@@ -10,3 +10,4 @@ export type { BrowGeometry, Hair } from './eyebrow';
 export { browGeometry, browHairs } from './eyebrow';
 export type { Caruncle, FoldGeometry } from './canthi-fold';
 export { caruncleOf, foldGeometry } from './canthi-fold';
+export { linerGeometry, linerTopOffset, type LinerGeometry, type LinerSpec } from './liner';

@@ -2,11 +2,12 @@ import { darken, lighten } from '../../core/color';
 import { caruncleOf, foldGeometry, type OpeningGeometry, type FoldGeometry, type Vec } from '../../geometry/eye';
 import { direction2D, type LightVector } from '../../lighting/light';
 import { foreshortenTransform, gazeOf } from '../../lighting/gaze3d';
-import { compileSurface, edgeColor, gradientStop as stop, type Surface } from '../../materials';
+import { compileSurface, gradientStop as stop, type Surface } from '../../materials';
 import { renderPupil } from './pupil';
+import { renderIrisDetail } from './iris-detail';
 import type { EyeSpec } from '../../schema';
 import { el, num, urlRef } from '../../core/svg';
-import { P, highlightOffsets, irisFibers, openingPath, polygonPath, pupilRadii } from './helpers';
+import { P, highlightOffsets, irisFibers, limbalRing, openingPath, polygonPath, pupilRadii } from './helpers';
 
 export interface GlobeInner {
   readonly defs: string[];
@@ -46,21 +47,13 @@ export function renderGlobeInner(
   const irisGroup: string[] = [iris.markup, irisFibers(eye, c, irisRx, irisRy)];
 
   // Anneau limbique
-  const ringW = irisRx * 0.12 * eye.iris.limbalRing;
-  if (ringW > 0.01) {
-    irisGroup.push(
-      el('ellipse', {
-        cx: c.x,
-        cy: c.y,
-        rx: irisRx - ringW / 2,
-        ry: irisRy - ringW / 2,
-        fill: 'none',
-        stroke: darken(edgeColor(eye.iris.material.base), 0.6),
-        'stroke-width': ringW,
-        'stroke-opacity': 0.35 + 0.5 * eye.iris.limbalRing,
-      }),
-    );
-  }
+  const ring = limbalRing(eye, c, irisRx, irisRy);
+  if (ring) irisGroup.push(ring);
+
+  // Iris détaillé (opt-in : vide si `iris.detail` est null) — couches sous la pupille, voir iris-detail.ts.
+  const detail = renderIrisDetail(eye, c, irisRx, irisRy, id);
+  defs.push(...detail.defs);
+  irisGroup.push(...detail.markup);
 
   // Lueur de transillumination : côté de l'iris OPPOSÉ à la lumière.
   if (eye.iris.glow && eye.iris.glow.strength > 0) {

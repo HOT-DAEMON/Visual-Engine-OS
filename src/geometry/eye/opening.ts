@@ -1,10 +1,16 @@
 import { rad } from '../../core/math';
 import type { EyeSpec } from '../../schema';
 import type { BBox } from '../../materials';
+import { extendedStyle } from './opening-styles';
 import { cubicAt, cubicDeriv, norm, type Vec } from './primitives';
 
 
 // ------------------------------------------------------------------ Fente palpébrale
+
+/** Facteur de hauteur du style 'compressed' (paupières mi-closes) — la largeur n'est pas touchée. */
+const COMPRESSED_CLOSURE = 0.55;
+/** Rapport hauteur/largeur minimal du style 'circle'. */
+const CIRCLE_MIN_ASPECT = 0.92;
 
 export interface OpeningGeometry {
   /** Canthus interne, canthus externe, contrôles de la courbe supérieure (u) et inférieure (l). */
@@ -25,9 +31,26 @@ export interface OpeningGeometry {
 export function openingGeometry(shape: EyeSpec['shape'], canthi: EyeSpec['canthi']): OpeningGeometry {
   const { width: w, height: h, tiltDeg, upperFraction, openness, style } = shape;
   const s: 1 | -1 = shape.outerSide === 'left' ? -1 : 1;
-  const hEff = h * openness;
-  const hUp = hEff * upperFraction;
-  const hLo = hEff * (1 - upperFraction);
+  // 'compressed' : la hauteur est réduite par la FERMETURE des paupières (largeur inchangée), et la
+  // paupière supérieure descend plus que l'inférieure ne monte (la part haute diminue).
+  const closure = style === 'compressed' ? COMPRESSED_CLOSURE : 1;
+  // 'triangle' : presque tout le volume est SOUS la ligne des canthi (dessus plat, sommet en bas) ;
+  // 'diamond' : haut et bas symétriques ; 'circle' : symétrique aussi (cercle).
+  const uf =
+    style === 'compressed'
+      ? upperFraction * 0.9
+      : style === 'triangle'
+        ? 0.12
+        : style === 'diamond' || style === 'diamond_v2' || style === 'circle'
+          ? 0.5
+          : upperFraction;
+  // 'circle' : une ouverture circulaire exige une hauteur voisine de la largeur → plancher à 0,92 × largeur.
+  // 'triangle' : œil plus haut (×1,12, proportions du modèle) ; 'chibi' : beaucoup plus haut (×1,5) ; les deux
+  // sont aussi prolongés côté externe (voir opening-styles.ts).
+  const hBase = style === 'circle' ? Math.max(h, w * CIRCLE_MIN_ASPECT) : style === 'triangle' ? h * 1.12 : style === 'chibi' ? h * 1.5 : h;
+  const hEff = hBase * openness * closure;
+  const hUp = hEff * uf;
+  const hLo = hEff * (1 - uf);
   const t = Math.tan(rad(tiltDeg)) * (w / 2);
   const k = 4 / 3; // contrôle à 4/3 de la hauteur => l'apex de la cubique atteint exactement la hauteur visée
   // Plus un canthus est arrondi, plus la courbe le quitte à la verticale.
@@ -39,10 +62,10 @@ export function openingGeometry(shape: EyeSpec['shape'], canthi: EyeSpec['canthi
   const innerRoundBoost = style === 'round' ? 0.45 : 0;
   const upIn = w * (0.24 - 0.16 * rIn) * (1 - innerRoundBoost);
   const loIn = w * (0.26 - 0.16 * rIn) * (1 - innerRoundBoost);
-  const pi: Vec = { x: (-s * w) / 2, y: t };
+  let pi: Vec = { x: (-s * w) / 2, y: t };
   let po: Vec = { x: (s * w) / 2, y: -t };
-  const u1: Vec = { x: pi.x + s * upIn, y: pi.y - k * hUp * (1 + innerRoundBoost * 0.5) };
-  const l2: Vec = { x: pi.x + s * loIn, y: pi.y + k * hLo * (1 + innerRoundBoost * 0.5) };
+  let u1: Vec = { x: pi.x + s * upIn, y: pi.y - k * hUp * (1 + innerRoundBoost * 0.5) };
+  let l2: Vec = { x: pi.x + s * loIn, y: pi.y + k * hLo * (1 + innerRoundBoost * 0.5) };
 
   // Canthus externe : chaque style ne touche que u2 (contrôle haut-externe), l1 (contrôle bas-externe)
   // et éventuellement po lui-même (position du coin externe). `upOut`/`loOut` restent la base commune.
@@ -74,6 +97,10 @@ export function openingGeometry(shape: EyeSpec['shape'], canthi: EyeSpec['canthi
     u2 = { x: po.x - s * upOut * 1.05, y: po.y - k * hUp * 0.55 };
     l1 = { x: po.x - s * loOut * 0.55, y: po.y + droop };
   }
+
+  // Styles ajoutés (chibi, angular, circle, triangle, diamond, diamond_v2, rounded_rect).
+  const ext = extendedStyle(style, { pi, po, u1, u2, l1, l2 }, { s, w, k, hUp, hLo, hEff, t, rIn, rOut });
+  if (ext) ({ pi, po, u1, u2, l1, l2 } = ext);
 
   let minX = Infinity;
   let minY = Infinity;

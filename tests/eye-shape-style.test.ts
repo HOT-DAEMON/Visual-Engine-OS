@@ -146,7 +146,7 @@ describe('shape.style : non-régression et couverture', () => {
   );
 
   it('est rejeté par le schéma si la valeur ne fait pas partie de l\'énumération', () => {
-    const r = EyeSpec.safeParse({ id: 'e', kind: 'eye', shape: { style: 'chibi' } });
+    const r = EyeSpec.safeParse({ id: 'e', kind: 'eye', shape: { style: 'hexagone' } });
     expect(r.success).toBe(false);
   });
 });

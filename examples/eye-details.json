@@ -1,0 +1,671 @@
+{
+ "width": 1400,
+ "height": 820,
+ "background": "#f1d3bd",
+ "label": "Liner ailé, cils longs/mèches et iris détaillés sur les silhouettes de référence",
+ "objects": [
+  {
+   "kind": "eye",
+   "id": "e0",
+   "seed": 7,
+   "transform": {
+    "x": 230,
+    "y": 230
+   },
+   "shape": {
+    "width": 210,
+    "height": 130,
+    "style": "almond"
+   },
+   "lids": {
+    "thickness": 0.07,
+    "material": {
+     "preset": "matte",
+     "color": "#0d2f33"
+    },
+    "liner": {
+     "color": "#0f4a4a",
+     "tipColor": "#25b3a6",
+     "thickness": 1.0,
+     "wing": {
+      "length": 0.3,
+      "liftDeg": 22,
+      "curve": 0.35
+     }
+    }
+   },
+   "lashes": {
+    "upper": {
+     "count": 18,
+     "length": 0.19,
+     "outerLength": 0.75,
+     "clump": 0.55,
+     "clumpSize": 3,
+     "tipSharpness": 0.9,
+     "sweep": 20,
+     "outerLift": 0.6,
+     "curl": 0.7,
+     "gloss": 0.3,
+     "arch": {
+      "peak": 0.82,
+      "width": 0.38,
+      "strength": 0.5
+     },
+     "flick": {
+      "count": 3,
+      "length": 0.46,
+      "liftDeg": 34,
+      "curl": 0.75
+     }
+    },
+    "lower": {
+     "count": 8,
+     "length": 0.06,
+     "opacity": 0.7,
+     "clump": 0.4
+    }
+   },
+   "iris": {
+    "radius": 0.5,
+    "aspect": 1.1,
+    "fibers": 0,
+    "material": {
+     "base": {
+      "type": "radial",
+      "stops": [
+       {
+        "offset": 0,
+        "color": "#ffe27a"
+       },
+       {
+        "offset": 0.55,
+        "color": "#e8921c"
+       },
+       {
+        "offset": 1,
+        "color": "#6a2f08"
+       }
+      ]
+     },
+     "roughness": 0.3,
+     "clearcoat": 0.35
+    },
+    "glow": {
+     "color": "#ffd27a",
+     "strength": 0.4
+    },
+    "detail": {
+     "accent": {
+      "color": "#fff0a0",
+      "reach": 0.55,
+      "spikes": 24,
+      "opacity": 0.8
+     },
+     "sparkles": 5,
+     "crypts": 12,
+     "topShade": 0.5
+    }
+   },
+   "eyebrow": null,
+   "highlights": {
+    "primary": {
+     "size": 0.2,
+     "opacity": 1
+    },
+    "secondary": {
+     "size": 0.09,
+     "opacity": 0.8
+    }
+   }
+  },
+  {
+   "kind": "eye",
+   "id": "e1",
+   "seed": 8,
+   "transform": {
+    "x": 690,
+    "y": 230
+   },
+   "shape": {
+    "width": 210,
+    "height": 130,
+    "style": "diamond_v2"
+   },
+   "lids": {
+    "thickness": 0.07,
+    "material": {
+     "preset": "matte",
+     "color": "#14121c"
+    },
+    "liner": {
+     "color": "#0b1b33",
+     "tipColor": "#2f6fd0",
+     "wing": {
+      "length": 0.26,
+      "liftDeg": 26
+     }
+    }
+   },
+   "lashes": {
+    "upper": {
+     "count": 18,
+     "length": 0.19,
+     "outerLength": 0.75,
+     "clump": 0.55,
+     "clumpSize": 3,
+     "tipSharpness": 0.9,
+     "sweep": 20,
+     "outerLift": 0.6,
+     "curl": 0.7,
+     "gloss": 0.3,
+     "arch": {
+      "peak": 0.82,
+      "width": 0.38,
+      "strength": 0.5
+     },
+     "flick": {
+      "count": 3,
+      "length": 0.46,
+      "liftDeg": 34,
+      "curl": 0.75
+     }
+    },
+    "lower": {
+     "count": 8,
+     "length": 0.06,
+     "opacity": 0.7,
+     "clump": 0.4
+    }
+   },
+   "iris": {
+    "radius": 0.5,
+    "aspect": 1.1,
+    "fibers": 0,
+    "material": {
+     "base": {
+      "type": "radial",
+      "stops": [
+       {
+        "offset": 0,
+        "color": "#9ffff0"
+       },
+       {
+        "offset": 0.5,
+        "color": "#17a79c"
+       },
+       {
+        "offset": 1,
+        "color": "#052c36"
+       }
+      ]
+     },
+     "roughness": 0.3,
+     "clearcoat": 0.35
+    },
+    "glow": {
+     "color": "#aaffee",
+     "strength": 0.4
+    },
+    "detail": {
+     "accent": {
+      "color": "#eafffb",
+      "reach": 0.45,
+      "spikes": 18,
+      "opacity": 0.8
+     },
+     "density": 0.9,
+     "topShade": 0.55,
+     "sparkles": 4
+    }
+   },
+   "eyebrow": null,
+   "highlights": {
+    "primary": {
+     "size": 0.2,
+     "opacity": 1
+    },
+    "secondary": {
+     "size": 0.09,
+     "opacity": 0.8
+    }
+   }
+  },
+  {
+   "kind": "eye",
+   "id": "e2",
+   "seed": 9,
+   "transform": {
+    "x": 1150,
+    "y": 230
+   },
+   "shape": {
+    "width": 210,
+    "height": 130,
+    "style": "triangle"
+   },
+   "lids": {
+    "thickness": 0.07,
+    "material": {
+     "preset": "matte",
+     "color": "#14121c"
+    },
+    "liner": {
+     "color": "#14121c",
+     "thickness": 0.8,
+     "wing": {
+      "length": 0.3,
+      "liftDeg": 16,
+      "curve": 0.35
+     }
+    }
+   },
+   "lashes": {
+    "upper": {
+     "count": 18,
+     "length": 0.19,
+     "outerLength": 0.4,
+     "clump": 0.55,
+     "clumpSize": 3,
+     "tipSharpness": 0.9,
+     "sweep": 20,
+     "outerLift": 0.6,
+     "curl": 0.7,
+     "gloss": 0.3,
+     "arch": {
+      "peak": 0.82,
+      "width": 0.38,
+      "strength": 0.5
+     },
+     "flick": {
+      "count": 2,
+      "length": 0.5,
+      "liftDeg": 52,
+      "curl": 0.8,
+      "reach": 0.1
+     }
+    },
+    "lower": {
+     "count": 8,
+     "length": 0.06,
+     "opacity": 0.7,
+     "clump": 0.4
+    }
+   },
+   "iris": {
+    "radius": 0.62,
+    "aspect": 1.12,
+    "fibers": 0,
+    "material": {
+     "base": {
+      "type": "radial",
+      "stops": [
+       {
+        "offset": 0,
+        "color": "#bdf0ff"
+       },
+       {
+        "offset": 0.55,
+        "color": "#2f8fbf"
+       },
+       {
+        "offset": 1,
+        "color": "#0a2548"
+       }
+      ]
+     },
+     "roughness": 0.3,
+     "clearcoat": 0.35
+    },
+    "detail": {
+     "sparkles": 3
+    }
+   },
+   "eyebrow": null,
+   "highlights": {
+    "primary": {
+     "size": 0.2,
+     "opacity": 1
+    },
+    "secondary": {
+     "size": 0.09,
+     "opacity": 0.8
+    }
+   }
+  },
+  {
+   "kind": "eye",
+   "id": "e3",
+   "seed": 10,
+   "transform": {
+    "x": 230,
+    "y": 610
+   },
+   "shape": {
+    "width": 210,
+    "height": 130,
+    "style": "circle"
+   },
+   "lids": {
+    "thickness": 0.07,
+    "material": {
+     "preset": "matte",
+     "color": "#14121c"
+    },
+    "liner": {
+     "thickness": 0.7,
+     "wing": {
+      "length": 0.22,
+      "liftDeg": 28,
+      "curve": 0.4
+     }
+    }
+   },
+   "lashes": {
+    "upper": {
+     "count": 18,
+     "length": 0.19,
+     "outerLength": 0.75,
+     "clump": 0.55,
+     "clumpSize": 3,
+     "tipSharpness": 0.9,
+     "sweep": 20,
+     "outerLift": 0.6,
+     "curl": 0.7,
+     "gloss": 0.3,
+     "arch": {
+      "peak": 0.82,
+      "width": 0.38,
+      "strength": 0.5
+     },
+     "flick": {
+      "count": 3,
+      "length": 0.46,
+      "liftDeg": 34,
+      "curl": 0.75
+     }
+    },
+    "lower": {
+     "count": 8,
+     "length": 0.06,
+     "opacity": 0.7,
+     "clump": 0.4
+    }
+   },
+   "iris": {
+    "radius": 0.5,
+    "aspect": 1.1,
+    "fibers": 0,
+    "material": {
+     "base": {
+      "type": "radial",
+      "stops": [
+       {
+        "offset": 0,
+        "color": "#ff5a6e"
+       },
+       {
+        "offset": 0.6,
+        "color": "#b0123c"
+       },
+       {
+        "offset": 1,
+        "color": "#3a0618"
+       }
+      ]
+     },
+     "roughness": 0.3,
+     "clearcoat": 0.35
+    },
+    "glow": {
+     "color": "#ff8a9a",
+     "strength": 0.35
+    },
+    "detail": {
+     "accent": {
+      "color": "#ffb347",
+      "reach": 0.6,
+      "spikes": 22,
+      "opacity": 0.95
+     },
+     "bottomGlow": {
+      "color": "#ff9ab0",
+      "strength": 0.6
+     },
+     "sparkles": 5,
+     "crypts": 12
+    }
+   },
+   "eyebrow": null,
+   "highlights": {
+    "primary": {
+     "size": 0.2,
+     "opacity": 1
+    },
+    "secondary": {
+     "size": 0.09,
+     "opacity": 0.8
+    }
+   }
+  },
+  {
+   "kind": "eye",
+   "id": "e4",
+   "seed": 11,
+   "transform": {
+    "x": 690,
+    "y": 610
+   },
+   "shape": {
+    "width": 210,
+    "height": 130,
+    "style": "chibi"
+   },
+   "lids": {
+    "thickness": 0.07,
+    "material": {
+     "preset": "matte",
+     "color": "#2a1d4a"
+    },
+    "liner": {
+     "color": "#3a2a66",
+     "tipColor": "#a78bff",
+     "thickness": 0.9,
+     "wing": {
+      "length": 0.22,
+      "liftDeg": 34
+     }
+    }
+   },
+   "lashes": {
+    "upper": {
+     "count": 18,
+     "length": 0.19,
+     "outerLength": 0.75,
+     "clump": 0.55,
+     "clumpSize": 3,
+     "tipSharpness": 0.9,
+     "sweep": 20,
+     "outerLift": 0.6,
+     "curl": 0.7,
+     "gloss": 0.3,
+     "arch": {
+      "peak": 0.82,
+      "width": 0.38,
+      "strength": 0.5
+     },
+     "flick": {
+      "count": 3,
+      "length": 0.46,
+      "liftDeg": 34,
+      "curl": 0.75
+     }
+    },
+    "lower": {
+     "count": 8,
+     "length": 0.06,
+     "opacity": 0.7,
+     "clump": 0.4
+    }
+   },
+   "iris": {
+    "radius": 0.58,
+    "aspect": 1.1,
+    "fibers": 0,
+    "material": {
+     "base": {
+      "type": "radial",
+      "stops": [
+       {
+        "offset": 0,
+        "color": "#efe6ff"
+       },
+       {
+        "offset": 0.5,
+        "color": "#8a78e8"
+       },
+       {
+        "offset": 1,
+        "color": "#2a1d6a"
+       }
+      ]
+     },
+     "roughness": 0.3,
+     "clearcoat": 0.35
+    },
+    "glow": {
+     "color": "#d8ccff",
+     "strength": 0.45
+    },
+    "detail": {
+     "bottomGlow": {
+      "color": "#ffffff",
+      "strength": 0.6
+     },
+     "pupilHalo": 0.5,
+     "sparkles": 8,
+     "topShade": 0.35
+    }
+   },
+   "eyebrow": null,
+   "highlights": {
+    "primary": {
+     "size": 0.2,
+     "opacity": 1
+    },
+    "secondary": {
+     "size": 0.09,
+     "opacity": 0.8
+    }
+   }
+  },
+  {
+   "kind": "eye",
+   "id": "e5",
+   "seed": 12,
+   "transform": {
+    "x": 1150,
+    "y": 610
+   },
+   "shape": {
+    "width": 210,
+    "height": 130,
+    "style": "diamond"
+   },
+   "lids": {
+    "thickness": 0.07,
+    "material": {
+     "preset": "matte",
+     "color": "#14121c"
+    },
+    "liner": {
+     "thickness": 0.9,
+     "wing": {
+      "length": 0.26,
+      "liftDeg": 24
+     }
+    }
+   },
+   "lashes": {
+    "upper": {
+     "count": 18,
+     "length": 0.19,
+     "outerLength": 0.75,
+     "clump": 0.55,
+     "clumpSize": 3,
+     "tipSharpness": 0.9,
+     "sweep": 20,
+     "outerLift": 0.6,
+     "curl": 0.7,
+     "gloss": 0.3,
+     "arch": {
+      "peak": 0.82,
+      "width": 0.38,
+      "strength": 0.5
+     },
+     "flick": {
+      "count": 3,
+      "length": 0.46,
+      "liftDeg": 34,
+      "curl": 0.75
+     }
+    },
+    "lower": {
+     "count": 8,
+     "length": 0.06,
+     "opacity": 0.7,
+     "clump": 0.4
+    }
+   },
+   "iris": {
+    "radius": 0.5,
+    "aspect": 1.1,
+    "fibers": 0,
+    "material": {
+     "base": {
+      "type": "radial",
+      "stops": [
+       {
+        "offset": 0,
+        "color": "#efe6ff"
+       },
+       {
+        "offset": 0.5,
+        "color": "#8a78e8"
+       },
+       {
+        "offset": 1,
+        "color": "#2a1d6a"
+       }
+      ]
+     },
+     "roughness": 0.3,
+     "clearcoat": 0.35
+    },
+    "glow": {
+     "color": "#d8ccff",
+     "strength": 0.45
+    },
+    "detail": {
+     "bottomGlow": {
+      "color": "#ffffff",
+      "strength": 0.6
+     },
+     "pupilHalo": 0.5,
+     "sparkles": 8,
+     "topShade": 0.35
+    }
+   },
+   "eyebrow": null,
+   "highlights": {
+    "primary": {
+     "size": 0.2,
+     "opacity": 1
+    },
+    "secondary": {
+     "size": 0.09,
+     "opacity": 0.8
+    }
+   }
+  }
+ ]
+}

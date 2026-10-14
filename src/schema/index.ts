@@ -7,7 +7,7 @@ export { Hex, Slug } from './primitives';
 export { ColorSource, MaterialDescriptor, PresetRef, MaterialRef } from './color-material';
 export { LightSpec, Transform } from './light-transform';
 export { HostSpec } from './host';
-export { Lids } from './eye-lids';
+export { Lids, Liner } from './eye-lids';
 export { Lashes, LashesUpper, LashesLower } from './eye-lashes';
 export { CompoundEyeSpec } from './compound-eye';
 export { GemEyeSpec } from './gem-eye';

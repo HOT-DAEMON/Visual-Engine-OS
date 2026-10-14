@@ -34,8 +34,11 @@ src/
 
   geometry/eye/    Géométrie pure de l'œil — fonctions sans SVG, testables isolément.
                     primitives.ts (Vec/Cubic/cubicAt), opening.ts (fente palpébrale,
-                    styles almond/round/sharp/drooping), crease.ts (pli palpébral),
-                    lashes.ts, eyebrow.ts (sourcil + poils), canthi-fold.ts (caroncule,
+                    styles almond/round/sharp/drooping), opening-styles.ts (styles ajoutés :
+                    chibi/angular/circle/triangle/diamond/diamond_v2/rounded_rect), crease.ts (pli palpébral),
+                    lashes.ts, lash-extras.ts (mèches, cils longs externes), liner.ts
+                    (liner ailé : contour, aile, profil d'épaisseur),
+                    eyebrow.ts (sourcil + poils), canthi-fold.ts (caroncule,
                     pli épicanthique).
 
   composition/     anchors.ts (similarités 2D, ancres/motifs d'un hôte),
@@ -54,7 +57,10 @@ src/
     eye/              helpers.ts (fonctions pures : chemins, irisRadii/Center, etc.),
                       globe-inner.ts (tout ce qui est DANS le clip de l'ouverture :
                       iris, pupille, regard 3D, caroncule, ombres, reflets),
+                      iris-detail.ts + iris-strands.ts (iris détaillé : couches, fibres,
+                      collerette, flammes — insérés par globe-inner.ts),
                       lids-fold.ts (tout ce qui est HORS clip : pli, bords, cils),
+                      liner.ts (dessin du liner ailé, appelé par lids-fold.ts),
                       eyebrow-render.ts, eye.ts (orchestrateur), default-skin.ts.
     robot/            housing.ts (boîtier + vis), lens.ts (lentille + capteur + verre),
                       robot.ts (orchestrateur).

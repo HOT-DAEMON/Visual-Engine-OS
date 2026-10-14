@@ -1,5 +1,5 @@
 import { darken, lighten } from '../../core/color';
-import { dominantColor } from '../../materials';
+import { dominantColor, edgeColor } from '../../materials';
 import { gazeOf } from '../../lighting/gaze3d';
 import { halfVectorXY, toLocal, type LightVector } from '../../lighting/light';
 import { mulberry32 } from '../../core/prng';
@@ -30,6 +30,41 @@ export function smoothClosed(pts: readonly Vec[]): string {
     d += `Q${P(p)} ${P(mid(p, q))}`;
   }
   return `${d}Z`;
+}
+
+/** Anneau limbique (liseré sombre au bord de l'iris), ou `null` s'il est désactivé / invisible. */
+export function limbalRing(eye: EyeSpec, c: Vec, irisRx: number, irisRy: number): string | null {
+  const ringW = irisRx * 0.12 * eye.iris.limbalRing;
+  if (ringW <= 0.01) return null;
+  return el('ellipse', {
+    cx: c.x,
+    cy: c.y,
+    rx: irisRx - ringW / 2,
+    ry: irisRy - ringW / 2,
+    fill: 'none',
+    stroke: darken(edgeColor(eye.iris.material.base), 0.6),
+    'stroke-width': ringW,
+    'stroke-opacity': 0.35 + 0.5 * eye.iris.limbalRing,
+  });
+}
+
+/**
+ * Segments « C » d'une courbe lisse passant par TOUS les points (Catmull-Rom → Bézier), sans le
+ * « M » initial. Les extrémités sont dupliquées : la courbe démarre/finit dans la direction du
+ * premier/dernier segment, sans dépassement.
+ */
+export function smoothThrough(pts: readonly Vec[]): string {
+  let d = '';
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)] as Vec;
+    const p1 = pts[i] as Vec;
+    const p2 = pts[i + 1] as Vec;
+    const p3 = pts[Math.min(pts.length - 1, i + 2)] as Vec;
+    const c1: Vec = { x: p1.x + (p2.x - p0.x) / 6, y: p1.y + (p2.y - p0.y) / 6 };
+    const c2: Vec = { x: p2.x - (p3.x - p1.x) / 6, y: p2.y - (p3.y - p1.y) / 6 };
+    d += `C${P(c1)} ${P(c2)} ${P(p2)}`;
+  }
+  return d;
 }
 
 export function polygonPath(pts: readonly Vec[]): string {

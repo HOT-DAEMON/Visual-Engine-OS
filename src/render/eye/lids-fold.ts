@@ -1,5 +1,5 @@
 import { darken } from '../../core/color';
-import { creaseCurve, cubicTopY, upperLashes, lowerLashes, type FoldGeometry, type OpeningGeometry, type Vec } from '../../geometry/eye';
+import { creaseCurve, cubicTopY, linerTopOffset, upperLashes, lowerLashes, type FoldGeometry, type OpeningGeometry, type Vec } from '../../geometry/eye';
 import { direction2D, type LightVector } from '../../lighting/light';
 import { dominantColor, gradientStop as stop } from '../../materials';
 import { clamp01 } from '../../core/math';
@@ -7,6 +7,7 @@ import type { EyeSpec } from '../../schema';
 import { el, num, urlRef } from '../../core/svg';
 import { P, polygonPath } from './helpers';
 import { renderLashGroup } from './lashes-render';
+import { renderLiner } from './liner';
 
 export interface LidsAndFold {
   readonly defs: string[];
@@ -77,7 +78,8 @@ export function renderLidsAndFold(
     }),
   ];
 
-  const wing = eye.lids.wing;
+  // Le liner ailé (s'il est défini) remplace l'ancienne pointe simple.
+  const wing = eye.lids.liner ? 0 : eye.lids.wing;
   if (wing > 0.01) {
     // Pointe externe : quadratique po -> tip, tracée en segments à traits arrondis dont la largeur décroît.
     const Lw = wing * g.w * 0.26;
@@ -112,10 +114,19 @@ export function renderLidsAndFold(
     }
   }
 
+  if (eye.lids.liner) {
+    const linerMarkup = renderLiner(eye, g, th, lidColor, id);
+    defs.push(...linerMarkup.defs);
+    lids.push(...linerMarkup.markup);
+  }
+
   // Couleur : le matériau propre au groupe (s'il est précisé) prime sur celle de la paupière —
   // voir eye-lashes.ts (`material: null` = hérite de `lidColor`, comportement historique).
   const lightDir = direction2D(L);
-  const upLashes = upperLashes(g, eye.lashes.upper, th, (eye.seed ^ 0xa5a5a5a5) >>> 0);
+  // Avec un liner, les racines des cils se posent sur son bord haut (voir geometry/eye/liner.ts).
+  const liner = eye.lids.liner;
+  const rootShift = liner ? (t: number) => linerTopOffset(liner, th, t) * 0.88 : undefined;
+  const upLashes = upperLashes(g, eye.lashes.upper, th, (eye.seed ^ 0xa5a5a5a5) >>> 0, rootShift);
   if (upLashes.length > 0) {
     const upColor = eye.lashes.upper.material ? dominantColor(eye.lashes.upper.material.base) : lidColor;
     lids.push(

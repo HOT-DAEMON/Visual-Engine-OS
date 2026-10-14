@@ -61,11 +61,40 @@ function lashGroup(maxCount: number, defaults: { count: number; length: number; 
       colorVariation: Unit.default(0.15),
       /** Liseré plus clair du côté éclairé de chaque cil (0 = désactivé). */
       gloss: Unit.default(0),
+      // --- Travail du cil (opt-in : 0 = comportement historique) ------------------------------
+      /** Allongement des cils de la partie EXTERNE : jusqu'à +`outerLength` × la longueur au canthus externe. */
+      outerLength: z.number().min(0).max(2).default(0),
+      /**
+       * Redresse les cils de la moitié externe vers le HAUT de l'œil (0 = suivent la normale de la
+       * paupière, qui plonge à l'extérieur ; 1 = presque verticaux au canthus externe).
+       */
+      outerLift: Unit.default(0),
+      /** Mèches : 0 = cils indépendants ; 1 = cils regroupés en pointe par paquets de `clumpSize`. */
+      clump: Unit.default(0),
+      clumpSize: z.number().int().min(2).max(6).default(3),
     })
     .strict();
 }
 
-export const LashesUpper = lashGroup(60, { count: 16, length: 0.22, thickness: 0.5 });
+/**
+ * Cils longs du canthus externe (opt-in, `count` = 0 : aucun). Ce sont des cils supplémentaires,
+ * plantés sur les derniers `reach` du bord supérieur, orientés comme l'aile du liner (relevés de
+ * `liftDeg` par rapport à l'horizontale de l'œil), le plus externe étant le plus long, et
+ * recourbés en fin de course.
+ */
+export const LashFlick = z
+  .object({
+    count: z.number().int().min(0).max(8).default(0),
+    /** Longueur du plus long, en fraction de la hauteur de l'œil. */
+    length: z.number().min(0.15).max(1.5).default(0.5),
+    /** Portion du bord supérieur (depuis le canthus externe) où ils prennent racine. */
+    reach: z.number().min(0.04).max(0.35).default(0.14),
+    liftDeg: z.number().min(-10).max(80).default(32),
+    curl: Unit.default(0.7),
+  })
+  .strict();
+
+export const LashesUpper = lashGroup(60, { count: 16, length: 0.22, thickness: 0.5 }).extend({ flick: LashFlick.default({}) });
 export const LashesLower = lashGroup(30, { count: 6, length: 0.09, thickness: 0.4 }).extend({ opacity: Unit.default(0.8) });
 
 export const Lashes = z.object({ upper: LashesUpper.default({}), lower: LashesLower.default({}) }).strict();

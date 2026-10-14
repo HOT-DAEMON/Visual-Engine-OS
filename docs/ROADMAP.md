@@ -24,14 +24,17 @@ par affirmation.
 
 | Composant | État | Détail |
 |---|---|---|
-| Enveloppe (fente palpébrale) | ✅ | Bézier cubique, canthi arrondis, tilt, ouverture, 4 styles (`shape.style`) : almond (classique), round (kawaii), sharp (tsurime), drooping (tareme) — le canthus interne reste anatomiquement stable, seul l'externe varie |
+| Enveloppe (fente palpébrale) | ✅ | Bézier cubique, canthi arrondis, tilt, ouverture, 4 styles (`shape.style`) : almond (classique), round (kawaii), sharp (tsurime), drooping (tareme), chibi (grand œil arrondi), angular, compressed (paupières mi-closes), rounded_rect (angles arrondis), triangle / circle / diamond (silhouettes de référence) — le canthus interne reste anatomiquement stable pour almond/sharp/drooping |
 | Sclère | ✅ | Matériau libre (n'importe quelle teinte), pas seulement blanc |
 | Iris — couleur | ✅ | `ColorSource` libre (uni/linéaire/radial), palette procédurale par famille |
 | Iris — texture | 🚧 | `fibers` (rayons), `concentric` (anneaux), `spiral`, `petals` implémentés ; `veins`/`mandala` richement décoré = ⏳ |
+| Iris — détaillé | ✅ | `iris.detail` (opt-in) : zone pupillaire, fibres du stroma à 2 échelles, cryptes, collerette ondulée, flammes d'accent (2 couronnes), assombrissement limbique, ombre de paupière, lueur basse, halo de pupille, scintillements — palette dérivée du matériau, déterministe. Limite : pas de motifs décoratifs figuratifs (cœurs, étoiles…) — voir « Bibliothèques de motifs » plus bas. |
 | Pupille — forme | ✅ | ronde, fente verticale, fente horizontale |
 | Pupille — remplissage/contour | ✅ | `fill: ColorSource` (uni/linéaire orientable/radial — même richesse que l'iris/la sclère), 0 à 3 contours concentriques indépendants (couleur/épaisseur/opacité chacun), `visible: boolean` explicite. Volontairement SANS `compileSurface` (une pupille est un trou, pas une surface éclairée). |
 | Highlight — forme | ✅ | bibliothèque de motifs : cercle, ellipse, croissant, trapèze, étoile, étincelle (sparkle), croix +, croix x, cœur |
 | Cils | ✅ | Vrai moteur paramétrique (`eye-lashes.ts`) : MORPHOLOGIE (épaisseur, longueur, arche réglable en position/largeur/amplitude, angle global, pointe effilée, courbure), FIBRES (dispersion seedée : longueur, épaisseur, orientation, courbure, répartition — chacune un curseur indépendant), APPARENCE (matériau/couleur propre ou hérité, opacité, variation de luminosité par cil, brillance directionnelle). `angle` et `inclinaison` ont été fusionnés en un seul champ (`angleDeg`) — ce sont le même effet, les dupliquer n'aurait rien ajouté. « Rugosité » n'est pas un champ séparé de la brillance (`gloss`) pour la même raison. Pas encore de mélange de PLUSIEURS styles au sein d'un même œil (tous les cils d'un groupe partagent la même morphologie de base, seule la dispersion varie). |
+| Liner ailé | ✅ | `lids.liner` (opt-in) : épaisseur progressive, dégradé vers la pointe, aile relevée par rapport à l'HORIZONTALE de l'œil (longueur/relèvement/courbure/finesse), brillance, liner inférieur ; remplace `lids.wing` quand actif ; les racines des cils se posent sur son bord haut |
+| Cils — mèches et cils longs | ✅ | `outerLength` (allongement externe), `outerLift` (redressement vers le haut), `clump`/`clumpSize` (cils regroupés en pointe), `upper.flick` (cils longs recourbés au canthus externe, cubiques). Tous opt-in (valeur 0 = comportement historique, vérifié par test et par l'empreinte exacte des scènes d'exemple). Le mélange de plusieurs morphologies reste ⏳ |
 | Sourcil | ✅ | densité, longueur, épaisseur, arche, angle — combinables indépendamment |
 | Pli palpébral | ✅ | hauteur, profondeur, ombre portée |
 | Pli épicanthique | ✅ | recouvrement du canthus interne, raccord tangent |
