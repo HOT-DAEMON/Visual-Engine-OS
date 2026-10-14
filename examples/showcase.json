@@ -1,0 +1,37 @@
+{
+  "width": 960,
+  "height": 560,
+  "background": "#3b4157",
+  "label": "Trois yeux et quatre matériaux",
+  "objects": [
+    { "kind": "eye", "id": "eye-anime", "seed": 7, "transform": { "x": 200, "y": 150 }, "shape": { "width": 240, "height": 150 } },
+    {
+      "kind": "eye", "id": "eye-cat", "seed": 21,
+      "transform": { "x": 490, "y": 150, "rotationDeg": -15 },
+      "shape": { "width": 240, "height": 150, "outerSide": "left" },
+      "iris": {
+        "material": { "base": { "type": "radial", "stops": [
+          { "offset": 0, "color": "#fff0a0" }, { "offset": 0.55, "color": "#d9a520" }, { "offset": 1, "color": "#5a3b00" } ] },
+          "roughness": 0.3, "clearcoat": 0.3 },
+        "glow": { "color": "#ffe9a8", "strength": 0.5 }
+      },
+      "pupil": { "shape": "slit_vertical", "size": 0.4 }
+    },
+    {
+      "kind": "eye", "id": "eye-red", "seed": 99,
+      "transform": { "x": 780, "y": 150, "rotationDeg": 20 },
+      "shape": { "width": 240, "height": 150, "openness": 0.7 },
+      "gaze": { "yawDeg": 18, "pitchDeg": 4 },
+      "iris": {
+        "material": { "base": { "type": "radial", "stops": [
+          { "offset": 0, "color": "#ff9a8a" }, { "offset": 0.55, "color": "#d43a3a" }, { "offset": 1, "color": "#5a0f16" } ] },
+          "roughness": 0.3, "clearcoat": 0.3 },
+        "glow": { "color": "#ffb3a8", "strength": 0.5 }
+      }
+    },
+    { "kind": "panel", "id": "panel-polished", "transform": { "x": 125, "y": 400 }, "width": 180, "height": 120, "cornerRadius": 14, "material": { "preset": "polished_metal", "color": "#c9d1d9" } },
+    { "kind": "panel", "id": "panel-waxed", "transform": { "x": 345, "y": 400 }, "width": 180, "height": 120, "cornerRadius": 14, "material": { "preset": "waxed_metal", "color": "#c9d1d9" } },
+    { "kind": "panel", "id": "panel-matte", "transform": { "x": 565, "y": 400 }, "width": 180, "height": 120, "cornerRadius": 14, "material": { "preset": "matte", "color": "#c9d1d9" } },
+    { "kind": "panel", "id": "panel-emissive", "transform": { "x": 785, "y": 400 }, "width": 180, "height": 120, "cornerRadius": 14, "material": { "preset": "emissive", "color": "#4dffb0" } }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "width": 1500, "height": 480, "background": "#eec9ad",
+  "label": "Moteur de cils : morphologie, fibres, apparence",
+  "objects": [
+    { "kind": "eye", "id": "l1", "seed": 3, "transform": {"x":160,"y":280}, "shape": {"width":220,"height":130},
+      "lashes": { "upper": { "count": 22, "length": 0.4, "tipSharpness": 1, "arch": {"peak":0.85,"width":0.2,"strength":0.9},
+        "lengthVariation": 0.05, "thicknessVariation": 0.05, "orientationVariation": 1, "curlVariation": 0.05, "positionDispersion": 0.05 } } },
+    { "kind": "eye", "id": "l2", "seed": 3, "transform": {"x":440,"y":280}, "shape": {"width":220,"height":130},
+      "lashes": { "upper": { "count": 30, "length": 0.32, "tipSharpness": 0.1,
+        "lengthVariation": 0.7, "thicknessVariation": 0.6, "orientationVariation": 14, "curlVariation": 0.6, "positionDispersion": 0.9 } } },
+    { "kind": "eye", "id": "l3", "seed": 3, "transform": {"x":720,"y":280}, "shape": {"width":220,"height":130},
+      "lashes": { "upper": { "count": 18, "length": 0.3, "angleDeg": -22, "sweep": 0, "curl": 0.1 } } },
+    { "kind": "eye", "id": "l4", "seed": 3, "transform": {"x":1000,"y":280}, "shape": {"width":220,"height":130},
+      "lashes": { "upper": { "count": 20, "length": 0.34,
+        "material": { "preset": "matte", "color": "#2a1a8f" }, "colorVariation": 0.5, "gloss": 0.8 } } },
+    { "kind": "eye", "id": "l5", "seed": 3, "transform": {"x":1280,"y":280}, "shape": {"width":220,"height":130},
+      "lashes": { "upper": { "count": 40, "length": 0.5, "arch": {"peak":0.5,"width":0.9,"strength":0.15}, "curl": 1, "tipSharpness": 0.85 },
+        "lower": { "count": 16, "length": 0.22, "curl": 0.4 } } }
+  ]
+}

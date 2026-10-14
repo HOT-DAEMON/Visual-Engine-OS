@@ -1,0 +1,8 @@
+{ "width": 2000, "height": 420, "background": "#eec9ad",
+  "objects": [
+    { "kind": "eye", "id": "h0", "transform": {"x":220,"y":220}, "shape": {"width":200,"height":130} },
+    { "kind": "eye", "id": "h1", "transform": {"x":680,"y":220}, "shape": {"width":200,"height":130}, "headTurn": {"yawDeg": 35} },
+    { "kind": "eye", "id": "h2", "transform": {"x":1140,"y":220}, "shape": {"width":200,"height":130}, "headTurn": {"yawDeg": -35}, "gaze": {"yawDeg": -20} },
+    { "kind": "eye", "id": "h3", "transform": {"x":1600,"y":220}, "shape": {"width":200,"height":130}, "headTurn": {"yawDeg": 55, "pitchDeg": -15} }
+  ]
+}

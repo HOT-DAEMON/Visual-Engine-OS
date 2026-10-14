@@ -1,0 +1,38 @@
+{
+  "width": 700,
+  "height": 420,
+  "background": "#3b4157",
+  "label": "Œil composé (insecte) et œil de gemme (cristal)",
+  "objects": [
+    {
+      "kind": "compound_eye",
+      "id": "bug",
+      "transform": {
+        "x": 200,
+        "y": 210
+      },
+      "size": 280,
+      "facetRadius": 0.1,
+      "material": {
+        "preset": "satin",
+        "color": "#2f6b4f"
+      },
+      "seed": 3
+    },
+    {
+      "kind": "gem_eye",
+      "id": "crystal",
+      "transform": {
+        "x": 520,
+        "y": 210
+      },
+      "shape": {
+        "width": 280,
+        "height": 180
+      },
+      "gemColor": "#6a3fd0",
+      "facets": 14,
+      "sparkle": 0.9
+    }
+  ]
+}

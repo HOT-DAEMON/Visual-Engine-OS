@@ -1,0 +1,152 @@
+{
+  "width": 800,
+  "height": 700,
+  "background": "#3b4157",
+  "label": "Coordination inter-yeux : colère (gauche) vs neutre (centre) vs peur (droite)",
+  "objects": [
+    {
+      "kind": "host",
+      "id": "h0",
+      "transform": {
+        "x": 130,
+        "y": 350
+      },
+      "shape": "ellipse",
+      "width": 220,
+      "height": 260,
+      "material": {
+        "preset": "matte",
+        "color": "#eec9ad"
+      },
+      "anchors": [
+        {
+          "id": "l",
+          "x": -0.42,
+          "y": -0.05
+        },
+        {
+          "id": "r",
+          "x": 0.42,
+          "y": -0.05
+        }
+      ]
+    },
+    {
+      "kind": "eye",
+      "id": "e0",
+      "seed": 7,
+      "place": {
+        "host": "h0",
+        "anchors": [
+          "l",
+          "r"
+        ]
+      },
+      "shape": {
+        "width": 90,
+        "height": 56,
+        "outerSide": "auto"
+      },
+      "expression": {
+        "kind": "angry",
+        "intensity": 1
+      }
+    },
+    {
+      "kind": "host",
+      "id": "h1",
+      "transform": {
+        "x": 400,
+        "y": 350
+      },
+      "shape": "ellipse",
+      "width": 220,
+      "height": 260,
+      "material": {
+        "preset": "matte",
+        "color": "#eec9ad"
+      },
+      "anchors": [
+        {
+          "id": "l",
+          "x": -0.42,
+          "y": -0.05
+        },
+        {
+          "id": "r",
+          "x": 0.42,
+          "y": -0.05
+        }
+      ]
+    },
+    {
+      "kind": "eye",
+      "id": "e1",
+      "seed": 7,
+      "place": {
+        "host": "h1",
+        "anchors": [
+          "l",
+          "r"
+        ]
+      },
+      "shape": {
+        "width": 90,
+        "height": 56,
+        "outerSide": "auto"
+      },
+      "expression": {
+        "kind": "neutral",
+        "intensity": 1
+      }
+    },
+    {
+      "kind": "host",
+      "id": "h2",
+      "transform": {
+        "x": 670,
+        "y": 350
+      },
+      "shape": "ellipse",
+      "width": 220,
+      "height": 260,
+      "material": {
+        "preset": "matte",
+        "color": "#eec9ad"
+      },
+      "anchors": [
+        {
+          "id": "l",
+          "x": -0.42,
+          "y": -0.05
+        },
+        {
+          "id": "r",
+          "x": 0.42,
+          "y": -0.05
+        }
+      ]
+    },
+    {
+      "kind": "eye",
+      "id": "e2",
+      "seed": 7,
+      "place": {
+        "host": "h2",
+        "anchors": [
+          "l",
+          "r"
+        ]
+      },
+      "shape": {
+        "width": 90,
+        "height": 56,
+        "outerSide": "auto"
+      },
+      "expression": {
+        "kind": "fearful",
+        "intensity": 1
+      }
+    }
+  ]
+}

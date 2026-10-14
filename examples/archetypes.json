@@ -1,0 +1,92 @@
+{
+  "width": 1350,
+  "height": 400,
+  "background": "#3b4157",
+  "label": "6 archétypes d'œil",
+  "objects": [
+    {
+      "kind": "eye",
+      "id": "e0",
+      "seed": 7,
+      "transform": {
+        "x": 150,
+        "y": 200
+      },
+      "shape": {
+        "width": 180,
+        "height": 120
+      },
+      "archetype": "realistic"
+    },
+    {
+      "kind": "eye",
+      "id": "e1",
+      "seed": 7,
+      "transform": {
+        "x": 360,
+        "y": 200
+      },
+      "shape": {
+        "width": 180,
+        "height": 120
+      },
+      "archetype": "reptile"
+    },
+    {
+      "kind": "eye",
+      "id": "e2",
+      "seed": 7,
+      "transform": {
+        "x": 570,
+        "y": 200
+      },
+      "shape": {
+        "width": 180,
+        "height": 120
+      },
+      "archetype": "feline"
+    },
+    {
+      "kind": "eye",
+      "id": "e3",
+      "seed": 7,
+      "transform": {
+        "x": 780,
+        "y": 200
+      },
+      "shape": {
+        "width": 180,
+        "height": 120
+      },
+      "archetype": "doll"
+    },
+    {
+      "kind": "eye",
+      "id": "e4",
+      "seed": 7,
+      "transform": {
+        "x": 990,
+        "y": 200
+      },
+      "shape": {
+        "width": 180,
+        "height": 120
+      },
+      "archetype": "alien"
+    },
+    {
+      "kind": "eye",
+      "id": "e5",
+      "seed": 7,
+      "transform": {
+        "x": 1200,
+        "y": 200
+      },
+      "shape": {
+        "width": 180,
+        "height": 120
+      },
+      "archetype": "demon"
+    }
+  ]
+}

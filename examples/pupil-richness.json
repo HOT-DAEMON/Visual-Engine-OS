@@ -1,0 +1,21 @@
+{
+  "width": 1300, "height": 420, "background": "#eec9ad",
+  "label": "Richesse de la pupille : remplissage orienté, contours multiples, invisible",
+  "objects": [
+    { "kind": "eye", "id": "p1", "transform": {"x":150,"y":220}, "shape": {"width":180,"height":120},
+      "pupil": { "size": 0.4, "fill": { "type": "solid", "color": "#3a1a08" } } },
+    { "kind": "eye", "id": "p2", "transform": {"x":390,"y":220}, "shape": {"width":180,"height":120},
+      "pupil": { "size": 0.42, "fill": { "type": "linear", "angleDeg": 90,
+        "stops": [ {"offset":0,"color":"#ffd166","opacity":1}, {"offset":0.55,"color":"#ffd166","opacity":1}, {"offset":0.55,"color":"#07090f","opacity":1}, {"offset":1,"color":"#07090f","opacity":1} ] } } },
+    { "kind": "eye", "id": "p3", "transform": {"x":630,"y":220}, "shape": {"width":180,"height":120},
+      "pupil": { "size": 0.32,
+        "fill": { "type": "radial", "stops": [ {"offset":0,"color":"#4a0f0f","opacity":1}, {"offset":1,"color":"#000000","opacity":1} ] },
+        "outlines": [ {"color":"#ff3b30","width":0.1,"opacity":0.9}, {"color":"#ffd166","width":0.06,"opacity":0.7} ] } },
+    { "kind": "eye", "id": "p4", "transform": {"x":870,"y":220}, "shape": {"width":180,"height":120},
+      "pupil": { "shape": "slit_vertical", "size": 0.55,
+        "fill": { "type": "solid", "color": "#000000" },
+        "outlines": [ {"color":"#ffe9a0","width":0.12,"opacity":0.8} ] } },
+    { "kind": "eye", "id": "p5", "transform": {"x":1110,"y":220}, "shape": {"width":180,"height":120},
+      "pupil": { "visible": false } }
+  ]
+}

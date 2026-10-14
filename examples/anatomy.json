@@ -1,0 +1,128 @@
+{
+  "width": 960,
+  "height": 800,
+  "background": "#eec9ad",
+  "label": "Anatomie de l'œil : quatre variantes",
+  "objects": [
+    {
+      "kind": "eye",
+      "id": "eye-standard",
+      "seed": 7,
+      "transform": {
+        "x": 250,
+        "y": 270
+      },
+      "shape": {
+        "width": 300,
+        "height": 170
+      }
+    },
+    {
+      "kind": "eye",
+      "id": "eye-monolid-fold",
+      "seed": 11,
+      "transform": {
+        "x": 710,
+        "y": 270
+      },
+      "shape": {
+        "width": 300,
+        "height": 130,
+        "tiltDeg": 9,
+        "outerSide": "left"
+      },
+      "lids": {
+        "crease": {
+          "height": 0
+        }
+      },
+      "epicanthicFold": {
+        "amount": 0.9,
+        "reach": 0.7
+      },
+      "canthi": {
+        "inner": {
+          "caruncle": 0.6,
+          "roundness": 0.7
+        }
+      },
+      "lashes": {
+        "upper": {
+          "count": 22,
+          "length": 0.16,
+          "curl": 0.4
+        }
+      },
+      "eyebrow": {
+        "tiltDeg": 12,
+        "arch": 0.3
+      }
+    },
+    {
+      "kind": "eye",
+      "id": "eye-deep-crease",
+      "seed": 3,
+      "transform": {
+        "x": 250,
+        "y": 640
+      },
+      "shape": {
+        "width": 300,
+        "height": 150,
+        "upperFraction": 0.68
+      },
+      "lids": {
+        "crease": {
+          "height": 0.4,
+          "depth": 0.9
+        },
+        "thickness": 0.05
+      },
+      "lashes": {
+        "upper": {
+          "count": 30,
+          "length": 0.34,
+          "curl": 0.9,
+          "sweep": 40
+        },
+        "lower": {
+          "count": 12,
+          "length": 0.14
+        }
+      },
+      "eyebrow": {
+        "gap": 0.2,
+        "thickness": 0.16,
+        "arch": 0.8,
+        "tiltDeg": 4,
+        "hairs": 100
+      }
+    },
+    {
+      "kind": "eye",
+      "id": "eye-no-brow",
+      "seed": 5,
+      "transform": {
+        "x": 710,
+        "y": 640
+      },
+      "shape": {
+        "width": 300,
+        "height": 150,
+        "openness": 0.6
+      },
+      "lashes": {
+        "upper": {
+          "count": 0
+        },
+        "lower": {
+          "count": 0
+        }
+      },
+      "eyebrow": null,
+      "lids": {
+        "wing": 0
+      }
+    }
+  ]
+}

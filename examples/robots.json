@@ -1,0 +1,42 @@
+{
+  "width": 960,
+  "height": 420,
+  "background": "#3b4157",
+  "label": "Trois yeux de robot : boîtiers et capteurs différents",
+  "objects": [
+    {
+      "kind": "robot_eye",
+      "id": "robot-cyan",
+      "transform": { "x": 170, "y": 210 },
+      "size": 260
+    },
+    {
+      "kind": "robot_eye",
+      "id": "robot-red",
+      "transform": { "x": 480, "y": 210, "rotationDeg": -20 },
+      "size": 260,
+      "housing": {
+        "material": { "preset": "waxed_metal", "color": "#8e969f" },
+        "bolts": 6,
+        "ringWidth": 0.26
+      },
+      "lens": { "tint": "#b0303a", "rings": 4, "aperture": 0.56 },
+      "sensor": { "color": "#ff3b30", "intensity": 1, "size": 0.18 },
+      "gaze": { "x": 0.6, "y": -0.3 }
+    },
+    {
+      "kind": "robot_eye",
+      "id": "robot-amber",
+      "transform": { "x": 790, "y": 210, "rotationDeg": 15 },
+      "size": 260,
+      "housing": {
+        "material": { "preset": "matte", "color": "#5a5f68" },
+        "bolts": 8,
+        "ringWidth": 0.18
+      },
+      "lens": { "tint": "#2f8a55", "rings": 2, "aperture": 0.42, "reticle": false },
+      "sensor": { "color": "#ffb020", "intensity": 0.6, "size": 0.3 },
+      "gaze": { "x": -0.4, "y": 0.5 }
+    }
+  ]
+}

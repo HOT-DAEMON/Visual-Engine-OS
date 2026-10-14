@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Banc d'essai de l'œil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bench: #dde2e8;
+  --panel: #f4f6f8;
+  --ink: #14171f;
+  --ink-2: #4a5262;
+  --line: #c3cad3;
+  --accent: #1f6a94;
+  --accent-ink: #ffffff;
+  --err: #a3271f;
+  --code-bg: #141821;
+  --code-ink: #dfe5f0;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bench: #10131a;
+    --panel: #181d27;
+    --ink: #e7ebf2;
+    --ink-2: #98a2b5;
+    --line: #2a3242;
+    --accent: #6fc0ee;
+    --accent-ink: #0b1118;
+    --err: #ff9088;
+    --code-bg: #0b0e14;
+    --code-ink: #dfe5f0;
+  }
+}
+:root[data-theme="dark"] {
+  --bench: #10131a;
+  --panel: #181d27;
+  --ink: #e7ebf2;
+  --ink-2: #98a2b5;
+  --line: #2a3242;
+  --accent: #6fc0ee;
+  --accent-ink: #0b1118;
+  --err: #ff9088;
+  --code-bg: #0b0e14;
+  --code-ink: #dfe5f0;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *::before, *::after { box-sizing: inherit; }
+body {
+  margin: 0;
+  background: var(--bench);
+  color: var(--ink);
+  font: 400 15px/1.5 var(--sans);
+}
+.top { padding: 22px 20px 0; max-width: 1280px; margin: 0 auto; }
+h1 { margin: 0 0 4px; font: 600 24px/1.2 var(--sans); letter-spacing: -0.01em; }
+.top p { margin: 0; color: var(--ink-2); max-width: 62ch; }
+.bench {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 20px;
+  padding: 18px 20px 28px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+@media (max-width: 900px) { .bench { grid-template-columns: minmax(0, 1fr); } }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.tabs button {
+  font: 500 14px/1 var(--sans);
+  min-height: 40px;
+  padding: 0 14px;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+.frame { margin: 0; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--panel); transition: opacity 0.15s; }
+.frame[data-stale] { opacity: 0.45; }
+.frame svg { display: block; width: 100%; height: auto; }
+
+.lightbench { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 28px; padding: 16px 2px 0; }
+.dial { width: 132px; height: 132px; flex: none; touch-action: none; cursor: grab; border-radius: 50%; }
+.dial:active { cursor: grabbing; }
+.dial:focus-visible, textarea:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.dial .ring { fill: var(--panel); stroke: var(--line); stroke-width: 1.5; }
+.dial .tick { stroke: var(--line); stroke-width: 1.5; }
+.dial .spoke { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 3 3; }
+.dial .knob { fill: var(--accent); stroke: var(--panel); stroke-width: 3; }
+.dial .hub { fill: var(--ink-2); }
+.readouts { display: grid; gap: 10px; min-width: 200px; }
+.readouts .row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.readouts label, .readouts .name { color: var(--ink-2); }
+.readouts output { font: 500 15px var(--mono); }
+input[type="range"] { width: 100%; accent-color: var(--accent); min-height: 32px; }
+
+.code-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.code-col > label { font-weight: 500; }
+textarea {
+  width: 100%;
+  min-height: 460px;
+  resize: vertical;
+  background: var(--code-bg);
+  color: var(--code-ink);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px 14px;
+  font: 400 13px/1.55 var(--mono);
+  tab-size: 2;
+  white-space: pre;
+  overflow: auto;
+}
+#status { min-height: 1.5em; color: var(--ink-2); font-size: 14px; }
+#status[data-state="error"] { color: var(--err); }
+#status ul { margin: 4px 0 0; padding-left: 18px; }
+details { border-top: 1px solid var(--line); padding-top: 8px; }
+summary { cursor: pointer; font-weight: 500; }
+details textarea { min-height: 160px; margin-top: 8px; font-size: 12px; }
+.copy { margin-top: 8px; min-height: 40px; padding: 0 14px; font: 500 14px var(--sans); color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 4px; cursor: pointer; }
+@media (prefers-reduced-motion: reduce) { .frame { transition: none; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Banc d'essai de l'œil</h1>
+  <p>Modifie le JSON ou tourne la lumière. La spécification est validée, puis compilée en SVG : même entrée, même image.</p>
+</header>
+
+<main class="bench">
+  <section aria-label="Aperçu">
+    <div class="tabs" role="group" aria-label="Scènes d'exemple">
+      <button type="button" data-scene="first-eye" aria-selected="true">Premier œil</button>
+      <button type="button" data-scene="showcase" aria-selected="false">Trois yeux, quatre matériaux</button>
+      <button type="button" data-scene="robots" aria-selected="false">Yeux de robot</button>
+      <button type="button" data-scene="anatomy" aria-selected="false">Anatomie de l'œil</button>
+      <button type="button" data-scene="face" aria-selected="false">Visage (ancrage)</button>
+      <button type="button" data-scene="hosts" aria-selected="false">Monstre &amp; voiture</button>
+      <button type="button" data-scene="expressions" aria-selected="false">Expressions</button>
+      <button type="button" data-scene="gallery" aria-selected="false">Galerie aléatoire</button>
+      <button type="button" data-scene="coordination" aria-selected="false">Coordination inter-yeux</button>
+      <button type="button" data-scene="eyestyles" aria-selected="false">Styles d'enveloppe</button>
+      <button type="button" data-scene="archetypes" aria-selected="false">6 archétypes d'œil</button>
+      <button type="button" data-scene="newkinds" aria-selected="false">Insecte &amp; gemme</button>
+      <button type="button" data-scene="pupils" aria-selected="false">Richesse des pupilles</button>
+      <button type="button" data-scene="lashengine" aria-selected="false">Moteur de cils</button>
+      <button type="button" data-scene="pairs" aria-selected="false">48 paires G/D</button>
+      <button type="button" data-scene="gazesheet" aria-selected="false">Feuille de regard</button>
+      <button type="button" data-scene="headturn" aria-selected="false">Rotation de tête 3D</button>
+      <button type="button" data-scene="newexpr" aria-selected="false">7 nouvelles expressions</button>
+    </div>
+    <figure class="frame" id="stage" aria-live="polite"></figure>
+
+    <div class="lightbench">
+      <svg id="dial" class="dial" viewBox="0 0 132 132" role="slider" tabindex="0"
+           aria-label="Direction de la lumière" aria-valuemin="0" aria-valuemax="360" aria-valuenow="330">
+        <circle class="ring" cx="66" cy="66" r="60"/>
+        <g id="ticks"></g>
+        <line id="spoke" class="spoke" x1="66" y1="66" x2="66" y2="20"/>
+        <circle class="hub" cx="66" cy="66" r="4"/>
+        <circle id="knob" class="knob" cx="66" cy="20" r="9"/>
+      </svg>
+      <div class="readouts">
+        <div class="row"><span class="name">Direction</span><output id="az-out">330°</output></div>
+        <div class="row"><label for="el">Hauteur</label><output id="el-out">55°</output></div>
+        <input id="el" type="range" min="10" max="90" step="1" value="55">
+      </div>
+    </div>
+  </section>
+
+  <section class="code-col" aria-label="Spécification">
+    <label for="spec">Spécification (JSON)</label>
+    <textarea id="spec" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea>
+    <div id="status" role="status"></div>
+    <details>
+      <summary id="svgsum">Source SVG</summary>
+      <textarea id="svgsrc" readonly aria-label="Source SVG"></textarea>
+      <button type="button" class="copy" id="copy">Copier le SVG</button>
+    </details>
+  </section>
+</main>
+<noscript><p style="padding:20px">Cette page a besoin de JavaScript pour compiler le SVG.</p></noscript>
+
+<script>/*__ENGINE__*/</script>
+<script>
+(function () {
+  "use strict";
+  var SCENES = /*__SCENES__*/;
+  var $ = function (id) { return document.getElementById(id); };
+  var spec = $("spec"), stage = $("stage"), status = $("status");
+  var svgsrc = $("svgsrc"), svgsum = $("svgsum");
+  var dial = $("dial"), knob = $("knob"), spoke = $("spoke");
+  var azOut = $("az-out"), elOut = $("el-out"), elSlider = $("el");
+  var tabs = Array.prototype.slice.call(document.querySelectorAll("[data-scene]"));
+  var timer = 0, raf = 0, pending = null, dragging = false;
+
+  var ticks = $("ticks"), NS = "http://www.w3.org/2000/svg";
+  for (var i = 0; i < 12; i++) {
+    var a = (i * 30) * Math.PI / 180, l = document.createElementNS(NS, "line");
+    var r0 = i % 3 === 0 ? 50 : 54, r1 = 58;
+    l.setAttribute("class", "tick");
+    l.setAttribute("x1", (66 + r0 * Math.sin(a)).toFixed(2));
+    l.setAttribute("y1", (66 - r0 * Math.cos(a)).toFixed(2));
+    l.setAttribute("x2", (66 + r1 * Math.sin(a)).toFixed(2));
+    l.setAttribute("y2", (66 - r1 * Math.cos(a)).toFixed(2));
+    ticks.appendChild(l);
+  }
+
+  function pretty(o) { return JSON.stringify(o, null, 2); }
+
+  function setDial(az, el) {
+    var R = 46, a = az * Math.PI / 180;
+    var x = (66 + R * Math.sin(a)).toFixed(2), y = (66 - R * Math.cos(a)).toFixed(2);
+    knob.setAttribute("cx", x); knob.setAttribute("cy", y);
+    spoke.setAttribute("x2", x); spoke.setAttribute("y2", y);
+    dial.setAttribute("aria-valuenow", String(Math.round(az)));
+    dial.setAttribute("aria-valuetext", Math.round(az) + " degrés");
+    azOut.textContent = Math.round(az) + "°";
+    elSlider.value = String(el);
+    elOut.textContent = Math.round(el) + "°";
+  }
+
+  function fail(issues) {
+    stage.setAttribute("data-stale", "");
+    status.dataset.state = "error";
+    status.textContent = "";
+    var ul = document.createElement("ul");
+    issues.slice(0, 6).forEach(function (m) {
+      var li = document.createElement("li");
+      li.textContent = m;
+      ul.appendChild(li);
+    });
+    if (issues.length > 6) {
+      var more = document.createElement("li");
+      more.textContent = "… et " + (issues.length - 6) + " autres";
+      ul.appendChild(more);
+    }
+    var head = document.createElement("div");
+    head.textContent = "Spécification refusée : aucun SVG n'est produit tant qu'elle est invalide.";
+    status.appendChild(head);
+    status.appendChild(ul);
+  }
+
+  function render() {
+    var obj;
+    try { obj = JSON.parse(spec.value); }
+    catch (e) { fail(["JSON invalide : " + e.message]); return; }
+    var t0 = performance.now();
+    var res = EyeEngine.compileScene(obj);
+    var ms = performance.now() - t0;
+    if (!res.ok) { fail(res.issues); return; }
+    stage.innerHTML = res.svg;
+    stage.removeAttribute("data-stale");
+    var bytes = new TextEncoder().encode(res.svg).length;
+    var n = res.scene.objects.length;
+    status.dataset.state = "ok";
+    status.textContent = "Valide · " + n + (n > 1 ? " objets" : " objet") + " · " + (bytes / 1024).toFixed(1) + " Ko · " + ms.toFixed(1) + " ms";
+    svgsrc.value = res.svg;
+    svgsum.textContent = "Source SVG (" + (bytes / 1024).toFixed(1) + " Ko)";
+    setDial(res.scene.light.azimuthDeg, res.scene.light.elevationDeg);
+  }
+
+  function patchLight(patch) {
+    var obj;
+    try { obj = JSON.parse(spec.value); }
+    catch (e) { render(); return; }
+    obj.light = Object.assign({}, obj.light || {}, patch);
+    spec.value = pretty(obj);
+    tabs.forEach(function (t) { t.setAttribute("aria-selected", "false"); });
+    render();
+  }
+
+  function schedulePatch(p) {
+    pending = Object.assign(pending || {}, p);
+    if (raf) return;
+    raf = requestAnimationFrame(function () { raf = 0; var q = pending; pending = null; if (q) patchLight(q); });
+  }
+
+  function currentAz() { return Number(dial.getAttribute("aria-valuenow")) || 0; }
+  function azFrom(ev) {
+    var r = dial.getBoundingClientRect();
+    var x = ev.clientX - (r.left + r.width / 2), y = ev.clientY - (r.top + r.height / 2);
+    var d = Math.atan2(x, -y) * 180 / Math.PI;
+    if (d < 0) d += 360;
+    return Math.round(d) % 361;
+  }
+
+  dial.addEventListener("pointerdown", function (ev) {
+    dragging = true;
+    try { dial.setPointerCapture(ev.pointerId); } catch (e) {}
+    schedulePatch({ azimuthDeg: azFrom(ev) });
+  });
+  dial.addEventListener("pointermove", function (ev) { if (dragging) schedulePatch({ azimuthDeg: azFrom(ev) }); });
+  function stop() { dragging = false; }
+  dial.addEventListener("pointerup", stop);
+  dial.addEventListener("pointercancel", stop);
+  dial.addEventListener("keydown", function (ev) {
+    var step = ev.shiftKey ? 1 : 5, d = 0;
+    if (ev.key === "ArrowRight" || ev.key === "ArrowUp") d = step;
+    else if (ev.key === "ArrowLeft" || ev.key === "ArrowDown") d = -step;
+    else return;
+    ev.preventDefault();
+    schedulePatch({ azimuthDeg: (currentAz() + d + 360) % 360 });
+  });
+  elSlider.addEventListener("input", function () { schedulePatch({ elevationDeg: Number(elSlider.value) }); });
+
+  spec.addEventListener("input", function () {
+    tabs.forEach(function (t) { t.setAttribute("aria-selected", "false"); });
+    clearTimeout(timer);
+    timer = setTimeout(render, 150);
+  });
+
+  tabs.forEach(function (t) {
+    t.addEventListener("click", function () {
+      tabs.forEach(function (o) { o.setAttribute("aria-selected", String(o === t)); });
+      spec.value = pretty(SCENES[t.getAttribute("data-scene")]);
+      render();
+    });
+  });
+
+  $("copy").addEventListener("click", function () {
+    var btn = $("copy"), done = function (m) { btn.textContent = m; setTimeout(function () { btn.textContent = "Copier le SVG"; }, 1800); };
+    svgsrc.select();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(svgsrc.value).then(function () { done("Copié"); }, function () { done("Sélectionné : Ctrl/Cmd+C"); });
+    } else { done("Sélectionné : Ctrl/Cmd+C"); }
+  });
+
+  spec.value = pretty(SCENES["first-eye"]);
+  render();
+})();
+</script>
+</body>
+</html>

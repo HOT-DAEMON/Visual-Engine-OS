@@ -1,0 +1,24 @@
+{
+  "name": "eye-engine",
+  "version": "1.0.0",
+  "description": "Moteur de rendu SVG piloté par schéma — MVP œil",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "render": "tsx scripts/render.ts",
+    "bundle": "tsx scripts/bundle.ts"
+  },
+  "dependencies": {
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/node": "^26.6.2",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.1"
+  },
+  "private": true,
+  "type": "module"
+}

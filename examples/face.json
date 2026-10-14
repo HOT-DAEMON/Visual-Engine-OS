@@ -1,0 +1,31 @@
+{
+  "width": 640,
+  "height": 600,
+  "background": "#3b4157",
+  "label": "Visage : deux yeux posés sur les ancres d'un hôte",
+  "light": { "azimuthDeg": 320, "elevationDeg": 55 },
+  "objects": [
+    {
+      "kind": "host",
+      "id": "head",
+      "transform": { "x": 320, "y": 310 },
+      "shape": "ellipse",
+      "width": 440,
+      "height": 520,
+      "material": { "preset": "matte", "color": "#eec9ad" },
+      "anchors": [
+        { "id": "eye-l", "x": -0.4, "y": -0.14 },
+        { "id": "eye-r", "x": 0.4, "y": -0.14 }
+      ]
+    },
+    {
+      "kind": "eye",
+      "id": "eyes",
+      "seed": 7,
+      "place": { "host": "head", "anchors": ["eye-l", "eye-r"] },
+      "shape": { "width": 120, "height": 70, "outerSide": "auto" },
+      "epicanthicFold": { "amount": 0.4 },
+      "eyebrow": { "gap": 0.5, "thickness": 0.14, "tiltDeg": 10 }
+    }
+  ]
+}

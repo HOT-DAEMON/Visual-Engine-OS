@@ -1,0 +1,76 @@
+{
+  "width": 1000,
+  "height": 540,
+  "background": "#3b4157",
+  "label": "Yeux sur des hôtes : un monstre à six yeux et une voiture",
+  "objects": [
+    {
+      "kind": "host",
+      "id": "monster",
+      "transform": { "x": 260, "y": 280 },
+      "shape": "ellipse",
+      "width": 420,
+      "height": 380,
+      "material": { "preset": "satin", "color": "#6aa84f" },
+      "anchors": [{ "id": "core", "x": 0, "y": 0.04 }],
+      "patterns": [{ "type": "ring", "id": "ring", "count": 6, "radius": 0.62, "startDeg": 30, "follow": "surface" }]
+    },
+    {
+      "kind": "eye",
+      "id": "monster-eye",
+      "seed": 21,
+      "place": { "host": "monster", "patterns": ["ring"], "variation": "vary" },
+      "shape": { "width": 84, "height": 56 },
+      "iris": {
+        "material": { "base": { "type": "radial", "stops": [
+          { "offset": 0, "color": "#fff0a0" }, { "offset": 0.55, "color": "#d9a520" }, { "offset": 1, "color": "#5a3b00" } ] },
+          "roughness": 0.3, "clearcoat": 0.3 },
+        "glow": { "color": "#ffe9a8", "strength": 0.5 }
+      },
+      "pupil": { "shape": "slit_vertical", "size": 0.4 },
+      "lashes": { "upper": { "count": 0 }, "lower": { "count": 0 } },
+      "lids": { "wing": 0, "crease": { "height": 0 } },
+      "eyebrow": null
+    },
+    {
+      "kind": "robot_eye",
+      "id": "monster-core",
+      "place": { "host": "monster", "anchors": ["core"] },
+      "size": 110,
+      "sensor": { "color": "#ff3b30", "intensity": 1, "size": 0.2 },
+      "lens": { "tint": "#b0303a" }
+    },
+    {
+      "kind": "host",
+      "id": "car",
+      "transform": { "x": 770, "y": 290, "rotationDeg": -6 },
+      "shape": "rounded_rect",
+      "width": 400,
+      "height": 250,
+      "cornerRadius": 70,
+      "material": { "preset": "glossy_wet", "color": "#c0392b" },
+      "anchors": [
+        { "id": "light-l", "x": -0.58, "y": -0.05 },
+        { "id": "light-r", "x": 0.58, "y": -0.05 }
+      ]
+    },
+    {
+      "kind": "robot_eye",
+      "id": "headlight",
+      "place": { "host": "car", "anchors": ["light-l", "light-r"] },
+      "size": 110,
+      "housing": { "material": { "preset": "polished_metal", "color": "#c9d1d9" }, "bolts": 0, "ringWidth": 0.16 },
+      "lens": { "tint": "#3a7bd5", "rings": 2, "reticle": false },
+      "sensor": { "color": "#fff3c4", "intensity": 0.9, "size": 0.3 }
+    },
+    {
+      "kind": "panel",
+      "id": "grille",
+      "transform": { "x": 770, "y": 375, "rotationDeg": -6 },
+      "width": 200,
+      "height": 36,
+      "cornerRadius": 10,
+      "material": { "preset": "matte", "color": "#2a2d36" }
+    }
+  ]
+}

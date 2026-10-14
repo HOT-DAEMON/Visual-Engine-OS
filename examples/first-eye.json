@@ -1,0 +1,21 @@
+{
+  "width": 640,
+  "height": 520,
+  "background": "#3b4157",
+  "label": "Premier œil : archétype anime",
+  "objects": [
+    {
+      "kind": "eye",
+      "id": "eye-main",
+      "seed": 7,
+      "transform": {
+        "x": 320,
+        "y": 380
+      },
+      "shape": {
+        "width": 400,
+        "height": 240
+      }
+    }
+  ]
+}

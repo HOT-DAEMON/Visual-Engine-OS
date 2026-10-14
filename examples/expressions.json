@@ -1,0 +1,127 @@
+{
+  "width": 1690,
+  "height": 420,
+  "background": "#eec9ad",
+  "label": "Expressions",
+  "objects": [
+    {
+      "kind": "eye",
+      "id": "e0",
+      "seed": 9,
+      "transform": {
+        "x": 150,
+        "y": 260
+      },
+      "shape": {
+        "width": 190,
+        "height": 120
+      },
+      "expression": {
+        "kind": "neutral",
+        "intensity": 1
+      }
+    },
+    {
+      "kind": "eye",
+      "id": "e1",
+      "seed": 9,
+      "transform": {
+        "x": 370,
+        "y": 260
+      },
+      "shape": {
+        "width": 190,
+        "height": 120
+      },
+      "expression": {
+        "kind": "angry",
+        "intensity": 1
+      }
+    },
+    {
+      "kind": "eye",
+      "id": "e2",
+      "seed": 9,
+      "transform": {
+        "x": 590,
+        "y": 260
+      },
+      "shape": {
+        "width": 190,
+        "height": 120
+      },
+      "expression": {
+        "kind": "sad",
+        "intensity": 1
+      }
+    },
+    {
+      "kind": "eye",
+      "id": "e3",
+      "seed": 9,
+      "transform": {
+        "x": 810,
+        "y": 260
+      },
+      "shape": {
+        "width": 190,
+        "height": 120
+      },
+      "expression": {
+        "kind": "fearful",
+        "intensity": 1
+      }
+    },
+    {
+      "kind": "eye",
+      "id": "e4",
+      "seed": 9,
+      "transform": {
+        "x": 1030,
+        "y": 260
+      },
+      "shape": {
+        "width": 190,
+        "height": 120
+      },
+      "expression": {
+        "kind": "anguished",
+        "intensity": 1
+      }
+    },
+    {
+      "kind": "eye",
+      "id": "e5",
+      "seed": 9,
+      "transform": {
+        "x": 1250,
+        "y": 260
+      },
+      "shape": {
+        "width": 190,
+        "height": 120
+      },
+      "expression": {
+        "kind": "melancholic",
+        "intensity": 1
+      }
+    },
+    {
+      "kind": "eye",
+      "id": "e6",
+      "seed": 9,
+      "transform": {
+        "x": 1470,
+        "y": 260
+      },
+      "shape": {
+        "width": 190,
+        "height": 120
+      },
+      "expression": {
+        "kind": "drowsy",
+        "intensity": 1
+      }
+    }
+  ]
+}

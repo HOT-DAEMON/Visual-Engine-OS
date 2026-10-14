@@ -1,0 +1,64 @@
+{
+  "width": 1090,
+  "height": 460,
+  "background": "#eec9ad",
+  "label": "Styles d'enveloppe : almond / round / sharp / drooping",
+  "objects": [
+    {
+      "kind": "eye",
+      "id": "e0",
+      "seed": 7,
+      "transform": {
+        "x": 170,
+        "y": 260
+      },
+      "shape": {
+        "width": 210,
+        "height": 130,
+        "style": "almond"
+      }
+    },
+    {
+      "kind": "eye",
+      "id": "e1",
+      "seed": 7,
+      "transform": {
+        "x": 420,
+        "y": 260
+      },
+      "shape": {
+        "width": 210,
+        "height": 130,
+        "style": "round"
+      }
+    },
+    {
+      "kind": "eye",
+      "id": "e2",
+      "seed": 7,
+      "transform": {
+        "x": 670,
+        "y": 260
+      },
+      "shape": {
+        "width": 210,
+        "height": 130,
+        "style": "sharp"
+      }
+    },
+    {
+      "kind": "eye",
+      "id": "e3",
+      "seed": 7,
+      "transform": {
+        "x": 920,
+        "y": 260
+      },
+      "shape": {
+        "width": 210,
+        "height": 130,
+        "style": "drooping"
+      }
+    }
+  ]
+}
