@@ -4,6 +4,7 @@ import { objectTransform, type CompiledObject } from './object';
 import { resolveAnchors } from '../composition/anchors';
 import type { HostSpec } from '../schema';
 import { el } from '../core/svg';
+import { faceParts, faceSurface } from './face';
 
 /** Hôte : surface (ellipse bombée ou rectangle plat) habillée par le système de matériaux partagé. */
 export function compileHost(h: HostSpec, worldLight: LightVector): CompiledObject {
@@ -12,8 +13,10 @@ export function compileHost(h: HostSpec, worldLight: LightVector): CompiledObjec
   const rx = h.width / 2;
   const ry = h.height / 2;
   const bbox = { x: -rx, y: -ry, w: h.width, h: h.height };
-  const surface: Surface =
-    h.shape === 'ellipse'
+  const parts = h.shape === 'face' ? faceParts(h) : null;
+  const surface: Surface = parts
+    ? faceSurface(h, parts.lm)
+    : h.shape !== 'rounded_rect'
       ? { bbox, curvature: 'sphere', draw: (a) => el('ellipse', { cx: 0, cy: 0, rx, ry, ...a }) }
       : {
           bbox,
@@ -30,7 +33,7 @@ export function compileHost(h: HostSpec, worldLight: LightVector): CompiledObjec
         };
   const out = compileSurface(`${h.id}-surface`, surface, h.material, L, rot);
 
-  const children = [out.markup];
+  const children = parts ? [...parts.behind, out.markup, ...parts.front] : [out.markup];
   if (h.showAnchors) {
     const r = Math.max(3, Math.min(h.width, h.height) * 0.012);
     const marks = resolveAnchors(h).map((a) =>
@@ -42,5 +45,5 @@ export function compileHost(h: HostSpec, worldLight: LightVector): CompiledObjec
     );
     children.push(el('g', {}, marks));
   }
-  return { defs: out.defs, markup: el('g', { transform: objectTransform(h.transform) }, children) };
+  return { defs: [...out.defs, ...(parts?.defs ?? [])], markup: el('g', { transform: objectTransform(h.transform) }, children) };
 }

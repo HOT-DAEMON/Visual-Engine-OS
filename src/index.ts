@@ -1,5 +1,5 @@
 export { compileScene, renderScene, type CompileResult } from './compile';
-export { SceneSpec, EyeSpec, RobotEyeSpec, PanelSpec, HostSpec, CompoundEyeSpec, GemEyeSpec, MaterialDescriptor, MaterialRef, LightSpec, ColorSource } from './schema';
+export { SceneSpec, EyeSpec, RobotEyeSpec, PanelSpec, HostSpec, FaceParams, CompoundEyeSpec, GemEyeSpec, MaterialDescriptor, MaterialRef, LightSpec, ColorSource } from './schema';
 export type { SceneInput } from './schema';
 export { PRESET_NAMES, PRESET_PARAMS, resolvePreset, type PresetName, compileGloss, compileSurface, SHADING, type Surface } from './materials';
 export { lightVector, toLocal } from './lighting/light';
@@ -11,3 +11,6 @@ export { applyExpression, type ExpressionKind } from './expressions';
 export { generateIrisPalette, hslToHex, IRIS_FAMILY_NAMES, type IrisPaletteOptions } from './generation/palette';
 export { generateRandomEye, type RandomEyeOptions } from './generation/random-eye';
 export { applyArchetype, ARCHETYPE_PRESETS } from './archetypes';
+export { generateRandomFace, type RandomFace, type RandomFaceOptions } from './generation/random-face';
+export { galleryEye, galleryPair, GALLERY_IDENTITIES } from './generation/eye-pool';
+export { faceLandmarks, fitEyeToFace, headOutline, outlinePath, halfWidthAt, eyeReach, type FaceLandmarks, type EyeFit } from './face';

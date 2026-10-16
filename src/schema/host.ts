@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { Slug } from './primitives';
 import { MaterialRef } from './color-material';
 import { Transform } from './light-transform';
+import { FaceParams } from './face';
 
 export const Place = z
   .object({
@@ -57,17 +58,20 @@ export const Pattern = z.discriminatedUnion('type', [
 /**
  * Hôte : surface (ellipse ou rectangle arrondi) qui porte des ancres nommées.
  * Coordonnées d'ancre normalisées : ±1 = bord de l'hôte (demi-largeur / demi-hauteur).
+ * `shape: 'face'` : visage complet (crâne, mâchoire, oreilles, nez, bouche) décrit par `face`.
  */
 export const HostSpec = z
   .object({
     kind: z.literal('host'),
     id: Slug,
     transform: Transform.default({}),
-    shape: z.enum(['ellipse', 'rounded_rect']).default('ellipse'),
+    shape: z.enum(['ellipse', 'rounded_rect', 'face']).default('ellipse'),
     width: z.number().min(10).max(4000).default(300),
     height: z.number().min(10).max(4000).default(300),
     cornerRadius: z.number().min(0).max(2000).default(16),
     material: MaterialRef,
+    /** Proportions du visage ; réservé à `shape: 'face'` (défauts validés si omis, voir scene.ts). */
+    face: FaceParams.optional(),
     anchors: z.array(Anchor).max(64).default([]),
     patterns: z.array(Pattern).max(16).default([]),
     /** Dessine un repère à chaque ancre (aide à l'authoring). */

@@ -79,7 +79,11 @@ pas de nouveau code de rendu. `compound_eye` et `gem_eye` sont de VRAIS nouveaux
 | Autre | État |
 |---|---|
 | Panneau (preuve de généricité) | ✅ |
-| Visage complet (nez, lèvres, oreilles) | ⏳ |
+| Visage complet (hôte `shape: 'face'` : crâne/mâchoire, oreilles, nez, bouche, joues) | ✅ — proportions en fractions de l'hôte ; repères anatomiques uniques (`face/landmarks.ts`) |
+| Yeux enfants du visage (ancre = canthus interne, taille bornée par l'orbite) | ✅ — 12 styles d'enveloppe × grosseurs de 0,3 à 4 testés ; position indépendante de la forme |
+| Génération aléatoire de visage complet (`generateRandomFace`) | ✅ — paires d'yeux des 48 identités des galeries (gauche/droite en miroir) ; expression partagée yeux + bouche |
+| Cheveux, cou, pilosité faciale | ⏳ |
+| Rotation 3D du visage entier (occultation par le nez) | ⏳ — `headTurn` ne concerne encore que chaque œil |
 
 ## Architecture du code
 
@@ -91,11 +95,11 @@ pas de nouveau code de rendu. `compound_eye` et `gem_eye` sont de VRAIS nouveaux
 
 ## Prochaines étapes (non commencées)
 
-- ⏳ Génération aléatoire de visage complet (au-delà d'une paire d'yeux)
+- ⏳ Cheveux / cou / pilosité faciale sur le visage complet ; asymétrie légère gauche/droite des yeux d'une paire
 - ⏳ Motifs iris supplémentaires : nervures fines ramifiées, mandala composite
 - ⏳ Formes décoratives (cœurs, étoiles, étincelles, croix) pour le highlight — la pupille a maintenant remplissage/contours riches, mais reste une ellipse/fente, pas une forme libre
 - ⏳ Mélange de PLUSIEURS morphologies de cils au sein d'un même œil (ex. longs et fins au coin externe, courts et denses ailleurs, au lieu d'une seule morphologie dispersée statistiquement)
-- ⏳ Nez, lèvres, oreilles comme nouveaux archétypes composables
+- ⏳ Nez, lèvres, oreilles comme objets autonomes composables (aujourd'hui dessinés par l'hôte `face`, pas posables ailleurs)
 - ⏳ Documentation ligne-à-ligne systématique (le code actuel est commenté par bloc/fonction, pas par ligne)
 - ⏳ Bibliothèques de motifs décoratifs pour l'iris/le highlight/la pupille (cœurs, étoiles, étincelles, croix, croissants, spirales, pétales, nervures)
 - ⏳ Cils transformés en éléments décoratifs (filaments, plumes, brins d'herbe)

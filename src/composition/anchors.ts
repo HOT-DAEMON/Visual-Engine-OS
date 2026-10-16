@@ -51,7 +51,8 @@ export function surfaceNormalDeg(host: HostSpec, px: number, py: number): number
   const ry = host.height / 2;
   let nx: number;
   let ny: number;
-  if (host.shape === 'ellipse') {
+  // 'face' : normale approchée par celle de l'ellipse englobante (suffisant pour orienter un objet posé).
+  if (host.shape !== 'rounded_rect') {
     nx = px / (rx * rx);
     ny = py / (ry * ry);
   } else {

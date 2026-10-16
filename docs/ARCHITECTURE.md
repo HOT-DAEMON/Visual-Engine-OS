@@ -48,8 +48,15 @@ src/
   expressions/      deltas.ts (table des émotions), apply.ts (fonction pure qui
                     recalcule la pose d'un œil pour une émotion donnée).
 
+  face/             Géométrie pure du visage (aucun SVG) : outline.ts (contour crâne/mâchoire,
+                    halfWidthAt), landmarks.ts (repères anatomiques — SOURCE UNIQUE lue par le rendu
+                    et par le placement des yeux), fit-eye.ts (ajustement d'un œil à l'orbite :
+                    ancre = canthus interne, échelle bornée par temple/front/nez/ligne médiane).
+
   generation/       palette.ts (couleurs d'iris procédurales), random-eye.ts
-                    (génération combinatoire d'un œil complet).
+                    (génération combinatoire d'un œil complet), eye-pool.ts (les 48 identités des
+                    galeries, paires gauche/droite), random-face.ts + random-face-helpers.ts
+                    (visage complet : peau, proportions, bouche induite par l'expression, yeux posés).
 
   render/           Un compilateur SVG par archétype d'objet.
     object.ts         objectTransform, interface CompiledObject.
@@ -62,6 +69,8 @@ src/
                       lids-fold.ts (tout ce qui est HORS clip : pli, bords, cils),
                       liner.ts (dessin du liner ailé, appelé par lids-fold.ts),
                       eyebrow-render.ts, eye.ts (orchestrateur), default-skin.ts.
+    face/             face.ts (surface + assemblage), ears.ts, nose.ts, mouth.ts ; appelé par host.ts
+                      quand `shape: 'face'`.
     robot/            housing.ts (boîtier + vis), lens.ts (lentille + capteur + verre),
                       robot.ts (orchestrateur).
 
@@ -98,7 +107,7 @@ dépendance. `anchors.ts` ne dépend en retour que du TYPE `HostSpec` (import
 
 1. `npm run typecheck` — toute référence à un symbole déplacé sans import mis à jour
    échoue immédiatement.
-2. `npm test` — 176 tests, dont une empreinte SHA-256 exacte du SVG produit pour la
+2. `npm test` — 514 tests, dont une empreinte SHA-256 exacte du SVG produit pour la
    scène `first-eye` (`tests/__snapshots__/engine.test.ts.snap`) : le moindre octet
    différent dans le rendu la fait échouer.
 3. `npm run bundle` — reconstruit le banc d'essai avec esbuild, qui résout les
@@ -111,3 +120,16 @@ a été vérifiée par ces trois moyens à chaque étape, et par une comparaison
 par octet des 9 scènes d'exemple avant/après (identiques, à l'exception d'une
 métadonnée de provenance C2PA ajoutée par la plateforme de livraison, étrangère au
 moteur). Détail session par session dans `docs/CHANGELOG.md`.
+
+## Visage : pourquoi l'ancre est le canthus interne
+
+Un œil n'a pas de « centre » stable : selon le style (chibi, triangle…), sa fente s'étend d'un côté ou de
+l'autre de l'origine. Le canthus interne, lui, est le point osseux fixe de l'orbite. Le visage définit sa
+position (ligne des yeux × demi-écart inter-canthal) ; `fitEyeToFace` règle le `transform` de l'œil pour que
+son `pi` tombe exactement dessus, puis borne l'échelle. Les yeux sont de vrais enfants (`place` sur l'hôte) :
+déplacer, tourner ou mettre à l'échelle le visage entraîne les yeux, lumière comprise.
+
+## Découpage de la documentation
+
+Tout fichier de `docs/` est limité à ~200 lignes ; au-delà, une suite numérotée est créée
+(`CHANGELOG-2.md`, `ERRORS-2.md`…), la plus récente restant dans le fichier sans numéro.

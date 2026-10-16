@@ -1,13 +1,13 @@
 # eye-engine — MVP « œil » (SVG 2D)
 
-Un JSON validé entre, un SVG déterministe sort. Objets disponibles : `eye` (avec 6 préréglages d'archétype — realistic/reptile/feline/doll/alien/demon — en plus de l'anime par défaut), `robot_eye`, `compound_eye` (œil composé d'insecte), `gem_eye` (œil de cristal à facettes), `panel` (preuve de généricité) et `host` (surface porteuse d'ancres). 10 archétypes au total — détail dans `docs/ROADMAP.md`.
+Un JSON validé entre, un SVG déterministe sort. Objets disponibles : `eye` (avec 6 préréglages d'archétype — realistic/reptile/feline/doll/alien/demon — en plus de l'anime par défaut), `robot_eye`, `compound_eye` (œil composé d'insecte), `gem_eye` (œil de cristal à facettes), `panel` (preuve de généricité) et `host` (surface porteuse d'ancres ; `shape: "face"` = visage complet). 10 archétypes au total — détail dans `docs/ROADMAP.md`.
 Le système de matériaux et de lumière est partagé : tous passent par le même code.
 
 ## Utilisation
 
 ```bash
 npm install
-npm test                                  # 303 tests
+npm test                                  # 514 tests
 npm run typecheck
 npm run render -- examples/showcase.json out 1440   # SVG + PNG (resvg) dans out/
 npm run bundle                            # dist/preview.html : banc d'essai autonome
@@ -50,6 +50,17 @@ const eye = generateRandomEye(42);              // toujours le même résultat p
 const angry = generateRandomEye(42, { expression: { kind: 'angry', intensity: 1 } });
 ```
 
+Visage complet aléatoire (crâne, oreilles, nez, bouche + une paire d'yeux des galeries posée comme enfants du
+visage, ancrée au canthus interne et ajustée à l'orbite) :
+
+```ts
+import { generateRandomFace, compileScene } from './src';
+const face = generateRandomFace(42, { identity: 7, transform: { x: 320, y: 300 } });   // 0–47 : identité de galerie
+const r = compileScene({ width: 640, height: 600, objects: face.objects });
+```
+
+`npx tsx scripts/gallery-faces.ts` produit `examples/gallery-faces.json` (48 visages, une paire de galerie chacun).
+
 Regard 3D et expression, sur un œil écrit à la main :
 
 ```json
@@ -81,6 +92,8 @@ procédure de vérification dans **`docs/ARCHITECTURE.md`**.
 | `src/expressions.ts` | Recalcule la « pose » d'un œil neutre pour une émotion (colère, tristesse, peur, angoisse, mélancolie, lassitude) : fonction pure, aucun hasard, n'affecte pas les couleurs. |
 | `src/palette.ts` | Génère une palette d'iris procédurale (dégradé radial) à partir d'une seed, par famille de couleur plausible (brun, ambre, noisette, vert, gris, bleu). |
 | `src/random-eye.ts` | Génère un œil complet et valide en tirant chaque trait indépendamment (forme, canthi, pli, iris, pupille, cils, sourcil, regard, expression) : la preuve que le moteur compose une quasi-infinité d'individus. |
+| `src/face/` | Visage : contour, repères anatomiques (source unique), ajustement des yeux à l'orbite. Rendu dans `src/render/face/`. |
+| `src/generation/random-face.ts` | Visage complet aléatoire : peau, proportions, bouche cohérente avec l'expression, paire d'yeux de galerie posée sur les ancres. |
 | `src/svg.ts` | Constructeur SVG à liste blanche d'éléments/attributs. Aucun script ne peut être émis. |
 | `src/compile.ts` | Scène validée → SVG. |
 

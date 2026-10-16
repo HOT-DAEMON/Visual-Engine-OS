@@ -42,6 +42,7 @@ export const SceneSpec = z
 
     scene.objects.forEach((o, i) => {
       if (o.kind === 'host') {
+        if (o.face !== undefined && o.shape !== 'face') issue(['objects', i, 'face'], "`face` n'est accepté que pour shape: 'face'");
         const seen = new Set<string>();
         for (const a of resolveAnchors(o)) {
           if (seen.has(a.id)) issue(['objects', i, 'anchors'], `ancre dupliquée dans l'hôte ${o.id} : ${a.id}`);
