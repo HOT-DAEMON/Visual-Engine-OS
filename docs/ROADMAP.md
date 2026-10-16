@@ -82,20 +82,21 @@ pas de nouveau code de rendu. `compound_eye` et `gem_eye` sont de VRAIS nouveaux
 | Visage complet (hôte `shape: 'face'` : crâne/mâchoire, oreilles, nez, bouche, joues) | ✅ — proportions en fractions de l'hôte ; repères anatomiques uniques (`face/landmarks.ts`) |
 | Yeux enfants du visage (ancre = canthus interne, taille bornée par l'orbite) | ✅ — 12 styles d'enveloppe × grosseurs de 0,3 à 4 testés ; position indépendante de la forme |
 | Génération aléatoire de visage complet (`generateRandomFace`) | ✅ — paires d'yeux des 48 identités des galeries (gauche/droite en miroir) ; expression partagée yeux + bouche |
-| Cheveux, cou, pilosité faciale | ⏳ |
+| Cheveux (8 styles × 4 franges), cou, pilosité (4 moustaches, 4 barbes) | ✅ — enfants du visage : positions lues dans `face/landmarks.ts`, jamais sur les yeux (0 cas sur 1500 visages) |
+| Asymétrie légère gauche/droite des yeux (+ bouche) | ✅ — rotation autour du canthus interne : ancrage exact (1e-13 px) |
 | Rotation 3D du visage entier (occultation par le nez) | ⏳ — `headTurn` ne concerne encore que chaque œil |
 
 ## Architecture du code
 
 | Objectif | État |
 |---|---|
-| Un fichier = un domaine, ≤ ~200 lignes | ✅ — 58 fichiers, le plus gros fait 199 lignes (voir `docs/ARCHITECTURE.md`) |
+| Un fichier = un domaine, ≤ ~200 lignes | ✅ — 107 fichiers source, le plus gros fait 200 lignes (voir `docs/ARCHITECTURE.md`) |
 | Arborescence par domaine (core/schema/materials/geometry/render/…) | ✅ |
 | Chaque ligne commentée | 🚧 — commenté par bloc/fonction, pas systématiquement ligne à ligne |
 
 ## Prochaines étapes (non commencées)
 
-- ⏳ Cheveux / cou / pilosité faciale sur le visage complet ; asymétrie légère gauche/droite des yeux d'une paire
+- ⏳ Épaules / vêtements sous le cou (aujourd'hui base plate élargie) ; coiffures supplémentaires (queue, chignon, tresses) ; cheveux sensibles à la rotation 3D
 - ⏳ Motifs iris supplémentaires : nervures fines ramifiées, mandala composite
 - ⏳ Formes décoratives (cœurs, étoiles, étincelles, croix) pour le highlight — la pupille a maintenant remplissage/contours riches, mais reste une ellipse/fente, pas une forme libre
 - ⏳ Mélange de PLUSIEURS morphologies de cils au sein d'un même œil (ex. longs et fins au coin externe, courts et denses ailleurs, au lieu d'une seule morphologie dispersée statistiquement)

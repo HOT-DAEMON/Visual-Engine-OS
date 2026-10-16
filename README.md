@@ -61,6 +61,18 @@ const r = compileScene({ width: 640, height: 600, objects: face.objects });
 
 `npx tsx scripts/gallery-faces.ts` produit `examples/gallery-faces.json` (48 visages, une paire de galerie chacun).
 
+Un visage complet a cheveux, cou, pilosité et asymétrie légère (tirés par la seed, ou imposés) :
+
+```ts
+generateRandomFace(42, {
+  hair: { style: 'long', fringe: 'curtain', color: '#4a2c17' },
+  facialHair: { mustache: 'handlebar', beard: 'full' },
+  asymmetry: { eyeScale: 0, eyeOpenness: 0, eyeRollDeg: 0, eyeDy: 0, mouthTiltDeg: 0 }, // visage symétrique
+});
+```
+
+`npx tsx scripts/artefacts-face.ts` régénère les preuves visuelles dans `artefacts/` (voir `artefacts/README.md`).
+
 Regard 3D et expression, sur un œil écrit à la main :
 
 ```json

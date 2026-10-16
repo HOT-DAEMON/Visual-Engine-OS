@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { Hex, Unit } from './primitives';
+import { FaceAsymmetry, FaceFacialHair, FaceHair, FaceNeck } from './face-extras';
 
 /**
  * Paramètres d'un visage complet (hôte `shape: 'face'`). TOUTES les proportions sont des fractions de
@@ -69,6 +70,11 @@ export const FaceParams = z
     nose: FaceNose.default({}),
     mouth: FaceMouth.default({}),
     ears: FaceEars.default({}),
+    /** Cou, cheveux, pilosité, asymétrie : voir `face-extras.ts` (désactivés par défaut). */
+    neck: FaceNeck.default({}),
+    hair: FaceHair.default({}),
+    facialHair: FaceFacialHair.default({}),
+    asymmetry: FaceAsymmetry.default({}),
   })
   .strict();
 export type FaceParams = z.infer<typeof FaceParams>;

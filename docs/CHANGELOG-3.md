@@ -139,3 +139,38 @@ pose distinct et documenté dans `expressions/deltas.ts`. Deux décisions assum�
   l'enveloppe correspond EXACTEMENT à `cos(yaw)` (ratio mesuré 0,817 contre 0,819 attendu à 35°) —
   après une première impression visuelle erronée (voir `docs/ERRORS.md` #12) qui avait fait croire
   à tort à un défaut de chevauchement puis à une absence de compression.
+
+## Session 12 — Visage complet : cheveux, cou, pilosité, asymétrie
+
+**Demande** : génération aléatoire d'un vrai visage complet ; cheveux, cou, pilosité faciale ; asymétrie légère
+gauche/droite des yeux ; toutes les paires d'yeux des galeries posées sur les visages ; yeux, nez, bouche et
+pilosité = enfants du visage (positions définies par lui, quelles que soient leurs formes/grosseurs) ;
+dossier `artefacts/` de preuves visuelles ; docs découpées à 200 lignes.
+
+### Ce qui a été ajouté
+
+- **Schéma** (`schema/face-extras.ts`) : `neck`, `hair` (8 styles × 4 franges, raie, pattes, volume,
+  longueur), `facialHair` (4 moustaches, 4 barbes), `asymmetry`. Défauts neutres : un visage existant
+  est rendu à l'identique tant qu'on n'active rien.
+- **Repères étendus** (`face/landmarks.ts`) : `lips`, `neck`, `hair`. La bouche (`render/face/mouth.ts`) lit
+  désormais `lm.lips` : la moustache et la barbe s'appuient sur les mêmes chiffres, elles ne peuvent pas dériver.
+- **Géométrie pure** (sans SVG, testable) : `face/hair-geometry.ts`, `face/beard-geometry.ts`, `face/poly.ts`.
+- **Rendu** (`render/face/`) : `hair.ts` + `hair-strands.ts` (matériau « satin » du système partagé, brins,
+  reflet), `facial-hair.ts` (matériau « matte »), `neck.ts`. Ordre : cheveux arrière → cou → oreilles → tête →
+  nez/bouche(+moustache) → barbe → cheveux avant → yeux.
+- **Zone des cheveux liée à la ligne des yeux** : `browLimitY = max(0,12 H, eyeY − 0,2 H)` ; naissance des cheveux,
+  tempe et frange restent AU-DESSUS. Les pattes restent dans la marge de tempe (0,045 W) réservée aux yeux.
+- **Asymétrie** (`face/fit-eye.ts`) : échelle (l'œil visé rétrécit, jamais ne grossit), ouverture, rotation
+  AUTOUR du canthus interne (`x,y = −k·R(ρ)·pi`), décalage vertical des canthi, inclinaison de la bouche.
+  L'étendue est recalculée après rotation (boîte conservatrice) : l'orbite reste respectée.
+- **Générateur** (`generation/random-face-extras.ts`) : tirages APRÈS les anciens (seeds existantes : mêmes
+  proportions, peau, expression, yeux). Sourcils assortis à la couleur des cheveux. `RandomFace` expose `params` et `fits`.
+
+### Résultat mesuré (`artefacts/metrics.json`, 1500 visages)
+
+- Chevauchement cheveux/œil : **0** ; moustache sur un œil : **0** ; barbe sur la bouche : **0**.
+- Erreur d'ancrage du canthus (coordonnées monde, yeux tournés) : **1,1·10⁻¹³ px**.
+- Asymétrie max observée : 2,2° (rotation), 6 % (échelle), 0,70 % de H (hauteur des canthi).
+- 514 → 1449 tests, tous verts. 2 mutations injectées (frange trop basse ; rotation non compensée) : détectées (150 et 120 échecs).
+- Preuves visuelles : dossier `artefacts/` (6 images + `metrics.json` + `README.md`), régénérées par `npx tsx scripts/artefacts-face.ts`.
+

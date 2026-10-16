@@ -1,4 +1,4 @@
-import { clamp } from '../core/math';
+import { clamp, rad } from '../core/math';
 import { browGeometry, openingGeometry, type Vec } from '../geometry/eye';
 import { minHalfWidth } from './outline';
 import type { FaceLandmarks } from './landmarks';
@@ -58,11 +58,29 @@ export function eyeReach(spec: EyeSpec): EyeReach {
   return { pi: g.pi, out, inn, up: Math.max(0, g.pi.y - top), down: Math.max(0, bottom - g.pi.y), aperture: Math.abs(g.po.x - g.pi.x) };
 }
 
+/**
+ * Étendue de l'œil après rotation `deg` autour de son canthus interne : boîte englobante des 4 coins
+ * (CONSERVATRICE : la vraie fente est plus petite que la boîte). `s` = sens « vers l'extérieur » (-1 : œil de gauche).
+ * Rotation nulle → l'étendue d'origine, strictement.
+ */
+function rotateReach(r: EyeReach, s: number, deg: number): EyeReach {
+  if (deg === 0) return r;
+  const t = rad(deg);
+  const c = Math.cos(t);
+  const sn = Math.sin(t);
+  const xs = s > 0 ? [-r.inn, r.out] : [-r.out, r.inn];
+  const pts = xs.flatMap((x) => [-r.up, r.down].map((y): [number, number] => [x * c - y * sn, x * sn + y * c]));
+  const px = pts.map((q) => q[0] * s);
+  return { ...r, out: Math.max(...px), inn: Math.max(0, -Math.min(...px)), up: Math.max(0, -Math.min(...pts.map((q) => q[1]))), down: Math.max(0, Math.max(...pts.map((q) => q[1]))) };
+}
+
 export interface EyeFit {
   /** Échelle uniforme appliquée à l'œil (transform.scale). */
   readonly scale: number;
-  /** Transform de l'œil, RELATIF à l'ancre du canthus interne : amène `pi` exactement sur l'ancre. */
-  readonly transform: { readonly x: number; readonly y: number; readonly rotationDeg: 0; readonly scale: number };
+  /** Transform de l'œil, RELATIF à l'ancre du canthus interne : amène `pi` exactement sur l'ancre (même tourné). */
+  readonly transform: { readonly x: number; readonly y: number; readonly rotationDeg: number; readonly scale: number };
+  /** L'œil à poser : celui reçu, avec l'ouverture ajustée par l'asymétrie du visage (identique si symétrique). */
+  readonly eye: EyeInput;
   /** Ancre (canthus interne) dans le repère de l'hôte. */
   readonly anchor: Vec;
   /** Boîte occupée par l'œil (fente + pli + cils + sourcil) dans le repère de l'hôte. */
@@ -84,39 +102,50 @@ export interface FitOptions {
  * La taille est ensuite bornée par l'orbite : largeur disponible jusqu'au temple, hauteur sous le
  * front nu et au-dessus du nez, ligne médiane. Un œil trop grand rétrécit ; il ne déborde jamais.
  */
-export function fitEyeToFace(eye: EyeInput, side: EyeSide, lm: FaceLandmarks, options: FitOptions = {}): EyeFit {
-  const spec = EyeSpec.parse({ ...eye, place: undefined, shape: { ...eye.shape, outerSide: side } });
-  const r = eyeReach(spec);
-  const P = side === 'left' ? lm.innerCanthus.left : lm.innerCanthus.right;
+export function fitEyeToFace(input: EyeInput, side: EyeSide, lm: FaceLandmarks, options: FitOptions = {}): EyeFit {
+  const A = lm.asymmetry;
   const s = side === 'left' ? -1 : 1;
+  // Asymétrie : l'ouverture se règle sur l'œil AVANT la mesure, pour que l'empreinte reste exacte.
+  const openness = clamp((input.shape?.openness ?? 1) * (1 - (s * A.eyeOpenness) / 2), 0.05, 1.2);
+  const eye: EyeInput = A.eyeOpenness === 0 ? input : { ...input, shape: { ...input.shape, openness } };
+  const spec = EyeSpec.parse({ ...eye, place: undefined, shape: { ...eye.shape, outerSide: side } });
+  const r = rotateReach(eyeReach(spec), s, A.eyeRollDeg);
+  const P = side === 'left' ? lm.innerCanthus.left : lm.innerCanthus.right;
   const half = Math.abs(P.x);
 
   // 1. Taille souhaitée : la fente occupe `fill` de l'espace canthus → temple, modulée par la grosseur propre à l'œil.
   const fill = clamp(options.fill ?? 0.9, 0.4, 1);
   const rel = clamp((eye.shape?.width ?? 280) / 280, 0.8, 1.2) * (options.size ?? 1);
-  const space = minHalfWidth(lm.outline, lm.eyeY - 0.08 * lm.H, lm.eyeY + 0.08 * lm.H) - half - TEMPLE_MARGIN * lm.W;
+  const space = minHalfWidth(lm.outline, P.y - 0.08 * lm.H, P.y + 0.08 * lm.H) - half - TEMPLE_MARGIN * lm.W;
   const kTarget = (space * fill * rel) / r.aperture;
 
   // 2. Bornes dures.
-  const kUp = r.up > 0 ? (lm.eyeY - lm.browLimitY) / r.up : Infinity;
-  const kDown = r.down > 0 ? (lm.lowerLimitY - lm.eyeY) / r.down : Infinity;
+  const kUp = r.up > 0 ? (P.y - lm.browLimitY) / r.up : Infinity;
+  const kDown = r.down > 0 ? (lm.lowerLimitY - P.y) / r.down : Infinity;
   const kIn = r.inn > 0 ? (INNER_LIMIT * half) / r.inn : Infinity;
   const kVert = Math.min(kTarget, kUp, kDown, kIn);
   // La largeur disponible dépend de la hauteur occupée : on l'évalue à l'échelle provisoire `kVert`
   // (plus petite que l'échelle finale ne peut l'être → borne conservatrice, jamais optimiste).
-  const avail = minHalfWidth(lm.outline, lm.eyeY - r.up * kVert, lm.eyeY + r.down * kVert) - half - TEMPLE_MARGIN * lm.W;
+  const avail = minHalfWidth(lm.outline, P.y - r.up * kVert, P.y + r.down * kVert) - half - TEMPLE_MARGIN * lm.W;
   const kOut = r.out > 0 ? avail / r.out : Infinity;
 
   const candidates: [EyeFit['limitedBy'], number][] = [['target', kTarget], ['up', kUp], ['down', kDown], ['inner', kIn], ['outer', kOut]];
   const [limitedBy, scale] = candidates.reduce((a, b) => (b[1] < a[1] ? b : a));
-  const k = Math.max(0.01, scale);
+  // Asymétrie de taille : l'œil visé rétrécit (jamais ne grossit) → il reste dans l'orbite.
+  const smaller = (A.eyeScale > 0 && side === 'right') || (A.eyeScale < 0 && side === 'left');
+  const k = Math.max(0.01, scale) * (smaller ? 1 - Math.abs(A.eyeScale) : 1);
 
+  // Le canthus interne local `pi` doit tomber sur l'ancre APRÈS rotation : x,y = -k·R(ρ)·pi.
+  const t = rad(A.eyeRollDeg);
+  const c = Math.cos(t);
+  const sn = Math.sin(t);
   const xs = [P.x + s * r.out * k, P.x - s * r.inn * k];
   return {
     scale: k,
-    transform: { x: -k * r.pi.x, y: -k * r.pi.y, rotationDeg: 0, scale: k },
+    transform: { x: -k * (r.pi.x * c - r.pi.y * sn), y: -k * (r.pi.x * sn + r.pi.y * c), rotationDeg: A.eyeRollDeg, scale: k },
+    eye,
     anchor: P,
-    footprint: { minX: Math.min(...xs), maxX: Math.max(...xs), minY: lm.eyeY - r.up * k, maxY: lm.eyeY + r.down * k },
+    footprint: { minX: Math.min(...xs), maxX: Math.max(...xs), minY: P.y - r.up * k, maxY: P.y + r.down * k },
     limitedBy,
   };
 }

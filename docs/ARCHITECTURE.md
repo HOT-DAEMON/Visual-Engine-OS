@@ -51,12 +51,15 @@ src/
   face/             Géométrie pure du visage (aucun SVG) : outline.ts (contour crâne/mâchoire,
                     halfWidthAt), landmarks.ts (repères anatomiques — SOURCE UNIQUE lue par le rendu
                     et par le placement des yeux), fit-eye.ts (ajustement d'un œil à l'orbite :
-                    ancre = canthus interne, échelle bornée par temple/front/nez/ligne médiane).
+                    ancre = canthus interne, échelle bornée par temple/front/nez/ligne médiane ; asymétrie : rotation autour
+                    du canthus), hair-geometry.ts / beard-geometry.ts / poly.ts (polygones des cheveux et
+                    de la pilosité : géométrie pure, lue par le rendu ET par les tests).
 
   generation/       palette.ts (couleurs d'iris procédurales), random-eye.ts
                     (génération combinatoire d'un œil complet), eye-pool.ts (les 48 identités des
                     galeries, paires gauche/droite), random-face.ts + random-face-helpers.ts
-                    (visage complet : peau, proportions, bouche induite par l'expression, yeux posés).
+                    (visage complet : peau, proportions, bouche induite par l'expression, yeux posés),
+                    random-face-extras.ts (cou, cheveux, pilosité, asymétrie ; tirés APRÈS le reste).
 
   render/           Un compilateur SVG par archétype d'objet.
     object.ts         objectTransform, interface CompiledObject.
@@ -69,8 +72,8 @@ src/
                       lids-fold.ts (tout ce qui est HORS clip : pli, bords, cils),
                       liner.ts (dessin du liner ailé, appelé par lids-fold.ts),
                       eyebrow-render.ts, eye.ts (orchestrateur), default-skin.ts.
-    face/             face.ts (surface + assemblage), ears.ts, nose.ts, mouth.ts ; appelé par host.ts
-                      quand `shape: 'face'`.
+    face/             face.ts (surface + assemblage), ears.ts, nose.ts, mouth.ts, neck.ts, hair.ts,
+                      hair-strands.ts, facial-hair.ts, path.ts ; appelé par host.ts quand `shape: 'face'`.
     robot/            housing.ts (boîtier + vis), lens.ts (lentille + capteur + verre),
                       robot.ts (orchestrateur).
 
@@ -115,7 +118,7 @@ dépendance. `anchors.ts` ne dépend en retour que du TYPE `HostSpec` (import
    cohérence de l'arborescence avec un outil différent.
 
 Cette refonte (découpage de `eye.ts`, `schema.ts`, `eye-geometry.ts`, `materials.ts`,
-`robot.ts` — environ 1860 lignes à elles cinq — en 58 fichiers organisés par domaine)
+`robot.ts` — environ 1860 lignes à elles cinq — en 58 fichiers organisés par domaine ; 107 depuis le visage complet)
 a été vérifiée par ces trois moyens à chaque étape, et par une comparaison octet
 par octet des 9 scènes d'exemple avant/après (identiques, à l'exception d'une
 métadonnée de provenance C2PA ajoutée par la plateforme de livraison, étrangère au
@@ -128,6 +131,16 @@ l'autre de l'origine. Le canthus interne, lui, est le point osseux fixe de l'orb
 position (ligne des yeux × demi-écart inter-canthal) ; `fitEyeToFace` règle le `transform` de l'œil pour que
 son `pi` tombe exactement dessus, puis borne l'échelle. Les yeux sont de vrais enfants (`place` sur l'hôte) :
 déplacer, tourner ou mettre à l'échelle le visage entraîne les yeux, lumière comprise.
+
+## Visage : cheveux, cou, pilosité = enfants du visage
+
+Aucun de ces éléments ne porte de coordonnée propre : tout est lu dans `FaceLandmarks` (contour du crâne,
+`lips`, `neck`, `hair`, `browLimitY`). Conséquences vérifiées par `tests/face-extras.test.ts` et
+`artefacts/metrics.json` : la naissance des cheveux et la frange restent au-dessus des sourcils, les pattes
+dans la marge de tempe, la moustache entre la base du nez et la lèvre, la barbe dans le contour du visage et
+hors de la bouche, le cou entre la largeur du menton et celle de la mâchoire. Les cheveux et la pilosité
+utilisent les matériaux partagés (`satin`, `matte`) et la même lumière que la peau.
+Asymétrie : la rotation des yeux se fait AUTOUR du canthus interne (`x,y = −k·R·pi`), l'ancrage reste exact.
 
 ## Découpage de la documentation
 

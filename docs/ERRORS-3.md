@@ -90,3 +90,30 @@ défaut est inchangé, ce n'était pas un défaut de rendu.
 **Cause** : le point de contrôle de sortie du coin de mâchoire (`p2` de la 2ᵉ cubique) est reculé le long de la tangente ; quand le menton est plus étroit que la mâchoire, ce recul poussait `p2.x` au-delà de `W/2`, et la cubique suivait.
 **Correction** : `p2.x` borné à `W/2` (`face/outline.ts`). Une cubique reste dans l'enveloppe convexe de ses points de contrôle : borner les contrôles suffit à garantir la boîte [-W/2, W/2]. Test dédié (`tests/face-geometry.test.ts`) sur tous les échantillons.
 **Leçon** : le test écrit AVANT d'afficher le résultat a trouvé ce que l'œil n'aurait pas vu (1 px sur 150).
+
+## Session 12 (cheveux, cou, pilosité, asymétrie)
+
+### 18. Deux anciens tests échouaient dès que l'asymétrie est devenue aléatoire
+
+**Observé** : `paire en miroir` et `indifférent à la forme et à la grosseur` (random-face.test.ts) en échec.
+**Cause** : leur visage de référence venait de `generateRandomFace`, qui tire maintenant une asymétrie ; ils vérifient pourtant la symétrie miroir.
+**Correction** : visage de référence explicitement symétrique (`asymmetry` à 0) ; le cas asymétrique a ses propres tests (`face-extras.test.ts`). Aucun test n'a été assoupli.
+
+### 19. Première zone de cheveux : une calotte de 12 % de H (aspect « crâne chauve avec un liseré »)
+
+**Observé** : au premier rendu, les cheveux étaient limités au haut du crâne ; le front restait immense sous une frange minuscule.
+**Cause** : `browLimitY` valait −H/2 + 0,12 H quelle que soit la ligne des yeux.
+**Correction** : `browLimitY = max(0,12 H, eyeY − 0,2 H)` — le front a une hauteur proportionnée. Les yeux restent bornés par la même limite : leur placement est inchangé, seule leur marge haute dépend de la ligne des yeux.
+
+### 20. Défauts de rendu corrigés après lecture des images
+
+- **Pattes et rideaux coupés net** (aspect casque) → bas en biseau (coin extérieur relevé).
+- **Frange à « épaules » carrées** : ses coins hauts dépassaient le crâne (calés sur la largeur à la hauteur de la frange, plus large que celle du haut) → calés sur le contour à leur propre hauteur ; coins bas relevés.
+- **Barbe de quelques jours : un rectangle au-dessus de la lèvre** → zone en forme de moustache.
+- **Barbiche en « tube »** (trop longue, étroite) → longueur réduite, haut en arc sous la lèvre.
+**Leçon** : les invariants (tests) garantissent le placement, pas l'esthétique ; seule la lecture des images a trouvé ces quatre défauts.
+
+### Limite connue
+
+Le cou se termine par une base plate élargie (pas d'épaules ni de vêtement) ; voir `docs/ROADMAP.md`.
+

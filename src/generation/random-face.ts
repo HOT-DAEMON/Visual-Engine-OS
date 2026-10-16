@@ -1,12 +1,13 @@
 import { mulberry32 } from '../core/prng';
-import { faceLandmarks, fitEyeToFace, type EyeSide } from '../face';
+import { faceLandmarks, fitEyeToFace, type EyeFit, type EyeSide } from '../face';
 import { FaceParams, type SceneInput } from '../schema';
 import { galleryPair, GALLERY_IDENTITIES } from './eye-pool';
 import { generateRandomEye } from './random-eye';
 import { drawFaceParams, drawSkin, FACE_EXPRESSIONS, mouthFor, type ExpressionKind } from './random-face-helpers';
+import { drawFaceExtras, type ExtrasOverride } from './random-face-extras';
 import { pick, range, type EyeInput } from './random-eye-helpers';
 
-export interface RandomFaceOptions {
+export interface RandomFaceOptions extends ExtrasOverride {
   /** Identifiant de l'hôte ; les yeux en dérivent (`<id>-eye-left`, …). Défaut : `face-<seed hex>`. */
   readonly id?: string;
   /** 'gallery' (défaut) : paire d'yeux d'une des 48 identités des galeries ; 'random' : œil tiré de la seed du visage. */
@@ -27,12 +28,15 @@ export interface RandomFace {
   readonly identity: number | null;
   readonly width: number;
   readonly height: number;
+  /** Paramètres du visage (parsés) et ajustement de chaque œil : pour les tests et les artefacts de preuve. */
+  readonly params: FaceParams;
+  readonly fits: Record<EyeSide, EyeFit>;
 }
 
 /**
  * Visage complet aléatoire et déterministe : crâne/mâchoire, oreilles, nez, bouche, teinte de peau,
- * plus une PAIRE d'yeux (gauche/droite, vrai miroir) posée comme enfants du visage sur les ancres
- * des canthi internes. Les yeux sont ajustés à l'orbite (`face/fit-eye.ts`) : leur position est
+ * cou, cheveux (8 styles, 4 franges), pilosité (moustaches, barbes), asymétrie légère, plus une PAIRE d'yeux
+ * (gauche/droite) posée comme enfants du visage sur les ancres des canthi internes. Les yeux sont ajustés à l'orbite (`face/fit-eye.ts`) : leur position est
  * celle du visage, leur taille est bornée par lui, quelle que soit leur forme.
  */
 export function generateRandomFace(seed: number, options: RandomFaceOptions = {}): RandomFace {
@@ -44,7 +48,9 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
   const intensity = options.expression?.intensity ?? range(rnd, 0.5, 1);
   const rollDeg = range(rnd, -4, 4);
   const drawnIdentity = Math.floor(rnd() * GALLERY_IDENTITIES);
-  const params = FaceParams.parse(drawFaceParams(rnd, mouthFor(kind, intensity)));
+  const base = drawFaceParams(rnd, mouthFor(kind, intensity));
+  const extras = drawFaceExtras(rnd, options);
+  const params = FaceParams.parse({ ...base, neck: extras.neck, hair: extras.hair, facialHair: extras.facialHair, asymmetry: extras.asymmetry });
   const lm = faceLandmarks(params, width, height);
 
   const id = options.id ?? `face-${(seed >>> 0).toString(16)}`;
@@ -75,10 +81,11 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
     face: params,
     anchors,
   };
+  const fits = { left: fitEyeToFace(pair.left, 'left', lm, { size: options.eyeSize }), right: fitEyeToFace(pair.right, 'right', lm, { size: options.eyeSize }) };
   const eyes = sides.map((side): SceneInput['objects'][number] => {
-    const eye = pair[side];
-    const fit = fitEyeToFace(eye, side, lm, { size: options.eyeSize });
+    const fit = fits[side];
+    const eye = fit.eye.eyebrow ? { ...fit.eye, eyebrow: { ...fit.eye.eyebrow, material: { preset: 'matte' as const, color: extras.browColor } } } : fit.eye;
     return { ...eye, id: `${id}-eye-${side}`, place: { host: id, anchors: [`canthus-${side}`] }, transform: fit.transform };
   });
-  return { objects: [host, ...eyes], identity, width, height };
+  return { objects: [host, ...eyes], identity, width, height, params, fits };
 }

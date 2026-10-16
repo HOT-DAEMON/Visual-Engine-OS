@@ -8,6 +8,7 @@ export { ColorSource, MaterialDescriptor, PresetRef, MaterialRef } from './color
 export { LightSpec, Transform } from './light-transform';
 export { HostSpec } from './host';
 export { FaceParams, FaceNose, FaceMouth, FaceEars, type FaceParamsInput } from './face';
+export { FaceNeck, FaceHair, FaceFacialHair, FaceAsymmetry, HAIR_STYLES, HAIR_FRINGES, MUSTACHES, BEARDS } from './face-extras';
 export { Lids, Liner } from './eye-lids';
 export { Lashes, LashesUpper, LashesLower } from './eye-lashes';
 export { CompoundEyeSpec } from './compound-eye';

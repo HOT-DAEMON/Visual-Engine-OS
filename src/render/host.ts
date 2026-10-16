@@ -13,7 +13,7 @@ export function compileHost(h: HostSpec, worldLight: LightVector): CompiledObjec
   const rx = h.width / 2;
   const ry = h.height / 2;
   const bbox = { x: -rx, y: -ry, w: h.width, h: h.height };
-  const parts = h.shape === 'face' ? faceParts(h) : null;
+  const parts = h.shape === 'face' ? faceParts(h, L, rot) : null;
   const surface: Surface = parts
     ? faceSurface(h, parts.lm)
     : h.shape !== 'rounded_rect'

@@ -12,18 +12,18 @@ export function renderMouth(p: FaceParams, lm: FaceLandmarks, skin: string): str
   const mw = m.width * lm.W;
   const H = lm.H;
   const cy = lm.mouthY;
-  const cornerY = cy - m.curve * 0.03 * H;
+  const cornerY = lm.lips.cornerY;
   const L = { x: -mw / 2, y: cornerY };
   const R = { x: mw / 2, y: cornerY };
-  const oh = m.open * 0.09 * H;
+  const oh = lm.lips.openH;
   const lipColor = m.color ?? mix(skin, '#b8323f', 0.5);
   const f = (x: number, y: number): string => `${num(x)} ${num(y)}`;
   // Ligne de fermeture : de gauche à droite, déportée vers le bas de `off` au centre.
   const sag = cy + m.curve * 0.006 * H;
   const rima = (off: number): string => `C${f(-mw * 0.2, sag + off / 0.75)} ${f(mw * 0.2, sag + off / 0.75)} ${f(R.x, R.y)}`;
   const rimaBack = (off: number): string => `C${f(mw * 0.2, sag + off / 0.75)} ${f(-mw * 0.2, sag + off / 0.75)} ${f(L.x, L.y)}`;
-  const ul = (0.012 + 0.03 * m.upperLip) * H;
-  const ll = (0.02 + 0.05 * m.lowerLip) * H;
+  const ul = lm.lips.upperH;
+  const ll = lm.lips.lowerH;
   const bow = { x: mw * 0.13, y: cy - ul };
   const dip = { x: 0, y: cy - ul * 0.6 };
   const out: string[] = [];

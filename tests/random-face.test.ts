@@ -42,7 +42,8 @@ describe('visage aléatoire', () => {
 
 describe('yeux enfants du visage : position définie par le visage', () => {
   const lmFor = (seed: number): { lm: ReturnType<typeof faceLandmarks>; f: ReturnType<typeof generateRandomFace> } => {
-    const f = generateRandomFace(seed, { identity: 0 });
+    // Visage de référence SYMÉTRIQUE : ces tests vérifient la géométrie miroir (l'asymétrie a ses propres tests : face-extras).
+    const f = generateRandomFace(seed, { identity: 0, asymmetry: { eyeScale: 0, eyeOpenness: 0, eyeRollDeg: 0, eyeDy: 0, mouthTiltDeg: 0 } });
     const host = SceneSpec.parse(sceneOf(f.objects)).objects[0];
     if (host?.kind !== 'host') throw new Error('hôte attendu');
     return { lm: faceLandmarks(FaceParams.parse(host.face), host.width, host.height), f };

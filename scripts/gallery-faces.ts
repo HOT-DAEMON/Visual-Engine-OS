@@ -7,9 +7,9 @@ import type { SceneInput } from '../src/schema';
  * gallery-pairs.json posée sur un visage tiré d'une seed propre). Expression et proportions varient.
  */
 const COLS = 8;
-const CELL_X = 250;
-const CELL_Y = 310;
-const SCALE = 0.62;
+const CELL_X = 230;
+const CELL_Y = 450;
+const SCALE = 0.5;
 const objects: SceneInput['objects'] = [];
 for (let i = 0; i < GALLERY_IDENTITIES; i++) {
   const face = generateRandomFace(7000 + i * 131, {
