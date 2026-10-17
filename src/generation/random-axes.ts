@@ -17,7 +17,7 @@ export interface SkinAxes {
 }
 
 /** Ancres de sous-ton (teinte °, saturation) : rosé → neutre → olive → doré, interpolées en continu. */
-const UNDERTONES: readonly (readonly [number, number])[] = [[6, 0.46], [22, 0.4], [46, 0.27], [38, 0.62]];
+const UNDERTONES: readonly (readonly [number, number])[] = [[8, 0.34], [22, 0.3], [44, 0.22], [36, 0.46]];
 
 export function skinColor(clarity: number, undertone: number, jitter = 0): string {
   const f = Math.min(0.9999, Math.max(0, undertone)) * (UNDERTONES.length - 1);
@@ -25,7 +25,7 @@ export function skinColor(clarity: number, undertone: number, jitter = 0): strin
   const a = UNDERTONES[i] as readonly [number, number];
   const b = UNDERTONES[i + 1] as readonly [number, number];
   const hue = a[0] + (b[0] - a[0]) * (f - i);
-  const sat = (a[1] + (b[1] - a[1]) * (f - i)) * (0.8 + 0.4 * (1 - Math.abs(2 * clarity - 1))) + jitter;
+  const sat = (a[1] + (b[1] - a[1]) * (f - i)) * (0.62 + 0.3 * (1 - Math.abs(2 * clarity - 1))) + jitter;
   return hslToHex(hue, Math.min(0.75, Math.max(0.15, sat)), 0.22 + 0.62 * clarity);
 }
 
