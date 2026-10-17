@@ -1,5 +1,8 @@
 import { z } from 'zod';
 import { Hex, Unit } from './primitives';
+import { HAIR_FRINGES, HAIR_STYLES, HAIR_TEXTURE_CHOICES, HAIRLINES, HairBraids, HairTie } from './hair-system';
+
+export { HAIR_FRINGES, HAIR_STYLES, HAIR_TEXTURES, HAIR_TEXTURE_CHOICES, HAIRLINES } from './hair-system';
 
 /**
  * Compléments du visage complet : cou, cheveux, pilosité, asymétrie. Comme le reste de `FaceParams`,
@@ -22,9 +25,6 @@ export const FaceNeck = z
   })
   .strict();
 
-export const HAIR_STYLES = ['bald', 'buzz', 'short', 'spiky', 'curly', 'afro', 'bob', 'long'] as const;
-export const HAIR_FRINGES = ['none', 'straight', 'sweep', 'curtain'] as const;
-
 export const FaceHair = z
   .object({
     style: z.enum(HAIR_STYLES).default('bald'),
@@ -41,13 +41,42 @@ export const FaceHair = z
     part: z.number().min(-1).max(1).default(0),
     /** Longueur des pattes (favoris) devant l'oreille. */
     sideburns: Unit.default(0.3),
-    /** Graine des brins, des pointes et des boucles (rendu déterministe). */
+    /** Graine des mèches, des pointes et des boucles (rendu déterministe). */
     seed: z.number().int().min(0).max(0xffffffff).default(1),
+    /** TEXTURE des mèches, indépendante de la coiffure ('auto' = couplage historique style → texture). */
+    texture: z.enum(HAIR_TEXTURE_CHOICES).default('auto'),
+    /** Serrage de la texture : amplitude et fréquence des ondulations / boucles / vrilles. */
+    curl: Unit.default(0.5),
+    /** Forme de la ligne d'implantation (front). */
+    hairlineShape: z.enum(HAIRLINES).default('round'),
+    /** Recul des tempes (golfes) : 0 = naissance pleine, 1 = tempes très dégarnies. */
+    recession: Unit.default(0),
+    /** Irrégularité de l'implantation (bords inégaux, encoches, asymétrie gauche/droite). */
+    irregularity: Unit.default(0.15),
+    /** Éclaircissement (front et sommet) : moins de mèches, cuir chevelu visible. */
+    thinning: Unit.default(0),
+    /** Densité globale de mèches (0 = clairsemé, 1 = très fourni). */
+    density: Unit.default(0.7),
+    /** Variation de densité d'une zone à l'autre. */
+    densityVariance: Unit.default(0.35),
+    /** Variation de longueur d'une mèche à l'autre (pointes dentelées). */
+    lengthVariance: Unit.default(0.35),
+    /** Largeur de la raie : cuir chevelu visible entre les deux masses. */
+    partWidth: Unit.default(0.25),
+    /** Variation de teinte entre mèches (reflets, mèches claires et sombres). */
+    highlight: Unit.default(0.35),
+    /** Couleur des racines ; null : dérivée de `color`. */
+    rootColor: Hex.nullable().default(null),
+    /** Queue / chignon : voir `HairTie`. */
+    tie: HairTie.default({}),
+    /** Tresses pendantes (style `braids`). */
+    braids: HairBraids.default({}),
   })
   .strict();
 
-export const MUSTACHES = ['none', 'thin', 'full', 'handlebar'] as const;
-export const BEARDS = ['none', 'stubble', 'goatee', 'full'] as const;
+export const MUSTACHES = ['none', 'thin', 'full', 'handlebar', 'pencil'] as const;
+export const BEARDS = ['none', 'stubble', 'short', 'full', 'long', 'goatee'] as const;
+export const SIDEBURNS = ['none', 'short', 'long', 'mutton'] as const;
 
 export const FaceFacialHair = z
   .object({
@@ -60,6 +89,12 @@ export const FaceFacialHair = z
     /** null : couleur des cheveux, un peu assombrie. */
     color: Hex.nullable().default(null),
     seed: z.number().int().min(0).max(0xffffffff).default(1),
+    /** Favoris : de l'oreille vers la joue, indépendants de la barbe et de la coiffure. */
+    sideburns: z.enum(SIDEBURNS).default('none'),
+    /** Transition peau/poils : 0 = bord net, 1 = lisière diffuse (poils épars au-delà du bord). */
+    transition: Unit.default(0.5),
+    /** Zones clairsemées (joues, menton) : 0 = couverture uniforme. */
+    patchiness: Unit.default(0),
   })
   .strict();
 
