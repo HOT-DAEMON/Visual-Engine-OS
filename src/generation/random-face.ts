@@ -1,6 +1,7 @@
 import { mulberry32 } from '../core/prng';
 import { faceLandmarks, fitEyeToFace, type EyeFit, type EyeSide } from '../face';
 import { FaceParams, type SceneInput } from '../schema';
+import { applyEyeAxes, type BrowLash, type EyelidFold } from './random-axes';
 import { galleryPair, GALLERY_IDENTITIES } from './eye-pool';
 import { generateRandomEye } from './random-eye';
 import { drawFaceParams, drawSkin, FACE_EXPRESSIONS, mouthFor, type ExpressionKind } from './random-face-helpers';
@@ -31,11 +32,13 @@ export interface RandomFace {
   /** Paramètres du visage (parsés) et ajustement de chaque œil : pour les tests et les artefacts de preuve. */
   readonly params: FaceParams;
   readonly fits: Record<EyeSide, EyeFit>;
+  /** Axes indépendants tirés pour ce visage (pli de l'œil, sourcils/cils) : pour les tests et les artefacts. */
+  readonly axes: { readonly fold: EyelidFold; readonly browLash: BrowLash };
 }
 
 /**
  * Visage complet aléatoire et déterministe : crâne/mâchoire, oreilles, nez, bouche, teinte de peau,
- * cou, cheveux (8 styles, 4 franges), pilosité (moustaches, barbes), asymétrie légère, plus une PAIRE d'yeux
+ * cou, cheveux (11 coiffures × 5 textures indépendantes), pilosité (moustaches, barbes, favoris), asymétrie légère, plus une PAIRE d'yeux
  * (gauche/droite) posée comme enfants du visage sur les ancres des canthi internes. Les yeux sont ajustés à l'orbite (`face/fit-eye.ts`) : leur position est
  * celle du visage, leur taille est bornée par lui, quelle que soit leur forme.
  */
@@ -81,11 +84,11 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
     face: params,
     anchors,
   };
-  const fits = { left: fitEyeToFace(pair.left, 'left', lm, { size: options.eyeSize }), right: fitEyeToFace(pair.right, 'right', lm, { size: options.eyeSize }) };
+  const withAxes = (e: EyeInput): EyeInput => (e.kind === 'eye' ? applyEyeAxes(e, extras.fold, extras.browLash) : e);
+  const fits = { left: fitEyeToFace(withAxes(pair.left), 'left', lm, { size: options.eyeSize }), right: fitEyeToFace(withAxes(pair.right), 'right', lm, { size: options.eyeSize }) };
   const eyes = sides.map((side): SceneInput['objects'][number] => {
     const fit = fits[side];
-    const eye = fit.eye.eyebrow ? { ...fit.eye, eyebrow: { ...fit.eye.eyebrow, material: { preset: 'matte' as const, color: extras.browColor } } } : fit.eye;
-    return { ...eye, id: `${id}-eye-${side}`, place: { host: id, anchors: [`canthus-${side}`] }, transform: fit.transform };
+    return { ...fit.eye, id: `${id}-eye-${side}`, place: { host: id, anchors: [`canthus-${side}`] }, transform: fit.transform };
   });
-  return { objects: [host, ...eyes], identity, width, height, params, fits };
+  return { objects: [host, ...eyes], identity, width, height, params, fits, axes: { fold: extras.fold, browLash: extras.browLash } };
 }

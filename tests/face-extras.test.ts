@@ -48,7 +48,9 @@ describe('cheveux : enfants du visage, jamais sur les yeux', () => {
     if (style === 'bald') return expect(geo).toBeNull();
     // Tout point du contour du crâne situé au-dessus de la naissance des cheveux est sous les cheveux.
     const s = rightSamples(lm.outline);
-    const top = s.filter((q) => q.y < lm.hair.centerY - 0.01 * lm.H);
+    // Implantation réelle (forme, tempes, irrégularité) : on teste ce qui est AU-DESSUS d'elle.
+    const hlY = (x: number): number => (geo?.hairline.reduce((a, b) => (Math.abs(b.x - x) < Math.abs(a.x - x) ? b : a)) ?? { y: 0 }).y;
+    const top = s.filter((q) => q.y < hlY(q.x) - 0.012 * lm.H);
     expect(top.length).toBeGreaterThan(3);
     for (const q of top) for (const sg of [-1, 1]) expect(anyInside(geo?.front ?? [], [{ x: sg * q.x * 0.995, y: q.y + 0.002 * lm.H }])).toBe(true);
   });

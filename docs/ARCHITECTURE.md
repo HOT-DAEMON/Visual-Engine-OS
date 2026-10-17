@@ -52,14 +52,16 @@ src/
                     halfWidthAt), landmarks.ts (repères anatomiques — SOURCE UNIQUE lue par le rendu
                     et par le placement des yeux), fit-eye.ts (ajustement d'un œil à l'orbite :
                     ancre = canthus interne, échelle bornée par temple/front/nez/ligne médiane ; asymétrie : rotation autour
-                    du canthus), hair-geometry.ts / beard-geometry.ts / poly.ts (polygones des cheveux et
-                    de la pilosité : géométrie pure, lue par le rendu ET par les tests).
+                    du canthus), hair/ (système capillaire : hairline, scalp, flow, texture, ribbon, fringe, tie, guard,
+                    noise, types, index → `hairGeometry`) / beard-geometry.ts (moustache, barbe, favoris) /
+                    poly.ts : géométrie pure, lue par le rendu ET par les tests.
 
   generation/       palette.ts (couleurs d'iris procédurales), random-eye.ts
                     (génération combinatoire d'un œil complet), eye-pool.ts (les 48 identités des
                     galeries, paires gauche/droite), random-face.ts + random-face-helpers.ts
                     (visage complet : peau, proportions, bouche induite par l'expression, yeux posés),
-                    random-face-extras.ts (cou, cheveux, pilosité, asymétrie ; tirés APRÈS le reste).
+                    random-face-extras.ts (cou, cheveux, pilosité, asymétrie, pli, sourcils/cils ; tirés APRÈS le reste),
+                    random-axes.ts (axes INDÉPENDANTS : peau clarté × sous-ton, pli de l'œil, sourcils/cils).
 
   render/           Un compilateur SVG par archétype d'objet.
     object.ts         objectTransform, interface CompiledObject.
@@ -72,8 +74,8 @@ src/
                       lids-fold.ts (tout ce qui est HORS clip : pli, bords, cils),
                       liner.ts (dessin du liner ailé, appelé par lids-fold.ts),
                       eyebrow-render.ts, eye.ts (orchestrateur), default-skin.ts.
-    face/             face.ts (surface + assemblage), ears.ts, nose.ts, mouth.ts, neck.ts, hair.ts,
-                      hair-strands.ts, facial-hair.ts, path.ts ; appelé par host.ts quand `shape: 'face'`.
+    face/             face.ts (surface + assemblage), ears.ts, nose.ts, mouth.ts, neck.ts, hair.ts (cuir chevelu,
+                      sous-couche, mèches), hair-detail.ts (transition peau/cheveux, reflet), facial-hair.ts, path.ts ; appelé par host.ts quand `shape: 'face'`.
     robot/            housing.ts (boîtier + vis), lens.ts (lentille + capteur + verre),
                       robot.ts (orchestrateur).
 
@@ -142,7 +144,17 @@ hors de la bouche, le cou entre la largeur du menton et celle de la mâchoire. L
 utilisent les matériaux partagés (`satin`, `matte`) et la même lumière que la peau.
 Asymétrie : la rotation des yeux se fait AUTOUR du canthus interne (`x,y = −k·R·pi`), l'ancrage reste exact.
 
+## Cheveux : ligne d'implantation → mèches → texture (indépendantes)
+
+1. `hairline.ts` fixe la ligne d'implantation (forme, recul des tempes, irrégularité) ; `skullArc` donne l'arc du crâne.
+2. Chaque racine est un point entre la ligne et l'arc ; `keepRoot` applique densité, éclaircissement, variation de zone.
+3. `flow.ts` oriente la mèche (champ local de la coiffure, gravité) ; `capTo` la ramène vers une attache (queue, chignon, tresses).
+4. `texture.ts` déforme la ligne médiane (ondulé, boucles fermées, ressort crépu, tresse) — la TEXTURE ne dépend pas de la coiffure.
+5. `guard.fit` projette chaque polygone avant hors du visage (sommets + arêtes subdivisées) : aucune mèche sur un œil.
+La couche arrière (queue, chignon, tresses, mèches de dos) est dessinée AVANT le cou et la tête ; la sous-couche, le cuir chevelu visible
+et les mèches avant APRÈS la tête. Les axes (peau, texture, couleur, pli de l'œil, sourcils/cils) sont tirés séparément : voir `random-axes.ts`.
+
 ## Découpage de la documentation
 
 Tout fichier de `docs/` est limité à ~200 lignes ; au-delà, une suite numérotée est créée
-(`CHANGELOG-2.md`, `ERRORS-2.md`…), la plus récente restant dans le fichier sans numéro.
+(`CHANGELOG-2.md`, `CHANGELOG-4.md`, `ERRORS-2.md`…), la plus récente restant dans le fichier sans numéro.

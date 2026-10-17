@@ -71,7 +71,18 @@ generateRandomFace(42, {
 });
 ```
 
-`npx tsx scripts/artefacts-face.ts` régénère les preuves visuelles dans `artefacts/` (voir `artefacts/README.md`).
+Coiffure, texture, implantation, queue/chignon/tresses, barbe et favoris sont des axes séparés ; la peau (clarté × sous-ton),
+le pli de l'œil et les sourcils/cils le sont aussi (rien n'est couplé à une origine) :
+
+```ts
+generateRandomFace(42, {
+  hair: { style: 'ponytail', texture: 'coily', curl: 0.7, hairlineShape: 'widow', recession: 0.5, thinning: 0.3,
+          tie: { height: 0.9, side: 0, tail: 0.7, thickness: 0.6, double: false } },
+  facialHair: { beard: 'long', mustache: 'pencil', sideburns: 'mutton', transition: 0.8, patchiness: 0.3 },
+});
+```
+
+`npx tsx scripts/artefacts-face.ts` et `npx tsx scripts/artefacts-hair.ts` régénèrent les preuves visuelles (`artefacts/`, `artefacts/cheveux-pilosite/`).
 
 Regard 3D et expression, sur un œil écrit à la main :
 

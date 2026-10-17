@@ -82,7 +82,9 @@ pas de nouveau code de rendu. `compound_eye` et `gem_eye` sont de VRAIS nouveaux
 | Visage complet (hôte `shape: 'face'` : crâne/mâchoire, oreilles, nez, bouche, joues) | ✅ — proportions en fractions de l'hôte ; repères anatomiques uniques (`face/landmarks.ts`) |
 | Yeux enfants du visage (ancre = canthus interne, taille bornée par l'orbite) | ✅ — 12 styles d'enveloppe × grosseurs de 0,3 à 4 testés ; position indépendante de la forme |
 | Génération aléatoire de visage complet (`generateRandomFace`) | ✅ — paires d'yeux des 48 identités des galeries (gauche/droite en miroir) ; expression partagée yeux + bouche |
-| Cheveux (8 styles × 4 franges), cou, pilosité (4 moustaches, 4 barbes) | ✅ — enfants du visage : positions lues dans `face/landmarks.ts`, jamais sur les yeux (0 cas sur 1500 visages) |
+| Cheveux (11 coiffures × 5 textures indépendantes × 4 franges ; queue, chignon, tresses), cou, pilosité (5 moustaches, 6 barbes, 4 favoris) | ✅ — enfants du visage : positions lues dans `face/landmarks.ts`, jamais sur les yeux (0 cas sur 1500 visages) |
+| Implantation réelle (forme, tempes dégarnies, irrégularité), mèches principales/secondaires, cuir chevelu visible, éclaircissement | ✅ — `face/hair/` ; transitions peau/poils et zones clairsemées |
+| Axes indépendants : clarté de peau, sous-ton rosé→olive→doré, texture, pli de l'œil ; sourcils/cils distincts | ✅ — `generation/random-axes.ts` ; indépendance vérifiée statistiquement (`tests/hair-system.test.ts`) |
 | Asymétrie légère gauche/droite des yeux (+ bouche) | ✅ — rotation autour du canthus interne : ancrage exact (1e-13 px) |
 | Rotation 3D du visage entier (occultation par le nez) | ⏳ — `headTurn` ne concerne encore que chaque œil |
 
@@ -96,7 +98,7 @@ pas de nouveau code de rendu. `compound_eye` et `gem_eye` sont de VRAIS nouveaux
 
 ## Prochaines étapes (non commencées)
 
-- ⏳ Épaules / vêtements sous le cou (aujourd'hui base plate élargie) ; coiffures supplémentaires (queue, chignon, tresses) ; cheveux sensibles à la rotation 3D
+- ⏳ Épaules / vêtements sous le cou (aujourd'hui base plate élargie) ; cheveux sensibles à la rotation 3D
 - ⏳ Motifs iris supplémentaires : nervures fines ramifiées, mandala composite
 - ⏳ Formes décoratives (cœurs, étoiles, étincelles, croix) pour le highlight — la pupille a maintenant remplissage/contours riches, mais reste une ellipse/fente, pas une forme libre
 - ⏳ Mélange de PLUSIEURS morphologies de cils au sein d'un même œil (ex. longs et fins au coin externe, courts et denses ailleurs, au lieu d'une seule morphologie dispersée statistiquement)
@@ -105,5 +107,5 @@ pas de nouveau code de rendu. `compound_eye` et `gem_eye` sont de VRAIS nouveaux
 - ⏳ Bibliothèques de motifs décoratifs pour l'iris/le highlight/la pupille (cœurs, étoiles, étincelles, croix, croissants, spirales, pétales, nervures)
 - ⏳ Cils transformés en éléments décoratifs (filaments, plumes, brins d'herbe)
 
-Voir `docs/CHANGELOG.md` pour l'historique détaillé des sessions et
+Voir `docs/CHANGELOG-4.md` (le plus récent) et `docs/CHANGELOG.md` pour l'historique détaillé des sessions et
 `docs/ERRORS.md` pour les erreurs rencontrées et leur correction.

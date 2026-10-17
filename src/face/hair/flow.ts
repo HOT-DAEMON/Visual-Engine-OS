@@ -31,7 +31,7 @@ export interface StyleDef {
 export const STYLES: Record<Exclude<HairStyle, 'bald'>, StyleDef> = {
   buzz: { radial: 1, sweep: 0, back: 0, gravity: 0, len: [0.012, 0], jitter: 0.1, off: [0.004, 0], mainW: [0.01, 0], sharp: 0.2 },
   short: { radial: 0.4, sweep: 0.6, back: 0.3, gravity: 0.12, len: [0.07, 0.06], jitter: 0.25, off: [0.01, 0.02], mainW: [0.026, 0.012], sharp: 0.6 },
-  spiky: { radial: 1, sweep: 0, back: 0.7, gravity: 0, len: [0.1, 0.1], jitter: 0.4, off: [0.008, 0.02], mainW: [0.03, 0.016], sharp: 1 },
+  spiky: { radial: 1, sweep: 0, back: 0.7, gravity: 0, len: [0.07, 0.07], jitter: 0.4, off: [0.008, 0.02], mainW: [0.03, 0.016], sharp: 1 },
   curly: { radial: 0.8, sweep: 0.3, back: 0.1, gravity: 0.25, len: [0.15, 0.12], jitter: 0.35, off: [0.05, 0.08], mainW: [0.04, 0.02], sharp: 0.4 },
   afro: { radial: 1, sweep: 0, back: 0.15, gravity: 0.04, len: [0.22, 0.2], jitter: 0.55, off: [0.1, 0.15], mainW: [0.05, 0.025], sharp: 0.2 },
   bob: { radial: 0.9, sweep: 0.35, back: 0, gravity: 1.5, len: [0.3, 0.1], jitter: 0.12, off: [0.018, 0.03], mainW: [0.034, 0.014], sharp: 0.5, hang: true },

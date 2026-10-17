@@ -1,5 +1,7 @@
 # Artefacts — visage complet (cheveux, cou, pilosité, asymétrie)
 
+> Preuves de la tâche suivante (cheveux par mèches, queue/chignon/tresses, axes indépendants) : dossier `artefacts/cheveux-pilosite/`.
+
 Preuves visuelles et mesurées. Tout se régénère avec `npx tsx scripts/gallery-faces.ts && npx tsx scripts/artefacts-face.ts`.
 Sur les images 05 et 06, les surcouches sont dessinées HORS du moteur (`scripts/lib/proof.ts`) à partir des mêmes
 repères que ceux qu'il utilise : tirets jaune = limite des sourcils, cyan = base du nez, vert = bouche,
@@ -9,7 +11,7 @@ pointillé blanc = axe du visage, rectangles magenta = empreintes réelles des y
 | Image | Ce qu'elle prouve |
 |---|---|
 | `01-galerie-48-visages.png` | Les 48 paires d'yeux des galeries (gauche/droite) posées sur 48 visages complets aléatoires. |
-| `02-styles-cheveux-x-franges.png` | 7 styles × 4 franges sur le MÊME visage : seul le cheveu change, le reste est identique. |
+| `02-styles-cheveux-x-franges.png` | 10 styles × 4 franges sur le MÊME visage : seul le cheveu change, le reste est identique. |
 | `03-pilosite-moustaches-x-barbes.png` | 4 moustaches × 4 barbes sur le même visage. |
 | `04-cous.png` | Largeurs/longueurs/évasements de cou, bornés par le menton et la mâchoire. |
 | `05-asymetrie-symetrique-vs-legere.png` | Haut : symétrique ; bas : mêmes visages, asymétrie légère (échelle 6 %, rotation 2,2°, canthi décalés de 0,7 % de H, bouche inclinée). |

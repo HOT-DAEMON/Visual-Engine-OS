@@ -79,10 +79,13 @@ export function bunLocks(ctx: HairCtx, T: Vec): HairLock[] {
 export function braidRoots(ctx: HairCtx): { at: Vec; sg: number }[] {
   const { h, lm, guard } = ctx;
   const n = h.braids.count;
+  // La tresse pend en ligne droite : on la pose hors du point le plus large du visage (joues comprises), de sa demi-largeur.
+  const hwMax = Math.max(...Array.from({ length: 14 }, (_, i) => guard.hw(lm.hair.sideY + ((lm.jawY - lm.hair.sideY) * i) / 13)));
+  const half = ((0.03 + 0.035 * h.braids.thickness) * lm.W) / 2;
   return Array.from({ length: n }, (_, k) => {
     const sg = n === 1 ? (h.tie.side < 0 ? -1 : 1) : k % 2 === 0 ? -1 : 1;
     const y = lm.hair.sideY + (0.02 + 0.1 * (n === 1 ? 0 : Math.floor(k / 2))) * lm.H;
-    return { at: { x: sg * (guard.hw(y) + 0.012 * lm.W), y }, sg };
+    return { at: { x: sg * (hwMax + half + 0.012 * lm.W), y }, sg };
   });
 }
 
@@ -91,7 +94,7 @@ export function braidLocks(ctx: HairCtx, root: Vec, sg: number): HairLock[] {
   const { h, lm, rnd } = ctx;
   const { H, W } = lm;
   const len = (0.2 + 0.55 * h.tie.tail) * H;
-  const c = resample(growLock(ctx, root, len, { dir: unit({ x: sg * 0.5, y: 0.85 }), gravity: 1.2 }), 40);
+  const c = resample(growLock(ctx, root, len, { dir: unit({ x: sg * 0.15, y: 1 }), gravity: 1.2 }), 40);
   const w = (0.03 + 0.035 * h.braids.thickness) * W;
   const { segs, end } = plait(c, w);
   const locks: HairLock[] = segs.map((poly, i) => ({ poly, rank: 'plait', tone: i % 2 === 0 ? 0 : -0.2, layer: 'back', edge: true }));

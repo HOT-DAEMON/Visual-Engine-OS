@@ -117,3 +117,25 @@ défaut est inchangé, ce n'était pas un défaut de rendu.
 
 Le cou se termine par une base plate élargie (pas d'épaules ni de vêtement) ; voir `docs/ROADMAP.md`.
 
+## Session 13 (cheveux par mèches, pilosité, axes indépendants)
+
+### 21. Une arête entre deux sommets autorisés traversait le coin de tempe (21 échecs sur 240 graines)
+Le garde-fou ne projetait que les SOMMETS des mèches. Une arête reliant un sommet au-dessus de la limite des sourcils à un sommet hors du
+contour coupait l'angle extérieur de l'œil. Correction : `guard.fit` subdivise (récursivement, 5 niveaux) toute arête dont le milieu tombe dans la
+zone interdite. Détecté par le test existant « aucun œil recouvert » ; désactiver la projection fait échouer 55 tests.
+
+### 22. Test de « crâne couvert » devenu faux avec une implantation réelle
+Il comptait comme « à couvrir » tout point du contour au-dessus de `centerY`, or une ligne reculée ou irrégulière peut passer plus haut. Le test
+lit maintenant la ligne d'implantation réelle (`geo.hairline`).
+
+### 23. Tresses presque invisibles
+Posées à `hw(y) + 0,012 W` et dessinées derrière la tête, elles étaient cachées à moitié (largeur ≈ 0,05 W). Elles sont maintenant posées hors du
+point le plus large du visage (joues comprises) + leur demi-largeur, et tombent droit.
+
+### 24. Détails d'outillage
+Aire de polygone signée (`polyArea` négatif selon l'orientation) : les tests prennent la valeur absolue. Fond de scène `#333` refusé (format
+`#rrggbb` imposé). `git commit` sans identité : identité locale au dépôt configurée.
+
+### Limite connue
+Les cheveux ne suivent pas encore la rotation 3D du visage entier ; une mèche texturée très serrée (crépu) est une approximation de silhouette,
+pas une simulation de brin. La tresse est un motif de chevrons, pas un tressage réel à trois brins.

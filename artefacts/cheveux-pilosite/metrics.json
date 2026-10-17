@@ -1,0 +1,37 @@
+{
+  "faces": 1500,
+  "hairOnEye": 0,
+  "sideburnOnEye": 0,
+  "hairlineBelowBrowLimit": 0,
+  "minHairlineMarginPctH": 3,
+  "meanLocks": 142,
+  "withTie": 311,
+  "withThinning": 304,
+  "withRecession": 456,
+  "monolid": 370,
+  "browDiffersFromHair": 1500,
+  "coilyOnLightSkin": 73,
+  "straightOnDarkSkin": 126,
+  "lightSkin": 438,
+  "darkSkin": 437,
+  "styles": {
+    "short": 197,
+    "ponytail": 224,
+    "long": 225,
+    "bob": 111,
+    "buzz": 87,
+    "curly": 124,
+    "afro": 108,
+    "bun": 87,
+    "bald": 108,
+    "spiky": 110,
+    "braids": 119
+  },
+  "textures": {
+    "straight": 459,
+    "wavy": 339,
+    "curly": 290,
+    "coily": 253,
+    "braided": 159
+  }
+}

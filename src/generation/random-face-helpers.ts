@@ -1,13 +1,13 @@
-import { hslToHex } from './palette';
+import { drawSkinAxes } from './random-axes';
 import { range, maybe } from './random-eye-helpers';
 import type { FaceParamsInput } from '../schema';
 
 export type ExpressionKind = 'neutral' | 'angry' | 'sad' | 'fearful' | 'melancholic' | 'drowsy' | 'surprised' | 'sulky' | 'furious' | 'joyful' | 'smiling' | 'fierce' | 'stressed';
 export const FACE_EXPRESSIONS: readonly ExpressionKind[] = ['neutral', 'neutral', 'neutral', 'angry', 'sad', 'fearful', 'melancholic', 'drowsy', 'surprised', 'sulky', 'furious', 'joyful', 'smiling', 'fierce', 'stressed'];
 
-/** Teinte de peau procédurale (continue, pas un catalogue) : de très claire à très foncée. */
+/** Teinte de peau : clarté et sous-ton INDÉPENDANTS (voir `random-axes.ts`). */
 export function drawSkin(rnd: () => number): string {
-  return hslToHex(range(rnd, 14, 34), range(rnd, 0.28, 0.6), range(rnd, 0.26, 0.82));
+  return drawSkinAxes(rnd).color;
 }
 
 /** Bouche induite par l'expression, pour que les yeux et la bouche racontent la même émotion. */
