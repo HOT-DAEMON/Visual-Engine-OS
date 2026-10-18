@@ -66,17 +66,22 @@ function beardPoly(p: FaceParams, lm: FaceLandmarks): Poly | null {
   const hw = (y: number): number => halfWidthAt(outline, y, samples);
   const L = p.facialHair.length;
   const ext = (kind === 'goatee' ? 0.01 + 0.05 * L : kind === 'stubble' ? 0 : kind === 'short' ? 0.004 : kind === 'long' ? 0.06 + 0.16 * L : 0.02 + 0.12 * L) * H;
-  const chin = H / 2;
+  // Bas du menton RÉEL (la mandibule peut être abaissée) et coin du menton : le contour du menton est arrondi, il n'a plus de base plate.
+  const chin = lm.chinY;
+  const corner = outline.keys.chinCorner;
   const ub = lm.lips.bottomY + 0.014 * H;
   const e = 0.003 * W;
   const full = kind !== 'goatee';
   const yStart = kind === 'short' ? (lm.noseBaseY + lm.lips.cornerY) / 2 : full ? lm.noseBaseY - 0.02 * H : ub;
   const tw = lm.lips.half * 0.8;
+  // Sans extension sous le menton, le bord suit le contour jusqu'au bas ; avec extension, il s'arrête au coin du menton
+  // et l'arc ci-dessous enveloppe le menton et dépasse de `ext`.
+  const yEnd = ext > 0 ? corner.y : chin;
   // Bord extérieur droit (de haut en bas) : le contour du visage ; goatee : un trapèze bridé par le contour.
-  const out = span(yStart, chin, 24).map((y): Vec => ({ x: full ? hw(y) + e : Math.min(tw * (1 - 0.15 * ((y - yStart) / (chin - yStart))), hw(y) + e), y }));
+  const out = span(yStart, yEnd, 24).map((y): Vec => ({ x: full ? hw(y) + e : Math.min(tw * (1 - 0.15 * ((y - yStart) / (yEnd - yStart))), hw(y) + e), y }));
   const rxB = (out[out.length - 1] as Vec).x;
   const taper = kind === 'long' ? 1.6 : 1;
-  const bottom = ext > 0 ? span(0, 1, 16).map((t): Vec => ({ x: rxB * Math.cos((t * Math.PI) / 2) ** taper * 0.98, y: chin + ext * Math.sin((t * Math.PI) / 2) })) : [];
+  const bottom = ext > 0 ? span(0, 1, 16).map((t): Vec => ({ x: rxB * Math.cos((t * Math.PI) / 2) ** taper * 0.98, y: yEnd + (chin + ext - yEnd) * Math.sin((t * Math.PI) / 2) })) : [];
   const right = [...out, ...bottom.slice(1)];
   if (!full) return orient([{ x: 0, y: ub + 0.012 * H }, ...right, ...[...right].reverse().map(mirrorX)]);
   // Bord intérieur : épouse la bouche à distance, sous la lèvre, puis rejoint la patte.
@@ -88,6 +93,12 @@ function beardPoly(p: FaceParams, lm: FaceLandmarks): Poly | null {
     { x: lm.lips.half * 0.55, y: ub - 0.002 * H },
     { x: 0, y: ub },
   ];
+  // Un contour de mâchoire plus étroit (angle mandibulaire arrondi) ne doit jamais laisser le bord intérieur dépasser du visage :
+  // chaque point intérieur est borné par la demi-largeur du crâne à sa hauteur (marge 0,008 W).
+  for (let i = 0; i < inner.length; i++) {
+    const q = inner[i] as Vec;
+    inner[i] = { x: Math.min(q.x, Math.max(0, hw(q.y) - 0.008 * W)), y: q.y };
+  }
   const innerR = [...inner].reverse();
   return orient([...right, ...[...right].reverse().map(mirrorX), ...inner.map(mirrorX), ...innerR.slice(1)]);
 }

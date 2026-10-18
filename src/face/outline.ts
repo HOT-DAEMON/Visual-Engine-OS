@@ -1,70 +1,53 @@
-import { cubicAt, norm, type Cubic, type Vec } from '../geometry/eye/primitives';
+import { cubicAt, type Cubic, type Vec } from '../geometry/eye/primitives';
 import { num } from '../core/svg';
+import { lowerContour } from './jaw/contour';
 import type { FaceParams } from '../schema';
 
 /**
- * Contour du crâne + mâchoire (géométrie pure, sans SVG). Repère local de l'hôte : origine au centre,
- * x vers la droite, y vers le bas ; la boîte englobante est exactement [-W/2, W/2] × [-H/2, H/2].
- * Le contour est symétrique : on ne construit que la moitié DROITE (du sommet au menton), la gauche
- * en est le miroir. Trois cubiques raccordées en tangente : sommet → temple (le plus large),
- * temple → coin de mâchoire, coin de mâchoire → bord du menton (tangente horizontale).
+ * Contour du crâne + mâchoire + menton (géométrie pure, sans SVG). Repère local de l'hôte : origine au centre, x vers la droite,
+ * y vers le bas ; le HAUT est à -H/2 et, bouche fermée, le BAS à H/2 (bouche ouverte, la mandibule s'abaisse : `bottomY` > H/2).
+ * Le contour est symétrique : on ne construit que la moitié DROITE (du sommet au menton), la gauche en est le miroir.
+ * Cinq cubiques raccordées en tangente : sommet → temple (le plus large), puis le contour bas de `jaw/contour.ts`
+ * (ramus, coin de mâchoire arrondi selon l'angle mandibulaire, corps de la mandibule, symphyse du menton).
  */
 const KAPPA = 0.5523; // contrôle d'un quart d'ellipse par une cubique
 
 export interface Outline {
-  /** Moitié droite, du sommet (0, -H/2) au bord droit du menton (cx, H/2). */
+  /** Moitié droite, du sommet (0, -H/2) au centre du bas du menton (0, bottomY). */
   readonly right: readonly Cubic[];
   readonly W: number;
   readonly H: number;
-  /** Demi-largeur du bas du menton (plat). */
+  /** Demi-largeur du menton au coin (là où le corps de la mandibule rejoint la symphyse). */
   readonly chinHalf: number;
+  /** Ordonnée du bas du menton : H/2 bouche fermée, plus bas quand la mandibule s'abaisse. */
+  readonly bottomY: number;
+  /** Points clés du contour bas, pour les repères et la vérification. */
+  readonly keys: { readonly gonion: Vec; readonly chinCorner: Vec; readonly bottom: Vec };
 }
-
-const along = (a: Vec, d: Vec, k: number): Vec => ({ x: a.x + d.x * k, y: a.y + d.y * k });
-const dist = (a: Vec, b: Vec): number => Math.hypot(b.x - a.x, b.y - a.y);
 
 export function headOutline(p: FaceParams, W: number, H: number): Outline {
   const top: Vec = { x: 0, y: -H / 2 };
   const temple: Vec = { x: W / 2, y: -H / 2 + p.templeY * H };
-  const jaw: Vec = { x: (p.jawWidth * W) / 2, y: -H / 2 + p.jawY * H };
-  const chin: Vec = { x: (p.chinWidth * W) / 2, y: H / 2 };
-
   const seg1: Cubic = {
     p0: top,
     p1: { x: KAPPA * temple.x, y: top.y },
     p2: { x: temple.x, y: temple.y - KAPPA * (temple.y - top.y) },
     p3: temple,
   };
-  // Tangente commune au coin de mâchoire : direction du coin vers le bord du menton.
-  const d = norm({ x: chin.x - jaw.x, y: chin.y - jaw.y });
-  const seg2: Cubic = {
-    p0: temple,
-    p1: { x: temple.x, y: temple.y + 0.45 * (jaw.y - temple.y) },
-    // Contrôle borné à x ≤ W/2 : sans cela le flanc pouvait dépasser la largeur déclarée du crâne.
-    p2: (() => {
-      const c = along(jaw, d, -0.4 * dist(temple, jaw));
-      return { x: Math.min(c.x, temple.x), y: c.y };
-    })(),
-    p3: jaw,
-  };
-  const seg3: Cubic = {
-    p0: jaw,
-    p1: along(jaw, d, 0.4 * dist(jaw, chin)),
-    p2: { x: chin.x + 0.35 * (jaw.x - chin.x), y: chin.y },
-    p3: chin,
-  };
-  return { right: [seg1, seg2, seg3], W, H, chinHalf: chin.x };
+  const low = lowerContour(p, W, H, temple);
+  return { right: [seg1, ...low.segments], W, H, chinHalf: low.chinHalf, bottomY: low.bottom.y, keys: { gonion: low.gonion, chinCorner: low.chinCorner, bottom: low.bottom } };
 }
 
 const mirror = (v: Vec): Vec => ({ x: -v.x, y: v.y });
 
-/** Chemin SVG fermé du contour complet (droite descendante, base du menton, gauche montante). */
+/** Chemin SVG fermé du contour complet (droite descendante, centre du bas du menton, gauche montante). */
 export function outlinePath(o: Outline): string {
   const f = (v: Vec): string => `${num(v.x)} ${num(v.y)}`;
-  const [s1, s2, s3] = o.right as [Cubic, Cubic, Cubic];
   const down = (c: Cubic): string => `C${f(c.p1)} ${f(c.p2)} ${f(c.p3)}`;
   const up = (c: Cubic): string => `C${f(mirror(c.p2))} ${f(mirror(c.p1))} ${f(mirror(c.p0))}`;
-  return `M${f(s1.p0)}${down(s1)}${down(s2)}${down(s3)}L${f(mirror(s3.p3))}${up(s3)}${up(s2)}${up(s1)}Z`;
+  const first = o.right[0] as Cubic;
+  // Descente côté droit jusqu'au centre du bas du menton, puis montée côté gauche (segments parcourus à l'envers et en miroir).
+  return `M${f(first.p0)}${o.right.map(down).join('')}${[...o.right].reverse().map(up).join('')}Z`;
 }
 
 /** Échantillons (x, y) de la moitié droite, y croissant. */
@@ -78,7 +61,7 @@ export function rightSamples(o: Outline, perSegment = 48): Vec[] {
 
 /** Demi-largeur du crâne à la hauteur y (interpolation sur les échantillons ; 0 hors de [-H/2, H/2]). */
 export function halfWidthAt(o: Outline, y: number, samples: readonly Vec[] = rightSamples(o)): number {
-  if (y < -o.H / 2 || y > o.H / 2) return 0;
+  if (y < -o.H / 2 || y > o.bottomY) return 0;
   for (let i = 1; i < samples.length; i++) {
     const a = samples[i - 1] as Vec;
     const b = samples[i] as Vec;

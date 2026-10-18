@@ -1,5 +1,7 @@
 import { clamp } from '../core/math';
-import { halfWidthAt, headOutline, type Outline } from './outline';
+import { halfWidthAt, headOutline, minHalfWidth, type Outline } from './outline';
+import { jawDerived, mouthOpenPx, type JawDerived } from './jaw/params';
+import { tipLift } from './nose/frame';
 import type { FaceAsymmetry, FaceParams } from '../schema';
 import type { Vec } from '../geometry/eye/primitives';
 
@@ -29,6 +31,34 @@ export interface HairLandmarks {
   readonly sideY: number;
 }
 
+/** Menton : le sillon mentolabial et le bas, mesurés. `heightPx` peut être inférieur à `requestedPx` si la lèvre ouverte le contraint. */
+export interface ChinLandmarks {
+  /** Ordonnée du sillon mentolabial (sous la lèvre inférieure). */
+  readonly sulcusY: number;
+  /** Hauteur RÉELLE du menton (sillon → bas), px ; `requestedPx` = hauteur demandée (`chin.height × H`). */
+  readonly heightPx: number;
+  readonly requestedPx: number;
+  /** Demi-largeur du menton au coin, et avancée simulée de la projection (px, sert aux ombres et aux reflets). */
+  readonly half: number;
+  readonly projectionPx: number;
+}
+
+/** Mâchoire : coin, angle, abaissement, déformations des tissus (voir `jaw/params.ts`). */
+export interface JawLandmarks {
+  readonly gonion: Vec;
+  readonly gonialDeg: number;
+  readonly drop: number;
+  readonly tissue: JawDerived['tissue'];
+}
+
+/** Région orbitaire (ellipse approchée autour de l'œil, avant ajustement) : reçoit l'ombre de l'arcade et du nez. */
+export interface OrbitLandmarks {
+  readonly cx: number;
+  readonly cy: number;
+  readonly rx: number;
+  readonly ry: number;
+}
+
 /**
  * Repères anatomiques d'un visage, en pixels dans le repère local de l'hôte (origine au centre).
  * SOURCE UNIQUE de vérité : le rendu du nez/de la bouche/des cheveux/de la barbe et le placement des
@@ -52,6 +82,9 @@ export interface FaceLandmarks {
   readonly browLimitY: number;
   readonly lowerLimitY: number;
   readonly lips: LipLandmarks;
+  readonly chin: ChinLandmarks;
+  readonly jaw: JawLandmarks;
+  readonly orbit: { readonly left: OrbitLandmarks; readonly right: OrbitLandmarks };
   readonly neck: NeckLandmarks;
   readonly hair: HairLandmarks;
   readonly asymmetry: FaceAsymmetry;
@@ -68,11 +101,24 @@ export function faceLandmarks(p: FaceParams, W: number, H: number): FaceLandmark
   const outline = headOutline(p, W, H);
   const mouthY = Math.max(-H / 2 + p.mouth.y * H, noseBaseY + NOSE_MOUTH_GAP * H);
   const m = p.mouth;
+  const jd = jawDerived(p, W, H);
+  // Déformation des tissus à l'ouverture : la lèvre inférieure s'étire (s'amincit) et la commissure s'écarte un peu.
+  const stretch = jd.tissue.lipStretch;
   const upperH = (0.012 + 0.03 * m.upperLip) * H;
-  const lowerH = (0.02 + 0.05 * m.lowerLip) * H;
-  const openH = m.open * 0.09 * H;
+  const lowerH = (0.02 + 0.05 * m.lowerLip) * H * (1 - stretch);
+  const openH = mouthOpenPx(p, H);
   const jawY = -H / 2 + p.jawY * H;
   const jawHalf = halfWidthAt(outline, jawY);
+  // La bouche est un enfant du visage : sa demi-largeur (étirée à l'ouverture) ne dépasse jamais 80 % de la demi-largeur du crâne à sa hauteur,
+  // quelle que soit la mâchoire (une mâchoire étroite et arrondie ne doit pas laisser les commissures toucher le contour).
+  const lipsHalf = Math.min(((m.width * W) / 2) * (1 + 0.15 * stretch), 0.8 * halfWidthAt(outline, mouthY));
+  const lipsBottom = mouthY + openH + lowerH;
+  // Sillon mentolabial : la mandibule entraîne le coussinet du menton (abaissement) ; le sillon reste sous la lèvre inférieure et au-dessus du bas.
+  const sulcusRaw = H / 2 - p.chin.height * H + jd.drop;
+  const sulcusY = Math.min(outline.bottomY - 0.04 * H, Math.max(lipsBottom + 0.014 * H, sulcusRaw));
+  // Région orbitaire : de la ligne médiane de l'œil au temple, comme l'ajustement des yeux (même marge).
+  const outerReach = minHalfWidth(outline, eyeY - 0.06 * H, eyeY + 0.06 * H) - 0.045 * W;
+  const orbitOf = (s: -1 | 1): OrbitLandmarks => ({ cx: s * (half + (outerReach - half) * 0.5), cy: eyeY - 0.006 * H, rx: Math.max(0.01, (outerReach - half) * 0.62), ry: 0.085 * H });
   // Le sourcil reste sous la zone de cheveux (au moins le haut du crâne, ou 0,2 H au-dessus de la ligne des
   // yeux : un front proportionné quelle que soit la hauteur des yeux) ; l'œil reste au-dessus du nez.
   const browLimitY = Math.max(-H / 2 + 0.12 * H, eyeY - 0.2 * H);
@@ -86,13 +132,17 @@ export function faceLandmarks(p: FaceParams, W: number, H: number): FaceLandmark
     eyeY,
     innerCanthus: { left: { x: -half, y: eyeY - dy }, right: { x: half, y: eyeY + dy } },
     noseBaseY,
-    noseTipY: noseBaseY - 0.012 * H,
+    // Pointe du nez : même formule que le moteur de nez (`nose/frame.ts`), jamais une copie divergente.
+    noseTipY: noseBaseY - tipLift(p.nose.tip.rotation) * H,
     mouthY,
-    chinY: H / 2,
+    chinY: outline.bottomY,
     jawY,
     browLimitY,
     lowerLimitY: eyeY + 0.5 * p.nose.length * H + 0.04 * H,
-    lips: { half: (m.width * W) / 2, cornerY: mouthY - m.curve * 0.03 * H, upperH, lowerH, openH, topY: mouthY - upperH * 0.6, bottomY: mouthY + openH + lowerH },
+    lips: { half: lipsHalf, cornerY: mouthY - m.curve * 0.03 * H, upperH, lowerH, openH, topY: mouthY - upperH * 0.6, bottomY: lipsBottom },
+    chin: { sulcusY, heightPx: outline.bottomY - sulcusY, requestedPx: p.chin.height * H, half: outline.chinHalf, projectionPx: p.chin.projection * 0.045 * W },
+    jaw: { gonion: outline.keys.gonion, gonialDeg: jd.gonialDeg, drop: jd.drop, tissue: jd.tissue },
+    orbit: { left: orbitOf(-1), right: orbitOf(1) },
     neck: { half: clamp((p.neck.width * W) / 2, outline.chinHalf * 1.15, jawHalf * 0.85), topY: -H / 2 + 0.6 * H, bottomY: H / 2 + p.neck.length * H },
     hair: { centerY: -H / 2 + (0.25 + 0.25 * hl) * zone, templeY, sideY: Math.max(-H / 2 + 0.08 * H, templeY - 0.05 * H) },
     asymmetry: p.asymmetry,

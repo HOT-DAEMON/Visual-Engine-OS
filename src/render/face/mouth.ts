@@ -9,7 +9,8 @@ import type { FaceParams } from '../../schema';
  */
 export function renderMouth(p: FaceParams, lm: FaceLandmarks, skin: string): string[] {
   const m = p.mouth;
-  const mw = m.width * lm.W;
+  // Largeur lue dans les repères (bornée par le contour, étirée à l'ouverture) : source unique partagée avec la moustache et la barbe.
+  const mw = lm.lips.half * 2;
   const H = lm.H;
   const cy = lm.mouthY;
   const cornerY = lm.lips.cornerY;

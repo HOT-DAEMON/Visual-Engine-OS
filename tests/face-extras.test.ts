@@ -75,7 +75,9 @@ describe('pilosité faciale : à sa place, qu’elle que soit sa forme', () => {
     for (const side of ['left', 'right'] as const) expect(Math.max(...(g.mustache ?? []).map((q) => q.y)) > f.fits[side].footprint.maxY).toBe(true);
     const s = rightSamples(lm.outline);
     for (const q of g.beard ?? []) {
-      if (q.y <= lm.H / 2) expect(Math.abs(q.x)).toBeLessThanOrEqual(halfWidthAt(lm.outline, q.y, s) + 0.01 * lm.W);
+      // Le menton n'a plus de base plate : au-dessus du COIN du menton la barbe reste dans le contour ; au-dessous, elle enveloppe le
+      // menton sans dépasser sa largeur au coin (`chinHalf`).
+      if (q.y <= lm.outline.keys.chinCorner.y) expect(Math.abs(q.x)).toBeLessThanOrEqual(halfWidthAt(lm.outline, q.y, s) + 0.01 * lm.W);
       else expect(Math.abs(q.x)).toBeLessThanOrEqual(lm.outline.chinHalf + 0.01 * lm.W);
     }
     // Le centre de la bouche et ses commissures ne sont jamais sous la barbe pleine ou la barbiche.

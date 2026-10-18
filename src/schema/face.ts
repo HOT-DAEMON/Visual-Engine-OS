@@ -2,6 +2,12 @@ import { z } from 'zod';
 import { Appearance } from './appearance';
 import { Hex, Unit } from './primitives';
 import { FaceAsymmetry, FaceFacialHair, FaceHair, FaceNeck } from './face-extras';
+import { FaceNose } from './face-nose';
+import { FaceChin, FaceJaw } from './face-jaw';
+import { FaceLighting } from './face-lighting';
+import { SkinMaterial } from './skin-material';
+
+export { FaceNose };
 
 /**
  * Paramètres d'un visage complet (hôte `shape: 'face'`). TOUTES les proportions sont des fractions de
@@ -10,19 +16,6 @@ import { FaceAsymmetry, FaceFacialHair, FaceHair, FaceNeck } from './face-extras
  * sont définies ICI, une seule fois, et le reste du moteur (rendu du nez/de la bouche, ajustement des
  * yeux) les relit via `face/landmarks.ts` — jamais de copie : c'est ce qui garantit la cohérence.
  */
-export const FaceNose = z
-  .object({
-    /** Distance ligne des yeux → base du nez, fraction de H. */
-    length: z.number().min(0.08).max(0.26).default(0.16),
-    /** Largeur des ailes du nez, fraction de W. */
-    width: z.number().min(0.08).max(0.3).default(0.16),
-    /** Taille des narines (0 = invisibles). */
-    nostril: Unit.default(0.6),
-    /** Relief de l'arête (ombres latérales). */
-    bridge: Unit.default(0.4),
-  })
-  .strict();
-
 export const FaceMouth = z
   .object({
     /** Position verticale de la commissure, fraction de H depuis le haut du crâne. */
@@ -69,6 +62,9 @@ export const FaceParams = z
     /** Joues rosées (0 = aucune). */
     blush: Unit.default(0),
     nose: FaceNose.default({}),
+    /** Menton (hauteur, projection, symphyse…) et mandibule (angle, transition cou, mobilité) : voir `face-jaw.ts`. */
+    chin: FaceChin.default({}),
+    jaw: FaceJaw.default({}),
     mouth: FaceMouth.default({}),
     ears: FaceEars.default({}),
     /** Cou, cheveux, pilosité, asymétrie : voir `face-extras.ts` (désactivés par défaut). */
@@ -78,6 +74,10 @@ export const FaceParams = z
     asymmetry: FaceAsymmetry.default({}),
     /** Apparence de la peau (teintes d'ombre/lumière/contour) : lue par le cou, les oreilles, la transition à l'implantation. */
     skin: Appearance.default({}),
+    /** Matériau de peau (rugosité par région, reflet diélectrique, diffusion sous-cutanée) : indépendant de la géométrie, voir `skin-material.ts`. */
+    skinMaterial: SkinMaterial.default({}),
+    /** Lumières de contour, ombres de contact, zones lumineuses des composants : voir `face-lighting.ts`. */
+    lighting: FaceLighting.default({}),
   })
   .strict();
 export type FaceParams = z.infer<typeof FaceParams>;

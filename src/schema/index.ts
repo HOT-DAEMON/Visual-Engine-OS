@@ -5,9 +5,13 @@
  */
 export { Hex, Slug } from './primitives';
 export { ColorSource, MaterialDescriptor, PresetRef, MaterialRef } from './color-material';
-export { LightSpec, Transform } from './light-transform';
+export { LightSpec, LightInfluence, Transform } from './light-transform';
 export { HostSpec } from './host';
-export { FaceParams, FaceNose, FaceMouth, FaceEars, type FaceParamsInput } from './face';
+export { FaceParams, FaceMouth, FaceEars, type FaceParamsInput } from './face';
+export { FaceNose, NoseRoot, NoseDorsum, NoseTip, NoseAlae, NoseNostrils, NoseJunction, DORSUM_SHAPES, type FaceNoseInput } from './face-nose';
+export { FaceChin, FaceJaw, SYMPHYSIS_SHAPES } from './face-jaw';
+export { SkinMaterial, SkinRoughness, SkinSpecular, SkinSubsurface, SKIN_MODELS, SKIN_REGIONS, type SkinRegionId, type SkinMaterialInput } from './skin-material';
+export { FaceLighting, FaceRims, FaceContacts, LightZones, RimSpec, ContactSpec, RIM_SIDES, RIM_COMPONENTS, CONTACT_COMPONENTS, type RimComponent, type ContactComponent, type FaceLightingInput } from './face-lighting';
 export { FaceNeck, FaceHair, FaceFacialHair, FaceAsymmetry, HAIR_STYLES, HAIR_FRINGES, HAIR_TEXTURES, HAIR_TEXTURE_CHOICES, HAIRLINES, MUSTACHES, BEARDS, SIDEBURNS } from './face-extras';
 export { HairTie, HairBraids, type HairStyle, type HairTexture, type HairTextureChoice, type HairlineShape } from './hair-system';
 export { Lids, Liner } from './eye-lids';
