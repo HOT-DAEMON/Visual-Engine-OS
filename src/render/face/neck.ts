@@ -1,4 +1,5 @@
 import { darken } from '../../core/color';
+import type { ResolvedAppearance } from '../../appearance';
 import { el, num, urlRef } from '../../core/svg';
 import type { FaceLandmarks } from '../../face';
 import { spotGradient } from '../../materials';
@@ -19,17 +20,17 @@ export function neckPath(p: FaceParams, lm: FaceLandmarks): string {
  * derrière la tête). Teinte de la peau assombrie, ombre portée du menton, deux creux latéraux
  * (sterno-cléido-mastoïdiens). Dessiné AVANT la tête.
  */
-export function renderNeck(id: string, p: FaceParams, lm: FaceLandmarks, skin: string): { defs: string[]; markup: string[] } {
+export function renderNeck(id: string, p: FaceParams, lm: FaceLandmarks, skin: string, ra: ResolvedAppearance): { defs: string[]; markup: string[] } {
   if (!p.neck.visible) return { defs: [], markup: [] };
-  const base = darken(skin, 0.1 + 0.16 * p.neck.shade);
+  const base = ra.tone(-(0.25 + 0.4 * p.neck.shade), skin);
   const d = neckPath(p, lm);
   const clipId = `${id}-neck-clip`;
   const gid = `${id}-neck-shadow`;
   const { half, bottomY } = lm.neck;
   const len = bottomY - lm.H / 2;
-  const defs = [el('clipPath', { id: clipId }, [el('path', { d })]), spotGradient(gid, darken(skin, 0.85), 0.55 * (0.5 + p.neck.shade), 0.8)];
+  const defs = [el('clipPath', { id: clipId }, [el('path', { d })]), spotGradient(gid, darken(ra.shadow, 0.55), 0.55 * (0.5 + p.neck.shade), 0.8)];
   const groove = (sg: -1 | 1): string =>
-    el('path', { d: `M${num(sg * half * 0.8)} ${num(lm.jawY)}C${num(sg * half * 0.7)} ${num(lm.H / 2 + 0.2 * len)} ${num(sg * half * 0.4)} ${num(lm.H / 2 + 0.6 * len)} ${num(sg * half * 0.2)} ${num(bottomY)}`, fill: 'none', stroke: darken(skin, 0.5), 'stroke-width': half * 0.12, 'stroke-linecap': 'round', opacity: 0.22 });
+    el('path', { d: `M${num(sg * half * 0.8)} ${num(lm.jawY)}C${num(sg * half * 0.7)} ${num(lm.H / 2 + 0.2 * len)} ${num(sg * half * 0.4)} ${num(lm.H / 2 + 0.6 * len)} ${num(sg * half * 0.2)} ${num(bottomY)}`, fill: 'none', stroke: ra.tone(-1, skin), 'stroke-width': half * 0.12, 'stroke-linecap': 'round', opacity: 0.22 });
   const markup = [
     el('path', { d, fill: base }),
     el('g', { 'clip-path': urlRef(clipId) }, [

@@ -152,3 +152,7 @@ procédure de vérification dans **`docs/ARCHITECTURE.md`**.
 - Persistance en base et branchement prompt → JSON : non implémentés (le JSON + seed sont prêts à être stockés).
 - Cible Zod 3 (`.default()` re-validé). Passer à Zod 4 demande de revoir les défauts imbriqués.
 - Écart mesuré entre deux moteurs de rendu (Chromium vs resvg, scène `showcase` à 960 px) : écart absolu moyen 0,45/255 ; 1,5 % des pixels à plus de 8/255 (bords, flou). Les tests d'images de référence devront donc comparer avec tolérance, sur un moteur fixé.
+
+## Cheveux v2, moteur d'apparence, vérification
+
+Voir `docs/HAIR-V2.md`, `docs/HAIR-V2-FACE.md`, `docs/APPEARANCE.md`, `docs/VERIFY.md` ; preuves visuelles dans `artefacts/hair-v2/` (`npx tsx scripts/artefacts-hair-v2.ts`).

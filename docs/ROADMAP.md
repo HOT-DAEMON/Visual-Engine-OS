@@ -107,5 +107,10 @@ pas de nouveau code de rendu. `compound_eye` et `gem_eye` sont de VRAIS nouveaux
 - ⏳ Bibliothèques de motifs décoratifs pour l'iris/le highlight/la pupille (cœurs, étoiles, étincelles, croix, croissants, spirales, pétales, nervures)
 - ⏳ Cils transformés en éléments décoratifs (filaments, plumes, brins d'herbe)
 
+- ✅ Cheveux v2 (mèches en S, cônes, volutes, franges `sheer`/`blades`/`wispy`/`asym_brow`, côtés indépendants, occlusions, étages, pointes, épaisseurs, textures mélangées, cel) — `docs/HAIR-V2.md`, `docs/HAIR-V2-FACE.md`
+- ✅ Moteur d'apparence partagé (ombre/lumière/contour indépendants, dégradés N couleurs, effets) — `docs/APPEARANCE.md`
+- ✅ Couche de vérification (géométrie, anatomie, style) — `docs/VERIFY.md`
+- ⏳ Occlusions tirées au hasard dans le générateur (aujourd'hui sur demande) ; mèches 3D suivant la rotation du visage ; apparence appliquée aux yeux et aux lèvres
+
 Voir `docs/CHANGELOG-4.md` (le plus récent) et `docs/CHANGELOG.md` pour l'historique détaillé des sessions et
 `docs/ERRORS.md` pour les erreurs rencontrées et leur correction.

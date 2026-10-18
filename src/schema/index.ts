@@ -20,3 +20,5 @@ export { EyeSpec } from './eye';
 export { PanelSpec } from './panel';
 export { RobotEyeSpec } from './robot';
 export { SceneSpec, type SceneInput } from './scene';
+export { Appearance, AppearanceLight, AppearanceShading, AppearanceStop, AppearanceTexture, TEXTURE_KINDS, SHADING_MODES, type AppearanceInput } from './appearance';
+export { FLOW_MODES, FRINGE_ENGINES, EAR_BEHAVIORS, CHEEK_LOCKS, HairFlow, HairSilhouette, HairFringeEngine, HairRootLift, HairSide, HairSides, HairOcclusion, HairTiers, HairTips, HairStrands, HairTextureMix, HairLook } from './hair-v2';

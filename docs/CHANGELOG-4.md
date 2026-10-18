@@ -49,3 +49,35 @@ Les yeux, nez, bouche, pilosité restent des ENFANTS du visage (positions lues d
 - Mesures sur 1500 visages (`artefacts/cheveux-pilosite/metrics.json`) : cheveux sur un œil **0**, favoris sur un œil **0**, implantation sous la
   limite des sourcils **0**, marge minimale 3 % de H ; crépu + peau claire 73 cas, raide + peau foncée 126 cas ; sourcils ≠ cheveux 1500/1500.
 - Mutation : garde-fou désactivé → 55 échecs détectés. Images : `artefacts/cheveux-pilosite/` (10 images, `scripts/artefacts-hair.ts`).
+
+## Session : cheveux v2 + moteur d'apparence + vérification du rendu
+
+### Ajouté
+
+- **Moteur d'apparence partagé** (`src/appearance/`, contrat `schema/appearance.ts`, `docs/APPEARANCE.md`) : ombre / lumière / contour
+  indépendants, dégradés à N couleurs, texture, contraste, saturation, luminosité, opacité, émission, réflexion, réfraction, glow, bloom.
+  Lu par les cheveux, la pilosité, le cou, les oreilles, le nez et la transition à l'implantation.
+- **Formes de mèches** : grandes mèches en S flottantes, cônes rigides épais à la base, volutes libres sans gravité (`shapes.ts`).
+- **Silhouette** : gonflement (`puff`) pour toutes les textures, asymétrie par côté, report de masse (`volume.ts`).
+- **Racines relevées à la raie**, **longueurs étagées + sous-couches visibles**, **pointes irrégulières / retroussées / translucides**,
+  **trois niveaux d'épaisseur** (masses, moyennes, poils très fins), **textures mélangées par zone**.
+- **Moteur générique de frange** : `sheer` (fils individuels, peau visible), `blades` (grandes mèches triangulaires avec jour), `wispy`, `asym_brow`.
+- **Comportement par côté** : oreille cachée / dégagée / rangée, mèches de joue, indépendamment à gauche et à droite.
+- **Occlusions** : mèches devant le visage (calque `over` après les yeux), recouvrement mesuré = demandé.
+- **Ombrage cel** (2–3 tons à bords nets, bande de reflet blanche à contour dur), ombre portée teintée entre mèches.
+- **Génération** : `hairEngine: 'v2' | 'classic'`, `occlusions`; 47 % de couleurs vives (contre 16 %), dégradés racine → pointe.
+- **Couche de vérification** (`src/verify/`, `docs/VERIFY.md`) : géométrie, anatomie, style ; 40 contrôles distincts.
+
+### Modifié
+
+- `HairGeometry` : `over`, `tierMasses`, `occlusions`, `sides` ; `HairLock` : `kind`, `spine`, `w0`, `sharp`, `profile`, `tier`, `fade`, `edgeFade`.
+- `compileScene` : calque final des `overlay` (cheveux devant les yeux). Liste blanche SVG : primitives de filtre inertes.
+- Garde-fou : mode `cheek` ; en mode `fringe`, une pointe sous `yF` est **ramenée** à `yF` (plus poussée de côté).
+- `polyBox` en boucle (une chevelure de milliers de sommets faisait déborder la pile avec `Math.min(...xs)`).
+
+### Preuves
+
+- Tests : 1779 → 1866 (`tests/hair-v2.test.ts`, 87 tests : formes, franges, côtés, occlusions, étages, pointes, épaisseurs, apparence,
+  génération, vérification). Les tests du moteur classique passent `hairEngine: 'classic'`.
+- 300 seeds : **300/300** passent les trois couches (`artefacts/hair-v2/metrics.json`). Images : `artefacts/hair-v2/` (10 images, `scripts/artefacts-hair-v2.ts`).
+

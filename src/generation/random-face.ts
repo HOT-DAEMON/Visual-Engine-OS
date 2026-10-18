@@ -9,6 +9,10 @@ import { drawFaceExtras, type ExtrasOverride } from './random-face-extras';
 import { pick, range, type EyeInput } from './random-eye-helpers';
 
 export interface RandomFaceOptions extends ExtrasOverride {
+  /** Moteur de cheveux : 'v2' (défaut) ou 'classic' (reproduit exactement les visages d'avant la v2). */
+  readonly hairEngine?: 'v2' | 'classic';
+  /** Autorise des occlusions du visage par les cheveux tirées au hasard (v2) ; défaut : non. */
+  readonly occlusions?: boolean;
   /** Identifiant de l'hôte ; les yeux en dérivent (`<id>-eye-left`, …). Défaut : `face-<seed hex>`. */
   readonly id?: string;
   /** 'gallery' (défaut) : paire d'yeux d'une des 48 identités des galeries ; 'random' : œil tiré de la seed du visage. */
@@ -52,7 +56,7 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
   const rollDeg = range(rnd, -4, 4);
   const drawnIdentity = Math.floor(rnd() * GALLERY_IDENTITIES);
   const base = drawFaceParams(rnd, mouthFor(kind, intensity));
-  const extras = drawFaceExtras(rnd, options);
+  const extras = drawFaceExtras(rnd, options, { hairEngine: options.hairEngine, occlusions: options.occlusions });
   const params = FaceParams.parse({ ...base, neck: extras.neck, hair: extras.hair, facialHair: extras.facialHair, asymmetry: extras.asymmetry });
   const lm = faceLandmarks(params, width, height);
 

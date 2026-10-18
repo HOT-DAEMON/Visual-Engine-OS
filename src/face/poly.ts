@@ -27,12 +27,19 @@ export function inPoly(p: Poly, x: number, y: number): boolean {
   return inside;
 }
 
+/** Boîte englobante. Boucle (et non `Math.min(...xs)`) : une chevelure à des milliers de sommets ferait déborder la pile d'appels. */
 export function polyBox(p: Poly): { x: number; y: number; w: number; h: number } {
-  const xs = p.map((v) => v.x);
-  const ys = p.map((v) => v.y);
-  const x = Math.min(...xs);
-  const y = Math.min(...ys);
-  return { x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y };
+  let x0 = Infinity;
+  let y0 = Infinity;
+  let x1 = -Infinity;
+  let y1 = -Infinity;
+  for (const v of p) {
+    if (v.x < x0) x0 = v.x;
+    if (v.x > x1) x1 = v.x;
+    if (v.y < y0) y0 = v.y;
+    if (v.y > y1) y1 = v.y;
+  }
+  return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
 }
 
 export const mirrorX = (v: Vec): Vec => ({ x: -v.x, y: v.y });

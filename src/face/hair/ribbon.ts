@@ -2,7 +2,7 @@ import type { Vec } from '../../geometry/eye/primitives';
 import type { Poly } from '../poly';
 import { rot, smoothstep } from './noise';
 
-const normals = (c: Vec[]): Vec[] =>
+export const normals = (c: Vec[]): Vec[] =>
   c.map((_, i) => {
     const a = c[Math.max(0, i - 1)] as Vec;
     const b = c[Math.min(c.length - 1, i + 1)] as Vec;
@@ -73,4 +73,33 @@ export function plait(c: Vec[], w: number): { segs: Poly[]; end: Vec } {
     }));
   }
   return { segs, end: c[c.length - 1] as Vec };
+}
+
+/**
+ * Cône : largeur maximale `w0` à la RACINE (pas de rétrécissement : c'est la base épaisse d'un paquet rigide),
+ * qui décroît jusqu'à une pointe d'aiguille. `power` = 1 : bords droits (cône parfait) ; > 1 : bords concaves (aiguille).
+ */
+export function cone(c: Vec[], w0: number, power = 1): Poly {
+  const n = c.length;
+  const nn = normals(c);
+  const left: Vec[] = [];
+  const right: Vec[] = [];
+  c.forEach((p, i) => {
+    const u = i / (n - 1);
+    const w = (w0 * Math.max(0.0, 1 - u) ** power) / 2;
+    const q = nn[i] as Vec;
+    left.push({ x: p.x + q.x * w, y: p.y + q.y * w });
+    right.push({ x: p.x - q.x * w, y: p.y - q.y * w });
+  });
+  return [...left, ...right.reverse()];
+}
+
+/**
+ * DEMI-largeur du ruban (ou du cône) à l'abscisse réduite u ∈ [0, 1] : MÊME formule que `ribbon` / `cone`. Lue par le
+ * rendu pour tracer des bandes (ombre, reflet) exactement à l'intérieur de la mèche.
+ */
+export function halfWidth(u: number, w0: number, sharp: number, profile: 'ribbon' | 'cone', power = 1, root = 0.8): number {
+  if (profile === 'cone') return (w0 * Math.max(0, 1 - u) ** power) / 2;
+  const prof = sharp * (1 - u ** 1.2) + (1 - sharp) * (1 - 0.75 * u ** 2);
+  return Math.max(0.03 * w0, w0 * prof * (root + (1 - root) * Math.min(1, u * 5))) / 2;
 }

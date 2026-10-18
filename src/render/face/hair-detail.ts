@@ -1,4 +1,5 @@
-import { darken, lighten } from '../../core/color';
+import { darken } from '../../core/color';
+import type { ResolvedAppearance } from '../../appearance';
 import { mulberry32 } from '../../core/prng';
 import { el, num, urlRef } from '../../core/svg';
 import type { FaceLandmarks } from '../../face';
@@ -31,13 +32,13 @@ export function smoothPath(poly: Poly): string {
  * et fins « baby hairs » qui franchissent la ligne. Reste au-dessus de la limite des sourcils (déjà garantie
  * par la ligne d'implantation) : 0,02 H d'amplitude au plus.
  */
-export function hairlineTransition(geo: HairGeometry, p: FaceParams, lm: FaceLandmarks, skin: string): string[] {
+export function hairlineTransition(geo: HairGeometry, p: FaceParams, lm: FaceLandmarks, skinShadow: string): string[] {
   const h = p.hair;
   const rnd = mulberry32(h.seed ^ 0xbabe);
   const line = (dy: number): string => `M${geo.hairline.map((q) => `${num(q.x)} ${num(q.y + dy * lm.H)}`).join('L')}`;
   const out = [
-    el('path', { d: line(0.011), fill: 'none', stroke: darken(skin, 0.35), 'stroke-width': lm.W * 0.024, 'stroke-linecap': 'round', opacity: 0.05 }),
-    el('path', { d: line(0.005), fill: 'none', stroke: darken(skin, 0.35), 'stroke-width': lm.W * 0.014, 'stroke-linecap': 'round', opacity: 0.1 }),
+    el('path', { d: line(0.011), fill: 'none', stroke: skinShadow, 'stroke-width': lm.W * 0.024, 'stroke-linecap': 'round', opacity: 0.05 }),
+    el('path', { d: line(0.005), fill: 'none', stroke: skinShadow, 'stroke-width': lm.W * 0.014, 'stroke-linecap': 'round', opacity: 0.1 }),
   ];
   const n = geo.hairline.length;
   for (let i = 2; i < n - 2; i++) {
@@ -53,8 +54,10 @@ export function hairlineTransition(geo: HairGeometry, p: FaceParams, lm: FaceLan
 const GLOSS = { straight: 0.9, wavy: 0.7, curly: 0.35, coily: 0.12, braided: 0.5 } as const;
 
 /** Reflet côté lumière, limité à la chevelure avant (clip = union des polygones) : faible sur les textures crépues. */
-export function hairGloss(id: string, geo: HairGeometry, p: FaceParams, lm: FaceLandmarks, L: LightVector, rot: number): { defs: string[]; markup: string[] } {
-  const k = GLOSS[geo.texture];
+export function hairGloss(id: string, geo: HairGeometry, _p: FaceParams, lm: FaceLandmarks, L: LightVector, rot: number, ra: ResolvedAppearance): { defs: string[]; markup: string[] } {
+  // En ombrage cel, le reflet est porté par les bandes de chaque mèche : pas de tache douce par-dessus.
+  const k = ra.spec.shading.mode === 'cel' ? 0 : GLOSS[geo.texture] * (0.4 + 1.2 * ra.spec.reflection.intensity);
+  if (k === 0) return { defs: [], markup: [] };
   const loc = toLocal(L, rot);
   const box = polyBox(geo.front.flat());
   const gid = `${id}-hair-gloss`;
@@ -62,7 +65,7 @@ export function hairGloss(id: string, geo: HairGeometry, p: FaceParams, lm: Face
   const cx = box.x + box.w / 2 + loc.x * 0.2 * lm.W;
   const cy = box.y + box.h * 0.3 + loc.y * 0.06 * lm.H;
   return {
-    defs: [spotGradient(gid, lighten(p.hair.color, 0.75), 0.4 * k, 0.7), el('clipPath', { id: cid }, [el('path', { d: polyPath(...geo.front) })])],
+    defs: [spotGradient(gid, ra.highlight, 0.4 * k, 0.7), el('clipPath', { id: cid }, [el('path', { d: polyPath(...geo.front) })])],
     markup: [el('g', { 'clip-path': urlRef(cid) }, [el('ellipse', { cx, cy, rx: box.w * 0.34, ry: box.h * 0.2, fill: urlRef(gid) })])],
   };
 }

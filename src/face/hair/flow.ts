@@ -6,9 +6,10 @@ import type { Poly } from '../poly';
 import type { Guard } from './guard';
 import type { Hairline } from './hairline';
 import { rot, sub, unit } from './noise';
-import { plait, ribbon } from './ribbon';
-import { displace, resample, samplesFor, type TexSpec } from './texture';
-import type { HairLock, LockRank } from './types';
+import { cone, plait, ribbon } from './ribbon';
+import { flickTip, raggedTip } from './tips';
+import { displace, resample, samplesFor, textureSpec, type TexSpec } from './texture';
+import type { HairLock, LockKind, LockRank } from './types';
 
 /**
  * Définition d'une coiffure = champ de direction + longueur + largeur. `radial/sweep/back` pondèrent trois
@@ -56,6 +57,12 @@ export interface HairCtx {
   /** Centre des directions radiales et abscisse de la raie. */
   readonly C: Vec;
   readonly partX: number;
+  /** Gain d'enveloppe à l'abscisse normalisée s ∈ [−1, 1] (asymétrie de silhouette) : 1 = neutre. */
+  readonly gain: (s: number) => number;
+  /** Gonflement de la masse (fraction de W) ajouté à l'enveloppe pour toutes les textures. */
+  readonly puffW: number;
+  /** Retombée des racines relevées à la raie : (R) → { dir ajustée, gravité ajoutée }. */
+  readonly lift: (R: Vec, dir: Vec) => { dir: Vec; gravity: number };
 }
 
 /** Direction initiale locale à la racine R : mélange radial / balayage loin de la raie / vers l'arrière, + jitter. */
@@ -67,14 +74,15 @@ export function initialDir(ctx: HairCtx, R: Vec): Vec {
     x: rad.x * def.radial + sg * def.sweep + sg * 0.2 * def.back,
     y: rad.y * def.radial + 0.35 * def.sweep - def.back,
   };
-  return rot(unit(v), (ctx.rnd() - 0.5) * 2 * def.jitter);
+  const base = rot(unit(v), (ctx.rnd() - 0.5) * 2 * def.jitter);
+  return ctx.lift(R, base).dir;
 }
 
 /** Longueur cible d'une mèche (px) : style, volume/longueur, variation d'une mèche à l'autre, rétrécissement par la texture. */
 export function lockLen(ctx: HairCtx, fine: boolean): number {
   const { h, def, lm } = ctx;
   const grow = def.hang ? h.length : h.volume;
-  const base = (def.len[0] + def.len[1] * grow) * lm.H;
+  const base = (def.len[0] + def.len[1] * grow) * lm.H * (1 + ctx.puffW * 4);
   return base * (1 + (ctx.rnd() - 0.5) * h.lengthVariance * 1.4) * (fine ? 0.85 : 1) * ctx.spec.shrink;
 }
 
@@ -82,7 +90,7 @@ export function lockLen(ctx: HairCtx, fine: boolean): number {
 export function growLock(ctx: HairCtx, R: Vec, len: number, opts: { dir?: Vec; yEnd?: number; gravity?: number } = {}): Vec[] {
   const { H } = ctx.lm;
   let dir = opts.dir ?? initialDir(ctx, R);
-  const g = opts.gravity ?? ctx.def.gravity;
+  const g = (opts.gravity ?? ctx.def.gravity) + ctx.lift(R, dir).gravity;
   const n = opts.yEnd === undefined ? 16 : clamp(Math.ceil(len / (0.02 * H)), 16, 90);
   const ds = len / n;
   const pts: Vec[] = [R];
@@ -114,22 +122,50 @@ export interface LockOpts {
   readonly width: number;
   readonly rank: LockRank;
   readonly tone: number;
-  readonly layer: 'front' | 'back';
+  readonly layer: 'front' | 'back' | 'over';
   readonly sharp?: number;
   /** Mode du garde-fou (mèches avant) ; ignoré à l'arrière (cachées par la tête). */
-  readonly mode?: 'cap' | 'fringe';
-  /** Pas de texture (ligne déjà finale : frange, bord de chignon). */
+  readonly mode?: 'cap' | 'fringe' | 'cheek';
+  /** Pas de texture (ligne déjà finale : frange, bord de chignon, grande mèche en S). */
   readonly raw?: boolean;
+  /** Forme / rôle, étage, fondus (voir `HairLock`). */
+  readonly kind?: LockKind;
+  readonly tier?: number;
+  readonly fade?: number;
+  readonly edgeFade?: number;
+  /** Profil `cone` : base épaisse, bords droits, pointe d'aiguille (`power` : concavité). */
+  readonly profile?: 'ribbon' | 'cone';
+  readonly power?: number;
+  /** Texture de CETTE mèche (mélange de textures) ; défaut : celle de la coiffure. */
+  readonly tex?: HairTexture;
+  /** Pointe retroussée (0–1) vers l'extérieur de la tête (signe de l'abscisse de la racine). */
+  readonly flick?: number;
+  /** Pointe irrégulière (0–1). */
+  readonly ragged?: number;
 }
 
-/** Ligne médiane → mèche(s) : texture, ruban (ou tresse en texture `braided`), puis garde-fou sur chaque sommet avant. */
+const samplesOf = (c: Vec[], sp: TexSpec): number => samplesFor(Math.hypot((c[c.length - 1] as Vec).x - (c[0] as Vec).x, (c[c.length - 1] as Vec).y - (c[0] as Vec).y) * 1.25, sp);
+
+/**
+ * Ligne médiane → mèche(s) : texture, pointe retroussée, ruban (ou cône, ou tresse en texture `braided`), pointe
+ * irrégulière, puis garde-fou sur chaque sommet avant. Les champs `spine/w0/sharp/profile` décrivent le ruban
+ * AVANT garde-fou : le rendu s'en sert pour le dégradé, les bandes cel et l'ombre portée (il rogne par le polygone final).
+ */
 export function lockFrom(ctx: HairCtx, centre: Vec[], o: LockOpts): HairLock[] {
-  const wide = o.rank === 'main' ? ctx.spec.wide : 1;
+  const tex = o.tex ?? ctx.tex;
+  const spec = o.tex ? textureSpec(tex, ctx.h.curl, ctx.lm.W, ctx.lm.H) : ctx.spec;
+  const wide = o.rank === 'main' || o.rank === 'mass' ? spec.wide : 1;
   const guardPoly = (poly: Poly): Poly => (o.layer === 'front' ? ctx.guard.fit(poly, o.mode ?? 'cap') : poly);
-  if (ctx.tex === 'braided' && o.rank === 'main' && !o.raw) {
+  const meta = { kind: o.kind ?? ('lock' as LockKind), tier: o.tier ?? 0, fade: o.fade ?? 0, edgeFade: o.edgeFade ?? 0 };
+  if (tex === 'braided' && o.rank === 'main' && !o.raw) {
     const c = resample(centre, 36);
-    return plait(c, o.width * 0.9).segs.map((poly, i) => ({ poly: guardPoly(poly), rank: 'plait', tone: i % 2 === 0 ? o.tone : o.tone - 0.18, layer: o.layer, edge: true }));
+    return plait(c, o.width * 0.9).segs.map((poly, i) => ({ poly: guardPoly(poly), rank: 'plait', tone: i % 2 === 0 ? o.tone : o.tone - 0.18, layer: o.layer, edge: true, ...meta }));
   }
-  const c = o.raw ? centre : displace(resample(centre, samplesFor(Math.hypot(...[(centre[centre.length - 1] as Vec).x - (centre[0] as Vec).x, (centre[centre.length - 1] as Vec).y - (centre[0] as Vec).y]) * 1.25, ctx.spec)), ctx.spec, ctx.rnd() * 6.283, ctx.nz);
-  return [{ poly: guardPoly(ribbon(c, o.width * wide, o.sharp ?? ctx.def.sharp)), rank: o.rank, tone: o.tone, layer: o.layer, edge: o.rank === 'main' }];
+  let c = o.raw ? centre : displace(resample(centre, samplesOf(centre, spec)), spec, ctx.rnd() * 6.283, ctx.nz);
+  if (o.flick) c = flickTip(c, (c[0] as Vec).x < 0 ? -1 : 1, o.flick);
+  const w0 = o.width * wide;
+  const sharp = o.sharp ?? ctx.def.sharp;
+  let poly = o.profile === 'cone' ? cone(c, w0, o.power ?? 1) : ribbon(c, w0, sharp);
+  if (o.ragged) poly = raggedTip(poly, o.ragged, ctx.rnd() * 2 - 1, w0 * 1.1);
+  return [{ poly: guardPoly(poly), rank: o.rank, tone: o.tone, layer: o.layer, edge: o.rank === 'main' || o.rank === 'mass', spine: c, w0, sharp, profile: o.profile ?? 'ribbon', power: o.power ?? 1, ...meta }];
 }

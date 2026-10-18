@@ -10,7 +10,8 @@ const STYLES = HAIR_STYLES.filter((s) => s !== 'bald');
 const grid = (b: { minX: number; maxX: number; minY: number; maxY: number }): { x: number; y: number }[] =>
   Array.from({ length: 121 }, (_, k) => ({ x: b.minX + ((b.maxX - b.minX) * (k % 11)) / 10, y: b.minY + ((b.maxY - b.minY) * Math.floor(k / 11)) / 10 }));
 const hit = (polys: Poly[], pts: { x: number; y: number }[]): boolean => pts.some((q) => polys.some((p) => inPoly(p, q.x, q.y)));
-const withHair = (seed: number, hair: Record<string, unknown>, facialHair: Record<string, unknown> = {}) => generateRandomFace(seed, { hair: hair as never, facialHair: facialHair as never });
+// Ces tests décrivent le moteur CLASSIQUE (comptes de mèches, textures, tresses exacts) : les axes v2 sont testés dans hair-v2.test.ts.
+const withHair = (seed: number, hair: Record<string, unknown>, facialHair: Record<string, unknown> = {}) => generateRandomFace(seed, { hair: hair as never, facialHair: facialHair as never, hairEngine: 'classic' });
 const geo = (f: ReturnType<typeof generateRandomFace>) => hairGeometry(f.params, faceLandmarks(f.params, f.width, f.height));
 
 describe('ligne d\'implantation', () => {

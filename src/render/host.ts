@@ -45,5 +45,6 @@ export function compileHost(h: HostSpec, worldLight: LightVector): CompiledObjec
     );
     children.push(el('g', {}, marks));
   }
-  return { defs: [...out.defs, ...(parts?.defs ?? [])], markup: el('g', { transform: objectTransform(h.transform) }, children) };
+  const overlay = parts && parts.over.length ? el('g', { transform: objectTransform(h.transform) }, parts.over) : undefined;
+  return { defs: [...out.defs, ...(parts?.defs ?? [])], markup: el('g', { transform: objectTransform(h.transform) }, children), ...(overlay ? { overlay } : {}) };
 }

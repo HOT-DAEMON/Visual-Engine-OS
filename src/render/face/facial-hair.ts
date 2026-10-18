@@ -1,4 +1,4 @@
-import { darken, lighten } from '../../core/color';
+import { resolveAppearance, type ResolvedAppearance } from '../../appearance';
 import { mulberry32 } from '../../core/prng';
 import { el, num, urlRef } from '../../core/svg';
 import type { FaceLandmarks } from '../../face';
@@ -20,6 +20,8 @@ export interface FacialHairParts {
 
 interface Look {
   readonly color: string;
+  /** Apparence résolue (ombre / lumière dérivées de `color`) : mêmes contrats que les cheveux. */
+  readonly ra: ResolvedAppearance;
   readonly opacity: number;
   /** Transition peau/poils (0 = bord net) et zones clairsemées (0 = uniforme). */
   readonly soft: number;
@@ -51,7 +53,7 @@ function mass(id: string, poly: Poly, look: Look, L: LightVector, rot: number, f
   const strand = (q: { x: number; y: number }, i: number, o: number): string => {
     const { dx, dy } = flow(q.x, q.y);
     const len = W * (0.014 + 0.014 * rnd());
-    return el('path', { d: `M${num(q.x)} ${num(q.y)}l${num(dx * len)} ${num(dy * len)}`, fill: 'none', stroke: i % 3 === 0 ? lighten(color, 0.35) : darken(color, 0.4), 'stroke-width': W * 0.0036, 'stroke-linecap': 'round', opacity: (i % 3 === 0 ? 0.25 : 0.4) * o });
+    return el('path', { d: `M${num(q.x)} ${num(q.y)}l${num(dx * len)} ${num(dy * len)}`, fill: 'none', stroke: i % 3 === 0 ? look.ra.tone(0.5, color) : look.ra.tone(-0.9, color), 'stroke-width': W * 0.0036, 'stroke-linecap': 'round', opacity: (i % 3 === 0 ? 0.25 : 0.4) * o });
   };
   const strands = scatterIn(poly, box, count, seed, inPoly).filter((q) => !holes(q.x, q.y)).map((q, i) => strand(q, i, 1));
   const wide = inflate(poly, 1 + 0.06 * soft);
@@ -67,13 +69,14 @@ export function renderFacialHair(id: string, p: FaceParams, lm: FaceLandmarks, L
   const none: FacialHairParts = { defs: [], mustache: [], beard: [] };
   if (fh.mustache === 'none' && fh.beard === 'none' && fh.sideburns === 'none') return none;
   const geo = facialHairGeometry(p, lm);
-  const color = fh.color ?? darken(p.hair.color, 0.08);
+  const color = fh.color ?? p.hair.color;
+  const ra = resolveAppearance(color, fh.appearance);
   const defs: string[] = [];
   const mustache: string[] = [];
   const beard: string[] = [];
   const dens = 0.55 + 0.45 * fh.density;
   const W = lm.W;
-  const look = (o: number, s: number): Look => ({ color, opacity: o, soft: fh.transition, patch: fh.patchiness, seed: fh.seed + s });
+  const look = (o: number, s: number): Look => ({ color, ra, opacity: o, soft: fh.transition, patch: fh.patchiness, seed: fh.seed + s });
   if (geo.mustache) {
     const m = mass(`${id}-mustache`, geo.mustache, look(0.95, 11), L, rot, (x) => ({ dx: Math.sign(x || 1) * 0.9, dy: 0.45 }), 90, W);
     defs.push(...m.defs);
@@ -97,7 +100,7 @@ export function renderFacialHair(id: string, p: FaceParams, lm: FaceLandmarks, L
       });
       for (const q of polys) {
         for (const pt of scatterIn(q, polyBox(q), Math.round(220 * dens * (1 - 0.5 * fh.patchiness)), fh.seed + 17, inPoly)) {
-          beard.push(el('circle', { cx: pt.x, cy: pt.y, r: W * (0.0016 + 0.0014 * rnd()), fill: darken(color, 0.3), opacity: 0.55 * dens }));
+          beard.push(el('circle', { cx: pt.x, cy: pt.y, r: W * (0.0016 + 0.0014 * rnd()), fill: ra.tone(-0.7, color), opacity: 0.55 * dens }));
         }
       }
     } else {

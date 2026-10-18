@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import { Hex, Unit } from './primitives';
+import { Appearance } from './appearance';
+import { HairFlow, HairFringeEngine, HairLook, HairOcclusion, HairRootLift, HairSides, HairSilhouette, HairStrands, HairTextureMix, HairTiers, HairTips } from './hair-v2';
 import { HAIR_FRINGES, HAIR_STYLES, HAIR_TEXTURE_CHOICES, HAIRLINES, HairBraids, HairTie } from './hair-system';
 
 export { HAIR_FRINGES, HAIR_STYLES, HAIR_TEXTURES, HAIR_TEXTURE_CHOICES, HAIRLINES } from './hair-system';
@@ -71,6 +73,20 @@ export const FaceHair = z
     tie: HairTie.default({}),
     /** Tresses pendantes (style `braids`). */
     braids: HairBraids.default({}),
+    // --- Moteur v2 : tous les défauts sont neutres (voir `hair-v2.ts`) -------------------------------------------
+    flow: HairFlow.default({}),
+    silhouette: HairSilhouette.default({}),
+    fringeEngine: HairFringeEngine.default({}),
+    rootLift: HairRootLift.default({}),
+    sides: HairSides.default({}),
+    occlusion: HairOcclusion.default({}),
+    tiers: HairTiers.default({}),
+    tips: HairTips.default({}),
+    strands: HairStrands.default({}),
+    textureMix: HairTextureMix.default([]),
+    look: HairLook.default({}),
+    /** Apparence partagée (ombre/lumière/contour, dégradé, cel, effets) : voir `schema/appearance.ts`. */
+    appearance: Appearance.default({}),
   })
   .strict();
 
@@ -95,6 +111,8 @@ export const FaceFacialHair = z
     transition: Unit.default(0.5),
     /** Zones clairsemées (joues, menton) : 0 = couverture uniforme. */
     patchiness: Unit.default(0),
+    /** Apparence partagée de la pilosité (mêmes contrats que les cheveux). */
+    appearance: Appearance.default({}),
   })
   .strict();
 

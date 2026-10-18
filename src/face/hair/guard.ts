@@ -5,7 +5,7 @@ import type { FaceLandmarks } from '../landmarks';
 import { halfWidthAt, rightSamples } from '../outline';
 import type { Hairline } from './hairline';
 
-export type GuardMode = 'cap' | 'fringe';
+export type GuardMode = 'cap' | 'fringe' | 'cheek';
 
 /**
  * Garde-fou « enfant du visage » : chaque sommet de chaque mèche (avant) passe par `project`.
@@ -37,15 +37,25 @@ export function makeGuard(p: FaceParams, lm: FaceLandmarks, hl: Hairline): Guard
   const wSB = (0.022 + 0.018 * sb) * W;
   const yF = lm.browLimitY - 0.008 * H;
   const sideMargin = (y: number): number => (y <= yBs ? w0 + (wSB - w0) * clamp((y - yT) / (yBs - yT), 0, 1) : 0);
+  // Mode `cheek` : une mèche peut longer la joue DEVANT l'oreille. Marge bornée par la marge de l'œil au niveau des yeux
+  // (le bord extérieur d'un œil reste à 0,045 W du contour : `fit-eye.ts`), plus large sous le nez où il n'y a que la joue.
+  const cheekMargin = (y: number): number => {
+    const dEye = y - lm.eyeY;
+    if (dEye < -0.1 * H) return 0.04 * W;
+    if (dEye < 0.1 * H) return 0.03 * W;
+    return 0.03 * W + 0.055 * W * clamp((dEye - 0.1 * H) / (0.14 * H), 0, 1) * clamp((lm.jawY + 0.04 * H - y) / (0.1 * H), 0, 1);
+  };
+  const margin = (y: number, mode: GuardMode): number => (mode === 'cheek' ? Math.max(sideMargin(y), cheekMargin(y)) : sideMargin(y));
   const project = (v: Vec, mode: GuardMode = 'cap'): Vec => {
-    const inner = hw(v.y) - sideMargin(v.y);
+    const inner = hw(v.y) - margin(v.y, mode);
     if (Math.abs(v.x) >= inner) return v;
-    if (v.y > yF) return { x: (v.x < 0 ? -1 : 1) * inner, y: v.y };
+    // Frange : une pointe qui dépasse la limite des sourcils y est RAMENÉE (jamais poussée de côté : cela traçait une arête qui traversait le front).
+    if (v.y > yF) return mode === 'fringe' ? { x: v.x, y: yF } : { x: (v.x < 0 ? -1 : 1) * inner, y: v.y };
     const ymax = mode === 'fringe' ? yF : Math.min(yF, hl.yAt(v.x) + 0.01 * H);
     return v.y > ymax ? { x: v.x, y: ymax } : v;
   };
   const inZone = (v: Vec, mode: GuardMode): boolean => {
-    const inner = hw(v.y) - sideMargin(v.y);
+    const inner = hw(v.y) - margin(v.y, mode);
     if (Math.abs(v.x) >= inner) return false;
     return v.y > (mode === 'fringe' ? yF : Math.min(yF, hl.yAt(v.x) + 0.01 * H));
   };

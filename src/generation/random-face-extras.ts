@@ -2,6 +2,7 @@ import { HAIR_FRINGES, HAIR_TEXTURES, HAIRLINES, SIDEBURNS, type FaceHair, type 
 import { drawBrowLash, drawEyelidFold, type BrowLash, type EyelidFold } from './random-axes';
 import { hslToHex } from './palette';
 import { maybe, pick, range } from './random-eye-helpers';
+import { drawHairV2 } from './random-hair-v2';
 
 /** Couleur de cheveux : naturelle (pondérée), grise/blanche, ou vive (anime). Continue, pas un catalogue. */
 export function drawHairColor(rnd: () => number): string {
@@ -11,6 +12,13 @@ export function drawHairColor(rnd: () => number): string {
   if (r < 0.82) return hslToHex(range(rnd, 8, 20), range(rnd, 0.6, 0.8), range(rnd, 0.3, 0.45)); // roux
   if (r < 0.92) return hslToHex(range(rnd, 200, 240), range(rnd, 0.02, 0.1), range(rnd, 0.6, 0.88)); // gris / blanc
   return hslToHex(range(rnd, 0, 360), range(rnd, 0.6, 0.9), range(rnd, 0.42, 0.62)); // vif
+}
+
+export interface ExtrasOptions {
+  /** 'v2' (défaut) : tire aussi les axes du moteur de cheveux v2 (formes, franges, côtés, étages, apparence…) ; 'classic' : seeds d'avant. */
+  readonly hairEngine?: 'v2' | 'classic';
+  /** Autorise des occlusions du visage tirées au hasard (v2). */
+  readonly occlusions?: boolean;
 }
 
 export type ExtrasOverride = Partial<Pick<FaceParamsInput, 'neck' | 'hair' | 'facialHair' | 'asymmetry'>>;
@@ -35,7 +43,7 @@ export interface Extras extends Required<ExtrasOverride> {
  * tirages du visage : proportions, peau, expression et yeux d'une seed existante ne changent pas. Chaque axe
  * (coiffure, TEXTURE, implantation, couleur, barbe, pli…) est tiré séparément : aucun n'en déduit un autre.
  */
-export function drawFaceExtras(rnd: () => number, override: ExtrasOverride = {}): Extras {
+export function drawFaceExtras(rnd: () => number, override: ExtrasOverride = {}, options: ExtrasOptions = {}): Extras {
   const style = pick<FaceHair['style']>(rnd, ['bald', 'buzz', 'short', 'short', 'spiky', 'curly', 'afro', 'bob', 'long', 'long', 'ponytail', 'ponytail', 'bun', 'braids']);
   const color = drawHairColor(rnd);
   const hair = {
@@ -92,9 +100,11 @@ export function drawFaceExtras(rnd: () => number, override: ExtrasOverride = {})
   };
   const fold = drawEyelidFold(rnd);
   const browLash = drawBrowLash(rnd, (override.hair?.color as string | undefined) ?? color);
+  // Axes v2 : tirés en TOUT dernier (ordre fixe) pour ne rien changer aux tirages précédents d'une seed existante.
+  const v2 = options.hairEngine === 'classic' ? {} : drawHairV2(rnd, { style, color, texture }, { occlusions: options.occlusions });
   return {
     neck: { ...neck, ...override.neck },
-    hair: { ...hair, ...hairNew, ...override.hair },
+    hair: { ...hair, ...hairNew, ...v2, ...override.hair },
     facialHair: { ...facialHair, ...facialNew, ...override.facialHair },
     asymmetry: { ...asymmetry, ...override.asymmetry },
     fold,

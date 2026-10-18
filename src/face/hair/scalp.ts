@@ -4,6 +4,7 @@ import { orient, type Poly } from '../poly';
 import type { HairCtx } from './flow';
 import { arcAt } from './hairline';
 import { smoothstep, sub, unit } from './noise';
+import { liftBump } from './volume';
 import { ribbon } from './ribbon';
 import type { BareScalp } from './types';
 
@@ -14,12 +15,16 @@ import type { BareScalp } from './types';
  */
 export function capBase(ctx: HairCtx): { base: Poly; scalp: Poly } {
   const { h, lm, hl, arc, guard, C, def } = ctx;
-  const off = (def.off[0] + def.off[1] * h.volume) * lm.W;
+  // Enveloppe = volume de la coiffure + GONFLEMENT (`puff`, toutes textures) ; chaque point est mis à l'échelle par le gain de
+  // silhouette de son côté (asymétrie) et relevé par la bosse des racines à la raie.
+  const off = (def.off[0] + def.off[1] * h.volume + ctx.puffW) * lm.W;
   const outer = arc.map((q, i) => {
     const k = i / (arc.length - 1);
-    const f = off * smoothstep(Math.min(1, Math.min(k, 1 - k) * 6));
+    // Évanouissement court aux deux extrémités (temples) : la masse dépasse du crâne en haut ET sur les côtés.
+    const f = off * ctx.gain(2 * k - 1) * smoothstep(Math.min(1, Math.min(k, 1 - k) * (ctx.puffW > 0.01 ? 16 : 6)));
     const n = unit(sub(q, C));
-    return { x: q.x + n.x * f, y: q.y + n.y * f };
+    const bump = liftBump(h, ctx.partX, lm.W, lm.H, q.x);
+    return { x: q.x + n.x * f, y: q.y + n.y * f - bump };
   });
   const scalp = orient([...hl.pts, ...[...arc].reverse()]);
   const base = guard.fit(orient([...hl.pts, ...[...outer].reverse()]));

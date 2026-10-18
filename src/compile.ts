@@ -39,11 +39,15 @@ export function renderScene(scene: SceneSpec): string {
   const light = lightVector(scene.light);
   const defs: string[] = [];
   const body: string[] = [];
+  const overlays: string[] = [];
   for (const obj of expandScene(scene)) {
     const out = compileObject(obj, light);
     defs.push(...out.defs);
     body.push(out.markup);
+    if (out.overlay) overlays.push(out.overlay);
   }
+  // Calque final : ce qui passe DEVANT les enfants posés sur l'hôte (cheveux devant les yeux).
+  body.push(...overlays);
   const background = scene.background
     ? [el('rect', { x: 0, y: 0, width: scene.width, height: scene.height, fill: scene.background })]
     : [];

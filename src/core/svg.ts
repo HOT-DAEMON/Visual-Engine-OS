@@ -11,6 +11,8 @@ export type Attrs = Record<string, AttrValue>;
 const ELEMENTS: ReadonlySet<string> = new Set([
   'svg', 'defs', 'g', 'path', 'ellipse', 'circle', 'rect', 'clipPath',
   'linearGradient', 'radialGradient', 'stop', 'filter', 'feGaussianBlur',
+  // Primitives de filtre inertes (aucune ne charge de ressource ni n'exécute de code) : glow, bloom, réfraction, grain.
+  'feColorMatrix', 'feComponentTransfer', 'feFuncA', 'feMerge', 'feMergeNode', 'feOffset', 'feComposite', 'feFlood', 'feTurbulence', 'feDisplacementMap',
 ]);
 
 const ATTRIBUTES: ReadonlySet<string> = new Set([
@@ -20,6 +22,9 @@ const ATTRIBUTES: ReadonlySet<string> = new Set([
   'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'stroke-opacity',
   'opacity', 'transform', 'clip-path', 'clip-rule', 'filter',
   'gradientUnits', 'offset', 'stop-color', 'stop-opacity', 'stdDeviation',
+  'in', 'in2', 'result', 'operator', 'values', 'type', 'slope', 'intercept', 'dx', 'dy', 'flood-color', 'flood-opacity',
+  'k1', 'k2', 'k3', 'k4', 'baseFrequency', 'numOctaves', 'seed', 'scale', 'xChannelSelector', 'yChannelSelector',
+  'filterUnits', 'color-interpolation-filters',
 ]);
 
 const ID_RE = /^[A-Za-z][A-Za-z0-9_-]*$/;

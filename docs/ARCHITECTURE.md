@@ -154,6 +154,12 @@ Asymétrie : la rotation des yeux se fait AUTOUR du canthus interne (`x,y = −k
 La couche arrière (queue, chignon, tresses, mèches de dos) est dessinée AVANT le cou et la tête ; la sous-couche, le cuir chevelu visible
 et les mèches avant APRÈS la tête. Les axes (peau, texture, couleur, pli de l'œil, sourcils/cils) sont tirés séparément : voir `random-axes.ts`.
 
+## Cheveux v2, apparence, vérification
+
+`appearance/` (moteur de teintes/effets partagé) · `face/hair/` : `shapes` (S, cônes, volutes), `fringe2`, `sides`, `occlusion`, `layers`, `volume`,
+`mixtex`, `tips`, `classic` (mèches moyennes/fines) ; `render/face/hair-lock.ts` (dégradé, cel, ombre portée), `hair-cel.ts` · `verify/` (3 couches) ·
+`generation/random-hair-v2.ts`. Détail : `docs/HAIR-V2.md`, `docs/HAIR-V2-FACE.md`, `docs/APPEARANCE.md`, `docs/VERIFY.md`.
+
 ## Découpage de la documentation
 
 Tout fichier de `docs/` est limité à ~200 lignes ; au-delà, une suite numérotée est créée

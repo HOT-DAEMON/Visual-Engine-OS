@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { Appearance } from './appearance';
 import { Hex, Unit } from './primitives';
 import { FaceAsymmetry, FaceFacialHair, FaceHair, FaceNeck } from './face-extras';
 
@@ -75,6 +76,8 @@ export const FaceParams = z
     hair: FaceHair.default({}),
     facialHair: FaceFacialHair.default({}),
     asymmetry: FaceAsymmetry.default({}),
+    /** Apparence de la peau (teintes d'ombre/lumière/contour) : lue par le cou, les oreilles, la transition à l'implantation. */
+    skin: Appearance.default({}),
   })
   .strict();
 export type FaceParams = z.infer<typeof FaceParams>;

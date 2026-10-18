@@ -139,3 +139,36 @@ Aire de polygone signée (`polyArea` négatif selon l'orientation) : les tests p
 ### Limite connue
 Les cheveux ne suivent pas encore la rotation 3D du visage entier ; une mèche texturée très serrée (crépu) est une approximation de silhouette,
 pas une simulation de brin. La tresse est un motif de chevrons, pas un tressage réel à trois brins.
+
+## Session cheveux v2
+
+### 25. Ombre et lumière écrasées par le contraste
+Avec `contrast` > 0, un noir devenait `#000000` ; l'ombre dérivée (calculée avant étalonnage puis étalonnée) tombait sur la même valeur : lumière et
+ombre indiscernables sur 4 seeds / 300. Correction : teintes dérivées calculées depuis la base **déjà étalonnée**, reflet des noirs plus clair (L ≥ 0,28).
+
+### 26. Sous-couche d'étage sur tout le visage
+L'enveloppe radiale d'un étage englobe la tête : tracée devant, elle colorait le visage. Correction : rognée par la sous-couche (clip-path) devant la
+tête, copie derrière la tête.
+
+### 27. Pointe de frange qui traversait le front
+Une pointe de la frange v2 sous la limite des sourcils était poussée **de côté** vers le contour : le polygone gagnait une arête qui traversait tout le
+front et recouvrait 4 % d'un œil (seed 7065). Correction : en mode `fringe`, la pointe est ramenée à `yF` ; marge de 0,016 H sur les pointes.
+
+### 28. Débordement de pile (`Math.min(...xs)`)
+Une chevelure à plusieurs dizaines de milliers de sommets (poils très fins + étages) dépassait la limite d'arguments. Correction : boucles dans `polyBox`
+et l'enveloppe arrière.
+
+### 29. Recouvrement d'occlusion qui plafonnait à 0,5
+Largeur de mèche trop étroite (profil effilé, référence = largeur de la boîte même pour la bouche). Correction : profil carré (`sharp` 0,2), plage de largeur
+×3,2, référence = hauteur pour la bouche, meilleur essai conservé ; mesuré = demandé à 0,00 près ; bouche plafonnée à 0,6.
+
+### 30. NaN dans la bande de reflet
+`Math.sin(π)` pouvait valoir −1e-16 puis `** 0,7` → NaN. Correction : `Math.max(0, …)`.
+
+### 31. Tests du moteur classique cassés par la génération v2
+Comptes de mèches, textures et tresses exacts supposaient l'ancien moteur. Correction : ces tests utilisent `hairEngine: 'classic'` ; la v2 a ses propres tests.
+
+### Limites connues (v2)
+Les occlusions ne sont pas tirées au hasard par défaut. Les mèches en S, cônes et volutes sont des rubans 2D (pas de volume 3D) ; le cel et l'ombre portée
+sont stylisés. Le rideau d'oreille est une approximation par rubans larges.
+

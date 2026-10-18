@@ -1,0 +1,199 @@
+{
+  "seeds": 300,
+  "facesAllLayersOk": 300,
+  "errorFailures": 0,
+  "warnings": 52,
+  "palette": {
+    "v1": {
+      "vivid": 0.15666666666666668,
+      "hueFamilies": 10,
+      "gradient": 0
+    },
+    "v2": {
+      "vivid": 0.47333333333333333,
+      "hueFamilies": 12,
+      "gradient": 0.5466666666666666
+    }
+  },
+  "coverage": {
+    "flowModes": {
+      "classic": 190,
+      "ribbons": 44,
+      "cones": 25,
+      "mixed": 41
+    },
+    "fringeEngines": {
+      "off": 145,
+      "sheer": 58,
+      "blades": 46,
+      "wispy": 26,
+      "asym_brow": 25
+    },
+    "celShare": 0.4666666666666667,
+    "asymmetricSides": 0.74,
+    "withWisps": 0.4766666666666667,
+    "withMixedTextures": 0.26666666666666666
+  },
+  "checks": {
+    "geometry/scene-compiles": {
+      "total": 300,
+      "failed": 0
+    },
+    "geometry/finite": {
+      "total": 269,
+      "failed": 0
+    },
+    "geometry/min-vertices": {
+      "total": 269,
+      "failed": 0
+    },
+    "geometry/non-degenerate": {
+      "total": 269,
+      "failed": 0
+    },
+    "geometry/bounds": {
+      "total": 269,
+      "failed": 0
+    },
+    "geometry/hairline-above-brow": {
+      "total": 269,
+      "failed": 0
+    },
+    "geometry/face-interior-clear": {
+      "total": 269,
+      "failed": 0
+    },
+    "anatomy/eye-anchor-left": {
+      "total": 300,
+      "failed": 0
+    },
+    "anatomy/eye-side-left": {
+      "total": 300,
+      "failed": 0
+    },
+    "anatomy/eye-in-head-left": {
+      "total": 300,
+      "failed": 0
+    },
+    "anatomy/eye-anchor-right": {
+      "total": 300,
+      "failed": 0
+    },
+    "anatomy/eye-side-right": {
+      "total": 300,
+      "failed": 0
+    },
+    "anatomy/eye-in-head-right": {
+      "total": 300,
+      "failed": 0
+    },
+    "anatomy/mouth-below-nose": {
+      "total": 300,
+      "failed": 0
+    },
+    "anatomy/front-clear-eye-left": {
+      "total": 269,
+      "failed": 0
+    },
+    "anatomy/front-clear-eye-right": {
+      "total": 269,
+      "failed": 0
+    },
+    "anatomy/front-clear-nose": {
+      "total": 269,
+      "failed": 0
+    },
+    "anatomy/front-clear-mouth": {
+      "total": 269,
+      "failed": 0
+    },
+    "anatomy/occluder-spill-eyeLeft": {
+      "total": 269,
+      "failed": 0
+    },
+    "anatomy/occluder-spill-eyeRight": {
+      "total": 269,
+      "failed": 0
+    },
+    "anatomy/occluder-spill-nose": {
+      "total": 269,
+      "failed": 0
+    },
+    "anatomy/occluder-spill-mouth": {
+      "total": 269,
+      "failed": 0
+    },
+    "anatomy/ear-tucked-left": {
+      "total": 50,
+      "failed": 0
+    },
+    "anatomy/ear-height-left": {
+      "total": 269,
+      "failed": 0
+    },
+    "anatomy/ear-tucked-right": {
+      "total": 53,
+      "failed": 0
+    },
+    "anatomy/ear-height-right": {
+      "total": 269,
+      "failed": 0
+    },
+    "anatomy/forehead-visible-fringe": {
+      "total": 223,
+      "failed": 1
+    },
+    "style/cel-max-3-tones": {
+      "total": 124,
+      "failed": 0
+    },
+    "style/cel-hard-edges": {
+      "total": 124,
+      "failed": 0
+    },
+    "style/cel-highlight-band": {
+      "total": 123,
+      "failed": 0
+    },
+    "style/light-shadow-distinct": {
+      "total": 269,
+      "failed": 0
+    },
+    "style/shadow-near-main": {
+      "total": 160,
+      "failed": 0
+    },
+    "style/highlight-keeps-hue": {
+      "total": 160,
+      "failed": 0
+    },
+    "style/gradient-differs": {
+      "total": 152,
+      "failed": 0
+    },
+    "style/hair-skin-contrast": {
+      "total": 269,
+      "failed": 20
+    },
+    "anatomy/ear-free-left": {
+      "total": 129,
+      "failed": 0
+    },
+    "anatomy/ear-free-right": {
+      "total": 134,
+      "failed": 0
+    },
+    "style/silhouette-asymmetric": {
+      "total": 115,
+      "failed": 31
+    },
+    "anatomy/ear-covered-right": {
+      "total": 82,
+      "failed": 0
+    },
+    "anatomy/ear-covered-left": {
+      "total": 90,
+      "failed": 0
+    }
+  }
+}
