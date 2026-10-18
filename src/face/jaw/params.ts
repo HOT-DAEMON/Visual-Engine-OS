@@ -49,3 +49,17 @@ export function jawDerived(p: FaceParams, W: number, H: number): JawDerived {
     },
   };
 }
+
+/** Écart minimal nez → bouche (fraction de H) : source unique, partagée avec `faceLandmarks`. */
+export const NOSE_MOUTH_GAP = 0.07;
+
+/**
+ * Ordonnée (px) du bas de la lèvre inférieure, ESTIMÉE depuis les seuls paramètres (sans contour : le contour en a besoin pour placer le coin du
+ * menton, et les repères ont besoin du contour). Même formule que `faceLandmarks` (`lips.bottomY`), à l'étirement des tissus près.
+ * Le coin du menton ne remonte jamais au-dessus : la bouche repose sur le corps de la mandibule, pas sur l'arrondi étroit du menton.
+ */
+export function mouthFloorY(p: FaceParams, H: number): number {
+  const noseBase = -H / 2 + p.eyeLine * H + p.nose.length * H;
+  const mouthY = Math.max(-H / 2 + p.mouth.y * H, noseBase + NOSE_MOUTH_GAP * H);
+  return mouthY + mouthOpenPx(p, H) + (0.02 + 0.05 * p.mouth.lowerLip) * H;
+}

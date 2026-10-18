@@ -16,16 +16,20 @@ export function alaGeometry(p: FaceParams, F: NoseFrame, tipX: number): { left: 
   const H = F.H;
   // Attache sur la joue : l'aile descend un peu sous la base du nez (0,004 H), plus quand `attachment` est faible (sillon plus profond).
   const foot = F.baseY + (0.004 + 0.004 * (1 - a.attachment)) * H;
+  // Aile : un coin qui remonte le long de la paroi du nez (jonction haute près de la pointe), s'élargit en crête, redescend vers l'attache sur la joue
+  // puis revient le long du seuil de la narine. Six points de contrôle, courbe de Catmull-Rom fermée.
   const ctrl: Vec[] = [
-    { x: tipX + F.tipHalf * 0.92, y: F.tipY + 0.004 * H },
-    { x: F.alarX * 0.86, y: F.tipY + 0.2 * span },
-    { x: F.alarX, y: F.tipY + 0.55 * span },
-    { x: F.alarX * 0.84, y: foot },
+    { x: tipX + F.tipHalf * 1.05, y: F.tipY - 0.9 * F.tipRy },
+    { x: F.alarX * 0.78, y: F.tipY - 0.15 * F.tipRy },
+    { x: F.alarX, y: F.tipY + 0.4 * span },
+    { x: F.alarX * 0.8, y: foot },
     { x: F.colHalf * 1.15 + F.nw * 0.04, y: foot + 0.002 * H },
-    { x: F.colHalf * 1.25, y: F.tipY + 0.55 * span },
+    { x: F.colHalf * 1.35, y: F.tipY + 0.35 * span },
   ];
   const right = catmullRom(ctrl, true, 6);
+  // Le polygone commence à la jonction avec la pointe (ctrl[0]) : les 3 premiers segments (3 × 6 sous-points + 1) forment le bord extérieur.
+  const edge = right.slice(0, 3 * 6 + 1);
   const thick = F.nw * (0.03 + 0.05 * a.thickness);
-  const make = (side: -1 | 1, poly: Vec[]): NoseAlaGeo => ({ side, poly, crest: { x: side * (ctrl[1] as Vec).x, y: (ctrl[1] as Vec).y }, outerX: F.alarX, base: { x: side * (ctrl[3] as Vec).x, y: foot }, thicknessPx: thick });
+  const make = (side: -1 | 1, poly: Vec[]): NoseAlaGeo => ({ side, poly, outerEdge: edge.map((q) => ({ x: side * q.x, y: q.y })), crest: { x: side * (ctrl[2] as Vec).x, y: (ctrl[2] as Vec).y }, outerX: F.alarX, base: { x: side * (ctrl[3] as Vec).x, y: foot }, thicknessPx: thick });
   return { right: make(1, right), left: make(-1, mirrorPoly(right)) };
 }

@@ -1,6 +1,6 @@
 import { norm, type Cubic, type Vec } from '../../geometry/eye/primitives';
 import type { FaceParams } from '../../schema';
-import { jawDerived } from './params';
+import { jawDerived, mouthFloorY } from './params';
 
 /**
  * Contour BAS du visage : ramus (temple → coin de mâchoire), coin de mâchoire arrondi selon l'angle mandibulaire, corps de la
@@ -36,8 +36,9 @@ export function lowerContour(p: FaceParams, W: number, H: number, temple: Vec): 
   const G: Vec = { x: jawHalf, y: -H / 2 + p.jawY * H + 0.35 * jd.drop };
   const B: Vec = { x: 0, y: H / 2 + jd.drop };
   const chinHalf = Math.min((p.chinWidth * W) / 2, jawHalf * 0.92);
-  // Coin du menton : remonte avec la HAUTEUR du menton (contrôle indépendant de la largeur et de la projection), sous le coin de mâchoire.
-  const C: Vec = { x: chinHalf, y: Math.max(G.y + 0.03 * H, B.y - RISE[sym] * p.chin.height * H) };
+  // Coin du menton : remonte avec la HAUTEUR du menton (contrôle indépendant de la largeur et de la projection), sous le coin de mâchoire
+  // ET sous la lèvre inférieure (la bouche ne tombe jamais sur la partie étroite du menton).
+  const C: Vec = { x: chinHalf, y: Math.max(G.y + 0.03 * H, mouthFloorY(p, H) + 0.012 * H, B.y - RISE[sym] * p.chin.height * H) };
 
   const dIn = norm({ x: G.x - temple.x, y: G.y - temple.y });
   const dOut = norm({ x: C.x - G.x, y: C.y - G.y });

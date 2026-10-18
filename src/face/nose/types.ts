@@ -41,6 +41,8 @@ export interface NoseAlaGeo {
   readonly outerX: number;
   readonly base: Vec;
   readonly thicknessPx: number;
+  /** Bord EXTÉRIEUR de l'aile (de la jonction avec la pointe à l'attache sur la joue), polyligne ouverte : sillon alaire et lumière de contour. */
+  readonly outerEdge: readonly Vec[];
 }
 
 /** Une narine : goutte orientée (axe incliné, sommet vers la ligne médiane). `a` = demi-axe long, `b` = demi-axe court. */

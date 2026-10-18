@@ -12,5 +12,6 @@ export { generateIrisPalette, hslToHex, IRIS_FAMILY_NAMES, type IrisPaletteOptio
 export { generateRandomEye, type RandomEyeOptions } from './generation/random-eye';
 export { applyArchetype, ARCHETYPE_PRESETS } from './archetypes';
 export { generateRandomFace, type RandomFace, type RandomFaceOptions } from './generation/random-face';
+export { drawAnatomy, randomLight, deepMerge, type AnatomyOverride } from './generation/random-face-anatomy';
 export { galleryEye, galleryPair, GALLERY_IDENTITIES } from './generation/eye-pool';
 export { faceLandmarks, fitEyeToFace, headOutline, outlinePath, halfWidthAt, eyeReach, type FaceLandmarks, type EyeFit } from './face';

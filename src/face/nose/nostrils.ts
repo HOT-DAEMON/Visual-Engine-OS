@@ -41,7 +41,7 @@ export function nostrilGeometry(p: FaceParams, F: NoseFrame): { left: NostrilGeo
   const make = (side: -1 | 1): NostrilGeo => {
     // Asymétrie : la narine du côté positif grandit, l'autre rétrécit (±25 %) et s'incline de ±6°.
     const k = 1 + 0.25 * o.asymmetry * side;
-    const a = Math.min(F.nw * (0.07 + 0.07 * n.nostril) * scale * k, 0.3 * band + 0.002 * F.H);
+    const a = Math.min(F.nw * (0.07 + 0.07 * n.nostril) * scale * k, 0.42 * band + 0.002 * F.H);
     const b = a * (1 - 0.62 * o.shape);
     const tilt = clamp(o.tiltDeg + 6 * o.asymmetry * side, 0, 55);
     const c: Vec = { x: side * (F.colHalf + b * 1.15 + F.nw * 0.025), y: F.baseY - 0.001 * F.H - 0.9 * a };

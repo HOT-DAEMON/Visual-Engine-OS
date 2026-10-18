@@ -38,14 +38,15 @@ export type RimComponent = (typeof RIM_COMPONENTS)[number];
 
 export const FaceRims = z
   .object({
-    head: RimSpec.default({}),
-    nose: RimSpec.default({}),
-    tip: RimSpec.default({}),
-    alae: RimSpec.default({}),
-    ears: RimSpec.default({}),
-    chin: RimSpec.default({}),
-    mouth: RimSpec.default({}),
-    neck: RimSpec.default({}),
+    // Défauts DISCRETS (un liseré, pas un contour) : la tête et les oreilles un peu plus, les petits volumes très peu.
+    head: RimSpec.default({ intensity: 0.22, width: 0.3 }),
+    nose: RimSpec.default({ intensity: 0.12, width: 0.25 }),
+    tip: RimSpec.default({ intensity: 0.12, width: 0.25 }),
+    alae: RimSpec.default({ intensity: 0.1, width: 0.2 }),
+    ears: RimSpec.default({ intensity: 0.18, width: 0.25 }),
+    chin: RimSpec.default({ intensity: 0.14, width: 0.3 }),
+    mouth: RimSpec.default({ intensity: 0.08, width: 0.2 }),
+    neck: RimSpec.default({ intensity: 0.14, width: 0.3 }),
   })
   .strict();
 

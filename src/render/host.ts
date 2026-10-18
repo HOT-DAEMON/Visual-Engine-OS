@@ -31,7 +31,8 @@ export function compileHost(h: HostSpec, worldLight: LightVector): CompiledObjec
               ...a,
             }),
         };
-  const out = compileSurface(`${h.id}-surface`, surface, h.material, L, rot);
+  // Matériau de peau (par défaut) : remplace l'ombrage générique ; `legacy` conserve `compileSurface`.
+  const out = parts?.skin ? { defs: [], markup: parts.skin.markup } : compileSurface(`${h.id}-surface`, surface, h.material, L, rot);
 
   const children = parts ? [...parts.behind, out.markup, ...parts.front] : [out.markup];
   if (h.showAnchors) {

@@ -21,11 +21,8 @@ export function junctionGeometry(p: FaceParams, F: NoseFrame, lm: FaceLandmarks,
     // Du canthus interne (juste sous l'œil) à la crête alaire, en passant par la paroi (légèrement à l'extérieur d'elle).
     return catmullRom([{ x: s * F.canthusHalf * 1.02, y: lm.eyeY + 0.012 * H }, { x: s * lerp(F.canthusHalf, Math.abs(crest.x), 0.4), y: lerp(lm.eyeY, crest.y, 0.55) }, { x: crest.x * 1.04, y: crest.y }], false, 8);
   };
-  const groove = (a: NoseAlaGeo): Vec[] => {
-    // Bord extérieur de l'aile : les points de son polygone situés du côté extérieur (|x| ≥ 0,8 de la crête), décalés de 1,5 px vers l'extérieur.
-    const outer = a.poly.filter((q) => Math.abs(q.x) >= 0.8 * a.outerX * 0.84).sort((u, v) => u.y - v.y);
-    return outer.map((q) => ({ x: q.x + a.side * 1.5, y: q.y }));
-  };
+  // Sillon alaire : le bord extérieur de l'aile, décalé de 1,5 px vers l'extérieur.
+  const groove = (a: NoseAlaGeo): Vec[] => a.outerEdge.map((q) => ({ x: q.x + a.side * 1.5, y: q.y }));
   const nasolabial = (s: -1 | 1, ala: NoseAlaGeo): Vec[] => {
     const corner: Vec = { x: s * lm.lips.half * 1.02, y: lm.lips.cornerY - 0.01 * H };
     const start: Vec = { x: s * F.alarX * 0.95, y: F.baseY - 0.008 * H };

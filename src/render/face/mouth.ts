@@ -2,12 +2,15 @@ import { darken, lighten, mix } from '../../core/color';
 import { num, el } from '../../core/svg';
 import type { FaceLandmarks } from '../../face';
 import type { FaceParams } from '../../schema';
+import type { ResolvedAppearance } from '../../appearance';
+import { direction2D, type LightVector } from '../../lighting/light';
+import { intensityFor } from '../../lighting/rig';
 
 /**
  * Bouche : lèvre supérieure (arc de Cupidon), lèvre inférieure, intérieur sombre + dents si ouverte.
  * `curve` déplace les commissures (sourire ↑ / moue ↓) ; `open` écarte la lèvre inférieure.
  */
-export function renderMouth(p: FaceParams, lm: FaceLandmarks, skin: string): string[] {
+export function renderMouth(p: FaceParams, lm: FaceLandmarks, skin: string, ra?: ResolvedAppearance, light?: LightVector): string[] {
   const m = p.mouth;
   // Largeur lue dans les repères (bornée par le contour, étirée à l'ouverture) : source unique partagée avec la moustache et la barbe.
   const mw = lm.lips.half * 2;
@@ -35,7 +38,12 @@ export function renderMouth(p: FaceParams, lm: FaceLandmarks, skin: string): str
   }
   // Lèvre inférieure : bord haut = ligne de fermeture (descendue de `oh`), bord bas arrondi.
   out.push(el('path', { d: `M${f(L.x, L.y)}${rima(oh)}C${f(R.x - mw * 0.1, R.y + oh + ll * 0.9)} ${f(mw * 0.3, cy + oh + ll)} ${f(0, cy + oh + ll)}C${f(-mw * 0.3, cy + oh + ll)} ${f(L.x + mw * 0.1, L.y + oh + ll * 0.9)} ${f(L.x, L.y)}Z`, fill: lipColor }));
-  out.push(el('ellipse', { cx: 0, cy: cy + oh + ll * 0.55, rx: mw * 0.14, ry: ll * 0.16, fill: lighten(lipColor, 0.45), opacity: 0.35 }));
+  // Reflet de la lèvre inférieure : décalé vers la lumière (couleur de la lumière de la peau quand l'apparence est fournie), force ∝ intensité.
+  const dir = light ? direction2D(light) : { x: 0, y: -1 };
+  const I = light ? intensityFor(light, 'lips') : 1;
+  out.push(el('ellipse', { cx: dir.x * mw * 0.1, cy: cy + oh + ll * (0.55 + 0.1 * dir.y), rx: mw * 0.14, ry: ll * 0.16, fill: ra ? mix(lipColor, ra.light, 0.7) : lighten(lipColor, 0.45), opacity: 0.38 * I }));
+  // Commissures : légère ombre de chaque coin (la bouche s'enfonce dans la joue), un peu plus forte du côté opposé à la lumière.
+  if (ra) for (const s of [-1, 1] as const) out.push(el('ellipse', { cx: s * (mw / 2 + 0.012 * lm.W), cy: cornerY, rx: 0.014 * lm.W, ry: 0.011 * lm.H, fill: ra.shadow, opacity: 0.22 + 0.12 * (s * dir.x < 0 ? 1 : 0) }));
   // Lèvre supérieure : arc de Cupidon puis retour le long de la ligne de fermeture.
   out.push(el('path', { d: `M${f(L.x, L.y)}C${f(L.x + mw * 0.12, L.y - ul * 0.1)} ${f(-bow.x - mw * 0.1, bow.y)} ${f(-bow.x, bow.y)}C${f(-bow.x + mw * 0.06, bow.y)} ${f(-0.06 * mw, dip.y)} ${f(0, dip.y)}C${f(0.06 * mw, dip.y)} ${f(bow.x - mw * 0.06, bow.y)} ${f(bow.x, bow.y)}C${f(bow.x + mw * 0.1, bow.y)} ${f(R.x - mw * 0.12, R.y - ul * 0.1)} ${f(R.x, R.y)}${rimaBack(0)}Z`, fill: darken(lipColor, 0.08) }));
   out.push(el('path', { d: `M${f(L.x, L.y)}${rima(0)}`, fill: 'none', stroke: darken(lipColor, 0.55), 'stroke-width': mw * 0.012, 'stroke-linecap': 'round' }));

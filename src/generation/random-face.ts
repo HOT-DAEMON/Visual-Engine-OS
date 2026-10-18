@@ -6,9 +6,12 @@ import { galleryPair, GALLERY_IDENTITIES } from './eye-pool';
 import { generateRandomEye } from './random-eye';
 import { drawFaceParams, drawSkin, FACE_EXPRESSIONS, mouthFor, type ExpressionKind } from './random-face-helpers';
 import { drawFaceExtras, type ExtrasOverride } from './random-face-extras';
+import { drawAnatomy, type AnatomyOverride } from './random-face-anatomy';
 import { pick, range, type EyeInput } from './random-eye-helpers';
 
 export interface RandomFaceOptions extends ExtrasOverride {
+  /** Surcharges du nez, du menton, de la mâchoire, du matériau de peau, de l'éclairage et de l'apparence de la peau (fusion profonde sur les tirages). */
+  readonly anatomy?: AnatomyOverride;
   /** Moteur de cheveux : 'v2' (défaut) ou 'classic' (reproduit exactement les visages d'avant la v2). */
   readonly hairEngine?: 'v2' | 'classic';
   /** Autorise des occlusions du visage par les cheveux tirées au hasard (v2) ; défaut : non. */
@@ -57,7 +60,9 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
   const drawnIdentity = Math.floor(rnd() * GALLERY_IDENTITIES);
   const base = drawFaceParams(rnd, mouthFor(kind, intensity));
   const extras = drawFaceExtras(rnd, options, { hairEngine: options.hairEngine, occlusions: options.occlusions });
-  const params = FaceParams.parse({ ...base, neck: extras.neck, hair: extras.hair, facialHair: extras.facialHair, asymmetry: extras.asymmetry });
+  // Nouveaux axes (nez, menton, mâchoire, matériau, éclairage, apparence) : flux de tirage DÉRIVÉ, les tirages existants ne bougent pas.
+  const anatomy = drawAnatomy(seed, skin, options.anatomy);
+  const params = FaceParams.parse({ ...base, ...anatomy, nose: { ...(base.nose ?? {}), ...(anatomy.nose ?? {}) }, neck: extras.neck, hair: extras.hair, facialHair: extras.facialHair, asymmetry: extras.asymmetry });
   const lm = faceLandmarks(params, width, height);
 
   const id = options.id ?? `face-${(seed >>> 0).toString(16)}`;

@@ -1,6 +1,6 @@
 import { clamp } from '../core/math';
 import { halfWidthAt, headOutline, minHalfWidth, type Outline } from './outline';
-import { jawDerived, mouthOpenPx, type JawDerived } from './jaw/params';
+import { jawDerived, mouthOpenPx, NOSE_MOUTH_GAP, type JawDerived } from './jaw/params';
 import { tipLift } from './nose/frame';
 import type { FaceAsymmetry, FaceParams } from '../schema';
 import type { Vec } from '../geometry/eye/primitives';
@@ -91,7 +91,6 @@ export interface FaceLandmarks {
 }
 
 /** Marge entre la bouche et la base du nez (fraction de H) : la bouche ne remonte jamais sous le nez. */
-const NOSE_MOUTH_GAP = 0.07;
 
 export function faceLandmarks(p: FaceParams, W: number, H: number): FaceLandmarks {
   const eyeY = -H / 2 + p.eyeLine * H;
@@ -109,10 +108,12 @@ export function faceLandmarks(p: FaceParams, W: number, H: number): FaceLandmark
   const openH = mouthOpenPx(p, H);
   const jawY = -H / 2 + p.jawY * H;
   const jawHalf = halfWidthAt(outline, jawY);
-  // La bouche est un enfant du visage : sa demi-largeur (étirée à l'ouverture) ne dépasse jamais 80 % de la demi-largeur du crâne à sa hauteur,
+  // La bouche est un enfant du visage : sa demi-largeur (étirée à l'ouverture) ne dépasse jamais 80 % de la demi-largeur du crâne à sa hauteur (la plus étroite des deux : centre et bas de la bouche),
   // quelle que soit la mâchoire (une mâchoire étroite et arrondie ne doit pas laisser les commissures toucher le contour).
-  const lipsHalf = Math.min(((m.width * W) / 2) * (1 + 0.15 * stretch), 0.8 * halfWidthAt(outline, mouthY));
   const lipsBottom = mouthY + openH + lowerH;
+  // « à sa hauteur » = à la hauteur la plus basse de la bouche (commissure ou lèvre inférieure, + la marge de la barbe) : c'est là que le crâne est le plus étroit.
+  const yLow = Math.min(outline.bottomY - 1e-3, Math.max(mouthY - m.curve * 0.03 * H, lipsBottom) + 0.012 * H);
+  const lipsHalf = Math.min(((m.width * W) / 2) * (1 + 0.15 * stretch), 0.8 * Math.min(halfWidthAt(outline, mouthY), halfWidthAt(outline, yLow)));
   // Sillon mentolabial : la mandibule entraîne le coussinet du menton (abaissement) ; le sillon reste sous la lèvre inférieure et au-dessus du bas.
   const sulcusRaw = H / 2 - p.chin.height * H + jd.drop;
   const sulcusY = Math.min(outline.bottomY - 0.04 * H, Math.max(lipsBottom + 0.014 * H, sulcusRaw));
