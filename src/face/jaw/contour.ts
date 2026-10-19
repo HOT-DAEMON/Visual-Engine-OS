@@ -59,20 +59,18 @@ export function lowerContour(p: FaceParams, W: number, H: number, temple: Vec): 
   };
   // 2. Coin de mâchoire : arrondi de rayon `cornerRadius` (angle aigu → coin franc, angle obtus → grand arrondi).
   const corner: Cubic = { p0: A, p1: { x: A.x + (G.x - A.x) * 0.55, y: A.y + (G.y - A.y) * 0.55 }, p2: { x: Bp.x + (G.x - Bp.x) * 0.55, y: Bp.y + (G.y - Bp.y) * 0.55 }, p3: Bp };
-  // 3. Corps de la mandibule : légère convexité vers l'extérieur d'autant plus forte que `taper` est faible (côtés plus parallèles).
+  // 3. Corps de la mandibule : convexité réglée par la LONGUEUR des poignées (jamais par un décalage latéral, qui casserait la continuité de
+  //    tangente aux raccords) : `taper` faible → poignées longues → côtés plus bombés et parallèles ; `taper` fort → corps plus rectiligne en V.
   const tC = norm(TANGENT[sym]);
   const len4 = dist(Bp, C);
-  const bulge = (1 - p.jaw.taper) * 0.05 * W;
+  const k4 = 0.3 + 0.25 * (1 - p.jaw.taper);
   const body: Cubic = {
     p0: Bp,
     p1: (() => {
-      const q = along(Bp, dOut, 0.35 * len4);
-      return { x: Math.min(q.x + bulge, W / 2), y: q.y };
+      const q = along(Bp, dOut, k4 * len4);
+      return { x: Math.min(q.x, W / 2), y: q.y };
     })(),
-    p2: (() => {
-      const q = along(C, tC, -0.35 * len4);
-      return { x: Math.min(q.x + 0.6 * bulge, W / 2), y: q.y };
-    })(),
+    p2: along(C, tC, -k4 * len4),
     p3: C,
   };
   // 4. Symphyse : du coin du menton au centre du bas du menton. Menton pointu : l'arrivée est oblique (apex en V après le miroir) ;

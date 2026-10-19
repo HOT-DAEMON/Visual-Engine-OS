@@ -55,7 +55,7 @@ export function drawAnatomy(seed: number, skin: string, over: AnatomyOverride = 
     nostrils: { shape: u(0.3, 0.8), tiltDeg: u(12, 36), asymmetry: u(-0.3, 0.3), columella: u(0.3, 0.75), visibility: null },
     junction: { glabella: u(0.3, 0.8), orbital: u(0.3, 0.8), cheek: u(0.3, 0.8), nasolabial: u(0.2, 0.7) },
   };
-  const chin = { height: u(0.11, 0.2), projection: u(0.2, 0.8), symphysis: weighted(r, [['round', 50], ['square', 20], ['pointed', 15], ['cleft', 15]] as const), cleft: u(0.3, 0.8), mentolabial: u(0.25, 0.65), pad: u(0.25, 0.65) };
+  const chin = { height: u(0.085, 0.14), projection: u(0.2, 0.8), symphysis: weighted(r, [['round', 50], ['square', 20], ['pointed', 15], ['cleft', 15]] as const), cleft: u(0.3, 0.8), mentolabial: u(0.25, 0.65), pad: u(0.25, 0.65) };
   const jaw = { angle: u(0.15, 0.85), taper: u(0.25, 0.8), neckTransition: u(0.2, 0.8), submental: u(0, 0.35), mobility: u(0.3, 0.7), tissue: u(0.3, 0.7) };
   // Matériau de peau : une rugosité INDÉPENDANTE par région (la variation est le but), reflet large et non métallique.
   const skinMaterial: SkinMaterialInput = {

@@ -5,10 +5,12 @@ import type { RandomFace } from '../generation/random-face';
 import { checkAnatomy } from './anatomy';
 import { checkGeometry } from './geometry';
 import { checkStyle } from './style';
+import { checkFaceEngine } from './face-engine';
 import { report, type Check, type Report } from './types';
 
 export { paletteStats, isVivid } from './style';
 export type { Check, Report, VerifyLayer } from './types';
+export { engineContext, REFERENCE_LIGHT, type EngineContext } from './face-engine';
 
 /**
  * Vérifie le rendu d'un visage complet sur les trois couches (géométrique, anatomique, style). Pure et déterministe :
@@ -26,5 +28,7 @@ export function verifyFace(face: RandomFace): Report {
   if (geo) checks.push(...checkGeometry(geo, lm));
   checks.push(...checkAnatomy(face, lm, geo));
   checks.push(...checkStyle(face.params, geo, svg, skin));
+  // Moteur de visage (nez, menton, mâchoire, peau, ombres de contact, contours) : trois couches chiffrées.
+  checks.push(...checkFaceEngine(face));
   return report(checks);
 }

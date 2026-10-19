@@ -42,10 +42,22 @@ export function nostrilGeometry(p: FaceParams, F: NoseFrame): { left: NostrilGeo
     // Asymétrie : la narine du côté positif grandit, l'autre rétrécit (±25 %) et s'incline de ±6°.
     const k = 1 + 0.25 * o.asymmetry * side;
     const a = Math.min(F.nw * (0.07 + 0.07 * n.nostril) * scale * k, 0.42 * band + 0.002 * F.H);
-    const b = a * (1 - 0.62 * o.shape);
+    // Demi-axe court borné à 0,1 × la largeur des ailes : une grande narine reste dans son aile.
+    const b = Math.min(a * (1 - 0.62 * o.shape), 0.1 * F.nw);
     const tilt = clamp(o.tiltDeg + 6 * o.asymmetry * side, 0, 55);
-    const c: Vec = { x: side * (F.colHalf + b * 1.15 + F.nw * 0.025), y: F.baseY - 0.001 * F.H - 0.9 * a };
-    return { side, c, a, b, tiltDeg: tilt, poly: dropPoly(c, a, b, tilt, side) };
+    const t = (tilt * Math.PI) / 180;
+    // Emprise d'une ellipse de demi-axes (a, b) tournée de `tilt` : demi-largeur et demi-hauteur du rectangle qui la contient.
+    const extX = (aa: number, bb: number): number => Math.hypot(aa * Math.sin(t), bb * Math.cos(t));
+    const extY = (aa: number, bb: number): number => Math.hypot(aa * Math.cos(t), bb * Math.sin(t));
+    // Couloir disponible dans l'aile : de la columelle (+ marge) à 78 % de la crête alaire. Une narine trop grande est RÉDUITE pour y tenir :
+    // elle ne sort jamais de son aile, quelles que soient la taille, l'inclinaison et l'écartement des ailes.
+    const lo = F.colHalf + 0.03 * F.nw;
+    const hi = F.alarX * 0.78;
+    const fit = Math.min(1, (hi - lo) / Math.max(1e-6, 2 * extX(a, b)));
+    const a2 = a * fit;
+    const b2 = b * fit;
+    const c: Vec = { x: side * (lo + extX(a2, b2)), y: F.baseY - 0.001 * F.H - extY(a2, b2) };
+    return { side, c, a: a2, b: b2, tiltDeg: tilt, poly: dropPoly(c, a2, b2, tilt, side) };
   };
   return { left: make(-1), right: make(1) };
 }

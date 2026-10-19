@@ -23,8 +23,8 @@ export function alaGeometry(p: FaceParams, F: NoseFrame, tipX: number): { left: 
     { x: F.alarX * 0.78, y: F.tipY - 0.15 * F.tipRy },
     { x: F.alarX, y: F.tipY + 0.4 * span },
     { x: F.alarX * 0.8, y: foot },
-    { x: F.colHalf * 1.15 + F.nw * 0.04, y: foot + 0.002 * H },
-    { x: F.colHalf * 1.35, y: F.tipY + 0.35 * span },
+    { x: F.colHalf + F.nw * 0.02, y: foot + 0.002 * H },
+    { x: F.colHalf + F.nw * 0.02, y: F.tipY + 0.35 * span },
   ];
   const right = catmullRom(ctrl, true, 6);
   // Le polygone commence à la jonction avec la pointe (ctrl[0]) : les 3 premiers segments (3 × 6 sous-points + 1) forment le bord extérieur.
