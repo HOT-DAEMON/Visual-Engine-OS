@@ -31,7 +31,7 @@ export function skinRegions(lm: FaceLandmarks, nose: NoseGeometry): SkinRegions 
   const inner = (nose.widthPx / 2) * 1.1;
   const cheek = (s: -1 | 1): Ellipse => ({ cx: s * (inner + (hw(cheekY) - inner) * 0.5), cy: cheekY, rx: Math.max(0.01 * W, (hw(cheekY) - inner) * 0.42), ry: 0.075 * H });
   const templeY = lm.eyeY - 0.09 * H;
-  const temple = (s: -1 | 1): Ellipse => ({ cx: s * hw(templeY) * 0.86, cy: templeY, rx: 0.06 * W, ry: 0.09 * H });
+  const temple = (s: -1 | 1): Ellipse => ({ cx: s * hw(templeY) * 0.74, cy: templeY, rx: 0.075 * W, ry: 0.075 * H });
   const chin: Ellipse = { cx: 0, cy: (lm.chin.sulcusY + lm.chinY) / 2, rx: lm.chin.half * 0.9, ry: Math.max(0.02 * H, lm.chin.heightPx / 2) };
   const lipY = (lm.noseBaseY + lm.lips.topY) / 2;
   const upperLip: Ellipse = { cx: 0, cy: lipY, rx: 0.05 * W, ry: Math.max(0.008 * H, (lm.lips.topY - lm.noseBaseY) / 2) };

@@ -67,7 +67,9 @@ export function skinShading(mat: SkinMaterial, L: LightVector, regions: SkinRegi
     // et le réglage `reflection.size` de l'apparence l'élargissent encore. Jamais étroit comme un métal poli (plancher 0,3).
     const size = Math.min(1.1, Math.max(0.3, (0.18 + 0.5 * rough) * (0.6 + 0.8 * sp.broadness) * (0.8 + 0.6 * soft) * (0.6 + 0.8 * refl.size)));
     // Intensité : décroît avec la rugosité (reflet plus diffus et moins brillant), croît avec la graisse de la zone T.
-    const alpha = clamp01(I * sp.strength * (1 - 0.7 * rough) * oil * 0.34 * (2 * refl.intensity));
+    // Les tempes et le cou sont des surfaces qui fuient vers le contour : leur reflet est atténué de 40 % (sinon un liseré doré borde la tête).
+    const edge = id === 'temples' || id === 'neck' ? 0.6 : 1;
+    const alpha = clamp01(I * sp.strength * (1 - 0.7 * rough) * oil * 0.34 * (2 * refl.intensity) * edge);
     for (const r of regions[id]) {
       // Le reflet se décale vers le vecteur médian (même formule physique que le matériau générique) : il suit la lumière.
       spots.push({ region: id, e: { cx: r.cx + H.x * r.rx * 0.5, cy: r.cy + H.y * r.ry * 0.5, rx: r.rx * size, ry: r.ry * size }, alpha, soft: cel ? 0.04 : clamp01(0.55 + 0.4 * rough + 0.15 * soft), color: specColor });
