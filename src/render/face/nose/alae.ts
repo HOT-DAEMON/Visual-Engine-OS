@@ -17,7 +17,7 @@ function drawAla(c: NoseCtx, a: NoseAlaGeo, tag: string): string[] {
   const d = polyD(a.poly);
   const out: string[] = [];
   const vid = `${c.id}-nose-ala-${tag}`;
-  c.defs.push(el('radialGradient', { id: vid, cx: 0.5, cy: 0.5, r: 0.5, fx: 0.5 + dir.x * 0.25, fy: 0.5 + dir.y * 0.25 }, [stop(0, ra.light, 0.45 * al.volume * I), stop(0.55, ra.light, 0.08 * al.volume * I), stop(1, ra.shadow, 0.5 * al.volume)]));
+  c.defs.push(el('radialGradient', { id: vid, cx: 0.5, cy: 0.5, r: 0.5, fx: 0.5 + dir.x * 0.25, fy: 0.5 + dir.y * 0.25 }, [stop(0, ra.light, 0.6 * al.volume * I), stop(0.55, ra.light, 0.1 * al.volume * I), stop(1, ra.shadow, 0.65 * al.volume)]));
   out.push(el('path', { d, fill: urlRef(vid) }));
   // Bord : trait d'ombre intérieur (épaisseur de l'aile) + reflet fin décalé vers la lumière, tous deux limités à la silhouette de l'aile.
   const cid = `${c.id}-nose-ala-clip-${tag}`;

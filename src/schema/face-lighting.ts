@@ -43,10 +43,10 @@ export const FaceRims = z
     nose: RimSpec.default({ intensity: 0.12, width: 0.25 }),
     tip: RimSpec.default({ intensity: 0.12, width: 0.25 }),
     alae: RimSpec.default({ intensity: 0.1, width: 0.2 }),
-    ears: RimSpec.default({ intensity: 0.18, width: 0.25 }),
+    ears: RimSpec.default({ intensity: 0.1, width: 0.2 }),
     chin: RimSpec.default({ intensity: 0.14, width: 0.3 }),
     mouth: RimSpec.default({ intensity: 0.08, width: 0.2 }),
-    neck: RimSpec.default({ intensity: 0.14, width: 0.3 }),
+    neck: RimSpec.default({ intensity: 0.08, width: 0.25 }),
   })
   .strict();
 

@@ -77,9 +77,10 @@ export function skinShading(mat: SkinMaterial, L: LightVector, regions: SkinRegi
   // matériau ET de la lumière. Au milieu, la diffusion sous-cutanée rougit la transition (la peau n'est pas un plâtre).
   const width = cel ? 0.01 : clamp01(0.12 + 0.5 * mat.softness * (0.5 + 0.5 * soft));
   const t0 = 0.45 + 0.25 * L.z;
-  const sss = mat.subsurface.color ?? mix(ra.shadow, '#d1443a', 0.55);
-  const shadowA = clamp01(0.18 + 0.4 * I * (0.4 + 0.6 * (L.hardness ?? 0.5)));
-  const sssA = clamp01(mat.subsurface.strength * 0.5 * (0.6 + 0.8 * mat.subsurface.width));
+  // Diffusion sous-cutanée : une rougeur CHAUDE mais retenue (mélange 30 % avec un rouge sang) — plus saturée, elle forme des taches au lieu d'une transition.
+  const sss = mat.subsurface.color ?? mix(ra.shadow, '#c25048', 0.3);
+  const shadowA = clamp01(0.22 + 0.5 * I * (0.4 + 0.6 * (L.hardness ?? 0.5)));
+  const sssA = clamp01(mat.subsurface.strength * 0.32 * (0.6 + 0.8 * mat.subsurface.width));
   const terminator: ShadeStop[] = cel
     ? [{ offset: 0, color: ra.shadow, alpha: 0 }, { offset: t0, color: ra.shadow, alpha: 0 }, { offset: t0, color: ra.shadow, alpha: shadowA * 0.85 }, { offset: 1, color: ra.shadow, alpha: shadowA }]
     : [

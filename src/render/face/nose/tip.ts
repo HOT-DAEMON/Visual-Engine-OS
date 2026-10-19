@@ -16,10 +16,10 @@ export function renderTip(c: NoseCtx): string[] {
   const out: string[] = [];
   // Volume : dégradé radial sur la pointe elle-même (clair côté lumière, ombré à l'opposé).
   const vid = `${c.id}-nose-tipvol`;
-  c.defs.push(el('radialGradient', { id: vid, cx: 0.5, cy: 0.5, r: 0.5, fx: 0.5 + dir.x * 0.22, fy: 0.5 + dir.y * 0.22 }, [stop(0, ra.light, 0.55 * tp.highlight * I), stop(0.55, ra.light, 0.08 * tp.highlight * I), stop(0.85, ra.shadow, 0.1), stop(1, ra.shadow, 0.22)]));
+  c.defs.push(el('radialGradient', { id: vid, cx: 0.5, cy: 0.5, r: 0.5, fx: 0.5 + dir.x * 0.22, fy: 0.5 + dir.y * 0.22 }, [stop(0, ra.light, 0.85 * tp.highlight * I), stop(0.55, ra.light, 0.08 * tp.highlight * I), stop(0.85, ra.shadow, 0.1), stop(1, ra.shadow, 0.22)]));
   out.push(el('path', { d: polyD(t.poly), fill: urlRef(vid) }));
   // Ombre sous la pointe : ellipse floue sous le lobule, d'autant plus marquée que la projection est forte.
-  const sh = 0.2 + 0.35 * tp.projection;
+  const sh = 0.3 + 0.4 * tp.projection;
   out.push(c.kit.fill(`${polyD(t.poly.map((q) => ({ x: t.c.x + (q.x - t.c.x) * 1.05, y: t.c.y + t.ry * 0.95 + (q.y - t.c.y) * 0.35 })))}`, ra.shadow, sh * (0.6 + 0.4 * I), 1.6 * u));
   // Supra-pointe : rupture douce entre le lobule et les ailes, quand `alarBlend` est faible.
   const brk = 1 - tp.alarBlend;

@@ -27,7 +27,7 @@ export function renderWalls(c: NoseCtx): string[] {
     const x2 = (outer[Math.floor(n / 2)] as { x: number }).x;
     const lit = expo >= 0;
     const col = lit ? ra.light : ra.shadow;
-    const a = (lit ? 0.42 : 0.78) * relief * (0.35 + 0.65 * Math.abs(expo)) * (lit ? I : 0.6 + 0.4 * I);
+    const a = (lit ? 0.5 : 0.9) * relief * (0.35 + 0.65 * Math.abs(expo)) * (lit ? I : 0.6 + 0.4 * I);
     c.defs.push(el('linearGradient', { id: gid, gradientUnits: 'userSpaceOnUse', x1, y1: 0, x2, y2: 0 }, [stop(0, col, a), stop(0.5, col, a * 0.45), stop(1, col, 0)]));
     walls.push(el('path', { d, fill: urlRef(gid) }));
   }
@@ -39,7 +39,7 @@ export function renderWalls(c: NoseCtx): string[] {
   const mid = g.dorsum.half[Math.floor(n / 2)] as number;
   const shift = dir.x * mid * 0.35;
   const line = ax.slice(Math.floor(n * 0.15)).map((q) => ({ x: q.x + shift, y: q.y }));
-  out.push(c.kit.stroke(lineD(line), ra.light, Math.max(1.2 * u, mid * (shape === 'convex' ? 0.9 : 1.3)), Math.min(0.7, 0.5 * k * I * (0.5 + relief)), Math.max(1 * u, mid * 0.45)));
+  out.push(c.kit.stroke(lineD(line), ra.light, Math.max(1.2 * u, mid * (shape === 'convex' ? 0.9 : 1.3)), Math.min(0.8, 0.65 * k * I * (0.5 + relief)), Math.max(1 * u, mid * 0.45)));
   return out;
 }
 

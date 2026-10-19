@@ -156,3 +156,19 @@ describe('rendu : la peau reste cohérente sous différents éclairages (mesuré
     expect(Math.sign(a)).toBe(-Math.sign(dxA));
   }, 60000);
 });
+
+describe('régression : glow + bloom ensemble ne rendent pas la forme translucide', () => {
+  it('le centre d\'un aplat reste opaque et de la même couleur avec glow ET bloom actifs', async () => {
+    const { compileEffects } = await import('../src/appearance');
+    const { Appearance } = await import('../src/schema');
+    const spec = Appearance.parse({ glow: { intensity: 0.05, radius: 0.25 }, bloom: { intensity: 0.04, radius: 0.33, threshold: 0.77 } });
+    const ra2 = resolveAppearance('#d5ccc2', spec);
+    const fx = compileEffects('t', spec, ra2, { x: -60, y: -60, w: 120, h: 120 });
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="-60 -60 120 120"><rect x="-60" y="-60" width="120" height="120" fill="#000"/><defs>${fx.defs.join('')}</defs><rect x="-25" y="-25" width="50" height="50" fill="#d5ccc2" filter="${fx.filter}"/></svg>`;
+    const px = new Resvg(svg).render().pixels as Uint8Array;
+    const i = (60 * 120 + 60) * 4;
+    expect(Math.abs((px[i] as number) - 0xd5)).toBeLessThan(14);
+    expect(Math.abs((px[i + 1] as number) - 0xcc)).toBeLessThan(14);
+    expect(Math.abs((px[i + 2] as number) - 0xc2)).toBeLessThan(14);
+  });
+});

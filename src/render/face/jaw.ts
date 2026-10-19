@@ -34,7 +34,7 @@ export function renderChin(id: string, p: FaceParams, lm: FaceLandmarks, ra: Res
   out.push(kit.stroke(lineD(arc), ra.shadow, 3.4 * u, 0.45 * depth * (0.6 + 0.4 * I), 2.4 * u));
   // Coussinet / pogonion : tache lumineuse sur le menton, décalée vers la lumière ; plus forte et plus petite quand la projection augmente.
   const gid = `${id}-chin-pad`;
-  defs.push(el('radialGradient', { id: gid, cx: 0.5, cy: 0.5, r: 0.5 }, [stop(0, ra.light, 0.34 * c.pad * I * (0.6 + 0.8 * c.projection)), stop(0.6, ra.light, 0.1 * c.pad * I), stop(1, ra.light, 0)]));
+  defs.push(el('radialGradient', { id: gid, cx: 0.5, cy: 0.5, r: 0.5 }, [stop(0, ra.light, 0.26 * c.pad * I * (0.6 + 0.8 * c.projection)), stop(0.6, ra.light, 0.1 * c.pad * I), stop(1, ra.light, 0)]));
   const ph = lm.chin.heightPx;
   const pr = 0.7 * (1 - 0.25 * c.projection);
   out.push(el('ellipse', { cx: dir.x * half * 0.25, cy: y + ph * 0.55 + dir.y * ph * 0.1, rx: half * pr, ry: Math.max(0.012 * lm.H, ph * 0.36), fill: urlRef(gid) }));

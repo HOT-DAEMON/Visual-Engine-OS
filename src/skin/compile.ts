@@ -43,8 +43,9 @@ export function compileSkin(id: string, lm: FaceLandmarks, mat: SkinMaterial, ra
   // 2. Ombrage de forme : bords plus sombres, centre décalé vers la lumière (formule du matériau générique).
   defs.push(el('radialGradient', { id: `${id}-skin-form`, cx: 0.5, cy: 0.5, r: 0.5, fx: 0.5 + L.x * 0.28, fy: 0.5 + L.y * 0.28 }, [stop(0, ra.shadow, 0), stop(0.55, ra.shadow, sh.formEdge * 0.2), stop(1, ra.shadow, sh.formEdge)]));
   layers.push(draw({ fill: urlRef(`${id}-skin-form`) }));
-  // Terminateur : dégradé le long de la lumière, de x1 (côté lumière, offset 0) à x2 (côté ombre, offset 1) ; traversée = 0,55 × la plus grande dimension.
-  const R = 0.55 * Math.max(W, H);
+  // Terminateur : dégradé le long de la lumière, de x1 (côté lumière, offset 0) à x2 (côté ombre, offset 1).
+  // Traversée = demi-étendue du visage le long de la lumière (|x|·W + |y|·H, moitié) : les bords du visage atteignent pleinement lumière et ombre.
+  const R = 0.5 * (Math.abs(sh.dir.x) * W + Math.abs(sh.dir.y) * H) * 1.05;
   const cy0 = (-H / 2 + lm.chinY) / 2;
   defs.push(el('linearGradient', { id: `${id}-skin-term`, gradientUnits: 'userSpaceOnUse', x1: sh.dir.x * R, y1: cy0 + sh.dir.y * R, x2: -sh.dir.x * R, y2: cy0 - sh.dir.y * R }, sh.terminator.map((s) => stop(s.offset, s.color, s.alpha))));
   layers.push(draw({ fill: urlRef(`${id}-skin-term`) }));

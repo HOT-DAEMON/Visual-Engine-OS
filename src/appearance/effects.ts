@@ -34,6 +34,8 @@ const MIN = 0.02;
 export function compileEffects(id: string, a: Appearance, ra: ResolvedAppearance, box: FilterBox, scale = 1): EffectResult {
   const steps: string[] = [];
   let last = 'SourceGraphic';
+  // Chaque primitive empilée DOIT porter son `result` : la suivante la lit par ce nom (un nom sans primitive correspondante donne un résultat vide,
+  // donc une forme noire ou transparente dès que deux effets s'enchaînent).
   const push = (node: string, result: string): void => {
     steps.push(node);
     last = result;
@@ -52,26 +54,29 @@ export function compileEffects(id: string, a: Appearance, ra: ResolvedAppearance
     steps.push(el('feColorMatrix', { in: 'tn', type: 'matrix', values: `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 ${num(-2.2)} ${num(1.25)}`, result: 'tm' }));
     steps.push(el('feComposite', { in: 'tm', in2: 'SourceAlpha', operator: 'in', result: 'tc' }));
     steps.push(el('feColorMatrix', { in: 'tc', type: 'matrix', values: `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 ${num(a.texture.intensity * 0.5)} 0`, result: 'tx' }));
-    push(el('feMerge', {}, [el('feMergeNode', { in: last }), el('feMergeNode', { in: 'tx' })]), 'tg');
+    push(el('feMerge', { result: 'tg' }, [el('feMergeNode', { in: last }), el('feMergeNode', { in: 'tx' })]), 'tg');
   }
   if (a.glow.intensity > MIN) {
     const col = a.glow.color ?? ra.light;
     steps.push(el('feFlood', { 'flood-color': col, 'flood-opacity': a.glow.intensity, result: 'gf' }));
     steps.push(el('feComposite', { in: 'gf', in2: 'SourceAlpha', operator: 'in', result: 'gc' }));
     steps.push(el('feGaussianBlur', { in: 'gc', stdDeviation: (2 + 14 * a.glow.radius) * scale, result: 'gb' }));
-    push(el('feMerge', {}, [el('feMergeNode', { in: 'gb' }), el('feMergeNode', { in: last })]), 'gm');
+    push(el('feMerge', { result: 'gm' }, [el('feMergeNode', { in: 'gb' }), el('feMergeNode', { in: last })]), 'gm');
   }
   if (a.bloom.intensity > MIN) {
     // Alpha = (luminance − seuil) × gain : seules les zones claires alimentent le halo.
     const gain = 3 + 6 * a.bloom.intensity;
     steps.push(el('feColorMatrix', { in: last, type: 'matrix', values: `1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  ${num(0.2126 * gain)} ${num(0.7152 * gain)} ${num(0.0722 * gain)} 0 ${num(-a.bloom.threshold * gain)}`, result: 'bb' }));
-    steps.push(el('feGaussianBlur', { in: 'bb', stdDeviation: (3 + 12 * a.bloom.radius) * scale, result: 'bg' }));
-    push(el('feMerge', {}, [el('feMergeNode', { in: last }), el('feMergeNode', { in: 'bg' })]), 'bm');
+    // Le halo ne naît que des pixels PRÉSENTS : l'alpha issu de la luminance est borné par l'alpha d'entrée (`in`). Sans cela, avec un glow actif
+    // (pixels de halo clairs et translucides autour de la forme), la matrice rend ces pixels opaques et un voile blanc recouvre toute la forme.
+    steps.push(el('feComposite', { in: 'bb', in2: last, operator: 'in', result: 'bi' }));
+    steps.push(el('feGaussianBlur', { in: 'bi', stdDeviation: (3 + 12 * a.bloom.radius) * scale, result: 'bg' }));
+    push(el('feMerge', { result: 'bm' }, [el('feMergeNode', { in: last }), el('feMergeNode', { in: 'bg' })]), 'bm');
   }
   if (a.emission.intensity > MIN) {
     steps.push(el('feFlood', { 'flood-color': a.emission.color ?? ra.light, 'flood-opacity': a.emission.intensity * 0.45, result: 'ef' }));
     steps.push(el('feComposite', { in: 'ef', in2: 'SourceAlpha', operator: 'in', result: 'ec' }));
-    push(el('feMerge', {}, [el('feMergeNode', { in: last }), el('feMergeNode', { in: 'ec' })]), 'em');
+    push(el('feMerge', { result: 'em' }, [el('feMergeNode', { in: last }), el('feMergeNode', { in: 'ec' })]), 'em');
   }
   if (steps.length === 0) return NONE;
   const fid = `${id}-fx`;
