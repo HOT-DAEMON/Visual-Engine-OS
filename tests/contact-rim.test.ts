@@ -23,8 +23,8 @@ describe('arbre des composants', () => {
     const { components } = setup();
     const r = relations(components);
     expect(r.get('nose')?.parent).toBe('head');
-    expect(r.get('nose')?.children.sort()).toEqual(['alaL', 'alaR', 'tip']);
-    expect(r.get('alaL')?.siblings.sort()).toEqual(['alaR', 'tip']);
+    expect([...(r.get('nose')?.children ?? [])].sort()).toEqual(['alaL', 'alaR', 'tip']);
+    expect([...(r.get('alaL')?.siblings ?? [])].sort()).toEqual(['alaR', 'tip']);
     expect(r.get('nose')?.siblings).toContain('mouth');
     expect(r.get('head')?.parent).toBeNull();
   });

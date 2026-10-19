@@ -6,7 +6,7 @@ import type { RandomFace } from '../generation/random-face';
 import { lightVector } from '../lighting/light';
 import { faceComponents } from '../render/face/components';
 import { skinShading, type SkinShading } from '../skin';
-import { toHsl } from '../appearance';
+import { parseHex } from '../core/color';
 import { check, type Check } from './types';
 
 /** Lumière de référence des mesures (celle des scènes par défaut) : toutes les valeurs de ce fichier sont reproductibles. */
@@ -110,8 +110,10 @@ export function engineStyle(c: EngineContext): Check[] {
   const mat = face.params.skinMaterial;
   const o: Check[] = [];
   const cel = s.cel;
-  const sat = toHsl(s.specColor).s;
-  o.push(check('style', 'skin-specular-nonmetal', '<=', sat, 0.35, 'reflet de peau teinté (métallique) : il doit rester proche de la couleur de la lumière', 'error'));
+  // Chroma (max − min des canaux, 0–1) plutôt que la saturation HSL, instable près du blanc.
+  const rgb = parseHex(s.specColor);
+  const sat = (Math.max(...rgb) - Math.min(...rgb)) / 255;
+  o.push(check('style', 'skin-specular-nonmetal', '<=', sat, 0.3, 'reflet de peau teinté (métallique) : il doit rester proche de la couleur de la lumière', 'error'));
   const rough = Object.values(mat.roughness);
   const mean = rough.reduce((a, b) => a + b, 0) / rough.length;
   const sd = Math.sqrt(rough.reduce((a, b) => a + (b - mean) ** 2, 0) / rough.length);
