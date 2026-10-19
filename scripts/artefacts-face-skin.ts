@@ -36,14 +36,14 @@ const ROUGH = (v: number) => ({ forehead: v, nose: v, cheeks: v, temples: v, chi
 /** Surcouche : régions de la peau teintées par leur rugosité (bleu = lisse, rouge = rugueux). */
 const roughMap = (m: CellMeta): string => {
   const r = skinRegions(m.lm, m.nose);
-  const rough = m.face.params.skinMaterial.roughness;
+  const rough = m.params.skinMaterial.roughness;
   const col = (v: number): string => `rgb(${Math.round(255 * v)},${Math.round(90 + 60 * (1 - Math.abs(v - 0.5) * 2))},${Math.round(255 * (1 - v))})`;
   return (Object.keys(rough) as (keyof typeof rough)[]).flatMap((k) => r[k].map((e) => { const [cx, cy] = m.px(e.cx, e.cy); return `<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${(e.rx * m.s).toFixed(1)}" ry="${(e.ry * m.s).toFixed(1)}" fill="${col(rough[k])}" fill-opacity="0.45" stroke="#fff" stroke-width="1"/><text x="${(cx - 14).toFixed(1)}" y="${(cy + 4).toFixed(1)}" fill="#fff" font-size="11" font-family="DejaVu Sans">${rough[k].toFixed(2)}</text>`; })).join('');
 };
 make('rough', '09-peau-rugosite-par-region.png', 'Rugosité : uniforme lisse, uniforme rugueuse, variable par région, et carte des régions (bleu = lisse, rouge = rugueux)', [
   { label: 'uniforme 0,2 (reflets petits, forts)', patch: { skinMaterial: { roughness: ROUGH(0.2) } } },
   { label: 'uniforme 0,9 (reflets larges, faibles)', patch: { skinMaterial: { roughness: ROUGH(0.9) } } },
-  { label: 'variable : front 0,35 · nez 0,25 · joues 0,75 · cou 0,8', patch: { skinMaterial: { roughness: { forehead: 0.35, nose: 0.25, cheeks: 0.75, temples: 0.65, chin: 0.45, upperLip: 0.55, neck: 0.8 } } } },
+  { label: 'variable par région', patch: { skinMaterial: { roughness: { forehead: 0.35, nose: 0.25, cheeks: 0.75, temples: 0.65, chin: 0.45, upperLip: 0.55, neck: 0.8 } } } },
   { label: 'carte des régions (variable)', patch: { skinMaterial: { roughness: { forehead: 0.35, nose: 0.25, cheeks: 0.75, temples: 0.65, chin: 0.45, upperLip: 0.55, neck: 0.8 } } }, overlay: roughMap },
 ], 4, 300, 380);
 

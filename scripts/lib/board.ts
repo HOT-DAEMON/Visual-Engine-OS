@@ -25,6 +25,8 @@ export interface CellSpec {
 
 export interface CellMeta {
   readonly face: RandomFace;
+  /** `FaceParams` FINAUX (après surcharge `patch`) : c'est eux qui sont rendus. */
+  readonly params: FaceParams;
   readonly lm: FaceLandmarks;
   readonly nose: NoseGeometry;
   readonly s: number;
@@ -34,7 +36,7 @@ export interface CellMeta {
   readonly px: (x: number, y: number) => [number, number];
 }
 
-export const BASE_OPTS: RandomFaceOptions = { identity: 3, hairEngine: 'classic', hair: { style: 'bald', sideburns: 0 } as never, facialHair: { mustache: 'none', beard: 'none' }, neck: { visible: true } as never, expression: { kind: 'neutral', intensity: 0.4 }, eyeSize: 1 };
+export const BASE_OPTS: RandomFaceOptions = { identity: 3, hairEngine: 'classic', hair: { style: 'bald', sideburns: 0 } as never, facialHair: { mustache: 'none', beard: 'none', sideburns: 'none' }, neck: { visible: true } as never, expression: { kind: 'neutral', intensity: 0.4 }, eyeSize: 1 };
 
 /** Point d'intérêt (repère local de l'hôte) et échelle de chaque cadrage, pour une cellule de `w` px de large. */
 function framing(f: Focus, lm: FaceLandmarks, nose: NoseGeometry, w: number): { fx: number; fy: number; s: number } {
@@ -63,7 +65,7 @@ export function cell(spec: CellSpec, w: number, h: number): { png: Buffer; meta:
   const objects = [host, ...f0.objects.slice(1)] as SceneInput['objects'];
   const r = compileScene({ width: w, height: h, background: '#3b4157', ...(spec.light ? { light: { azimuthDeg: 330, elevationDeg: 55, color: '#ffffff', intensity: 1, ...spec.light } } : {}), objects } as never);
   if (!r.ok) throw new Error(r.issues.join('\n'));
-  const meta: CellMeta = { face: f0, lm, nose, s: fr.s, w, h, px: (x, y) => [tx + x * fr.s, ty + y * fr.s] };
+  const meta: CellMeta = { face: f0, params, lm, nose, s: fr.s, w, h, px: (x, y) => [tx + x * fr.s, ty + y * fr.s] };
   const svg = spec.overlay ? r.svg.replace(/<\/svg>\s*$/, `${spec.overlay(meta)}</svg>`) : r.svg;
   return { png: new Resvg(svg, { font: { loadSystemFonts: true } }).render().asPng(), meta };
 }

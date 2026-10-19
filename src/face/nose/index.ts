@@ -26,10 +26,11 @@ export function noseGeometry(p: FaceParams, lm: FaceLandmarks): NoseGeometry {
   const tip = tipGeometry(p, F, dorsum.deviationPx, prof.projectionPx);
   const alae = alaGeometry(p, F, tip.c.x);
   const nostrils = nostrilGeometry(p, F);
-  // Silhouette : paroi droite (racine → supra-pointe), contour extérieur de l'aile droite (crête → attache → seuil), puis le miroir.
+  // Silhouette : paroi droite (racine → supra-pointe), puis le bord EXTÉRIEUR de l'aile droite dans son ordre de parcours (jonction → crête → attache),
+  // puis le seuil jusqu'à la columelle ; le côté gauche en est le miroir parcouru à l'envers. Aucun point n'est trié : le contour ne se recoupe pas.
   const wallR: Vec[] = dorsum.axis.map((q, i) => ({ x: q.x + (dorsum.wallHalf[i] as number), y: q.y }));
-  const aR = alae.right.poly.filter((q) => q.x >= F.colHalf).sort((a, b) => a.y - b.y);
-  const right = [...wallR, ...aR];
+  const sill: Vec = { x: F.colHalf, y: alae.right.base.y + 0.002 * F.H };
+  const right = [...wallR, ...alae.right.outerEdge, sill];
   const silhouette = [...right, ...[...right].reverse().map((q) => ({ x: -q.x, y: q.y }))];
   return {
     widthPx: F.nw,
