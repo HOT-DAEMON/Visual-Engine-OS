@@ -164,3 +164,8 @@ et les mèches avant APRÈS la tête. Les axes (peau, texture, couleur, pli de l
 
 Tout fichier de `docs/` est limité à ~200 lignes ; au-delà, une suite numérotée est créée
 (`CHANGELOG-2.md`, `CHANGELOG-4.md`, `ERRORS-2.md`…), la plus récente restant dans le fichier sans numéro.
+
+## Moteur de visage (anatomie, peau, éclairage, contact)
+
+Voir `docs/FACE-ANATOMY.md` (nez, menton, mâchoire), `docs/SKIN-LIGHT.md` (matériau de peau, éclairage, Rendu = f(géométrie, matériaux, éclairage, caméra)),
+`docs/CONTACT-RIM.md` (ombres de contact, lumières de contour), `docs/TODO-FACE.md` (reste à faire). Modules : `src/face/{nose,jaw}`, `src/skin`, `src/contact`, `src/lighting/rig.ts`.

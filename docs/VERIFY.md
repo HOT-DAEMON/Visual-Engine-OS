@@ -33,3 +33,15 @@ mesurée sur la zone d'oreille) · `ear-height-*` · `occluder-attached` (warn) 
 300 seeds aléatoires v2 : **300/300 passent** sans erreur ; 0 mèche avant sur un œil, le nez ou la bouche. Les avertissements restants sont
 esthétiques (cheveux de luminance proche de la peau, front peu visible sous une frange dense, asymétrie faible sur des coupes très courtes).
 Le contrôle **détecte** une incohérence : un canthus décalé de 5 px fait échouer `verifyFace` (test dédié).
+
+## Moteur de visage (nez, menton, mâchoire, peau, contact, contours)
+
+`src/verify/face-engine.ts`, appelé par `verifyFace`. Trois couches chiffrées, une lumière de référence (azimut 330°, élévation 55°).
+- **Géométrie** : nombres finis, polygones du nez non dégénérés, contour C1 (≤ 3°) et monotone, longueur du visage fixe quelle que soit la hauteur du menton,
+  ombres ni collées (`≤ 0,55`) ni flottantes (part au contact `≥ 0,35`), écart ombre/composant, lumières de contour bornées.
+- **Anatomie** : racine entre sourcils et ligne des yeux, racine plus étroite que l'écart des canthi, pointe entre racine et base, nez au-dessus de la bouche,
+  narines DANS leurs ailes, sous la pointe, axe convergent, columelle respectée, sillon mentolabial entre lèvre et menton, mâchoire plus large que le menton,
+  angle mandibulaire 95°–140°, abaissement ≤ ouverture, bouche dans le contour.
+- **Style** : reflet non métallique (chroma ≤ 0,3), rugosité variée entre régions, reflets au bord doux, terminateur doux (net en `cel`), reflets qui suivent la lumière.
+Chaque contrôle est testé en NÉGATIF (`tests/face-engine-verify.test.ts`) : on fabrique l'erreur, le contrôle doit la détecter. Rapport sur 120 visages :
+`artefacts/face-anatomy/verification-report.json`.
