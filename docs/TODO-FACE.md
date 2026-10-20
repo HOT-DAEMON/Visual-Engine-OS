@@ -41,3 +41,24 @@ Rien ci-dessous n'est simulé : ce qui n'est pas fait est écrit comme tel.
 ## Génération
 - Fait : tous les nouveaux axes tirés sur un flux de hasard dérivé (les visages existants gardent leurs proportions, yeux et cheveux).
 - À faire : corrélations anatomiques (nez large ↔ ailes épaisses, menton fendu ↔ mâchoire carrée) ; archétypes (enfant, vieillard) ; `randomLight` branché dans les scènes de galerie.
+
+## Tâches ajoutées le 2026-10-20 (cahier des charges : `docs/TODO-FACE-SPEC.md`, copie fidèle)
+
+Statut de chaque tâche tenu à jour dans `docs/FACE-STRUCTURE-STATUS.md` (fait / partiel / reste à faire, par composant).
+
+- T1 Nez = volume continu à régions distinctes (racine, dorsum, parois latérales, pointe, dômes alaires, ailes, sillons alaires, base, narines + bords, columelle, transitions joues / philtrum / lèvre).
+- T2 Nez : longueur, largeur, projection, hauteur de racine, forme de pointe, ouverture des narines, largeur de base DISSOCIÉES, avec contraintes anatomiques.
+- T3 Mâchoire : corps, angle, branche montante, transition préauriculaire, bord inférieur, projection du menton, volume des joues recouvrant l'os.
+- T4 Mandibule : largeur, hauteur, angle, courbure du corps, profondeur, forme, sans déformer le crâne.
+- T5 Menton : largeur, hauteur, projection, rondeur/aplatissement/carré, symphyse (largeur, profondeur), fossette/sillon, transitions (labio-mentonnière, joues, sous-mentonnière).
+- T6 Tissus mous : joues, masséter, sous-menton, péri-labial, transitions préauriculaire / cou ; largeur de mâchoire DÉCOMPOSÉE (os, muscle, graisse, silhouette).
+- T7 Bouche indépendante : lèvres, arc de Cupidon + tubercule, commissures G/D, cavité, dents, gencives, langue, volume, largeur, courbure, asymétrie, plis.
+- T8 Joues : pommettes, volume, largeur latérale, creux sous-malaire, masséters ; sillons nasogéniens et plis péri-buccaux comme déformation de tissu.
+- T9 Cou : angle cervico-mentonnier, largeur, épaisseur sous-mandibulaire, muscles, déformation (bouche ouverte, inclinaison) ; menton ≠ cou (paramètres distincts).
+- T10 Dépendances entre paramètres (projection du menton → raccords joues / sous-menton, sans allonger la mandibule ; ouverture → pivot + translation de la mandibule).
+- T11 Articulation : lèvre inférieure et dents inférieures suivent la mandibule, tissus mous déformés.
+- T12 Trois déformations (morphologique, articulatoire, expressive) combinables sans s'écraser.
+- T13 Profil de stylisation (9 contrôles) distinct du matériau et de l'éclairage ; même géométrie en encrage N&B, réaliste, anime.
+- T14 Couche de vérification de rendu : cohérence géométrique, anatomique, style artistique (y compris mesures sur l'IMAGE rendue).
+- T15 Artefacts (images de preuve) dans `artefacts/face-structure/`.
+- T16 Docs : fichiers ≤ 200 lignes, suites créées, reste-à-faire documenté par composant.
