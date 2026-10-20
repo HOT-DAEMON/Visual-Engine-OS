@@ -232,6 +232,33 @@ Il faut éviter de coder une règle telle que « les oreilles d'elfe sont toujou
 - les déformations autorisées ;
 - les extensions spécifiques ;
 - les règles de symétrie ou d'asymétrie.
+### 9.1 : Exemple de matrice de conception sur lequel se baser pour definir les éventuelles futurs especes:
+#### Famille Humain:
+Structure de référence: Pavillon auriculaire humain
+Transformations caractéristiques: Variations anatomiques naturelles
+#### Famille Félin:
+Structure de référence: Oreille à pavillon triangulaire
+Transformations caractéristiques: Pôle haut, base large, cavité orientée
+#### Famille Canidé
+Structure de référence: Oreille dressée ou tombante
+Transformations caractéristiques: Flexion, inclinaison, variation du cartilage
+#### Famille Équidé
+Structure de référence: Oreille allongée et mobile
+Transformations caractéristiques: Rotation, mobilité, extrémité affinée
+#### Famille Élfique
+Structure de référence: Base organique modifiée
+Transformations caractéristiques: Pointe étirée, torsion, crêtes accentuées
+#### Famille Draconique
+Structure de référence: Structures organiques étendues
+Transformations caractéristiques: Crêtes secondaires, écailles, membranes
+#### Famille Extraterrestre
+Structure de référence: Morphologie libre sous contraintes
+Transformations caractéristiques: Structures inédites, asymétrie, bioluminescence
+
+Ces familles sont des préréglages de départ, pas des modèles définitifs. Il faudra aussi autoriser les variations internes : un chat ne possède pas toujours la même forme d'oreille qu'un autre chat.
+
+Pour produire une espèce jamais prévue, le moteur doit pouvoir combiner les primitives morphologiques existantes, puis autoriser de nouvelles primitives lorsqu'aucune combinaison ne satisfait le résultat demandé. Sinon, sa prétendue universalité restera limitée à son catalogue initial.
+
 # TRES IMPORTANT 
 Les tests visuels doivent être tres rigoureux sur tous les parametres sans exception de tous les axes et leurs micro parametre
 ### A. Face
