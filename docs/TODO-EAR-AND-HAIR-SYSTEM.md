@@ -1,2 +1,4 @@
 # A faire par composant (moteur de l'oreille)
 Le moteur doit être traité comme une veritable chef d'oeuvre d'ingénierie avec la plus grande attention possible
+L'objectif est de créer un véritable système de génération auriculaire capable de fusionner la précision anatomique, l'exagération caricaturale, la stylisation artistique et l'imagination fantastique, sans perdre la cohérence des volumes, des matières et de l'éclairage.
+L'objectif n'est pas de créer une collection de 100 modèles d'oreilles dessinés à l'avance. C'est de construire une grammaire visuelle qui permette de produire des oreilles inédites par composition de structures, de règles anatomiques, de transformations géométriques et de décisions artistiques.Elle doit être étudiée comme un assemblage de surfaces, de cavités, de replis, de transitions cutanées, de variations d'épaisseur, de bijoux et d'occlusions par les cheveux.
