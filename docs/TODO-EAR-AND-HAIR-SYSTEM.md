@@ -258,6 +258,18 @@ Transformations caractéristiques: Structures inédites, asymétrie, bioluminesc
 Ces familles sont des préréglages de départ, pas des modèles définitifs. Il faudra aussi autoriser les variations internes : un chat ne possède pas toujours la même forme d'oreille qu'un autre chat.
 
 Pour produire une espèce jamais prévue, le moteur doit pouvoir combiner les primitives morphologiques existantes, puis autoriser de nouvelles primitives lorsqu'aucune combinaison ne satisfait le résultat demandé. Sinon, sa prétendue universalité restera limitée à son catalogue initial.
+## 10. La géométrie doit être contrainte, pas simplement assemblée
+C'est la partie qui distinguera un véritable moteur d'un système qui empile des formes.
+Imaginons une oreille dont la conque est très profonde. Si le moteur creuse simplement la surface, il peut traverser la paroi postérieure. Si le lobule est élargi, il peut produire une jonction cassée. Si l'hélix devient très épais, il peut masquer entièrement la scapha.
+Le moteur doit donc posséder un système de contraintes.
+### 10.1 Exemples de contraintes géométriques
+Épaisseur minimale: La profondeur d'une cavité doit rester compatible avec l'épaisseur de la paroi.
+Continuité des surfaces: Les structures qui fusionnent doivent avoir des raccords acceptables, sans fissures ni intersections accidentelles.
+Préservation des cavités: Une cavité doit être une vraie dépression géométrique, ou une approximation graphique explicitement choisie, et non un simple cercle sombre posé sur une surface plate.
+Déformations cohérentes: Une modification de l'hélix doit recalculer les régions voisines sans écraser arbitrairement les autres structures.
+Compatibilité avec la tête: L'oreille doit conserver son attache au crâne, même lorsque ses proportions changent fortement.
+
+Il faudra distinguer les contraintes strictes, les préférences anatomiques et les objectifs artistiques. Une oreille de monstre peut volontairement enfreindre certaines proportions humaines, mais elle ne devrait pas produire accidentellement des surfaces cassées.
 
 # TRES IMPORTANT 
 Les tests visuels doivent être tres rigoureux sur tous les parametres sans exception de tous les axes et leurs micro parametre
