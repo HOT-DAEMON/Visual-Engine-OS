@@ -1,3 +1,5 @@
+import { clock } from './perf/clock';
+import { ContentCache, canonical, type CacheStats } from './perf/content-cache';
 import type { z } from 'zod';
 import {
   compileCompoundEye,
@@ -36,6 +38,11 @@ function compileObject(obj: SceneObject, light: LightVector): CompiledObject {
 
 /** Compile une scène DÉJÀ validée en SVG. Pure et déterministe : même scène => même chaîne. */
 export function renderScene(scene: SceneSpec): string {
+  // Étape `svg` (durée EXCLUSIVE : le calcul géométrique imbriqué est compté dans `geometry`).
+  return clock.time('svg', () => renderSceneUntimed(scene));
+}
+
+function renderSceneUntimed(scene: SceneSpec): string {
   const light = lightVector(scene.light);
   const defs: string[] = [];
   const body: string[] = [];
@@ -84,3 +91,18 @@ export function compileScene(input: unknown): CompileResult {
   if (!parsed.success) return { ok: false, issues: [...new Set(parsed.error.issues.flatMap(flatten))] };
   return { ok: true, svg: renderScene(parsed.data), scene: parsed.data };
 }
+
+/**
+ * `compileScene` avec cache par contenu : même entrée (sérialisation canonique) → même résultat sans recalcul.
+ * Sûr parce que `compileScene` est pure et déterministe (même scène ⇒ même chaîne, voir `renderScene`). Le résultat rendu est partagé : ne pas le muter.
+ */
+const sceneCache = new ContentCache<CompileResult>('compileScene', 128);
+export const compileSceneCached = (input: unknown): CompileResult => {
+  const key = canonical(input);
+  const hit = sceneCache.get(key);
+  if (hit) return hit;
+  const r = compileScene(input);
+  if (r.ok) sceneCache.set(key, r);
+  return r;
+};
+export const sceneCacheStats = (): CacheStats => sceneCache.stats();

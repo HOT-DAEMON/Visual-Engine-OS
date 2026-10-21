@@ -1,0 +1,109 @@
+{
+  "summary": {
+    "faces": 6,
+    "size": "340x420",
+    "avg": {
+      "geometryMs": 3.9,
+      "svgMs": 35.5,
+      "rasterShapesMs": 129.7,
+      "filtersMs": 163.3,
+      "fullRasterMs": 293,
+      "filters": 40.3
+    },
+    "warmCompileMsPerFace": 3.86,
+    "caches": [
+      {
+        "name": "faceLandmarks",
+        "hits": 24,
+        "misses": 6,
+        "size": 6
+      },
+      {
+        "name": "noseGeometry",
+        "hits": 12,
+        "misses": 6,
+        "size": 6
+      },
+      {
+        "name": "structureGeometry",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "compileScene",
+        "hits": 6,
+        "misses": 6,
+        "size": 6
+      }
+    ]
+  },
+  "rows": [
+    {
+      "seed": 1000,
+      "geometryMs": 12.6,
+      "svgMs": 62.3,
+      "otherMs": 39,
+      "rasterShapesMs": 122,
+      "filtersMs": 199,
+      "fullRasterMs": 321,
+      "svgKB": 130,
+      "filters": 40
+    },
+    {
+      "seed": 1037,
+      "geometryMs": 6.8,
+      "svgMs": 60.4,
+      "otherMs": 19.4,
+      "rasterShapesMs": 134,
+      "filtersMs": 157,
+      "fullRasterMs": 291,
+      "svgKB": 136,
+      "filters": 43
+    },
+    {
+      "seed": 1074,
+      "geometryMs": 1,
+      "svgMs": 31.1,
+      "otherMs": 8.5,
+      "rasterShapesMs": 124,
+      "filtersMs": 201,
+      "fullRasterMs": 325,
+      "svgKB": 133,
+      "filters": 40
+    },
+    {
+      "seed": 1111,
+      "geometryMs": 1.4,
+      "svgMs": 26.8,
+      "otherMs": 9.3,
+      "rasterShapesMs": 140,
+      "filtersMs": 102,
+      "fullRasterMs": 242,
+      "svgKB": 130,
+      "filters": 39
+    },
+    {
+      "seed": 1148,
+      "geometryMs": 1.1,
+      "svgMs": 17.2,
+      "otherMs": 8.6,
+      "rasterShapesMs": 134,
+      "filtersMs": 157,
+      "fullRasterMs": 291,
+      "svgKB": 131,
+      "filters": 40
+    },
+    {
+      "seed": 1185,
+      "geometryMs": 0.8,
+      "svgMs": 15.1,
+      "otherMs": 5,
+      "rasterShapesMs": 124,
+      "filtersMs": 164,
+      "fullRasterMs": 288,
+      "svgKB": 137,
+      "filters": 40
+    }
+  ]
+}

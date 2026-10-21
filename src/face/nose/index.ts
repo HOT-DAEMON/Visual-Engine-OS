@@ -1,3 +1,4 @@
+import { memoPure } from '../../perf';
 import type { Vec } from '../../geometry/eye/primitives';
 import type { FaceParams } from '../../schema';
 import type { FaceLandmarks } from '../landmarks';
@@ -23,7 +24,7 @@ export { noseProfile, type NoseProfile } from './profile';
  * Fonction PURE et déterministe : mêmes `FaceParams` et mêmes repères → mêmes sommets. Le nez ne porte aucune coordonnée propre :
  * tout dérive de `faceLandmarks` (canthi, ligne des yeux, base du nez, bouche, orbites), donc il suit le visage quand on le déplace.
  */
-export function noseGeometry(p: FaceParams, lm: FaceLandmarks): NoseGeometry {
+function noseGeometryRaw(p: FaceParams, lm: FaceLandmarks): NoseGeometry {
   const F = noseFrame(p, lm);
   const { root, dorsum } = dorsumGeometry(p, F);
   const prof = noseProfile(p, F, DORSUM_SAMPLES, root.depthPx);
@@ -53,3 +54,6 @@ export function noseGeometry(p: FaceParams, lm: FaceLandmarks): NoseGeometry {
     regions: noseRegions({ p, F, lm, R, dorsum, tip, alae, nostrils }),
   };
 }
+
+/** Version mémoïsée par contenu (fonction pure : voir `src/perf/content-cache.ts`) ; temps compté dans l'étape `geometry`. */
+export const noseGeometry: (p: FaceParams, lm: FaceLandmarks) => NoseGeometry = memoPure('noseGeometry', 'geometry', noseGeometryRaw, 512);

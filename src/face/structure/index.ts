@@ -1,3 +1,4 @@
+import { memoPure } from '../../perf';
 import type { FaceParams } from '../../schema';
 import type { FaceLandmarks } from '../landmarks';
 import { faceLandmarks } from '../landmarks';
@@ -14,7 +15,7 @@ export type { StructureGeometry, MandibleGeo, ChinGeo, TissueGeo, CheekGeo, Neck
 export { DEPENDENCY_RULES, resolveDependencies, type Derived, type DependencyRule } from './dependencies';
 
 /** Assemble la structure du visage dans l'ordre anatomique : dépendances → mandibule → menton → tissus → cou. Fonction PURE et déterministe. */
-export function structureGeometry(p: FaceParams, lm: FaceLandmarks, nose?: NoseGeometry): StructureGeometry {
+function structureGeometryRaw(p: FaceParams, lm: FaceLandmarks, nose?: NoseGeometry): StructureGeometry {
   const n = nose ?? noseGeometry(p, lm);
   const d = resolveDependencies(p, lm);
   return { mandible: mandibleGeometry(p, lm), chin: chinGeometry(p, lm, d), tissue: tissueGeometry(p, lm, n, d), neck: neckGeometry(p, lm, d) };
@@ -49,3 +50,6 @@ export function measureStructure(p: FaceParams, W: number, H: number): Record<st
     'cranium.templeHalf': top.p3.x,
   };
 }
+
+/** Version mémoïsée par contenu (fonction pure : voir `src/perf/content-cache.ts`) ; temps compté dans l'étape `geometry`. */
+export const structureGeometry: (p: FaceParams, lm: FaceLandmarks, nose?: NoseGeometry) => StructureGeometry = memoPure('structureGeometry', 'geometry', structureGeometryRaw, 512);

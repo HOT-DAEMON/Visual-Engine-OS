@@ -1,3 +1,4 @@
+import { memoPure } from '../perf';
 import { clamp } from '../core/math';
 import { halfWidthAt, headOutline, minHalfWidth, type Outline } from './outline';
 import { jawDerived, mouthOpenPx, NOSE_MOUTH_GAP, type JawDerived } from './jaw/params';
@@ -92,7 +93,7 @@ export interface FaceLandmarks {
 
 /** Marge entre la bouche et la base du nez (fraction de H) : la bouche ne remonte jamais sous le nez. */
 
-export function faceLandmarks(p: FaceParams, W: number, H: number): FaceLandmarks {
+function faceLandmarksRaw(p: FaceParams, W: number, H: number): FaceLandmarks {
   const eyeY = -H / 2 + p.eyeLine * H;
   const half = (p.eyeGap * W) / 2;
   const dy = (p.asymmetry.eyeDy * H) / 2;
@@ -150,3 +151,6 @@ export function faceLandmarks(p: FaceParams, W: number, H: number): FaceLandmark
     asymmetry: p.asymmetry,
   };
 }
+
+/** Version mémoïsée par contenu (fonction pure : voir `src/perf/content-cache.ts`) ; temps compté dans l'étape `geometry`. */
+export const faceLandmarks: (p: FaceParams, W: number, H: number) => FaceLandmarks = memoPure('faceLandmarks', 'geometry', faceLandmarksRaw, 512);

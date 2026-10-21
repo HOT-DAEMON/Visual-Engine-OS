@@ -1,4 +1,5 @@
-export { compileScene, renderScene, type CompileResult } from './compile';
+export { compileScene, compileSceneCached, sceneCacheStats, renderScene, type CompileResult } from './compile';
+export { clock, STAGES, memoPure, cacheStats, clearCaches, canonical, ContentCache, type Stage, type ClockSnapshot, type CacheStats } from './perf';
 export { SceneSpec, EyeSpec, RobotEyeSpec, PanelSpec, HostSpec, FaceParams, CompoundEyeSpec, GemEyeSpec, MaterialDescriptor, MaterialRef, LightSpec, ColorSource } from './schema';
 export type { SceneInput } from './schema';
 export { PRESET_NAMES, PRESET_PARAMS, resolvePreset, type PresetName, compileGloss, compileSurface, SHADING, type Surface } from './materials';

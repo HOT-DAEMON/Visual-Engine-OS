@@ -1,6 +1,6 @@
-import { Resvg } from '@resvg/resvg-js';
+import { rasterPng } from './raster';
 import { applyStylization } from '../../src/face/stylize';
-import { compileScene, generateRandomFace, type RandomFace, type RandomFaceOptions } from '../../src';
+import { compileSceneCached as compileScene, generateRandomFace, type RandomFace, type RandomFaceOptions } from '../../src';
 import { deepMerge } from '../../src/generation/random-face-anatomy';
 import { FaceParams } from '../../src/schema';
 import { faceLandmarks, noseGeometry, type FaceLandmarks, type NoseGeometry } from '../../src/face';
@@ -78,7 +78,7 @@ export function cellSvg(spec: CellSpec, w: number, h: number): { svg: string; me
 /** Rendu rastérisé (PNG) d'une cellule, avec son SVG. */
 export function cell(spec: CellSpec, w: number, h: number): { png: Buffer; meta: CellMeta; svg: string } {
   const { svg, meta } = cellSvg(spec, w, h);
-  return { png: new Resvg(svg, { font: { loadSystemFonts: true } }).render().asPng(), meta, svg };
+  return { png: rasterPng(svg, svg.includes('<text') ? { fonts: true } : {}), meta, svg };
 }
 
 const esc = (s: string): string => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -96,10 +96,10 @@ export function board(title: string, cells: { png: Buffer; label?: string }[], c
     return `<image x="${x}" y="${y}" width="${w}" height="${h}" href="data:image/png;base64,${c.png.toString('base64')}"/><text x="${x + 8}" y="${y + h + 22}" fill="#e8ecf5" font-size="14" font-family="DejaVu Sans, sans-serif">${esc(c.label ?? '')}</text>`;
   });
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#1b1f2e"/><text x="12" y="30" fill="#ffffff" font-size="22" font-weight="bold" font-family="DejaVu Sans, sans-serif">${esc(title)}</text>${parts.join('')}</svg>`;
-  return new Resvg(svg, { font: { loadSystemFonts: true } }).render().asPng();
+  return rasterPng(svg, { fonts: true });
 }
 
 /** Rastérise un SVG complet en PNG (utilisé pour les scènes post-traitées, ex. l'encrage global). */
 export function rasterize(svg: string): Buffer {
-  return new Resvg(svg, { font: { loadSystemFonts: true } }).render().asPng();
+  return rasterPng(svg, { fonts: true });
 }
