@@ -130,7 +130,7 @@ for (let i = 0; i < rows.length; i++) {
   if (!row.valid) continue;
   let match = -1;
   for (let c = 0; c < representatives.length; c++) {
-    const rep = rows[representatives[c]]!
+    const rep = rows[representatives[c]!]!
     const d = contourDistance(row.contour, rep.contour);
     if (d.rms <= tolerance && d.max <= tolerance * 2.5) { match = c; break; }
   }
