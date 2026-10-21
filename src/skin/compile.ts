@@ -1,6 +1,7 @@
 import { el, num, urlRef } from '../core/svg';
 import { parseHex } from '../core/color';
-import { compileEffects, type ResolvedAppearance } from '../appearance';
+import { compileEffects, effectsReach, type ResolvedAppearance } from '../appearance';
+import { pathBox, padBox, unionBox, type Box } from '../core/pathbox';
 import { outlinePath, type FaceLandmarks, type SkinRegions } from '../face';
 import type { LightVector } from '../lighting/light';
 import { spotGradient, gradientStop as stop } from '../materials';
@@ -72,8 +73,12 @@ export function compileSkin(id: string, lm: FaceLandmarks, mat: SkinMaterial, ra
   // 6. Pores : bruit fractal teinté de l'ombre, appliqué à des taches douces sur chaque région, d'autant plus fort que la région est rugueuse.
   if (mat.pores > 0.02) {
     const [r, g, b] = rgb01(ra.shadow);
+    // Région du filtre = réunion des boîtes des taches (carré de rayon max(rx, ry) : valable quelle que soit la rotation), pas la tête entière.
+    const spotBoxes: Box[] = [];
+    (Object.keys(mat.roughness) as (keyof typeof mat.roughness)[]).forEach((rid) => { if (rid !== 'neck') for (const e of regions[rid]) { const q = Math.max(e.rx, e.ry); spotBoxes.push({ x: e.cx - q, y: e.cy - q, w: 2 * q, h: 2 * q }); } });
+    const pb = spotBoxes.length ? padBox(unionBox(spotBoxes), 2) : { x: -W, y: -H, w: 2 * W, h: 2 * H };
     defs.push(
-      el('filter', { id: `${id}-skin-pores`, filterUnits: 'userSpaceOnUse', x: -W, y: -H, width: 2 * W, height: 2 * H, 'color-interpolation-filters': 'sRGB' }, [
+      el('filter', { id: `${id}-skin-pores`, filterUnits: 'userSpaceOnUse', x: pb.x, y: pb.y, width: pb.w, height: pb.h, 'color-interpolation-filters': 'sRGB' }, [
         el('feTurbulence', { type: 'fractalNoise', baseFrequency: `${num(1.1 / (W / 300))} ${num(1.1 / (W / 300))}`, numOctaves: 2, seed: 5, result: 'n' }),
         el('feColorMatrix', { in: 'n', type: 'matrix', values: `0 0 0 0 ${num(r)}  0 0 0 0 ${num(g)}  0 0 0 0 ${num(b)}  0 0 0 ${num(-2.4)} ${num(1.2)}`, result: 'c' }),
         el('feComposite', { in: 'c', in2: 'SourceAlpha', operator: 'in' }),
@@ -91,7 +96,10 @@ export function compileSkin(id: string, lm: FaceLandmarks, mat: SkinMaterial, ra
     layers.push(el('g', { filter: urlRef(`${id}-skin-pores`) }, spots));
   }
   // Effets de l'apparence (réfraction, grain, glow, bloom, émission) : UN filtre sur tout le calque ; opacité globale.
-  const fx = compileEffects(`${id}-skin`, ra.spec, ra, { x: -W, y: -H, w: 2 * W, h: 2 * H });
+  // Région des effets = boîte du contour de la tête + débordement des effets actifs (halo, déplacement), pas 2 W × 2 H.
+  const headBox = pathBox(d);
+  const fb = headBox ? padBox(headBox, effectsReach(ra.spec)) : { x: -W, y: -H, w: 2 * W, h: 2 * H };
+  const fx = compileEffects(`${id}-skin`, ra.spec, ra, { x: fb.x, y: fb.y, w: fb.w, h: fb.h });
   defs.push(...fx.defs);
   const group = el('g', { 'clip-path': urlRef(`${id}-skin-clip`), filter: fx.filter, opacity: ra.spec.opacity < 1 ? ra.spec.opacity : undefined }, layers);
   return { defs, markup: group };

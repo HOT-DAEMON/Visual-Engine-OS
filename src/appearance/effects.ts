@@ -17,6 +17,19 @@ export interface EffectResult {
   readonly filter: string | undefined;
 }
 
+/**
+ * Débordement MAXIMAL (px) que les effets actifs peuvent ajouter autour de la silhouette de la source : halo du glow et du bloom
+ * (flou gaussien : BLUR_REACH·σ), amplitude du déplacement de la réfraction. Sert à donner au filtre une région SERRÉE
+ * (silhouette + débordement) au lieu d'une région large : le coût de rastérisation est proportionnel à l'aire de la région.
+ */
+export function effectsReach(a: Appearance, scale = 1): number {
+  let r = 0;
+  if (a.glow.intensity > MIN) r = Math.max(r, 3.5 * (2 + 14 * a.glow.radius) * scale);
+  if (a.bloom.intensity > MIN) r = Math.max(r, 3.5 * (3 + 12 * a.bloom.radius) * scale);
+  if (a.refraction.strength > MIN) r = Math.max(r, a.refraction.strength * 14 * scale);
+  return Math.ceil(r) + 2;
+}
+
 const NONE: EffectResult = { defs: [], filter: undefined };
 
 /** Un effet est actif dès que son intensité dépasse ce seuil (évite les filtres coûteux pour rien). */

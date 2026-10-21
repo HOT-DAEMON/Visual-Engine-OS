@@ -1,3 +1,4 @@
+import { pathBox, unionBox, type Box } from '../../../core/pathbox';
 import { el, urlRef } from '../../../core/svg';
 import { gradientStop as stop } from '../../../materials';
 import { lineD } from '../soft';
@@ -15,6 +16,7 @@ export function renderWalls(c: NoseCtx): string[] {
   const ax = g.dorsum.axis;
   const n = ax.length;
   const walls: string[] = [];
+  const wallBoxes: Box[] = [];
   for (const s of [-1, 1] as const) {
     // Paroi du côté s : de l'arête (bord intérieur) au contour de la pyramide (bord extérieur), du haut vers le bas puis retour.
     const inner = ax.map((q, i) => ({ x: q.x + s * (g.dorsum.half[i] as number), y: q.y }));
@@ -30,9 +32,11 @@ export function renderWalls(c: NoseCtx): string[] {
     const a = (lit ? 0.5 : 0.9) * relief * (0.35 + 0.65 * Math.abs(expo)) * (lit ? I : 0.6 + 0.4 * I);
     c.defs.push(el('linearGradient', { id: gid, gradientUnits: 'userSpaceOnUse', x1, y1: 0, x2, y2: 0 }, [stop(0, col, a), stop(0.5, col, a * 0.45), stop(1, col, 0)]));
     walls.push(el('path', { d, fill: urlRef(gid) }));
+    const wb = pathBox(d);
+    if (wb) wallBoxes.push(wb);
   }
   // Les parois sont floutées en bloc : la coupe de la racine et le bord extérieur disparaissent (aucune arête de pyramide visible).
-  out.push(el('g', { filter: c.kit.blur(2.2 * u) }, walls));
+  out.push(el('g', { filter: c.kit.blur(2.2 * u, wallBoxes.length ? unionBox(wallBoxes) : undefined) }, walls));
   // Reflet de l'arête : trait flou le long de l'axe, décalé vers la lumière ; plus étroit et plus fort pour un dorsum convexe.
   const shape = p.nose.dorsum.shape;
   const k = { straight: 1, concave: 0.6, convex: 1.25, asymmetric: 1 }[shape];

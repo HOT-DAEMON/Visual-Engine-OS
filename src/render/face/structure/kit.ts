@@ -1,3 +1,4 @@
+import type { Box } from '../../../core/pathbox';
 import { el } from '../../../core/svg';
 import type { ResolvedAppearance } from '../../../appearance';
 import type { Blob } from '../../../face/structure';
@@ -44,10 +45,13 @@ export function structureCtx(id: string, p: FaceParams, W: number, H: number, ra
   };
 }
 
+/** Boîte conservatrice d'une ellipse orientée : le carré de rayon max(rx, ry) contient l'ellipse quelle que soit sa rotation. */
+const blobBox = (b: Blob): Box => { const r = Math.max(0.5, b.rx, b.ry); return { x: b.c.x - r, y: b.c.y - r, w: 2 * r, h: 2 * r }; };
+
 /** Ellipse orientée et floue (un volume mou) ; `sigma` en px, déjà multiplié par le facteur de douceur par l'appelant. */
 export function blobEl(c: StructureCtx, b: Blob, fill: string, opacity: number, sigma: number): string {
   if (opacity <= 0.004) return '';
-  return el('ellipse', { cx: b.c.x, cy: b.c.y, rx: Math.max(0.5, b.rx), ry: Math.max(0.5, b.ry), transform: b.rotDeg === 0 ? undefined : `rotate(${b.rotDeg} ${b.c.x} ${b.c.y})`, fill, 'fill-opacity': opacity, filter: c.kit.blur(Math.max(0.1, sigma * c.soft)) });
+  return el('ellipse', { cx: b.c.x, cy: b.c.y, rx: Math.max(0.5, b.rx), ry: Math.max(0.5, b.ry), transform: b.rotDeg === 0 ? undefined : `rotate(${b.rotDeg} ${b.c.x} ${b.c.y})`, fill, 'fill-opacity': opacity, filter: c.kit.blur(Math.max(0.1, sigma * c.soft), blobBox(b)) });
 }
 
 /** `true` si un point (x) est du côté éclairé de la tête (lumière à droite → côté droit éclairé). */

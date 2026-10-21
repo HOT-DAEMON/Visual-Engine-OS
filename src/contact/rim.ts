@@ -1,3 +1,4 @@
+import { pathBox, padBox } from '../core/pathbox';
 import { mix } from '../core/color';
 import { clamp01 } from '../core/math';
 import { el, num, urlRef } from '../core/svg';
@@ -95,6 +96,7 @@ export function renderRim(id: string, c: FaceComponent, r: ResolvedRim, L: Light
   const defs = [el('clipPath', { id: cid }, [el('path', { d: clipD })])];
   // Le dégradé s'éteint à 55 % de la traversée : seul le côté éclairé porte le liseré (le côté opposé reste franchement sombre).
   const stroke = v ? (defs.push(el('linearGradient', { id: gid, gradientUnits: 'userSpaceOnUse', x1: cx + v.x * ext, y1: cy + v.y * ext, x2: cx - v.x * ext, y2: cy - v.y * ext }, [stop(0, r.color, r.intensity), stop(0.3, r.color, r.intensity * 0.35), stop(0.55, r.color, 0)])), urlRef(gid)) : r.color;
-  const line = el('path', { d: edgeD, fill: 'none', stroke, 'stroke-width': w, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', 'stroke-opacity': v ? undefined : r.intensity * 0.6, filter: kit.blur((0.4 + 1.2 * r.width) * u) });
+  const edgeBox = pathBox(edgeD);
+  const line = el('path', { d: edgeD, fill: 'none', stroke, 'stroke-width': w, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', 'stroke-opacity': v ? undefined : r.intensity * 0.6, filter: kit.blur((0.4 + 1.2 * r.width) * u, edgeBox ? padBox(edgeBox, w / 2 + 1) : undefined) });
   return { defs, markup: el('g', { 'clip-path': urlRef(cid) }, [line]) };
 }
