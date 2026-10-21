@@ -61,7 +61,7 @@ function curvature(points: Point[]): number {
   let sum = 0;
   let count = 0;
   for (let i = 1; i < points.length - 1; i++) {
-    const a = points[i - 1], b = points[i], c = points[i + 1];
+    const a = points[i - 1]!, b = points[i]!, c = points[i + 1]!;
     const u = { x: b.x - a.x, y: b.y - a.y };
     const v = { x: c.x - b.x, y: c.y - b.y };
     const lu = Math.hypot(u.x, u.y), lv = Math.hypot(v.x, v.y);
