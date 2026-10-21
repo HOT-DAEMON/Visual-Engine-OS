@@ -90,7 +90,6 @@ for (let i = 0; i < count; i++) {
     expression: { kind: 'neutral', intensity: 0 },
     hairEngine: 'classic',
     occlusions: false,
-    asymmetry: { eyeScale: 0, eyeOpenness: 0, eyeRollDeg: 0, eyeDy: 0, mouthTiltDeg: 0 },
   });
   const outline = headOutline(face.params, face.width, face.height);
   const sampled = rightSamples(outline, SAMPLES_PER_SEGMENT);
