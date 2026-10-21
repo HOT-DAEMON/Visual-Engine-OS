@@ -75,7 +75,7 @@ function curvature(points: Point[]): number {
 function contourDistance(a: Point[], b: Point[]): { rms: number; max: number } {
   let squares = 0, max = 0;
   for (let i = 0; i < Math.min(a.length, b.length); i++) {
-    const d = distance(a[i], b[i]);
+    const d = distance(a[i]!, b[i]!);
     squares += d * d;
     max = Math.max(max, d);
   }
@@ -103,7 +103,7 @@ for (let i = 0; i < count; i++) {
   if (outline.bottomY <= outline.keys.chinCorner.y) issues.push('menton_dégénéré');
   if (outline.keys.gonion.x <= 0 || outline.keys.gonion.x >= face.width / 2) issues.push('gonion_hors_limites');
   for (let j = 1; j < sampled.length; j++) {
-    if (sampled[j].y + 1e-6 < sampled[j - 1].y) { issues.push('contour_non_monotone'); break; }
+    if (sampled[j]!.y + 1e-6 < sampled[j - 1]!.y) { issues.push('contour_non_monotone'); break; }
   }
   const gonionHalf = Math.max(1e-9, Math.abs(outline.keys.gonion.x));
   const metrics = {
@@ -126,11 +126,11 @@ for (let i = 0; i < count; i++) {
 // déplacement maximal sont sous les seuils. On ne compare que des contours échantillonnés de façon identique.
 const representatives: number[] = [];
 for (let i = 0; i < rows.length; i++) {
-  const row = rows[i];
+  const row = rows[i]!;
   if (!row.valid) continue;
   let match = -1;
   for (let c = 0; c < representatives.length; c++) {
-    const rep = rows[representatives[c]];
+    const rep = rows[representatives[c]]!
     const d = contourDistance(row.contour, rep.contour);
     if (d.rms <= tolerance && d.max <= tolerance * 2.5) { match = c; break; }
   }
