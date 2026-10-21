@@ -28,6 +28,8 @@ const CELL_H = 172;
 type Point = { x: number; y: number };
 type Row = {
   seed: number;
+  width: number;
+  height: number;
   cluster: number;
   isRepresentative: boolean;
   valid: boolean;
@@ -113,7 +115,7 @@ for (let i = 0; i < count; i++) {
     symmetryError: 0,
   };
   rows.push({
-    seed, cluster: -1, isRepresentative: false, valid: issues.length === 0, issues, metrics,
+    seed, width: face.width, height: face.height, cluster: -1, isRepresentative: false, valid: issues.length === 0, issues, metrics,
     params: face.params, contour, path: outlinePath(outline),
   });
 }
@@ -167,7 +169,7 @@ const summary = {
 const tile = (row: Row, idx: number): string => {
   const x = (idx % COLS) * CELL_W;
   const y = Math.floor(idx / COLS) * CELL_H;
-  const scale = 112 / Math.max(1.15, 1.1 + 0.1);
+  const scale = 112 / Math.max(row.width, row.height);
   const transform = `translate(${x + CELL_W / 2} ${y + 98}) scale(${scale})`;
   const label = `#${row.seed.toString(16)} C${row.cluster < 0 ? 'X' : row.cluster}`;
   const status = row.valid ? '#dce9df' : '#f4cccc';
