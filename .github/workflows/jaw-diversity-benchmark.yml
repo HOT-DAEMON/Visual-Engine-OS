@@ -1,0 +1,44 @@
+name: Jaw diversity benchmark
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "src/face/**"
+      - "src/generation/**"
+      - "scripts/measure-jaw-diversity.ts"
+      - "package.json"
+      - "tsconfig.json"
+      - ".github/workflows/jaw-diversity-benchmark.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Unit tests
+        run: npm test
+      - name: Generate 1,000 jaw contours
+        run: npx tsx scripts/measure-jaw-diversity.ts 1000 0.004 artefacts/jaw-diversity
+      - name: Upload benchmark artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: jaw-diversity-benchmark
+          path: artefacts/jaw-diversity.*
+          if-no-files-found: error
+          retention-days: 14
