@@ -30,3 +30,7 @@ Branche `feat/face-structure` (partie de `feat/face-anatomy`). Cahier des charge
 
 ## Erreurs et reste à faire
 - `docs/ERRORS-5.md` ; `docs/FACE-STRUCTURE-STATUS.md`.
+
+## Résultat final
+- Suite complète : 43 fichiers, 2028 tests passent ; `tsc --noEmit` propre.
+- Artefacts : 14 planches dans `artefacts/face-structure/` (rendues après les corrections nos 15 à 18 de `ERRORS-5.md`).

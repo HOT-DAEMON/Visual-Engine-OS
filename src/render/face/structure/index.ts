@@ -41,6 +41,6 @@ export function renderStructure(id: string, p: FaceParams, lm: FaceLandmarks, no
   const noseRegions = renderNoseRegions(c, nose, skin);
   const mouth = renderMouthStructured(c, mouthGeo, skin);
   const after = [...renderFolds(c, geometry, mouthGeo, pose.field, pose.pulls.foldDeepen), ...renderChinStructure(c, geometry), ...renderInk(c, lm, nose, geometry, mouthGeo)];
-  const neck = renderNeckStructure(c, geometry);
+  const neck = renderNeckStructure(c, lm, geometry);
   return { defs: [...c.kit.defs, ...mouth.defs], tissue, noseRegions, mouth: mouth.markup, after, neck, geometry, mouthGeo };
 }

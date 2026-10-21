@@ -1,10 +1,18 @@
+import { luminance } from '../../../core/color';
 import { el, urlRef } from '../../../core/svg';
+
+/**
+ * Seuil de l'encrage ADAPTÉ À LA PEAU : 82 % de la luminance de la peau en valeur sRGB (bornée 0,2–0,75). Un seuil fixe noircit entièrement une peau sombre (défaut constaté : seuil 0,7 sur une peau
+ * de luminance 0,45 = visage tout noir) ; relatif à la peau, la peau éclairée reste blanche et seules les ombres passent au noir.
+ */
+// `luminance` est en lumière LINÉAIRE ; le filtre travaille en sRGB : on repasse en valeur sRGB (gamma 2,2) avant d'appliquer les 82 %.
+export const inkThreshold = (skinHex: string): number => Math.max(0.2, Math.min(0.75, 0.82 * luminance(skinHex) ** (1 / 2.2)));
 
 /**
  * MODE DE RENDU `ink` (encrage noir et blanc) : un filtre SVG appliqué APRÈS le dessin. Il n'a aucune connaissance de l'anatomie : niveaux de gris, puis seuil
  * (tout ce qui est plus sombre que `threshold` devient noir, le reste blanc). C'est la preuve qu'une même géométrie peut recevoir un autre traitement sans être reconstruite.
  */
-export function inkFilter(id: string, W: number, H: number, threshold = 0.7): { defs: string[]; ref: string } {
+export function inkFilter(id: string, W: number, H: number, threshold = 0.45): { defs: string[]; ref: string } {
   const fid = `${id}-ink`;
   // Table discrète de 10 pas : les `n0` premiers pas valent 0 (noir), les suivants 1 (blanc) ; le seuil tombe à n0 / 10.
   const n0 = Math.max(1, Math.min(9, Math.round(threshold * 10)));

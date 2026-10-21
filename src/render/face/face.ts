@@ -18,7 +18,7 @@ import { renderNeck } from './neck';
 import { renderNose } from './nose';
 import { softKit } from './soft';
 import { renderStructure, type StructureLayers } from './structure';
-import { inkFilter } from './structure/ink-filter';
+import { inkFilter, inkThreshold } from './structure/ink-filter';
 
 /** Surface « crâne + mâchoire » d'un hôte `shape: 'face'`, habillable par le système de matériaux. */
 export function faceSurface(h: HostSpec, lm: FaceLandmarks): Surface {
@@ -118,7 +118,7 @@ export function faceParts(h: HostSpec, L: LightVector, rot: number): FaceParts {
   const behind = [...hair.back, ...neck.markup, ...(st ? st.neck : []), shadow('head'), rim('neck'), ...renderEars(params, lm, skin, skinRa).flatMap((e, i) => [e, shadow(i === 0 ? 'earL' : 'earR')]), rim('earL'), rim('earR')];
   defs.push(...rimKit.defs);
   // Rendu `ink` : un filtre global (niveaux de gris + seuil) ; aucune anatomie n'est reconstruite.
-  const ink = params.renderMode === 'ink' ? inkFilter(h.id, lm.W, lm.H) : null;
+  const ink = params.renderMode === 'ink' ? inkFilter(h.id, lm.W, lm.H, inkThreshold(skin)) : null;
   if (ink) defs.push(...ink.defs);
   return { lm, defs, skin: skinLayer, behind, front: front.filter((s) => s !== ''), over: hair.over, contacts: ct.metrics, nose: g, structure: st, filter: ink ? ink.ref : null };
 }

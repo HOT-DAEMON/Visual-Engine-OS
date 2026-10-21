@@ -159,3 +159,6 @@ Voir `docs/HAIR-V2.md`, `docs/HAIR-V2-FACE.md`, `docs/APPEARANCE.md`, `docs/VERI
 
 Moteur de visage (nez, menton / mâchoire, matériau de peau, éclairage, ombres de contact, lumières de contour) : `docs/FACE-ANATOMY.md`, `docs/SKIN-LIGHT.md`,
 `docs/CONTACT-RIM.md`, `docs/TODO-FACE.md` ; preuves dans `artefacts/face-anatomy/` (`npx tsx scripts/artefacts-face-nose-jaw.ts`, `npx tsx scripts/artefacts-face-skin.ts`).
+
+Moteur de structure du visage (`anatomyEngine: 'structured'` : régions du nez, mandibule, menton, tissus mous, bouche, trois déformations, stylisation, vérification de rendu) :
+`docs/FACE-STRUCTURE.md` (+ suites `FACE-STRUCTURE-NOSE/JAW/MOUTH/DEFORM/STYLE.md`), état par composant `docs/FACE-STRUCTURE-STATUS.md`, artefacts `artefacts/face-structure/`.

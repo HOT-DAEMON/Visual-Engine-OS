@@ -20,6 +20,8 @@ export interface CellSpec {
   readonly light?: Partial<LightSpec>;
   readonly focus?: Focus;
   readonly label?: string;
+  /** Couleur de fond de la scène (défaut : gris-bleu des planches). */
+  readonly background?: string;
   /** Surcouche de preuve en coordonnées de la CELLULE (px). */
   readonly overlay?: (m: CellMeta) => string;
 }
@@ -66,7 +68,7 @@ export function cellSvg(spec: CellSpec, w: number, h: number): { svg: string; me
   const ty = h / 2 - fr.fy * fr.s;
   const host = { ...f0.objects[0], face: params, transform: { x: tx, y: ty, scale: fr.s, rotationDeg: 0 } } as never;
   const objects = [host, ...f0.objects.slice(1)] as SceneInput['objects'];
-  const r = compileScene({ width: w, height: h, background: '#3b4157', ...(spec.light ? { light: { azimuthDeg: 330, elevationDeg: 55, color: '#ffffff', intensity: 1, ...spec.light } } : {}), objects } as never);
+  const r = compileScene({ width: w, height: h, background: spec.background ?? '#3b4157', ...(spec.light ? { light: { azimuthDeg: 330, elevationDeg: 55, color: '#ffffff', intensity: 1, ...spec.light } } : {}), objects } as never);
   if (!r.ok) throw new Error(r.issues.join('\n'));
   const meta: CellMeta = { face: f0, params, lm, nose, s: fr.s, w, h, px: (x, y) => [tx + x * fr.s, ty + y * fr.s] };
   const svg = spec.overlay ? r.svg.replace(/<\/svg>\s*$/, `${spec.overlay(meta)}</svg>`) : r.svg;

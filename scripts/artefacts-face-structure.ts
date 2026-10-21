@@ -103,7 +103,7 @@ const BOARDS: Record<string, () => void> = {
     const MASSIVE = { jawWidth: 0.95, softTissue: { masseter: { volume: 0.7, relief: 0.8 } }, chin: { form: 1, projection: 0.75 }, jaw: { angle: 0.15 } };
     const ghost = (rest: CellMeta | null) => (m: CellMeta): string => { const { st } = g(m); return line(m, st.mandible.lowerBorder, '#00e5ff', 2.4, '6 4') + note(12, 24, `gonion ${st.mandible.gonion.x.toFixed(2)} · menton ${(st.chin.widthPx).toFixed(2)} px`, '#00e5ff') + (rest ? '' : ''); };
     const mk = (label: string, patch: object): Cell => ({ label, focus: 'lower', patch: { ...MASSIVE, ...patch } as never, overlay: ghost(null) });
-    save('09-trois-deformations', 'Mâchoire massive : A morphologie · B articulation · C expression se combinent sans s’écraser (T12) — pointillé cyan = contour osseux, identique partout', [
+    save('09-trois-deformations', 'Mâchoire massive : A morphologie · B articulation · C expression se combinent sans s’écraser (T12) — cyan = contour osseux, identique', [
       mk('A seule (repos)', {}), mk('C : sourire', { deform: { expression: { smile: 1 } } }), mk('C : grimace', { deform: { expression: { grimace: 1 } } }),
       mk('C : colère', { deform: { expression: { anger: 1 } } }), mk('B : parler (bouche ouverte)', { mouth: { open: 0.7 } }), mk('B + C : parler en souriant', { mouth: { open: 0.7 }, deform: { expression: { smile: 0.8 }, articulation: { jawShift: 0.4 } } }),
       mk('C : caricature (sourire ×2,5)', { deform: { expression: { smile: 1, caricature: 1 } } }), mk('B : serrage des mâchoires', { deform: { articulation: { clench: 1 } } }),
@@ -126,8 +126,8 @@ const BOARDS: Record<string, () => void> = {
     const t = Date.now();
     const out: { png: Buffer; label: string }[] = [];
     for (const [label, mode] of [['réaliste', 'realistic'], ['anime (aplats nets)', 'anime'], ['encrage noir et blanc', 'ink']] as const) {
-      const r = cellSvg({ seed: SEED, focus: 'face', patch: { ...S, stylization: STY, renderMode: mode, mouth: { open: 0.35 }, deform: { expression: { smile: 0.5 } } } }, 420, 520);
-      out.push({ png: rasterize(mode === 'ink' ? inkWrapScene(r.svg) : r.svg), label: `${label} — MÊME géométrie` });
+      const r = cellSvg({ seed: SEED, focus: 'face', background: mode === 'ink' ? '#ffffff' : undefined, patch: { ...S, stylization: STY, renderMode: mode, mouth: { open: 0.35 }, deform: { expression: { smile: 0.5 } } } }, 420, 520);
+      out.push({ png: rasterize(mode === 'ink' ? inkWrapScene(r.svg, 0.4) : r.svg), label: `${label} — MÊME géométrie` });
     }
     writeFileSync(`${OUT}/13-modes-de-rendu.png`, board('Même géométrie caricaturale, trois traitements : l’anatomie n’est jamais reconstruite (T13)', out, 3, 420, 520));
     console.log(`13-modes-de-rendu.png  ${((Date.now() - t) / 1000).toFixed(0)} s`);

@@ -169,3 +169,5 @@ Tout fichier de `docs/` est limité à ~200 lignes ; au-delà, une suite numéro
 
 Voir `docs/FACE-ANATOMY.md` (nez, menton, mâchoire), `docs/SKIN-LIGHT.md` (matériau de peau, éclairage, Rendu = f(géométrie, matériaux, éclairage, caméra)),
 `docs/CONTACT-RIM.md` (ombres de contact, lumières de contour), `docs/TODO-FACE.md` (reste à faire). Modules : `src/face/{nose,jaw}`, `src/skin`, `src/contact`, `src/lighting/rig.ts`.
+
+Moteur de structure du visage : `docs/FACE-STRUCTURE.md` (contrats, ordre de calcul), `docs/FACE-STRUCTURE-STATUS.md` (fait / partiel / reste à faire), journal `docs/CHANGELOG-6.md`, erreurs `docs/ERRORS-5.md`.

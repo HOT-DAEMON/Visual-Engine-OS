@@ -106,10 +106,12 @@ export function checkRenderImage(spec: CellSpec, W = 520, H = 640): ImageCheck[]
   const lipY = meta.lm.mouthY + 0.004 * meta.lm.H;
   const lipC = avg(r0, ...meta.px(0, lipY));
   add('anatomy', 'image-lips-redder-than-skin', lipC[0] - lipC[1] > skinC[0] - skinC[1], lipC[0] - lipC[1], skinC[0] - skinC[1], 'les lèvres ne sont pas plus rouges que la peau');
-  // STYLE — modes de rendu : la silhouette ne bouge pas (IoU des masques ≥ 0,985) ; l'encrage est quasi binaire ; les contours dessinés existent.
+  // STYLE — modes de rendu : la silhouette ne bouge pas (IoU des masques ≥ 0,97 : le seuil de l'encrage noircit une partie du halo d'ombre du bord, 1 à 3 % des pixels) ; l'encrage est quasi binaire ; les contours dessinés existent.
   const ink = cellSvg({ ...spec, focus: 'lower', patch: { ...(spec.patch as object), renderMode: 'ink' } }, W, H);
   const rInk = raster(ink.svg);
   let binary = 0;
+  let white = 0;
+  let black = 0;
   let total = 0;
   for (let y = Math.round(H * 0.25); y < Math.round(H * 0.85); y += 2) {
     for (let x = Math.round(W * 0.2); x < Math.round(W * 0.8); x += 2) {
@@ -117,13 +119,17 @@ export function checkRenderImage(spec: CellSpec, W = 520, H = 640): ImageCheck[]
       if (isBg(c)) continue;
       total++;
       if (Math.max(...c) - Math.min(...c) < 12 && (Math.max(...c) <= 30 || Math.min(...c) >= 225)) binary++;
+      if (Math.min(...c) >= 225) white++;
+      if (Math.max(...c) <= 30) black++;
     }
   }
+  // Binaire ET non dégénéré : un visage tout noir ou tout blanc est « binaire » mais ne prouve rien (défaut du premier contrôle) ; il faut ≥ 15 % de blanc ET ≥ 1 % de noir.
   add('style', 'image-ink-is-binary', total > 0 && binary / total >= 0.9, binary / Math.max(1, total), 0.9, 'l\'encrage contient trop de niveaux de gris');
+  add('style', 'image-ink-has-both-levels', total > 0 && white / total >= 0.15 && black / total >= 0.01, Math.min(white / Math.max(1, total) / 0.15, black / Math.max(1, total) / 0.01), 1, 'l\'encrage est tout noir ou tout blanc');
   const anime = raster(cellSvg({ ...spec, focus: 'face', patch: { ...(spec.patch as object), renderMode: 'anime' } }, W, H).svg);
   const inkFull = raster(cellSvg({ ...spec, focus: 'face', patch: { ...(spec.patch as object), renderMode: 'ink' } }, W, H).svg);
   const m0 = mask(r0);
-  add('style', 'image-render-modes-keep-silhouette', Math.min(iou(m0, mask(anime)), iou(m0, mask(inkFull))) >= 0.985, Math.min(iou(m0, mask(anime)), iou(m0, mask(inkFull))), 0.985, 'un mode de rendu a déplacé la silhouette');
+  add('style', 'image-render-modes-keep-silhouette', Math.min(iou(m0, mask(anime)), iou(m0, mask(inkFull))) >= 0.97, Math.min(iou(m0, mask(anime)), iou(m0, mask(inkFull))), 0.97, 'un mode de rendu a déplacé la silhouette');
   // Contours dessinés : un point du contour du visage est sombre avec `outline: 1`, pas sans.
   const inked = raster(cellSvg({ ...spec, focus: 'face', patch: { ...(spec.patch as object), stylization: { outline: 1 } } }, W, H).svg);
   const edge = meta.px(halfWidthAt(meta.lm.outline, meta.lm.mouthY) * 0.999, meta.lm.mouthY);

@@ -62,6 +62,9 @@ export function structureGeometryChecks(c: StructureContext): Check[] {
   k('structure-philtrum-length', '>=', R.philtrum.lengthPx, 0.02 * lm.H, 'le philtrum est trop court (le nez touche la lèvre)');
   const blobs = [g.chin.dimple, g.chin.upper, g.chin.lateral.left, g.chin.lateral.right, g.chin.lower, g.mandible.masseter.left, g.mandible.masseter.right, g.neck.submentalBand, g.tissue.submental.blob, g.tissue.perioral.upper, g.tissue.perioral.lower, ...[g.tissue.cheeks.left, g.tissue.cheeks.right].flatMap((ch) => [ch.zygoma, ch.volume, ch.hollow, ch.masseterBlend])];
   k('structure-blobs-valid', '==', blobs.every(blobOk) ? 1 : 0, 1, 'un volume mou a un centre ou des rayons invalides');
+  // Le bord inférieur est une ligne continue : aucun segment ne dépasse 12 % de W (un saut d'une oreille à l'autre en ferait 60 %).
+  const lb = g.mandible.lowerBorder;
+  k('structure-lower-border-continuous', '<=', Math.max(...lb.slice(1).map((q, i) => Math.hypot(q.x - (lb[i] as { x: number }).x, q.y - (lb[i] as { y: number }).y))), 0.12 * lm.W, 'le bord inférieur de la mâchoire contient un saut (segment parasite)');
   k('structure-mandible-body-positive', '>=', g.mandible.bodyLengthPx, 1, 'le corps de la mandibule est de longueur nulle');
   k('structure-closure-monotone-x', '<=', Math.max(0, ...mouth.closure.slice(1).map((q, i) => (mouth.closure[i] as { x: number }).x - q.x)), 1e-9, 'la ligne de fermeture se replie en x');
   k('structure-corners-inside-contour', '<=', mouth.halfWidth, 0.8 * halfWidthAt(lm.outline, Math.min(lm.chinY - 1e-3, lm.mouthY)) + 1e-6, 'une commissure touche le contour');

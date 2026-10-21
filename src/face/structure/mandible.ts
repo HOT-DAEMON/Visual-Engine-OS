@@ -1,6 +1,5 @@
 import type { Vec } from '../../geometry/eye/primitives';
 import type { FaceParams } from '../../schema';
-import { jawline } from '../jaw/regions';
 import { jawSilhouette } from '../jaw/structure';
 import type { FaceLandmarks } from '../landmarks';
 import { halfWidthAt, rightSamples } from '../outline';
@@ -8,6 +7,12 @@ import { polylineLength } from '../curve';
 import type { MandibleGeo } from './types';
 
 const mirror = (q: Vec): Vec => ({ x: -q.x, y: q.y });
+
+/** Bord inférieur continu : les échantillons du contour à partir de 5 % de H au-dessus du gonion, côté gauche (miroir) de haut en bas, puis côté droit de bas en haut. */
+function lowerBorderOf(r: readonly Vec[], gonionY: number, H: number): Vec[] {
+  const part = r.filter((q) => q.y >= gonionY - 0.05 * H);
+  return [...part.map(mirror), ...[...part].reverse()];
+}
 
 /**
  * Mandibule (T3, T4) : les régions osseuses lues sur le contour RÉEL du visage (`lm.outline`) — jamais redessinées à côté.
@@ -40,7 +45,8 @@ export function mandibleGeometry(p: FaceParams, lm: FaceLandmarks): MandibleGeo 
     gonialDeg: lm.jaw.gonialDeg,
     body,
     bodyLengthPx: polylineLength(body),
-    lowerBorder: jawline(lm),
+    // Bord inférieur : de l'oreille gauche au menton puis au gonion droit, SANS saut (le gauche est le miroir du droit, parcouru de haut en bas ; le droit est parcouru de bas en haut).
+    lowerBorder: lowerBorderOf(r, g.y, H),
     preauricular: { right: strip, left: strip.map(mirror) },
     masseter: { left: mass(-1), right: mass(1) },
   };

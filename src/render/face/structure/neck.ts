@@ -1,3 +1,4 @@
+import type { FaceLandmarks } from '../../../face';
 import { lineD } from '../soft';
 import type { StructureGeometry } from '../../../face/structure';
 import { blobEl, type StructureCtx } from './kit';
@@ -6,14 +7,14 @@ import { blobEl, type StructureCtx } from './kit';
  * Cou (T9), calque de structure : ombre portée du menton sous la mandibule (profondeur = angle cervico-mentonnier effectif), bande de tissu sous-mandibulaire,
  * sterno-cléido-mastoïdiens (relief `muscles`), tension du platysma (bouche ouverte, tête inclinée). Dessiné juste après le cou, derrière la tête.
  */
-export function renderNeckStructure(c: StructureCtx, g: StructureGeometry): string[] {
+export function renderNeckStructure(c: StructureCtx, lm: FaceLandmarks, g: StructureGeometry): string[] {
   const { p, ra, I, u, detail } = c;
   const nk = g.neck;
   const out: string[] = [];
-  // Ombre sous le menton : plus profonde quand l'angle cervico-mentonnier se ferme (nk.shadowReachPx a déjà l'angle et le sous-menton intégrés).
-  out.push(blobEl(c, { c: { x: 0, y: nk.submentalBand.c.y }, rx: nk.submentalBand.rx, ry: nk.submentalBand.ry, rotDeg: 0 }, ra.shadow, 0.5 * (0.5 + p.neck.thickness), 3 * u));
-  // Épaisseur sous la mandibule : bande douce plus sombre dessous.
-  out.push(blobEl(c, { ...nk.submentalBand, c: { x: 0, y: nk.submentalBand.c.y + 0.5 * nk.submentalBand.ry }, ry: nk.submentalBand.ry * 0.7 }, ra.shadow, 0.18 * p.neck.thickness, 4 * u));
+  // Ombre portée du menton : dégradé large et doux, collé sous la mandibule (centre à 15 % de sa portée au-dessus de la bande), jamais un disque à bord net. Opacité plafonnée à 0,3 ;
+  // la portée (angle cervico-mentonnier, sous-menton) règle la HAUTEUR de l'ombre, l'épaisseur du tissu son intensité. Flou ≥ 40 % de la hauteur : pas de bord visible.
+  const ry = Math.max(0.006 * lm.H, 0.9 * nk.shadowReachPx);
+  out.push(blobEl(c, { c: { x: 0, y: nk.submentalBand.c.y - 0.15 * nk.shadowReachPx }, rx: nk.submentalBand.rx * 0.95, ry, rotDeg: 0 }, ra.shadow, 0.14 + 0.16 * p.neck.thickness, Math.max(7 * u, 0.4 * ry)));
   // Sterno-cléido-mastoïdiens : ombre le long du bord interne, reflet du côté lumière ; relief = `muscles` × détail.
   for (const [s, line] of [[-1, nk.scm.left], [1, nk.scm.right]] as const) {
     const lit = s * c.dir.x >= 0;
