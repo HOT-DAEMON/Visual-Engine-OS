@@ -1,0 +1,168 @@
+{
+ "size": {
+  "w": 170,
+  "h": 210
+ },
+ "cases": {
+  "std-01": {
+   "svgSha1": "bd8e47d965641cc2f3485126ef5cc73a8ec6073f",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "std-02": {
+   "svgSha1": "087951c9b9794938ecfce656ffa0f57dbc268eed",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "std-03": {
+   "svgSha1": "2a8cd59cd0c240dafe01b5ca6adf5560017f7a53",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "std-04": {
+   "svgSha1": "f51595da8308e06ebc78901863c13390c8c19dfb",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "std-05": {
+   "svgSha1": "b90333dd458ee200e7afad5c459b12f7e7c60670",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "std-06": {
+   "svgSha1": "87a97e26a22cd131223c6660f01b576d95916d28",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "std-07": {
+   "svgSha1": "52a2ab9a9ae7326c41c8794a1803fce899a6622c",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "std-08": {
+   "svgSha1": "43a323daea5bf2a06e65ba6601f8d8936051af58",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "std-09": {
+   "svgSha1": "5b3d921f6d5322ccda3006722c4b4729a09ec6b6",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "std-10": {
+   "svgSha1": "8a5315ca7dafcf69452e35083228ddc537f34eff",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "std-11": {
+   "svgSha1": "279bb1b3bd3798255f049cfb9409a7a3f71ca2aa",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "std-12": {
+   "svgSha1": "5e6c4b99f7077d2da614abccbb064197be8261eb",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "std-13": {
+   "svgSha1": "80199819c68bad3e234f268d99fb353de8eb7023",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "std-14": {
+   "svgSha1": "557398fa46af73798b9510495f0500f85c792990",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "std-15": {
+   "svgSha1": "528038b6493cf0c28b0dd8918526d64cc220dc10",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "std-16": {
+   "svgSha1": "be863d982caaac1045dc996e0f69948fa1dc3dd1",
+   "kind": "standard",
+   "why": "tirage aléatoire structuré à graine fixe"
+  },
+  "hard-01-machoire-etroite-menton-pointu": {
+   "svgSha1": "ed8273512011f59a2ed19559199954716ee14374",
+   "kind": "hard",
+   "why": "mâchoire minimale + convergence maximale : risque de bas de visage « en entonnoir » (déjà observé)"
+  },
+  "hard-02-machoire-carree-massive": {
+   "svgSha1": "2defed7e106b1c44cb7cc5e60f998d9019fe6756",
+   "kind": "hard",
+   "why": "os maximal + masséter + graisse : les quatre contributions de largeur s'additionnent, le contour doit rester lisible"
+  },
+  "hard-03-bouche-ouverte-articulee": {
+   "svgSha1": "d0542e429888ecbd6f3089e0be1a183b8bb6ec20",
+   "kind": "hard",
+   "why": "ouverture maximale + translation et avancée de la mandibule : lèvre inférieure, dents et menton doivent suivre ensemble"
+  },
+  "hard-04-anime-stylisation-maximale": {
+   "svgSha1": "65017a7d0b3b62eadfbd64dd3c3d77f4125f0fe5",
+   "kind": "hard",
+   "why": "neuf contrôles de stylisation à 1 en mode anime : géométrie exagérée ET aplats à bords nets"
+  },
+  "hard-05-encre-contours-maximaux": {
+   "svgSha1": "024b5c8e6a302919c94be2fee071df996ebfea00",
+   "kind": "hard",
+   "why": "seuil global N&B : un détail fin peut disparaître ou se boucher"
+  },
+  "hard-06-expression-caricaturale": {
+   "svgSha1": "5b76a994d11233a819550f68e2be1a09cb195792",
+   "kind": "hard",
+   "why": "colère + grimace + caricature maximales : trois déplacements qui se combinent sans s'écraser"
+  },
+  "hard-07-lumiere-rasante": {
+   "svgSha1": "1690ed8d0b54788ad8f722df9fe6046f254b3a0c",
+   "kind": "hard",
+   "why": "élévation 10° (minimum du schéma) : ombres longues, le nez et les orbites portent de grandes ombres"
+  },
+  "hard-08-contre-jour-faible": {
+   "svgSha1": "206b276ebf3fce5280dd7089c21d628b5deb401a",
+   "kind": "hard",
+   "why": "intensité 0,25 depuis l'arrière : rien ne doit disparaître ni virer au noir plat"
+  },
+  "hard-09-nez-projection-maximale": {
+   "svgSha1": "a91cee998f987ea55a6866705b6693ef5ab0dcb4",
+   "kind": "hard",
+   "why": "nez long, large, pointe projetée au maximum : régions et ombres de la pointe"
+  },
+  "hard-10-nez-minimal": {
+   "svgSha1": "52b129496275c67f0be8228cbaebcc1835d372bb",
+   "kind": "hard",
+   "why": "nez court et étroit, narines nulles : les régions deviennent minuscules (précision numérique)"
+  },
+  "hard-11-bouche-minuscule": {
+   "svgSha1": "72670ee9085ad9eef88661eafe441760103ce4df",
+   "kind": "hard",
+   "why": "bouche à sa largeur minimale et réduite par la stylisation : commissures, plis et philtrum se rapprochent"
+  },
+  "hard-12-bouche-immense": {
+   "svgSha1": "30030e7330549625e2977c62e720a7c8617e5bf1",
+   "kind": "hard",
+   "why": "bouche à sa largeur maximale et agrandie par la stylisation : doit rester bornée par le contour"
+  },
+  "hard-13-menton-extreme": {
+   "svgSha1": "17f65b2156b10f8ed509526b397cc60804c1f375",
+   "kind": "hard",
+   "why": "menton haut et projeté au maximum sous une lèvre mince"
+  },
+  "hard-14-cou-tendu-incline": {
+   "svgSha1": "0a17c7fde2e6b0e5d03d3088cd4b07126f6cd2eb",
+   "kind": "hard",
+   "why": "angle cervico-mentonnier minimal, platysma et muscles maximaux, tête inclinée à 30°"
+  },
+  "hard-15-ouverture-plus-colere-plus-serrage": {
+   "svgSha1": "e0d91320b77f981dda00f85ecdcd96518e29d894",
+   "kind": "hard",
+   "why": "bouche ouverte + colère + mâchoires serrées : tout agit sur le masséter et la lèvre"
+  },
+  "hard-16-tete-etroite-yeux-ecartes": {
+   "svgSha1": "d095704a45767ea5166579f7ac16c63b59024663",
+   "kind": "hard",
+   "why": "yeux écartés au maximum sur une tête étroite : orbites et nez se rapprochent des bords du contour"
+  }
+ }
+}

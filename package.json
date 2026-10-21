@@ -6,7 +6,10 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "render": "tsx scripts/render.ts",
-    "bundle": "tsx scripts/bundle.ts"
+    "bundle": "tsx scripts/bundle.ts",
+    "regress": "tsx scripts/regress.ts check",
+    "regress:update": "tsx scripts/regress.ts update",
+    "bench": "tsx scripts/bench-render.ts"
   },
   "dependencies": {
     "zod": "^3.25.76"

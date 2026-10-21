@@ -1,0 +1,26 @@
+[
+  {
+    "id": "hard-01-machoire-etroite-menton-pointu",
+    "rms": 3.6273007766615866,
+    "maxDiff": 91,
+    "fracOver8": 0.013977591036414565,
+    "fracOver32": 0.006246498599439776,
+    "detected": true
+  },
+  {
+    "id": "std-01",
+    "rms": 7.858688329458707,
+    "maxDiff": 130,
+    "fracOver8": 0.03887955182072829,
+    "fracOver32": 0.012128851540616246,
+    "detected": true
+  },
+  {
+    "id": "std-05",
+    "rms": 6.362417371454823,
+    "maxDiff": 80,
+    "fracOver8": 0.07859943977591037,
+    "fracOver32": 0.02638655462184874,
+    "detected": true
+  }
+]
