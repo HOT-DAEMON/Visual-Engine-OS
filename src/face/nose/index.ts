@@ -2,6 +2,8 @@ import type { Vec } from '../../geometry/eye/primitives';
 import type { FaceParams } from '../../schema';
 import type { FaceLandmarks } from '../landmarks';
 import { alaGeometry } from './alae';
+import { resolveNoseConstraints } from './constraints';
+import { noseRegions } from './regions';
 import { DORSUM_SAMPLES, dorsumGeometry } from './dorsum';
 import { noseFrame } from './frame';
 import { junctionGeometry } from './junctions';
@@ -12,6 +14,8 @@ import type { NoseGeometry } from './types';
 
 export type { NoseGeometry, NoseAlaGeo, NostrilGeo, NoseTipGeo, NoseRootGeo, NoseDorsumGeo, NoseJunctionsGeo } from './types';
 export { noseFrame, tipLift, type NoseFrame } from './frame';
+export { resolveNoseConstraints, type NoseConstraint, type ResolvedNose } from './constraints';
+export type { NoseRegionsGeo, NoseSidewallGeo, NoseDomeGeo, NoseGrooveGeo, NostrilRegionGeo } from './regions-types';
 export { noseProfile, type NoseProfile } from './profile';
 
 /**
@@ -24,7 +28,9 @@ export function noseGeometry(p: FaceParams, lm: FaceLandmarks): NoseGeometry {
   const { root, dorsum } = dorsumGeometry(p, F);
   const prof = noseProfile(p, F, DORSUM_SAMPLES, root.depthPx);
   const tip = tipGeometry(p, F, dorsum.deviationPx, prof.projectionPx);
-  const alae = alaGeometry(p, F, tip.c.x);
+  // Contraintes anatomiques (T2) : arbitrage des axes indépendants AVANT de construire les volumes qui en dépendent.
+  const R = resolveNoseConstraints(p, F, lm);
+  const alae = alaGeometry(p, F, tip.c.x, R.baseWidth);
   const nostrils = nostrilGeometry(p, F);
   // Silhouette : paroi droite (racine → supra-pointe), puis le bord EXTÉRIEUR de l'aile droite dans son ordre de parcours (jonction → crête → attache),
   // puis le seuil jusqu'à la columelle ; le côté gauche en est le miroir parcouru à l'envers. Aucun point n'est trié : le contour ne se recoupe pas.
@@ -44,5 +50,6 @@ export function noseGeometry(p: FaceParams, lm: FaceLandmarks): NoseGeometry {
     profile: prof.points,
     junctions: junctionGeometry(p, F, lm, alae),
     silhouette,
+    regions: noseRegions({ p, F, lm, R, dorsum, tip, alae, nostrils }),
   };
 }

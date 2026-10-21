@@ -47,5 +47,7 @@ export function compileHost(h: HostSpec, worldLight: LightVector): CompiledObjec
     children.push(el('g', {}, marks));
   }
   const overlay = parts && parts.over.length ? el('g', { transform: objectTransform(h.transform) }, parts.over) : undefined;
-  return { defs: [...out.defs, ...(parts?.defs ?? [])], markup: el('g', { transform: objectTransform(h.transform) }, children), ...(overlay ? { overlay } : {}) };
+  // Rendu `ink` : le filtre enveloppe tout l'hôte (peau, traits, bouche) ; absent pour les autres modes.
+  const inner = parts?.filter ? [el('g', { filter: parts.filter }, children)] : children;
+  return { defs: [...out.defs, ...(parts?.defs ?? [])], markup: el('g', { transform: objectTransform(h.transform) }, inner), ...(overlay ? { overlay } : {}) };
 }

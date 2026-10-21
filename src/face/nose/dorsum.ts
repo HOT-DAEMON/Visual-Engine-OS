@@ -25,7 +25,9 @@ export function dorsumGeometry(p: FaceParams, F: NoseFrame): { root: NoseRootGeo
     // Arête : la racine (large) se resserre vers le pont (`dorsumHalf`) sur la première moitié, puis s'évase jusqu'à la largeur de la pointe.
     half.push(lerp(lerp(F.rootHalf, F.dorsumHalf, smooth(t / 0.55)), F.tipHalf * 1.05, smooth((t - 0.55) / 0.45)));
     // Paroi : effilée à la racine (0,35 × sa demi-largeur : la pyramide naît dans le front sans coupe franche) vers 0,3 de la largeur des ailes au niveau de la supra-pointe.
-    wallHalf.push(lerp(F.rootHalf * 0.35, F.nw * 0.3, smooth(t ** 1.1)));
+    // La PENTE des parois règle leur largeur : plans presque horizontaux (0) → parois 15 % plus larges ; plans abrupts (1) → 15 % plus étroites. Neutre à 0,5.
+    const slopeK = 1.15 - 0.3 * n.sidewall.slope;
+    wallHalf.push(lerp(F.rootHalf * 0.35, F.nw * 0.3, smooth(t ** 1.1)) * slopeK);
   }
   return {
     root: { y: F.rootY, half: F.rootHalf, depthPx: (F.baseY - F.rootY) * (0.04 + 0.2 * n.root.depth) },

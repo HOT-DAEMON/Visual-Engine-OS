@@ -6,11 +6,13 @@ import { checkAnatomy } from './anatomy';
 import { checkGeometry } from './geometry';
 import { checkStyle } from './style';
 import { checkFaceEngine } from './face-engine';
+import { checkStructure } from './structure';
 import { report, type Check, type Report } from './types';
 
 export { paletteStats, isVivid } from './style';
 export type { Check, Report, VerifyLayer } from './types';
 export { engineContext, REFERENCE_LIGHT, type EngineContext } from './face-engine';
+export { checkStructure, structureContext, geometryDigest, type StructureContext } from './structure';
 
 /**
  * Vérifie le rendu d'un visage complet sur les trois couches (géométrique, anatomique, style). Pure et déterministe :
@@ -30,5 +32,7 @@ export function verifyFace(face: RandomFace): Report {
   checks.push(...checkStyle(face.params, geo, svg, skin));
   // Moteur de visage (nez, menton, mâchoire, peau, ombres de contact, contours) : trois couches chiffrées.
   checks.push(...checkFaceEngine(face));
+  // Moteur de structure (`anatomyEngine: 'structured'` seulement) : géométrie, anatomie, style de la structure.
+  checks.push(...checkStructure(face));
   return report(checks);
 }

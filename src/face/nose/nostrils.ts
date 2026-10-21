@@ -12,7 +12,7 @@ const N_POINTS = 28;
  * Contour d'une narine : une GOUTTE (large en bas, effilée vers le haut) dans son repère propre (u le long de l'axe, de bas en haut ;
  * v perpendiculaire), puis tournée de `tilt`. Pour la narine droite, le haut converge vers la ligne médiane (rotation vers x < 0).
  */
-function dropPoly(c: Vec, a: number, b: number, tiltDeg: number, side: -1 | 1): Vec[] {
+export function dropPoly(c: Vec, a: number, b: number, tiltDeg: number, side: -1 | 1): Vec[] {
   const out: Vec[] = [];
   for (let i = 0; i < N_POINTS; i++) {
     const th = (2 * Math.PI * i) / N_POINTS;

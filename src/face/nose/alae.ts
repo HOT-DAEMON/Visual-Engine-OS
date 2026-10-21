@@ -2,6 +2,7 @@ import { catmullRom, mirrorPoly } from '../curve';
 import type { Vec } from '../../geometry/eye/primitives';
 import type { FaceParams } from '../../schema';
 import type { NoseFrame } from './frame';
+import { baseHalfAt } from './constraints';
 import type { NoseAlaGeo } from './types';
 
 /**
@@ -10,7 +11,7 @@ import type { NoseAlaGeo } from './types';
  * L'épaisseur du bord et le volume sont des propriétés de rendu lues ici (`thicknessPx`) ; la forme, elle, ne dépend que du cadre.
  * Les points sont construits pour le côté DROIT et reflétés pour le gauche.
  */
-export function alaGeometry(p: FaceParams, F: NoseFrame, tipX: number): { left: NoseAlaGeo; right: NoseAlaGeo } {
+export function alaGeometry(p: FaceParams, F: NoseFrame, tipX: number, baseWidth = 0): { left: NoseAlaGeo; right: NoseAlaGeo } {
   const a = p.nose.alae;
   const span = F.baseY - F.tipY;
   const H = F.H;
@@ -22,7 +23,8 @@ export function alaGeometry(p: FaceParams, F: NoseFrame, tipX: number): { left: 
     { x: tipX + F.tipHalf * 1.05, y: F.tipY - 0.9 * F.tipRy },
     { x: F.alarX * 0.78, y: F.tipY - 0.15 * F.tipRy },
     { x: F.alarX, y: F.tipY + 0.4 * span },
-    { x: F.alarX * 0.8, y: foot },
+    // Pied de l'aile : sa position latérale est la LARGEUR DE BASE (axe `nose.base.width`, indépendant de l'écartement de la crête `alae.flare`). Neutre : 0,8 × la crête.
+    { x: baseHalfAt(F, baseWidth), y: foot },
     { x: F.colHalf + F.nw * 0.02, y: foot + 0.002 * H },
     { x: F.colHalf + F.nw * 0.02, y: F.tipY + 0.35 * span },
   ];

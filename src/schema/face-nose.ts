@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { Unit } from './primitives';
+import { NoseBase, NoseColumella, NoseDomes, NoseGroove, NosePhiltrum, NoseSidewall } from './face-nose-regions';
 
 /**
  * CONTRAT DU MOTEUR DE NEZ (`src/face/nose/`, `src/render/face/nose/`).
@@ -84,6 +85,10 @@ export const NoseNostrils = z
     columella: Unit.default(0.5),
     /** Visibilité des narines ; `null` = dérivée de l'orientation de la pointe. */
     visibility: Unit.nullable().default(null),
+    /** OUVERTURE visible de la narine (part de la goutte réellement sombre) : `null` = dérivée de la forme et de la visibilité (comportement d'avant). Indépendante de `shape` et de `nostril`. */
+    opening: Unit.nullable().default(null),
+    /** Épaisseur du BORD (rebord charnu) de la narine, en fraction de son petit axe. */
+    rim: Unit.default(0.4),
   })
   .strict();
 
@@ -117,6 +122,13 @@ export const FaceNose = z
     alae: NoseAlae.default({}),
     nostrils: NoseNostrils.default({}),
     junction: NoseJunction.default({}),
+    /** Régions ajoutées (T1) : voir `face-nose-regions.ts`. Défauts neutres. */
+    sidewall: NoseSidewall.default({}),
+    domes: NoseDomes.default({}),
+    groove: NoseGroove.default({}),
+    base: NoseBase.default({}),
+    columella: NoseColumella.default({}),
+    philtrum: NosePhiltrum.default({}),
   })
   .strict();
 export type FaceNose = z.infer<typeof FaceNose>;

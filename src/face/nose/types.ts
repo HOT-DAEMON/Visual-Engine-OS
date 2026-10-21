@@ -1,5 +1,6 @@
 import type { Vec } from '../../geometry/eye/primitives';
 import type { Poly } from '../poly';
+import type { NoseRegionsGeo } from './regions-types';
 
 /**
  * Géométrie PURE du nez (aucun SVG), repère local de l'hôte, en pixels. Chaque sous-composant anatomique a sa propre structure :
@@ -78,4 +79,6 @@ export interface NoseGeometry {
   readonly junctions: NoseJunctionsGeo;
   /** Silhouette de la pyramide nasale (racine → ailes → base), pour la mise en ombre et la vérification. */
   readonly silhouette: Poly;
+  /** Régions ajoutées (parois, dômes, sillons, base, columelle, narines à ouverture, philtrum) et contraintes appliquées : voir `regions-types.ts`. */
+  readonly regions: NoseRegionsGeo;
 }

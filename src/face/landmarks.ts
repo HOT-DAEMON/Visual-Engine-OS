@@ -144,7 +144,8 @@ export function faceLandmarks(p: FaceParams, W: number, H: number): FaceLandmark
     chin: { sulcusY, heightPx: outline.bottomY - sulcusY, requestedPx: p.chin.height * H, half: outline.chinHalf, projectionPx: p.chin.projection * 0.045 * W },
     jaw: { gonion: outline.keys.gonion, gonialDeg: jd.gonialDeg, drop: jd.drop, tissue: jd.tissue },
     orbit: { left: orbitOf(-1), right: orbitOf(1) },
-    neck: { half: clamp((p.neck.width * W) / 2, outline.chinHalf * 1.15, jawHalf * 0.85), topY: -H / 2 + 0.6 * H, bottomY: H / 2 + p.neck.length * H },
+    // Largeur du cou : paramètre propre (`neck.width`) ; le menton ne l'agrandit QUE si `neck.chinCoupling` > 0 (0 par défaut : menton et cou indépendants).
+    neck: { half: clamp((p.neck.width * W) / 2 + p.neck.chinCoupling * (p.chin.projection - 0.5) * 0.05 * W, outline.chinHalf * 1.15, jawHalf * 0.85), topY: -H / 2 + 0.6 * H, bottomY: H / 2 + p.neck.length * H },
     hair: { centerY: -H / 2 + (0.25 + 0.25 * hl) * zone, templeY, sideY: Math.max(-H / 2 + 0.08 * H, templeY - 0.05 * H) },
     asymmetry: p.asymmetry,
   };

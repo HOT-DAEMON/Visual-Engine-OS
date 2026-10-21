@@ -3,6 +3,7 @@ import { el, urlRef } from '../../core/svg';
 import { resolveAppearance } from '../../appearance';
 import { compileContact, renderRim, resolveRims, type ContactMetric } from '../../contact';
 import { faceLandmarks, noseGeometry, outlinePath, skinRegions, type FaceLandmarks, type NoseGeometry } from '../../face';
+import { applyStylization } from '../../face/stylize';
 import { dominantColor, spotGradient, type Surface } from '../../materials';
 import { compileSkin, type CompiledSkin } from '../../skin';
 import { FaceParams, type ContactSpec, type HostSpec } from '../../schema';
@@ -16,6 +17,8 @@ import { renderMouth } from './mouth';
 import { renderNeck } from './neck';
 import { renderNose } from './nose';
 import { softKit } from './soft';
+import { renderStructure, type StructureLayers } from './structure';
+import { inkFilter } from './structure/ink-filter';
 
 /** Surface « crâne + mâchoire » d'un hôte `shape: 'face'`, habillable par le système de matériaux. */
 export function faceSurface(h: HostSpec, lm: FaceLandmarks): Surface {
@@ -36,6 +39,10 @@ export interface FaceParts {
   /** Mesures des ombres de contact (vérification : ni flottant ni collé). */
   readonly contacts: ContactMetric[];
   readonly nose: NoseGeometry;
+  /** Calques et géométrie du moteur de structure (`anatomyEngine: 'structured'`), sinon `null`. */
+  readonly structure: StructureLayers | null;
+  /** Filtre à appliquer à tout l'hôte (rendu `ink`), sinon `null`. */
+  readonly filter: string | null;
 }
 
 /** Ombres de contact modulées par la mâchoire : une transition cou douce adoucit l'ombre, un tissu sous-mentonnier épais la renforce et l'étale. */
@@ -47,11 +54,13 @@ function contactSpecs(p: FaceParams, lm: FaceLandmarks): Record<string, ContactS
 }
 
 export function faceParts(h: HostSpec, L: LightVector, rot: number): FaceParts {
-  const params = FaceParams.parse(h.face ?? {});
+  // Profil de stylisation appliqué UNE fois (idempotent, neutre par défaut) : la géométrie lue partout ensuite est la géométrie stylisée.
+  const params = applyStylization(FaceParams.parse(h.face ?? {}));
   const lm = faceLandmarks(params, h.width, h.height);
   const skin = dominantColor(h.material.base);
   // Apparence de la peau : teinte d'ombre (proche de la peau, légèrement bleutée), lumière et contour lues par TOUS les enfants.
-  const skinRa = resolveAppearance(skin, params.skin);
+  // Mode de rendu `anime` : aplats à bords nets (ombrage `cel`) ; la géométrie n'est pas touchée.
+  const skinRa = resolveAppearance(skin, params.renderMode === 'anime' ? { ...params.skin, shading: { ...params.skin.shading, mode: 'cel' } } : params.skin);
   const g = noseGeometry(params, lm);
   const regions = skinRegions(lm, g);
   const u = lm.W / 300;
@@ -91,19 +100,25 @@ export function faceParts(h: HostSpec, L: LightVector, rot: number): FaceParts {
   defs.push(...hair.defs, ...neck.defs, ...chin.defs, ...fh.defs);
   // Bouche et moustache forment UN groupe : l'asymétrie les incline ensemble autour du centre de la bouche.
   const tilt = params.asymmetry.mouthTiltDeg;
-  const mouthGroup = [...renderMouth(params, lm, skin, skinRa, L), ...fh.mustache];
+  // Moteur de structure : calques peints d'après la géométrie de structure ; la bouche structurée REMPLACE la bouche classique.
+  const st = params.anatomyEngine === 'structured' ? renderStructure(h.id, params, lm, g, skin, skinRa, L) : null;
+  if (st) defs.push(...st.defs);
+  const mouthGroup = [...(st ? st.mouth : renderMouth(params, lm, skin, skinRa, L)), ...fh.mustache];
   // Ordre : ombres de contact sur la peau (orbites, nez, ailes) → nez → contours du nez → menton → bouche (+ ombre de la lèvre) → barbe → ombre des
   // cheveux → contour de la tête et du menton → cheveux.
   front.push(
-    shadow('orbitL'), shadow('orbitR'), shadow('nose'), shadow('alaL'), shadow('alaR'),
-    ...nose.markup, rim('nose'), rim('tip'), rim('alaL'), rim('alaR'),
+    shadow('orbitL'), shadow('orbitR'), ...(st ? st.tissue : []), shadow('nose'), shadow('alaL'), shadow('alaR'),
+    ...nose.markup, ...(st ? st.noseRegions : []), rim('nose'), rim('tip'), rim('alaL'), rim('alaR'),
     ...chin.markup,
     shadow('mouth'),
     tilt === 0 ? mouthGroup.join('') : el('g', { transform: `rotate(${tilt} 0 ${lm.mouthY})` }, mouthGroup), rim('mouth'),
-    ...fh.beard, shadow('hair'), rim('chin'), rim('head'), ...hair.front,
+    ...(st ? st.after : []), ...fh.beard, shadow('hair'), rim('chin'), rim('head'), ...hair.front,
   );
   // Derrière la tête : ombre portée de la mâchoire sur le cou (dessinée juste après le cou), oreilles creusées contre la tête.
-  const behind = [...hair.back, ...neck.markup, shadow('head'), rim('neck'), ...renderEars(params, lm, skin, skinRa).flatMap((e, i) => [e, shadow(i === 0 ? 'earL' : 'earR')]), rim('earL'), rim('earR')];
+  const behind = [...hair.back, ...neck.markup, ...(st ? st.neck : []), shadow('head'), rim('neck'), ...renderEars(params, lm, skin, skinRa).flatMap((e, i) => [e, shadow(i === 0 ? 'earL' : 'earR')]), rim('earL'), rim('earR')];
   defs.push(...rimKit.defs);
-  return { lm, defs, skin: skinLayer, behind, front: front.filter((s) => s !== ''), over: hair.over, contacts: ct.metrics, nose: g };
+  // Rendu `ink` : un filtre global (niveaux de gris + seuil) ; aucune anatomie n'est reconstruite.
+  const ink = params.renderMode === 'ink' ? inkFilter(h.id, lm.W, lm.H) : null;
+  if (ink) defs.push(...ink.defs);
+  return { lm, defs, skin: skinLayer, behind, front: front.filter((s) => s !== ''), over: hair.over, contacts: ct.metrics, nose: g, structure: st, filter: ink ? ink.ref : null };
 }

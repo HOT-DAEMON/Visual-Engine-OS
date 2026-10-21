@@ -24,6 +24,16 @@ export const FaceNeck = z
     flare: z.number().min(0).max(0.6).default(0.25),
     /** Assombrissement du cou par rapport au visage (il est dans l'ombre du menton). */
     shade: Unit.default(0.5),
+    /** Angle cervico-mentonnier (degrés) : angle entre le dessous du menton et la face antérieure du cou (85 = net, 150 = effacé). */
+    cervicomentalDeg: z.number().min(85).max(150).default(115),
+    /** Épaisseur du tissu sous la mandibule (indépendante de `jaw.submental`, qui règle l'ombre portée du contact). */
+    thickness: Unit.default(0.3),
+    /** Relief des muscles du cou (sterno-cléido-mastoïdiens) et de leur transition vers le trapèze. */
+    muscles: Unit.default(0.5),
+    /** Tension visible du platysma quand la bouche s'ouvre ou que la tête s'incline. */
+    platysma: Unit.default(0.4),
+    /** Couplage menton → cou : 0 = INDÉPENDANTS (défaut : un menton projeté n'élargit pas le cou), 1 = le cou suit la projection du menton. */
+    chinCoupling: Unit.default(0),
   })
   .strict();
 

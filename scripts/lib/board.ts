@@ -1,4 +1,5 @@
 import { Resvg } from '@resvg/resvg-js';
+import { applyStylization } from '../../src/face/stylize';
 import { compileScene, generateRandomFace, type RandomFace, type RandomFaceOptions } from '../../src';
 import { deepMerge } from '../../src/generation/random-face-anatomy';
 import { FaceParams } from '../../src/schema';
@@ -49,12 +50,14 @@ function framing(f: Focus, lm: FaceLandmarks, nose: NoseGeometry, w: number): { 
   }
 }
 
-export function cell(spec: CellSpec, w: number, h: number): { png: Buffer; meta: CellMeta } {
+/** Rendu SANS rastérisation : le SVG et les métadonnées (rapide ; utilisé par les tests qui n'ont besoin que du balisage). */
+export function cellSvg(spec: CellSpec, w: number, h: number): { svg: string; meta: CellMeta } {
   const seed = spec.seed ?? 321;
   const f0 = generateRandomFace(seed, { ...BASE_OPTS, ...spec.opts, anatomy: { ...(BASE_OPTS.anatomy ?? {}), ...(spec.opts?.anatomy ?? {}) } });
   const host0 = f0.objects[0] as { face: FaceParams };
   // Surcharge profonde puis re-validation : le visage rendu est toujours un `FaceParams` valide.
-  const params = FaceParams.parse(spec.patch ? deepMerge(host0.face, spec.patch) : host0.face);
+  // Le profil de stylisation est appliqué ICI (idempotent) : les repères et les surcouches lisent la géométrie stylisée, comme le rendu.
+  const params = applyStylization(FaceParams.parse(spec.patch ? deepMerge(host0.face, spec.patch) : host0.face));
   // Les repères sont recalculés avec les paramètres FINAUX (après surcharge) : cadrage et surcouches suivent le visage réellement rendu.
   const lm = faceLandmarks(params, f0.width, f0.height);
   const nose = noseGeometry(params, lm);
@@ -67,7 +70,13 @@ export function cell(spec: CellSpec, w: number, h: number): { png: Buffer; meta:
   if (!r.ok) throw new Error(r.issues.join('\n'));
   const meta: CellMeta = { face: f0, params, lm, nose, s: fr.s, w, h, px: (x, y) => [tx + x * fr.s, ty + y * fr.s] };
   const svg = spec.overlay ? r.svg.replace(/<\/svg>\s*$/, `${spec.overlay(meta)}</svg>`) : r.svg;
-  return { png: new Resvg(svg, { font: { loadSystemFonts: true } }).render().asPng(), meta };
+  return { svg, meta };
+}
+
+/** Rendu rastérisé (PNG) d'une cellule, avec son SVG. */
+export function cell(spec: CellSpec, w: number, h: number): { png: Buffer; meta: CellMeta; svg: string } {
+  const { svg, meta } = cellSvg(spec, w, h);
+  return { png: new Resvg(svg, { font: { loadSystemFonts: true } }).render().asPng(), meta, svg };
 }
 
 const esc = (s: string): string => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -85,5 +94,10 @@ export function board(title: string, cells: { png: Buffer; label?: string }[], c
     return `<image x="${x}" y="${y}" width="${w}" height="${h}" href="data:image/png;base64,${c.png.toString('base64')}"/><text x="${x + 8}" y="${y + h + 22}" fill="#e8ecf5" font-size="14" font-family="DejaVu Sans, sans-serif">${esc(c.label ?? '')}</text>`;
   });
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#1b1f2e"/><text x="12" y="30" fill="#ffffff" font-size="22" font-weight="bold" font-family="DejaVu Sans, sans-serif">${esc(title)}</text>${parts.join('')}</svg>`;
+  return new Resvg(svg, { font: { loadSystemFonts: true } }).render().asPng();
+}
+
+/** Rastérise un SVG complet en PNG (utilisé pour les scènes post-traitées, ex. l'encrage global). */
+export function rasterize(svg: string): Buffer {
   return new Resvg(svg, { font: { loadSystemFonts: true } }).render().asPng();
 }

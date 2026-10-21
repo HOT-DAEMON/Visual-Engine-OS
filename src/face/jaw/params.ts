@@ -1,4 +1,5 @@
 import type { FaceParams } from '../../schema';
+import { effectiveAngle } from './structure';
 
 /**
  * Grandeurs DÉRIVÉES du menton et de la mâchoire : tout ce que le contour, les repères et le rendu ont besoin de savoir,
@@ -35,11 +36,13 @@ export function jawDerived(p: FaceParams, W: number, H: number): JawDerived {
   // La mandibule descend d'une part de l'ouverture de la bouche, proportionnelle à la mobilité, bornée à 8 % de H :
   // une mobilité nulle laisse le menton en place (mâchoire rigide), une mobilité forte l'abaisse.
   const drop = Math.min(0.08 * H, mouthOpenPx(p, H) * 1.1 * j.mobility);
+  // Angle EFFECTIF : la graisse et le masséter arrondissent ou durcissent l'angle apparent (voir `structure.ts`) ; neutre sans tissus mous.
+  const ang = effectiveAngle(p);
   const s = j.tissue * open;
   return {
     drop,
-    gonialDeg: 95 + 45 * j.angle,
-    cornerRadius: (0.012 + 0.11 * j.angle) * W,
+    gonialDeg: 95 + 45 * ang,
+    cornerRadius: (0.012 + 0.11 * ang) * W,
     tissue: {
       lipStretch: 0.3 * s,
       sulcusFlatten: Math.min(1, 0.8 * s),

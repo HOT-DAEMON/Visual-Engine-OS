@@ -6,6 +6,9 @@ import { FaceNose } from './face-nose';
 import { FaceChin, FaceJaw } from './face-jaw';
 import { FaceLighting } from './face-lighting';
 import { SkinMaterial } from './skin-material';
+import { FaceCheek, FaceMandible, FaceSoftTissue } from './face-structure';
+import { FaceDeform } from './face-deform';
+import { FaceRenderMode, FaceStylization } from './face-style';
 
 export { FaceNose };
 
@@ -30,6 +33,21 @@ export const FaceMouth = z
     open: Unit.default(0),
     /** Couleur des lèvres ; null : dérivée de la peau. */
     color: Hex.nullable().default(null),
+    /** Arc de Cupidon : profondeur du creux central, largeur de l'arc, relief du tubercule médian (moteur `structured`). */
+    cupid: z.object({ depth: Unit.default(0.5), width: Unit.default(0.5), tubercle: Unit.default(0.4) }).strict().default({}),
+    /** Asymétrie des commissures : −1 = la gauche de l'image plus haute, +1 = la droite plus haute. */
+    cornerAsym: z.number().min(-1).max(1).default(0),
+    /** Irrégularité de la ligne de fermeture : 0 = courbe régulière, 1 = ondulée (S). */
+    lineWave: Unit.default(0),
+    /** Dents visibles quand la bouche est ouverte (supérieures, inférieures), gencive découverte, langue visible, profondeur sombre de la cavité. */
+    teeth: z.object({ upper: Unit.default(0.6), lower: Unit.default(0.4) }).strict().default({}),
+    gums: Unit.default(0.3),
+    tongue: Unit.default(0.4),
+    cavity: Unit.default(0.6),
+    /** Profondeur des plis des tissus autour des commissures (moteur `structured`). */
+    cornerFolds: Unit.default(0.4),
+    /** Adaptation à la mâchoire : 0 = largeur absolue (`width` × W), 1 = proportionnelle à la largeur du visage à la hauteur de la bouche. */
+    fit: Unit.default(0),
   })
   .strict();
 
@@ -78,6 +96,17 @@ export const FaceParams = z
     skinMaterial: SkinMaterial.default({}),
     /** Lumières de contour, ombres de contact, zones lumineuses des composants : voir `face-lighting.ts`. */
     lighting: FaceLighting.default({}),
+    /** `classic` : visage d'avant (aucun calque de structure). `structured` : moteur de structure (régions du nez, tissus mous, bouche structurée, plis). */
+    anatomyEngine: z.enum(['classic', 'structured']).default('classic'),
+    /** Structure profonde et tissus mous : voir `face-structure.ts`. Défauts neutres. */
+    mandible: FaceMandible.default({}),
+    softTissue: FaceSoftTissue.default({}),
+    cheek: FaceCheek.default({}),
+    /** Déformations articulatoire et expressive (la morphologie, elle, est le reste de ce contrat) : voir `face-deform.ts`. */
+    deform: FaceDeform.default({}),
+    /** Profil de stylisation (géométrie) et mode de rendu (traitement) : deux champs distincts, voir `face-style.ts`. */
+    stylization: FaceStylization.default({}),
+    renderMode: FaceRenderMode.default('realistic'),
   })
   .strict();
 export type FaceParams = z.infer<typeof FaceParams>;

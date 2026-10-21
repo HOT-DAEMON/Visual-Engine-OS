@@ -30,6 +30,22 @@ export const FaceChin = z
     mentolabial: Unit.default(0.45),
     /** Relief du coussinet mentonnier (reflet du pogonion). */
     pad: Unit.default(0.45),
+    /** Forme CONTINUE du bas du menton : −1 = pointu, 0 = rond, +1 = carré (méplat). `null` = déduite de `symphysis` (comportement d'avant). */
+    form: z.number().min(-1).max(1).nullable().default(null),
+    /** Largeur de la symphyse (le méplat du bas) : 0 = arrondi serré, 1 = méplat large. `null` = déduite de la forme. */
+    symphysisWidth: Unit.nullable().default(null),
+    /** Profondeur (épaisseur verticale) de la symphyse : 0 = menton qui se termine vite, 1 = symphyse haute. `null` = déduite de la forme. */
+    symphysisDepth: Unit.nullable().default(null),
+    /** Fossette ronde (dépression douce, centrée) — distincte de la fente verticale (`symphysis = 'cleft'`). */
+    dimple: Unit.default(0),
+    /** Sillon vertical mentonnier (ligne creusée), indépendant de la fente de la symphyse. */
+    groove: Unit.default(0),
+    /** Transition SUPÉRIEURE (vers le sillon labio-mentonnier) : 0 = marche nette, 1 = fondue. */
+    upperBlend: Unit.default(0.5),
+    /** Raccord LATÉRAL avec les parties antérieures des joues : 0 = rupture (bajoue marquée), 1 = continu. */
+    lateralBlend: Unit.default(0.5),
+    /** Transition INFÉRIEURE vers la région sous-mentonnière : 0 = arête nette, 1 = fondue. */
+    lowerBlend: Unit.default(0.5),
   })
   .strict();
 
