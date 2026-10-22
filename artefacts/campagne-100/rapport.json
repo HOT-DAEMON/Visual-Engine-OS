@@ -1,0 +1,1047 @@
+{
+ "summary": {
+  "faces": 100,
+  "ok": 98,
+  "withWarnings": 19,
+  "totalSeconds": 58.3,
+  "msPerFace": 583,
+  "correctionsByConstraint": {
+   "mouth-inside-contour": 53,
+   "chin-height-room": 41,
+   "neck-between-chin-and-jaw": 14,
+   "mouth-below-nose": 3
+  },
+  "warningsById": {
+   "chin-height-honoured": 4,
+   "silhouette-asymmetric": 6,
+   "hair-skin-contrast": 5,
+   "contract-no-crushed-request": 7
+  }
+ },
+ "rows": [
+  {
+   "seed": 1,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 547
+  },
+  {
+   "seed": 2,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 666
+  },
+  {
+   "seed": 3,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 391
+  },
+  {
+   "seed": 4,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "chin-height-honoured"
+   ],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 122
+  },
+  {
+   "seed": 5,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 373
+  },
+  {
+   "seed": 6,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "silhouette-asymmetric",
+    "chin-height-honoured"
+   ],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 869
+  },
+  {
+   "seed": 7,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 268
+  },
+  {
+   "seed": 8,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 321
+  },
+  {
+   "seed": 9,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "hair-skin-contrast"
+   ],
+   "corrections": [],
+   "ms": 2076
+  },
+  {
+   "seed": 10,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 552
+  },
+  {
+   "seed": 11,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 462
+  },
+  {
+   "seed": 12,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "contract-no-crushed-request"
+   ],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 255
+  },
+  {
+   "seed": 13,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 98
+  },
+  {
+   "seed": 14,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 279
+  },
+  {
+   "seed": 15,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-below-nose",
+    "mouth-inside-contour"
+   ],
+   "ms": 1290
+  },
+  {
+   "seed": 16,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 90
+  },
+  {
+   "seed": 17,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-height-room"
+   ],
+   "ms": 5110
+  },
+  {
+   "seed": 18,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 217
+  },
+  {
+   "seed": 19,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 243
+  },
+  {
+   "seed": 20,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 363
+  },
+  {
+   "seed": 21,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 511
+  },
+  {
+   "seed": 22,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 262
+  },
+  {
+   "seed": 23,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-height-room",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 3447
+  },
+  {
+   "seed": 24,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 392
+  },
+  {
+   "seed": 25,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 1526
+  },
+  {
+   "seed": 26,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 360
+  },
+  {
+   "seed": 27,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 1792
+  },
+  {
+   "seed": 28,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 479
+  },
+  {
+   "seed": 29,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-height-room",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 445
+  },
+  {
+   "seed": 30,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 240
+  },
+  {
+   "seed": 31,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "contract-no-crushed-request"
+   ],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 1331
+  },
+  {
+   "seed": 32,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 220
+  },
+  {
+   "seed": 33,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 4140
+  },
+  {
+   "seed": 34,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "silhouette-asymmetric"
+   ],
+   "corrections": [],
+   "ms": 989
+  },
+  {
+   "seed": 35,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "silhouette-asymmetric"
+   ],
+   "corrections": [
+    "mouth-inside-contour",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 261
+  },
+  {
+   "seed": 36,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-height-room"
+   ],
+   "ms": 81
+  },
+  {
+   "seed": 37,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-below-nose"
+   ],
+   "ms": 882
+  },
+  {
+   "seed": 38,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 317
+  },
+  {
+   "seed": 39,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 855
+  },
+  {
+   "seed": 40,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "contract-no-crushed-request"
+   ],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 432
+  },
+  {
+   "seed": 41,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 93
+  },
+  {
+   "seed": 42,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 95
+  },
+  {
+   "seed": 43,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 294
+  },
+  {
+   "seed": 44,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 241
+  },
+  {
+   "seed": 45,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "silhouette-asymmetric"
+   ],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 231
+  },
+  {
+   "seed": 46,
+   "ok": false,
+   "failures": [
+    "front-clear-mouth"
+   ],
+   "warnings": [],
+   "corrections": [
+    "mouth-below-nose",
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 871
+  },
+  {
+   "seed": 47,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "hair-skin-contrast"
+   ],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 278
+  },
+  {
+   "seed": 48,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 883
+  },
+  {
+   "seed": 49,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 458
+  },
+  {
+   "seed": 50,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 214
+  },
+  {
+   "seed": 51,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 877
+  },
+  {
+   "seed": 52,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "silhouette-asymmetric"
+   ],
+   "corrections": [
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 886
+  },
+  {
+   "seed": 53,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 2689
+  },
+  {
+   "seed": 54,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 326
+  },
+  {
+   "seed": 55,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 85
+  },
+  {
+   "seed": 56,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "chin-height-honoured",
+    "contract-no-crushed-request"
+   ],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 304
+  },
+  {
+   "seed": 57,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 270
+  },
+  {
+   "seed": 58,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-height-room"
+   ],
+   "ms": 363
+  },
+  {
+   "seed": 59,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 327
+  },
+  {
+   "seed": 60,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "contract-no-crushed-request"
+   ],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 393
+  },
+  {
+   "seed": 61,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 270
+  },
+  {
+   "seed": 62,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 1074
+  },
+  {
+   "seed": 63,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 853
+  },
+  {
+   "seed": 64,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 169
+  },
+  {
+   "seed": 65,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "hair-skin-contrast"
+   ],
+   "corrections": [],
+   "ms": 463
+  },
+  {
+   "seed": 66,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 611
+  },
+  {
+   "seed": 67,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 235
+  },
+  {
+   "seed": 68,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "hair-skin-contrast"
+   ],
+   "corrections": [],
+   "ms": 318
+  },
+  {
+   "seed": 69,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 92
+  },
+  {
+   "seed": 70,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 102
+  },
+  {
+   "seed": 71,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-height-room"
+   ],
+   "ms": 277
+  },
+  {
+   "seed": 72,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 231
+  },
+  {
+   "seed": 73,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "chin-height-honoured",
+    "contract-no-crushed-request"
+   ],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 202
+  },
+  {
+   "seed": 74,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 312
+  },
+  {
+   "seed": 75,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 249
+  },
+  {
+   "seed": 76,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 231
+  },
+  {
+   "seed": 77,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 395
+  },
+  {
+   "seed": 78,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 158
+  },
+  {
+   "seed": 79,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "hair-skin-contrast"
+   ],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 122
+  },
+  {
+   "seed": 80,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 1454
+  },
+  {
+   "seed": 81,
+   "ok": false,
+   "failures": [
+    "ear-free-right"
+   ],
+   "warnings": [],
+   "corrections": [
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 232
+  },
+  {
+   "seed": 82,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 107
+  },
+  {
+   "seed": 83,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 212
+  },
+  {
+   "seed": 84,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-height-room"
+   ],
+   "ms": 1100
+  },
+  {
+   "seed": 85,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 191
+  },
+  {
+   "seed": 86,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "contract-no-crushed-request"
+   ],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 283
+  },
+  {
+   "seed": 87,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 270
+  },
+  {
+   "seed": 88,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 198
+  },
+  {
+   "seed": 89,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 85
+  },
+  {
+   "seed": 90,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 769
+  },
+  {
+   "seed": 91,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "silhouette-asymmetric"
+   ],
+   "corrections": [],
+   "ms": 235
+  },
+  {
+   "seed": 92,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 175
+  },
+  {
+   "seed": 93,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 378
+  },
+  {
+   "seed": 94,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 195
+  },
+  {
+   "seed": 95,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 1149
+  },
+  {
+   "seed": 96,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 240
+  },
+  {
+   "seed": 97,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 75
+  },
+  {
+   "seed": 98,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 431
+  },
+  {
+   "seed": 99,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room"
+   ],
+   "ms": 297
+  },
+  {
+   "seed": 100,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour"
+   ],
+   "ms": 91
+  }
+ ]
+}

@@ -95,7 +95,7 @@
    "why": "os maximal + masséter + graisse : les quatre contributions de largeur s'additionnent, le contour doit rester lisible"
   },
   "hard-03-bouche-ouverte-articulee": {
-   "svgSha1": "d0542e429888ecbd6f3089e0be1a183b8bb6ec20",
+   "svgSha1": "6991687bc840bee264bff6239b8650936010a48a",
    "kind": "hard",
    "why": "ouverture maximale + translation et avancée de la mandibule : lèvre inférieure, dents et menton doivent suivre ensemble"
   },
@@ -163,6 +163,16 @@
    "svgSha1": "d095704a45767ea5166579f7ac16c63b59024663",
    "kind": "hard",
    "why": "yeux écartés au maximum sur une tête étroite : orbites et nez se rapprochent des bords du contour"
+  },
+  "hard-17-cheveux-sur-la-bouche-graine-46": {
+   "svgSha1": "e07da68aa981b01fbb678852cd44bfb96f1ad683",
+   "kind": "hard",
+   "why": "campagne : une mèche avant frôle la bouche (front-clear-mouth 0,02 / 0,02) ; défaut du moteur de cheveux, à corriger sans retirer ce cas"
+  },
+  "hard-18-oreille-couverte-graine-81": {
+   "svgSha1": "2506feca5b014507f9e7ed23619f76372882a6c8",
+   "kind": "hard",
+   "why": "campagne : l'oreille droite est trop couverte (ear-free-right 0,13 / 0,12) ; défaut du moteur de cheveux, à corriger sans retirer ce cas"
   }
  }
 }

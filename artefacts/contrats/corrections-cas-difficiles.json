@@ -1,0 +1,128 @@
+[
+ {
+  "id": "hard-01-machoire-etroite-menton-pointu",
+  "corrections": [
+   "mouth-inside-contour: 45.0 → 12.6",
+   "chin-height-room: 98.8 → 137.4"
+  ]
+ },
+ {
+  "id": "hard-02-machoire-carree-massive",
+  "corrections": [
+   "chin-height-room: 133.0 → 137.4"
+  ]
+ },
+ {
+  "id": "hard-03-bouche-ouverte-articulee",
+  "corrections": [
+   "mouth-inside-contour: 46.0 → 30.2",
+   "chin-height-room: 151.8 → 168.9"
+  ]
+ },
+ {
+  "id": "hard-04-anime-stylisation-maximale",
+  "corrections": [
+   "mouth-inside-contour: 45.0 → 38.6",
+   "chin-height-room: 133.0 → 137.4"
+  ]
+ },
+ {
+  "id": "hard-05-encre-contours-maximaux",
+  "corrections": [
+   "mouth-inside-contour: 45.0 → 38.6",
+   "chin-height-room: 133.0 → 137.4"
+  ]
+ },
+ {
+  "id": "hard-06-expression-caricaturale",
+  "corrections": [
+   "mouth-inside-contour: 45.6 → 32.6",
+   "chin-height-room: 144.3 → 156.3"
+  ]
+ },
+ {
+  "id": "hard-07-lumiere-rasante",
+  "corrections": [
+   "mouth-inside-contour: 45.0 → 38.6",
+   "chin-height-room: 133.0 → 137.4"
+  ]
+ },
+ {
+  "id": "hard-08-contre-jour-faible",
+  "corrections": [
+   "mouth-inside-contour: 45.0 → 38.6",
+   "chin-height-room: 133.0 → 137.4"
+  ]
+ },
+ {
+  "id": "hard-09-nez-projection-maximale",
+  "corrections": [
+   "mouth-below-nose: 114.0 → 117.8",
+   "mouth-inside-contour: 45.0 → 35.5",
+   "chin-height-room: 133.0 → 141.2"
+  ]
+ },
+ {
+  "id": "hard-10-nez-minimal",
+  "corrections": [
+   "mouth-inside-contour: 45.0 → 38.6",
+   "chin-height-room: 133.0 → 137.4"
+  ]
+ },
+ {
+  "id": "hard-11-bouche-minuscule",
+  "corrections": [
+   "chin-height-room: 133.0 → 137.4"
+  ]
+ },
+ {
+  "id": "hard-12-bouche-immense",
+  "corrections": [
+   "mouth-inside-contour: 75.8 → 33.4",
+   "chin-height-room: 142.4 → 153.1"
+  ]
+ },
+ {
+  "id": "hard-13-menton-extreme",
+  "corrections": [
+   "mouth-inside-contour: 45.0 → 28.8",
+   "chin-height-room: 98.8 → 137.4"
+  ]
+ },
+ {
+  "id": "hard-14-cou-tendu-incline",
+  "corrections": [
+   "mouth-inside-contour: 45.0 → 38.6",
+   "chin-height-room: 133.0 → 137.4",
+   "neck-between-chin-and-jaw: 120.0 → 98.0"
+  ]
+ },
+ {
+  "id": "hard-15-ouverture-plus-colere-plus-serrage",
+  "corrections": [
+   "mouth-inside-contour: 45.8 → 31.3",
+   "chin-height-room: 148.0 → 162.6"
+  ]
+ },
+ {
+  "id": "hard-16-tete-etroite-yeux-ecartes",
+  "corrections": [
+   "mouth-inside-contour: 45.0 → 36.7",
+   "chin-height-room: 133.0 → 137.4"
+  ]
+ },
+ {
+  "id": "hard-17-cheveux-sur-la-bouche-graine-46",
+  "corrections": [
+   "mouth-inside-contour: 45.0 → 38.6",
+   "chin-height-room: 133.0 → 137.4"
+  ]
+ },
+ {
+  "id": "hard-18-oreille-couverte-graine-81",
+  "corrections": [
+   "mouth-inside-contour: 45.0 → 38.6",
+   "chin-height-room: 133.0 → 137.4"
+  ]
+ }
+]

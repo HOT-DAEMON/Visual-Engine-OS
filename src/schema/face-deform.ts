@@ -23,7 +23,7 @@ export const DeformArticulation = z
   })
   .strict();
 
-/** Expression du bas du visage : quatre axes qui se COMBINENT (somme de déplacements, pas de remplacement). */
+/** Expression du bas du visage : huit axes qui se COMBINENT (somme de déplacements, pas de remplacement). */
 export const DeformExpression = z
   .object({
     /** Sourire (+) : commissures vers le haut et l'extérieur, joues qui remontent ; moue (−) : commissures vers le bas. */
@@ -32,6 +32,14 @@ export const DeformExpression = z
     grimace: Unit.default(0),
     /** Colère : lèvre supérieure retroussée, ailes du nez dilatées, plis nasogéniens creusés, lèvre inférieure abaissée. */
     anger: Unit.default(0),
+    /** Surprise : lèvre inférieure abaissée, lèvre supérieure légèrement relevée, ailes du nez un peu dilatées (la bouche s'ouvre via `mouth.open`). */
+    surprise: Unit.default(0),
+    /** Dégoût : lèvre supérieure retroussée haut, ailes dilatées, plis nasogéniens creusés, commissures abaissées. */
+    disgust: Unit.default(0),
+    /** Dédain : commissures abaissées, lèvres tendues, menton relevé par le mentonnier (version symétrique ; l'asymétrie vient de `stylization.cornerAsymmetry`). */
+    disdain: Unit.default(0),
+    /** Bouche en « o » : commissures RAPPROCHÉES (pincement), lèvre inférieure légèrement abaissée, lèvres arrondies. */
+    ooh: Unit.default(0),
     /** Caricature : multiplicateur global des déplacements (1 + 1,5 × caricature). */
     caricature: Unit.default(0),
   })

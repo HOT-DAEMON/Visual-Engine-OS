@@ -17,7 +17,7 @@ describe('régression visuelle — références permanentes', () => {
   });
 
   it('les cas difficiles sont tous présents et documentés (aucun n\'est retiré en silence)', () => {
-    expect(HARD_CASES.length).toBeGreaterThanOrEqual(16);
+    expect(HARD_CASES.length).toBeGreaterThanOrEqual(18);
     for (const c of HARD_CASES) { expect(c.why.length).toBeGreaterThan(20); expect(loadRef(c.id)).not.toBeNull(); }
   });
 

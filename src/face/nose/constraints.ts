@@ -1,4 +1,5 @@
-import { clamp, clamp01 } from '../../core/math';
+import { clamp01 } from '../../core/math';
+import { Resolver, type Correction } from '../../core/resolve';
 import type { FaceParams } from '../../schema';
 import type { FaceLandmarks } from '../landmarks';
 import type { NoseFrame } from './frame';
@@ -9,13 +10,7 @@ import type { NoseFrame } from './frame';
  * elle RAMÈNE la valeur demandée à la plus proche valeur admissible et la NOTE (`applied`), pour que les tests, la vérification et la documentation
  * puissent dire exactement ce qui a été corrigé. Rien n'est corrigé en silence.
  */
-export interface NoseConstraint {
-  readonly id: string;
-  readonly param: string;
-  readonly requested: number;
-  readonly applied: number;
-  readonly reason: string;
-}
+export type NoseConstraint = Correction;
 
 /** Valeurs EFFECTIVES (après arbitrage) des axes qui ont des contraintes. */
 export interface ResolvedNose {
@@ -32,13 +27,9 @@ export const baseHalfAt = (F: Pick<NoseFrame, 'alarX'>, bw: number): number => F
 
 export function resolveNoseConstraints(p: FaceParams, F: NoseFrame, lm: FaceLandmarks): ResolvedNose {
   const n = p.nose;
-  const applied: NoseConstraint[] = [];
-  /** Enregistre la correction si la valeur change (tolérance 1e-9) et renvoie la valeur effective. */
-  const limit = (id: string, param: string, requested: number, lo: number, hi: number, reason: string): number => {
-    const v = clamp(requested, lo, hi);
-    if (Math.abs(v - requested) > 1e-9) applied.push({ id, param, requested, applied: v, reason });
-    return v;
-  };
+  // Résolveur COMMUN (`core/resolve.ts`) : même procédure que les repères du visage — preuve que le mécanisme se répète vraiment.
+  const R = new Resolver();
+  const limit = (id: string, param: string, requested: number, lo: number, hi: number, reason: string): number => R.limit(id, param, requested, lo, hi, reason);
   // C1 — la base doit PORTER la columelle et une narine de chaque côté : demi-base ≥ demi-columelle + 9 % de la largeur des ailes.
   //      Sinon les narines sortiraient de leur plancher (le contrôle `nostrils-inside-alae` échouerait).
   const minBase = F.colHalf + 0.09 * F.nw;
@@ -54,5 +45,5 @@ export function resolveNoseConstraints(p: FaceParams, F: NoseFrame, lm: FaceLand
   const nostrilOpening = n.nostrils.opening === null ? null : limit('opening-vs-visibility', 'nose.nostrils.opening', n.nostrils.opening, 0, 0.25 + 0.75 * vis, 'une narine cachée par la pointe ne peut pas être grande ouverte');
   // C5 — la gouttière du philtrum reste plus étroite que 60 % de la bouche (au-delà, ce serait la bouche).
   const philtrumWidth = limit('philtrum-narrower-than-mouth', 'nose.philtrum.width', n.philtrum.width, 0, 1, 'largeur du philtrum bornée par la bouche');
-  return { baseWidth, domeSeparation, columellaHang, nostrilOpening, philtrumWidth, applied };
+  return { baseWidth, domeSeparation, columellaHang, nostrilOpening, philtrumWidth, applied: R.applied };
 }

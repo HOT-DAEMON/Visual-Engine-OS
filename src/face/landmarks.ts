@@ -1,5 +1,5 @@
 import { memoPure } from '../perf';
-import { clamp } from '../core/math';
+import { Resolver, type Correction } from '../core/resolve';
 import { halfWidthAt, headOutline, minHalfWidth, type Outline } from './outline';
 import { jawDerived, mouthOpenPx, NOSE_MOUTH_GAP, type JawDerived } from './jaw/params';
 import { tipLift } from './nose/frame';
@@ -89,6 +89,8 @@ export interface FaceLandmarks {
   readonly neck: NeckLandmarks;
   readonly hair: HairLandmarks;
   readonly asymmetry: FaceAsymmetry;
+  /** Contraintes entre composants qui ont ramené une valeur demandée (procédure : `core/resolve.ts`) ; vide si rien n'a été corrigé. */
+  readonly corrections: readonly Correction[];
 }
 
 /** Marge entre la bouche et la base du nez (fraction de H) : la bouche ne remonte jamais sous le nez. */
@@ -99,7 +101,8 @@ function faceLandmarksRaw(p: FaceParams, W: number, H: number): FaceLandmarks {
   const dy = (p.asymmetry.eyeDy * H) / 2;
   const noseBaseY = eyeY + p.nose.length * H;
   const outline = headOutline(p, W, H);
-  const mouthY = Math.max(-H / 2 + p.mouth.y * H, noseBaseY + NOSE_MOUTH_GAP * H);
+  const R = new Resolver();
+  const mouthY = R.limit('mouth-below-nose', 'mouth.y', -H / 2 + p.mouth.y * H, noseBaseY + NOSE_MOUTH_GAP * H, Infinity, 'la bouche ne remonte jamais sous le nez');
   const m = p.mouth;
   const jd = jawDerived(p, W, H);
   // Déformation des tissus à l'ouverture : la lèvre inférieure s'étire (s'amincit) et la commissure s'écarte un peu.
@@ -114,10 +117,10 @@ function faceLandmarksRaw(p: FaceParams, W: number, H: number): FaceLandmarks {
   const lipsBottom = mouthY + openH + lowerH;
   // « à sa hauteur » = à la hauteur la plus basse de la bouche (commissure ou lèvre inférieure, + la marge de la barbe) : c'est là que le crâne est le plus étroit.
   const yLow = Math.min(outline.bottomY - 1e-3, Math.max(mouthY - m.curve * 0.03 * H, lipsBottom) + 0.012 * H);
-  const lipsHalf = Math.min(((m.width * W) / 2) * (1 + 0.15 * stretch), 0.8 * Math.min(halfWidthAt(outline, mouthY), halfWidthAt(outline, yLow)));
+  const lipsHalf = R.limit('mouth-inside-contour', 'mouth.width', ((m.width * W) / 2) * (1 + 0.15 * stretch), 0, 0.8 * Math.min(halfWidthAt(outline, mouthY), halfWidthAt(outline, yLow)), 'la bouche reste à 80 % de la demi-largeur du contour à sa hauteur');
   // Sillon mentolabial : la mandibule entraîne le coussinet du menton (abaissement) ; le sillon reste sous la lèvre inférieure et au-dessus du bas.
   const sulcusRaw = H / 2 - p.chin.height * H + jd.drop;
-  const sulcusY = Math.min(outline.bottomY - 0.04 * H, Math.max(lipsBottom + 0.014 * H, sulcusRaw));
+  const sulcusY = R.limit('chin-height-room', 'chin.height', sulcusRaw, lipsBottom + 0.014 * H, outline.bottomY - 0.04 * H, 'le sillon mentolabial reste sous la lèvre inférieure et au-dessus du bas du menton');
   // Région orbitaire : de la ligne médiane de l'œil au temple, comme l'ajustement des yeux (même marge).
   const outerReach = minHalfWidth(outline, eyeY - 0.06 * H, eyeY + 0.06 * H) - 0.045 * W;
   const orbitOf = (s: -1 | 1): OrbitLandmarks => ({ cx: s * (half + (outerReach - half) * 0.5), cy: eyeY - 0.006 * H, rx: Math.max(0.01, (outerReach - half) * 0.62), ry: 0.085 * H });
@@ -146,9 +149,10 @@ function faceLandmarksRaw(p: FaceParams, W: number, H: number): FaceLandmarks {
     jaw: { gonion: outline.keys.gonion, gonialDeg: jd.gonialDeg, drop: jd.drop, tissue: jd.tissue },
     orbit: { left: orbitOf(-1), right: orbitOf(1) },
     // Largeur du cou : paramètre propre (`neck.width`) ; le menton ne l'agrandit QUE si `neck.chinCoupling` > 0 (0 par défaut : menton et cou indépendants).
-    neck: { half: clamp((p.neck.width * W) / 2 + p.neck.chinCoupling * (p.chin.projection - 0.5) * 0.05 * W, outline.chinHalf * 1.15, jawHalf * 0.85), topY: -H / 2 + 0.6 * H, bottomY: H / 2 + p.neck.length * H },
+    neck: { half: R.limit('neck-between-chin-and-jaw', 'neck.width', (p.neck.width * W) / 2 + p.neck.chinCoupling * (p.chin.projection - 0.5) * 0.05 * W, outline.chinHalf * 1.15, jawHalf * 0.85, 'le cou reste plus large que le menton et plus étroit que la mâchoire'), topY: -H / 2 + 0.6 * H, bottomY: H / 2 + p.neck.length * H },
     hair: { centerY: -H / 2 + (0.25 + 0.25 * hl) * zone, templeY, sideY: Math.max(-H / 2 + 0.08 * H, templeY - 0.05 * H) },
     asymmetry: p.asymmetry,
+    corrections: R.applied,
   };
 }
 

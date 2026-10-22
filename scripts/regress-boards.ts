@@ -17,7 +17,7 @@ const ref = (c: VisualCase): Buffer => readFileSync(`${REF_DIR}/${c.id}.png`);
 const sheet = (name: string, title: string, cs: readonly VisualCase[], cols: number): void => {
   writeFileSync(`${OUT}/${name}.png`, board(title, cs.map((c) => ({ png: ref(c), label: c.id.replace(/^hard-/, '').slice(0, 22) })), cols, REF_W, REF_H));
 };
-sheet('01-cas-difficiles', 'Cas difficiles : références permanentes (16)', HARD_CASES, 4);
+sheet('01-cas-difficiles', 'Cas difficiles : références permanentes (18)', HARD_CASES, 4);
 sheet('02-tirages-standard', 'Tirages standard à graine fixe (16)', STANDARD_CASES, 4);
 
 // Contrôle négatif : mêmes graine et cadrage, jawWidth ±0,04 (dérive subtile, vers l'intérieur si la borne est atteinte). Référence | perturbé | chaleur.

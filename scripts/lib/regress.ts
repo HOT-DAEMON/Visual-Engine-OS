@@ -26,7 +26,7 @@ interface Manifest { readonly size: { w: number; h: number }; readonly cases: Re
 export const sha1 = (s: string): string => createHash('sha1').update(s).digest('hex');
 
 export function renderCase(c: VisualCase): { svg: string } {
-  const { svg } = cellSvg({ seed: c.seed, patch: c.patch, light: c.light, focus: c.focus }, REF_W, REF_H);
+  const { svg } = cellSvg({ seed: c.seed, opts: c.opts, patch: c.patch, light: c.light, focus: c.focus }, REF_W, REF_H);
   return { svg };
 }
 

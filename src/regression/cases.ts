@@ -17,6 +17,8 @@ export interface VisualCase {
   readonly patch?: Record<string, unknown>;
   readonly light?: { azimuthDeg?: number; elevationDeg?: number; intensity?: number };
   readonly focus?: Focus;
+  /** Options de génération aléatoire (tirage `structure`), pour les cas issus d'une campagne. */
+  readonly opts?: { readonly structure?: boolean };
 }
 
 /** Graines fixes des tirages standard : ne jamais les renuméroter (les références en dépendent). */
@@ -48,6 +50,12 @@ const HARD: VisualCase[] = [
   hard('15-ouverture-plus-colere-plus-serrage', 'bouche ouverte + colère + mâchoires serrées : tout agit sur le masséter et la lèvre', { mouth: { open: 0.8 }, deform: { expression: { anger: 1 }, articulation: { clench: 1 } } }, { focus: 'lower' }),
   hard('16-tete-etroite-yeux-ecartes', 'yeux écartés au maximum sur une tête étroite : orbites et nez se rapprochent des bords du contour', { jawWidth: 0.55, eyeGap: 0.34, templeY: 0.22 }),
 ];
+
+/** Cas issus de la campagne de 100 visages : défauts RÉELS constatés (déjà présents avant ce travail, dans le moteur de cheveux). */
+HARD.push(
+  { id: 'hard-17-cheveux-sur-la-bouche-graine-46', kind: 'hard', why: 'campagne : une mèche avant frôle la bouche (front-clear-mouth 0,02 / 0,02) ; défaut du moteur de cheveux, à corriger sans retirer ce cas', seed: 46, opts: { structure: true } },
+  { id: 'hard-18-oreille-couverte-graine-81', kind: 'hard', why: 'campagne : l\'oreille droite est trop couverte (ear-free-right 0,13 / 0,12) ; défaut du moteur de cheveux, à corriger sans retirer ce cas', seed: 81, opts: { structure: true } },
+);
 
 export const ALL_CASES: readonly VisualCase[] = [...standard, ...HARD];
 export const HARD_CASES: readonly VisualCase[] = HARD;

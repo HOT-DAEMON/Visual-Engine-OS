@@ -28,25 +28,25 @@ Honnêteté d'abord : ce moteur est un moteur 2D de visage vu de FACE. Les volum
 
 ## T9 · Cou — ✅ angle, ombre, platysma, muscles, menton ≠ cou. 🟡 l'inclinaison de la tête ne tourne pas la tête : elle ne règle que l'angle, l'ombre et la tension. ⬜ rotation de tête, pomme d'Adam, clavicules.
 
-## T10 · Dépendances — ✅ table testée par perturbation (6 règles). ⬜ règles pour le nez et la bouche (hors ouverture) ; ⬜ propagation automatique générique (les formules sont écrites une à une).
+## T10 · Dépendances — ✅ table testée par perturbation (6 règles) ; ✅ contrats de 11 composants vérifiés contre l'influence MESURÉE, ordre de résolution déterministe, résolveur commun qui enregistre chaque correction (`docs/CONTRACTS.md`). 🟡 la propagation reste un bornage, pas une propagation automatique ; ⬜ règles de perturbation dédiées au nez et à la bouche.
 
 ## T11 · Articulation — ✅ skinning à deux os, poids, translation latérale, protrusion. ⬜ cycle de mastication animé, interpolation temporelle entre poses, rotation réelle de la mandibule autour du condyle (modèle : translation pondérée).
 
-## T12 · Trois déformations — ✅ A/B/C séparées, somme, os préservé, gain de caricature. 🟡 quatre axes d'expression seulement (sourire, grimace, colère, caricature). ⬜ surprise, dégoût, dédain, bouche en « o » pour le bas du visage ; ⬜ liaison avec `mouthFor` (anciennes expressions) : les deux systèmes coexistent.
+## T12 · Trois déformations — ✅ A/B/C séparées, somme, os préservé, gain de caricature. ✅ huit axes (sourire, grimace, colère, surprise, dégoût, dédain, « o », caricature) : même contrat de somme, os jamais déplacé (`tests/stylization-profiles.test.ts`). 🟡 le dédain est symétrique et très discret à l'image (`artefacts/contrats/planche-expressions.png`). ⬜ liaison avec `mouthFor` (anciennes expressions) : les deux systèmes coexistent.
 
-## T13 · Stylisation — ✅ 9 contrôles, neutre, idempotent, relations préservées, 3 modes de rendu. 🟡 `anime` = ombrage `cel` + bords nets, pas de contour de cheveux ; `ink` = filtre de seuil global (pas de hachures). ⬜ profils nommés enregistrés (manga, caricature, réaliste…).
+## T13 · Stylisation — ✅ 9 contrôles, neutre, idempotent, relations préservées, 3 modes de rendu. 🟡 `anime` = ombrage `cel` + bords nets, pas de contour de cheveux ; `ink` = filtre de seuil global (pas de hachures). ✅ 6 profils nommés (`STYLIZATION_PROFILES` : réaliste, sobre, anime, manga-angulaire, caricature, encre) : valides, idempotents, relations préservées (`tests/stylization-profiles.test.ts`).
 
-## T14 · Vérification — ✅ 3 couches sur la géométrie + mesures sur l'image + tests mutation. 🟡 mesure d'image sur un visage (coûteuse : ~40 s) ; ⬜ campagne d'image sur 100 visages.
+## T14 · Vérification — ✅ 3 couches sur la géométrie + mesures sur l'image + tests mutation + `checkContracts` (mesures finies, ordre vertical, bouche dans la mâchoire, contraintes qui écrasent une demande, budget de filtres). ✅ campagne de 100 visages (`artefacts/campagne-100/`, 88 s). 🟡 2 échecs préexistants du moteur de cheveux (graines 46 et 81, cas permanents 17 et 18). Détails : `docs/REGRESSION.md`, `docs/CONTRACTS.md`.
 
 ## T15 · Artefacts — ✅ `artefacts/face-structure/` (planches rendues, jamais retouchées). ⬜ planche de profil et de trois quarts.
 
 ## T16 · Docs — ✅ fichiers ≤ 200 lignes, suites `FACE-STRUCTURE-*.md`, `ERRORS-5.md`, `CHANGELOG-6.md`.
 
 ## Génération aléatoire
-✅ `generateRandomFace(seed, { structure: true })` : axes de structure tirés dans un flux dérivé (les visages `classic` ne bougent pas). ⬜ tirage de `deform` et de `stylization`.
+✅ `generateRandomFace(seed, { structure: true })` : axes de structure tirés dans un flux dérivé (les visages `classic` ne bougent pas). ✅ tirage OPTIONNEL de `deform` et de `stylization` : `structure: { draw: { deform: true, stylization: true } }` (flux dérivé distinct, sans l'option rien ne bouge).
 
 ## Performance
-🟡 un rendu structuré coûte ~10–35 s par cellule 340×420 sur un cœur (nombreux flous SVG). ⬜ mutualiser les filtres de flou par sigma.
+✅ rendu structuré : ~0,3 s par cellule 340×420 (15–17 s avant) grâce aux régions de flou serrées et aux filtres mutualisés ; caches par contenu ; mesure séparée géométrie / SVG / filtres / raster. Détails : `docs/PERF.md`.
 
 ## Documentation « ligne par ligne »
 🟡 chaque fonction, chaque bloc de calcul et la plupart des instructions sont commentés en français (contrat en tête de fichier) ; ce n'est pas littéralement une ligne de commentaire par ligne de code (les lignes triviales : imports, accolades, retours, ne le sont pas).

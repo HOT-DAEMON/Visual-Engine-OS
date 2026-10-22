@@ -93,7 +93,9 @@ export function mouthGeometry(p: FaceParams, lm: FaceLandmarks): MouthGeo {
   const wT = WEIGHT.lowerTeeth;
   const dT = mandibleDisplace(pose, wT);
   // Le bas des dents inférieures reste à 0,3 px AU-DESSUS du bord de la lèvre (dents posées derrière la lèvre, jamais sur son bord : le polygone reste strictement dans la cavité).
-  const lowerTeethBot = closure.map((q, i) => ({ x: q.x + dT.x, y: Math.min((lowerTop[i] as Vec).y - 0.3, q.y + dT.y) }));
+  // Abscisse : celle du BORD DE LA LÈVRE (pas q.x + dT.x) — la lèvre pèse moins que les dents près des commissures, donc une translation latérale
+  // de la mandibule faisait sortir les dents de la cavité (constaté par la campagne de tirage, graine 931 : 82 % des dents dans la cavité < 90 %).
+  const lowerTeethBot = closure.map((q, i) => ({ x: (lowerTop[i] as Vec).x, y: Math.min((lowerTop[i] as Vec).y - 0.3, q.y + dT.y) }));
   const lowerTeethTop = lowerTeethBot.map((q, i) => ({ x: q.x, y: q.y - Math.min(gap(i) * 0.45, 0.016 * H) * m.teeth.lower * vis * bell(u[i] as number, 0.5) }));
   const idx = closure.map((_, i) => i).filter(inner);
   const poly = (top: Vec[], bot: Vec[]): Poly => (open && idx.length > 1 ? [...idx.map((i) => top[i] as Vec), ...[...idx].reverse().map((i) => bot[i] as Vec)] : []);

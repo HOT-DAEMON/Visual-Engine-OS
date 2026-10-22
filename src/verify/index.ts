@@ -7,6 +7,7 @@ import { checkGeometry } from './geometry';
 import { checkStyle } from './style';
 import { checkFaceEngine } from './face-engine';
 import { checkStructure } from './structure';
+import { checkContracts } from './contracts';
 import { report, type Check, type Report } from './types';
 
 export { paletteStats, isVivid } from './style';
@@ -34,5 +35,7 @@ export function verifyFace(face: RandomFace): Report {
   checks.push(...checkFaceEngine(face));
   // Moteur de structure (`anatomyEngine: 'structured'` seulement) : géométrie, anatomie, style de la structure.
   checks.push(...checkStructure(face));
+  // Contrats entre composants : mesures observables, corrections du résolveur, ordre anatomique, budget de rendu.
+  checks.push(...checkContracts(face, svg));
   return report(checks);
 }
