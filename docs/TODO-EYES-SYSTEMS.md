@@ -178,9 +178,9 @@ Une structure de données de couleur devrait donc pouvoir exprimer :
 - opacités  et transitions ;
 - Dégradées d'opacité;
 - Glow, bloom, halo;
--
+- superposition et mode de mélange.
 Un gradient angulaire permet notamment de produire un iris dont le bleu se trouve dans la partie supérieure et le doré dans la partie inférieure, sans peindre manuellement une texture complète.
 
 Les motifs doivent être générés à partir d'une graine aléatoire reproductible. Deux yeux peuvent partager une palette et une morphologie sans avoir des fibres strictement identiques.
 - superposition et mode de mélange.
-Suite du document dans TOD-EYES-SYSTEMS-2.md
+Suite du document dans TODO-EYES-SYSTEMS-2.md
