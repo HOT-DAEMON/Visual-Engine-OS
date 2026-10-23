@@ -19,6 +19,8 @@ export interface Outline {
   readonly H: number;
   /** Demi-largeur du menton au coin (là où le corps de la mandibule rejoint la symphyse). */
   readonly chinHalf: number;
+  /** Demi-largeur de menton demandée avant le plancher de continuité (`chinHalf` ≥ cette valeur). */
+  readonly chinHalfRequested: number;
   /** Ordonnée du bas du menton : H/2 bouche fermée, plus bas quand la mandibule s'abaisse. */
   readonly bottomY: number;
   /** Points clés du contour bas, pour les repères et la vérification. */
@@ -35,7 +37,7 @@ export function headOutline(p: FaceParams, W: number, H: number): Outline {
     p3: temple,
   };
   const low = lowerContour(p, W, H, temple);
-  return { right: [seg1, ...low.segments], W, H, chinHalf: low.chinHalf, bottomY: low.bottom.y, keys: { gonion: low.gonion, chinCorner: low.chinCorner, bottom: low.bottom } };
+  return { right: [seg1, ...low.segments], W, H, chinHalf: low.chinHalf, chinHalfRequested: low.chinHalfRequested, bottomY: low.bottom.y, keys: { gonion: low.gonion, chinCorner: low.chinCorner, bottom: low.bottom } };
 }
 
 const mirror = (v: Vec): Vec => ({ x: -v.x, y: v.y });
@@ -50,27 +52,46 @@ export function outlinePath(o: Outline): string {
   return `M${f(first.p0)}${o.right.map(down).join('')}${[...o.right].reverse().map(up).join('')}Z`;
 }
 
-/** Échantillons (x, y) de la moitié droite, y croissant. */
+const SAMPLE_CACHE = new WeakMap<Outline, Map<number, Vec[]>>();
+
+/**
+ * Échantillons (x, y) de la moitié droite, y croissant. MÉMOÏSÉS par contour (un `Outline` est immuable) : mesuré au profil, le recalcul à chaque appel de
+ * `halfWidthAt` représentait ~27 % du temps de la vérification d'un visage. Le tableau renvoyé est partagé : ne pas le modifier.
+ */
 export function rightSamples(o: Outline, perSegment = 48): Vec[] {
+  let byRes = SAMPLE_CACHE.get(o);
+  if (!byRes) SAMPLE_CACHE.set(o, (byRes = new Map()));
+  const hit = byRes.get(perSegment);
+  if (hit) return hit;
   const out: Vec[] = [];
   for (const c of o.right) {
     for (let i = 0; i <= perSegment; i++) out.push(cubicAt(c.p0, c.p1, c.p2, c.p3, i / perSegment));
   }
+  byRes.set(perSegment, out);
   return out;
 }
 
-/** Demi-largeur du crâne à la hauteur y (interpolation sur les échantillons ; 0 hors de [-H/2, H/2]). */
+/**
+ * Demi-largeur du crâne à la hauteur y (interpolation sur les échantillons ; 0 hors de [-H/2, bottomY]).
+ * Recherche DICHOTOMIQUE du premier intervalle qui contient y (les échantillons sont monotones en y) : même résultat que le balayage linéaire d'avant
+ * (premier intervalle trouvé), en O(log n) au lieu de O(n).
+ */
 export function halfWidthAt(o: Outline, y: number, samples: readonly Vec[] = rightSamples(o)): number {
   if (y < -o.H / 2 || y > o.bottomY) return 0;
-  for (let i = 1; i < samples.length; i++) {
-    const a = samples[i - 1] as Vec;
-    const b = samples[i] as Vec;
-    if ((y >= a.y && y <= b.y) || (y <= a.y && y >= b.y)) {
-      const dy = b.y - a.y;
-      return Math.abs(dy) < 1e-9 ? Math.max(a.x, b.x) : a.x + ((b.x - a.x) * (y - a.y)) / dy;
-    }
+  let lo = 1;
+  let hi = samples.length - 1;
+  if (hi < 1) return 0;
+  // Plus petit i ≥ 1 tel que samples[i].y ≥ y.
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if ((samples[mid] as Vec).y >= y) hi = mid;
+    else lo = mid + 1;
   }
-  return 0;
+  const a = samples[lo - 1] as Vec;
+  const b = samples[lo] as Vec;
+  if (!((y >= a.y && y <= b.y) || (y <= a.y && y >= b.y))) return 0;
+  const dy = b.y - a.y;
+  return Math.abs(dy) < 1e-9 ? Math.max(a.x, b.x) : a.x + ((b.x - a.x) * (y - a.y)) / dy;
 }
 
 /** Plus petite demi-largeur sur [y0, y1] : la contrainte réelle pour un objet qui occupe cet intervalle. */

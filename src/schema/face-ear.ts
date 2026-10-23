@@ -83,8 +83,10 @@ export const FaceEars = z
     /** Mélange : poids (0–1) d'autres familles ; la famille principale prend le reste. Clés triées → résultat déterministe. */
     blend: z.record(EarFamily, Unit).default({}),
     seed: z.number().int().min(0).max(0x7fffffff).default(0),
-    /** Alignement sur les repères du visage : 1 = exact (racine de l'hélix sur la ligne des yeux, bas du lobule sur la ligne de la bouche), 0 = libre. */
-    anchors: z.object({ eye: Unit.default(1), mouth: Unit.default(1), crusLevel: z.number().min(0.2).max(0.34).default(0.26) }).strict().default({}),
+    /** Alignement sur les repères du visage : 1 = exact (racine de l'hélix sur la ligne des yeux, bas du lobule sur `lobuleLine`), 0 = libre.
+     * `lobuleLine` : ligne visée par le bas du lobule. `nose-base` (défaut, anatomie réelle : le bas du lobule est au niveau de la base du nez) ;
+     * `mouth` = ancienne consigne (ligne de séparation des lèvres), conservée pour comparaison : elle donne des oreilles ≈ 0,41 H, trop grandes. */
+    anchors: z.object({ eye: Unit.default(1), mouth: Unit.default(1), lobuleLine: z.enum(['nose-base', 'mouth']).default('nose-base'), crusLevel: z.number().min(0.2).max(0.34).default(0.26) }).strict().default({}),
     /** Attache au crâne : ouverture (degrés d'écartement du pavillon), inclinaison avant-arrière, rotation locale, échelle relative, enfoncement dans le contour. */
     attach: z
       .object({

@@ -115,7 +115,7 @@ export function earAnatomyChecks(p: FaceParams, lm: FaceLandmarks, e: EarGeo): C
   if (p.ears.anchors.eye >= 1) o.push(check('anatomy', `ear-crus-on-eye-line-${s}`, '<=', Math.abs(a.crusToEyeLine), 0.5, `la racine de l'hélix (fosse triangulaire) ${s} n'est pas sur la ligne des yeux`));
   if (p.ears.anchors.mouth >= 1 && m.resolved.present.lobule) {
     const corrected = a.corrections.length > 0;
-    o.push(check('anatomy', `ear-lobule-on-mouth-line-${s}`, '<=', Math.abs(a.lobuleToMouthLine), corrected ? 0.2 * lm.H : 0.5, `le bas du lobule ${s} n'est pas sur la ligne de la bouche`, corrected ? 'warn' : 'error'));
+    o.push(check('anatomy', `ear-lobule-on-line-${s}`, '<=', Math.abs(a.lobuleToLine), corrected ? 0.2 * lm.H : 0.5, `le bas du lobule ${s} n'est pas sur la ligne visée (base du nez)`, corrected ? 'warn' : 'error'));
   }
   // L'oreille ne dépasse pas la zone sourcils → menton.
   o.push(check('anatomy', `ear-within-face-height-${s}`, '>=', pl.topY, -lm.H / 2, `le haut de l'oreille ${s} dépasse le sommet du crâne`));

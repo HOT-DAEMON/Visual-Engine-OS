@@ -51,19 +51,25 @@ export interface ChinShape {
   readonly flat: number;
   /** `true` pour un menton pointu (arrivée oblique, apex en V voulu). */
   readonly pointed: boolean;
+  /** Pointu (1) … rond/carré (0) : pilote le renflement minimal du menton. Continu, jamais un interrupteur. */
+  readonly pointedness: number;
+  /** Part (0…1) de la rotation de tangente effectuée dans le CORPS de la mandibule (haute : menton en V arrondi ; basse : menton large à symphyse marquée). */
+  readonly turnShare: number;
 }
 
 /** Les quatre symphyses historiques, exprimées comme points d'une forme continue (valeurs identiques à celles de `contour.ts` d'avant). */
-const ROUND: ChinShape = { rise: 0.5, tangent: { x: -0.3, y: 1 }, flat: 0.55, pointed: false };
-const SQUARE: ChinShape = { rise: 0.3, tangent: { x: -0.05, y: 1 }, flat: 0.9, pointed: false };
-const POINTED: ChinShape = { rise: 0.75, tangent: { x: -0.55, y: 1 }, flat: 0, pointed: true };
-const CLEFT: ChinShape = { rise: 0.45, tangent: { x: -0.2, y: 1 }, flat: 0.7, pointed: false };
+const ROUND: ChinShape = { rise: 0.5, tangent: { x: -0.3, y: 1 }, flat: 0.55, pointed: false, pointedness: 0, turnShare: 0.55 };
+const SQUARE: ChinShape = { rise: 0.3, tangent: { x: -0.05, y: 1 }, flat: 0.9, pointed: false, pointedness: 0, turnShare: 0.2 };
+const POINTED: ChinShape = { rise: 0.75, tangent: { x: -0.55, y: 1 }, flat: 0.12, pointed: true, pointedness: 1, turnShare: 0.85 };
+const CLEFT: ChinShape = { rise: 0.45, tangent: { x: -0.2, y: 1 }, flat: 0.7, pointed: false, pointedness: 0, turnShare: 0.4 };
 const mixShape = (a: ChinShape, b: ChinShape, t: number): ChinShape => ({
   rise: a.rise + (b.rise - a.rise) * t,
   tangent: { x: a.tangent.x + (b.tangent.x - a.tangent.x) * t, y: 1 },
   flat: a.flat + (b.flat - a.flat) * t,
   // L'apex en V n'existe qu'au-delà de 85 % du chemin vers le pointu : en deçà, la symphyse reste arrondie (continuité C1).
   pointed: b.pointed ? t >= 0.85 : a.pointed && t < 0.15,
+  pointedness: a.pointedness + (b.pointedness - a.pointedness) * t,
+  turnShare: a.turnShare + (b.turnShare - a.turnShare) * t,
 });
 
 export function chinShape(p: FaceParams): ChinShape {

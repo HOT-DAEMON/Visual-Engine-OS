@@ -4,7 +4,7 @@ import { rightSamples } from '../src/face';
 import { bundle, face, H, set, W } from './helpers-structure';
 
 /** Valeur « extrême mais valide » posée sur chaque chemin de paramètre des règles de dépendance. */
-const PUSH: Record<string, number> = { 'chin.projection': 0.95, chinWidth: 0.3, jawWidth: 0.92, 'softTissue.masseter.volume': 0.9, 'softTissue.fat': 0.9, 'mouth.open': 0.9 };
+const PUSH: Record<string, number> = { 'chin.projection': 0.95, chinWidth: 0.36, jawWidth: 0.92, 'softTissue.masseter.volume': 0.9, 'softTissue.fat': 0.9, 'mouth.open': 0.9 };
 const measure = (patch: Record<string, unknown>) => measureStructure(face(patch), W, H);
 
 describe('dépendances entre paramètres (T10)', () => {

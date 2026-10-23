@@ -19,11 +19,16 @@ export interface DependencyRule {
   readonly preserve: readonly string[];
 }
 
+/**
+ * CONTINUITÉ MANDIBULE → MENTON (dépendance conditionnelle, testée dans `tests/chin-continuity.test.ts`) : `chin.widthPx = max(chinWidth demandée, plancher)`,
+ * le plancher étant la droite gonion → bas du menton (+ renflement). Il n'est actif que pour un menton plus étroit que cette droite ; au-dessus,
+ * `chinWidth` reste indépendante de la mâchoire. C'est pourquoi `chin.widthPx` n'est plus listée comme « préservée » par `jawWidth` / `softTissue.masseter.volume`.
+ */
 export const DEPENDENCY_RULES: readonly DependencyRule[] = [
   { id: 'chin-projection', when: ['chin.projection'], recompute: ['chin.lateralBlendPx', 'chin.upperBlendDepth', 'neck.shadowReachPx'], preserve: ['mandible.bodyLengthPx', 'neck.halfWidthPx', 'cranium.templeHalf'] },
   { id: 'chin-width', when: ['chinWidth'], recompute: ['chin.widthPx'], preserve: ['mandible.bodyHeightY', 'neck.halfWidthPx', 'cranium.templeHalf'] },
-  { id: 'jaw-bone-width', when: ['jawWidth'], recompute: ['mandible.outerHalf', 'mandible.bodyLengthPx'], preserve: ['cranium.templeHalf', 'chin.widthPx'] },
-  { id: 'masseter-volume', when: ['softTissue.masseter.volume'], recompute: ['mandible.outerHalf'], preserve: ['mandible.boneHalf', 'cranium.templeHalf', 'chin.widthPx'] },
+  { id: 'jaw-bone-width', when: ['jawWidth'], recompute: ['mandible.outerHalf', 'mandible.bodyLengthPx'], preserve: ['cranium.templeHalf'] },
+  { id: 'masseter-volume', when: ['softTissue.masseter.volume'], recompute: ['mandible.outerHalf'], preserve: ['mandible.boneHalf', 'cranium.templeHalf'] },
   { id: 'fat', when: ['softTissue.fat'], recompute: ['mandible.outerHalf', 'mandible.gonialDeg'], preserve: ['mandible.boneHalf', 'cranium.templeHalf'] },
   { id: 'mouth-open', when: ['mouth.open'], recompute: ['mandible.dropPx', 'mouth.lowerTeethY', 'mouth.lowerLipBottomY', 'neck.platysmaTension'], preserve: ['mandible.boneHalf', 'mouth.upperTeethTopY', 'cranium.templeHalf'] },
 ];

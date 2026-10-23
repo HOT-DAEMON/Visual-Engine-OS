@@ -12,15 +12,15 @@ const S = (patch: object = {}) => FaceParams.parse({ anatomyEngine: 'structured'
 const ears = (p: FaceParams) => earGeometry(p, faceLandmarks(p, 300, 400));
 
 describe('alignement de l\'oreille sur les repères du visage', () => {
-  it('la racine de l\'hélix est sur la ligne des yeux ; le bas du lobule sur la ligne de la bouche (défaut)', () => {
+  it('la racine de l\'hélix est sur la ligne des yeux ; le bas du lobule sur la base du nez (défaut)', () => {
     const p = S();
     const lm = faceLandmarks(p, 300, 400);
     for (const e of ears(p)) {
       expect(Math.abs(e.align!.crusToEyeLine)).toBeLessThan(0.5);
-      expect(Math.abs(e.align!.lobuleToMouthLine)).toBeLessThan(0.5);
+      expect(Math.abs(e.align!.lobuleToLine)).toBeLessThan(0.5);
       const crusY = e.placement!.topY + (e.model!.landmarks.crus!.y) * e.placement!.hPx;
       expect(crusY).toBeCloseTo(lm.eyeY, 6);
-      expect(e.placement!.topY + e.placement!.hPx).toBeCloseTo(lm.mouthY, 0);
+      expect(e.placement!.topY + e.placement!.hPx).toBeCloseTo(lm.noseBaseY, 0);
     }
   });
 
@@ -30,7 +30,7 @@ describe('alignement de l\'oreille sur les repères du visage', () => {
       const lm = faceLandmarks(f.params, f.width, f.height);
       for (const e of earGeometry(f.params, lm)) {
         expect(Math.abs(e.align!.crusToEyeLine), `seed ${s}`).toBeLessThan(0.5);
-        if (e.align!.corrections.length === 0) expect(Math.abs(e.align!.lobuleToMouthLine), `seed ${s}`).toBeLessThan(0.5);
+        if (e.align!.corrections.length === 0) expect(Math.abs(e.align!.lobuleToLine), `seed ${s}`).toBeLessThan(0.5);
       }
     }
   });

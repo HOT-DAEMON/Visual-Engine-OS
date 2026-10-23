@@ -122,6 +122,8 @@ function faceLandmarksRaw(p: FaceParams, W: number, H: number): FaceLandmarks {
   const yLow = Math.min(outline.bottomY - 1e-3, Math.max(mouthY - m.curve * 0.03 * H, lipsBottom) + 0.012 * H);
   const lipsHalf = R.limit('mouth-inside-contour', 'mouth.width', ((m.width * W) / 2) * (1 + 0.15 * stretch), 0, 0.8 * Math.min(halfWidthAt(outline, mouthY), halfWidthAt(outline, yLow)), 'la bouche reste à 80 % de la demi-largeur du contour à sa hauteur');
   // Sillon mentolabial : la mandibule entraîne le coussinet du menton (abaissement) ; le sillon reste sous la lèvre inférieure et au-dessus du bas.
+  // Continuité mandibule → menton : le plancher de largeur est appliqué par le contour ; on consigne ici l'écart (même mécanisme que les autres bornes).
+  R.limit('chin-continuity', 'chinWidth', outline.chinHalfRequested, outline.chinHalf, Infinity, 'le menton n’est jamais plus étroit que la droite mandibule → symphyse (sinon creux + menton pendant)');
   const sulcusRaw = H / 2 - p.chin.height * H + jd.drop;
   const sulcusY = R.limit('chin-height-room', 'chin.height', sulcusRaw, lipsBottom + 0.014 * H, outline.bottomY - 0.04 * H, 'le sillon mentolabial reste sous la lèvre inférieure et au-dessus du bas du menton');
   // Région orbitaire : de la ligne médiane de l'œil au temple, comme l'ajustement des yeux (même marge).

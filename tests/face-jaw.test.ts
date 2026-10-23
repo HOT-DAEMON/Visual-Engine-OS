@@ -32,9 +32,10 @@ describe('moteur de menton et de mâchoire', () => {
   });
 
   it('LARGEUR du menton : ne change ni la hauteur ni le bas du visage', () => {
-    const a = lmOf({ chinWidth: 0.1 }).lm;
-    const b = lmOf({ chinWidth: 0.4 }).lm;
-    expect(b.outline.chinHalf).toBeGreaterThan(a.outline.chinHalf * 2);
+    const a = lmOf({ chinWidth: 0.3 }).lm;
+    const b = lmOf({ chinWidth: 0.42 }).lm;
+    // Au-dessus du plancher de continuité (voir `chin-continuity.test.ts`), la largeur demandée est exacte.
+    expect(b.outline.chinHalf).toBeGreaterThan(a.outline.chinHalf * 1.2);
     expect(b.chin.heightPx).toBeCloseTo(a.chin.heightPx, 9);
     expect(b.outline.bottomY).toBe(a.outline.bottomY);
   });

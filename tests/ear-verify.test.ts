@@ -51,8 +51,8 @@ describe('couche de vérification de l\'oreille', () => {
     const p = S();
     const lm = faceLandmarks(p, 300, 400);
     const e = earGeometry(p, lm)[1]!;
-    const bad = { ...e, align: { ...e.align!, lobuleToMouthLine: 30, corrections: [] } };
-    expect(earAnatomyChecks(p, lm, bad).filter((c) => !c.ok).map((c) => c.id)).toContain('ear-lobule-on-mouth-line-R');
+    const bad = { ...e, align: { ...e.align!, lobuleToLine: 30, corrections: [] } };
+    expect(earAnatomyChecks(p, lm, bad).filter((c) => !c.ok).map((c) => c.id)).toContain('ear-lobule-on-line-R');
   });
 
   it('classic : aucune vérification d\'oreille (le moteur d\'avant est inchangé)', () => {
