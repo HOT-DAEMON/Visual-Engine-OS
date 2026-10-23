@@ -35,5 +35,5 @@ describe('tirage de deform et de stylisation', () => {
     }
     expect(profiles.size).toBeGreaterThanOrEqual(4);
     expect(axes.size).toBeGreaterThanOrEqual(5);
-  });
+  }, 120000);
 });

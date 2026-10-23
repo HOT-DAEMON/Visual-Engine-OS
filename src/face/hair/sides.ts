@@ -1,6 +1,7 @@
 import type { Vec } from '../../geometry/eye/primitives';
 import type { FaceParams } from '../../schema';
 import { inPoly, type Poly } from '../poly';
+import { earEngine, earGeometry } from '../ears-geometry';
 import { lockFrom, type HairCtx } from './flow';
 import { rot } from './noise';
 import type { HairLock, SideInfo } from './types';
@@ -14,6 +15,11 @@ const SIDES = [{ name: 'left', sg: -1 }, { name: 'right', sg: 1 }] as const;
  */
 export function earZone(p: FaceParams, ctx: HairCtx, sg: -1 | 1): Poly {
   const { lm, guard } = ctx;
+  // Moteur d'oreille `morphology` : la zone est la silhouette de l'oreille réellement dessinée (une seule géométrie pour le rendu, les ombres et les cheveux).
+  if (earEngine(p) === 'morphology') {
+    const g = earGeometry(p, lm).find((e) => e.side === sg);
+    if (g) return g.poly;
+  }
   const w = p.ears.size * lm.W;
   const h = w * p.ears.aspect;
   const cy = (lm.eyeY + lm.noseBaseY) / 2;

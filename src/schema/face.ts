@@ -9,8 +9,9 @@ import { SkinMaterial } from './skin-material';
 import { FaceCheek, FaceMandible, FaceSoftTissue } from './face-structure';
 import { FaceDeform } from './face-deform';
 import { FaceRenderMode, FaceStylization } from './face-style';
+import { FaceEars } from './face-ear';
 
-export { FaceNose };
+export { FaceNose, FaceEars };
 
 /**
  * Paramètres d'un visage complet (hôte `shape: 'face'`). TOUTES les proportions sont des fractions de
@@ -48,18 +49,6 @@ export const FaceMouth = z
     cornerFolds: Unit.default(0.4),
     /** Adaptation à la mâchoire : 0 = largeur absolue (`width` × W), 1 = proportionnelle à la largeur du visage à la hauteur de la bouche. */
     fit: Unit.default(0),
-  })
-  .strict();
-
-export const FaceEars = z
-  .object({
-    visible: z.boolean().default(true),
-    /** Largeur d'une oreille, fraction de W. */
-    size: z.number().min(0.04).max(0.16).default(0.09),
-    /** Rapport hauteur/largeur. */
-    aspect: z.number().min(1).max(2.6).default(1.6),
-    /** Inclinaison (degrés) : le haut penche vers l'extérieur si positif. */
-    tiltDeg: z.number().min(-20).max(30).default(8),
   })
   .strict();
 

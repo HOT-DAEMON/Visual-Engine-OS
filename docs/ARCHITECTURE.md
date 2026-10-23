@@ -171,3 +171,7 @@ Voir `docs/FACE-ANATOMY.md` (nez, menton, mâchoire), `docs/SKIN-LIGHT.md` (mat�
 `docs/CONTACT-RIM.md` (ombres de contact, lumières de contour), `docs/TODO-FACE.md` (reste à faire). Modules : `src/face/{nose,jaw}`, `src/skin`, `src/contact`, `src/lighting/rig.ts`.
 
 Moteur de structure du visage : `docs/FACE-STRUCTURE.md` (contrats, ordre de calcul), `docs/FACE-STRUCTURE-STATUS.md` (fait / partiel / reste à faire), journal `docs/CHANGELOG-6.md`, erreurs `docs/ERRORS-5.md`.
+
+## Moteur d'oreille et zones du visage (feat/ear-system)
+- Oreille = graphe de structures dans un plan (unité = hauteur de l'oreille), projeté en quatre vues, aligné sur les yeux et la bouche : `docs/EAR-SYSTEM.md`, `-2.md`.
+- Zones verticales du visage et frontière d'implantation : `docs/FACE-ZONES.md`. Reste à faire : `docs/EAR-REMAINING.md`. Erreurs : `docs/ERRORS-6.md`.

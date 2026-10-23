@@ -10,5 +10,5 @@ export { inPoly, polyArea, polyBox, type Poly } from './poly';
 export { eyeReach, fitEyeToFace, type EyeFit, type EyeReach, type EyeSide, type EyeInput, type FitOptions } from './fit-eye';
 export { noseGeometry, noseFrame, noseProfile, tipLift, type NoseGeometry, type NoseAlaGeo, type NostrilGeo, type NoseTipGeo, type NoseFrame, type NoseProfile } from './nose';
 export { skinRegions, type Ellipse, type SkinRegions } from './regions';
-export { earGeometry, type EarGeo } from './ears-geometry';
+export { earGeometry, earEngine, type EarGeo } from './ears-geometry';
 export { headPoly, chinPoly, jawline } from './jaw/regions';

@@ -26,5 +26,7 @@ export const CONTRACTS: readonly ComponentContract[] = [
   { id: 'chin', needs: ['mandible', 'mouth'], reads: ['chin', 'chinWidth', 'chinY', 'stylization', 'softTissue'], provides: ['chin.'] },
   { id: 'cheek', needs: ['nose', 'mouth', 'mandible'], reads: ['cheek', 'softTissue', 'deform', 'stylization'], provides: ['cheek.'] },
   { id: 'neck', needs: ['chin', 'mandible'], reads: ['neck', 'softTissue', 'deform'], provides: ['neck.'] },
-  { id: 'ear', needs: ['cranium', 'eye', 'nose'], reads: ['ears', 'deform'], provides: ['ear.'] },
+  // L'oreille est posée sur les repères du visage : racine de l'hélix sur la ligne des yeux, bas du lobule sur la ligne de la bouche, attache à la surface du crâne
+  // (contour : mandibule). Elle dépend donc du crâne, des yeux, du nez, de la bouche et de la mandibule — jamais l'inverse (pas de cycle).
+  { id: 'ear', needs: ['cranium', 'eye', 'nose', 'mouth', 'mandible'], reads: ['ears', 'deform'], provides: ['ear.'] },
 ];

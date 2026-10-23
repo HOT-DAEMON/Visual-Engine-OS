@@ -8,6 +8,8 @@ import { faceComponents } from '../render/face/components';
 import { skinShading, type SkinShading } from '../skin';
 import { parseHex } from '../core/color';
 import { check, type Check } from './types';
+import { checkEars } from './ear';
+import { checkZones } from './zones';
 
 /** Lumière de référence des mesures (celle des scènes par défaut) : toutes les valeurs de ce fichier sont reproductibles. */
 export const REFERENCE_LIGHT = { azimuthDeg: 330, elevationDeg: 55, color: '#ffffff', intensity: 1 } as const;
@@ -136,5 +138,7 @@ export function engineStyle(c: EngineContext): Check[] {
 /** Les trois couches du moteur de visage, dans l'ordre. */
 export function checkFaceEngine(face: RandomFace): Check[] {
   const c = engineContext(face);
-  return [...engineGeometry(c), ...engineAnatomy(c), ...engineStyle(c)];
+  // Oreilles du moteur `morphology` (vide pour `classic`) + zones verticales du visage (moteur `structured`).
+  const skin = (c.face.objects[0] as { material: { color: string } }).material.color;
+  return [...engineGeometry(c), ...engineAnatomy(c), ...engineStyle(c), ...checkEars(c.face.params, c.lm, skin), ...checkZones(c.face.params, c.lm)];
 }

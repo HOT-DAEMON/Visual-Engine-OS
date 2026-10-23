@@ -1,5 +1,6 @@
 import type { FaceParams } from '../../schema';
 import { effectiveAngle } from './structure';
+import { mouthCeilingY, noseLengthFrac, philtrumFloorY } from '../zones-limits';
 
 /**
  * Grandeurs DÉRIVÉES du menton et de la mâchoire : tout ce que le contour, les repères et le rendu ont besoin de savoir,
@@ -62,7 +63,7 @@ export const NOSE_MOUTH_GAP = 0.07;
  * Le coin du menton ne remonte jamais au-dessus : la bouche repose sur le corps de la mandibule, pas sur l'arrondi étroit du menton.
  */
 export function mouthFloorY(p: FaceParams, H: number): number {
-  const noseBase = -H / 2 + p.eyeLine * H + p.nose.length * H;
-  const mouthY = Math.max(-H / 2 + p.mouth.y * H, noseBase + NOSE_MOUTH_GAP * H);
+  const noseBase = -H / 2 + p.eyeLine * H + noseLengthFrac(p) * H;
+  const mouthY = Math.min(mouthCeilingY(p, H, noseBase), Math.max(-H / 2 + p.mouth.y * H, noseBase + NOSE_MOUTH_GAP * H, philtrumFloorY(p, H, noseBase)));
   return mouthY + mouthOpenPx(p, H) + (0.02 + 0.05 * p.mouth.lowerLip) * H;
 }

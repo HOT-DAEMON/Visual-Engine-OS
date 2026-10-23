@@ -115,7 +115,7 @@ export function faceParts(h: HostSpec, L: LightVector, rot: number): FaceParts {
     ...(st ? st.after : []), ...fh.beard, shadow('hair'), rim('chin'), rim('head'), ...hair.front,
   );
   // Derrière la tête : ombre portée de la mâchoire sur le cou (dessinée juste après le cou), oreilles creusées contre la tête.
-  const behind = [...hair.back, ...neck.markup, ...(st ? st.neck : []), shadow('head'), rim('neck'), ...renderEars(params, lm, skin, skinRa).flatMap((e, i) => [e, shadow(i === 0 ? 'earL' : 'earR')]), rim('earL'), rim('earR')];
+  const behind = [...hair.back, ...neck.markup, ...(st ? st.neck : []), shadow('head'), rim('neck'), ...renderEars(params, lm, skin, skinRa, L, defs).flatMap((e, i) => [e, shadow(i === 0 ? 'earL' : 'earR')]), rim('earL'), rim('earR')];
   defs.push(...rimKit.defs);
   // Rendu `ink` : un filtre global (niveaux de gris + seuil) ; aucune anatomie n'est reconstruite.
   const ink = params.renderMode === 'ink' ? inkFilter(h.id, lm.W, lm.H, inkThreshold(skin)) : null;

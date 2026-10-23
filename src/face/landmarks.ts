@@ -3,6 +3,7 @@ import { Resolver, type Correction } from '../core/resolve';
 import { halfWidthAt, headOutline, minHalfWidth, type Outline } from './outline';
 import { jawDerived, mouthOpenPx, NOSE_MOUTH_GAP, type JawDerived } from './jaw/params';
 import { tipLift } from './nose/frame';
+import { mouthCeilingY, noseLengthFrac, philtrumFloorY } from './zones-limits';
 import type { FaceAsymmetry, FaceParams } from '../schema';
 import type { Vec } from '../geometry/eye/primitives';
 
@@ -99,10 +100,12 @@ function faceLandmarksRaw(p: FaceParams, W: number, H: number): FaceLandmarks {
   const eyeY = -H / 2 + p.eyeLine * H;
   const half = (p.eyeGap * W) / 2;
   const dy = (p.asymmetry.eyeDy * H) / 2;
-  const noseBaseY = eyeY + p.nose.length * H;
+  // Zone du nez : en `structured`, le nez ne remonte pas vers l'espace entre les yeux (`zones-limits.ts`).
+  const noseBaseY = eyeY + noseLengthFrac(p) * H;
   const outline = headOutline(p, W, H);
   const R = new Resolver();
-  const mouthY = R.limit('mouth-below-nose', 'mouth.y', -H / 2 + p.mouth.y * H, noseBaseY + NOSE_MOUTH_GAP * H, Infinity, 'la bouche ne remonte jamais sous le nez');
+  // Bouche : jamais sous le nez (plancher) ; en `structured`, jamais si bas que le philtrum dépasse sa longueur maximale (plafond ; le plancher prime si les bornes se croisent).
+  const mouthY = R.limit('mouth-philtrum-zone', 'mouth.y', R.limit('mouth-below-nose', 'mouth.y', -H / 2 + p.mouth.y * H, Math.max(noseBaseY + NOSE_MOUTH_GAP * H, philtrumFloorY(p, H, noseBaseY)), Infinity, 'la bouche ne remonte jamais sous le nez'), Math.max(noseBaseY + NOSE_MOUTH_GAP * H, philtrumFloorY(p, H, noseBaseY)), mouthCeilingY(p, H, noseBaseY), 'le philtrum (base du nez → lèvre) ne dépasse pas sa longueur maximale');
   const m = p.mouth;
   const jd = jawDerived(p, W, H);
   // Déformation des tissus à l'ouverture : la lèvre inférieure s'étire (s'amincit) et la commissure s'écarte un peu.

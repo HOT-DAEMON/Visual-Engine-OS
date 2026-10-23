@@ -13,6 +13,8 @@ const ELEMENTS: ReadonlySet<string> = new Set([
   'linearGradient', 'radialGradient', 'stop', 'filter', 'feGaussianBlur',
   // Primitives de filtre inertes (aucune ne charge de ressource ni n'exécute de code) : glow, bloom, réfraction, grain.
   'feColorMatrix', 'feComponentTransfer', 'feFuncA', 'feFuncR', 'feFuncG', 'feFuncB', 'feMerge', 'feMergeNode', 'feOffset', 'feComposite', 'feFlood', 'feTurbulence', 'feDisplacementMap',
+  // Éclairage de relief (oreille) : carte de hauteur = canal alpha ; sources distantes uniquement, aucune ressource externe.
+  'feDiffuseLighting', 'feSpecularLighting', 'feDistantLight',
 ]);
 
 const ATTRIBUTES: ReadonlySet<string> = new Set([
@@ -25,6 +27,7 @@ const ATTRIBUTES: ReadonlySet<string> = new Set([
   'in', 'in2', 'result', 'operator', 'values', 'tableValues', 'type', 'slope', 'intercept', 'dx', 'dy', 'flood-color', 'flood-opacity',
   'k1', 'k2', 'k3', 'k4', 'baseFrequency', 'numOctaves', 'seed', 'scale', 'xChannelSelector', 'yChannelSelector',
   'filterUnits', 'color-interpolation-filters',
+  'surfaceScale', 'diffuseConstant', 'specularConstant', 'specularExponent', 'azimuth', 'elevation', 'lighting-color',
 ]);
 
 const ID_RE = /^[A-Za-z][A-Za-z0-9_-]*$/;
