@@ -16,6 +16,6 @@ Rien ici n'est caché : chaque ligne est un manque réel de cette session.
 | Éclairage | carte de hauteur + filtre ; croissants | ombres portées de l'oreille sur la tête ; occlusion ambiante ; lumière colorée de contour par structure |
 | Cheveux | visibilité mesurée, silhouette partagée | mèches passant devant/derrière un hélix précis ; cheveux collés à la peau |
 | Bijoux | 5 points d'attache, gravité, collision cou | physique du pendentif ; collision avec cheveux ; bijoux multi-pièces |
-| Tirage aléatoire | — | **non branché** : `generateRandomFace` ne tire pas famille/morphologie d'oreille (volontaire : ne pas déplacer les graines existantes) |
-| Hauteur de l'oreille | alignement exact yeux / bouche | l'alignement lobule-bouche donne ≈ 0,41 H (oreille grande) ; `anchors.mouth < 1` ou famille sans lobule pour des oreilles plus petites |
-| Zones | 7 zones, bornes, corrections | bornes de la zone du menton prioritaires sur le philtrum ; zone du cou |
+| Tirage aléatoire | **branché en option** : `structure: { draw: { ears: true } }` (famille humaine 86 %, elfe 9 %, félin 5 % + morphologie modérée, flux dérivé `seed ^ EAR_SALT`, graines existantes inchangées) | activé par défaut dans les campagnes ; familles B/C (draconique, alien…) ; corrélation oreille ↔ crâne/mâchoire |
+| Hauteur de l'oreille | **corrigé** : racine de l'hélix sur la ligne des yeux, bas du lobule sur la **base du nez** (anatomie réelle) ; ancienne consigne « bouche » conservée via `anchors.lobuleLine = 'mouth'` | distribution de hauteurs par famille mesurée sur 1 000 visages (aujourd'hui vérifiée par les bornes [0,20 H ; 0,50 H]) |
+| Zones | 7 zones, bornes, corrections | bornes de la zone du menton prioritaires sur le philtrum ; zone du cou (non commencées cette session) |

@@ -12,9 +12,10 @@ Le pavillon est un plan écarté du crâne de α (`attach.openingDeg`, 24° par 
 
 ## 5. Interaction avec le visage (§6)
 - **Attache** (`place.ts`) : ouverture, tangage (`pitchDeg`), rotation locale, échelle relative, enfoncement.
-- **Alignement demandé** : racine de l'hélix (fosse triangulaire) **sur la ligne des yeux** ; bas du lobule **sur la ligne de la bouche** (séparation des lèvres).
-  Hauteur = (bouche − yeux) / (1 − niveau de la racine) ; bornée à [0,20 H ; 0,50 H] (contrainte stricte enregistrée).
-  `anchors.eye` / `anchors.mouth` ∈ [0,1] (1 = exact, 0 = libre). Sans lobule (félin, équidé…) : hauteur libre 0,30 H, jamais forcée sur la bouche.
+- **Alignement demandé** : racine de l'hélix (fosse triangulaire) **sur la ligne des yeux** ; bas du lobule **sur la base du nez** (sous-nasal).
+  *Correction (CHANGELOG-8) : la consigne initiale visait la ligne de la bouche ; elle donnait des oreilles de ≈ 0,41 H (« grandes oreilles »). `anchors.lobuleLine = 'mouth'` la conserve pour comparaison.*
+  Hauteur = (base du nez − yeux) / (1 − niveau de la racine) ; bornée à [0,20 H ; 0,50 H] (contrainte stricte enregistrée).
+  `anchors.eye` / `anchors.mouth` ∈ [0,1] (1 = exact, 0 = libre ; `mouth` règle la force d'ancrage du lobule, quelle que soit la ligne `lobuleLine`). Sans lobule (félin, équidé…) : hauteur libre 0,30 H, jamais forcée sur la ligne du lobule.
 - **Cheveux** (`visibility.ts`) : `visible`, `partial`, `under_hair`, `tucked_behind`, `covers_piercing` ; mesuré sur les mèches de devant. La géométrie n'est jamais supprimée.
   `hair/sides.ts` lit la silhouette réelle de l'oreille (une seule géométrie pour rendu, ombres et cheveux).
 - **Bijoux** (`jewelry.ts`) : cinq points d'attache du modèle (lobe, hélix, tragus, conque, industriel) ; refusés si la structure d'accueil manque ; gravité ; collision avec le cou.
@@ -38,7 +39,7 @@ Réaliste : croissants de lumière/ombre par relief + éclairage de relief par f
 
 ## 9. Couches de vérification (`src/verify/ear.ts`, `src/verify/zones.ts`)
 - **Géométrique** : nombres finis, contour simple (0 auto-intersection), structures non dégénérées et dans le pavillon, rotation maximale du contour, **mêmes ordonnées dans les quatre vues**, attache au crâne, zones qui recouvrent H.
-- **Anatomique** : structures requises/interdites, ordre vertical (cymba < racine < cavum < lobule), tragus avant l'antitragus, **racine sur la ligne des yeux**, **lobule sur la ligne de la bouche**, bornes de zones, implantation entre sommet et sourcils, symétrie bornée.
+- **Anatomique** : structures requises/interdites, ordre vertical (cymba < racine < cavum < lobule), tragus avant l'antitragus, **racine sur la ligne des yeux**, **lobule sur la base du nez**, bornes de zones, implantation entre sommet et sourcils, symétrie bornée.
 - **Style** : palette cel, homogénéité des traits, cohérence avec la peau, contraste lumière/ombre.
 Contrôles négatifs testés (oreille décalée de 20 px, lobule à 30 px). Branchées dans `verifyFace` via `checkFaceEngine`.
 

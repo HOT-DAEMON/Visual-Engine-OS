@@ -57,3 +57,10 @@ même galerie : 0 rastérisation) et du cache de scène (3,9 ms contre 39 ms).
 - La mutualisation compte ~40 filtres par cellule (contre 26 avant) : plus de filtres mais beaucoup plus petits ; un budget
   d'alerte (160 filtres sur un visage complet, médiane ≈ 100) est vérifié par `checkContracts`.
 - Mesure faite sur un seul type de machine : les ratios (×10 à ×50) sont fiables, les valeurs absolues non.
+
+## Mise à jour (suite 8)
+
+- Vérification : `rightSamples` mémoïsé par contour, `halfWidthAt` dichotomique : ≈ 490 → ≈ 280 ms/visage (caches vidés).
+- Campagne multi-processus (`JOBS`, `scripts/lib/parallel.ts`) : sortie identique à la série ; gain non mesurable sur la machine de test (1 cœur).
+- Profil de rastérisation (visage 340×420) : 95 flous distincts, 2 turbulences (≈ 30 %), formes ≈ 107 ms. Pistes non faites : tuile de turbulence pré-calculée
+  (dépend de la graine et de l'échelle), rendu des flous à résolution réduite.

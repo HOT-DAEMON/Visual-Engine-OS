@@ -56,7 +56,9 @@ export function hairBoundary(p: FaceParams, lm: FaceLandmarks): HairBoundary {
   return {
     crownY: top,
     centerY: lm.hair.centerY,
-    temple: { x: Math.max(Math.abs(first.x), Math.abs(last.x)), y: last.y },
+    // Bornée à la demi-largeur du crâne à cette ordonnée : près du sommet, le contour est presque horizontal et deux échantillonnages différents (40 vs 48 points)
+    // donnaient jusqu'à +3,8 % (défaut antérieur, révélé par la campagne : graines 35, 65, 89).
+    temple: { x: Math.min(Math.max(Math.abs(first.x), Math.abs(last.x)), halfWidthAt(lm.outline, last.y)), y: last.y },
     line: hl.pts,
     crownArc,
     scalpShare: (lm.hair.centerY - top) / lm.H,

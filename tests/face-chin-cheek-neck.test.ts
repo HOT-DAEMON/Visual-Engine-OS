@@ -24,7 +24,7 @@ type C = ReturnType<typeof chin>;
 describe('menton — contrôles séparés (T5)', () => {
   const base = chin({ chin: { symphysis: 'round' } });
   const VAR: Record<string, [keyof C, Record<string, unknown>]> = {
-    largeur: ['width', { chinWidth: 0.3 }],
+    largeur: ['width', { chinWidth: 0.45 }],
     hauteur: ['height', { chin: { height: 0.09 } }],
     projection: ['projection', { chin: { projection: 0.95 } }],
     rondeur: ['flatness', { chin: { form: 1 } }],

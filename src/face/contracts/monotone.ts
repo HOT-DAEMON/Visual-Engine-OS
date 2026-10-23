@@ -13,7 +13,7 @@ export interface MonotoneRule {
 
 export const MONOTONE: readonly MonotoneRule[] = [
   { param: 'jawWidth', measure: 'mandible.outerHalf', direction: 1, sweep: [0.55, 0.65, 0.75, 0.85] },
-  { param: 'chinWidth', measure: 'chin.widthPx', direction: 1, sweep: [0.08, 0.12, 0.16, 0.2] },
+  { param: 'chinWidth', measure: 'chin.widthPx', direction: 1, sweep: [0.34, 0.38, 0.42, 0.46] }, // au-dessus du plancher de continuité mandibule → menton (en dessous, la largeur est volontairement saturée)
   { param: 'nose.length', measure: 'nose.lengthPx', direction: 1, sweep: [0.17, 0.2, 0.23, 0.26] },
   { param: 'nose.width', measure: 'nose.widthPx', direction: 1, sweep: [0.1, 0.14, 0.18, 0.22] },
   { param: 'mouth.width', measure: 'mouth.halfWidthPx', direction: 1, sweep: [0.16, 0.2, 0.24] },

@@ -57,7 +57,7 @@ export const FaceParams = z
     /** Largeur de la mâchoire (au coin), fraction de W. */
     jawWidth: z.number().min(0.5).max(0.98).default(0.8),
     /** Largeur du menton (partie basse), fraction de W. */
-    chinWidth: z.number().min(0.06).max(0.5).default(0.22),
+    chinWidth: z.number().min(0.06).max(0.5).default(0.35), // 0,35 : au-dessus du plancher de continuité mandibule → menton du visage par défaut (0,22 donnait un menton élargi d office)
     /** Hauteur de la plus grande largeur du crâne (temples), fraction de H depuis le haut. */
     templeY: z.number().min(0.22).max(0.5).default(0.36),
     /** Hauteur du coin de mâchoire, fraction de H depuis le haut. */

@@ -5,31 +5,22 @@
  * Usage : npx tsx scripts/campaign-100.ts [premier=1] [dernier=100]
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { generateRandomFace } from '../src/generation/random-face';
-import { verifyFace } from '../src/verify';
-import { faceLandmarks } from '../src/face';
-import { board, cell } from './lib/board';
+import { board } from './lib/board';
+import { renderCampaign } from './lib/parallel';
 
 const from = Number(process.argv[2] ?? 1); const to = Number(process.argv[3] ?? 100);
-const OUT = 'artefacts/campagne-100'; mkdirSync(OUT, { recursive: true });
+const JOBS = process.env.JOBS ? Number(process.env.JOBS) : undefined; // défaut : nombre de cœurs (plafonné à 8)
+const OUT = process.env.OUT ?? 'artefacts/campagne-100'; mkdirSync(OUT, { recursive: true });
 const now = (): number => Number(process.hrtime.bigint()) / 1e6;
 const W = 170; const H = 210;
-const rows: Record<string, unknown>[] = [];
-const cells: { png: Buffer; label: string }[] = [];
 const t0 = now();
+const seeds = Array.from({ length: to - from + 1 }, (_, i) => from + i);
+const res = await renderCampaign(seeds, W, H, JOBS);
+const rows = res.map((r) => r.row);
+const cells = res.map((r) => ({ png: Buffer.from(r.png, 'base64'), label: r.label }));
 const corr: Record<string, number> = {};
 const warn: Record<string, number> = {};
-for (let seed = from; seed <= to; seed++) {
-  const t = now();
-  const face = generateRandomFace(seed, { structure: true });
-  const rep = verifyFace(face);
-  const lm = faceLandmarks(face.params, face.width, face.height);
-  const c = cell({ seed, opts: { structure: true } as never }, W, H);
-  cells.push({ png: c.png, label: `#${seed}${rep.failures.length ? ' ✗' : rep.warnings.length ? ' !' : ''}` });
-  for (const k of lm.corrections) corr[k.id] = (corr[k.id] ?? 0) + 1;
-  for (const k of rep.warnings) warn[k.id] = (warn[k.id] ?? 0) + 1;
-  rows.push({ seed, ok: rep.ok, failures: rep.failures.map((f) => f.id), warnings: rep.warnings.map((f) => f.id), corrections: lm.corrections.map((k) => k.id), ms: +(now() - t).toFixed(0) });
-}
+for (const r of res) { for (const k of r.corrections) corr[k] = (corr[k] ?? 0) + 1; for (const k of r.warnings) warn[k] = (warn[k] ?? 0) + 1; }
 const total = now() - t0;
 const per = 20;
 for (let i = 0; i < cells.length; i += per) writeFileSync(`${OUT}/planche-${String(Math.floor(i / per) + 1).padStart(2, '0')}.png`, board(`Campagne : visages ${from + i}–${from + Math.min(cells.length, i + per) - 1} (✗ échec, ! avertissement)`, cells.slice(i, i + per), 5, W, H));

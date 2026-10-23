@@ -39,7 +39,10 @@ export function lowerContour(p: FaceParams, W: number, H: number, temple: Vec): 
   // CONTINUITÉ MANDIBULE → MENTON (garantie par construction, pas par réglage) : le contour G → C → B est CONVEXE si et seulement si C est
   // à l'extérieur de la droite G–B. Un menton plus étroit que cette droite crée un creux sous les angles de la mâchoire puis une « goutte » pendante.
   // On impose donc un plancher de demi-largeur : la droite G–B à la hauteur de C, majorée d'un renflement (une pointe garde un renflement faible : V arrondi).
-  const xLine = (G.x * tail) / Math.max(1e-6, B.y - G.y);
+  // Le plancher est calculé AU REPOS (sans abaissement de la mandibule) : ouvrir la bouche ou avancer la mâchoire ne change pas la largeur du menton.
+  // La marge (×1,12 + renflement) absorbe l'abaissement ; la convexité sous articulation est testée (`chin-continuity.test.ts`).
+  const G0y = G.y - 0.35 * jd.drop;
+  const xLine = (G.x * (tail)) / Math.max(1e-6, H / 2 - G0y + (B.y - H / 2 - jd.drop));
   const bulge = (0.012 + 0.03 * Math.min(1, Math.max(0, 1 - shape.pointedness))) * W;
   const requested = Math.min((p.chinWidth * W) / 2, jawHalf * 0.92);
   const floor = Math.min(jawHalf * 0.92, xLine * 1.12 + bulge);
@@ -70,7 +73,7 @@ export function lowerContour(p: FaceParams, W: number, H: number, temple: Vec): 
   const phiChord = Math.atan2(G.x - C.x, Math.max(1e-6, C.y - G.y));
   const phiMax = Math.max(phiChord, Math.atan2(0.9 * C.x, Math.max(1e-6, tail)));
   const k4 = bodyHandle(p);
-  const build = (share: number): { corner: Cubic; body: Cubic; symph: Cubic } => {
+  const build = (share: number): { corner: Cubic; body: Cubic; symph: Cubic; flatMax: number } => {
     const phiC = phiChord + share * (phiMax - phiChord);
     // Départ du corps plus vertical que la corde (bombé). Il peut être plus vertical que le ramus : c'est alors un évasement local du coin de mâchoire (angle gonial
     // qui ressort), borné au coin lui-même ; le CORPS, lui, reste convexe de bout en bout.
@@ -95,14 +98,16 @@ export function lowerContour(p: FaceParams, W: number, H: number, temple: Vec): 
     const reachX = C.x + tC.x * (tail / tC.y);
     const flatMax = Math.max(0.1, (0.92 * reachX) / C.x);
     const make = (f: number): Cubic => ({ p0: C, p1: { x: C.x + tC.x * sLen, y: C.y + tC.y * sLen }, p2: { x: f * C.x, y: B.y }, p3: B });
-    let flat = Math.min(shape.flat, flatMax);
+    // `shape.flat` (0…0,95) est une FRACTION de la largeur maximale atteignable : un bas de menton plus large que la tangente d'arrivée ne le permet
+    // serait concave (le défaut corrigé ici), donc le réglage reste toujours effectif au lieu d'être écrêté.
+    let flat = Math.max(0.1, Math.min(flatMax, (shape.flat / 0.95) * flatMax));
     let symph = make(flat);
     for (let i = 0; i < 12 && tipRadius(symph) < MIN_TIP * W && flat < flatMax; i++) { flat = Math.min(flatMax, flat + 0.06); symph = make(flat); }
-    return { corner, body, symph };
+    return { corner, body, symph, flatMax };
   };
   let share = shape.turnShare;
   let built = build(share);
-  for (let i = 0; i < 12 && tipRadius(built.symph) < MIN_TIP * W && share > 0.1; i++) { share = Math.max(0.1, share - 0.08); built = build(share); }
+  for (let i = 0; i < 16 && tipRadius(built.symph) < MIN_TIP * W && share > 0.1; i++) { share = Math.max(0.1, share - 0.05); built = build(share); }
   const { corner, body, symph } = built;
   return { segments: [ramus, corner, body, symph], gonion: G, chinCorner: C, bottom: B, chinHalf, chinHalfRequested: requested, chinHalfFloor: floor };
 }

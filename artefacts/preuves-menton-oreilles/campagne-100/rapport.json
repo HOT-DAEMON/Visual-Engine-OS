@@ -1,0 +1,1113 @@
+{
+ "summary": {
+  "faces": 100,
+  "ok": 99,
+  "withWarnings": 11,
+  "totalSeconds": 75.5,
+  "msPerFace": 755,
+  "correctionsByConstraint": {
+   "mouth-philtrum-zone": 65,
+   "chin-continuity": 61,
+   "mouth-below-nose": 10,
+   "chin-height-room": 16,
+   "neck-between-chin-and-jaw": 17,
+   "mouth-inside-contour": 2
+  },
+  "warningsById": {
+   "silhouette-asymmetric": 6,
+   "hair-skin-contrast": 5
+  }
+ },
+ "rows": [
+  {
+   "seed": 1,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 1054
+  },
+  {
+   "seed": 2,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-below-nose"
+   ],
+   "ms": 771
+  },
+  {
+   "seed": 3,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 536
+  },
+  {
+   "seed": 4,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity",
+    "chin-height-room"
+   ],
+   "ms": 211
+  },
+  {
+   "seed": 5,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 572
+  },
+  {
+   "seed": 6,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "silhouette-asymmetric"
+   ],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 1151
+  },
+  {
+   "seed": 7,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity"
+   ],
+   "ms": 488
+  },
+  {
+   "seed": 8,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 453
+  },
+  {
+   "seed": 9,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "hair-skin-contrast"
+   ],
+   "corrections": [],
+   "ms": 2896
+  },
+  {
+   "seed": 10,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 870
+  },
+  {
+   "seed": 11,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity"
+   ],
+   "ms": 387
+  },
+  {
+   "seed": 12,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity"
+   ],
+   "ms": 380
+  },
+  {
+   "seed": 13,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 168
+  },
+  {
+   "seed": 14,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 383
+  },
+  {
+   "seed": 15,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-below-nose",
+    "chin-continuity"
+   ],
+   "ms": 1410
+  },
+  {
+   "seed": 16,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 224
+  },
+  {
+   "seed": 17,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 5917
+  },
+  {
+   "seed": 18,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 561
+  },
+  {
+   "seed": 19,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 392
+  },
+  {
+   "seed": 20,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity"
+   ],
+   "ms": 363
+  },
+  {
+   "seed": 21,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 889
+  },
+  {
+   "seed": 22,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 297
+  },
+  {
+   "seed": 23,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-height-room",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 2068
+  },
+  {
+   "seed": 24,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-height-room"
+   ],
+   "ms": 772
+  },
+  {
+   "seed": 25,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 1771
+  },
+  {
+   "seed": 26,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-below-nose",
+    "chin-continuity"
+   ],
+   "ms": 508
+  },
+  {
+   "seed": 27,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 1635
+  },
+  {
+   "seed": 28,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 784
+  },
+  {
+   "seed": 29,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 606
+  },
+  {
+   "seed": 30,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 362
+  },
+  {
+   "seed": 31,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 1486
+  },
+  {
+   "seed": 32,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity",
+    "chin-height-room"
+   ],
+   "ms": 470
+  },
+  {
+   "seed": 33,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity",
+    "chin-height-room"
+   ],
+   "ms": 4597
+  },
+  {
+   "seed": 34,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "silhouette-asymmetric"
+   ],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 1234
+  },
+  {
+   "seed": 35,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "silhouette-asymmetric"
+   ],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 673
+  },
+  {
+   "seed": 36,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-height-room"
+   ],
+   "ms": 240
+  },
+  {
+   "seed": 37,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-below-nose"
+   ],
+   "ms": 1142
+  },
+  {
+   "seed": 38,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 470
+  },
+  {
+   "seed": 39,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 919
+  },
+  {
+   "seed": 40,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 433
+  },
+  {
+   "seed": 41,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 203
+  },
+  {
+   "seed": 42,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 173
+  },
+  {
+   "seed": 43,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 500
+  },
+  {
+   "seed": 44,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity"
+   ],
+   "ms": 599
+  },
+  {
+   "seed": 45,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "silhouette-asymmetric"
+   ],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 444
+  },
+  {
+   "seed": 46,
+   "ok": false,
+   "failures": [
+    "front-clear-mouth"
+   ],
+   "warnings": [],
+   "corrections": [
+    "mouth-below-nose",
+    "chin-continuity",
+    "chin-height-room",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 1055
+  },
+  {
+   "seed": 47,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "hair-skin-contrast"
+   ],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 400
+  },
+  {
+   "seed": 48,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity"
+   ],
+   "ms": 1068
+  },
+  {
+   "seed": 49,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 615
+  },
+  {
+   "seed": 50,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity"
+   ],
+   "ms": 418
+  },
+  {
+   "seed": 51,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 1443
+  },
+  {
+   "seed": 52,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "silhouette-asymmetric"
+   ],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 934
+  },
+  {
+   "seed": 53,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity",
+    "chin-height-room",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 2814
+  },
+  {
+   "seed": 54,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 552
+  },
+  {
+   "seed": 55,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 214
+  },
+  {
+   "seed": 56,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 521
+  },
+  {
+   "seed": 57,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 415
+  },
+  {
+   "seed": 58,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 699
+  },
+  {
+   "seed": 59,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity"
+   ],
+   "ms": 482
+  },
+  {
+   "seed": 60,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 400
+  },
+  {
+   "seed": 61,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 492
+  },
+  {
+   "seed": 62,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 1203
+  },
+  {
+   "seed": 63,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity",
+    "chin-height-room",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 931
+  },
+  {
+   "seed": 64,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 285
+  },
+  {
+   "seed": 65,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "hair-skin-contrast"
+   ],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 445
+  },
+  {
+   "seed": 66,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-below-nose",
+    "chin-continuity",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 725
+  },
+  {
+   "seed": 67,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 185
+  },
+  {
+   "seed": 68,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "hair-skin-contrast"
+   ],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 399
+  },
+  {
+   "seed": 69,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 363
+  },
+  {
+   "seed": 70,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 200
+  },
+  {
+   "seed": 71,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity",
+    "chin-height-room"
+   ],
+   "ms": 367
+  },
+  {
+   "seed": 72,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity"
+   ],
+   "ms": 407
+  },
+  {
+   "seed": 73,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 419
+  },
+  {
+   "seed": 74,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 518
+  },
+  {
+   "seed": 75,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity"
+   ],
+   "ms": 423
+  },
+  {
+   "seed": 76,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-below-nose"
+   ],
+   "ms": 335
+  },
+  {
+   "seed": 77,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 325
+  },
+  {
+   "seed": 78,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity",
+    "chin-height-room"
+   ],
+   "ms": 281
+  },
+  {
+   "seed": 79,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "hair-skin-contrast"
+   ],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 259
+  },
+  {
+   "seed": 80,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 1451
+  },
+  {
+   "seed": 81,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-below-nose",
+    "chin-continuity",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 331
+  },
+  {
+   "seed": 82,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 161
+  },
+  {
+   "seed": 83,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity"
+   ],
+   "ms": 329
+  },
+  {
+   "seed": 84,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity",
+    "chin-height-room"
+   ],
+   "ms": 1622
+  },
+  {
+   "seed": 85,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 453
+  },
+  {
+   "seed": 86,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 465
+  },
+  {
+   "seed": 87,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-continuity",
+    "chin-height-room"
+   ],
+   "ms": 389
+  },
+  {
+   "seed": 88,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "chin-continuity"
+   ],
+   "ms": 321
+  },
+  {
+   "seed": 89,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-inside-contour",
+    "chin-height-room",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 163
+  },
+  {
+   "seed": 90,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-below-nose"
+   ],
+   "ms": 722
+  },
+  {
+   "seed": 91,
+   "ok": true,
+   "failures": [],
+   "warnings": [
+    "silhouette-asymmetric"
+   ],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 420
+  },
+  {
+   "seed": 92,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-below-nose",
+    "chin-height-room"
+   ],
+   "ms": 363
+  },
+  {
+   "seed": 93,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 402
+  },
+  {
+   "seed": 94,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity"
+   ],
+   "ms": 292
+  },
+  {
+   "seed": 95,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 1223
+  },
+  {
+   "seed": 96,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 402
+  },
+  {
+   "seed": 97,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity",
+    "neck-between-chin-and-jaw"
+   ],
+   "ms": 158
+  },
+  {
+   "seed": 98,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [],
+   "ms": 635
+  },
+  {
+   "seed": 99,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone",
+    "chin-continuity",
+    "chin-height-room"
+   ],
+   "ms": 469
+  },
+  {
+   "seed": 100,
+   "ok": true,
+   "failures": [],
+   "warnings": [],
+   "corrections": [
+    "mouth-philtrum-zone"
+   ],
+   "ms": 144
+  }
+ ]
+}
