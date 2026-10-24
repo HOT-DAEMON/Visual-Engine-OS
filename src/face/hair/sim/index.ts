@@ -7,12 +7,14 @@ import type { HairLock } from '../types';
 import { ARCHETYPES, type MassDef } from './archetypes';
 import { makeCollider, type Collider, type P3 } from './collider';
 import { makeDrape, skinShadow } from './drape';
+import { asymEnvelope, columnEnvelope } from './mass';
 import { simulateChain, type ChainSpec } from './verlet';
+import { bunLocks } from '../tie';
 
 /** Archétype par défaut d'un style de la grammaire historique (quand `sim.archetype` = none). */
 const FALLBACK: Record<string, string> = { buzz: 'swept_back', short: 'tousled', spiky: 'tousled', curly: 'fluffy_messy', afro: 'fluffy_messy', bob: 'hime', long: 'hime', ponytail: 'rebel_lock', bun: 'bun_undercut', braids: 'cornrows_side' };
 
-export interface SimResult { readonly locks: HairLock[]; readonly skinShadows: Poly[]; readonly chains: { readonly mass: string; readonly pts: P3[]; readonly cls: string }[] }
+export interface SimResult { readonly locks: HairLock[]; readonly skinShadows: Poly[]; readonly mass: Poly | null; readonly backMass: Poly | null; readonly chains: { readonly mass: string; readonly pts: P3[]; readonly cls: string }[] }
 
 const unit3 = (v: P3): P3 => { const n = Math.hypot(v.x, v.y, v.z) || 1; return { x: v.x / n, y: v.y / n, z: v.z / n }; };
 const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
@@ -44,10 +46,18 @@ export function simLocks(ctx: HairCtx): SimResult {
   const shadows: Poly[] = [];
   const chains: SimResult['chains'] = [];
   for (const m of arch.masses) {
+    // Chignon : volume enroulé dédié (disque + spirales), posé au sommet ; pas de chaînes.
+    if (m.cls === 'tail' && (m.curl ?? 0) >= 0.5) {
+      const top = arc.reduce((a, q) => (q.y < a.y ? q : a), arc[0] as Vec);
+      for (const l of bunLocks({ ...ctx, h: { ...h, tie: { ...h.tie, thickness: 0.85 } } }, { x: 0.1 * W, y: top.y + 0.075 * H })) locks.push({ ...l, layer: 'back', z: -1, sim: true });
+      continue;
+    }
     const nPk = Math.max(1, Math.round((sim.packets * m.share) / total));
     for (let k = 0; k < nPk; k++) {
       // Racine : abscisse stratifiée dans la masse, hauteur entre l'implantation et le contour du crâne.
-      const s = lerp(m.s[0], m.s[1], (k + rnd() * 0.8) / nPk);
+      const s0 = lerp(m.s[0], m.s[1], (k + rnd() * 0.8) / nPk);
+      // Mèches de côté : racines sur les tempes seulement (|s| ≥ 0,62), jamais au centre du front.
+      const s = m.cls === 'side' ? Math.sign(s0 || 1) * (0.62 + 0.38 * Math.abs(s0)) : s0;
       const t = lerp(m.t[0], m.t[1], rnd());
       const A = hl.at(s);
       const B = arcAt(arc, s);
@@ -56,8 +66,10 @@ export function simLocks(ctx: HairCtx): SimResult {
       const z0 = body.frontZ(x, y);
       const root: P3 = { x, y, z: m.rear ? -z0 : z0 };
       const dir = flowDir(root, P0, body, m, ctx.partX);
-      const len = (lerp(m.len[0], m.len[1], rnd()) + sim.lengthBias * 0.2) * H * (1 + (rnd() - 0.5) * h.lengthVariance);
-      const nS = sim.strandsPerPacket;
+      const reach = m.cls === 'bang' && m.limit !== 'eye' ? 1 + 0.9 * sim.blade : 1;
+      const len = (lerp(m.len[0], m.len[1], rnd()) * reach + sim.lengthBias * 0.2) * H * (1 + (rnd() - 0.5) * h.lengthVariance);
+      const plaited = m.cls === 'braid' || m.cls === 'row';
+      const nS = plaited ? 0 : sim.strandsPerPacket;
       for (let j = 0; j <= nS; j++) {
         const main = j === 0;
         const off = main ? 0 : (j / nS - 0.5) * 2.2 * m.w * W * (0.6 + rnd() * 0.8);
@@ -70,11 +82,15 @@ export function simLocks(ctx: HairCtx): SimResult {
         };
         const chain = simulateChain(spec, body);
         chains.push({ mass: m.name, pts: chain, cls: m.cls });
-        const wMain = m.w * W * 1.9 * (0.85 + 0.3 * rnd());
+        const wMain = m.w * W * (plaited ? 1.3 : 1.9 + 1.7 * sim.blade) * (0.85 + 0.3 * rnd());
         let spine: Vec[] = chain.map((p) => ({ x: p.x, y: p.y }));
         // Limite sourcils : la mèche s'ARRÊTE à la limite (bout interpolé) au lieu d'être écrasée en un segment horizontal.
         if (m.limit === 'brow' || m.limit === undefined) {
-          const yCut = drape.yF - 0.45 * wMain;
+          // Profondeur de retombée de la masse (implantation → sourcils), avec pente latérale : bord de frange propre à l'archétype.
+          const yH = hl.yAt(root.x);
+          const dEff = clamp((m.depth ?? (m.cls === 'bang' ? 1 : 0.5)) + (m.slope ?? 0) * (root.x / (0.5 * W)), 0.04, 1);
+          const yCut0 = yH + (drape.yF - 0.45 * wMain - yH) * dEff - (m.cls === 'bang' ? rnd() * 0.06 * H * (0.4 + sim.blade) * dEff : 0);
+          const yCut = Math.max(yCut0, Math.min(root.y + 0.07 * H, drape.yF - 0.45 * wMain)); // jamais au-dessus de la racine (corde dressée)
           const cut = spine.findIndex((v, i) => i > 0 && v.y > yCut && Math.abs(v.x) < ctx.guard.hw(v.y) - 0.012 * W);
           if (cut > 0) {
             const a = spine[cut - 1] as Vec; const b = spine[cut] as Vec;
@@ -88,7 +104,7 @@ export function simLocks(ctx: HairCtx): SimResult {
         const behind = zMean < -0.06 * W || m.rear === true;
         const touchesFace = spine.some((v) => v.y > drape.yF);
         const layer: HairLock['layer'] = behind ? 'back' : touchesFace && m.limit === 'eye' ? 'over' : 'front';
-        const made = lockFrom(ctx, spine, { width: main ? wMain : wMain * 0.32, rank: main ? 'main' : 'fine', tone: m.tone + (rnd() - 0.5) * 0.3, layer: layer === 'over' ? 'back' : layer, sharp: m.sharp, raw: true, kind: touchesFace && layer !== 'over' ? 'cheek' : m.cls === 'bang' ? 'fringe' : main ? 'flow' : 'lock', noGuard: true, ragged: h.tips.irregular, flick: h.tips.flick });
+        const made = lockFrom(ctx, spine, { width: main ? wMain : wMain * (0.32 + 0.12 * sim.blade), rank: main ? 'main' : 'fine', tone: m.tone + (rnd() - 0.5) * 0.3, layer: layer === 'over' ? 'back' : layer, sharp: m.sharp, raw: !plaited, tex: plaited ? 'braided' : undefined, kind: touchesFace && layer !== 'over' ? 'cheek' : m.cls === 'bang' ? 'fringe' : main ? 'flow' : 'lock', noGuard: true, ragged: h.tips.irregular, flick: h.tips.flick });
         // Les sommets du RUBAN (largeur comprise) passent aussi par le drapé : aucun bord de mèche ne déborde sur une zone interdite.
         for (const l of made) locks.push({ ...l, poly: m.limit === 'eye' || m.cls === 'bang' ? l.poly : l.poly.map((v) => drape.limit(v, m)), layer, z: zMean, sim: true });
         if (main && layer === 'front' && sim.skinShadow > 0) {
@@ -100,5 +116,11 @@ export function simLocks(ctx: HairCtx): SimResult {
   }
   // Ordre de profondeur : du plus loin (z petit) au plus proche, dans chaque calque.
   locks.sort((a, b) => a.z - b.z);
-  return { locks: locks.map(({ z: _z, ...l }) => l), skinShadows: shadows, chains };
+  const plain = locks.map(({ z: _z, ...l }) => l);
+  // Masse de volume : tranche par tranche, du sommet jusqu'au bas des mèches AVANT ; masse arrière séparée (queue, nuque).
+  const frontOnes = plain.filter((l) => l.layer !== 'back' && l.kind !== 'cheek');
+  const backOnes = plain.filter((l) => l.layer === 'back');
+  const mass = sim.mass && frontOnes.length > 4 ? columnEnvelope(frontOnes, drape.yF, 0.004 * W, 0.045 * H) : null;
+  const backMass = sim.mass && backOnes.length > 4 ? asymEnvelope(backOnes, lm.hair.sideY, Math.max(...backOnes.flatMap((l) => l.poly.map((q) => q.y))), 0.006 * W) : null;
+  return { locks: plain, skinShadows: shadows, mass, backMass, chains };
 }

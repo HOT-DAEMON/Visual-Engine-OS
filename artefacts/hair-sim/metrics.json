@@ -5,7 +5,7 @@
       "strands": 219,
       "electrocutedShare": 0,
       "detachedShare": 0,
-      "meanAngleDeg": 19.474037174863124,
+      "meanAngleDeg": 18.759356323104313,
       "scalpCoverage": 1,
       "tolerance": 0.2381818181818182
     },
@@ -14,16 +14,16 @@
       "strands": 219,
       "electrocutedShare": 0,
       "detachedShare": 0,
-      "meanAngleDeg": 19.390188662878167,
+      "meanAngleDeg": 18.533952175057664,
       "scalpCoverage": 1,
       "tolerance": 0.2381818181818182
     },
     {
       "label": "anti-gravité volontaire",
       "strands": 219,
-      "electrocutedShare": 0.7625570776255708,
-      "detachedShare": 0.0182648401826484,
-      "meanAngleDeg": 116.80262345378458,
+      "electrocutedShare": 0.4429223744292237,
+      "detachedShare": 0.0273972602739726,
+      "meanAngleDeg": 74.14077645699318,
       "scalpCoverage": 1,
       "tolerance": 1
     }
@@ -35,18 +35,18 @@
         "strands": 216,
         "electrocutedShare": 0.004629629629629629,
         "detachedShare": 0,
-        "meanAngleDeg": 20.563808849428103,
+        "meanAngleDeg": 22.58164066481259,
         "scalpCoverage": 1,
         "tolerance": 0.3002272727272727
       },
       "raster": {
         "px": 200,
-        "areaRatio": 0.25740766746243504,
-        "riseAbove": 0.033167239073495766,
-        "overhang": 0.026399703306476764,
-        "scalpCoverage": 0.9789288849868305,
+        "areaRatio": 0.3005195899452324,
+        "riseAbove": 0.03943382083537174,
+        "overhang": 0.03146201943601358,
+        "scalpCoverage": 0.9833187006145742,
         "eyeOcclusion": 0,
-        "foreheadSkin": 0.9629629629629629,
+        "foreheadSkin": 0.9150326797385621,
         "w": 200,
         "h": 303
       },
@@ -60,20 +60,20 @@
       "archetype": "side_sweep",
       "geometry": {
         "strands": 216,
-        "electrocutedShare": 0.18518518518518517,
+        "electrocutedShare": 0.25,
         "detachedShare": 0,
-        "meanAngleDeg": 52.11809652611217,
+        "meanAngleDeg": 55.648553244748236,
         "scalpCoverage": 1,
         "tolerance": 0.2525
       },
       "raster": {
         "px": 200,
-        "areaRatio": 0.29560454992276364,
+        "areaRatio": 0.3346440106726583,
         "riseAbove": 0.033167239073495766,
-        "overhang": 0.03441380726664724,
-        "scalpCoverage": 0.9815627743634767,
+        "overhang": 0.026399703306476764,
+        "scalpCoverage": 0.9877085162423178,
         "eyeOcclusion": 0,
-        "foreheadSkin": 0.9564270152505446,
+        "foreheadSkin": 0.6753812636165577,
         "w": 200,
         "h": 303
       },
@@ -87,20 +87,20 @@
       "archetype": "swept_back",
       "geometry": {
         "strands": 216,
-        "electrocutedShare": 0.2175925925925926,
+        "electrocutedShare": 0.2824074074074074,
         "detachedShare": 0,
-        "meanAngleDeg": 62.66209110498288,
+        "meanAngleDeg": 68.92037699826402,
         "scalpCoverage": 1,
         "tolerance": 0.3352272727272727
       },
       "raster": {
         "px": 200,
-        "areaRatio": 0.23030473248139308,
-        "riseAbove": 0.033167239073495766,
-        "overhang": 0.026399703306476764,
-        "scalpCoverage": 0.9806848112379281,
+        "areaRatio": 0.24364555539952254,
+        "riseAbove": 0.04570040259724772,
+        "overhang": 0.03441380726664724,
+        "scalpCoverage": 0.9877085162423178,
         "eyeOcclusion": 0,
-        "foreheadSkin": 0.9956427015250545,
+        "foreheadSkin": 1,
         "w": 200,
         "h": 303
       },
@@ -113,19 +113,19 @@
     {
       "archetype": "bun_undercut",
       "geometry": {
-        "strands": 219,
-        "electrocutedShare": 0.1689497716894977,
+        "strands": 153,
+        "electrocutedShare": 0.13725490196078433,
         "detachedShare": 0,
-        "meanAngleDeg": 50.43269620274785,
+        "meanAngleDeg": 44.12317172860983,
         "scalpCoverage": 1,
         "tolerance": 0.45973684210526317
       },
       "raster": {
         "px": 200,
-        "areaRatio": 0.21387445583485465,
-        "riseAbove": 0.05196698435912369,
-        "overhang": 0.03947612339618389,
-        "scalpCoverage": 0.9683933274802459,
+        "areaRatio": 0.2602162617609886,
+        "riseAbove": 0.06450014788287564,
+        "overhang": 0.03146201943601358,
+        "scalpCoverage": 0.9762949956101844,
         "eyeOcclusion": 0,
         "foreheadSkin": 1,
         "w": 200,
@@ -143,47 +143,45 @@
         "strands": 219,
         "electrocutedShare": 0,
         "detachedShare": 0,
-        "meanAngleDeg": 19.474037174863124,
+        "meanAngleDeg": 18.759356323104313,
         "scalpCoverage": 1,
         "tolerance": 0.2381818181818182
       },
       "raster": {
         "px": 200,
-        "areaRatio": 0.3559893273416655,
+        "areaRatio": 0.43519168656087626,
         "riseAbove": 0.020634075549743815,
-        "overhang": 0.03146201943601358,
-        "scalpCoverage": 0.9841966637401229,
+        "overhang": 0.05550433131652467,
+        "scalpCoverage": 0.9929762949956101,
         "eyeOcclusion": 0,
-        "foreheadSkin": 0.616557734204793,
+        "foreheadSkin": 0.4662309368191721,
         "w": 200,
         "h": 303
       },
       "verify": {
         "ok": true,
         "failures": [],
-        "warnings": [
-          "hair-sim-segments"
-        ]
+        "warnings": []
       }
     },
     {
       "archetype": "wavy_swept",
       "geometry": {
         "strands": 216,
-        "electrocutedShare": 0.023148148148148147,
+        "electrocutedShare": 0.032407407407407406,
         "detachedShare": 0,
-        "meanAngleDeg": 27.091936996686254,
+        "meanAngleDeg": 29.679792847466228,
         "scalpCoverage": 1,
         "tolerance": 0.2875
       },
       "raster": {
         "px": 200,
-        "areaRatio": 0.2655525909282404,
+        "areaRatio": 0.3384356129757057,
         "riseAbove": 0.02690065731161979,
-        "overhang": 0.026399703306476764,
-        "scalpCoverage": 0.9859525899912204,
+        "overhang": 0.04242791122681755,
+        "scalpCoverage": 0.9920983318700615,
         "eyeOcclusion": 0,
-        "foreheadSkin": 0.9912854030501089,
+        "foreheadSkin": 0.8997821350762527,
         "w": 200,
         "h": 303
       },
@@ -199,18 +197,18 @@
         "strands": 219,
         "electrocutedShare": 0.3515981735159817,
         "detachedShare": 0,
-        "meanAngleDeg": 78.76344976465407,
+        "meanAngleDeg": 77.47831767225799,
         "scalpCoverage": 1,
         "tolerance": 0.4672727272727273
       },
       "raster": {
         "px": 200,
-        "areaRatio": 0.2437859851144502,
+        "areaRatio": 0.2795955624210083,
         "riseAbove": 0.0770333114066276,
-        "overhang": 0.018385599346306458,
-        "scalpCoverage": 0.9806848112379281,
+        "overhang": 0.03441380726664724,
+        "scalpCoverage": 0.9885864793678666,
         "eyeOcclusion": 0,
-        "foreheadSkin": 0.9912854030501089,
+        "foreheadSkin": 1,
         "w": 200,
         "h": 303
       },
@@ -223,19 +221,19 @@
     {
       "archetype": "braid_updo",
       "geometry": {
-        "strands": 216,
-        "electrocutedShare": 0.05555555555555555,
+        "strands": 171,
+        "electrocutedShare": 0.06432748538011696,
         "detachedShare": 0,
-        "meanAngleDeg": 41.206271081497476,
+        "meanAngleDeg": 29.07612732099843,
         "scalpCoverage": 1,
         "tolerance": 0.26631578947368423
       },
       "raster": {
         "px": 200,
-        "areaRatio": 0.2835275944389833,
+        "areaRatio": 0.30676871225951413,
         "riseAbove": 0.020634075549743815,
         "overhang": 0.05044201518698802,
-        "scalpCoverage": 0.9683933274802459,
+        "scalpCoverage": 0.9806848112379281,
         "eyeOcclusion": 0,
         "foreheadSkin": 1,
         "w": 200,
@@ -253,18 +251,18 @@
         "strands": 219,
         "electrocutedShare": 0,
         "detachedShare": 0,
-        "meanAngleDeg": 19.833404265961033,
+        "meanAngleDeg": 20.570146769623673,
         "scalpCoverage": 1,
         "tolerance": 0.32727272727272727
       },
       "raster": {
         "px": 200,
-        "areaRatio": 0.24504985254879932,
+        "areaRatio": 0.356199971914057,
         "riseAbove": 0.020634075549743815,
-        "overhang": 0.010371495386135982,
-        "scalpCoverage": 0.9815627743634767,
+        "overhang": 0.026399703306476764,
+        "scalpCoverage": 0.9912203687445127,
         "eyeOcclusion": 0,
-        "foreheadSkin": 1,
+        "foreheadSkin": 0.6797385620915033,
         "w": 200,
         "h": 303
       },
@@ -280,47 +278,45 @@
         "strands": 219,
         "electrocutedShare": 0,
         "detachedShare": 0,
-        "meanAngleDeg": 18.311278877200625,
+        "meanAngleDeg": 16.517404284863044,
         "scalpCoverage": 1,
         "tolerance": 0.2381818181818182
       },
       "raster": {
         "px": 200,
-        "areaRatio": 0.4181996910546272,
+        "areaRatio": 0.4979637691335487,
         "riseAbove": 0.020634075549743815,
-        "overhang": 0.06647022310732864,
-        "scalpCoverage": 0.9885864793678666,
+        "overhang": 0.07448432706749912,
+        "scalpCoverage": 0.990342405618964,
         "eyeOcclusion": 0,
-        "foreheadSkin": 0.30718954248366015,
+        "foreheadSkin": 0.07625272331154684,
         "w": 200,
         "h": 303
       },
       "verify": {
         "ok": true,
         "failures": [],
-        "warnings": [
-          "hair-sim-segments"
-        ]
+        "warnings": []
       }
     },
     {
       "archetype": "pompadour_strand",
       "geometry": {
         "strands": 216,
-        "electrocutedShare": 0.2824074074074074,
+        "electrocutedShare": 0.3425925925925926,
         "detachedShare": 0,
-        "meanAngleDeg": 66.47174239262672,
+        "meanAngleDeg": 73.15781050328759,
         "scalpCoverage": 1,
         "tolerance": 0.4055825242718447
       },
       "raster": {
         "px": 200,
-        "areaRatio": 0.24729672798764218,
+        "areaRatio": 0.29630669849740204,
         "riseAbove": 0.0770333114066276,
-        "overhang": 0.0023573914259656737,
-        "scalpCoverage": 0.9912203687445127,
+        "overhang": 0.018385599346306458,
+        "scalpCoverage": 0.9859525899912204,
         "eyeOcclusion": 0,
-        "foreheadSkin": 0.9411764705882353,
+        "foreheadSkin": 0.5185185185185185,
         "w": 200,
         "h": 303
       },
@@ -333,27 +329,29 @@
     {
       "archetype": "cornrows_side",
       "geometry": {
-        "strands": 213,
-        "electrocutedShare": 0.014084507042253521,
+        "strands": 48,
+        "electrocutedShare": 0,
         "detachedShare": 0,
-        "meanAngleDeg": 27.20227819575119,
+        "meanAngleDeg": 15.847953576207969,
         "scalpCoverage": 1,
         "tolerance": 0.2
       },
       "raster": {
         "px": 200,
-        "areaRatio": 0.2781912652717315,
+        "areaRatio": 0.21682347984833591,
         "riseAbove": 0.020634075549743815,
-        "overhang": 0.015433811515672798,
-        "scalpCoverage": 0.9675153643546971,
+        "overhang": 0.023447915475843108,
+        "scalpCoverage": 1,
         "eyeOcclusion": 0,
-        "foreheadSkin": 0.9193899782135077,
+        "foreheadSkin": 1,
         "w": 200,
         "h": 303
       },
       "verify": {
-        "ok": true,
-        "failures": [],
+        "ok": false,
+        "failures": [
+          "cel-highlight-band"
+        ],
         "warnings": []
       }
     },
@@ -363,16 +361,16 @@
         "strands": 216,
         "electrocutedShare": 0.08796296296296297,
         "detachedShare": 0,
-        "meanAngleDeg": 38.57465901777953,
+        "meanAngleDeg": 38.657102986747084,
         "scalpCoverage": 1,
         "tolerance": 0.3257042253521127
       },
       "raster": {
         "px": 200,
-        "areaRatio": 0.21506810841173993,
+        "areaRatio": 0.276225249262744,
         "riseAbove": 0.0770333114066276,
-        "overhang": 0.018385599346306458,
-        "scalpCoverage": 0.9754170324846356,
+        "overhang": 0.03947612339618389,
+        "scalpCoverage": 0.9894644424934153,
         "eyeOcclusion": 0,
         "foreheadSkin": 1,
         "w": 200,
@@ -390,16 +388,16 @@
         "strands": 216,
         "electrocutedShare": 0.013888888888888888,
         "detachedShare": 0,
-        "meanAngleDeg": 31.284910973660256,
+        "meanAngleDeg": 31.301162162057423,
         "scalpCoverage": 1,
         "tolerance": 0.33999999999999997
       },
       "raster": {
         "px": 200,
-        "areaRatio": 0.2522117680101109,
+        "areaRatio": 0.332607779806207,
         "riseAbove": 0.020634075549743815,
-        "overhang": 0.06647022310732864,
-        "scalpCoverage": 0.9806848112379281,
+        "overhang": 0.0905125349878399,
+        "scalpCoverage": 0.9885864793678666,
         "eyeOcclusion": 0,
         "foreheadSkin": 1,
         "w": 200,
@@ -415,20 +413,20 @@
       "archetype": "hime",
       "geometry": {
         "strands": 219,
-        "electrocutedShare": 0.0045662100456621,
+        "electrocutedShare": 0,
         "detachedShare": 0,
-        "meanAngleDeg": 18.85995908281006,
+        "meanAngleDeg": 14.619948579105742,
         "scalpCoverage": 1,
         "tolerance": 0.2
       },
       "raster": {
         "px": 200,
-        "areaRatio": 0.37803679258531103,
-        "riseAbove": 0.020634075549743815,
-        "overhang": 0.047490227356354366,
-        "scalpCoverage": 0.9912203687445127,
+        "areaRatio": 0.4959977531245612,
+        "riseAbove": 0.033167239073495766,
+        "overhang": 0.05845611914715833,
+        "scalpCoverage": 0.9991220368744512,
         "eyeOcclusion": 0,
-        "foreheadSkin": 0.6949891067538126,
+        "foreheadSkin": 0.5119825708061002,
         "w": 200,
         "h": 303
       },
@@ -442,9 +440,9 @@
     }
   ],
   "timing": {
-    "classicMs": 2220,
-    "simMs": 3200,
-    "simArchetypesSheetMs": 5227,
+    "classicMs": 2163,
+    "simMs": 3754,
+    "simArchetypesSheetMs": 6139,
     "faces": 12
   }
 }

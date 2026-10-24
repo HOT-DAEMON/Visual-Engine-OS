@@ -98,5 +98,7 @@ export interface HairGeometry {
   /** Points d'attache (élastiques) : position et vrai si au-dessus du crâne (visible, dessiné devant). */
   /** Ombres portées des mèches sur la peau (cheveux simulés) ; vide sinon. */
   readonly skinShadows?: Poly[];
+  /** Masse de volume des cheveux simulés (silhouette pleine dessinée sous les mèches), ou null. */
+  readonly simMass?: Poly | null;
   readonly ties: { readonly at: Vec; readonly rx: number; readonly front: boolean }[];
 }

@@ -99,11 +99,14 @@ describe('lumières de contour : réglages séparés et propagation parent / enf
 
   it('le liseré se dessine : couleur voulue, flou, découpé à la silhouette ; intensité nulle = rien', () => {
     const { components } = setup();
-    const r = resolveRims(components, { nose: rim({ intensity: 0.6, color: '#ff8800' }) }, ra).get('nose')!;
+    const r = resolveRims(components, { nose: rim({ intensity: 0.6, color: '#ff8800', width: 1 }) }, ra).get('nose')!;
     const c = components.find((x) => x.id === 'nose')!;
     const out = renderRim('t', c, r, L, 1, softKit('t', 320, 420));
     expect(out.markup).toContain('clip-path');
-    expect(out.markup).toContain('filter');
+    expect(out.markup).toContain('filter'); // liseré large : flou conservé
+    // Liseré fin (σ < 1) : aucun filtre rastérisé (perf, écart imperceptible).
+    const thin = resolveRims(components, { nose: rim({ intensity: 0.6, color: '#ff8800', width: 0 }) }, ra).get('nose')!;
+    expect(renderRim('t', c, thin, L, 0.5, softKit('t', 320, 420)).markup).not.toContain('filter=');
     expect(out.defs.join('')).toContain('#ff8800');
     expect(renderRim('t', c, { ...r, intensity: 0 }, L, 1, softKit('t', 320, 420)).markup).toBe('');
   });

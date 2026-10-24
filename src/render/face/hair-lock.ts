@@ -41,7 +41,9 @@ export function lockMarkup(l: HairLock, k: number, st: LockStyle, depth: number,
   const fade = l.fade ?? 0;
   const alphaAt = (t: number): number => ra.rampAlpha(t) * (1 - fade * smoothstep(clamp((t - 0.35) / 0.65, 0, 1))) * spec.opacity * (RANK_ALPHA[l.rank] ?? 1);
   const sp = l.spine;
-  const needsGrad = !!sp && sp.length > 3 && (spec.gradient.length > 0 || fade > 0.02 || l.rank === 'hairline' || l.rank === 'fine');
+  // Perf : les brins FINS d'une mèche simulée sont plats (un dégradé par brin = 1 <linearGradient> de plus pour presque rien à l'écran).
+  const flatFine = l.sim === true && l.rank === 'fine';
+  const needsGrad = !flatFine && !!sp && sp.length > 3 && (spec.gradient.length > 0 || fade > 0.02 || l.rank === 'hairline' || l.rank === 'fine');
   const rankBig = l.rank === 'mass' || l.rank === 'main' || l.rank === 'plait';
 
   if (cast && spec.shading.castShadow > 0.02 && rankBig && l.layer !== 'back') {

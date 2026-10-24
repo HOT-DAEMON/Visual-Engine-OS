@@ -19,9 +19,12 @@ export interface Drape {
   onSkin(v: Vec): boolean;
 }
 
+/** Limite basse des franges simulées : juste au-dessus des vrais sourcils (eyeY − 0,095 H), jamais au-dessus de `browLimitY`. */
+export const simBrowY = (lm: FaceLandmarks): number => Math.max(lm.browLimitY, lm.eyeY - 0.095 * lm.H) - 0.008 * lm.H;
+
 export function makeDrape(lm: FaceLandmarks, sim: HairSim, hw: (y: number) => number, hairY: (x: number) => number): Drape {
   const { W, H } = lm;
-  const yF = lm.browLimitY - 0.008 * H;
+  const yF = simBrowY(lm);
   // Bande de joue : SOUS la zone des yeux (jamais devant un œil) jusqu'au coin de mâchoire, 0,08 W de large, devant l'oreille.
   const yBand = lm.eyeY + 0.09 * H;
   const band = (y: number): number => (sim.drape.cheeks && y > yBand && y < lm.jawY ? 0.08 * W * clamp((lm.jawY - y) / (0.25 * H), 0.3, 1) : 0);

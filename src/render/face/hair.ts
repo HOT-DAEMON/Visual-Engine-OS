@@ -80,6 +80,7 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
   const massEl = (m: (typeof geo.tierMasses)[number]): string => el('path', { d: smoothPath(m.poly), fill: hueShift(ra.tone(h.tiers.underTone * Math.min(1, 0.6 + 0.2 * m.tier)), h.tiers.underHue * m.tier), opacity: h.tiers.underVisible });
   if (geo.tierMasses.length) body.push(el('g', { 'clip-path': urlRef(clipId) }, geo.tierMasses.map(massEl)));
   back.unshift(...geo.tierMasses.map(massEl));
+  if (geo.simMass) body.push(el('path', { d: smoothPath(geo.simMass), fill: ra.tone(-0.42) }));
   for (const l of frontLocks) body.push(...draw(l, 0, true));
   const gloss = hairGloss(id, geo, p, lm, L, rot, ra);
   defs.push(...gloss.defs);

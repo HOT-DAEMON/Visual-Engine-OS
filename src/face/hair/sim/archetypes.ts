@@ -29,6 +29,10 @@ export interface MassDef {
   readonly reach?: number;
   /** Limite basse : `brow` = au-dessus des sourcils ; `eye` = peut recouvrir l'œil (mèche voulue) ; `free` = sans limite. */
   readonly limit?: 'brow' | 'eye' | 'free';
+  /** Profondeur de retombée sur le front : 0 = reste à l'implantation, 1 = descend jusqu'aux sourcils (défaut : frange 1, sommet 0,5). */
+  readonly depth?: number;
+  /** Pente latérale de cette profondeur (par unité de s, + = plus profond à droite de l'image) : bord de frange en diagonale. */
+  readonly slope?: number;
 }
 
 export interface Archetype { readonly masses: readonly MassDef[]; readonly gravity?: number; readonly puff?: number }
@@ -52,21 +56,21 @@ export const ARCHETYPES: Record<string, Archetype> = {
   // 2 — grande mèche balayée sur le front jusqu'au sourcil gauche, côtés courts, oreilles dégagées.
   side_sweep: { masses: [
     ...under(0.14),
-    m('swoop', 'bang', 0.45, [-0.7, 0.9], [0.05, 0.6], [0.2, 0.3], { sweep: -1.1, lift: 0.1, stiff: 0.9, w: 0.06, sharp: 0.95, limit: 'brow' }),
-    m('top', 'crown', 0.3, [-0.9, 0.9], [0.5, 1], [0.1, 0.16], { sweep: -0.8, lift: 0.4, stiff: 0.9, w: 0.06, sharp: 0.9 }),
+    m('swoop', 'bang', 0.45, [-0.7, 0.9], [0.05, 0.6], [0.2, 0.3], { sweep: -1.1, lift: 0.1, stiff: 0.9, w: 0.06, sharp: 0.95, limit: 'brow', depth: 0.85, slope: -0.45 }),
+    m('top', 'crown', 0.3, [-0.9, 0.9], [0.5, 1], [0.1, 0.16], { sweep: -0.8, lift: 0.4, stiff: 0.9, w: 0.06, sharp: 0.9, depth: 0.45, slope: -0.3 }),
     m('sides', 'side', 0.25, [-1, 1], [0, 0.35], [0.05, 0.09], { out: 0.3, back: 0.4, stiff: 0.9, w: 0.04 }),
   ] },
   // 3 — peigné vers l'arrière, volume devant, côtés courts (blond clair).
   swept_back: { masses: [
     ...under(0.14),
-    m('front', 'crown', 0.5, [-0.8, 0.8], [0.05, 0.7], [0.14, 0.22], { back: 1, lift: 0.7, out: 0.2, stiff: 0.95, w: 0.055, sharp: 0.85 }),
+    m('front', 'crown', 0.5, [-0.8, 0.8], [0.05, 0.7], [0.14, 0.22], { back: 1, lift: 0.7, out: 0.2, stiff: 0.95, w: 0.055, sharp: 0.85, depth: 0.12 }),
     m('top', 'crown', 0.25, [-0.9, 0.9], [0.6, 1], [0.1, 0.16], { back: 0.9, lift: 0.3, stiff: 0.9, w: 0.05 }),
     m('sides', 'side', 0.25, [-1, 1], [0, 0.35], [0.05, 0.09], { back: 0.8, out: 0.2, stiff: 0.95, w: 0.04 }),
   ] },
   // 4 — chignon haut + côtés rasés (undercut) + une mèche longue devant l'oreille.
   bun_undercut: { masses: [
     ...under(0.1),
-    m('combed', 'crown', 0.45, [-0.7, 0.7], [0.1, 0.9], [0.1, 0.16], { back: 1.2, lift: 0.9, stiff: 0.95, w: 0.05 }),
+    m('combed', 'crown', 0.45, [-0.7, 0.7], [0.1, 0.9], [0.1, 0.16], { back: 1.2, lift: 0.9, stiff: 0.95, w: 0.05, depth: 0.1 }),
     m('bun', 'tail', 0.3, [-0.1, 0.1], [0.95, 1], [0.07, 0.1], { back: 0.2, lift: 1, curl: 0.55, stiff: 0.7, w: 0.05, sharp: 0.4, limit: 'free' }),
     m('long lock', 'side', 0.1, [-1, -0.8], [0, 0.2], [0.34, 0.42], { out: 0.1, stiff: 0.35, w: 0.03, sharp: 0.9, limit: 'free' }),
   ] },
@@ -80,21 +84,21 @@ export const ARCHETYPES: Record<string, Archetype> = {
   // 6 — ondulations balayées en arrière et sur le côté.
   wavy_swept: { masses: [
     ...under(0.18),
-    m('waves', 'crown', 0.55, [-0.9, 0.9], [0.05, 1], [0.16, 0.24], { sweep: 0.5, back: 0.7, lift: 0.5, wave: 0.28, stiff: 0.8, w: 0.055, sharp: 0.8 }),
+    m('waves', 'crown', 0.55, [-0.9, 0.9], [0.05, 1], [0.16, 0.24], { sweep: 0.5, back: 0.7, lift: 0.5, wave: 0.28, stiff: 0.8, w: 0.055, sharp: 0.8, depth: 0.3 }),
     m('sides', 'side', 0.25, [-1, 1], [0, 0.4], [0.1, 0.16], { back: 0.6, out: 0.3, wave: 0.2, stiff: 0.6, w: 0.045 }),
     m('fringe', 'bang', 0.2, [-0.6, 0.6], [0.05, 0.4], [0.1, 0.15], { sweep: 0.6, wave: 0.25, stiff: 0.7, w: 0.045, limit: 'brow' }),
   ] },
   // 7 — houppe relevé, côtés rasés, longue mèche devant la joue d'un côté.
   quiff_undercut: { masses: [
     ...under(0.09),
-    m('quiff', 'crown', 0.6, [-0.7, 0.7], [0.05, 0.9], [0.18, 0.3], { back: 0.5, lift: 1.4, stiff: 0.95, w: 0.055, sharp: 0.95 }),
+    m('quiff', 'crown', 0.6, [-0.7, 0.7], [0.05, 0.9], [0.18, 0.3], { back: 0.5, lift: 1.4, stiff: 0.95, w: 0.055, sharp: 0.95, depth: 0.1 }),
     m('cheek lock', 'side', 0.1, [0.8, 1], [0, 0.15], [0.36, 0.44], { out: 0, stiff: 0.3, w: 0.028, sharp: 0.95, limit: 'free' }),
     m('sides', 'side', 0.3, [-1, 1], [0, 0.3], [0.03, 0.06], { back: 0.6, stiff: 0.95, w: 0.04 }),
   ] },
   // 8 — chignon bas tressé de côté + mèches ondulées libres.
   braid_updo: { masses: [
     ...under(0.14),
-    m('swept', 'crown', 0.45, [-0.9, 0.9], [0.05, 1], [0.15, 0.22], { sweep: 0.8, back: 0.8, lift: 0.4, wave: 0.2, stiff: 0.8, w: 0.05 }),
+    m('swept', 'crown', 0.45, [-0.9, 0.9], [0.05, 1], [0.15, 0.22], { sweep: 0.8, back: 0.8, lift: 0.4, wave: 0.2, stiff: 0.8, w: 0.05, depth: 0.2 }),
     m('braid', 'braid', 0.2, [0.6, 0.9], [0.1, 0.5], [0.35, 0.45], { sweep: 0.3, back: 0.9, stiff: 0.7, w: 0.04, sharp: 0.5, limit: 'free' }),
     m('loose', 'side', 0.2, [-1, -0.7], [0, 0.2], [0.3, 0.4], { out: 0.2, wave: 0.3, stiff: 0.3, w: 0.025, sharp: 0.95, limit: 'free' }),
   ] },
@@ -115,14 +119,14 @@ export const ARCHETYPES: Record<string, Archetype> = {
   // 11 — dessus lissé vers l'arrière, une mèche détachée tombe au centre du front.
   pompadour_strand: { masses: [
     ...under(0.1),
-    m('slick', 'crown', 0.55, [-0.8, 0.8], [0.05, 0.9], [0.16, 0.26], { back: 0.9, lift: 1.1, stiff: 0.95, w: 0.055, sharp: 0.85 }),
+    m('slick', 'crown', 0.55, [-0.8, 0.8], [0.05, 0.9], [0.16, 0.26], { back: 0.9, lift: 1.1, stiff: 0.95, w: 0.055, sharp: 0.85, depth: 0.1 }),
     m('strand', 'bang', 0.08, [-0.15, 0.15], [0.1, 0.3], [0.2, 0.26], { stiff: 0.25, w: 0.022, sharp: 0.98, limit: 'brow' }),
     m('sides', 'side', 0.3, [-1, 1], [0, 0.3], [0.03, 0.06], { back: 0.7, stiff: 0.95, w: 0.04 }),
   ] },
   // 12 — rangées tressées plaquées vers un côté + une mèche libre.
   cornrows_side: { masses: [
     ...under(0.1),
-    m('rows', 'row', 0.65, [-0.9, 0.9], [0.05, 1], [0.2, 0.28], { sweep: 0.9, back: 1, stiff: 0.98, w: 0.026, sharp: 0.5, limit: 'brow' }),
+    m('rows', 'row', 0.65, [-0.9, 0.9], [0.05, 1], [0.2, 0.28], { sweep: 0.9, back: 1, stiff: 0.98, w: 0.026, sharp: 0.5, limit: 'brow', depth: 0.1 }),
     m('free lock', 'side', 0.1, [-1, -0.85], [0, 0.2], [0.34, 0.42], { stiff: 0.3, w: 0.028, sharp: 0.95, limit: 'free' }),
   ] },
   // Archétypes de lisibilité demandés : mèche rebelle, couettes, coupe hime.

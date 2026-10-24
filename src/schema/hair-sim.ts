@@ -34,6 +34,10 @@ export const HairSim = z
     skinShadow: Unit.default(0.35),
     /** Longueur relative (fraction de H) ajoutée aux valeurs de l'archétype. */
     lengthBias: z.number().min(-1).max(1).default(0),
+    /** Mèches en LAMES (larges, lissées) : 0 = rubans fins historiques, 1 = grandes lames de manga. */
+    blade: Unit.default(0.75),
+    /** Masse de volume pleine sous les mèches (silhouette lisible, jamais de crâne nu entre deux mèches). */
+    mass: z.boolean().default(true),
   })
   .strict();
 export type HairSim = z.infer<typeof HairSim>;

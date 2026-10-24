@@ -13,6 +13,9 @@ import { relations } from './graph';
 import { polysD, type ComponentId, type FaceComponent } from './types';
 
 /** Lumière de contour EFFECTIVE d'un composant, après propagation de ses parent / enfants / frères. */
+/** Sous ce σ (px local), le flou du liseré n'est pas rastérisé (voir docs/PERF-HAIR-SIM.md). */
+const RIM_MIN_SIGMA = 1;
+
 export interface ResolvedRim {
   readonly id: ComponentId;
   readonly color: string;
@@ -97,6 +100,8 @@ export function renderRim(id: string, c: FaceComponent, r: ResolvedRim, L: Light
   // Le dégradé s'éteint à 55 % de la traversée : seul le côté éclairé porte le liseré (le côté opposé reste franchement sombre).
   const stroke = v ? (defs.push(el('linearGradient', { id: gid, gradientUnits: 'userSpaceOnUse', x1: cx + v.x * ext, y1: cy + v.y * ext, x2: cx - v.x * ext, y2: cy - v.y * ext }, [stop(0, r.color, r.intensity), stop(0.3, r.color, r.intensity * 0.35), stop(0.55, r.color, 0)])), urlRef(gid)) : r.color;
   const edgeBox = pathBox(edgeD);
-  const line = el('path', { d: edgeD, fill: 'none', stroke, 'stroke-width': w, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', 'stroke-opacity': v ? undefined : r.intensity * 0.6, filter: kit.blur((0.4 + 1.2 * r.width) * u, edgeBox ? padBox(edgeBox, w / 2 + 1) : undefined) });
+  // Perf : un flou de σ < 1 px sur un liseré fin est imperceptible (écart max 9/255 sur quelques pixels, moyenne 0,01) mais coûte ~100 ms par visage (aire de la tête) : pas de filtre.
+  const rimSigma = (0.4 + 1.2 * r.width) * u;
+  const line = el('path', { d: edgeD, fill: 'none', stroke, 'stroke-width': w, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', 'stroke-opacity': v ? undefined : r.intensity * 0.6, filter: rimSigma < RIM_MIN_SIGMA ? undefined : kit.blur(rimSigma, edgeBox ? padBox(edgeBox, w / 2 + 1) : undefined) });
   return { defs, markup: el('g', { 'clip-path': urlRef(cid) }, [line]) };
 }

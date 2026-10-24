@@ -76,6 +76,7 @@ export function hairGeometry(p: FaceParams, lm: FaceLandmarks): HairGeometry | n
     }
     backBase = envelope([...front, ...back].flatMap((l) => l.poly).filter((q) => q.y >= lm.hair.sideY), lm.hair.sideY, back.flatMap((l) => l.poly).reduce((a, q) => Math.max(a, q.y), lm.jawY) - 0.04 * H);
   }
+  if (sim?.backMass && !backBase) backBase = sim.backMass;
   const ties: HairGeometry['ties'] = [];
   for (const T of spots) {
     back.push(...(h.style === 'bun' ? bunLocks(ctx, T) : tailLocks(ctx, T)));
@@ -94,7 +95,7 @@ export function hairGeometry(p: FaceParams, lm: FaceLandmarks): HairGeometry | n
   return {
     texture: tex, hairline: hl.pts, scalp, base: [base], bare: bareScalp(ctx), locks: all, backBase,
     front: [base, ...(classic ? [classic.base] : []), ...sides.front.map((l) => l.poly)], back: [...(backBase ? [backBase] : []), ...sides.back.map((l) => l.poly)],
-    fringeBottom, ties, over: [...occ.locks, ...simOver].map((l) => l.poly), skinShadows: sim?.skinShadows ?? [], tierMasses: masses, occlusions: occ.info, sides: sides.info,
+    fringeBottom, ties, over: [...occ.locks, ...simOver].map((l) => l.poly), skinShadows: sim?.skinShadows ?? [], simMass: sim?.mass ?? null, tierMasses: masses, occlusions: occ.info, sides: sides.info,
   };
 }
 

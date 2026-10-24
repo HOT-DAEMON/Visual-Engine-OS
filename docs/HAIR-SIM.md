@@ -43,3 +43,9 @@ Ordre de profondeur : tri par z moyen ; calque `back` si z < −0,06 W ou masse 
 generateRandomFace(321, { hair: { style: 'short', sim: { enabled: true, archetype: 'side_sweep', wind: 0.4 } } });
 ```
 Preuves : `artefacts/hair-sim/` (régénérer : `npx tsx scripts/artefacts-hair-sim.ts`). Reste à faire : `docs/HAIR-SIM-REMAINING.md`.
+
+## Silhouette (passe lames + masse)
+- `sim.blade` (0–1, défaut 0,75) : largeur des mèches principales et portée des franges ; `sim.mass` : masse de volume sous les mèches.
+- Chaque masse d'archétype peut déclarer `depth` (0 = reste à l'implantation, 1 = jusqu'aux sourcils) et `slope` (pente latérale).
+- La masse (`geo.simMass`) est calculée par colonnes sur les mèches avant ; la masse arrière alimente `backBase`.
+- Limite des franges simulées : `simBrowY(lm)` = juste au-dessus des sourcils.
