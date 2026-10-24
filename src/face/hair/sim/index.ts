@@ -10,11 +10,13 @@ import { makeDrape, skinShadow } from './drape';
 import { asymEnvelope, columnEnvelope } from './mass';
 import { simulateChain, type ChainSpec } from './verlet';
 import { bunLocks } from '../tie';
+import { profileOf } from './profiles';
+import { regionMasses, volumeMass } from './regions';
 
 /** Archétype par défaut d'un style de la grammaire historique (quand `sim.archetype` = none). */
 const FALLBACK: Record<string, string> = { buzz: 'swept_back', short: 'tousled', spiky: 'tousled', curly: 'fluffy_messy', afro: 'fluffy_messy', bob: 'hime', long: 'hime', ponytail: 'rebel_lock', bun: 'bun_undercut', braids: 'cornrows_side' };
 
-export interface SimResult { readonly locks: HairLock[]; readonly skinShadows: Poly[]; readonly mass: Poly | null; readonly backMass: Poly | null; readonly chains: { readonly mass: string; readonly pts: P3[]; readonly cls: string }[] }
+export interface SimResult { readonly locks: HairLock[]; readonly skinShadows: Poly[]; readonly mass: Poly | null; readonly shaved: Poly[]; readonly backMass: Poly | null; readonly chains: { readonly mass: string; readonly pts: P3[]; readonly cls: string }[] }
 
 const unit3 = (v: P3): P3 => { const n = Math.hypot(v.x, v.y, v.z) || 1; return { x: v.x / n, y: v.y / n, z: v.z / n }; };
 const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
@@ -35,7 +37,11 @@ export function simLocks(ctx: HairCtx): SimResult {
   const { h, lm, hl, arc, rnd } = ctx;
   const sim = h.sim;
   const { W, H } = lm;
-  const arch = ARCHETYPES[sim.archetype === 'none' ? (FALLBACK[h.style] ?? 'tousled') : sim.archetype] ?? ARCHETYPES['tousled']!;
+  const archName = sim.archetype === 'none' ? (FALLBACK[h.style] ?? 'tousled') : sim.archetype;
+  const arch = ARCHETYPES[archName] ?? ARCHETYPES['tousled']!;
+  // Profil (régions + silhouette) : seulement si `sim.regions` ; sinon neutre ⇒ aucun rendu existant ne change.
+  const prof = sim.regions ? profileOf(archName) : profileOf('');
+  const sil = prof.sil;
   const body = makeCollider(lm, (0.012 + 0.03 * h.volume + (arch.puff ?? 0) * 0.04) * W);
   const drape = makeDrape(lm, sim, ctx.guard.hw, hl.yAt);
   const P0: P3 = { x: ctx.partX, y: body.topY, z: 0 };
@@ -45,7 +51,11 @@ export function simLocks(ctx: HairCtx): SimResult {
   const locks: Array<HairLock & { z: number }> = [];
   const shadows: Poly[] = [];
   const chains: SimResult['chains'] = [];
-  for (const m of arch.masses) {
+  for (const m0 of arch.masses) {
+    // Zone rasée : les masses de côté courtes disparaissent (la repousse est dessinée à part).
+    if (sil.shave.sides && m0.cls === 'side' && m0.limit !== 'free') continue;
+    // Silhouette : volume du dessus, largeur, balayage propres à l'archétype.
+    const m: MassDef = sim.regions ? { ...m0, len: m0.cls === 'crown' ? [m0.len[0] * sil.top, m0.len[1] * sil.top] : m0.len, lift: m0.cls === 'crown' ? m0.lift * (1 + 0.2 * (sil.top - 1)) : m0.lift, out: m0.out * sil.width, reach: m0.reach === undefined ? (m0.cls === 'crown' ? undefined : undefined) : m0.reach * sil.top, sweep: m0.sweep + (m0.cls === 'crown' || m0.cls === 'bang' ? 0.12 * sil.sweep : 0) } : m0;
     // Chignon : volume enroulé dédié (disque + spirales), posé au sommet ; pas de chaînes.
     if (m.cls === 'tail' && (m.curl ?? 0) >= 0.5) {
       const top = arc.reduce((a, q) => (q.y < a.y ? q : a), arc[0] as Vec);
@@ -114,6 +124,11 @@ export function simLocks(ctx: HairCtx): SimResult {
       }
     }
   }
+  // Masses de région : tempes + pattes, mèches de joue, nuque, zones rasées.
+  const reg = sim.regions ? regionMasses(ctx, prof) : { locks: [], shaved: [] };
+  const vol = sim.regions ? volumeMass(ctx, prof) : null;
+  if (vol) locks.push({ ...vol, z: -0.5 });
+  for (const l of reg.locks) locks.push({ ...l, z: l.layer === 'back' ? -2 : l.kind === 'cheek' ? 0.04 : 0.02 });
   // Ordre de profondeur : du plus loin (z petit) au plus proche, dans chaque calque.
   locks.sort((a, b) => a.z - b.z);
   const plain = locks.map(({ z: _z, ...l }) => l);
@@ -122,5 +137,5 @@ export function simLocks(ctx: HairCtx): SimResult {
   const backOnes = plain.filter((l) => l.layer === 'back');
   const mass = sim.mass && frontOnes.length > 4 ? columnEnvelope(frontOnes, drape.yF, 0.004 * W, 0.045 * H) : null;
   const backMass = sim.mass && backOnes.length > 4 ? asymEnvelope(backOnes, lm.hair.sideY, Math.max(...backOnes.flatMap((l) => l.poly.map((q) => q.y))), 0.006 * W) : null;
-  return { locks: plain, skinShadows: shadows, mass, backMass, chains };
+  return { locks: plain, skinShadows: shadows, mass, shaved: reg.shaved, backMass, chains };
 }

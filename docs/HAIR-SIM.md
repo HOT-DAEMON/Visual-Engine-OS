@@ -49,3 +49,6 @@ Preuves : `artefacts/hair-sim/` (régénérer : `npx tsx scripts/artefacts-hair-
 - Chaque masse d'archétype peut déclarer `depth` (0 = reste à l'implantation, 1 = jusqu'aux sourcils) et `slope` (pente latérale).
 - La masse (`geo.simMass`) est calculée par colonnes sur les mèches avant ; la masse arrière alimente `backBase`.
 - Limite des franges simulées : `simBrowY(lm)` = juste au-dessus des sourcils.
+
+## Masses de région, silhouettes, encre
+Passe suivante (`sim.regions`, `sim.ink`, opt-in) : voir `docs/HAIR-MASSES.md`, vérification `docs/HAIR-ZONES-VERIFY.md`, comparaison aux références `docs/HAIR-REFERENCE-COMPARISON.md`.

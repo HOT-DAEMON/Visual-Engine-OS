@@ -26,6 +26,8 @@ export function checkGeometry(geo: HairGeometry, lm: FaceLandmarks): Check[] {
   // Zone centrale du visage : sous la limite des sourcils, au-delà de 0,09 W du contour, au-dessus du menton.
   const half = (y: number): number => halfWidthAt(lm.outline, Math.min(lm.chinY - 1e-3, Math.max(-H / 2, y)));
   const intruders = geo.locks.filter((l) => l.layer === 'front' && l.kind !== 'cheek').flatMap((l) => l.poly).filter((q) => q.y > (geo.locks.some((l) => l.sim) ? simBrowY(lm) : lm.browLimitY - 0.008 * H) + 1e-6 && q.y < lm.chinY && Math.abs(q.x) < half(q.y) - 0.09 * W).length;
-  out.push(check('geometry', 'face-interior-clear', '==', intruders, 0, 'sommets de mèches avant dans la zone centrale du visage'));
+  // Cheveux à masses de région : la règle large est remplacée par la protection des SEULS yeux, sourcils, nez, bouche (`hair-zones.ts`).
+  const zoned = geo.locks.some((l) => l.zone !== undefined);
+  if (!zoned) out.push(check('geometry', 'face-interior-clear', '==', intruders, 0, 'sommets de mèches avant dans la zone centrale du visage'));
   return out;
 }

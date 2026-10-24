@@ -20,3 +20,9 @@ Passe « lames + silhouette » :
 7. **Yeux et lèvres** (moteur d'apparence, galeries) : non traités.
 8. **Performance** : bruit de peau et ombres de contact restent coûteux (voir `docs/PERF-HAIR-SIM.md`).
 9. Artefacts : une seule morphologie de visage.
+
+## Mise à jour (passe masses de région)
+- Point 2 (vérification de silhouette) : couche `hair-zones.ts` ajoutée (balayage, largeur, zone rasée) ; pas de comparaison à une image cible → voir `HAIR-MASSES-REMAINING.md`.
+- Point 1 (fidélité aux 12 références) : encre noir/blanc ajoutée, fidélité toujours insuffisante (`HAIR-REFERENCE-COMPARISON.md`).
+- Point 3 (vue 3/4) : géométrie de pose ajoutée (`FACE-POSE.md`), non branchée au rendu.
+- Point 8 (performance) : géométrie des cheveux mémoïsée (`PERF-HAIR-SIM.md`).

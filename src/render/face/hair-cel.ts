@@ -23,7 +23,7 @@ export interface CelBands {
  *  - OMBRE PROPRE : toute la largeur sur le premier quart (u ≤ 0,26), bord bas irrégulier.
  * Les polygones sont ensuite ROGNÉS par le contour réel de la mèche (clip-path) : aucune bande ne peut en sortir.
  */
-export function celBands(l: HairLock, ld: Vec, band: number, wantCore: boolean): CelBands {
+export function celBands(l: HairLock, ld: Vec, band: number, wantCore: boolean, span: readonly [number, number] = [0.12, 0.78]): CelBands {
   const sp = l.spine;
   if (!sp || sp.length < 6 || l.w0 === undefined) return { shade: null, core: null, highlight: null };
   const n = sp.length;
@@ -42,8 +42,8 @@ export function celBands(l: HairLock, ld: Vec, band: number, wantCore: boolean):
   const shade = [...idx.map(inner), ...[...idx].reverse().map(edge)];
   let highlight: Poly | null = null;
   if (band > 0.01) {
-    const a = Math.floor(0.12 * (n - 1));
-    const b = Math.floor(0.78 * (n - 1));
+    const a = Math.floor(span[0] * (n - 1));
+    const b = Math.floor(span[1] * (n - 1));
     const half = (i: number): number => 0.5 * band * 0.55 * Math.max(0, Math.sin((Math.PI * (i - a)) / Math.max(1, b - a))) ** 0.7;
     const sub = idx.filter((i) => i >= a && i <= b);
     highlight = [...sub.map((i) => at(i, 0.35 * d(i) + half(i))), ...[...sub].reverse().map((i) => at(i, 0.35 * d(i) - half(i)))];

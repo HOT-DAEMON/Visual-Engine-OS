@@ -9,8 +9,10 @@ import { checkFaceEngine } from './face-engine';
 import { checkStructure } from './structure';
 import { checkContracts } from './contracts';
 import { checkHairSim } from './hair-sim';
+import { checkHairZones } from './hair-zones';
 import { report, type Check, type Report } from './types';
 
+export { checkHairZones } from './hair-zones';
 export { checkHairSim, hairSimStats, toleranceOf, type HairSimStats } from './hair-sim';
 
 export { paletteStats, isVivid } from './style';
@@ -41,5 +43,6 @@ export function verifyFace(face: RandomFace): Report {
   // Contrats entre composants : mesures observables, corrections du résolveur, ordre anatomique, budget de rendu.
   checks.push(...checkContracts(face, svg));
   checks.push(...checkHairSim(face));
+  checks.push(...checkHairZones(face));
   return report(checks);
 }

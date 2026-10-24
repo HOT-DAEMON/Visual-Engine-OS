@@ -28,3 +28,9 @@ Les cheveux ne pèsent que ≈ 65 ms de la rastérisation : le gros du coût est
 2. Ombres de contact : régions de filtre ajustées à la boîte réelle ; fusion tête + cheveux.
 3. Cache de la simulation par (archétype, graine, morphologie).
 4. Ombres portées des mèches principales fusionnées en un seul `<path>`.
+
+## Mémoïsation de `hairGeometry` (passe masses de région)
+Un rendu appelait `hairGeometry` 3 fois (visibilité des oreilles, composants, cheveux) et la vérification 3 fois de plus, soit ≈ 100 ms de simulation à chaque appel. La fonction est maintenant mémoïsée par contenu `(paramètres du visage, W, H)` (`ContentCache`, 48 entrées, LRU).
+Mesure (`scripts/bench-hair-sim.ts`, appels répétés = cache chaud) : compilation SVG d'un visage chevelu simulé ≈ 205 ms → ≈ 84 ms ; géométrie 0 ms au 2ᵉ appel.
+Réserves : (1) le banc répète les appels, donc il mesure surtout le cas chaud ; (2) la machine exécutait la suite de tests en parallèle, la rastérisation (665–842 ms) n'est pas comparable à l'ancienne mesure (315–445 ms) ; (3) premier appel à froid inchangé. La rastérisation (filtres de peau) reste le poste dominant et n'est PAS traitée : tuile de bruit pré-calculée, fusion des ombres de contact = encore à faire.
+Le rendu encre n'ajoute aucun filtre (aplats, pas de flou).

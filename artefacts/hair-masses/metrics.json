@@ -1,0 +1,1926 @@
+{
+  "verification": [
+    {
+      "archetype": "tousled",
+      "region": {
+        "temple": 0.07,
+        "burn": 0.08,
+        "nape": 0.1,
+        "cheek": 0.12,
+        "cheekSide": "both",
+        "thick": 1
+      },
+      "silhouette": {
+        "top": 1.2,
+        "width": 1.15,
+        "sweep": 0,
+        "shave": {
+          "sides": false,
+          "nape": false,
+          "height": 0
+        }
+      },
+      "ok": true,
+      "failures": [],
+      "warnings": [],
+      "zoneChecks": [
+        {
+          "id": "ink-flat-fill",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "ink-white-bands",
+          "ok": true,
+          "value": 74,
+          "limit": 1
+        },
+        {
+          "id": "ink-outline",
+          "ok": true,
+          "value": 294,
+          "limit": 1
+        },
+        {
+          "id": "zone-protected-eye-left",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-eye-right",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-brows",
+          "ok": true,
+          "value": 0,
+          "limit": 0.03
+        },
+        {
+          "id": "zone-protected-nose",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-mouth",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-side-depth",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-side-length",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-nape-behind",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-spill",
+          "ok": true,
+          "value": 0,
+          "limit": 0.2
+        },
+        {
+          "id": "sil-width",
+          "ok": true,
+          "value": 1.1152,
+          "limit": 0.95
+        },
+        {
+          "id": "sil-width-max",
+          "ok": true,
+          "value": 1.1152,
+          "limit": 2.005
+        }
+      ]
+    },
+    {
+      "archetype": "side_sweep",
+      "region": {
+        "temple": 0.05,
+        "burn": 0.04,
+        "nape": 0.05,
+        "cheek": 0,
+        "cheekSide": "none",
+        "thick": 1
+      },
+      "silhouette": {
+        "top": 1,
+        "width": 0.95,
+        "sweep": -1,
+        "shave": {
+          "sides": false,
+          "nape": false,
+          "height": 0
+        }
+      },
+      "ok": true,
+      "failures": [],
+      "warnings": [],
+      "zoneChecks": [
+        {
+          "id": "ink-flat-fill",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "ink-white-bands",
+          "ok": true,
+          "value": 70,
+          "limit": 1
+        },
+        {
+          "id": "ink-outline",
+          "ok": true,
+          "value": 288,
+          "limit": 1
+        },
+        {
+          "id": "zone-protected-eye-left",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-eye-right",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-brows",
+          "ok": true,
+          "value": 0.0104,
+          "limit": 0.03
+        },
+        {
+          "id": "zone-protected-nose",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-mouth",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-side-depth",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-side-length",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-nape-behind",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-spill",
+          "ok": true,
+          "value": 0,
+          "limit": 0.2
+        },
+        {
+          "id": "sil-sweep-side_sweep",
+          "ok": true,
+          "value": 0.0197,
+          "limit": -0.01
+        },
+        {
+          "id": "sil-width",
+          "ok": true,
+          "value": 1.0673,
+          "limit": 0.95
+        },
+        {
+          "id": "sil-width-max",
+          "ok": true,
+          "value": 1.0673,
+          "limit": 1.865
+        }
+      ]
+    },
+    {
+      "archetype": "swept_back",
+      "region": {
+        "temple": 0.04,
+        "burn": 0.03,
+        "nape": 0.06,
+        "cheek": 0,
+        "cheekSide": "none",
+        "thick": 1
+      },
+      "silhouette": {
+        "top": 1.2,
+        "width": 0.95,
+        "sweep": 0,
+        "shave": {
+          "sides": false,
+          "nape": false,
+          "height": 0
+        }
+      },
+      "ok": true,
+      "failures": [],
+      "warnings": [],
+      "zoneChecks": [
+        {
+          "id": "ink-flat-fill",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "ink-white-bands",
+          "ok": true,
+          "value": 71,
+          "limit": 1
+        },
+        {
+          "id": "ink-outline",
+          "ok": true,
+          "value": 289,
+          "limit": 1
+        },
+        {
+          "id": "zone-protected-eye-left",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-eye-right",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-brows",
+          "ok": true,
+          "value": 0,
+          "limit": 0.03
+        },
+        {
+          "id": "zone-protected-nose",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-mouth",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-side-depth",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-side-length",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-nape-behind",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-spill",
+          "ok": true,
+          "value": 0,
+          "limit": 0.2
+        },
+        {
+          "id": "sil-width",
+          "ok": true,
+          "value": 1.0882,
+          "limit": 0.95
+        },
+        {
+          "id": "sil-width-max",
+          "ok": true,
+          "value": 1.0882,
+          "limit": 1.865
+        }
+      ]
+    },
+    {
+      "archetype": "bun_undercut",
+      "region": {
+        "temple": 0,
+        "burn": 0,
+        "nape": 0,
+        "cheek": 0,
+        "cheekSide": "none",
+        "thick": 0.8
+      },
+      "silhouette": {
+        "top": 1.1,
+        "width": 0.85,
+        "sweep": 0,
+        "shave": {
+          "sides": true,
+          "nape": true,
+          "height": 0.55
+        }
+      },
+      "ok": true,
+      "failures": [],
+      "warnings": [
+        "sil-shaved-clear"
+      ],
+      "zoneChecks": [
+        {
+          "id": "ink-flat-fill",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "ink-white-bands",
+          "ok": true,
+          "value": 43,
+          "limit": 1
+        },
+        {
+          "id": "ink-outline",
+          "ok": true,
+          "value": 196,
+          "limit": 1
+        },
+        {
+          "id": "zone-protected-eye-left",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-eye-right",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-brows",
+          "ok": true,
+          "value": 0,
+          "limit": 0.03
+        },
+        {
+          "id": "zone-protected-nose",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-mouth",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-side-depth",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-behind",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-spill",
+          "ok": true,
+          "value": 0,
+          "limit": 0.2
+        },
+        {
+          "id": "sil-width",
+          "ok": true,
+          "value": 1.0268,
+          "limit": 0.95
+        },
+        {
+          "id": "sil-width-max",
+          "ok": true,
+          "value": 1.0268,
+          "limit": 1.795
+        },
+        {
+          "id": "sil-shaved-clear",
+          "ok": false,
+          "value": 0.3418,
+          "limit": 0.3
+        }
+      ]
+    },
+    {
+      "archetype": "messy_bangs",
+      "region": {
+        "temple": 0.09,
+        "burn": 0.1,
+        "nape": 0.12,
+        "cheek": 0.14,
+        "cheekSide": "both",
+        "thick": 1.1
+      },
+      "silhouette": {
+        "top": 1,
+        "width": 1.1,
+        "sweep": 0,
+        "shave": {
+          "sides": false,
+          "nape": false,
+          "height": 0
+        }
+      },
+      "ok": true,
+      "failures": [],
+      "warnings": [],
+      "zoneChecks": [
+        {
+          "id": "ink-flat-fill",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "ink-white-bands",
+          "ok": true,
+          "value": 75,
+          "limit": 1
+        },
+        {
+          "id": "ink-outline",
+          "ok": true,
+          "value": 298,
+          "limit": 1
+        },
+        {
+          "id": "zone-protected-eye-left",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-eye-right",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-brows",
+          "ok": true,
+          "value": 0.0295,
+          "limit": 0.03
+        },
+        {
+          "id": "zone-protected-nose",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-mouth",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-side-depth",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-side-length",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-nape-behind",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-spill",
+          "ok": true,
+          "value": 0,
+          "limit": 0.2
+        },
+        {
+          "id": "sil-width",
+          "ok": true,
+          "value": 1.1081,
+          "limit": 0.95
+        },
+        {
+          "id": "sil-width-max",
+          "ok": true,
+          "value": 1.1081,
+          "limit": 1.97
+        }
+      ]
+    },
+    {
+      "archetype": "wavy_swept",
+      "region": {
+        "temple": 0.07,
+        "burn": 0.07,
+        "nape": 0.12,
+        "cheek": 0.1,
+        "cheekSide": "right",
+        "thick": 1
+      },
+      "silhouette": {
+        "top": 1.15,
+        "width": 1.15,
+        "sweep": 0.6,
+        "shave": {
+          "sides": false,
+          "nape": false,
+          "height": 0
+        }
+      },
+      "ok": true,
+      "failures": [],
+      "warnings": [
+        "hair-sim-segments"
+      ],
+      "zoneChecks": [
+        {
+          "id": "ink-flat-fill",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "ink-white-bands",
+          "ok": true,
+          "value": 66,
+          "limit": 1
+        },
+        {
+          "id": "ink-outline",
+          "ok": true,
+          "value": 285,
+          "limit": 1
+        },
+        {
+          "id": "zone-protected-eye-left",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-eye-right",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-brows",
+          "ok": true,
+          "value": 0.0017,
+          "limit": 0.03
+        },
+        {
+          "id": "zone-protected-nose",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-mouth",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-side-depth",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-side-length",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-nape-behind",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-spill",
+          "ok": true,
+          "value": 0,
+          "limit": 0.2
+        },
+        {
+          "id": "sil-sweep-wavy_swept",
+          "ok": true,
+          "value": 0.0063,
+          "limit": -0.01
+        },
+        {
+          "id": "sil-width",
+          "ok": true,
+          "value": 1.0935,
+          "limit": 0.95
+        },
+        {
+          "id": "sil-width-max",
+          "ok": true,
+          "value": 1.0935,
+          "limit": 2.005
+        }
+      ]
+    },
+    {
+      "archetype": "quiff_undercut",
+      "region": {
+        "temple": 0,
+        "burn": 0,
+        "nape": 0,
+        "cheek": 0.3,
+        "cheekSide": "right",
+        "thick": 0.8
+      },
+      "silhouette": {
+        "top": 1.4,
+        "width": 0.85,
+        "sweep": 0,
+        "shave": {
+          "sides": true,
+          "nape": true,
+          "height": 0.5
+        }
+      },
+      "ok": true,
+      "failures": [],
+      "warnings": [],
+      "zoneChecks": [
+        {
+          "id": "ink-flat-fill",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "ink-white-bands",
+          "ok": true,
+          "value": 46,
+          "limit": 1
+        },
+        {
+          "id": "ink-outline",
+          "ok": true,
+          "value": 205,
+          "limit": 1
+        },
+        {
+          "id": "zone-protected-eye-left",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-eye-right",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-brows",
+          "ok": true,
+          "value": 0,
+          "limit": 0.03
+        },
+        {
+          "id": "zone-protected-nose",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-mouth",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-side-depth",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-behind",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-spill",
+          "ok": true,
+          "value": 0,
+          "limit": 0.2
+        },
+        {
+          "id": "sil-width",
+          "ok": true,
+          "value": 1.0014,
+          "limit": 0.95
+        },
+        {
+          "id": "sil-width-max",
+          "ok": true,
+          "value": 1.0014,
+          "limit": 1.795
+        },
+        {
+          "id": "sil-shaved-clear",
+          "ok": true,
+          "value": 0,
+          "limit": 0.3
+        }
+      ]
+    },
+    {
+      "archetype": "braid_updo",
+      "region": {
+        "temple": 0.05,
+        "burn": 0.04,
+        "nape": 0.08,
+        "cheek": 0.22,
+        "cheekSide": "left",
+        "thick": 1
+      },
+      "silhouette": {
+        "top": 1,
+        "width": 1,
+        "sweep": 0.8,
+        "shave": {
+          "sides": false,
+          "nape": false,
+          "height": 0
+        }
+      },
+      "ok": true,
+      "failures": [],
+      "warnings": [],
+      "zoneChecks": [
+        {
+          "id": "ink-flat-fill",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "ink-white-bands",
+          "ok": true,
+          "value": 47,
+          "limit": 1
+        },
+        {
+          "id": "ink-outline",
+          "ok": true,
+          "value": 360,
+          "limit": 1
+        },
+        {
+          "id": "zone-protected-eye-left",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-eye-right",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-brows",
+          "ok": true,
+          "value": 0,
+          "limit": 0.03
+        },
+        {
+          "id": "zone-protected-nose",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-mouth",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-side-depth",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-side-length",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-nape-behind",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-spill",
+          "ok": true,
+          "value": 0,
+          "limit": 0.2
+        },
+        {
+          "id": "sil-sweep-braid_updo",
+          "ok": true,
+          "value": 0.0664,
+          "limit": -0.01
+        },
+        {
+          "id": "sil-width",
+          "ok": true,
+          "value": 1.1167,
+          "limit": 0.95
+        },
+        {
+          "id": "sil-width-max",
+          "ok": true,
+          "value": 1.1167,
+          "limit": 1.9
+        }
+      ]
+    },
+    {
+      "archetype": "fluffy_messy",
+      "region": {
+        "temple": 0.08,
+        "burn": 0.08,
+        "nape": 0.08,
+        "cheek": 0.09,
+        "cheekSide": "both",
+        "thick": 1.2
+      },
+      "silhouette": {
+        "top": 1.3,
+        "width": 1.35,
+        "sweep": 0,
+        "shave": {
+          "sides": false,
+          "nape": false,
+          "height": 0
+        }
+      },
+      "ok": true,
+      "failures": [],
+      "warnings": [],
+      "zoneChecks": [
+        {
+          "id": "ink-flat-fill",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "ink-white-bands",
+          "ok": true,
+          "value": 74,
+          "limit": 1
+        },
+        {
+          "id": "ink-outline",
+          "ok": true,
+          "value": 297,
+          "limit": 1
+        },
+        {
+          "id": "zone-protected-eye-left",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-eye-right",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-brows",
+          "ok": true,
+          "value": 0.0069,
+          "limit": 0.03
+        },
+        {
+          "id": "zone-protected-nose",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-mouth",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-side-depth",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-side-length",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-nape-behind",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-spill",
+          "ok": true,
+          "value": 0,
+          "limit": 0.2
+        },
+        {
+          "id": "sil-width",
+          "ok": true,
+          "value": 1.0684,
+          "limit": 0.95
+        },
+        {
+          "id": "sil-width-max",
+          "ok": true,
+          "value": 1.0684,
+          "limit": 2.145
+        }
+      ]
+    },
+    {
+      "archetype": "messy_long_bangs",
+      "region": {
+        "temple": 0.1,
+        "burn": 0.12,
+        "nape": 0.14,
+        "cheek": 0.2,
+        "cheekSide": "both",
+        "thick": 1.1
+      },
+      "silhouette": {
+        "top": 1,
+        "width": 1.1,
+        "sweep": 0,
+        "shave": {
+          "sides": false,
+          "nape": false,
+          "height": 0
+        }
+      },
+      "ok": true,
+      "failures": [],
+      "warnings": [],
+      "zoneChecks": [
+        {
+          "id": "ink-flat-fill",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "ink-white-bands",
+          "ok": true,
+          "value": 72,
+          "limit": 1
+        },
+        {
+          "id": "ink-outline",
+          "ok": true,
+          "value": 295,
+          "limit": 1
+        },
+        {
+          "id": "zone-protected-eye-left",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-eye-right",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-brows",
+          "ok": true,
+          "value": 0,
+          "limit": 0.03
+        },
+        {
+          "id": "zone-protected-nose",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-mouth",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-side-depth",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-side-length",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-nape-behind",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-spill",
+          "ok": true,
+          "value": 0,
+          "limit": 0.2
+        },
+        {
+          "id": "sil-width",
+          "ok": true,
+          "value": 1.1597,
+          "limit": 0.95
+        },
+        {
+          "id": "sil-width-max",
+          "ok": true,
+          "value": 1.1597,
+          "limit": 1.97
+        }
+      ]
+    },
+    {
+      "archetype": "pompadour_strand",
+      "region": {
+        "temple": 0.03,
+        "burn": 0.02,
+        "nape": 0.04,
+        "cheek": 0,
+        "cheekSide": "none",
+        "thick": 0.8
+      },
+      "silhouette": {
+        "top": 1.35,
+        "width": 0.9,
+        "sweep": 0,
+        "shave": {
+          "sides": true,
+          "nape": false,
+          "height": 0.3
+        }
+      },
+      "ok": true,
+      "failures": [],
+      "warnings": [
+        "hair-sim-segments"
+      ],
+      "zoneChecks": [
+        {
+          "id": "ink-flat-fill",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "ink-white-bands",
+          "ok": true,
+          "value": 44,
+          "limit": 1
+        },
+        {
+          "id": "ink-outline",
+          "ok": true,
+          "value": 199,
+          "limit": 1
+        },
+        {
+          "id": "zone-protected-eye-left",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-eye-right",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-brows",
+          "ok": true,
+          "value": 0.0226,
+          "limit": 0.03
+        },
+        {
+          "id": "zone-protected-nose",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-mouth",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-side-depth",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-side-length",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-nape-behind",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-spill",
+          "ok": true,
+          "value": 0,
+          "limit": 0.2
+        },
+        {
+          "id": "sil-width",
+          "ok": true,
+          "value": 1.0072,
+          "limit": 0.95
+        },
+        {
+          "id": "sil-width-max",
+          "ok": true,
+          "value": 1.0072,
+          "limit": 1.83
+        },
+        {
+          "id": "sil-shaved-clear",
+          "ok": true,
+          "value": 0.1047,
+          "limit": 0.3
+        }
+      ]
+    },
+    {
+      "archetype": "cornrows_side",
+      "region": {
+        "temple": 0.03,
+        "burn": 0,
+        "nape": 0.04,
+        "cheek": 0,
+        "cheekSide": "none",
+        "thick": 0.8
+      },
+      "silhouette": {
+        "top": 0.8,
+        "width": 0.9,
+        "sweep": 0.9,
+        "shave": {
+          "sides": false,
+          "nape": false,
+          "height": 0
+        }
+      },
+      "ok": true,
+      "failures": [],
+      "warnings": [],
+      "zoneChecks": [
+        {
+          "id": "ink-flat-fill",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "ink-white-bands",
+          "ok": true,
+          "value": 7,
+          "limit": 1
+        },
+        {
+          "id": "ink-outline",
+          "ok": true,
+          "value": 299,
+          "limit": 1
+        },
+        {
+          "id": "zone-protected-eye-left",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-eye-right",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-brows",
+          "ok": true,
+          "value": 0,
+          "limit": 0.03
+        },
+        {
+          "id": "zone-protected-nose",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-mouth",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-side-depth",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-side-length",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-nape-behind",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-spill",
+          "ok": true,
+          "value": 0,
+          "limit": 0.2
+        },
+        {
+          "id": "sil-sweep-cornrows_side",
+          "ok": true,
+          "value": 0.0626,
+          "limit": -0.01
+        },
+        {
+          "id": "sil-width",
+          "ok": true,
+          "value": 1.01,
+          "limit": 0.95
+        },
+        {
+          "id": "sil-width-max",
+          "ok": true,
+          "value": 1.01,
+          "limit": 1.83
+        }
+      ]
+    },
+    {
+      "archetype": "rebel_lock",
+      "region": {
+        "temple": 0.05,
+        "burn": 0.04,
+        "nape": 0.06,
+        "cheek": 0,
+        "cheekSide": "none",
+        "thick": 1
+      },
+      "silhouette": {
+        "top": 1,
+        "width": 1,
+        "sweep": 0.1,
+        "shave": {
+          "sides": false,
+          "nape": false,
+          "height": 0
+        }
+      },
+      "ok": true,
+      "failures": [],
+      "warnings": [],
+      "zoneChecks": [
+        {
+          "id": "ink-flat-fill",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "ink-white-bands",
+          "ok": true,
+          "value": 69,
+          "limit": 1
+        },
+        {
+          "id": "ink-outline",
+          "ok": true,
+          "value": 287,
+          "limit": 1
+        },
+        {
+          "id": "zone-protected-eye-left",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-eye-right",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-brows",
+          "ok": true,
+          "value": 0,
+          "limit": 0.03
+        },
+        {
+          "id": "zone-protected-nose",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-mouth",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-side-depth",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-side-length",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-nape-behind",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-spill",
+          "ok": true,
+          "value": 0,
+          "limit": 0.2
+        },
+        {
+          "id": "sil-width",
+          "ok": true,
+          "value": 1.096,
+          "limit": 0.95
+        },
+        {
+          "id": "sil-width-max",
+          "ok": true,
+          "value": 1.096,
+          "limit": 1.9
+        }
+      ]
+    },
+    {
+      "archetype": "twintails",
+      "region": {
+        "temple": 0.06,
+        "burn": 0.06,
+        "nape": 0.08,
+        "cheek": 0.1,
+        "cheekSide": "both",
+        "thick": 1
+      },
+      "silhouette": {
+        "top": 0.9,
+        "width": 1,
+        "sweep": 0,
+        "shave": {
+          "sides": false,
+          "nape": false,
+          "height": 0
+        }
+      },
+      "ok": true,
+      "failures": [],
+      "warnings": [],
+      "zoneChecks": [
+        {
+          "id": "ink-flat-fill",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "ink-white-bands",
+          "ok": true,
+          "value": 55,
+          "limit": 1
+        },
+        {
+          "id": "ink-outline",
+          "ok": true,
+          "value": 275,
+          "limit": 1
+        },
+        {
+          "id": "zone-protected-eye-left",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-eye-right",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-brows",
+          "ok": true,
+          "value": 0,
+          "limit": 0.03
+        },
+        {
+          "id": "zone-protected-nose",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-mouth",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-side-depth",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-side-length",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-nape-behind",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-spill",
+          "ok": true,
+          "value": 0,
+          "limit": 0.2
+        },
+        {
+          "id": "sil-width",
+          "ok": true,
+          "value": 1.1835,
+          "limit": 0.95
+        },
+        {
+          "id": "sil-width-max",
+          "ok": true,
+          "value": 1.1835,
+          "limit": 1.9
+        }
+      ]
+    },
+    {
+      "archetype": "hime",
+      "region": {
+        "temple": 0.14,
+        "burn": 0.22,
+        "nape": 0.3,
+        "cheek": 0.28,
+        "cheekSide": "both",
+        "thick": 1.3
+      },
+      "silhouette": {
+        "top": 0.95,
+        "width": 1.2,
+        "sweep": 0,
+        "shave": {
+          "sides": false,
+          "nape": false,
+          "height": 0
+        }
+      },
+      "ok": true,
+      "failures": [],
+      "warnings": [
+        "hair-sim-segments"
+      ],
+      "zoneChecks": [
+        {
+          "id": "ink-flat-fill",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "ink-white-bands",
+          "ok": true,
+          "value": 49,
+          "limit": 1
+        },
+        {
+          "id": "ink-outline",
+          "ok": true,
+          "value": 272,
+          "limit": 1
+        },
+        {
+          "id": "zone-protected-eye-left",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-eye-right",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-brows",
+          "ok": true,
+          "value": 0.0191,
+          "limit": 0.03
+        },
+        {
+          "id": "zone-protected-nose",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-protected-mouth",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-side-depth",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-side-length",
+          "ok": true,
+          "value": 0,
+          "limit": 0.02
+        },
+        {
+          "id": "zone-nape-behind",
+          "ok": true,
+          "value": 0,
+          "limit": 0
+        },
+        {
+          "id": "zone-nape-spill",
+          "ok": true,
+          "value": 0.0703,
+          "limit": 0.2
+        },
+        {
+          "id": "sil-width",
+          "ok": true,
+          "value": 1.1073,
+          "limit": 0.95
+        },
+        {
+          "id": "sil-width-max",
+          "ok": true,
+          "value": 1.1073,
+          "limit": 2.04
+        }
+      ]
+    }
+  ],
+  "referenceComparison": [
+    {
+      "ref": "h01",
+      "archetype": "tousled",
+      "referenceInk": {
+        "fill": 0.15757020757020757,
+        "cx": 0.1063193554476003,
+        "top": 0.06666666666666667,
+        "aspect": 0.5982905982905983
+      },
+      "engineInk": {
+        "fill": 0.3771575148906569,
+        "cx": 0.02926782659618743,
+        "top": 0.18,
+        "aspect": 0.6577540106951871
+      },
+      "dFill": 0.22,
+      "dCentroidX": -0.077,
+      "dAspect": 0.059
+    },
+    {
+      "ref": "h02",
+      "archetype": "side_sweep",
+      "referenceInk": {
+        "fill": 0.41604973973395026,
+        "cx": 0.18863236575754838,
+        "top": 0.11333333333333333,
+        "aspect": 0.5115384615384615
+      },
+      "engineInk": {
+        "fill": 0.5497687270979756,
+        "cx": -0.061962827675118404,
+        "top": 0.22,
+        "aspect": 0.5195530726256983
+      },
+      "dFill": 0.134,
+      "dCentroidX": -0.251,
+      "dAspect": 0.008
+    },
+    {
+      "ref": "h03",
+      "archetype": "swept_back",
+      "referenceInk": {
+        "fill": 0.14228367528991973,
+        "cx": 0.04772594442378186,
+        "top": 0.11333333333333333,
+        "aspect": 0.5635593220338984
+      },
+      "engineInk": {
+        "fill": 0.4100661489790049,
+        "cx": 0.023069782700844588,
+        "top": 0.18,
+        "aspect": 0.5191256830601093
+      },
+      "dFill": 0.268,
+      "dCentroidX": -0.025,
+      "dAspect": -0.044
+    },
+    {
+      "ref": "h04",
+      "archetype": "bun_undercut",
+      "referenceInk": {
+        "fill": 0.28384712457184064,
+        "cx": 0.2605494710186491,
+        "top": 0.14,
+        "aspect": 0.5
+      },
+      "engineInk": {
+        "fill": 0.2990582356332885,
+        "cx": -0.07139841274585945,
+        "top": 0.19333333333333333,
+        "aspect": 0.7034883720930233
+      },
+      "dFill": 0.015,
+      "dCentroidX": -0.332,
+      "dAspect": 0.203
+    },
+    {
+      "ref": "h05",
+      "archetype": "messy_bangs",
+      "referenceInk": {
+        "fill": 0.297581936136153,
+        "cx": 0.08758855732480608,
+        "top": 0.04666666666666667,
+        "aspect": 0.5742971887550201
+      },
+      "engineInk": {
+        "fill": 0.49986331328594863,
+        "cx": 0.009619691405395647,
+        "top": 0.21333333333333335,
+        "aspect": 0.6344086021505376
+      },
+      "dFill": 0.202,
+      "dCentroidX": -0.078,
+      "dAspect": 0.06
+    },
+    {
+      "ref": "h06",
+      "archetype": "wavy_swept",
+      "referenceInk": {
+        "fill": 0.22141811676695397,
+        "cx": 0.03798914595829794,
+        "top": 0.04666666666666667,
+        "aspect": 0.5542635658914729
+      },
+      "engineInk": {
+        "fill": 0.43930398246255026,
+        "cx": 0.01448559689382889,
+        "top": 0.19333333333333333,
+        "aspect": 0.6467391304347826
+      },
+      "dFill": 0.218,
+      "dCentroidX": -0.024,
+      "dAspect": 0.092
+    },
+    {
+      "ref": "h07",
+      "archetype": "quiff_undercut",
+      "referenceInk": {
+        "fill": 0.3622937062937063,
+        "cx": -0.00834527486102521,
+        "top": 0.04666666666666667,
+        "aspect": 0.572
+      },
+      "engineInk": {
+        "fill": 0.28605995429493214,
+        "cx": 0.060153997711040574,
+        "top": 0.14,
+        "aspect": 0.7456647398843931
+      },
+      "dFill": -0.076,
+      "dCentroidX": 0.068,
+      "dAspect": 0.174
+    },
+    {
+      "ref": "h08",
+      "archetype": "braid_updo",
+      "referenceInk": {
+        "fill": 0.2380887594895377,
+        "cx": 0.003968426903835365,
+        "top": 0.04666666666666667,
+        "aspect": 0.556420233463035
+      },
+      "engineInk": {
+        "fill": 0.35111293934823345,
+        "cx": 0.015012523198198124,
+        "top": 0.22,
+        "aspect": 0.6256684491978609
+      },
+      "dFill": 0.113,
+      "dCentroidX": 0.011,
+      "dAspect": 0.069
+    },
+    {
+      "ref": "h09",
+      "archetype": "fluffy_messy",
+      "referenceInk": {
+        "fill": 0.21871974179666487,
+        "cx": 0.09993189299632999,
+        "top": 0.04666666666666667,
+        "aspect": 0.55
+      },
+      "engineInk": {
+        "fill": 0.4700004541944861,
+        "cx": -0.0021670449367592326,
+        "top": 0.16666666666666666,
+        "aspect": 0.6871508379888268
+      },
+      "dFill": 0.251,
+      "dCentroidX": -0.102,
+      "dAspect": 0.137
+    },
+    {
+      "ref": "h10",
+      "archetype": "messy_long_bangs",
+      "referenceInk": {
+        "fill": 0.3442442173211404,
+        "cx": 0.08610288063370297,
+        "top": 0.04666666666666667,
+        "aspect": 0.55
+      },
+      "engineInk": {
+        "fill": 0.5518521754324655,
+        "cx": 0.0032160900799007575,
+        "top": 0.21333333333333335,
+        "aspect": 0.6082474226804123
+      },
+      "dFill": 0.208,
+      "dCentroidX": -0.083,
+      "dAspect": 0.058
+    },
+    {
+      "ref": "h11",
+      "archetype": "pompadour_strand",
+      "referenceInk": {
+        "fill": 0.27603550295857987,
+        "cx": 0.07870393272322551,
+        "top": 0.04666666666666667,
+        "aspect": 0.55
+      },
+      "engineInk": {
+        "fill": 0.4278192189556823,
+        "cx": 0.011115086463923785,
+        "top": 0.16,
+        "aspect": 0.6162790697674418
+      },
+      "dFill": 0.152,
+      "dCentroidX": -0.068,
+      "dAspect": 0.066
+    },
+    {
+      "ref": "h12",
+      "archetype": "cornrows_side",
+      "referenceInk": {
+        "fill": 0.18719741796664874,
+        "cx": 0.04657714412024827,
+        "top": 0.04666666666666667,
+        "aspect": 0.55
+      },
+      "engineInk": {
+        "fill": 0.2958786346396966,
+        "cx": -0.011308445442781312,
+        "top": 0.24666666666666667,
+        "aspect": 0.6457142857142857
+      },
+      "dFill": 0.109,
+      "dCentroidX": -0.058,
+      "dAspect": 0.096
+    }
+  ],
+  "timing": {
+    "facesRendered": 12,
+    "totalMs": 5260
+  }
+}

@@ -15,6 +15,28 @@ export interface LockStyle {
   readonly ra: ResolvedAppearance;
   readonly ld: { x: number; y: number };
   readonly W: number;
+  /** Rendu « encre » : noir franc, bande blanche continue, contour noir épais. */
+  readonly ink?: string;
+}
+
+/**
+ * Rendu ENCRE d'une mèche : aplat noir franc, contour noir épais, UNE bande blanche continue (aplat opaque, bords nets) le
+ * long de la mèche, rognée par son contour. Les mèches fines n'ont qu'un contour fin ; les masses arrière, aucun reflet.
+ */
+function inkMarkup(l: HairLock, k: number, st: LockStyle, d: string): { defs: string[]; markup: string[] } {
+  const { ld, W, id, ink } = st;
+  const big = l.rank === 'mass' || l.rank === 'main' || l.rank === 'plait';
+  const out: string[] = [el('path', { d, fill: ink, stroke: ink, 'stroke-width': W * (big ? 0.0042 : 0.0022), 'stroke-linejoin': 'round' })];
+  const defs: string[] = [];
+  const bands = big && l.layer !== 'back' ? celBands(l, ld, 0.75, false, [0.05, 0.9]) : null;
+  if (bands?.highlight) {
+    const cid = `${id}-c${k}`;
+    defs.push(el('clipPath', { id: cid }, [el('path', { d })]));
+    out.push(el('g', { 'clip-path': urlRef(cid) }, [el('path', { d: polyPath(bands.highlight), fill: '#ffffff' })]));
+    // Le contour noir est redessiné par-dessus la bande : elle ne touche jamais le bord.
+    out.push(el('path', { d, fill: 'none', stroke: ink, 'stroke-width': W * 0.0042, 'stroke-linejoin': 'round' }));
+  }
+  return { defs, markup: out };
 }
 
 const GRAD_T = [0, 0.25, 0.5, 0.75, 1] as const;
@@ -35,6 +57,7 @@ export function lockMarkup(l: HairLock, k: number, st: LockStyle, depth: number,
   const defs: string[] = [];
   const out: string[] = [];
   const d = smoothPath(l.poly);
+  if (st.ink) return inkMarkup(l, k, st, d);
   const dark = (c: string): string => (depth > 0 ? mix(c, '#000000', depth) : c);
   const colorAt = (t: number): string => dark(ra.tone(l.tone, ra.ramp(t)));
   const cel = spec.shading.mode === 'cel';

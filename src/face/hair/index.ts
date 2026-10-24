@@ -19,6 +19,8 @@ import { braidLocks, braidRoots, bunLocks, tailLocks, tieRing, tieSpots } from '
 import { resolveTexture, textureSpec } from './texture';
 import type { HairGeometry, HairLock } from './types';
 import { simLocks } from './sim';
+import { canonical, ContentCache } from '../../perf/content-cache';
+import { clock } from '../../perf/clock';
 import { makeGain, makeLift, puffWidth } from './volume';
 
 export type { HairGeometry, HairLock, LockRank, LockKind, BareScalp, TierMass, OcclusionInfo, SideInfo } from './types';
@@ -30,7 +32,7 @@ export type { HairGeometry, HairLock, LockRank, LockKind, BareScalp, TierMass, O
  * volutes → poils très fins → mèches arrière / queue / chignon / tresses → comportement de CHAQUE côté (oreilles,
  * joues) → mèches qui passent devant le visage (occlusions) → sous-couches d'étage. `null` si chauve.
  */
-export function hairGeometry(p: FaceParams, lm: FaceLandmarks): HairGeometry | null {
+function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null {
   const h = p.hair;
   if (h.style === 'bald') return null;
   const { W, H } = lm;
@@ -95,8 +97,23 @@ export function hairGeometry(p: FaceParams, lm: FaceLandmarks): HairGeometry | n
   return {
     texture: tex, hairline: hl.pts, scalp, base: [base], bare: bareScalp(ctx), locks: all, backBase,
     front: [base, ...(classic ? [classic.base] : []), ...sides.front.map((l) => l.poly)], back: [...(backBase ? [backBase] : []), ...sides.back.map((l) => l.poly)],
-    fringeBottom, ties, over: [...occ.locks, ...simOver].map((l) => l.poly), skinShadows: sim?.skinShadows ?? [], simMass: sim?.mass ?? null, tierMasses: masses, occlusions: occ.info, sides: sides.info,
+    fringeBottom, ties, over: [...occ.locks, ...simOver].map((l) => l.poly), skinShadows: sim?.skinShadows ?? [], simMass: sim?.mass ?? null, shaved: sim?.shaved ?? [], tierMasses: masses, occlusions: occ.info, sides: sides.info,
   };
+}
+
+/**
+ * Géométrie des cheveux MÉMOÏSÉE par contenu : (paramètres du visage, W, H) → même résultat (fonction pure, graine de la chevelure
+ * dans les paramètres). Un rendu l'appelle 3 fois (visibilité des oreilles, composants, cheveux) et la vérification 3 fois de plus ;
+ * la simulation coûte ≈ 100 ms : les appels suivants ne coûtent que la sérialisation de la clé. Le résultat est IMMUABLE pour les appelants.
+ */
+const geoCache = new ContentCache<HairGeometry | 'bald'>('hairGeometry', 48);
+export function hairGeometry(p: FaceParams, lm: FaceLandmarks): HairGeometry | null {
+  const key = canonical([p, lm.W, lm.H]);
+  const hit = geoCache.get(key);
+  if (hit !== undefined) return hit === 'bald' ? null : hit;
+  const g = clock.time('geometry', () => hairGeometryRaw(p, lm));
+  geoCache.set(key, g ?? 'bald');
+  return g;
 }
 
 export { capTo };

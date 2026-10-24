@@ -12,6 +12,8 @@ import { hairGloss, hairlineTransition, smoothPath } from './hair-detail';
 import { lockMarkup, type LockStyle } from './hair-lock';
 import { hairAppearance } from './hair-look';
 import { polyPath } from './path';
+import { profileOf } from '../../face/hair/sim/profiles';
+import { sheenBands } from '../../face/hair/sim/sheen';
 
 export interface HairParts {
   readonly defs: string[];
@@ -44,7 +46,8 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
   if (!geo) return { defs: [], back: [], front: [], over: [] };
   const h = p.hair;
   const ra: ResolvedAppearance = hairAppearance(h);
-  const st: LockStyle = { id: `${id}-hl`, ra, ld: direction2D(L), W: lm.W };
+  const ink = h.sim.enabled && h.sim.ink ? '#08080c' : undefined;
+  const st: LockStyle = { id: `${id}-hl`, ra, ld: direction2D(L), W: lm.W, ink };
   const rootColor = h.rootColor ?? mix(ra.base, ra.shadow, 0.55);
   const defs: string[] = [];
   let k = 0;
@@ -54,7 +57,7 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
     return m.markup;
   };
   const back: string[] = [];
-  if (geo.backBase) back.push(el('path', { d: smoothPath(geo.backBase), fill: mix(mix(ra.base, ra.shadow, 0.8), '#000000', 0.2) }));
+  if (geo.backBase) back.push(el('path', { d: smoothPath(geo.backBase), fill: ink ?? mix(mix(ra.base, ra.shadow, 0.8), '#000000', 0.2), stroke: ink, 'stroke-width': ink ? lm.W * 0.0042 : undefined, 'stroke-linejoin': 'round' }));
   for (const l of geo.locks.filter((q) => q.layer === 'back')) back.push(...draw(l, 0.12, false));
   for (const t of geo.ties) back.push(el('ellipse', { cx: t.at.x, cy: t.at.y, rx: t.rx, ry: t.rx * 0.55, fill: mix(ra.base, '#000000', 0.55), stroke: ra.light, 'stroke-width': lm.W * 0.003 }));
 
@@ -71,7 +74,9 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
     bare.push(el('ellipse', { cx: b.x + b.w / 2, cy: b.y + b.h / 2, rx: b.w / 2, ry: b.h / 2, fill: urlRef(gid) }));
   });
   const frontLocks = geo.locks.filter((q) => q.layer === 'front');
-  const body: string[] = [base.markup, el('g', { 'clip-path': urlRef(clipId) }, bare)];
+  const body: string[] = [ink ? el('path', { d: base.d, fill: ink }) : base.markup, el('g', { 'clip-path': urlRef(clipId) }, bare)];
+  // Zones rasées : repousse sombre sur la peau (côtés / nuque), sous les mèches.
+  for (const q of geo.shaved ?? []) body.unshift(el('path', { d: smoothPath(q), fill: mix(skin, ink ?? ra.base, ink ? 0.42 : 0.55), opacity: 0.9 }));
   const fringeBase = geo.front.slice(1, geo.front.length - frontLocks.length);
   if (fringeBase.length) body.push(el('path', { d: polyPath(...fringeBase), fill: rootColor }));
   // Sous-couches visibles par étage : silhouette plus sombre / décalée de teinte, sous les mèches de l'étage.
@@ -80,9 +85,16 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
   const massEl = (m: (typeof geo.tierMasses)[number]): string => el('path', { d: smoothPath(m.poly), fill: hueShift(ra.tone(h.tiers.underTone * Math.min(1, 0.6 + 0.2 * m.tier)), h.tiers.underHue * m.tier), opacity: h.tiers.underVisible });
   if (geo.tierMasses.length) body.push(el('g', { 'clip-path': urlRef(clipId) }, geo.tierMasses.map(massEl)));
   back.unshift(...geo.tierMasses.map(massEl));
-  if (geo.simMass) body.push(el('path', { d: smoothPath(geo.simMass), fill: ra.tone(-0.42) }));
+  if (geo.simMass) body.push(el('path', { d: smoothPath(geo.simMass), fill: ink ?? ra.tone(-0.42), stroke: ink, 'stroke-width': ink ? lm.W * 0.0042 : undefined, 'stroke-linejoin': 'round' }));
   for (const l of frontLocks) body.push(...draw(l, 0, true));
-  const gloss = hairGloss(id, geo, p, lm, L, rot, ra);
+  // Encre : bandes de brillance continues sur le dessus, rognées par la silhouette réelle des cheveux (sous la limite des sourcils).
+  if (ink) {
+    const cid = `${id}-hair-sheen`;
+    const silh = [...geo.front, ...(geo.simMass ? [geo.simMass] : [])];
+    defs.push(el('clipPath', { id: cid }, silh.map((q) => el('path', { d: polyPath(q) }))));
+    body.push(el('g', { 'clip-path': urlRef(cid) }, sheenBands(geo, lm, profileOf(h.sim.archetype === 'none' ? 'tousled' : h.sim.archetype)).map((q) => el('path', { d: smoothPath(q), fill: '#ffffff' }))));
+  }
+  const gloss = ink ? { defs: [] as string[], markup: [] as string[] } : hairGloss(id, geo, p, lm, L, rot, ra);
   defs.push(...gloss.defs);
   body.push(...gloss.markup);
   const box = polyBox(geo.front.flat());

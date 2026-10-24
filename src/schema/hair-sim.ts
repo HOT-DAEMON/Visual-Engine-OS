@@ -38,6 +38,10 @@ export const HairSim = z
     blade: Unit.default(0.75),
     /** Masse de volume pleine sous les mèches (silhouette lisible, jamais de crâne nu entre deux mèches). */
     mass: z.boolean().default(true),
+    /** Masses de RÉGION (tempes, pattes, nuque, mèches de joue) et silhouette par archétype (dessus, largeur, balayage, zone rasée). */
+    regions: z.boolean().default(false),
+    /** Rendu « encre » : noir franc, masses pleines, bandes blanches continues, contours noirs. */
+    ink: z.boolean().default(false),
   })
   .strict();
 export type HairSim = z.infer<typeof HairSim>;

@@ -4,6 +4,7 @@ import type { FaceLandmarks } from '../../landmarks';
 import type { Poly } from '../../poly';
 import type { HairSim } from '../../../schema/hair-sim';
 import type { MassDef } from './archetypes';
+import { smoothstep } from '../noise';
 import { ribbon } from '../ribbon';
 
 /**
@@ -34,6 +35,13 @@ export function makeDrape(lm: FaceLandmarks, sim: HairSim, hw: (y: number) => nu
     const inside = Math.abs(v.x) < inner - 0.012 * W;
     if (!inside) return v;
     if (lim === 'eye' && v.y <= lm.eyeY + 0.03 * H) return v;
+    // Masses de région : une mèche de côté ne se rabat pas d'un coup sur le contour à la limite des sourcils (arête diagonale qui
+    // traverse le sourcil) : elle s'en rapproche PROGRESSIVEMENT depuis le front et l'atteint avant les sourcils.
+    if (sim.regions && mass.cls !== 'bang' && lim !== 'eye' && v.y > yF - 0.1 * H) {
+      const f = smoothstep(clamp((v.y - (yF - 0.1 * H)) / (0.1 * H), 0, 1));
+      const target = Math.sign(v.x || 1) * (inner - (v.y > yF ? band(v.y) : 0));
+      if (Math.abs(target) > Math.abs(v.x)) return { x: v.x + (target - v.x) * f, y: v.y };
+    }
     if (lim === 'brow' || !sim.drape.forehead) {
       if (v.y <= yF) return v;
       return mass.cls === 'bang' && lim === 'brow' ? { x: v.x, y: yF } : push(v, inner, band(v.y));

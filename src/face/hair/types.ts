@@ -36,6 +36,8 @@ export interface HairLock {
   readonly edgeFade?: number;
   /** Mèche issue de la simulation : le drapé a déjà résolu les contacts ; `applySides` peut la passer derrière l'oreille. */
   readonly sim?: boolean;
+  /** Masse de RÉGION (tempe+patte, mèche de joue, nuque) : sert aux limites par zone de la vérification. */
+  readonly zone?: 'side' | 'cheek' | 'nape' | 'top';
 }
 
 /** Masse de sous-couche visible d'un étage : silhouette, ton relatif et décalage de teinte (degrés). */
@@ -100,5 +102,7 @@ export interface HairGeometry {
   readonly skinShadows?: Poly[];
   /** Masse de volume des cheveux simulés (silhouette pleine dessinée sous les mèches), ou null. */
   readonly simMass?: Poly | null;
+  /** Zones rasées (repousse sombre sur la peau) des cheveux simulés ; vide sinon. */
+  readonly shaved?: Poly[];
   readonly ties: { readonly at: Vec; readonly rx: number; readonly front: boolean }[];
 }

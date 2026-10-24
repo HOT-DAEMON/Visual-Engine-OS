@@ -24,7 +24,13 @@ export function checkStyle(params: FaceParams, geo: HairGeometry | null, svg: st
   const h = params.hair;
   const ra = hairAppearance(h);
   const cel = h.appearance.shading.mode === 'cel';
-  if (cel) {
+  // Rendu ENCRE : noir franc (aplats sans dégradé), bandes blanches continues (aplats opaques), contours noirs.
+  if (h.sim.enabled && h.sim.ink) {
+    const hairSvg = svg.slice(Math.max(0, svg.indexOf('-hair')));
+    out.push(check('style', 'ink-flat-fill', '==', (svg.match(/url\(#[^)]*-hl-g\d+\)/g) ?? []).length, 0, 'dégradé dans un aplat d\'encre (noir non franc)'));
+    out.push(check('style', 'ink-white-bands', '>=', (hairSvg.match(/fill="#ffffff"/g) ?? []).length, 1, 'aucune bande blanche dans le rendu encre'));
+    out.push(check('style', 'ink-outline', '>=', (hairSvg.match(/stroke="#08080c"/g) ?? []).length, 1, 'aucun contour noir dans le rendu encre'));
+  } else if (cel) {
     const groups = [...svg.matchAll(/<g clip-path="url\(#[^"]*-hl-c\d+\)">(.*?)<\/g>/g)].map((m) => m[1] as string);
     const tooMany = groups.filter((g) => (g.match(/<path/g) ?? []).length > 3).length;
     const gradInBands = groups.filter((g) => g.includes('fill="url(')).length;
