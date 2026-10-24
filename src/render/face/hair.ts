@@ -2,6 +2,7 @@ import { mix } from '../../core/color';
 import { el, urlRef } from '../../core/svg';
 import { compileEffects, toHsl, fromHsl, type ResolvedAppearance } from '../../appearance';
 import type { FaceLandmarks } from '../../face';
+import { outlinePath } from '../../face/outline';
 import { hairGeometry, type HairLock } from '../../face/hair';
 import { polyBox, type Poly } from '../../face/poly';
 import { direction2D, type LightVector } from '../../lighting/light';
@@ -87,7 +88,15 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
   const pad = lm.W * 0.3;
   const fx = compileEffects(`${id}-hair`, ra.spec, ra, { x: box.x - pad, y: box.y - pad, w: box.w + 2 * pad, h: box.h + 2 * pad });
   defs.push(...fx.defs);
-  const front: string[] = [...hairlineTransition(geo, p, lm, skinShadow), fx.filter ? el('g', { filter: fx.filter }, body) : body.join('')];
+  // Ombres portées des mèches simulées sur la peau : même lumière que le reste (décalage bas-droite), floutées, tronquées au contour du visage.
+  const shadows: string[] = [];
+  if (geo.skinShadows?.length && h.sim.skinShadow > 0) {
+    const cid = `${id}-hair-skin-clip`;
+    const fid = `${id}-hair-skin-blur`;
+    defs.push(el('clipPath', { id: cid }, [el('path', { d: outlinePath(lm.outline) })]), el('filter', { id: fid, x: '-10%', y: '-10%', width: '120%', height: '120%' }, [el('feGaussianBlur', { stdDeviation: lm.W * 0.006 })]));
+    shadows.push(el('g', { 'clip-path': urlRef(cid) }, [el('g', { filter: urlRef(fid), opacity: h.sim.skinShadow }, geo.skinShadows.map((q) => el('path', { d: polyPath(q), fill: mix(skin, '#1a0f0a', 0.55) })))]));
+  }
+  const front: string[] = [...hairlineTransition(geo, p, lm, skinShadow), ...shadows, fx.filter ? el('g', { filter: fx.filter }, body) : body.join('')];
   const over = geo.locks.filter((q) => q.layer === 'over').flatMap((l) => draw(l, 0, false));
   return { defs, back, front, over };
 }

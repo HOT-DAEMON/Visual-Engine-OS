@@ -18,6 +18,7 @@ import { applySides } from './sides';
 import { braidLocks, braidRoots, bunLocks, tailLocks, tieRing, tieSpots } from './tie';
 import { resolveTexture, textureSpec } from './texture';
 import type { HairGeometry, HairLock } from './types';
+import { simLocks } from './sim';
 import { makeGain, makeLift, puffWidth } from './volume';
 
 export type { HairGeometry, HairLock, LockRank, LockKind, BareScalp, TierMass, OcclusionInfo, SideInfo } from './types';
@@ -45,8 +46,8 @@ export function hairGeometry(p: FaceParams, lm: FaceLandmarks): HairGeometry | n
   };
   const { rnd, def } = ctx;
   const { base, scalp } = capBase(ctx);
-  const spots = h.style === 'ponytail' || h.style === 'bun' ? tieSpots(ctx) : [];
-  const braids = h.style === 'braids' ? braidRoots(ctx) : [];
+  const spots = !h.sim.enabled && (h.style === 'ponytail' || h.style === 'bun') ? tieSpots(ctx) : [];
+  const braids = !h.sim.enabled && h.style === 'braids' ? braidRoots(ctx) : [];
   const yHang = (): number => (h.style === 'long' ? H / 2 + (0.08 + 0.3 * h.length) * H : lm.jawY + (0.03 + 0.1 * h.length) * H) + (rnd() - 0.5) * h.lengthVariance * 0.18 * H;
 
   // Frange : moteur v2 si demandé, sinon la frange classique (masse pleine + dents).
@@ -56,13 +57,17 @@ export function hairGeometry(p: FaceParams, lm: FaceLandmarks): HairGeometry | n
   const fringeBottom = eng?.bottom ?? classic?.bottom ?? null;
 
   const grow = (R: Vec): Vec[] => (def.hang ? growLock(ctx, R, 2.2 * H, { yEnd: yHang() }) : growLock(ctx, R, 0.3 * H));
-  let front: HairLock[] = [...classicLocks(ctx, { spots, braids, yHang }), ...massLocks(ctx, grow)];
-  front.push(...flowLocks(ctx), ...coneLocks(ctx), ...wispLocks(ctx));
-  front.push(...hairlineStrands(ctx, front), ...fringeLocks);
+  // Cheveux SIMULÉS (Verlet) : remplacent les générateurs dessinés à la main ; frange, côtés et occlusions restent actifs.
+  const sim = h.sim.enabled ? simLocks(ctx) : null;
+  let front: HairLock[] = sim ? [] : [...classicLocks(ctx, { spots, braids, yHang }), ...massLocks(ctx, grow)];
+  if (!sim) {
+    front.push(...flowLocks(ctx), ...coneLocks(ctx), ...wispLocks(ctx));
+    front.push(...hairlineStrands(ctx, front), ...fringeLocks);
+  } else front.push(...sim.locks.filter((l) => l.layer !== 'over'));
 
   let back: HairLock[] = [];
   let backBase = null as HairGeometry['backBase'];
-  if (def.hang) {
+  if (def.hang && !sim) {
     const braided = tex === 'braided';
     const nMain = Math.round((braided ? 9 : 16) + (braided ? 8 : 26) * h.density);
     for (let i = 0; i < Math.round(nMain * 0.8); i++) {
@@ -84,11 +89,12 @@ export function hairGeometry(p: FaceParams, lm: FaceLandmarks): HairGeometry | n
   const sides = applySides(ctx, p, front, back);
   const occ = occluders(ctx, p);
   const masses = tierMasses(ctx, sides.front);
-  const all = [...sides.back, ...sides.front, ...occ.locks];
+  const simOver = sim ? sim.locks.filter((l) => l.layer === 'over') : [];
+  const all = [...sides.back, ...sides.front, ...occ.locks, ...simOver];
   return {
     texture: tex, hairline: hl.pts, scalp, base: [base], bare: bareScalp(ctx), locks: all, backBase,
     front: [base, ...(classic ? [classic.base] : []), ...sides.front.map((l) => l.poly)], back: [...(backBase ? [backBase] : []), ...sides.back.map((l) => l.poly)],
-    fringeBottom, ties, over: occ.locks.map((l) => l.poly), tierMasses: masses, occlusions: occ.info, sides: sides.info,
+    fringeBottom, ties, over: [...occ.locks, ...simOver].map((l) => l.poly), skinShadows: sim?.skinShadows ?? [], tierMasses: masses, occlusions: occ.info, sides: sides.info,
   };
 }
 

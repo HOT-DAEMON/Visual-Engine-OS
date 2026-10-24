@@ -142,6 +142,8 @@ export interface LockOpts {
   readonly flick?: number;
   /** Pointe irrégulière (0–1). */
   readonly ragged?: number;
+  /** Pas de garde-fou binaire : le drapé (cheveux simulés) a déjà résolu les contacts avec le visage. */
+  readonly noGuard?: boolean;
 }
 
 const samplesOf = (c: Vec[], sp: TexSpec): number => samplesFor(Math.hypot((c[c.length - 1] as Vec).x - (c[0] as Vec).x, (c[c.length - 1] as Vec).y - (c[0] as Vec).y) * 1.25, sp);
@@ -155,7 +157,7 @@ export function lockFrom(ctx: HairCtx, centre: Vec[], o: LockOpts): HairLock[] {
   const tex = o.tex ?? ctx.tex;
   const spec = o.tex ? textureSpec(tex, ctx.h.curl, ctx.lm.W, ctx.lm.H) : ctx.spec;
   const wide = o.rank === 'main' || o.rank === 'mass' ? spec.wide : 1;
-  const guardPoly = (poly: Poly): Poly => (o.layer === 'front' ? ctx.guard.fit(poly, o.mode ?? 'cap') : poly);
+  const guardPoly = (poly: Poly): Poly => (o.layer === 'front' && !o.noGuard ? ctx.guard.fit(poly, o.mode ?? 'cap') : poly);
   const meta = { kind: o.kind ?? ('lock' as LockKind), tier: o.tier ?? 0, fade: o.fade ?? 0, edgeFade: o.edgeFade ?? 0 };
   if (tex === 'braided' && o.rank === 'main' && !o.raw) {
     const c = resample(centre, 36);

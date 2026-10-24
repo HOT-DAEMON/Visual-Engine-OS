@@ -34,6 +34,8 @@ export interface HairLock {
   /** Fondu d'opacité vers la pointe et translucidité des bords (0–1). */
   readonly fade?: number;
   readonly edgeFade?: number;
+  /** Mèche issue de la simulation : le drapé a déjà résolu les contacts ; `applySides` peut la passer derrière l'oreille. */
+  readonly sim?: boolean;
 }
 
 /** Masse de sous-couche visible d'un étage : silhouette, ton relatif et décalage de teinte (degrés). */
@@ -94,5 +96,7 @@ export interface HairGeometry {
   /** Comportement de chaque côté de l'IMAGE. */
   readonly sides: { readonly left: SideInfo; readonly right: SideInfo };
   /** Points d'attache (élastiques) : position et vrai si au-dessus du crâne (visible, dessiné devant). */
+  /** Ombres portées des mèches sur la peau (cheveux simulés) ; vide sinon. */
+  readonly skinShadows?: Poly[];
   readonly ties: { readonly at: Vec; readonly rx: number; readonly front: boolean }[];
 }

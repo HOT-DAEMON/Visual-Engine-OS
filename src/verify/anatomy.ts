@@ -4,6 +4,7 @@ import { halfWidthAt } from '../face/outline';
 import type { HairGeometry } from '../face/hair';
 import { boxCoverage, targetBox } from '../face/hair/occlusion';
 import { coverageOf } from '../face/hair/sides';
+import { ARCHETYPES } from '../face/hair/sim/archetypes';
 import { check, type Check } from './types';
 
 type Box = { minX: number; maxX: number; minY: number; maxY: number };
@@ -31,6 +32,9 @@ export function checkAnatomy(face: RandomFace, lm: FaceLandmarks, geo: HairGeome
 
   const front = geo.locks.filter((l) => l.layer === 'front').map((l) => l.poly);
   const over = geo.locks.filter((l) => l.layer === 'over').map((l) => l.poly);
+  // Cheveux simulés : une masse à limite `eye` (mèche voulue devant l'œil) est une occlusion DÉCLARÉE par l'archétype.
+  const sh = face.params.hair.sim;
+  const simOccludes = sh.enabled && (ARCHETYPES[sh.archetype === 'none' ? 'tousled' : sh.archetype]?.masses.some((m) => m.limit === 'eye') ?? false);
   const requested = (t: string): number => geo.occlusions.find((o) => o.target === t)?.requested ?? 0;
   // 1. Mèches AVANT : jamais sur un œil, le nez ou la bouche.
   for (const side of ['left', 'right'] as const) {
@@ -44,7 +48,7 @@ export function checkAnatomy(face: RandomFace, lm: FaceLandmarks, geo: HairGeome
   // 2. Occlusions : le recouvrement MESURÉ égale le recouvrement demandé (±0,12) ; une cible non demandée reste libre.
   for (const o of geo.occlusions) out.push(check('anatomy', `occlusion-${o.target}`, '<=', Math.abs(o.measured - o.requested), 0.12, `recouvrement ${o.target} mesuré ${o.measured.toFixed(2)} ≠ demandé ${o.requested.toFixed(2)}`));
   for (const t of ['eyeLeft', 'eyeRight', 'nose', 'mouth'] as const) {
-    if (requested(t) > 0) continue;
+    if (requested(t) > 0 || simOccludes) continue;
     const b = targetBox(face.params, ctxOf(lm), t);
     out.push(check('anatomy', `occluder-spill-${t}`, '<=', boxCoverage(over, b), 0.03, `une mèche devant le visage déborde sur ${t} sans l'avoir demandé`));
   }

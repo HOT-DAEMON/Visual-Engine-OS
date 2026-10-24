@@ -98,7 +98,7 @@ export function applySides(ctx: HairCtx, p: FaceParams, frontIn: HairLock[], bac
     if (ear !== 'covered') {
       // Les mèches qui touchent l'oreille passent derrière la tête (hors frange, joue et mèches qui passent devant).
       const keep: HairLock[] = [];
-      for (const l of front) (l.kind === 'lock' || l.kind === 'flow' || l.kind === 'wisp' || l.kind === undefined) && hitsZone(l.poly, zone) ? back.push({ ...l, layer: 'back' }) : keep.push(l);
+      for (const l of front) (l.sim === true || l.kind === 'lock' || l.kind === 'flow' || l.kind === 'wisp' || l.kind === undefined) && hitsZone(l.poly, zone) ? back.push({ ...l, layer: 'back' }) : keep.push(l);
       front = keep;
     }
     if (ear === 'covered') {

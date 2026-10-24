@@ -1,0 +1,450 @@
+{
+  "electro": [
+    {
+      "label": "gravité",
+      "strands": 219,
+      "electrocutedShare": 0,
+      "detachedShare": 0,
+      "meanAngleDeg": 19.474037174863124,
+      "scalpCoverage": 1,
+      "tolerance": 0.2381818181818182
+    },
+    {
+      "label": "vent",
+      "strands": 219,
+      "electrocutedShare": 0,
+      "detachedShare": 0,
+      "meanAngleDeg": 19.390188662878167,
+      "scalpCoverage": 1,
+      "tolerance": 0.2381818181818182
+    },
+    {
+      "label": "anti-gravité volontaire",
+      "strands": 219,
+      "electrocutedShare": 0.7625570776255708,
+      "detachedShare": 0.0182648401826484,
+      "meanAngleDeg": 116.80262345378458,
+      "scalpCoverage": 1,
+      "tolerance": 1
+    }
+  ],
+  "rows": [
+    {
+      "archetype": "tousled",
+      "geometry": {
+        "strands": 216,
+        "electrocutedShare": 0.004629629629629629,
+        "detachedShare": 0,
+        "meanAngleDeg": 20.563808849428103,
+        "scalpCoverage": 1,
+        "tolerance": 0.3002272727272727
+      },
+      "raster": {
+        "px": 200,
+        "areaRatio": 0.25740766746243504,
+        "riseAbove": 0.033167239073495766,
+        "overhang": 0.026399703306476764,
+        "scalpCoverage": 0.9789288849868305,
+        "eyeOcclusion": 0,
+        "foreheadSkin": 0.9629629629629629,
+        "w": 200,
+        "h": 303
+      },
+      "verify": {
+        "ok": true,
+        "failures": [],
+        "warnings": []
+      }
+    },
+    {
+      "archetype": "side_sweep",
+      "geometry": {
+        "strands": 216,
+        "electrocutedShare": 0.18518518518518517,
+        "detachedShare": 0,
+        "meanAngleDeg": 52.11809652611217,
+        "scalpCoverage": 1,
+        "tolerance": 0.2525
+      },
+      "raster": {
+        "px": 200,
+        "areaRatio": 0.29560454992276364,
+        "riseAbove": 0.033167239073495766,
+        "overhang": 0.03441380726664724,
+        "scalpCoverage": 0.9815627743634767,
+        "eyeOcclusion": 0,
+        "foreheadSkin": 0.9564270152505446,
+        "w": 200,
+        "h": 303
+      },
+      "verify": {
+        "ok": true,
+        "failures": [],
+        "warnings": []
+      }
+    },
+    {
+      "archetype": "swept_back",
+      "geometry": {
+        "strands": 216,
+        "electrocutedShare": 0.2175925925925926,
+        "detachedShare": 0,
+        "meanAngleDeg": 62.66209110498288,
+        "scalpCoverage": 1,
+        "tolerance": 0.3352272727272727
+      },
+      "raster": {
+        "px": 200,
+        "areaRatio": 0.23030473248139308,
+        "riseAbove": 0.033167239073495766,
+        "overhang": 0.026399703306476764,
+        "scalpCoverage": 0.9806848112379281,
+        "eyeOcclusion": 0,
+        "foreheadSkin": 0.9956427015250545,
+        "w": 200,
+        "h": 303
+      },
+      "verify": {
+        "ok": true,
+        "failures": [],
+        "warnings": []
+      }
+    },
+    {
+      "archetype": "bun_undercut",
+      "geometry": {
+        "strands": 219,
+        "electrocutedShare": 0.1689497716894977,
+        "detachedShare": 0,
+        "meanAngleDeg": 50.43269620274785,
+        "scalpCoverage": 1,
+        "tolerance": 0.45973684210526317
+      },
+      "raster": {
+        "px": 200,
+        "areaRatio": 0.21387445583485465,
+        "riseAbove": 0.05196698435912369,
+        "overhang": 0.03947612339618389,
+        "scalpCoverage": 0.9683933274802459,
+        "eyeOcclusion": 0,
+        "foreheadSkin": 1,
+        "w": 200,
+        "h": 303
+      },
+      "verify": {
+        "ok": true,
+        "failures": [],
+        "warnings": []
+      }
+    },
+    {
+      "archetype": "messy_bangs",
+      "geometry": {
+        "strands": 219,
+        "electrocutedShare": 0,
+        "detachedShare": 0,
+        "meanAngleDeg": 19.474037174863124,
+        "scalpCoverage": 1,
+        "tolerance": 0.2381818181818182
+      },
+      "raster": {
+        "px": 200,
+        "areaRatio": 0.3559893273416655,
+        "riseAbove": 0.020634075549743815,
+        "overhang": 0.03146201943601358,
+        "scalpCoverage": 0.9841966637401229,
+        "eyeOcclusion": 0,
+        "foreheadSkin": 0.616557734204793,
+        "w": 200,
+        "h": 303
+      },
+      "verify": {
+        "ok": true,
+        "failures": [],
+        "warnings": [
+          "hair-sim-segments"
+        ]
+      }
+    },
+    {
+      "archetype": "wavy_swept",
+      "geometry": {
+        "strands": 216,
+        "electrocutedShare": 0.023148148148148147,
+        "detachedShare": 0,
+        "meanAngleDeg": 27.091936996686254,
+        "scalpCoverage": 1,
+        "tolerance": 0.2875
+      },
+      "raster": {
+        "px": 200,
+        "areaRatio": 0.2655525909282404,
+        "riseAbove": 0.02690065731161979,
+        "overhang": 0.026399703306476764,
+        "scalpCoverage": 0.9859525899912204,
+        "eyeOcclusion": 0,
+        "foreheadSkin": 0.9912854030501089,
+        "w": 200,
+        "h": 303
+      },
+      "verify": {
+        "ok": true,
+        "failures": [],
+        "warnings": []
+      }
+    },
+    {
+      "archetype": "quiff_undercut",
+      "geometry": {
+        "strands": 219,
+        "electrocutedShare": 0.3515981735159817,
+        "detachedShare": 0,
+        "meanAngleDeg": 78.76344976465407,
+        "scalpCoverage": 1,
+        "tolerance": 0.4672727272727273
+      },
+      "raster": {
+        "px": 200,
+        "areaRatio": 0.2437859851144502,
+        "riseAbove": 0.0770333114066276,
+        "overhang": 0.018385599346306458,
+        "scalpCoverage": 0.9806848112379281,
+        "eyeOcclusion": 0,
+        "foreheadSkin": 0.9912854030501089,
+        "w": 200,
+        "h": 303
+      },
+      "verify": {
+        "ok": true,
+        "failures": [],
+        "warnings": []
+      }
+    },
+    {
+      "archetype": "braid_updo",
+      "geometry": {
+        "strands": 216,
+        "electrocutedShare": 0.05555555555555555,
+        "detachedShare": 0,
+        "meanAngleDeg": 41.206271081497476,
+        "scalpCoverage": 1,
+        "tolerance": 0.26631578947368423
+      },
+      "raster": {
+        "px": 200,
+        "areaRatio": 0.2835275944389833,
+        "riseAbove": 0.020634075549743815,
+        "overhang": 0.05044201518698802,
+        "scalpCoverage": 0.9683933274802459,
+        "eyeOcclusion": 0,
+        "foreheadSkin": 1,
+        "w": 200,
+        "h": 303
+      },
+      "verify": {
+        "ok": true,
+        "failures": [],
+        "warnings": []
+      }
+    },
+    {
+      "archetype": "fluffy_messy",
+      "geometry": {
+        "strands": 219,
+        "electrocutedShare": 0,
+        "detachedShare": 0,
+        "meanAngleDeg": 19.833404265961033,
+        "scalpCoverage": 1,
+        "tolerance": 0.32727272727272727
+      },
+      "raster": {
+        "px": 200,
+        "areaRatio": 0.24504985254879932,
+        "riseAbove": 0.020634075549743815,
+        "overhang": 0.010371495386135982,
+        "scalpCoverage": 0.9815627743634767,
+        "eyeOcclusion": 0,
+        "foreheadSkin": 1,
+        "w": 200,
+        "h": 303
+      },
+      "verify": {
+        "ok": true,
+        "failures": [],
+        "warnings": []
+      }
+    },
+    {
+      "archetype": "messy_long_bangs",
+      "geometry": {
+        "strands": 219,
+        "electrocutedShare": 0,
+        "detachedShare": 0,
+        "meanAngleDeg": 18.311278877200625,
+        "scalpCoverage": 1,
+        "tolerance": 0.2381818181818182
+      },
+      "raster": {
+        "px": 200,
+        "areaRatio": 0.4181996910546272,
+        "riseAbove": 0.020634075549743815,
+        "overhang": 0.06647022310732864,
+        "scalpCoverage": 0.9885864793678666,
+        "eyeOcclusion": 0,
+        "foreheadSkin": 0.30718954248366015,
+        "w": 200,
+        "h": 303
+      },
+      "verify": {
+        "ok": true,
+        "failures": [],
+        "warnings": [
+          "hair-sim-segments"
+        ]
+      }
+    },
+    {
+      "archetype": "pompadour_strand",
+      "geometry": {
+        "strands": 216,
+        "electrocutedShare": 0.2824074074074074,
+        "detachedShare": 0,
+        "meanAngleDeg": 66.47174239262672,
+        "scalpCoverage": 1,
+        "tolerance": 0.4055825242718447
+      },
+      "raster": {
+        "px": 200,
+        "areaRatio": 0.24729672798764218,
+        "riseAbove": 0.0770333114066276,
+        "overhang": 0.0023573914259656737,
+        "scalpCoverage": 0.9912203687445127,
+        "eyeOcclusion": 0,
+        "foreheadSkin": 0.9411764705882353,
+        "w": 200,
+        "h": 303
+      },
+      "verify": {
+        "ok": true,
+        "failures": [],
+        "warnings": []
+      }
+    },
+    {
+      "archetype": "cornrows_side",
+      "geometry": {
+        "strands": 213,
+        "electrocutedShare": 0.014084507042253521,
+        "detachedShare": 0,
+        "meanAngleDeg": 27.20227819575119,
+        "scalpCoverage": 1,
+        "tolerance": 0.2
+      },
+      "raster": {
+        "px": 200,
+        "areaRatio": 0.2781912652717315,
+        "riseAbove": 0.020634075549743815,
+        "overhang": 0.015433811515672798,
+        "scalpCoverage": 0.9675153643546971,
+        "eyeOcclusion": 0,
+        "foreheadSkin": 0.9193899782135077,
+        "w": 200,
+        "h": 303
+      },
+      "verify": {
+        "ok": true,
+        "failures": [],
+        "warnings": []
+      }
+    },
+    {
+      "archetype": "rebel_lock",
+      "geometry": {
+        "strands": 216,
+        "electrocutedShare": 0.08796296296296297,
+        "detachedShare": 0,
+        "meanAngleDeg": 38.57465901777953,
+        "scalpCoverage": 1,
+        "tolerance": 0.3257042253521127
+      },
+      "raster": {
+        "px": 200,
+        "areaRatio": 0.21506810841173993,
+        "riseAbove": 0.0770333114066276,
+        "overhang": 0.018385599346306458,
+        "scalpCoverage": 0.9754170324846356,
+        "eyeOcclusion": 0,
+        "foreheadSkin": 1,
+        "w": 200,
+        "h": 303
+      },
+      "verify": {
+        "ok": true,
+        "failures": [],
+        "warnings": []
+      }
+    },
+    {
+      "archetype": "twintails",
+      "geometry": {
+        "strands": 216,
+        "electrocutedShare": 0.013888888888888888,
+        "detachedShare": 0,
+        "meanAngleDeg": 31.284910973660256,
+        "scalpCoverage": 1,
+        "tolerance": 0.33999999999999997
+      },
+      "raster": {
+        "px": 200,
+        "areaRatio": 0.2522117680101109,
+        "riseAbove": 0.020634075549743815,
+        "overhang": 0.06647022310732864,
+        "scalpCoverage": 0.9806848112379281,
+        "eyeOcclusion": 0,
+        "foreheadSkin": 1,
+        "w": 200,
+        "h": 303
+      },
+      "verify": {
+        "ok": true,
+        "failures": [],
+        "warnings": []
+      }
+    },
+    {
+      "archetype": "hime",
+      "geometry": {
+        "strands": 219,
+        "electrocutedShare": 0.0045662100456621,
+        "detachedShare": 0,
+        "meanAngleDeg": 18.85995908281006,
+        "scalpCoverage": 1,
+        "tolerance": 0.2
+      },
+      "raster": {
+        "px": 200,
+        "areaRatio": 0.37803679258531103,
+        "riseAbove": 0.020634075549743815,
+        "overhang": 0.047490227356354366,
+        "scalpCoverage": 0.9912203687445127,
+        "eyeOcclusion": 0,
+        "foreheadSkin": 0.6949891067538126,
+        "w": 200,
+        "h": 303
+      },
+      "verify": {
+        "ok": true,
+        "failures": [],
+        "warnings": [
+          "hair-sim-segments"
+        ]
+      }
+    }
+  ],
+  "timing": {
+    "classicMs": 2220,
+    "simMs": 3200,
+    "simArchetypesSheetMs": 5227,
+    "faces": 12
+  }
+}

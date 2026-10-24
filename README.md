@@ -155,7 +155,7 @@ procédure de vérification dans **`docs/ARCHITECTURE.md`**.
 
 ## Cheveux v2, moteur d'apparence, vérification
 
-Voir `docs/HAIR-V2.md`, `docs/HAIR-V2-FACE.md`, `docs/APPEARANCE.md`, `docs/VERIFY.md` ; preuves visuelles dans `artefacts/hair-v2/` (`npx tsx scripts/artefacts-hair-v2.ts`).
+Voir `docs/HAIR-V2.md`, `docs/HAIR-V2-FACE.md`, `docs/APPEARANCE.md`, `docs/VERIFY.md` ; preuves visuelles dans `artefacts/hair-v2/` (`npx tsx scripts/artefacts-hair-v2.ts`). Cheveux simulés (Verlet) : `docs/HAIR-SIM.md`, références `docs/HAIR-SIM-REFERENCES.md`, reste à faire `docs/HAIR-SIM-REMAINING.md`, preuves `artefacts/hair-sim/`.
 
 Moteur de visage (nez, menton / mâchoire, matériau de peau, éclairage, ombres de contact, lumières de contour) : `docs/FACE-ANATOMY.md`, `docs/SKIN-LIGHT.md`,
 `docs/CONTACT-RIM.md`, `docs/TODO-FACE.md` ; preuves dans `artefacts/face-anatomy/` (`npx tsx scripts/artefacts-face-nose-jaw.ts`, `npx tsx scripts/artefacts-face-skin.ts`).

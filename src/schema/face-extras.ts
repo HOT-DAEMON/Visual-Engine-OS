@@ -1,3 +1,4 @@
+import { HairSim } from './hair-sim';
 import { z } from 'zod';
 import { Hex, Unit } from './primitives';
 import { Appearance } from './appearance';
@@ -97,6 +98,8 @@ export const FaceHair = z
     look: HairLook.default({}),
     /** Apparence partagée (ombre/lumière/contour, dégradé, cel, effets) : voir `schema/appearance.ts`. */
     appearance: Appearance.default({}),
+    /** Cheveux simulés (Verlet) : voir `hair-sim.ts`. Désactivé par défaut. */
+    sim: HairSim.default({}),
   })
   .strict();
 
