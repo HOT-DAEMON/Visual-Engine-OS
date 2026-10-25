@@ -6,6 +6,7 @@ import { outlinePath, type FaceLandmarks, type SkinRegions } from '../face';
 import type { LightVector } from '../lighting/light';
 import { spotGradient, gradientStop as stop } from '../materials';
 import type { SkinMaterial } from '../schema';
+import { tiledNoiseNodes, LUMA_ROW } from '../noise';
 import { skinShading } from './shading';
 import { compileZones } from './zones';
 import type { FaceLighting } from '../schema';
@@ -79,8 +80,9 @@ export function compileSkin(id: string, lm: FaceLandmarks, mat: SkinMaterial, ra
     const pb = spotBoxes.length ? padBox(unionBox(spotBoxes), 2) : { x: -W, y: -H, w: 2 * W, h: 2 * H };
     defs.push(
       el('filter', { id: `${id}-skin-pores`, filterUnits: 'userSpaceOnUse', x: pb.x, y: pb.y, width: pb.w, height: pb.h, 'color-interpolation-filters': 'sRGB' }, [
-        el('feTurbulence', { type: 'fractalNoise', baseFrequency: `${num(1.1 / (W / 300))} ${num(1.1 / (W / 300))}`, numOctaves: 2, seed: 5, result: 'n' }),
-        el('feColorMatrix', { in: 'n', type: 'matrix', values: `0 0 0 0 ${num(r)}  0 0 0 0 ${num(g)}  0 0 0 0 ${num(b)}  0 0 0 ${num(-2.4)} ${num(1.2)}`, result: 'c' }),
+        // Bruit des pores = tuile pré-calculée (même fréquence, graine 5, alpha = −2,4·A + 1,2) répétée sur la région : voir src/noise.
+        ...tiledNoiseNodes({ freqX: 1.1 / (W / 300), freqY: 1.1 / (W / 300), octaves: 2, seed: 5, offset: 0, gain: -1.2 }, { x: pb.x, y: pb.y }, 'n', el),
+        el('feColorMatrix', { in: 'n', type: 'matrix', values: `0 0 0 0 ${num(r)}  0 0 0 0 ${num(g)}  0 0 0 0 ${num(b)}  ${LUMA_ROW}`, result: 'c' }),
         el('feComposite', { in: 'c', in2: 'SourceAlpha', operator: 'in' }),
       ]),
     );

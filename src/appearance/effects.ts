@@ -1,3 +1,4 @@
+import { tiledNoiseNodes, LUMA_ROW } from '../noise';
 import { el, num, urlRef } from '../core/svg';
 import type { Appearance } from '../schema/appearance';
 import type { ResolvedAppearance } from './resolve';
@@ -63,8 +64,10 @@ export function compileEffects(id: string, a: Appearance, ra: ResolvedAppearance
     // Les 4 textures partagent le même bruit ; seule la fréquence/anisotropie change (traits, points, hachures).
     const k = 0.35 + 1.4 * a.texture.scale;
     const freq: Record<string, string> = { grain: `${k} ${k}`, strands: `${k * 0.15} ${k * 1.6}`, dots: `${k * 0.7} ${k * 0.7}`, hatch: `${k * 1.5} ${k * 0.1}` };
-    steps.push(el('feTurbulence', { type: 'fractalNoise', baseFrequency: (freq[a.texture.kind] as string).split(' ').map((v) => Number(v) / scale).join(' '), numOctaves: 2, seed: 11, result: 'tn' }));
-    steps.push(el('feColorMatrix', { in: 'tn', type: 'matrix', values: `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 ${num(-2.2)} ${num(1.25)}`, result: 'tm' }));
+    const [fx, fy] = (freq[a.texture.kind] as string).split(' ').map((v) => Number(v) / scale) as [number, number];
+    // Bruit du grain = tuile pré-calculée (graine 11, alpha = −2,2·A + 1,25), ancrée au coin de la région du filtre : voir src/noise.
+    steps.push(...tiledNoiseNodes({ freqX: fx, freqY: fy, octaves: 2, seed: 11, offset: 0.15, gain: -1.1 }, { x: box.x, y: box.y }, 'tn', el));
+    steps.push(el('feColorMatrix', { in: 'tn', type: 'matrix', values: `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${LUMA_ROW}`, result: 'tm' }));
     steps.push(el('feComposite', { in: 'tm', in2: 'SourceAlpha', operator: 'in', result: 'tc' }));
     steps.push(el('feColorMatrix', { in: 'tc', type: 'matrix', values: `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 ${num(a.texture.intensity * 0.5)} 0`, result: 'tx' }));
     push(el('feMerge', { result: 'tg' }, [el('feMergeNode', { in: last }), el('feMergeNode', { in: 'tx' })]), 'tg');

@@ -13,6 +13,8 @@ const ELEMENTS: ReadonlySet<string> = new Set([
   'linearGradient', 'radialGradient', 'stop', 'filter', 'feGaussianBlur',
   // Primitives de filtre inertes (aucune ne charge de ressource ni n'exécute de code) : glow, bloom, réfraction, grain.
   'feColorMatrix', 'feComponentTransfer', 'feFuncA', 'feFuncR', 'feFuncG', 'feFuncB', 'feMerge', 'feMergeNode', 'feOffset', 'feComposite', 'feFlood', 'feTurbulence', 'feDisplacementMap',
+  // Tuile de bruit pré-calculée : `feImage` ne charge QUE un data-URI PNG base64 (vérifié dans `el`), jamais d'URL ; `feTile` la répète.
+  'feImage', 'feTile',
   // Éclairage de relief (oreille) : carte de hauteur = canal alpha ; sources distantes uniquement, aucune ressource externe.
   'feDiffuseLighting', 'feSpecularLighting', 'feDistantLight',
 ]);
@@ -26,10 +28,12 @@ const ATTRIBUTES: ReadonlySet<string> = new Set([
   'gradientUnits', 'offset', 'stop-color', 'stop-opacity', 'stdDeviation',
   'in', 'in2', 'result', 'operator', 'values', 'tableValues', 'type', 'slope', 'intercept', 'dx', 'dy', 'flood-color', 'flood-opacity',
   'k1', 'k2', 'k3', 'k4', 'baseFrequency', 'numOctaves', 'seed', 'scale', 'xChannelSelector', 'yChannelSelector',
-  'filterUnits', 'color-interpolation-filters',
+  'filterUnits', 'color-interpolation-filters', 'href', 'preserveAspectRatio',
   'surfaceScale', 'diffuseConstant', 'specularConstant', 'specularExponent', 'azimuth', 'elevation', 'lighting-color',
 ]);
 
+/** Seule ressource embarquée admise : PNG en base64, alphabet strict (aucun guillemet, aucune URL, aucun schéma autre). */
+const DATA_PNG_RE = /^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/;
 const ID_RE = /^[A-Za-z][A-Za-z0-9_-]*$/;
 
 /** Formate un nombre de façon déterministe (3 décimales max, pas de -0, pas de NaN/Infinity). */
@@ -65,6 +69,9 @@ export function el(name: string, attrs: Attrs = {}, children: readonly string[] 
     if (value === undefined) continue;
     if (!ATTRIBUTES.has(key)) throw new Error(`Attribut SVG non autorisé : ${key}`);
     if (key === 'id') idOf(String(value));
+    if ((key === 'href' || key === 'preserveAspectRatio') && name !== 'feImage') throw new Error(`Attribut SVG non autorisé : ${key} (réservé à feImage)`);
+    if (key === 'href' && !DATA_PNG_RE.test(String(value))) throw new Error('Attribut href refusé : seul un data-URI PNG base64 est autorisé');
+    if (key === 'preserveAspectRatio' && value !== 'none') throw new Error('preserveAspectRatio : seule la valeur "none" est autorisée');
     out += ` ${key}="${typeof value === 'number' ? num(value) : escapeXml(value)}"`;
   }
   return children.length === 0 ? `${out}/>` : `${out}>${children.join('')}</${name}>`;
