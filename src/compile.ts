@@ -1,3 +1,4 @@
+import { getNoiseMode } from './noise';
 import { clock } from './perf/clock';
 import { ContentCache, canonical, type CacheStats } from './perf/content-cache';
 import type { z } from 'zod';
@@ -98,7 +99,8 @@ export function compileScene(input: unknown): CompileResult {
  */
 const sceneCache = new ContentCache<CompileResult>('compileScene', 128);
 export const compileSceneCached = (input: unknown): CompileResult => {
-  const key = canonical(input);
+  // Le mode de bruit change le SVG émis pour une MÊME scène : il fait partie de la clé (sinon un cache chaud rendrait le SVG de l'autre mode).
+  const key = `${getNoiseMode()}|${canonical(input)}`;
   const hit = sceneCache.get(key);
   if (hit) return hit;
   const r = compileScene(input);

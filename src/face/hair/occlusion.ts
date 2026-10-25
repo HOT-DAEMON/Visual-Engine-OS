@@ -1,6 +1,6 @@
 import type { Vec } from '../../geometry/eye/primitives';
 import type { FaceParams } from '../../schema';
-import { inPoly, type Poly } from '../poly';
+import { anyContains, polysTouching, type Poly } from '../poly';
 import { lockFrom, type HairCtx } from './flow';
 import type { HairLock, OcclusionInfo } from './types';
 
@@ -28,11 +28,14 @@ export function targetBox(p: FaceParams, ctx: HairCtx, target: Target): Box {
 /** Part (0–1) de la boîte couverte par l'union des polygones (grille 24 × 24). */
 export function boxCoverage(polys: Poly[], b: Box): number {
   let n = 0;
+  // Pré-filtre exact : seuls les polygones dont la boîte recoupe la boîte mesurée peuvent couvrir un échantillon (voir `polysTouching`).
+  const cands = polysTouching(polys, b.minX, b.maxX, b.minY, b.maxY);
+  if (cands.length === 0) return 0;
   for (let i = 0; i < 24; i++) {
     for (let j = 0; j < 24; j++) {
       const x = b.minX + ((b.maxX - b.minX) * (i + 0.5)) / 24;
       const y = b.minY + ((b.maxY - b.minY) * (j + 0.5)) / 24;
-      if (polys.some((q) => inPoly(q, x, y))) n++;
+      if (anyContains(cands, x, y)) n++;
     }
   }
   return n / 576;

@@ -46,3 +46,4 @@ export function verifyFace(face: RandomFace): Report {
   checks.push(...checkHairZones(face));
   return report(checks);
 }
+export { measureEquivalence, equivalenceChecks, geometryOf, EQUIVALENCE_LIMITS, type EquivalenceMetrics } from './render-equivalence';

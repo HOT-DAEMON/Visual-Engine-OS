@@ -1,0 +1,50 @@
+{
+ "label": "apres",
+ "passes": 2,
+ "graines": [
+  1,
+  6,
+  11,
+  16,
+  21,
+  26,
+  31,
+  36,
+  41,
+  46,
+  51,
+  56,
+  61,
+  66,
+  71,
+  76
+ ],
+ "mediane": {
+  "pipeline_ms_170x210": 377.6,
+  "raster_defaut_ms_170x210": 143,
+  "raster_sans_polices_ms_170x210": 54.6,
+  "raster_defaut_ms_340x420": 237.7,
+  "raster_sans_polices_ms_340x420": 162.2,
+  "raster_defaut_ms_680x840": 550.5,
+  "raster_sans_polices_ms_680x840": 493.1
+ },
+ "passesBrutes": [
+  {
+   "pipeline_ms_170x210": 377.6,
+   "raster_defaut_ms_170x210": 135.1,
+   "raster_sans_polices_ms_170x210": 54.6,
+   "raster_defaut_ms_340x420": 237.7,
+   "raster_sans_polices_ms_340x420": 162.2,
+   "raster_defaut_ms_680x840": 550.5,
+   "raster_sans_polices_ms_680x840": 493.1
+  },
+  {
+   "raster_defaut_ms_170x210": 143,
+   "raster_sans_polices_ms_170x210": 54.6,
+   "raster_defaut_ms_340x420": 229.1,
+   "raster_sans_polices_ms_340x420": 137.8,
+   "raster_defaut_ms_680x840": 505.3,
+   "raster_sans_polices_ms_680x840": 447.4
+  }
+ ]
+}

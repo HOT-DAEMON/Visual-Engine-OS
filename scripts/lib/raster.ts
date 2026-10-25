@@ -20,7 +20,9 @@ const mem = new Map<string, Buffer>();
 const keyOf = (svg: string, o: RasterOpts): string => createHash('sha1').update(svg).update(JSON.stringify(o)).digest('hex');
 
 function engine(svg: string, o: RasterOpts): Resvg {
-  return new Resvg(svg, { ...(o.fonts ? { font: { loadSystemFonts: true } } : {}), ...(o.fitWidth ? { fitTo: { mode: 'width' as const, value: o.fitWidth } } : {}) });
+  // `loadSystemFonts` vaut `true` PAR DÉFAUT dans resvg-js : sans ce réglage explicite, chaque instance rescanne les polices du système (≈ 65 ms
+  // mesurés, même pour un SVG minimal ; docs/PERF-2.md). Le moteur n'émet aucun <text> : les polices ne servent qu'aux planches étiquetées (`fonts: true`).
+  return new Resvg(svg, { font: { loadSystemFonts: o.fonts === true }, ...(o.fitWidth ? { fitTo: { mode: 'width' as const, value: o.fitWidth } } : {}) });
 }
 
 /** PNG du SVG, depuis le cache (mémoire puis disque) ou rastérisé (durée comptée dans l'étape `raster`). */

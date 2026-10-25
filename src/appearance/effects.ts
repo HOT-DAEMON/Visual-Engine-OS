@@ -1,4 +1,4 @@
-import { tiledNoiseNodes, LUMA_ROW } from '../noise';
+import { noiseSteps } from '../noise';
 import { el, num, urlRef } from '../core/svg';
 import type { Appearance } from '../schema/appearance';
 import type { ResolvedAppearance } from './resolve';
@@ -66,8 +66,9 @@ export function compileEffects(id: string, a: Appearance, ra: ResolvedAppearance
     const freq: Record<string, string> = { grain: `${k} ${k}`, strands: `${k * 0.15} ${k * 1.6}`, dots: `${k * 0.7} ${k * 0.7}`, hatch: `${k * 1.5} ${k * 0.1}` };
     const [fx, fy] = (freq[a.texture.kind] as string).split(' ').map((v) => Number(v) / scale) as [number, number];
     // Bruit du grain = tuile pré-calculée (graine 11, alpha = −2,2·A + 1,25), ancrée au coin de la région du filtre : voir src/noise.
-    steps.push(...tiledNoiseNodes({ freqX: fx, freqY: fy, octaves: 2, seed: 11, offset: 0.15, gain: -1.1 }, { x: box.x, y: box.y }, 'tn', el));
-    steps.push(el('feColorMatrix', { in: 'tn', type: 'matrix', values: `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${LUMA_ROW}`, result: 'tm' }));
+    const grain = noiseSteps({ freqX: fx, freqY: fy, octaves: 2, seed: 11, offset: 0.15, gain: -1.1 }, { x: box.x, y: box.y }, 'tn', el);
+    steps.push(...grain.nodes);
+    steps.push(el('feColorMatrix', { in: 'tn', type: 'matrix', values: `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  ${grain.alphaRow}`, result: 'tm' }));
     steps.push(el('feComposite', { in: 'tm', in2: 'SourceAlpha', operator: 'in', result: 'tc' }));
     steps.push(el('feColorMatrix', { in: 'tc', type: 'matrix', values: `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 ${num(a.texture.intensity * 0.5)} 0`, result: 'tx' }));
     push(el('feMerge', { result: 'tg' }, [el('feMergeNode', { in: last }), el('feMergeNode', { in: 'tx' })]), 'tg');

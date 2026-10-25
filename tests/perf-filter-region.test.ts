@@ -5,7 +5,7 @@ import { softKit, BLUR_REACH } from '../src/render/face/soft';
 import { canonical, memoPure, clearCaches, cacheStats } from '../src/perf';
 import { clock } from '../src/perf';
 
-const px = (svg: string): Uint8Array => new Resvg(svg).render().pixels;
+const px = (svg: string): Uint8Array => new Resvg(svg, { font: { loadSystemFonts: false } }).render().pixels;
 const maxDiff = (a: Uint8Array, b: Uint8Array): number => { let m = 0; for (let i = 0; i < a.length; i++) m = Math.max(m, Math.abs(a[i]! - b[i]!)); return m; };
 
 describe('pathBox : boîte conservatrice', () => {

@@ -6,7 +6,7 @@ import { outlinePath, type FaceLandmarks, type SkinRegions } from '../face';
 import type { LightVector } from '../lighting/light';
 import { spotGradient, gradientStop as stop } from '../materials';
 import type { SkinMaterial } from '../schema';
-import { tiledNoiseNodes, LUMA_ROW } from '../noise';
+import { noiseSteps } from '../noise';
 import { skinShading } from './shading';
 import { compileZones } from './zones';
 import type { FaceLighting } from '../schema';
@@ -78,11 +78,13 @@ export function compileSkin(id: string, lm: FaceLandmarks, mat: SkinMaterial, ra
     const spotBoxes: Box[] = [];
     (Object.keys(mat.roughness) as (keyof typeof mat.roughness)[]).forEach((rid) => { if (rid !== 'neck') for (const e of regions[rid]) { const q = Math.max(e.rx, e.ry); spotBoxes.push({ x: e.cx - q, y: e.cy - q, w: 2 * q, h: 2 * q }); } });
     const pb = spotBoxes.length ? padBox(unionBox(spotBoxes), 2) : { x: -W, y: -H, w: 2 * W, h: 2 * H };
+    const fPore = Number(num(1.1 / (W / 300))); // fréquence arrondie comme l'attribut d'origine (3 décimales)
+    const pores = noiseSteps({ freqX: fPore, freqY: fPore, octaves: 2, seed: 5, offset: 0, gain: -1.2 }, { x: pb.x, y: pb.y }, 'n', el);
     defs.push(
       el('filter', { id: `${id}-skin-pores`, filterUnits: 'userSpaceOnUse', x: pb.x, y: pb.y, width: pb.w, height: pb.h, 'color-interpolation-filters': 'sRGB' }, [
-        // Bruit des pores = tuile pré-calculée (même fréquence, graine 5, alpha = −2,4·A + 1,2) répétée sur la région : voir src/noise.
-        ...tiledNoiseNodes({ freqX: 1.1 / (W / 300), freqY: 1.1 / (W / 300), octaves: 2, seed: 5, offset: 0, gain: -1.2 }, { x: pb.x, y: pb.y }, 'n', el),
-        el('feColorMatrix', { in: 'n', type: 'matrix', values: `0 0 0 0 ${num(r)}  0 0 0 0 ${num(g)}  0 0 0 0 ${num(b)}  ${LUMA_ROW}`, result: 'c' }),
+        // Bruit des pores (graine 5, alpha = −2,4·A + 1,2) : tuile pré-calculée répétée sur la région (src/noise) ; mode `turbulence` = filtre d'origine.
+        ...pores.nodes,
+        el('feColorMatrix', { in: 'n', type: 'matrix', values: `0 0 0 0 ${num(r)}  0 0 0 0 ${num(g)}  0 0 0 0 ${num(b)}  ${pores.alphaRow}`, result: 'c' }),
         el('feComposite', { in: 'c', in2: 'SourceAlpha', operator: 'in' }),
       ]),
     );

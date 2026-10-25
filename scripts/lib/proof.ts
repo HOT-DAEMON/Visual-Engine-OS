@@ -31,7 +31,7 @@ export function render(objects: SceneInput['objects'], w: number, h: number, ove
   const r = compileScene({ width: w, height: h, background: bg, objects });
   if (!r.ok) throw new Error(r.issues.join('\n'));
   const svg = overlay ? r.svg.replace(/<\/svg>\s*$/, `${overlay}</svg>`) : r.svg;
-  return new Resvg(svg, { fitTo: { mode: 'width', value: px } }).render().asPng();
+  return new Resvg(svg, { font: { loadSystemFonts: false }, fitTo: { mode: 'width', value: px } }).render().asPng();
 }
 
 const pathOf = (c: Cell, p: Poly): string => `M${p.map((q) => toWorld(c, q.x, q.y).map((v) => v.toFixed(1)).join(' ')).join('L')}Z`;

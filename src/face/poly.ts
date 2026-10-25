@@ -27,6 +27,29 @@ export function inPoly(p: Poly, x: number, y: number): boolean {
   return inside;
 }
 
+/** Polygone + sa boîte englobante, calculée UNE fois : sert à écarter d'un test de point la plupart des polygones sans parcourir leurs sommets. */
+export interface BoxedPoly { readonly q: Poly; readonly x0: number; readonly x1: number; readonly y0: number; readonly y1: number }
+
+/**
+ * Polygones de `polys` qui touchent la région `[rx0,rx1]×[ry0,ry1]`, avec leur boîte. Exact : un polygone dont la boîte ne recoupe pas
+ * la région ne peut contenir aucun point de la région, donc l'écarter ne change aucun résultat d'appartenance (testé contre `inPoly` seul).
+ */
+export function polysTouching(polys: readonly Poly[], rx0: number, rx1: number, ry0: number, ry1: number): BoxedPoly[] {
+  const out: BoxedPoly[] = [];
+  for (const q of polys) {
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    for (const v of q) { if (v.x < x0) x0 = v.x; if (v.x > x1) x1 = v.x; if (v.y < y0) y0 = v.y; if (v.y > y1) y1 = v.y; }
+    if (x1 >= rx0 && x0 <= rx1 && y1 >= ry0 && y0 <= ry1) out.push({ q, x0, x1, y0, y1 });
+  }
+  return out;
+}
+
+/** Vrai si l'un des polygones (pré-filtrés par `polysTouching`) contient le point : boîte d'abord, sommets ensuite. */
+export function anyContains(cands: readonly BoxedPoly[], x: number, y: number): boolean {
+  for (const c of cands) if (x >= c.x0 && x <= c.x1 && y >= c.y0 && y <= c.y1 && inPoly(c.q, x, y)) return true;
+  return false;
+}
+
 /** Boîte englobante. Boucle (et non `Math.min(...xs)`) : une chevelure à des milliers de sommets ferait déborder la pile d'appels. */
 export function polyBox(p: Poly): { x: number; y: number; w: number; h: number } {
   let x0 = Infinity;

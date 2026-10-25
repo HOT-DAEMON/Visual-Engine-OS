@@ -1,6 +1,6 @@
 import type { Vec } from '../../geometry/eye/primitives';
 import type { FaceParams } from '../../schema';
-import { inPoly, type Poly } from '../poly';
+import { anyContains, inPoly, polysTouching, type Poly } from '../poly';
 import { earEngine, earGeometry } from '../ears-geometry';
 import { lockFrom, type HairCtx } from './flow';
 import { rot } from './noise';
@@ -39,13 +39,14 @@ export function coverageOf(polys: Poly[], zone: Poly): number {
   const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
   let inside = 0;
   let covered = 0;
+  const cands = polysTouching(polys, x0, x1, y0, y1); // pré-filtre exact par boîtes
   for (let i = 0; i < 18; i++) {
     for (let j = 0; j < 18; j++) {
       const x = x0 + ((x1 - x0) * (i + 0.5)) / 18;
       const y = y0 + ((y1 - y0) * (j + 0.5)) / 18;
       if (!inPoly(zone, x, y)) continue;
       inside++;
-      if (polys.some((q) => inPoly(q, x, y))) covered++;
+      if (anyContains(cands, x, y)) covered++;
     }
   }
   return inside === 0 ? 0 : covered / inside;

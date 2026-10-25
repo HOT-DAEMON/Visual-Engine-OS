@@ -15,6 +15,6 @@ if (!result.ok) {
 mkdirSync(outDir, { recursive: true });
 const name = basename(input, '.json');
 writeFileSync(`${outDir}/${name}.svg`, result.svg);
-const png = new Resvg(result.svg, { fitTo: { mode: 'width', value: Number(widthArg) } }).render().asPng();
+const png = new Resvg(result.svg, { font: { loadSystemFonts: false }, fitTo: { mode: 'width', value: Number(widthArg) } }).render().asPng();
 writeFileSync(`${outDir}/${name}.png`, png);
 console.log(`${name}: svg ${result.svg.length} octets, png ${png.length} octets`);

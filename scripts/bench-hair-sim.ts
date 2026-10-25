@@ -21,7 +21,7 @@ for (const [label, sim] of cases) {
   const tg = time(5, () => { g = hairGeometry(face.params, lm2); });
   let svg = '';
   const tc = time(5, () => { const r = compileScene({ width: 600, height: 700, background: '#ffffff', objects: L.objects }); if (!r.ok) throw new Error(r.issues.join('\n')); svg = r.svg; });
-  const tr = time(5, () => { new Resvg(svg, { fitTo: { mode: 'width', value: 600 } }).render().asPng(); });
+  const tr = time(5, () => { new Resvg(svg, { font: { loadSystemFonts: false }, fitTo: { mode: 'width', value: 600 } }).render().asPng(); });
   void lm;
   const row = { cas: label, geometrieCheveuxMs: Math.round(tg), compileSvgMs: Math.round(tc), resvgMs: Math.round(tr), svgKo: Math.round(svg.length / 1024), meches: g?.locks.length ?? 0 };
   out.push(row); console.log(JSON.stringify(row));

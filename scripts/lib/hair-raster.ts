@@ -29,7 +29,7 @@ export interface RasterHair {
 const pixels = (face: RandomFace, objects: RandomFace['objects'], px: number): { rgba: Buffer; w: number; h: number } => {
   const r = compileScene({ width: Math.ceil(face.width * 1.6), height: Math.ceil(face.height * 1.9), background: '#ffffff', objects });
   if (!r.ok) throw new Error(r.issues.join('\n'));
-  const img = new Resvg(r.svg, { fitTo: { mode: 'width', value: px } }).render();
+  const img = new Resvg(r.svg, { font: { loadSystemFonts: false }, fitTo: { mode: 'width', value: px } }).render();
   return { rgba: Buffer.from(img.pixels), w: img.width, h: img.height };
 };
 

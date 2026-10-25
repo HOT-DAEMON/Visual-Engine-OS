@@ -135,7 +135,7 @@ describe('rendu : la peau reste cohérente sous différents éclairages (mesuré
     const host = { ...f.objects[0], transform: { x: W / 2, y: H / 2, scale: W / f.width / 1.05, rotationDeg: 0 } } as never;
     const r = compileScene({ width: W, height: H, background: '#808080', light: { azimuthDeg: az, elevationDeg: 50, color: '#ffffff', intensity: 1 }, objects: [host] } as never);
     if (!r.ok) throw new Error('scène');
-    const img = new Resvg(r.svg).render();
+    const img = new Resvg(r.svg, { font: { loadSystemFonts: false } }).render();
     const px = img.pixels as Uint8Array;
     const y0 = Math.round(H * 0.5);
     const y1 = Math.round(H * 0.62);
@@ -165,7 +165,7 @@ describe('régression : glow + bloom ensemble ne rendent pas la forme translucid
     const ra2 = resolveAppearance('#d5ccc2', spec);
     const fx = compileEffects('t', spec, ra2, { x: -60, y: -60, w: 120, h: 120 });
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="-60 -60 120 120"><rect x="-60" y="-60" width="120" height="120" fill="#000"/><defs>${fx.defs.join('')}</defs><rect x="-25" y="-25" width="50" height="50" fill="#d5ccc2" filter="${fx.filter}"/></svg>`;
-    const px = new Resvg(svg).render().pixels as Uint8Array;
+    const px = new Resvg(svg, { font: { loadSystemFonts: false } }).render().pixels as Uint8Array;
     const i = (60 * 120 + 60) * 4;
     expect(Math.abs((px[i] as number) - 0xd5)).toBeLessThan(14);
     expect(Math.abs((px[i + 1] as number) - 0xcc)).toBeLessThan(14);

@@ -13,10 +13,29 @@ import { clock, type Stage } from './clock';
 /** Sérialisation canonique : objets à clés triées, `undefined` omis, nombres tels quels (pas d'arrondi : deux flottants différents = deux clés). */
 export function canonical(v: unknown): string {
   if (v === null || typeof v !== 'object') return typeof v === 'number' && !Number.isFinite(v) ? `"${v}"` : JSON.stringify(v) ?? 'null';
-  if (Array.isArray(v)) return `[${v.map(canonical).join(',')}]`;
+  if (Array.isArray(v)) {
+    let out = '[';
+    for (let i = 0; i < v.length; i++) out += (i ? ',' : '') + canonical(v[i]);
+    return `${out}]`;
+  }
   const o = v as Record<string, unknown>;
-  const keys = Object.keys(o).filter((k) => o[k] !== undefined).sort();
-  return `{${keys.map((k) => `${JSON.stringify(k)}:${canonical(o[k])}`).join(',')}}`;
+  const keys = Object.keys(o).sort();
+  let out = '{'; let first = true;
+  for (const k of keys) {
+    const x = o[k];
+    if (x === undefined) continue;
+    out += `${first ? '' : ','}${quoted(k)}:${canonical(x)}`;
+    first = false;
+  }
+  return `${out}}`;
+}
+
+/** `JSON.stringify(clé)` mémoïsé : les clés d'objet se répètent des milliers de fois par visage (profil : `canonical` ≈ 8 % du pipeline). */
+const QUOTED = new Map<string, string>();
+function quoted(k: string): string {
+  let q = QUOTED.get(k);
+  if (q === undefined) { q = JSON.stringify(k); if (QUOTED.size < 4096) QUOTED.set(k, q); }
+  return q;
 }
 
 export interface CacheStats { readonly name: string; readonly hits: number; readonly misses: number; readonly size: number }

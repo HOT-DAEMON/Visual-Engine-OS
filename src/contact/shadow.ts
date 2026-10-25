@@ -51,6 +51,19 @@ function grow(poly: readonly { x: number; y: number }[], amount: number, dx: num
   return poly.map((q) => ({ x: cx + (q.x - cx) * k + dx, y: cy + (q.y - cy) * k + dy }));
 }
 
+/**
+ * Boîte englobante d'un tracé `d` en coordonnées ABSOLUES (M L C Q Z) : les points de contrôle d'une courbe sont dans l'enveloppe convexe de
+ * la courbe, la boîte de tous les nombres est donc une boîte englobante sûre (un peu large). `null` si le tracé sort de ce cas (relatif, arc…).
+ */
+export function pathBox(d: string): { x0: number; y0: number; x1: number; y1: number } | null {
+  if (/[a-zA-Z]/.test(d.replace(/[MLCQZ]/g, ''))) return null;
+  const n = d.match(/-?\d*\.?\d+(?:e[-+]?\d+)?/gi);
+  if (!n || n.length < 2 || n.length % 2) return null;
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (let i = 0; i < n.length; i += 2) { const x = Number(n[i]); const y = Number(n[i + 1]); if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  return Number.isFinite(x0 + y0 + x1 + y1) ? { x0, y0, x1, y1 } : null;
+}
+
 export function compileContact(id: string, comps: readonly FaceComponent[], specs: Readonly<Record<string, ContactSpec>>, master: number, L: LightVector, shadowColor: string, receivers: Receivers, u: number): ContactOut {
   const defs: string[] = [];
   const markup = new Map<string, string>();
@@ -73,7 +86,20 @@ export function compileContact(id: string, comps: readonly FaceComponent[], spec
     const aoA = peak * contactShare;
     const pad = 4 * blur + offsetPx + blur + 6 * u;
     const fid = `${id}-ct-f-${c.id}`;
-    defs.push(el('filter', { id: fid, filterUnits: 'userSpaceOnUse', x: box.x - pad, y: box.y - pad, width: box.w + 2 * pad, height: box.h + 2 * pad, 'color-interpolation-filters': 'sRGB' }, [el('feGaussianBlur', { stdDeviation: blur })]));
+    // Région du filtre : le résultat n'est visible que dans la zone RÉCEPTRICE (clip-path) ; un pixel de cette zone ne dépend de la source que
+    // dans un voisinage de 4σ. La région peut donc être réduite à (zone réceptrice ± 4σ) ∩ région d'origine, sans changer un pixel visible
+    // (mesuré : docs/PERF-2.md). Le coût d'un flou est proportionnel à l'aire de sa région.
+    let [fx0, fy0, fx1, fy1] = [box.x - pad, box.y - pad, box.x + box.w + pad, box.y + box.h + pad];
+    const rbs = c.receivers.map((rid) => (receivers[rid] ? pathBox(receivers[rid] as string) : null));
+    // Seulement quand le clip EST la zone réceptrice (composant posé, ou creux sans bord réel) ; un creux à bord réel (oreille) est découpé par sa propre silhouette.
+    if ((c.kind === 'caster' || c.edge === 'soft') && rbs.length > 0 && rbs.every((r) => r !== null)) {
+      const m = 4 * blur + 2 * u;
+      const ux0 = Math.min(...rbs.map((r) => (r as { x0: number }).x0)) - m; const uy0 = Math.min(...rbs.map((r) => (r as { y0: number }).y0)) - m;
+      const ux1 = Math.max(...rbs.map((r) => (r as { x1: number }).x1)) + m; const uy1 = Math.max(...rbs.map((r) => (r as { y1: number }).y1)) + m;
+      const [nx0, ny0, nx1, ny1] = [Math.max(fx0, ux0), Math.max(fy0, uy0), Math.min(fx1, ux1), Math.min(fy1, uy1)];
+      if (nx1 - nx0 > 4 && ny1 - ny0 > 4) [fx0, fy0, fx1, fy1] = [nx0, ny0, nx1, ny1];
+    }
+    defs.push(el('filter', { id: fid, filterUnits: 'userSpaceOnUse', x: fx0, y: fy0, width: fx1 - fx0, height: fy1 - fy0, 'color-interpolation-filters': 'sRGB' }, [el('feGaussianBlur', { stdDeviation: blur })]));
     const own = polysD(c.polys);
     const moved = polysD(c.polys.map((p) => p.map((v) => ({ x: v.x + off.x, y: v.y + off.y }))));
     const groups: string[] = [];

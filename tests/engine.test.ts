@@ -61,7 +61,7 @@ describe('SVG produit', () => {
       const svg = svgOf(load(name));
       assertReferencesResolve(svg);
       const scene = SceneSpec.parse(load(name));
-      const img = new Resvg(svg).render();
+      const img = new Resvg(svg, { font: { loadSystemFonts: false } }).render();
       expect(img.width).toBe(scene.width);
       expect(img.height).toBe(scene.height);
     });

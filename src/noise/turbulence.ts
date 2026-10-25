@@ -99,14 +99,16 @@ export interface TurbulenceParams {
   readonly freqY: number;
   readonly octaves: number;
   readonly seed: number;
-  /** Largeur/hauteur de la tuile périodique, en pixels. */
+  /** Côté de la tuile périodique, en UNITÉS utilisateur (la fréquence est par unité). */
   readonly size: number;
+  /** Échantillons par unité (défaut 1) : 2 donne une tuile suréchantillonnée, qui supporte un rééchantillonnage sous-pixel sans lisser le grain. */
+  readonly res?: number;
 }
 
 /**
  * Somme fractale (`fractalNoise`) du canal `ch` (0 R, 1 V, 2 B, 3 A) sur une tuile `size × size` PÉRIODIQUE.
  * Valeur brute dans ≈ [−1, 1] (moyenne ≈ 0). La fréquence est ajustée à l'entier de mailles le plus proche (règle de la spec),
- * ce qui rend la tuile raccordable sans couture. Retourne `size²` valeurs, ligne par ligne.
+ * ce qui rend la tuile raccordable sans couture. Retourne `(size·res)²` valeurs, ligne par ligne.
  */
 export function fractalTile(p: TurbulenceParams, ch = 3): Float64Array {
   const L = initLattice(p.seed);
@@ -116,19 +118,21 @@ export function fractalTile(p: TurbulenceParams, ch = 3): Float64Array {
     return lo > 0 && f / lo < hi / f ? lo : hi;
   };
   const fx = adj(p.freqX); const fy = adj(p.freqY);
-  const out = new Float64Array(p.size * p.size);
-  for (let y = 0; y < p.size; y++) {
-    for (let x = 0; x < p.size; x++) {
+  const res = p.res ?? 1;
+  const n = p.size * res;
+  const out = new Float64Array(n * n);
+  for (let y = 0; y < n; y++) {
+    for (let x = 0; x < n; x++) {
       const st: Stitch = { w: Math.trunc(p.size * fx + 0.5), h: Math.trunc(p.size * fy + 0.5), wrapX: 0, wrapY: 0 };
       st.wrapX = Math.trunc(0 * fx + PERLIN_N + st.w);
       st.wrapY = Math.trunc(0 * fy + PERLIN_N + st.h);
-      let vx = x * fx; let vy = y * fy; let ratio = 1; let sum = 0;
+      let vx = (x / res) * fx; let vy = (y / res) * fy; let ratio = 1; let sum = 0;
       for (let o = 0; o < p.octaves; o++) {
         sum += noise2(L, ch, vx, vy, st) / ratio;
         vx *= 2; vy *= 2; ratio *= 2;
         st.w *= 2; st.wrapX = 2 * st.wrapX - PERLIN_N; st.h *= 2; st.wrapY = 2 * st.wrapY - PERLIN_N;
       }
-      out[y * p.size + x] = sum;
+      out[y * n + x] = sum;
     }
   }
   return out;

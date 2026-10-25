@@ -3,20 +3,26 @@
     "faces": 6,
     "size": "340x420",
     "avg": {
-      "geometryMs": 3.9,
-      "svgMs": 35.5,
-      "rasterShapesMs": 129.7,
-      "filtersMs": 163.3,
-      "fullRasterMs": 293,
-      "filters": 40.3
+      "geometryMs": 3.1,
+      "svgMs": 50.4,
+      "rasterShapesMs": 84.2,
+      "filtersMs": 68,
+      "fullRasterMs": 152.2,
+      "filters": 31.3
     },
-    "warmCompileMsPerFace": 3.86,
+    "warmCompileMsPerFace": 5.16,
     "caches": [
       {
         "name": "faceLandmarks",
         "hits": 24,
         "misses": 6,
         "size": 6
+      },
+      {
+        "name": "earModel",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
       },
       {
         "name": "noseGeometry",
@@ -41,69 +47,69 @@
   "rows": [
     {
       "seed": 1000,
-      "geometryMs": 12.6,
-      "svgMs": 62.3,
-      "otherMs": 39,
-      "rasterShapesMs": 122,
-      "filtersMs": 199,
-      "fullRasterMs": 321,
-      "svgKB": 130,
-      "filters": 40
+      "geometryMs": 10.9,
+      "svgMs": 92.3,
+      "otherMs": 27.5,
+      "rasterShapesMs": 89,
+      "filtersMs": 65,
+      "fullRasterMs": 154,
+      "svgKB": 139,
+      "filters": 30
     },
     {
       "seed": 1037,
-      "geometryMs": 6.8,
-      "svgMs": 60.4,
-      "otherMs": 19.4,
-      "rasterShapesMs": 134,
-      "filtersMs": 157,
-      "fullRasterMs": 291,
-      "svgKB": 136,
-      "filters": 43
+      "geometryMs": 1.4,
+      "svgMs": 49.6,
+      "otherMs": 24.2,
+      "rasterShapesMs": 84,
+      "filtersMs": 58,
+      "fullRasterMs": 142,
+      "svgKB": 139,
+      "filters": 33
     },
     {
       "seed": 1074,
-      "geometryMs": 1,
-      "svgMs": 31.1,
-      "otherMs": 8.5,
-      "rasterShapesMs": 124,
-      "filtersMs": 201,
-      "fullRasterMs": 325,
-      "svgKB": 133,
-      "filters": 40
+      "geometryMs": 1.8,
+      "svgMs": 60.5,
+      "otherMs": 11.7,
+      "rasterShapesMs": 84,
+      "filtersMs": 62,
+      "fullRasterMs": 146,
+      "svgKB": 142,
+      "filters": 30
     },
     {
       "seed": 1111,
-      "geometryMs": 1.4,
-      "svgMs": 26.8,
-      "otherMs": 9.3,
-      "rasterShapesMs": 140,
-      "filtersMs": 102,
-      "fullRasterMs": 242,
-      "svgKB": 130,
-      "filters": 39
+      "geometryMs": 0.9,
+      "svgMs": 26.4,
+      "otherMs": 5.3,
+      "rasterShapesMs": 80,
+      "filtersMs": 66,
+      "fullRasterMs": 146,
+      "svgKB": 133,
+      "filters": 29
     },
     {
       "seed": 1148,
-      "geometryMs": 1.1,
-      "svgMs": 17.2,
-      "otherMs": 8.6,
-      "rasterShapesMs": 134,
-      "filtersMs": 157,
-      "fullRasterMs": 291,
-      "svgKB": 131,
-      "filters": 40
+      "geometryMs": 2.5,
+      "svgMs": 25.8,
+      "otherMs": 6.3,
+      "rasterShapesMs": 83,
+      "filtersMs": 55,
+      "fullRasterMs": 138,
+      "svgKB": 140,
+      "filters": 30
     },
     {
       "seed": 1185,
       "geometryMs": 0.8,
-      "svgMs": 15.1,
-      "otherMs": 5,
-      "rasterShapesMs": 124,
-      "filtersMs": 164,
-      "fullRasterMs": 288,
-      "svgKB": 137,
-      "filters": 40
+      "svgMs": 47.5,
+      "otherMs": 7,
+      "rasterShapesMs": 85,
+      "filtersMs": 102,
+      "fullRasterMs": 187,
+      "svgKB": 147,
+      "filters": 36
     }
   ]
 }
