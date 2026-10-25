@@ -144,3 +144,5 @@ cassé, ancrage inter-yeux cassé) : les 5 détectées. Détail dans
   fonctionnalités dans la même session, comme convenu.
 - Bibliothèques de motifs (cœurs, étoiles, étincelles) pour l'iris/le
   highlight/la pupille : demandées, pas commencées.
+
+- 10 : `CHANGELOG-10.md` (vitesse de génération, feat/render-speed).

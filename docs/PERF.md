@@ -64,3 +64,5 @@ même galerie : 0 rastérisation) et du cache de scène (3,9 ms contre 39 ms).
 - Campagne multi-processus (`JOBS`, `scripts/lib/parallel.ts`) : sortie identique à la série ; gain non mesurable sur la machine de test (1 cœur).
 - Profil de rastérisation (visage 340×420) : 95 flous distincts, 2 turbulences (≈ 30 %), formes ≈ 107 ms. Pistes non faites : tuile de turbulence pré-calculée
   (dépend de la graine et de l'échelle), rendu des flous à résolution réduite.
+
+- Suite : voir `PERF-2.md` (polices système, tuile de bruit, chemins chauds, vérification d équivalence).
