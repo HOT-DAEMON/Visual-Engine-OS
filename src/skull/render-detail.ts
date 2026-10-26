@@ -8,26 +8,30 @@ import type { CPoint, V2 } from './types';
 export interface Ink { readonly line: string; readonly soft: string; readonly hair: string; readonly shade: string }
 
 const q = (a: V2, b: V2, c: V2): string => `M${num(a.x)} ${num(a.y)}Q${num(b.x)} ${num(b.y)} ${num(c.x)} ${num(c.y)}`;
-export function faceDetails(g: SkullGeo, ink: Ink): string[] {
+export function faceDetails(g: SkullGeo, ink: Ink, genericEye = true): string[] {
   const { H, frame: fr } = g;
   const { x, f } = fr;
   const sk = (id: string): CPoint => g.skin.get(id) as CPoint;
   const out: string[] = [];
   const lw = H * 0.0042;
   const stroke = (d: string, c: string, w: number, o = 1): string => el('path', { d, fill: 'none', stroke: c, 'stroke-width': num(w), 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: num(o) });
-  // Œil : fente palpébrale (lames sup. et inf.), iris, cils, pli ; sa cornée affleure derrière le plan nasion-glabelle.
-  const xc = x.nasion - 0.012 * H, yc = f.eye * H;
+  // Œil et sourcil génériques : seulement si aucune donnée d'œil de la face n'est fournie (sinon `render-eye.ts` les dessine à partir du moteur d'yeux).
+  if (genericEye) {
+    // Œil : fente palpébrale (lames sup. et inf.), iris, cils, pli ; sa cornée affleure derrière le plan nasion-glabelle.
+    const xc = x.nasion - 0.012 * H, yc = f.eye * H;
   
-  out.push(el('path', { d: `M${num(xc - 0.042 * H)} ${num(yc + 0.002 * H)}Q${num(xc - 0.02 * H)} ${num(yc - 0.016 * H)} ${num(xc + 0.012 * H)} ${num(yc - 0.004 * H)}L${num(xc + 0.012 * H)} ${num(yc + 0.003 * H)}Q${num(xc - 0.02 * H)} ${num(yc + 0.012 * H)} ${num(xc - 0.042 * H)} ${num(yc + 0.002 * H)}Z`, fill: '#f5f1ea' }));
-  out.push(el('ellipse', { cx: num(xc - 0.004 * H), cy: num(yc - 0.002 * H), rx: num(0.0075 * H), ry: num(0.0115 * H), fill: mix(ink.line, '#5a3b25', 0.55) }));
-  out.push(el('ellipse', { cx: num(xc - 0.002 * H), cy: num(yc - 0.005 * H), rx: num(0.0022 * H), ry: num(0.0032 * H), fill: '#ffffff', opacity: 0.9 }));
-  out.push(stroke(q({ x: xc - 0.046 * H, y: yc + 0.003 * H }, { x: xc - 0.02 * H, y: yc - 0.022 * H }, { x: xc + 0.015 * H, y: yc - 0.006 * H }), ink.line, lw * 1.9));
-  out.push(stroke(q({ x: xc - 0.036 * H, y: yc + 0.004 * H }, { x: xc - 0.01 * H, y: yc + 0.015 * H }, { x: xc + 0.011 * H, y: yc + 0.004 * H }), ink.line, lw * 0.8, 0.8));
-  for (let i = 0; i < 3; i++) out.push(stroke(`M${num(xc - 0.004 * H + i * 0.006 * H)} ${num(yc - 0.0125 * H - i * 0.0006 * H)}l${num(0.013 * H)} ${num(-0.006 * H + i * 0.0015 * H)}`, ink.line, lw * 0.9));
-  out.push(stroke(q({ x: xc - 0.04 * H, y: yc - 0.026 * H }, { x: xc - 0.012 * H, y: yc - 0.034 * H }, { x: xc + 0.008 * H, y: yc - 0.02 * H }), ink.soft, lw * 0.9, 0.55));
-  // Sourcil : arc plein, plus épais en avant, qui suit l'arcade (glabelle → queue).
-  const yb = (f.glabella + f.eye) / 2 * H - 0.004 * H;
-  out.push(el('path', { d: `M${num(xc + 0.026 * H)} ${num(yb + 0.002 * H)}Q${num(xc - 0.012 * H)} ${num(yb - 0.016 * H)} ${num(xc - 0.068 * H)} ${num(yb + 0.006 * H)}Q${num(xc - 0.012 * H)} ${num(yb - 0.006 * H)} ${num(xc + 0.026 * H)} ${num(yb + 0.011 * H)}Z`, fill: ink.hair }));
+    out.push(el('path', { d: `M${num(xc - 0.042 * H)} ${num(yc + 0.002 * H)}Q${num(xc - 0.02 * H)} ${num(yc - 0.016 * H)} ${num(xc + 0.012 * H)} ${num(yc - 0.004 * H)}L${num(xc + 0.012 * H)} ${num(yc + 0.003 * H)}Q${num(xc - 0.02 * H)} ${num(yc + 0.012 * H)} ${num(xc - 0.042 * H)} ${num(yc + 0.002 * H)}Z`, fill: '#f5f1ea' }));
+    out.push(el('ellipse', { cx: num(xc - 0.004 * H), cy: num(yc - 0.002 * H), rx: num(0.0075 * H), ry: num(0.0115 * H), fill: mix(ink.line, '#5a3b25', 0.55) }));
+    out.push(el('ellipse', { cx: num(xc - 0.002 * H), cy: num(yc - 0.005 * H), rx: num(0.0022 * H), ry: num(0.0032 * H), fill: '#ffffff', opacity: 0.9 }));
+    out.push(stroke(q({ x: xc - 0.046 * H, y: yc + 0.003 * H }, { x: xc - 0.02 * H, y: yc - 0.022 * H }, { x: xc + 0.015 * H, y: yc - 0.006 * H }), ink.line, lw * 1.9));
+    out.push(stroke(q({ x: xc - 0.036 * H, y: yc + 0.004 * H }, { x: xc - 0.01 * H, y: yc + 0.015 * H }, { x: xc + 0.011 * H, y: yc + 0.004 * H }), ink.line, lw * 0.8, 0.8));
+    for (let i = 0; i < 3; i++) out.push(stroke(`M${num(xc - 0.004 * H + i * 0.006 * H)} ${num(yc - 0.0125 * H - i * 0.0006 * H)}l${num(0.013 * H)} ${num(-0.006 * H + i * 0.0015 * H)}`, ink.line, lw * 0.9));
+    out.push(stroke(q({ x: xc - 0.04 * H, y: yc - 0.026 * H }, { x: xc - 0.012 * H, y: yc - 0.034 * H }, { x: xc + 0.008 * H, y: yc - 0.02 * H }), ink.soft, lw * 0.9, 0.55));
+    // Sourcil : arc plein, plus épais en avant, qui suit l'arcade (glabelle → queue).
+    const yb = (f.glabella + f.eye) / 2 * H - 0.004 * H;
+    out.push(el('path', { d: `M${num(xc + 0.026 * H)} ${num(yb + 0.002 * H)}Q${num(xc - 0.012 * H)} ${num(yb - 0.016 * H)} ${num(xc - 0.068 * H)} ${num(yb + 0.006 * H)}Q${num(xc - 0.012 * H)} ${num(yb - 0.006 * H)} ${num(xc + 0.026 * H)} ${num(yb + 0.011 * H)}Z`, fill: ink.hair }));
+
+  }
   // Nez : sillon alaire, aile, narine.
   const sub = sk('subnasale'), tip = sk('pronasale');
   out.push(stroke(q({ x: tip.x - 0.068 * H, y: tip.y - 0.016 * H }, { x: tip.x - 0.092 * H, y: tip.y + 0.012 * H }, { x: sub.x - 0.034 * H, y: sub.y - 0.002 * H }), ink.soft, lw * 1.1, 0.8));

@@ -3,6 +3,9 @@ import { skullGeometry, type SkullGeo } from '../skull/geometry';
 import { profileInk, renderProfile, type ProfileMode } from '../skull/render';
 import { SkullParams, type V2 } from '../skull/types';
 import { FaceParams } from '../schema';
+import type { Derivation } from '../skull/derive';
+import type { ProfileEyeData } from '../skull/eye-data';
+import { checkCrossView } from './skull-cross';
 import { check, report, type Check, type Report } from './types';
 
 /**
@@ -113,12 +116,14 @@ export function checkProfileStyle(svg: string, mode: ProfileMode, skinHex: strin
 }
 
 /** Rapport complet d'une tête de profil. */
-export function verifyProfile(faceIn: unknown, skIn: unknown = {}, opts: { skin?: string; hair?: string } = {}): Report {
+export interface VerifyProfileOptions { readonly skin?: string; readonly hair?: string; readonly eye?: ProfileEyeData; readonly faceEyeHeightH?: number; readonly faceSize?: { readonly width: number; readonly height: number }; readonly derivation?: Derivation }
+export function verifyProfile(faceIn: unknown, skIn: unknown = {}, opts: VerifyProfileOptions = {}): Report {
   const face = FaceParams.parse(faceIn);
   const sk = SkullParams.parse(skIn);
   const g = skullGeometry(face, sk, 420);
   const mode: ProfileMode = 'skin';
-  const r = renderProfile(face, sk, { mode, ...(opts.skin ? { skin: opts.skin } : {}), ...(opts.hair ? { hair: opts.hair } : {}) });
+  const r = renderProfile(face, sk, { mode, ...(opts.skin ? { skin: opts.skin } : {}), ...(opts.hair ? { hair: opts.hair } : {}), ...(opts.eye ? { eye: opts.eye } : {}) });
   const skin = opts.skin ?? '#efc8a8';
-  return report([...checkProfileGeometry(g, face), ...checkProfileAnatomy(g, face), ...checkProfileStyle(r.svg, mode, skin, profileInk(skin, opts.hair ?? '#4a3222', face).line)]);
+  const cross = opts.faceSize ? checkCrossView({ face, faceW: opts.faceSize.width, faceH: opts.faceSize.height, eye: opts.eye ?? null, ...(opts.faceEyeHeightH !== undefined ? { faceEyeHeightH: opts.faceEyeHeightH } : {}), skull: sk, render: r, ...(opts.derivation ? { derivation: opts.derivation } : {}) }) : [];
+  return report([...checkProfileGeometry(g, face), ...checkProfileAnatomy(g, face), ...checkProfileStyle(r.svg, mode, skin, profileInk(skin, opts.hair ?? '#4a3222', face).line), ...cross]);
 }

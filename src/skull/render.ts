@@ -7,6 +7,11 @@ import { boneLayer } from './render-anatomy';
 import { faceDetails, lipsLayer, neckDetails, type Ink } from './render-detail';
 import { profileEar } from './render-ear';
 import { hairLayer } from './render-hair';
+import { beardShape, type BeardShape } from './beard-shape';
+import type { ProfileEyeData } from './eye-data';
+import { hairShape, type HairShape } from './hair-shape';
+import { eyeLayer, profileEyeGeometry, type ProfileEyeGeo } from './render-eye';
+import { paintFacialHair, paintHair } from './render-hairs';
 import { bezierChain, chainPath, type Bez } from './spline';
 import type { CPoint, V2 } from './types';
 
@@ -16,8 +21,8 @@ import type { CPoint, V2 } from './types';
  * Modes : `skin` (illustration finie, style cel), `anatomy` (peau translucide + os + tissus mous + repères), `bone` (os seul).
  */
 export type ProfileMode = 'skin' | 'anatomy' | 'bone';
-export interface ProfileOptions { readonly mode?: ProfileMode; readonly skin?: string; readonly hair?: string; readonly width?: number; readonly background?: string | null; readonly markers?: boolean }
-export interface ProfileRender { readonly svg: string; readonly width: number; readonly height: number; readonly geo: SkullGeo; readonly box: { x: number; y: number; w: number; h: number } }
+export interface ProfileOptions { readonly mode?: ProfileMode; readonly skin?: string; readonly hair?: string; readonly width?: number; readonly background?: string | null; readonly markers?: boolean; /** Œil de la face (moteur d'yeux) : si fourni, l'œil et le sourcil de profil en sont déduits. */ readonly eye?: ProfileEyeData }
+export interface ProfileRender { readonly svg: string; readonly width: number; readonly height: number; readonly geo: SkullGeo; readonly box: { x: number; y: number; w: number; h: number }; readonly shapes: { readonly hair: HairShape | null; readonly beard: BeardShape | null; readonly eye: ProfileEyeGeo | null } }
 
 const LIGHT = { x: 0.62, y: -0.52, z: 0.58 };
 const shift = (ch: readonly Bez[], dx: number, dy: number): Bez[] => ch.map((b) => ({ p0: mv(b.p0, dx, dy), c1: mv(b.c1, dx, dy), c2: mv(b.c2, dx, dy), p3: mv(b.p3, dx, dy) }));
@@ -45,11 +50,17 @@ export function renderProfile(faceIn: unknown, skIn: unknown, o: ProfileOptions 
   const ink = profileInk(skinHex, o.hair ?? '#4a3222', face);
   const { x, f } = g.frame;
   const hairC = o.hair ?? '#4a3222';
-  const hair = mode === 'skin' ? hairLayer(g, hairC, LIGHT, ink.line) : null;
-  const left = Math.min(x.back * 1.12, g.neck.back[0]!.x) - 0.1 * H - (g.params.hair === 'updo' ? 0.05 * H : 0);
+  const auto = mode === 'skin' && g.params.hair === 'auto';
+  const hs = auto ? hairShape(g, face.hair, g.params.napeHairline) : null;
+  const bs = mode === 'skin' ? beardShape(g, face.facialHair, face.hair) : null;
+  const eyeG = mode === 'skin' && o.eye ? profileEyeGeometry(g, o.eye) : null;
+  const hair = mode === 'skin' && !auto ? hairLayer(g, hairC, LIGHT, ink.line) : null;
+  const hairPaint = hs ? paintHair(hs, face.hair, H, ink.line) : null;
+  const hx = hs ? Math.min(...[...hs.mass, ...hs.extra.flat()].map((p) => p.x), hs.bun ? hs.bun.cx - hs.bun.r : 0) - 0.02 * H : 0;
+  const left = Math.min(x.back * 1.12, g.neck.back[0]!.x, hx || 0) - 0.1 * H - (g.params.hair === 'updo' ? 0.05 * H : 0);
   const right = x.tip + 0.14 * H;
-  const top = (g.params.hair === 'updo' && mode === 'skin' ? -0.17 : -0.06) * H;
-  const bottom = g.neck.yBase + 0.03 * H;
+  const top = Math.min((g.params.hair === 'updo' && mode === 'skin' ? -0.17 : -0.06) * H, hs ? hs.top - 0.03 * H : 0);
+  const bottom = Math.max(g.neck.yBase + 0.03 * H, hs ? hs.bottom + 0.03 * H : 0, bs ? bs.bottom + 0.03 * H : 0);
   const box = { x: left, y: top, w: right - left, h: bottom - top };
   const W = o.width ?? 640;
   const Hpx = Math.round((W * box.h) / box.w);
@@ -72,11 +83,14 @@ export function renderProfile(faceIn: unknown, skIn: unknown, o: ProfileOptions 
   const radial = (id: string, c: string, a: number): string => el('radialGradient', { id }, [el('stop', { offset: 0, 'stop-color': c, 'stop-opacity': a }), el('stop', { offset: 1, 'stop-color': c, 'stop-opacity': 0 })]);
   defs.push(radial('sk-soc', tone, 0.5), radial('sk-cheek', tone, 0.28), radial('sk-blush', '#e0566a', 0.14), radial('sk-hl', ra.highlight, 0.7));
   const body: string[] = [];
-  const earLayer = mode === 'skin' ? profileEar(g, face, skinHex, ra, LIGHT) : null;
+  const earLayer = mode === 'skin' && !(hs && hs.style === 'long') ? profileEar(g, face, skinHex, ra, LIGHT) : null;
   const lips = mode === 'skin' ? lipsLayer(g, mix(ra.base, '#c4505a', 0.38), ink.line) : [];
   if (earLayer) defs.push(...earLayer.defs);
+  const eyeOut = eyeG && o.eye ? eyeLayer(g, o.eye, ink) : null;
+  if (eyeOut) defs.push(...eyeOut.defs);
+  if (hairPaint) defs.push(...hairPaint.defs);
   if (mode === 'skin') {
-    body.push(...(hair?.back ?? []));
+    body.push(...(hair?.back ?? []), ...(hairPaint?.back ?? []));
     body.push(el('path', { d: sd, fill: ra.base }));
     const clip = { 'clip-path': 'url(#sk-sil)' };
     const xc = x.nasion - 0.012 * H, yc = f.eye * H;
@@ -91,9 +105,11 @@ export function renderProfile(faceIn: unknown, skIn: unknown, o: ProfileOptions 
       el('ellipse', { cx: num(x.nasion - 0.14 * H), cy: num(f.eye * H + 0.08 * H), rx: num(0.05 * H), ry: num(0.028 * H), fill: 'url(#sk-hl)' }),
     ];
     body.push(el('g', clip, sh));
-    body.push(el('g', {}, [...lips, ...faceDetails(g, ink), ...neckDetails(g, ink)]));
+    body.push(el('g', {}, [...lips, ...faceDetails(g, ink, !eyeOut), ...neckDetails(g, ink)]));
+    if (bs) body.push(el('g', {}, paintFacialHair(bs, face.facialHair, face.hair.color, H, ink.line)));
+    if (eyeOut) body.push(el('g', {}, eyeOut.markup));
     body.push(el('path', { d: open, fill: 'none', stroke: ink.line, 'stroke-width': num(H * 0.0058), 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
-    body.push(...(hair?.front ?? []));
+    body.push(...(hair?.front ?? []), ...(hairPaint?.front ?? []));
     if (earLayer) body.push(earLayer.markup);
   } else {
     const c = { bone: mode === 'bone' ? '#efe6d2' : '#f1e9d6', line: '#4a3a2c', shade: '#cfc3ab', marker: '#d23a3a', landmark: '#2f6fd0' };
@@ -104,5 +120,5 @@ export function renderProfile(faceIn: unknown, skIn: unknown, o: ProfileOptions 
   const svg = el('svg', { xmlns: 'http://www.w3.org/2000/svg', viewBox: `${num(box.x)} ${num(box.y)} ${num(box.w)} ${num(box.h)}`, width: W, height: Hpx, role: 'img', 'aria-label': `Tête de profil, mode ${mode}` }, [
     ...(bg ? [el('rect', { x: num(box.x), y: num(box.y), width: num(box.w), height: num(box.h), fill: bg })] : []), el('defs', {}, defs), ...body,
   ]);
-  return { svg, width: W, height: Hpx, geo: g, box };
+  return { svg, width: W, height: Hpx, geo: g, box, shapes: { hair: hs, beard: bs, eye: eyeG } };
 }

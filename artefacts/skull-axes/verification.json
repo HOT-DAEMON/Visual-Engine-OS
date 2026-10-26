@@ -1,0 +1,12 @@
+{
+  "seeds": 300,
+  "invalid": 0,
+  "errors": {},
+  "warnings": {
+    "facial-thirds": 6,
+    "nasolabial-angle-min": 11,
+    "cervicomental-matches": 1,
+    "hair-hang-formula": 2
+  },
+  "msPerHead": 60
+}

@@ -10,7 +10,7 @@ import { Unit } from '../schema/primitives';
  * couplé à une « origine ») ; tous sont des fractions ou des valeurs signées bornées, mises à l'échelle par H (hauteur sommet → menton).
  * Repère : x vers l'AVANT du visage (le visage regarde à droite), y vers le bas, origine = porion (conduit auditif), y = 0 au sommet.
  */
-export const HAIR_STYLES = ['none', 'short', 'undercut', 'updo'] as const;
+export const HAIR_STYLES = ['none', 'short', 'undercut', 'updo', 'auto'] as const;
 export type HairStyle = (typeof HAIR_STYLES)[number];
 
 const Signed = z.number().min(-1).max(1);
@@ -51,7 +51,7 @@ export const SkullParams = z
     trapezius: Unit.default(0.5),
     /** Saillie du cartilage thyroïde (pomme du cou). */
     thyroid: Unit.default(0.25),
-    /** Coiffure de la vue de profil (voir docs/SKULL-PROFILE-REMAINING.md : les coiffures complètes ne sont pas encore projetées). */
+    /** Coiffure de la vue de profil : `short|undercut|updo` = dessins propres au profil ; `auto` = projection des paramètres de cheveux de la FACE (`hair-shape.ts`) ; `none` = aucune. */
     hair: z.enum(HAIR_STYLES).default('none'),
     /** Hauteur de l'implantation des cheveux à la nuque : 0 = basse (nuque couverte), 1 = haute (nuque dégagée). */
     napeHairline: Unit.default(0.5),
