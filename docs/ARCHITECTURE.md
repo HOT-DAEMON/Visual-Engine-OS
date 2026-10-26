@@ -175,3 +175,7 @@ Moteur de structure du visage : `docs/FACE-STRUCTURE.md` (contrats, ordre de cal
 ## Moteur d'oreille et zones du visage (feat/ear-system)
 - Oreille = graphe de structures dans un plan (unité = hauteur de l'oreille), projeté en quatre vues, aligné sur les yeux et la bouche : `docs/EAR-SYSTEM.md`, `-2.md`.
 - Zones verticales du visage et frontière d'implantation : `docs/FACE-ZONES.md`. Reste à faire : `docs/EAR-REMAINING.md`. Erreurs : `docs/ERRORS-6.md`.
+
+## Moteur de crâne en profil (feat/skull-profile)
+`src/skull/` : le profil est calculé à partir des mêmes repères que la face (`faceLandmarks`), plus des axes de profondeur propres (`SkullParams`). Géométrie pure et
+mémoïsée (`geometry.ts`) → rendu sans filtre (`render*.ts`) ; oreille = modèle de face projeté à 90°. Vérification : `src/verify/skull.ts`. Voir `SKULL-PROFILE.md`.

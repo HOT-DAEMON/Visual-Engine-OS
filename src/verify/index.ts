@@ -1,4 +1,4 @@
-import { compileScene } from '../compile';
+import { compileSceneCached } from '../compile';
 import { faceLandmarks } from '../face';
 import { hairGeometry } from '../face/hair';
 import type { RandomFace } from '../generation/random-face';
@@ -27,7 +27,8 @@ export { checkStructure, structureContext, geometryDigest, type StructureContext
 export function verifyFace(face: RandomFace): Report {
   const lm = faceLandmarks(face.params, face.width, face.height);
   const geo = hairGeometry(face.params, lm);
-  const compiled = compileScene({ width: Math.ceil(face.width), height: Math.ceil(face.height), objects: face.objects });
+  // Compilation en cache par contenu : si la scène vient d'être compilée pour le rendu, la vérification la relit au lieu de la recompiler (docs/PERF-3.md).
+  const compiled = compileSceneCached({ width: Math.ceil(face.width), height: Math.ceil(face.height), objects: face.objects });
   const svg = compiled.ok ? compiled.svg : '';
   // L'hôte généré porte la peau en raccourci `{ preset, color }`.
   const skin = (face.objects[0] as { material: { color: string } }).material.color;

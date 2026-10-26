@@ -23,7 +23,7 @@ const ATTRIBUTES: ReadonlySet<string> = new Set([
   'xmlns', 'viewBox', 'width', 'height', 'role', 'aria-label', 'id',
   'd', 'cx', 'cy', 'r', 'rx', 'ry', 'x', 'y', 'x1', 'y1', 'x2', 'y2', 'fx', 'fy',
   'fill', 'fill-opacity', 'fill-rule',
-  'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'stroke-opacity',
+  'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'stroke-opacity', 'stroke-dasharray',
   'opacity', 'transform', 'clip-path', 'clip-rule', 'filter',
   'gradientUnits', 'offset', 'stop-color', 'stop-opacity', 'stdDeviation',
   'in', 'in2', 'result', 'operator', 'values', 'tableValues', 'type', 'slope', 'intercept', 'dx', 'dy', 'flood-color', 'flood-opacity',

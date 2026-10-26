@@ -114,3 +114,6 @@ pas de nouveau code de rendu. `compound_eye` et `gem_eye` sont de VRAIS nouveaux
 
 Voir `docs/CHANGELOG-4.md` (le plus récent) et `docs/CHANGELOG.md` pour l'historique détaillé des sessions et
 `docs/ERRORS.md` pour les erreurs rencontrées et leur correction.
+
+## Crâne en profil (feat/skull-profile) — fait / à faire
+Fait : contour de profil, os, tissus mous, nuque/cou, oreille projetée, 3 coiffures, génération, vérification (29 contrôles), preuves. À faire, par composant : `docs/SKULL-PROFILE-REMAINING.md`.

@@ -1,0 +1,250 @@
+{
+  "heads": 200,
+  "passed": 200,
+  "checksPerHead": 29,
+  "errors": {},
+  "warnings": {
+    "cervicomental-matches": 1,
+    "nasolabial-angle-min": 6,
+    "facial-thirds": 3
+  },
+  "msPerHead": 14,
+  "referenceHead": {
+    "seed": 7,
+    "ok": true,
+    "checks": [
+      {
+        "layer": "geometry",
+        "id": "profile-finite",
+        "value": 1,
+        "limit": 1,
+        "ok": true,
+        "severity": "error"
+      },
+      {
+        "layer": "geometry",
+        "id": "profile-no-self-intersection",
+        "value": 0,
+        "limit": 0,
+        "ok": true,
+        "severity": "error"
+      },
+      {
+        "layer": "geometry",
+        "id": "bone-inside-skin",
+        "value": 0,
+        "limit": 0,
+        "ok": true,
+        "severity": "error"
+      },
+      {
+        "layer": "geometry",
+        "id": "tissue-positive",
+        "value": 0,
+        "limit": 0,
+        "ok": true,
+        "severity": "error"
+      },
+      {
+        "layer": "geometry",
+        "id": "landmark-vertical-order",
+        "value": 1,
+        "limit": 1,
+        "ok": true,
+        "severity": "error"
+      },
+      {
+        "layer": "geometry",
+        "id": "heights-match-front",
+        "value": 0,
+        "limit": 1e-9,
+        "ok": true,
+        "severity": "error"
+      },
+      {
+        "layer": "geometry",
+        "id": "gonial-matches-front",
+        "value": 0,
+        "limit": 0.5,
+        "ok": true,
+        "severity": "error"
+      },
+      {
+        "layer": "geometry",
+        "id": "nothing-above-vertex",
+        "value": 0.2188,
+        "limit": 4.2,
+        "ok": true,
+        "severity": "error"
+      },
+      {
+        "layer": "anatomy",
+        "id": "frankfurt-plane",
+        "value": 0.005,
+        "limit": 0.03,
+        "ok": true,
+        "severity": "error"
+      },
+      {
+        "layer": "anatomy",
+        "id": "e-line-upper-lip",
+        "value": -0.0314,
+        "limit": 0.006,
+        "ok": true,
+        "severity": "error"
+      },
+      {
+        "layer": "anatomy",
+        "id": "e-line-lower-lip",
+        "value": -0.0218,
+        "limit": 0.008,
+        "ok": true,
+        "severity": "error"
+      },
+      {
+        "layer": "anatomy",
+        "id": "facial-thirds",
+        "value": 0.724,
+        "limit": 0.6,
+        "ok": true,
+        "severity": "warn"
+      },
+      {
+        "layer": "anatomy",
+        "id": "nasal-projection",
+        "value": 0.6194,
+        "limit": 0.4,
+        "ok": true,
+        "severity": "warn"
+      },
+      {
+        "layer": "anatomy",
+        "id": "nasal-projection-max",
+        "value": 0.6194,
+        "limit": 0.8,
+        "ok": true,
+        "severity": "warn"
+      },
+      {
+        "layer": "anatomy",
+        "id": "nasolabial-angle-min",
+        "value": 89.3879,
+        "limit": 70,
+        "ok": true,
+        "severity": "warn"
+      },
+      {
+        "layer": "anatomy",
+        "id": "nasolabial-angle-max",
+        "value": 89.3879,
+        "limit": 135,
+        "ok": true,
+        "severity": "warn"
+      },
+      {
+        "layer": "anatomy",
+        "id": "cervicomental-matches",
+        "value": 9.9408,
+        "limit": 12,
+        "ok": true,
+        "severity": "warn"
+      },
+      {
+        "layer": "anatomy",
+        "id": "neck-depth-range",
+        "value": 0.4152,
+        "limit": 0.3,
+        "ok": true,
+        "severity": "warn"
+      },
+      {
+        "layer": "anatomy",
+        "id": "neck-depth-range-max",
+        "value": 0.4152,
+        "limit": 0.56,
+        "ok": true,
+        "severity": "warn"
+      },
+      {
+        "layer": "anatomy",
+        "id": "tissue-depth-min",
+        "value": 0.01,
+        "limit": 0.005,
+        "ok": true,
+        "severity": "error"
+      },
+      {
+        "layer": "anatomy",
+        "id": "tissue-depth-max",
+        "value": 0.05,
+        "limit": 0.07,
+        "ok": true,
+        "severity": "error"
+      },
+      {
+        "layer": "anatomy",
+        "id": "mastoid-behind-porion",
+        "value": -31.5,
+        "limit": 0,
+        "ok": true,
+        "severity": "error"
+      },
+      {
+        "layer": "anatomy",
+        "id": "head-length-range",
+        "value": 0.7858,
+        "limit": 0.7,
+        "ok": true,
+        "severity": "warn"
+      },
+      {
+        "layer": "anatomy",
+        "id": "head-length-range-max",
+        "value": 0.7858,
+        "limit": 0.92,
+        "ok": true,
+        "severity": "warn"
+      },
+      {
+        "layer": "style",
+        "id": "no-filters",
+        "value": 0,
+        "limit": 0,
+        "ok": true,
+        "severity": "error"
+      },
+      {
+        "layer": "style",
+        "id": "cel-palette",
+        "value": 23,
+        "limit": 40,
+        "ok": true,
+        "severity": "warn"
+      },
+      {
+        "layer": "style",
+        "id": "ink-contrast",
+        "value": 7.7689,
+        "limit": 4,
+        "ok": true,
+        "severity": "warn"
+      },
+      {
+        "layer": "style",
+        "id": "stroke-homogeneity",
+        "value": 5.5,
+        "limit": 14,
+        "ok": true,
+        "severity": "warn"
+      },
+      {
+        "layer": "style",
+        "id": "svg-size",
+        "value": 98.0996,
+        "limit": 160,
+        "ok": true,
+        "severity": "warn"
+      }
+    ]
+  }
+}

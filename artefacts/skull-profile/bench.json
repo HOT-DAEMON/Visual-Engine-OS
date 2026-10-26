@@ -1,0 +1,16 @@
+{
+  "faces": 24,
+  "raster": "640 px de large, sans polices système",
+  "median": {
+    "geometryMs": 4.56,
+    "renderColdMs": 16.91,
+    "rasterMs": 33.22,
+    "verifyMs": 12.86,
+    "renderWarmMs": 8.94,
+    "faceCompileMs": 110.99,
+    "faceRasterMs": 666.47,
+    "svgKB": 98.47
+  },
+  "profileTotalMs": 50.13,
+  "faceTotalMs": 777.46
+}

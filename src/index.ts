@@ -16,3 +16,6 @@ export { generateRandomFace, type RandomFace, type RandomFaceOptions } from './g
 export { drawAnatomy, randomLight, deepMerge, type AnatomyOverride } from './generation/random-face-anatomy';
 export { galleryEye, galleryPair, GALLERY_IDENTITIES } from './generation/eye-pool';
 export { faceLandmarks, fitEyeToFace, headOutline, outlinePath, halfWidthAt, eyeReach, type FaceLandmarks, type EyeFit } from './face';
+export { renderProfile, skullGeometry, SkullParams, type ProfileRender } from './skull';
+export { generateRandomProfile, type RandomProfile } from './generation/random-skull';
+export { verifyProfile } from './verify/skull';

@@ -162,3 +162,9 @@ Moteur de visage (nez, menton / mâchoire, matériau de peau, éclairage, ombres
 
 Moteur de structure du visage (`anatomyEngine: 'structured'` : régions du nez, mandibule, menton, tissus mous, bouche, trois déformations, stylisation, vérification de rendu) :
 `docs/FACE-STRUCTURE.md` (+ suites `FACE-STRUCTURE-NOSE/JAW/MOUTH/DEFORM/STYLE.md`), état par composant `docs/FACE-STRUCTURE-STATUS.md`, artefacts `artefacts/face-structure/`.
+
+## Crâne et tête en vue de profil (feat/skull-profile)
+
+`renderProfile(face, skull, {mode: 'skin'|'anatomy'|'bone'})` dessine la tête de profil (nuque, cou, voûte, os, tissus mous) à partir des MÊMES repères que la face ;
+`generateRandomProfile(seed)` et `verifyProfile(...)` (29 contrôles, géométrie / anatomie / style). Documentation : `docs/SKULL-PROFILE.md` (+ `-ANATOMY`, `-VERIFY`,
+`-REMAINING`), vitesse : `docs/PERF-3.md`, preuves : `artefacts/skull-profile/`.
