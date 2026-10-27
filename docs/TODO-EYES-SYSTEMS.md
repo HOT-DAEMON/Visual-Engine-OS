@@ -126,7 +126,7 @@ Un œil peut paraître très allongé simplement parce que son ouverture est ét
 Le moteur doit donc conserver une séparation entre le volume oculaire et le masque palpébral.
 
 ## 2.4. Groupe EYE-04 — Iris : une architecture interne complète
-C'est probablement l'une des parties où ton moteur peut gagner le plus en richesse visuelle.
+C'est probablement l'une des parties où le moteur peut gagner le plus en richesse visuelle.
 L'iris ne devrait jamais être modélisé comme un disque uniformément coloré. Il faut le traiter comme un système de motifs superposés, avec une structure radiale et des variations locales.
 ### EYE-04A	Région pupillaire
 Transition entre la pupille et l'iris
