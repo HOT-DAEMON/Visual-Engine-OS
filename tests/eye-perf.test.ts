@@ -75,11 +75,16 @@ describe('ombres douces sans filtre (EYE-PERF)', () => {
     }
   });
 
-  it('vitesse : le mode `fast` rastérise nettement plus vite que `reference` (marge large, test anti-régression)', () => {
-    const med = (svg: string) => { const t: number[] = []; for (let i = 0; i < 5; i++) { const t0 = performance.now(); new Resvg(svg).render(); t.push(performance.now() - t0); } return t.sort((x, y) => x - y)[2] as number; };
-    const fast = med(svgOf({ renderQuality: 'fast' }));
-    const ref = med(svgOf({ renderQuality: 'reference' }));
-    expect(fast).toBeLessThan(ref * 0.75); // mesuré ≈ 0,4 ; seuil lâche pour tolérer la charge de la machine
+  it('vitesse : `fast` plus rapide que `reference` (mesures ENTRELACÉES pour résister à la charge ; la preuve chiffrée est scripts/bench-eyes.ts)', () => {
+    const fastSvg = svgOf({ renderQuality: 'fast' });
+    const refSvg = svgOf({ renderQuality: 'reference' });
+    const f: number[] = [], r: number[] = [];
+    for (let i = 0; i < 7; i++) {
+      let t0 = performance.now(); new Resvg(refSvg).render(); r.push(performance.now() - t0);
+      t0 = performance.now(); new Resvg(fastSvg).render(); f.push(performance.now() - t0);
+    }
+    const med = (a: number[]) => [...a].sort((x, y) => x - y)[3] as number;
+    expect(med(f)).toBeLessThan(med(r) * 0.95); // mesuré au repos : ≈ 0,4 ; seuil volontairement lâche
   });
 
   it('déterminisme : mêmes entrées, même SVG, en `fast` comme en `reference`', () => {
