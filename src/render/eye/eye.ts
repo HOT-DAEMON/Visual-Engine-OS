@@ -21,11 +21,16 @@ import { gradeEye, resolveEyeLook } from './look';
  * contexte partagé (géométrie de l'ouverture, lumière locale, couleurs de peau/paupière) puis
  * délègue chaque zone visuelle à sa fonction dédiée, et assemble le résultat final.
  */
-export function compileEye(rawEye: EyeSpec, worldLight: LightVector): CompiledObject {
+/** Œil EFFECTIF : archétype, expression, réponse lumineuse de la pupille (EYE-05G), étalonnage — exactement ce que le rendu dessine (réutilisé par `verify/eye.ts`). */
+export function resolveEye(rawEye: EyeSpec): EyeSpec {
   const posed = applyExpression(applyArchetype(rawEye));
   // EYE-05G : la réponse lumineuse change la taille AVANT tout le reste (iris détaillé, fibres, pupille lisent la même taille).
   const sized = posed.pupil.response.model === 'fixed' ? posed : { ...posed, pupil: { ...posed.pupil, size: effectivePupilSize(posed.pupil) } };
-  const eye = gradeEye(sized);
+  return gradeEye(sized);
+}
+
+export function compileEye(rawEye: EyeSpec, worldLight: LightVector): CompiledObject {
+  const eye = resolveEye(rawEye);
   const id = eye.id;
   const rot = eye.transform.rotationDeg;
   // Rotation 3D de la tête (voir lighting/head-turn.ts) : s'applique AVANT la rotation 2D dans le
