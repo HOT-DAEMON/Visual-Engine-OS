@@ -13,3 +13,4 @@ export type { Caruncle, FoldGeometry } from './canthi-fold';
 export { caruncleOf, foldGeometry } from './canthi-fold';
 export { linerGeometry, linerTopOffset, type LinerGeometry, type LinerSpec } from './liner';
 export { placeHighlights, hasDetailedHighlights, type PlacedHighlight, type PlaceCtx } from './highlights';
+export { polar, wobble, angularRange, radialRange, zoneOutline, angularCells, blendColor, type AngularCell } from './iris-layers';

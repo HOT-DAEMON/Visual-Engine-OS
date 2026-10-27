@@ -6,6 +6,7 @@ import { compileSurface, gradientStop as stop, type Surface } from '../../materi
 import { renderPupil } from './pupil';
 import { renderIrisDetail } from './iris-detail';
 import { renderHighlights } from './highlights-render';
+import { renderIrisLayers } from './iris-layers-render';
 import type { EyeSpec } from '../../schema';
 import { el, num, urlRef } from '../../core/svg';
 import { P, highlightOffsets, irisFibers, limbalRing, openingPath, polygonPath, pupilRadii } from './helpers';
@@ -45,7 +46,10 @@ export function renderGlobeInner(
   };
   const iris = compileSurface(`${id}-iris`, irisSurface, eye.iris.material, L, rot);
   defs.push(...iris.defs);
-  const irisGroup: string[] = [iris.markup, irisFibers(eye, c, irisRx, irisRy)];
+  // Couches de couleur (EYE-04) : sous les fibres, pour que la texture radiale reste lisible par-dessus.
+  const layers = renderIrisLayers(eye, c, irisRx, irisRy, id);
+  defs.push(...layers.defs);
+  const irisGroup: string[] = [iris.markup, ...layers.markup, irisFibers(eye, c, irisRx, irisRy)];
 
   // Anneau limbique
   const ring = limbalRing(eye, c, irisRx, irisRy);

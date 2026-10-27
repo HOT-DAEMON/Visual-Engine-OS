@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { Hex, Unit } from './primitives';
 import { ColorSource, MaterialRef } from './color-material';
 import { HighlightItem } from './eye-highlights';
+import { IrisLayer } from './eye-iris-layers';
 import { PUPIL_SHAPES, PupilCenter, PupilDeform, PupilEdge, PupilLobes, PupilMultiple, PupilResponse } from './eye-pupil-profile';
 
 /**
@@ -96,6 +97,8 @@ export const Iris = z
     glow: z.object({ color: Hex, strength: Unit }).strict().nullable().default({ color: '#bff3ff', strength: 0.55 }),
     /** Iris détaillé — voir `IrisDetail`. null : aucun (comportement historique). */
     detail: IrisDetail.nullable().default(null),
+    /** Couches de couleur à masques/gradients (EYE-04) — voir `eye-iris-layers.ts`. Vide : aucune (comportement historique). */
+    layers: z.array(IrisLayer).max(8).default([]),
   })
   .strict();
 
