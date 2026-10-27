@@ -5,6 +5,7 @@ import { foreshortenTransform, gazeOf } from '../../lighting/gaze3d';
 import { compileSurface, gradientStop as stop, type Surface } from '../../materials';
 import { renderPupil } from './pupil';
 import { renderIrisDetail } from './iris-detail';
+import { renderHighlights } from './highlights-render';
 import type { EyeSpec } from '../../schema';
 import { el, num, urlRef } from '../../core/svg';
 import { P, highlightOffsets, irisFibers, limbalRing, openingPath, polygonPath, pupilRadii } from './helpers';
@@ -148,28 +149,34 @@ export function renderGlobeInner(
     }),
   );
 
-  // Reflets « anime », positionnés par la lumière globale
-  const off = highlightOffsets(eye, worldLight);
-  const hl = eye.highlights;
-  inner.push(
-    el('circle', {
-      cx: c.x + off.primary.x,
-      cy: c.y + off.primary.y,
-      r: hl.primary.size * irisRx,
-      fill: worldLight.color,
-      'fill-opacity': hl.primary.opacity,
-    }),
-  );
-  if (hl.secondary) {
+  // Reflets : liste détaillée (highlights-render.ts) ou, par défaut, les deux reflets « anime » historiques.
+  if (eye.highlights.list.length > 0) {
+    const hr = renderHighlights(eye, g, c, L, irisRx, irisRy, worldLight.color, id);
+    defs.push(...hr.defs);
+    inner.push(...hr.markup);
+  } else {
+    const off = highlightOffsets(eye, worldLight);
+    const hl = eye.highlights;
     inner.push(
       el('circle', {
-        cx: c.x + off.secondary.x,
-        cy: c.y + off.secondary.y,
-        r: hl.secondary.size * irisRx,
+        cx: c.x + off.primary.x,
+        cy: c.y + off.primary.y,
+        r: hl.primary.size * irisRx,
         fill: worldLight.color,
-        'fill-opacity': hl.secondary.opacity,
+        'fill-opacity': hl.primary.opacity,
       }),
     );
+    if (hl.secondary) {
+      inner.push(
+        el('circle', {
+          cx: c.x + off.secondary.x,
+          cy: c.y + off.secondary.y,
+          r: hl.secondary.size * irisRx,
+          fill: worldLight.color,
+          'fill-opacity': hl.secondary.opacity,
+        }),
+      );
+    }
   }
 
   // Pli épicanthique : la peau recouvre une partie de la fente (recouvrement limité à l'ouverture)

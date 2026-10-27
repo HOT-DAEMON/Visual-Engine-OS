@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { Hex, Unit } from './primitives';
 import { ColorSource, MaterialRef } from './color-material';
+import { HighlightItem } from './eye-highlights';
 import { PUPIL_SHAPES, PupilCenter, PupilDeform, PupilEdge, PupilLobes, PupilMultiple, PupilResponse } from './eye-pupil-profile';
 
 /**
@@ -145,5 +146,7 @@ export const Highlights = z
   .object({
     primary: Highlight.default({ size: 0.24, opacity: 1 }),
     secondary: Highlight.nullable().default({ size: 0.11, opacity: 0.75 }),
+    /** Reflets détaillés (jusqu'à 6). Liste non vide : REMPLACE `primary`/`secondary` (voir `eye-highlights.ts`). */
+    list: z.array(HighlightItem).max(6).default([]),
   })
   .strict();

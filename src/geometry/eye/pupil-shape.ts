@@ -45,7 +45,7 @@ export function effectivePupilSize(pupil: Pupil): number {
 const ellipse = (n: number): Vec[] => Array.from({ length: n }, (_, i) => ({ x: Math.cos((i / n) * TAU), y: Math.sin((i / n) * TAU) }));
 
 /** Étoile / polygone régulier : sommet 0 en haut (−90°), orientation reproductible. */
-function vertices(count: number, inner: number | null): Vec[] {
+export function vertices(count: number, inner: number | null): Vec[] {
   const m = inner === null ? count : count * 2;
   return Array.from({ length: m }, (_, i) => {
     const a = -Math.PI / 2 + (i / m) * TAU;

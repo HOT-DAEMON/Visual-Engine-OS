@@ -12,3 +12,4 @@ export { browGeometry, browHairs } from './eyebrow';
 export type { Caruncle, FoldGeometry } from './canthi-fold';
 export { caruncleOf, foldGeometry } from './canthi-fold';
 export { linerGeometry, linerTopOffset, type LinerGeometry, type LinerSpec } from './liner';
+export { placeHighlights, hasDetailedHighlights, type PlacedHighlight, type PlaceCtx } from './highlights';
