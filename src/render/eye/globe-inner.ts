@@ -7,6 +7,7 @@ import { renderPupil } from './pupil';
 import { renderIrisDetail } from './iris-detail';
 import { renderHighlights } from './highlights-render';
 import { renderIrisLayers } from './iris-layers-render';
+import { renderMicrodetail } from './micro-render';
 import type { EyeSpec } from '../../schema';
 import { el, num, urlRef } from '../../core/svg';
 import { P, highlightOffsets, irisFibers, limbalRing, openingPath, polygonPath, pupilRadii } from './helpers';
@@ -84,7 +85,12 @@ export function renderGlobeInner(
   // lueur et la pupille se compressent ensemble le long de l'axe de bascule, comme un disque physique
   // vu de plus en plus de profil. Identité quand le regard est de face.
   const gazeT = foreshortenTransform(c.x, c.y, gazeOf(eye));
+  // Microdétails (EYE-07) : la sclère (dessous) précède l'iris, le film lacrymal et l'occlusion (dessus) le recouvrent.
+  const micro = renderMicrodetail(eye, g, c, L, irisRx, irisRy, id);
+  defs.push(...micro.defs);
+  inner.push(...micro.under);
   inner.push(gazeT ? el('g', { transform: gazeT }, irisGroup) : el('g', {}, irisGroup));
+  inner.push(...micro.over);
 
   // Caroncule lacrymale (canthus interne)
   const car = caruncleOf(g, eye.canthi.inner.caruncle);
