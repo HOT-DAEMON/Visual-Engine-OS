@@ -1,5 +1,5 @@
 import { darken, lighten } from '../../core/color';
-import { caruncleOf, foldGeometry, type OpeningGeometry, type FoldGeometry, type Vec } from '../../geometry/eye';
+import { caruncleOf, foldGeometry, type OpeningGeometry, type FoldGeometry, type TurnedOpening, type Vec } from '../../geometry/eye';
 import { direction2D, type LightVector } from '../../lighting/light';
 import { foreshortenTransform, gazeOf } from '../../lighting/gaze3d';
 import { compileSurface, gradientStop as stop, type Surface } from '../../materials';
@@ -35,6 +35,7 @@ export function renderGlobeInner(
   id: string,
   irisRx: number,
   irisRy: number,
+  turn: TurnedOpening | null = null,
 ): GlobeInner {
   const defs: string[] = [];
   const inner: string[] = [];
@@ -89,7 +90,11 @@ export function renderGlobeInner(
   const micro = renderMicrodetail(eye, g, c, L, irisRx, irisRy, id);
   defs.push(...micro.defs);
   inner.push(...micro.under);
-  inner.push(gazeT ? el('g', { transform: gazeT }, irisGroup) : el('g', {}, irisGroup));
+  // Rotation 3D de la tête (modèle sphère) : l'iris suit la matrice locale de la projection au centre de l'œil (compression propre à sa position).
+  const isId = !turn || (Math.abs(turn.jac.a - 1) < 1e-9 && Math.abs(turn.jac.d - 1) < 1e-9 && Math.abs(turn.jac.b) < 1e-9 && Math.abs(turn.jac.c) < 1e-9);
+  const turnT = turn && !isId ? `translate(${num(c.x)} ${num(c.y)}) matrix(${num(turn.jac.a)} ${num(turn.jac.c)} ${num(turn.jac.b)} ${num(turn.jac.d)} 0 0) translate(${num(-c.x)} ${num(-c.y)})` : '';
+  const irisNode = gazeT ? el('g', { transform: gazeT }, irisGroup) : el('g', {}, irisGroup);
+  inner.push(turnT ? el('g', { transform: turnT }, [irisNode]) : irisNode);
   inner.push(...micro.over);
 
   // Caroncule lacrymale (canthus interne)

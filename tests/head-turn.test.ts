@@ -73,8 +73,8 @@ describe('rotateLightForHeadTurn (rotation 3D physique de la lumière)', () => {
 });
 
 describe('schéma HeadTurn', () => {
-  it('défaut : yawDeg=0, pitchDeg=0', () => {
-    expect(eye().headTurn).toEqual({ yawDeg: 0, pitchDeg: 0 });
+  it('défaut : yawDeg=0, pitchDeg=0, modèle flat (historique)', () => {
+    expect(eye().headTurn).toEqual({ yawDeg: 0, pitchDeg: 0, model: 'flat', azimuthDeg: 0, radiusFactor: 3, parallax: false });
   });
   it('rejette une valeur hors bornes', () => {
     expect(EyeSpec.safeParse({ id: 'e', kind: 'eye', headTurn: { yawDeg: 80 } }).success).toBe(false);

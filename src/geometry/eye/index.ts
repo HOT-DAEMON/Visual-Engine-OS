@@ -15,3 +15,4 @@ export { linerGeometry, linerTopOffset, type LinerGeometry, type LinerSpec } fro
 export { placeHighlights, hasDetailedHighlights, type PlacedHighlight, type PlaceCtx } from './highlights';
 export { polar, wobble, angularRange, radialRange, zoneOutline, angularCells, blendColor, type AngularCell } from './iris-layers';
 export { microLod, scleraVessels, scleraMarks, type Lod, type Vessel } from './micro-detail';
+export { turnOpening, turnPoint, jacobianAtCenter, facingOf, type TurnParams, type TurnedOpening, type Jacobian } from './turn3d';

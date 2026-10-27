@@ -1,6 +1,6 @@
 import { applyArchetype } from '../../archetypes';
 import { applyExpression } from '../../expressions';
-import { effectivePupilSize, openingGeometry } from '../../geometry/eye';
+import { effectivePupilSize, openingGeometry, turnOpening, type TurnedOpening } from '../../geometry/eye';
 import { toLocal, type LightVector } from '../../lighting/light';
 import { headTurnOf, rotateLightForHeadTurn } from '../../lighting/head-turn';
 import { foreshortenTransform } from '../../lighting/gaze3d';
@@ -31,7 +31,12 @@ export function compileEye(rawEye: EyeSpec, worldLight: LightVector): CompiledOb
   // recevoir une « lumière du monde » — simplement déjà corrigée pour l'orientation de la tête.
   const headLight = rotateLightForHeadTurn(worldLight, eye.headTurn.yawDeg, eye.headTurn.pitchDeg);
   const L = toLocal(headLight, rot);
-  const g = openingGeometry(eye.shape, eye.canthi);
+  const g0 = openingGeometry(eye.shape, eye.canthi);
+  // Rotation 3D : modèle `sphere` = enveloppe reprojetée point par point sur la sphère de la tête (turn3d.ts) ; `flat` = écrasement uniforme historique (headWrap).
+  const ht = eye.headTurn;
+  const turned: TurnedOpening | null =
+    ht.model === 'sphere' ? turnOpening(g0, { yawDeg: ht.yawDeg, pitchDeg: ht.pitchDeg, azimuthDeg: ht.azimuthDeg, radius: eye.shape.width * ht.radiusFactor }, !ht.parallax) : null;
+  const g = turned ? turned.g : g0;
   const { rx: irisRx, ry: irisRy } = irisRadii(eye);
   const c = irisCenter(eye, g);
   const skin = dominantColor((eye.skin ?? DEFAULT_SKIN).base);
@@ -51,7 +56,7 @@ export function compileEye(rawEye: EyeSpec, worldLight: LightVector): CompiledOb
   const sclera = compileSurface(`${id}-sclera`, scleraSurface, eye.sclera, L, rot);
   defs.push(...sclera.defs);
 
-  const globe = renderGlobeInner(eye, g, c, L, rot, headLight, skin, id, irisRx, irisRy);
+  const globe = renderGlobeInner(eye, g, c, L, rot, headLight, skin, id, irisRx, irisRy, turned);
   defs.push(...globe.defs);
 
   const lids = renderLidsAndFold(eye, g, L, skin, lidColor, th, globe.fold, id);
@@ -65,7 +70,7 @@ export function compileEye(rawEye: EyeSpec, worldLight: LightVector): CompiledOb
   // avant la transformation de scène `objectTransform`). Identité exacte à headTurn=0.
   const headRadius = eye.shape.width * 0.9;
   const headProj = headTurnOf(eye.headTurn.yawDeg, eye.headTurn.pitchDeg, headRadius);
-  const headWrap = `translate(${num(headProj.dx)} ${num(headProj.dy)}) ${foreshortenTransform(0, 0, headProj)}`;
+  const headWrap = turned ? '' : `translate(${num(headProj.dx)} ${num(headProj.dy)}) ${foreshortenTransform(0, 0, headProj)}`;
   const content = [
     sclera.markup,
     el('g', { 'clip-path': urlRef(`${id}-opening`) }, globe.inner),
@@ -73,6 +78,6 @@ export function compileEye(rawEye: EyeSpec, worldLight: LightVector): CompiledOb
     ...brow.outside,
   ];
 
-  const markup = el('g', { transform: objectTransform(eye.transform) }, [el('g', { transform: headWrap }, content)]);
+  const markup = el('g', { transform: objectTransform(eye.transform) }, [el('g', headWrap ? { transform: headWrap } : {}, content)]);
   return { defs, markup };
 }
