@@ -5,7 +5,7 @@ dans quel fichier, et avec quels tests à l'appui. Voir `docs/ERRORS.md`
 pour le détail des erreurs rencontrées pendant le développement.
 
 > Journal découpé en fichiers de ≤ 200 lignes (discipline de lisibilité) :
-> `CHANGELOG-4.md` (le plus récent : session 13, cheveux complets) → `CHANGELOG-3.md` → `CHANGELOG.md` / `CHANGELOG-2.md`.
+> `CHANGELOG-12.md` (le plus récent : systèmes d'yeux) → `CHANGELOG-11.md` (crâne de profil) → … → `CHANGELOG-4.md` (session 13, cheveux complets) → `CHANGELOG-3.md` → `CHANGELOG.md` / `CHANGELOG-2.md`.
 
 ## Session 7 — Visage complet aléatoire (au-delà d'une paire d'yeux)
 

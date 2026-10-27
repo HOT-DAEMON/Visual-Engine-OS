@@ -1,0 +1,190 @@
+[
+  {
+    "eye": "almond",
+    "ok": true,
+    "failures": [],
+    "warnings": [],
+    "metrics": {
+      "openingArea": 17261.95114746093,
+      "irisToOpeningWidth": 0.552,
+      "pupilToIris": 0.36000000000000004,
+      "irisVisible": 0.8,
+      "filters": 0,
+      "svgBytes": 51581
+    }
+  },
+  {
+    "eye": "round",
+    "ok": true,
+    "failures": [],
+    "warnings": [],
+    "metrics": {
+      "openingArea": 24540.926345040356,
+      "irisToOpeningWidth": 0.552,
+      "pupilToIris": 0.36000000000000004,
+      "irisVisible": 1,
+      "filters": 0,
+      "svgBytes": 51682
+    }
+  },
+  {
+    "eye": "sharp",
+    "ok": true,
+    "failures": [],
+    "warnings": [
+      "iris-visible-fraction"
+    ],
+    "metrics": {
+      "openingArea": 13203.888715826813,
+      "irisToOpeningWidth": 0.552,
+      "pupilToIris": 0.36000000000000004,
+      "irisVisible": 0.48,
+      "filters": 0,
+      "svgBytes": 51407
+    }
+  },
+  {
+    "eye": "drooping",
+    "ok": true,
+    "failures": [],
+    "warnings": [],
+    "metrics": {
+      "openingArea": 13502.585898551577,
+      "irisToOpeningWidth": 0.552,
+      "pupilToIris": 0.36000000000000004,
+      "irisVisible": 0.52,
+      "filters": 0,
+      "svgBytes": 51422
+    }
+  },
+  {
+    "eye": "chibi",
+    "ok": true,
+    "failures": [],
+    "warnings": [],
+    "metrics": {
+      "openingArea": 36683.063084564215,
+      "irisToOpeningWidth": 0.4499980893423517,
+      "pupilToIris": 0.36000000000000004,
+      "irisVisible": 1,
+      "filters": 0,
+      "svgBytes": 52237
+    }
+  },
+  {
+    "eye": "angular",
+    "ok": true,
+    "failures": [],
+    "warnings": [
+      "iris-visible-fraction"
+    ],
+    "metrics": {
+      "openingArea": 12929.666529077842,
+      "irisToOpeningWidth": 0.552,
+      "pupilToIris": 0.36000000000000004,
+      "irisVisible": 0.44,
+      "filters": 0,
+      "svgBytes": 51368
+    }
+  },
+  {
+    "eye": "compressed",
+    "ok": true,
+    "failures": [],
+    "warnings": [
+      "iris-visible-fraction"
+    ],
+    "metrics": {
+      "openingArea": 9487.557874877928,
+      "irisToOpeningWidth": 0.552,
+      "pupilToIris": 0.36000000000000004,
+      "irisVisible": 0.36,
+      "filters": 0,
+      "svgBytes": 51234
+    }
+  },
+  {
+    "eye": "rounded_rect",
+    "ok": true,
+    "failures": [],
+    "warnings": [],
+    "metrics": {
+      "openingArea": 19863.822648559566,
+      "irisToOpeningWidth": 0.5515953261828176,
+      "pupilToIris": 0.36000000000000004,
+      "irisVisible": 0.84,
+      "filters": 0,
+      "svgBytes": 51771
+    }
+  },
+  {
+    "eye": "triangle",
+    "ok": true,
+    "failures": [],
+    "warnings": [],
+    "metrics": {
+      "openingArea": 26254.67233713636,
+      "irisToOpeningWidth": 0.41185035580936674,
+      "pupilToIris": 0.36000000000000004,
+      "irisVisible": 1,
+      "filters": 0,
+      "svgBytes": 52257
+    }
+  },
+  {
+    "eye": "circle",
+    "ok": true,
+    "failures": [],
+    "warnings": [],
+    "metrics": {
+      "openingArea": 29392.10205078125,
+      "irisToOpeningWidth": 0.552,
+      "pupilToIris": 0.36000000000000004,
+      "irisVisible": 1,
+      "filters": 0,
+      "svgBytes": 51851
+    }
+  },
+  {
+    "eye": "diamond",
+    "ok": true,
+    "failures": [],
+    "warnings": [],
+    "metrics": {
+      "openingArea": 16108.539935714369,
+      "irisToOpeningWidth": 0.552,
+      "pupilToIris": 0.36000000000000004,
+      "irisVisible": 0.6,
+      "filters": 0,
+      "svgBytes": 51289
+    }
+  },
+  {
+    "eye": "diamond_v2",
+    "ok": true,
+    "failures": [],
+    "warnings": [],
+    "metrics": {
+      "openingArea": 29844.398427444772,
+      "irisToOpeningWidth": 0.4181818181818182,
+      "pupilToIris": 0.36000000000000004,
+      "irisVisible": 1,
+      "filters": 0,
+      "svgBytes": 51823
+    }
+  },
+  {
+    "eye": "tout combiné",
+    "ok": true,
+    "failures": [],
+    "warnings": [],
+    "metrics": {
+      "openingArea": 14238.909927261704,
+      "irisToOpeningWidth": 0.6701034214486212,
+      "pupilToIris": 0.2925787938778676,
+      "irisVisible": 0.76,
+      "filters": 6,
+      "svgBytes": 60955
+    }
+  }
+]

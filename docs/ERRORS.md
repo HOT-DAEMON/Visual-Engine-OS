@@ -181,3 +181,4 @@ deux éléments neutralisés par une comparaison, les 9 fichiers sont strictemen
 identiques. Point important : ne jamais conclure à une régression sur la seule
 foi d'un hash qui diffère sans avoir d'abord diffé le contenu réel.
 - 8 : `ERRORS-8.md` (moteur de crâne en profil, feat/skull-profile).
+- 9 : `ERRORS-9.md` (systèmes d'yeux, feat/eyes-systems).
