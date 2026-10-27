@@ -5,8 +5,8 @@ import { microLod, openingGeometry, scleraMarks, scleraVessels } from '../src/ge
 const eye = (o: object = {}) => EyeSpec.parse({ kind: 'eye', id: 'e', ...o });
 const geom = (e = eye()) => openingGeometry(e.shape, e.canthi);
 const c = { x: 0, y: 0 };
-const scene = (microdetail: unknown, seed = 3) => {
-  const r = compileScene({ width: 640, height: 520, background: '#3b4157', objects: [{ kind: 'eye', id: 'e', seed, transform: { x: 320, y: 260 }, shape: { width: 400, height: 240 }, microdetail }] } as never);
+const scene = (microdetail: unknown, seed = 3, renderQuality = 'reference') => {
+  const r = compileScene({ width: 640, height: 520, background: '#3b4157', objects: [{ kind: 'eye', id: 'e', seed, transform: { x: 320, y: 260 }, shape: { width: 400, height: 240 }, microdetail, renderQuality }] } as never);
   if (!r.ok) throw new Error(r.issues.join('\n'));
   return r.svg;
 };
@@ -60,8 +60,9 @@ describe('EYE-07 — microdétails de la sclère', () => {
     expect(scene({})).not.toBe(none);
     const full = scene({ vessels: V, imperfections: 4 });
     expect(full).toContain('stroke-linecap="round"');
-    expect(full).toContain('-wet');
+    expect(full).toContain('-wet'); // mode `reference` : flous SVG historiques
     expect(full).toContain('-occl');
+    expect(scene({ vessels: V }, 3, 'fast')).not.toContain('<filter'); // mode `fast` (défaut) : aucun filtre
     const tiny = scene({ vessels: V, imperfections: 4, lod: { eyePixels: 30 } });
     expect(tiny.length).toBeLessThan(full.length);
     expect(scene({ vessels: V }, 3)).toBe(scene({ vessels: V }, 3));

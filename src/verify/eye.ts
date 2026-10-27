@@ -1,4 +1,4 @@
-import { cubicAt, IRIS_FIT, openingGeometry, placeHighlights, pupilContours, scleraVessels, microLod, turnOpening, type OpeningGeometry, type Vec } from '../geometry/eye';
+import { IRIS_FIT, openingPolygon, openingGeometry, placeHighlights, pupilContours, scleraVessels, microLod, turnOpening, type Vec } from '../geometry/eye';
 import { halfVectorXY, lightVector, toLocal, type LightVector } from '../lighting/light';
 import { rotateLightForHeadTurn } from '../lighting/head-turn';
 import { compileEye, resolveEye } from '../render/eye/eye';
@@ -33,14 +33,6 @@ const inside = (p: Vec, poly: readonly Vec[]): boolean => {
   return c;
 };
 const area = (poly: readonly Vec[]): number => Math.abs(poly.reduce((s, p, i) => { const q = poly[(i + 1) % poly.length] as Vec; return s + (p.x * q.y - q.x * p.y); }, 0)) / 2;
-
-/** Polygone de l'ouverture (bord haut de pi à po, bord bas de po à pi), `n` points par courbe. */
-export function openingPolygon(g: OpeningGeometry, n = 32): Vec[] {
-  const pts: Vec[] = [];
-  for (let i = 0; i < n; i++) pts.push(cubicAt(g.pi, g.u1, g.u2, g.po, i / n));
-  for (let i = 0; i < n; i++) pts.push(cubicAt(g.po, g.l1, g.l2, g.pi, i / n));
-  return pts;
-}
 
 export interface EyeMetrics {
   readonly openingArea: number;

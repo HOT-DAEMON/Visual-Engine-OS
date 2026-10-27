@@ -45,6 +45,8 @@ export const EyeSpec = z
      * l'œil est posé sur un hôte, sinon peau claire par défaut. Doit correspondre à la peau autour.
      */
     skin: MaterialRef.nullable().default(null),
+    /** `fast` (défaut) : ombres douces SANS filtre (≈ 4× plus rapide à rastériser, voir `render/eye/soft-shadow.ts`) ; `reference` : flou gaussien SVG historique. */
+    renderQuality: z.enum(['fast', 'reference']).default('fast'),
     /** Moteur d'apparence partagé (ombre/lumière/contour dérivés, effets sur l'iris, étalonnage) — voir `render/eye/look.ts`. null : aucun. */
     appearance: Appearance.nullable().default(null),
     /** Microdétails de la sclère et des tissus (EYE-07) — voir `eye-microdetail.ts`. null : aucun (comportement historique). */

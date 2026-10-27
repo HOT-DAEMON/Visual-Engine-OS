@@ -8,6 +8,8 @@ import { renderIrisDetail } from './iris-detail';
 import { renderHighlights } from './highlights-render';
 import { renderIrisLayers } from './iris-layers-render';
 import { renderMicrodetail } from './micro-render';
+import { softShadow } from './soft-shadow';
+import { openingPolygon } from '../../geometry/eye';
 import type { EyeLook } from './look';
 import { compileEffects } from '../../appearance';
 import type { EyeSpec } from '../../schema';
@@ -143,20 +145,16 @@ export function renderGlobeInner(
   const margin = Math.max(g.bbox.w, g.bbox.h) * 0.25;
   const b = g.bbox;
   const outer = `M${num(b.x - margin)} ${num(b.y - margin)}H${num(b.x + b.w + margin)}V${num(b.y + b.h + margin)}H${num(b.x - margin)}Z`;
-  defs.push(
-    el('filter', { id: `${id}-lidblur`, x: '-20%', y: '-20%', width: '140%', height: '140%' }, [
-      el('feGaussianBlur', { stdDeviation: g.hEff * 0.035 }),
-    ]),
-  );
-  inner.push(
-    el('path', {
-      d: outer + openingPath(g, -L.x * dist, -L.y * dist),
-      'fill-rule': 'evenodd',
-      fill: look ? darken(look.skin.shadow, 0.55) : '#000000',
-      'fill-opacity': 0.38,
-      filter: urlRef(`${id}-lidblur`),
-    }),
-  );
+  const shadowColor = look ? darken(look.skin.shadow, 0.55) : '#000000';
+  const shiftedOpening = openingPath(g, -L.x * dist, -L.y * dist);
+  if (eye.renderQuality === 'reference') {
+    defs.push(el('filter', { id: `${id}-lidblur`, x: '-20%', y: '-20%', width: '140%', height: '140%' }, [el('feGaussianBlur', { stdDeviation: g.hEff * 0.035 })]));
+    inner.push(el('path', { d: outer + shiftedOpening, 'fill-rule': 'evenodd', fill: shadowColor, 'fill-opacity': 0.38, filter: urlRef(`${id}-lidblur`) }));
+  } else {
+    const sh = softShadow(id, openingPolygon(g, 48, -L.x * dist, -L.y * dist), { x: b.x - margin, y: b.y - margin, w: b.w + 2 * margin, h: b.h + 2 * margin }, g.hEff * 0.035, shadowColor, 0.38);
+    defs.push(...sh.defs);
+    inner.push(...sh.markup);
+  }
 
   // Vignettage aux coins (occlusion ambiante de l'orbite)
   defs.push(

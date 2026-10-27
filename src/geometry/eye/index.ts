@@ -16,3 +16,4 @@ export { placeHighlights, hasDetailedHighlights, type PlacedHighlight, type Plac
 export { polar, wobble, angularRange, radialRange, zoneOutline, angularCells, blendColor, type AngularCell } from './iris-layers';
 export { microLod, scleraVessels, scleraMarks, type Lod, type Vessel } from './micro-detail';
 export { turnOpening, turnPoint, jacobianAtCenter, facingOf, type TurnParams, type TurnedOpening, type Jacobian } from './turn3d';
+export { openingPolygon } from './opening-polygon';

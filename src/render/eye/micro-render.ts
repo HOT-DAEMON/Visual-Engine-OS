@@ -5,6 +5,7 @@ import { gradientStop as stop } from '../../materials';
 import type { EyeSpec } from '../../schema';
 import { el, urlRef } from '../../core/svg';
 import { P, smoothThrough } from './helpers';
+import { softLine } from './soft-shadow';
 
 /**
  * EYE-07 / EYE-01 — Peinture des microdétails (géométrie et LOD : geometry/eye/micro-detail.ts).
@@ -57,10 +58,13 @@ export function renderMicrodetail(eye: EyeSpec, g: OpeningGeometry, c: Vec, loca
     if (marks.length) under.push(el('g', { fill: '#8c5b3d', 'fill-opacity': 0.28 }, marks));
   }
 
-  // EYE-07H — occlusion locale : ombre de contact de la paupière haute sur le globe.
+  // EYE-07H — occlusion locale : ombre de contact de la paupière haute sur le globe (trait doux sans filtre, ou flou de référence).
   if (m.occlusion > 0 && lod.fine > 0) {
-    defs.push(el('filter', { id: `${id}-occl`, x: '-10%', y: '-30%', width: '120%', height: '160%' }, [el('feGaussianBlur', { stdDeviation: h * 0.03 })]));
-    over.push(el('path', { d: upperD(g, h * 0.02), fill: 'none', stroke: '#000000', 'stroke-width': h * 0.07, 'stroke-opacity': m.occlusion * 0.42 * lod.fine, 'stroke-linecap': 'round', filter: urlRef(`${id}-occl`) }));
+    const alpha = m.occlusion * 0.42 * lod.fine;
+    if (eye.renderQuality === 'reference') {
+      defs.push(el('filter', { id: `${id}-occl`, x: '-10%', y: '-30%', width: '120%', height: '160%' }, [el('feGaussianBlur', { stdDeviation: h * 0.03 })]));
+      over.push(el('path', { d: upperD(g, h * 0.02), fill: 'none', stroke: '#000000', 'stroke-width': h * 0.07, 'stroke-opacity': alpha, 'stroke-linecap': 'round', filter: urlRef(`${id}-occl`) }));
+    } else over.push(...softLine(upperD(g, h * 0.02), h * 0.04, h * 0.03, '#000000', alpha));
   }
 
   // EYE-07C / EYE-01 — film lacrymal : reflet diffus sur le globe (côté de la lumière) + ménisque brillant le long du bord inférieur.
@@ -71,10 +75,13 @@ export function renderMicrodetail(eye: EyeSpec, g: OpeningGeometry, c: Vec, loca
     const sy = b.y + b.h / 2 + half.y * h * 0.22;
     defs.push(el('radialGradient', { id: `${id}-sheen`, cx: 0.5, cy: 0.5, r: 0.5 }, [stop(0, '#ffffff', tf.wetness * 0.3), stop(0.6, '#ffffff', tf.wetness * 0.08), stop(1, '#ffffff', 0)]));
     over.push(el('ellipse', { cx: sx, cy: sy, rx: b.w * 0.26, ry: h * 0.2, fill: urlRef(`${id}-sheen`) }));
-    defs.push(el('filter', { id: `${id}-wet`, x: '-5%', y: '-60%', width: '110%', height: '220%' }, [el('feGaussianBlur', { stdDeviation: h * 0.006 })]));
     const dy = -h * 0.012;
     const w0 = h * (0.016 + 0.03 * tf.meniscus);
-    over.push(el('path', { d: lowerD(g, dy), fill: 'none', stroke: lighten(eye.canthi.inner.color, 0.55), 'stroke-width': w0, 'stroke-opacity': tf.wetness * 0.38, 'stroke-linecap': 'round', filter: urlRef(`${id}-wet`) }));
+    const col = lighten(eye.canthi.inner.color, 0.55);
+    if (eye.renderQuality === 'reference') {
+      defs.push(el('filter', { id: `${id}-wet`, x: '-5%', y: '-60%', width: '110%', height: '220%' }, [el('feGaussianBlur', { stdDeviation: h * 0.006 })]));
+      over.push(el('path', { d: lowerD(g, dy), fill: 'none', stroke: col, 'stroke-width': w0, 'stroke-opacity': tf.wetness * 0.38, 'stroke-linecap': 'round', filter: urlRef(`${id}-wet`) }));
+    } else over.push(...softLine(lowerD(g, dy), w0 * 0.7, h * 0.006, col, tf.wetness * 0.38));
     over.push(el('path', { d: lowerD(g, dy - w0 * 0.15), fill: 'none', stroke: '#ffffff', 'stroke-width': w0 * 0.28, 'stroke-opacity': tf.wetness * 0.62, 'stroke-linecap': 'round' }));
   }
   return { defs, under, over };

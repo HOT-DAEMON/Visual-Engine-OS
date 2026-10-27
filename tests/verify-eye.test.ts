@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { verifyEye, openingPolygon } from '../src/verify';
-import { openingGeometry } from '../src/geometry/eye';
+import { verifyEye } from '../src/verify';
+import { openingGeometry, openingPolygon } from '../src/geometry/eye';
 import { EyeSpec } from '../src';
 
 const STYLES = ['almond', 'round', 'sharp', 'drooping', 'chibi', 'angular', 'compressed', 'rounded_rect', 'triangle', 'circle', 'diamond', 'diamond_v2'] as const;

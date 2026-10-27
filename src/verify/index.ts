@@ -48,4 +48,4 @@ export function verifyFace(face: RandomFace): Report {
   return report(checks);
 }
 export { measureEquivalence, equivalenceChecks, geometryOf, EQUIVALENCE_LIMITS, type EquivalenceMetrics } from './render-equivalence';
-export { verifyEye, openingPolygon, type EyeReport, type EyeMetrics } from './eye';
+export { verifyEye, type EyeReport, type EyeMetrics } from './eye';
