@@ -1,6 +1,6 @@
 import { applyArchetype } from '../../archetypes';
 import { applyExpression } from '../../expressions';
-import { openingGeometry } from '../../geometry/eye';
+import { effectivePupilSize, openingGeometry } from '../../geometry/eye';
 import { toLocal, type LightVector } from '../../lighting/light';
 import { headTurnOf, rotateLightForHeadTurn } from '../../lighting/head-turn';
 import { foreshortenTransform } from '../../lighting/gaze3d';
@@ -21,7 +21,9 @@ import { DEFAULT_SKIN } from './default-skin';
  * délègue chaque zone visuelle à sa fonction dédiée, et assemble le résultat final.
  */
 export function compileEye(rawEye: EyeSpec, worldLight: LightVector): CompiledObject {
-  const eye = applyExpression(applyArchetype(rawEye));
+  const posed = applyExpression(applyArchetype(rawEye));
+  // EYE-05G : la réponse lumineuse change la taille AVANT tout le reste (iris détaillé, fibres, pupille lisent la même taille).
+  const eye = posed.pupil.response.model === 'fixed' ? posed : { ...posed, pupil: { ...posed.pupil, size: effectivePupilSize(posed.pupil) } };
   const id = eye.id;
   const rot = eye.transform.rotationDeg;
   // Rotation 3D de la tête (voir lighting/head-turn.ts) : s'applique AVANT la rotation 2D dans le

@@ -71,7 +71,7 @@ export function renderGlobeInner(
 
   // Pupille (voir pupil.ts : visible/invisible, remplissage ColorSource, contours concentriques).
   const pr = pupilRadii(eye, irisRx, irisRy);
-  const pupil = renderPupil(eye.pupil, c.x, c.y, pr.rx, pr.ry, id);
+  const pupil = renderPupil(eye.pupil, c.x, c.y, pr.rx, pr.ry, id, { irisRx, irisRy, size: eye.pupil.size, seed: eye.seed });
   defs.push(...pupil.defs);
   irisGroup.push(...pupil.markup);
 

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { Hex, Unit } from './primitives';
 import { ColorSource, MaterialRef } from './color-material';
+import { PUPIL_SHAPES, PupilCenter, PupilDeform, PupilEdge, PupilLobes, PupilMultiple, PupilResponse } from './eye-pupil-profile';
 
 /**
  * Iris détaillé (opt-in, `null` par défaut : rendu historique inchangé). Chaque couche reprend un
@@ -113,7 +114,7 @@ export const PupilOutline = z
 
 export const Pupil = z
   .object({
-    shape: z.enum(['round', 'slit_vertical', 'slit_horizontal']).default('round'),
+    shape: z.enum(PUPIL_SHAPES).default('round'),
     size: z.number().min(0.12).max(0.7).default(0.36),
     /** false : aucune pupille dessinée (l'iris reste plein) — état explicitement invisible. */
     visible: z.boolean().default(true),
@@ -126,6 +127,15 @@ export const Pupil = z
     fill: ColorSource.default({ type: 'solid', color: '#07090f' }),
     /** 0 à 3 contours concentriques, chacun de sa propre couleur — voir `PupilOutline`. */
     outlines: z.array(PupilOutline).max(3).default([]),
+    /** EYE-05D : rotation de la forme autour de son centre (degrés). */
+    orientationDeg: z.number().min(-180).max(180).default(0),
+    center: PupilCenter.default({}),
+    edge: PupilEdge.default({}),
+    response: PupilResponse.default({}),
+    /** Sommets des profils `star` / `polygon` / `cross`. */
+    lobes: PupilLobes.default({}),
+    multiple: PupilMultiple.default({}),
+    deform: PupilDeform.default({}),
   })
   .strict();
 

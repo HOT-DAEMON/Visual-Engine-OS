@@ -4,6 +4,7 @@ export { cubicAt } from './primitives';
 export type { OpeningGeometry, Frame } from './opening';
 export { openingGeometry, upperFrame, lowerFrame } from './opening';
 export { creaseCurve, cubicTopY } from './crease';
+export { pupilContours, effectivePupilSize, pupilResponseFactor, isLegacyPupil, baseRadii, unitProfile, chaikin, IRIS_FIT, type Contour, type PupilContours } from './pupil-shape';
 export type { Lash } from './lashes';
 export { upperLashes, lowerLashes } from './lashes';
 export type { BrowGeometry, Hair } from './eyebrow';
