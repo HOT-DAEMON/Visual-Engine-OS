@@ -4,7 +4,7 @@ import { performance } from 'node:perf_hooks';
 import { crc32, deflateSync } from 'node:zlib';
 import { compileScene } from '../src';
 import { verifyEye } from '../src/verify';
-import { eyeCellSvg, eyeSheetPng, type SheetCell } from './lib/eye-sheet';
+import { eyeCellSvg, eyeSheetPng } from './lib/eye-sheet';
 
 /** Génère `artefacts/eyes/` : preuves visuelles et chiffrées du chantier yeux (reproductible : `npx tsx scripts/artefacts-eyes.ts`). */
 const OUT = 'artefacts/eyes';
