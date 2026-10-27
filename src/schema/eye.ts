@@ -13,6 +13,7 @@ import { EyeGaze, Expression } from './eye-gaze-expression';
 import { HeadTurn } from './eye-head-turn';
 import { EyeArchetype } from './eye-archetype';
 import { Microdetail } from './eye-microdetail';
+import { Appearance } from './appearance';
 
 export const EyeSpec = z
   .object({
@@ -44,6 +45,8 @@ export const EyeSpec = z
      * l'œil est posé sur un hôte, sinon peau claire par défaut. Doit correspondre à la peau autour.
      */
     skin: MaterialRef.nullable().default(null),
+    /** Moteur d'apparence partagé (ombre/lumière/contour dérivés, effets sur l'iris, étalonnage) — voir `render/eye/look.ts`. null : aucun. */
+    appearance: Appearance.nullable().default(null),
     /** Microdétails de la sclère et des tissus (EYE-07) — voir `eye-microdetail.ts`. null : aucun (comportement historique). */
     microdetail: Microdetail.nullable().default(null),
     /** Préréglage de regard (voir eye-archetype.ts) : résolu AVANT l'expression, au rendu. */

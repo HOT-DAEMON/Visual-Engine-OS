@@ -8,6 +8,7 @@ import { el, num, urlRef } from '../../core/svg';
 import { P, polygonPath } from './helpers';
 import { renderLashGroup } from './lashes-render';
 import { renderLiner } from './liner';
+import type { EyeLook } from './look';
 
 export interface LidsAndFold {
   readonly defs: string[];
@@ -28,6 +29,7 @@ export function renderLidsAndFold(
   th: number,
   fold: FoldGeometry | null,
   id: string,
+  look: EyeLook | null = null,
 ): LidsAndFold {
   const defs: string[] = [];
   const outside: string[] = [];
@@ -40,8 +42,8 @@ export function renderLidsAndFold(
     const shadowA = depth * 0.45 * clamp01(0.4 - L.y);
     defs.push(
       el('linearGradient', { id: `${id}-crease-shadow`, gradientUnits: 'userSpaceOnUse', x1: 0, y1: topY, x2: 0, y2: g.bbox.y }, [
-        stop(0, '#000000', shadowA),
-        stop(1, '#000000', 0),
+        stop(0, look ? look.skin.shadow : '#000000', shadowA),
+        stop(1, look ? look.skin.shadow : '#000000', 0),
       ]),
     );
     const region = `M${P(g.pi)}C${P(g.u1)} ${P(g.u2)} ${P(g.po)}L${P(crease.p3)}C${P(crease.p2)} ${P(crease.p1)} ${P(crease.p0)}Z`;
@@ -51,7 +53,7 @@ export function renderLidsAndFold(
         id: `${id}-crease`,
         d: `M${P(crease.p0)}C${P(crease.p1)} ${P(crease.p2)} ${P(crease.p3)}`,
         fill: 'none',
-        stroke: darken(skin, 0.5),
+        stroke: look ? look.skin.shadow : darken(skin, 0.5),
         'stroke-opacity': 0.15 + 0.55 * depth,
         'stroke-width': g.h * 0.008 * (0.7 + depth),
         'stroke-linecap': 'round',

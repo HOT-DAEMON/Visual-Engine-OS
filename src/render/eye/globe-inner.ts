@@ -8,6 +8,8 @@ import { renderIrisDetail } from './iris-detail';
 import { renderHighlights } from './highlights-render';
 import { renderIrisLayers } from './iris-layers-render';
 import { renderMicrodetail } from './micro-render';
+import type { EyeLook } from './look';
+import { compileEffects } from '../../appearance';
 import type { EyeSpec } from '../../schema';
 import { el, num, urlRef } from '../../core/svg';
 import { P, highlightOffsets, irisFibers, limbalRing, openingPath, polygonPath, pupilRadii } from './helpers';
@@ -36,6 +38,7 @@ export function renderGlobeInner(
   irisRx: number,
   irisRy: number,
   turn: TurnedOpening | null = null,
+  look: EyeLook | null = null,
 ): GlobeInner {
   const defs: string[] = [];
   const inner: string[] = [];
@@ -93,7 +96,11 @@ export function renderGlobeInner(
   // Rotation 3D de la tête (modèle sphère) : l'iris suit la matrice locale de la projection au centre de l'œil (compression propre à sa position).
   const isId = !turn || (Math.abs(turn.jac.a - 1) < 1e-9 && Math.abs(turn.jac.d - 1) < 1e-9 && Math.abs(turn.jac.b) < 1e-9 && Math.abs(turn.jac.c) < 1e-9);
   const turnT = turn && !isId ? `translate(${num(c.x)} ${num(c.y)}) matrix(${num(turn.jac.a)} ${num(turn.jac.c)} ${num(turn.jac.b)} ${num(turn.jac.d)} 0 0) translate(${num(-c.x)} ${num(-c.y)})` : '';
-  const irisNode = gazeT ? el('g', { transform: gazeT }, irisGroup) : el('g', {}, irisGroup);
+  // Effets du moteur d'apparence (réfraction, grain, glow, bloom, émission) sur le seul disque de l'iris.
+  const fx = look ? compileEffects(`${id}-iris`, look.spec, look.iris, { x: c.x - irisRx - look.reach, y: c.y - irisRy - look.reach, w: 2 * (irisRx + look.reach), h: 2 * (irisRy + look.reach) }) : null;
+  if (fx) defs.push(...fx.defs);
+  const irisAttrs: Record<string, string> = fx?.filter ? { filter: fx.filter } : {};
+  const irisNode = gazeT ? el('g', { transform: gazeT, ...irisAttrs }, irisGroup) : el('g', irisAttrs, irisGroup);
   inner.push(turnT ? el('g', { transform: turnT }, [irisNode]) : irisNode);
   inner.push(...micro.over);
 
@@ -125,6 +132,11 @@ export function renderGlobeInner(
     );
   }
 
+  // Lumière de contour (appearance.light.rim) : liseré fin le long du bord inférieur, du côté opposé à l'ombre des paupières.
+  if (look && look.spec.light.rimStrength > 0) {
+    inner.push(el('path', { d: `M${P(g.po)}C${P(g.l1)} ${P(g.l2)} ${P(g.pi)}`, fill: 'none', stroke: look.skin.rim, 'stroke-opacity': look.spec.light.rimStrength * 0.55, 'stroke-width': g.h * 0.01, 'stroke-linecap': 'round' }));
+  }
+
   // Ombre portée des paupières : le contour de l'ouverture décalé À L'OPPOSÉ de la lumière ;
   // la partie de l'ouverture réelle non couverte par la copie décalée est le croissant d'ombre.
   const dist = g.hEff * 0.2;
@@ -140,7 +152,7 @@ export function renderGlobeInner(
     el('path', {
       d: outer + openingPath(g, -L.x * dist, -L.y * dist),
       'fill-rule': 'evenodd',
-      fill: '#000000',
+      fill: look ? darken(look.skin.shadow, 0.55) : '#000000',
       'fill-opacity': 0.38,
       filter: urlRef(`${id}-lidblur`),
     }),
@@ -164,9 +176,11 @@ export function renderGlobeInner(
     }),
   );
 
+  // Teinte des reflets : couleur de la lumière de la scène (cause physique) sauf si l'apparence impose une teinte de reflet.
+  const hlColor = look && look.spec.reflection.tint ? look.skin.highlight : worldLight.color;
   // Reflets : liste détaillée (highlights-render.ts) ou, par défaut, les deux reflets « anime » historiques.
   if (eye.highlights.list.length > 0) {
-    const hr = renderHighlights(eye, g, c, L, irisRx, irisRy, worldLight.color, id);
+    const hr = renderHighlights(eye, g, c, L, irisRx, irisRy, hlColor, id);
     defs.push(...hr.defs);
     inner.push(...hr.markup);
   } else {
@@ -177,7 +191,7 @@ export function renderGlobeInner(
         cx: c.x + off.primary.x,
         cy: c.y + off.primary.y,
         r: hl.primary.size * irisRx,
-        fill: worldLight.color,
+        fill: hlColor,
         'fill-opacity': hl.primary.opacity,
       }),
     );
@@ -187,7 +201,7 @@ export function renderGlobeInner(
           cx: c.x + off.secondary.x,
           cy: c.y + off.secondary.y,
           r: hl.secondary.size * irisRx,
-          fill: worldLight.color,
+          fill: hlColor,
           'fill-opacity': hl.secondary.opacity,
         }),
       );

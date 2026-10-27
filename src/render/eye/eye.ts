@@ -13,6 +13,7 @@ import { renderGlobeInner } from './globe-inner';
 import { renderLidsAndFold } from './lids-fold';
 import { renderEyebrow } from './eyebrow-render';
 import { DEFAULT_SKIN } from './default-skin';
+import { gradeEye, resolveEyeLook } from './look';
 
 /**
  * Compile un œil complet : sclère, iris/pupille/regard 3D (globe-inner.ts), paupières/cils/pli
@@ -23,7 +24,8 @@ import { DEFAULT_SKIN } from './default-skin';
 export function compileEye(rawEye: EyeSpec, worldLight: LightVector): CompiledObject {
   const posed = applyExpression(applyArchetype(rawEye));
   // EYE-05G : la réponse lumineuse change la taille AVANT tout le reste (iris détaillé, fibres, pupille lisent la même taille).
-  const eye = posed.pupil.response.model === 'fixed' ? posed : { ...posed, pupil: { ...posed.pupil, size: effectivePupilSize(posed.pupil) } };
+  const sized = posed.pupil.response.model === 'fixed' ? posed : { ...posed, pupil: { ...posed.pupil, size: effectivePupilSize(posed.pupil) } };
+  const eye = gradeEye(sized);
   const id = eye.id;
   const rot = eye.transform.rotationDeg;
   // Rotation 3D de la tête (voir lighting/head-turn.ts) : s'applique AVANT la rotation 2D dans le
@@ -41,6 +43,7 @@ export function compileEye(rawEye: EyeSpec, worldLight: LightVector): CompiledOb
   const c = irisCenter(eye, g);
   const skin = dominantColor((eye.skin ?? DEFAULT_SKIN).base);
   const lidColor = dominantColor(eye.lids.material.base);
+  const look = resolveEyeLook(eye, skin);
   const th = eye.lids.thickness * eye.shape.height;
   const defs: string[] = [];
   const openD = openingPath(g);
@@ -56,10 +59,10 @@ export function compileEye(rawEye: EyeSpec, worldLight: LightVector): CompiledOb
   const sclera = compileSurface(`${id}-sclera`, scleraSurface, eye.sclera, L, rot);
   defs.push(...sclera.defs);
 
-  const globe = renderGlobeInner(eye, g, c, L, rot, headLight, skin, id, irisRx, irisRy, turned);
+  const globe = renderGlobeInner(eye, g, c, L, rot, headLight, skin, id, irisRx, irisRy, turned, look);
   defs.push(...globe.defs);
 
-  const lids = renderLidsAndFold(eye, g, L, skin, lidColor, th, globe.fold, id);
+  const lids = renderLidsAndFold(eye, g, L, skin, lidColor, th, globe.fold, id, look);
   defs.push(...lids.defs);
 
   const brow = renderEyebrow(eye, g, L, rot, id);
