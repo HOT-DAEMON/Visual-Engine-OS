@@ -30,6 +30,16 @@ describe('ruban de trait (cellule 01)', () => {
     const bad: RibbonProfile = { ...P, ribbons: [{ ...(P.ribbons[0] as RibbonProfile['ribbons'][number]), p: [[0, 0, Number.NaN], [0.1, 0.1, 0.01]] }, ...P.ribbons] };
     expect(verifyRibbonGeometry(bad).ok).toBe(false);
   });
+  it('masses pleines et bandes de ton : contours finis, gris décroissant avec le niveau', () => {
+    expect(P.solids.length).toBeGreaterThan(5);
+    const grays = [...P.tones].sort((a, b) => a.level - b.level).map((t) => t.gray);
+    expect(grays.every((g, i) => i === 0 || g < (grays[i - 1] as number))).toBe(true);
+    expect(verifyRibbonGeometry({ ...P, solids: [{ role: 'hair', ring: [[0, 0], [Number.NaN, 1], [1, 1]] }] }).ok).toBe(false);
+  });
+  it('la couche de style ÉCHOUE si les bandes de ton sont dans le désordre', () => {
+    const swapped: RibbonProfile = { ...P, tones: P.tones.map((t) => ({ ...t, gray: 255 - t.gray })) };
+    expect(verifyRibbonStyle(swapped).ok).toBe(false);
+  });
   it('rendu déterministe et sans filtre', () => {
     const a = ribbonScene(P, { w: 156, h: 150, px: 2 }); const b = ribbonScene(P, { w: 156, h: 150, px: 2 });
     expect(a).toBe(b); expect(a).not.toContain('<filter');

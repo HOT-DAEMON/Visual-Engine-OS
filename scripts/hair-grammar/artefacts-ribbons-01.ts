@@ -26,8 +26,9 @@ const m = compareToReference(ref, mine.g, 8, 132 * 4);
 const W = ref.w; const H = ref.h; const b64 = (p: string | Uint8Array): string => Buffer.from(typeof p === 'string' ? readFileSync(p) : p).toString('base64');
 writeFileSync(`${DIR}/02-reference-vs-rubans.png`, new Resvg(`<svg xmlns="http://www.w3.org/2000/svg" width="${W * 2}" height="${H}"><rect width="100%" height="100%" fill="#fff"/><image href="data:image/png;base64,${b64('artefacts/hair-grammar/refs/h01-roi-x4.png')}" width="${W}" height="${H}"/><image href="data:image/png;base64,${b64(mine.png)}" x="${W}" width="${W}" height="${H}"/></svg>`).render().asPng());
 const over = new Uint8Array(W * H * 4);
-for (let i = 0; i < W * H; i++) { const a = (ref.data[i] as number) < 140; const b = (mine.g.data[i] as number) < 140; over[i * 4] = a ? 215 : b ? 0 : 255; over[i * 4 + 1] = a && b ? 0 : b ? 170 : a ? 0 : 255; over[i * 4 + 2] = a && b ? 0 : b ? 190 : a ? 0 : 255; over[i * 4 + 3] = 255; }
-writeFileSync(`${DIR}/03-superposition-rouge-ref-cyan-rubans.png`, encodeRgbaPng(over, W, H));
+// noir = encre commune ; rouge = encre de la référence MANQUANTE dans le moteur ; cyan = encre du moteur EN TROP ; blanc = fond commun
+for (let i = 0; i < W * H; i++) { const a = (ref.data[i] as number) < 140; const b = (mine.g.data[i] as number) < 140; const [r, g, bl] = a && b ? [30, 30, 30] : a ? [220, 20, 20] : b ? [0, 175, 200] : [255, 255, 255]; over[i * 4] = r; over[i * 4 + 1] = g; over[i * 4 + 2] = bl; over[i * 4 + 3] = 255; }
+writeFileSync(`${DIR}/03-superposition-noir-commun-rouge-manquant-cyan-en-trop.png`, encodeRgbaPng(over, W, H));
 // Distance perceptuelle grossière : écart moyen absolu entre les deux images floutées (boîte 12 px sur l'image ×4), 0 = identique, 1 = noir/blanc.
 const boxBlur = (g: Gray, r: number): Float32Array => { const o = new Float32Array(g.w * g.h); for (let y = 0; y < g.h; y += 1) for (let x = 0; x < g.w; x += 1) { let s = 0; let n = 0; for (let dy = -r; dy <= r; dy += 3) for (let dx = -r; dx <= r; dx += 3) { const xx = x + dx; const yy = y + dy; if (xx >= 0 && yy >= 0 && xx < g.w && yy < g.h) { s += g.data[yy * g.w + xx] as number; n++; } } o[y * g.w + x] = s / n; } return o; };
 const ba = boxBlur(ref, 12); const bb = boxBlur(mine.g, 12); let acc = 0; let cnt = 0;

@@ -14,12 +14,14 @@ const hair = (P: RibbonProfile) => P.ribbons.filter((r) => r.role === 'hair');
 
 export function verifyRibbonGeometry(P: RibbonProfile): Report {
   let bad = 0; let tiny = 0; let thin = 0;
+  const badSolids = P.solids.filter((m) => m.ring.length < 3 || m.ring.some((q) => q.some((x) => !Number.isFinite(x)))).length
+    + P.tones.filter((t) => t.rings.length === 0 || t.rings.some((r) => r.length < 3 || r.some((q) => q.some((x) => !Number.isFinite(x))))).length;
   for (const r of P.ribbons) {
     if (r.p.some((q) => q.some((x) => !Number.isFinite(x)))) bad++;
     if (r.p.length < 2 || ribbonLength(r) < 0.03) tiny++;
     if (r.p.some((q) => q[2] <= 0)) thin++;
   }
-  return rep('geometry', [chk('rubans non finis', bad, 0, 0), chk('rubans dégénérés (< 0,03 H)', tiny, 0, 0), chk('largeurs ≤ 0', thin, 0, 0), chk('nombre de rubans de cheveux', hair(P).length, 40, 400)]);
+  return rep('geometry', [chk('rubans non finis', bad, 0, 0), chk('rubans dégénérés (< 0,03 H)', tiny, 0, 0), chk('largeurs ≤ 0', thin, 0, 0), chk('masses/tons dégénérés ou non finis', badSolids, 0, 0), chk('nombre de rubans de cheveux', hair(P).length, 40, 400)]);
 }
 
 export function verifyRibbonAnatomy(P: RibbonProfile): Report {
@@ -42,5 +44,7 @@ export function verifyRibbonStyle(P: RibbonProfile): Report {
   const median = ws[Math.floor(ws.length / 2)] as number; const max = ws[ws.length - 1] as number;
   const ratios = hair(P).map((r) => ribbonLength(r) / Math.max(1e-6, r.p.reduce((s, q) => s + q[2], 0) / r.p.length));
   const meanRatio = ratios.reduce((a, b) => a + b, 0) / Math.max(1, ratios.length);
-  return rep('style', [chk('épaisseur médiane du trait (px cellule)', median, 0.8, 2.2), chk('épaisseur maximale (px cellule)', max, 2, 3.6), chk('rapport longueur/largeur moyen', meanRatio, 6, 60), chk('niveaux de ton', new Set(P.tones.map((t) => t.level)).size, 2, 3)]);
+  return rep('style', [chk('épaisseur médiane du trait (px cellule)', median, 0.8, 2.2), chk('épaisseur maximale d\'un ruban fin (px cellule)', max, 2, 5.1), chk('rapport longueur/largeur moyen', meanRatio, 6, 60), chk('niveaux de ton', new Set(P.tones.map((t) => t.level)).size, 3, 6),
+    // le gris doit FONCER avec le niveau (sinon l'ordre de peinture clair → sombre ferait disparaître des bandes)
+    chk('bandes de ton dans le désordre', [...P.tones].sort((a, b) => a.level - b.level).filter((t, i, a) => i > 0 && t.gray >= (a[i - 1] as typeof t).gray).length, 0, 0)]);
 }

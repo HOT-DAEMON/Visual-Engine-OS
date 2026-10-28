@@ -1,0 +1,129 @@
+{
+  "cell": "01-tousled",
+  "ribbons": 157,
+  "tones": 11,
+  "svgKB": 92,
+  "buildMsMedian": 6.4,
+  "rasterMsMedian312": 9,
+  "reference": {
+    "silhouetteIoU": 0.6581458715359384,
+    "inkRecall": 0.9709419692360183,
+    "inkPrecision": 1,
+    "inkFraction": {
+      "ref": 0.21349917443667443,
+      "mine": 0.18030970765345766
+    }
+  },
+  "blurDiff": 0.0518,
+  "verification": {
+    "geo": {
+      "layer": "geometry",
+      "checks": [
+        {
+          "name": "rubans non finis",
+          "value": 0,
+          "min": 0,
+          "max": 0,
+          "ok": true
+        },
+        {
+          "name": "rubans dégénérés (< 0,03 H)",
+          "value": 0,
+          "min": 0,
+          "max": 0,
+          "ok": true
+        },
+        {
+          "name": "largeurs ≤ 0",
+          "value": 0,
+          "min": 0,
+          "max": 0,
+          "ok": true
+        },
+        {
+          "name": "nombre de rubans de cheveux",
+          "value": 139,
+          "min": 40,
+          "max": 400,
+          "ok": true
+        }
+      ],
+      "ok": true
+    },
+    "ana": {
+      "layer": "anatomy",
+      "checks": [
+        {
+          "name": "volume au-dessus du crâne / H",
+          "value": 0.35860000000000003,
+          "min": 0.25,
+          "max": 0.45,
+          "ok": true
+        },
+        {
+          "name": "débord avant (au-delà du contour du visage) / H",
+          "value": 0.278,
+          "min": 0.2,
+          "max": 0.4,
+          "ok": true
+        },
+        {
+          "name": "largeur totale des cheveux / H",
+          "value": 1.3159,
+          "min": 1,
+          "max": 1.5,
+          "ok": true
+        },
+        {
+          "name": "frange : au plus 0,1 H sous la pointe du nez",
+          "value": 0.0751,
+          "min": -0.6,
+          "max": 0.1,
+          "ok": true
+        },
+        {
+          "name": "mèches latérales : ne descendent pas sous le menton (/H)",
+          "value": -0.0030000000000000027,
+          "min": -0.4,
+          "max": 0.02,
+          "ok": true
+        }
+      ],
+      "ok": true
+    },
+    "sty": {
+      "layer": "style",
+      "checks": [
+        {
+          "name": "épaisseur médiane du trait (px cellule)",
+          "value": 1.60965,
+          "min": 0.8,
+          "max": 2.2,
+          "ok": true
+        },
+        {
+          "name": "épaisseur maximale (px cellule)",
+          "value": 3.40545,
+          "min": 2,
+          "max": 3.6,
+          "ok": true
+        },
+        {
+          "name": "rapport longueur/largeur moyen",
+          "value": 8.071147332197139,
+          "min": 6,
+          "max": 60,
+          "ok": true
+        },
+        {
+          "name": "niveaux de ton",
+          "value": 2,
+          "min": 2,
+          "max": 3,
+          "ok": true
+        }
+      ],
+      "ok": true
+    }
+  }
+}

@@ -1,3 +1,5 @@
+> **Remplacé en partie par la v2** : voir `HAIR-GRAMMAR-RIBBONS-V2.md` (extraction `analyze-01b.py`, masses pleines, tons mesurés). Ce document décrit la v1 ; son script `analyze-01.py` et son format `poly` sont obsolètes.
+
 # Grammaire de coiffure — rubans de trait (cellule 01)
 
 ## Pourquoi un changement d'approche
