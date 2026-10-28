@@ -17,11 +17,11 @@
 ## Grammaire (objectif d'origine)
 10. **Génération** : apprendre des statistiques de rubans (longueur/largeur, courbure, cap relatif à un champ d'écoulement, retroussés) pour tirer d'autres coiffures — **non fait**.
 11. **Lien avec la tête 3D** (`head.ts`, `lock.ts`) : rubans en repère de tête 2D 3/4, pas posés sur la coque ; rotation de vue impossible.
-12. **Autres coiffures** : `analyze-01b.py` est écrit pour la cellule 01 (repères, boîtes, origine) ; **02-side_sweep non commencée**, volontairement : la 01 n'est pas à la qualité visée. `analyze-01.py` (v1) est obsolète (ancien format `poly`).
+12. **Autres coiffures** : `analyze-01b.py` est écrit pour la cellule 01 (repères, boîtes, origine) ; **02-side_sweep commencée** : extracteur généralisé (`analyze-cell.py`), voir `HAIR-GRAMMAR-02.md`. `analyze-01.py` (v1) est obsolète (ancien format `poly`).
 13. **Intégration** au moteur de visage de face et test de régression visuelle : non faits.
 
 ## Vérification
-14. Seuils calés sur la référence elle-même ; aucun test sur d'autres cellules. Pas de test pixel (rendu vs image) dans la suite : les métriques sont dans les artefacts, pas des garde-fous automatiques.
+14. Seuils calés sur la référence elle-même ; aucun test sur d'autres cellules. Test pixel ajouté pour les cellules 01 et 02 (`tests/hair-grammar-cells.test.ts`).
 
 ## Sécurité
 15. Le jeton GitHub collé dans la conversation (`ghp_…`) doit être **révoqué** puis remplacé (il a été exposé en clair) ; il n'est écrit dans aucun fichier ni dépôt.

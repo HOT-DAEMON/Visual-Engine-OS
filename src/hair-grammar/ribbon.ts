@@ -17,7 +17,13 @@ export interface Ribbon { readonly id: number; readonly role: 'hair' | 'face'; r
 export interface ToneMass { readonly level: number; readonly gray: number; readonly rings: readonly (readonly (readonly [number, number])[])[] }
 /** Masse pleine (noir franc : racines, paquets sombres) : un contour fermé dans le repère de tête. */
 export interface SolidMass { readonly role: 'hair' | 'face'; readonly ring: readonly (readonly [number, number])[] }
-export interface RibbonProfile { readonly frame: HeadFrame & { readonly cell: number }; readonly ribbons: readonly Ribbon[]; readonly solids: readonly SolidMass[]; readonly tones: readonly ToneMass[] }
+/** Repères du visage de la cellule, dans le repère de tête (v vers le bas, u vers la droite). Mesurés sur la grille de la référence (voir `cells/*.json`). */
+export interface FaceLandmarks { readonly crownV: number; readonly faceContourU: number; readonly noseTipV: number; readonly mouthV: number; readonly chinV: number }
+/** Bornes [min, max] des cinq contrôles anatomiques (garde-fous autour de la référence, pas une preuve de ressemblance). */
+export interface AnatomyLimits { readonly crown: readonly [number, number]; readonly overhang: readonly [number, number]; readonly width: readonly [number, number]; readonly fringe: readonly [number, number]; readonly side: readonly [number, number] }
+/** Bornes de style [min, max] : épaisseur médiane, épaisseur maximale d'un ruban fin (px cellule), rapport longueur/largeur moyen. */
+export interface StyleLimits { readonly median: readonly [number, number]; readonly maxThin: readonly [number, number]; readonly ratio: readonly [number, number]; readonly tones?: readonly [number, number] }
+export interface RibbonProfile { readonly frame: HeadFrame & { readonly cell: number }; readonly ribbons: readonly Ribbon[]; readonly solids: readonly SolidMass[]; readonly tones: readonly ToneMass[]; readonly landmarks?: FaceLandmarks; readonly limits?: AnatomyLimits; readonly styleLimits?: StyleLimits }
 
 /** Repère → pixels de cellule. */
 export const toCell = (f: HeadFrame, u: number, v: number): V2 => ({ x: f.ox + u * f.unit, y: f.oy + v * f.unit });

@@ -1,0 +1,3 @@
+{"id":"01-tousled","image":"artefacts/visual-inspiration-01.jpg","crop":[0,0,188,188],"origin":[77,95],"unit":109.5,
+ "roi":[0,0,152,150],"ink_t":108,"cut_y":125,
+ "face_boxes":[[66,88,90,104],[28,90,56,106],[36,104,54,126],[30,122,118,152]],"face_polys":[],"tone_exclude_boxes":[[66,88,90,104],[28,90,56,106],[36,104,54,126]]}
