@@ -60,28 +60,29 @@ export function fieldDir(F: FlowField, p: V3): V3 {
   return norm(add(add(add(mul(F.sweep, 1), mul(swirl, F.swirl)), mul(radial, F.radial)), v3(0, F.fall, 0)));
 }
 
+/** Tire UNE mèche de la famille `F` (indice `i` : alternance du sens de courbure). Brique commune du générateur et de l'ajustement. */
+export function sampleLock(P: HairProfile, F: FamilySpec, i: number, g: () => number): LockSpec {
+  const H = P.head;
+  const el = pick(g, F.el); const az = pick(g, F.az);
+  const root = v3(H.rx * Math.cos((el * Math.PI) / 180) * Math.sin((az * Math.PI) / 180), -H.ry * Math.sin((el * Math.PI) / 180), H.cz + H.rz * Math.cos((el * Math.PI) / 180) * Math.cos((az * Math.PI) / 180));
+  const fd = fieldDir(P.field, root);
+  const base = F.aim ? add(mul(fd, F.follow), mul(norm(F.aim), 1 - F.follow + 0.0001)) : fd;
+  // Écart de cap : rotation du vecteur autour de la verticale de la racine (rapide, suffisant pour l'éventail).
+  const e = (g() * 2 - 1) * F.fan;
+  const dir = v3(base.x * Math.cos(e) + base.z * Math.sin(e), base.y, -base.x * Math.sin(e) + base.z * Math.cos(e));
+  const sign = F.bendSign === 0 ? 0 : (F.bendSign ?? (i % 2 === 0 ? 1 : -1));
+  return {
+    id: `${F.id}-${i}`, family: F.id, root: { el, az }, aim: norm(dir), length: pick(g, F.length),
+    bend: sign * pick(g, F.bend), wave: { amp: pick(g, F.waveAmp) * (g() < 0.5 ? 1 : -1), freq: pick(g, F.waveFreq), phase: g() },
+    flick: { amt: pick(g, F.flickAmt) * (g() < 0.5 ? 1 : -1), len: pick(g, F.flickLen) },
+    lift0: pick(g, F.lift0), lift1: pick(g, F.lift1), liftPow: pick(g, F.liftPow), gravity: pick(g, F.gravity),
+    width: pick(g, F.width), peak: pick(g, F.peak), taper: pick(g, F.taper), tone: pick(g, F.tone), strands: Math.round(pick(g, F.strands)), layer: F.layer,
+  };
+}
+
 export function generate(P: HairProfile, seed = 1): LockSpec[] {
   const g = prng(seed);
   const out: LockSpec[] = [];
-  const H = P.head;
-  for (const F of P.families) {
-    for (let i = 0; i < F.count; i++) {
-      const el = pick(g, F.el); const az = pick(g, F.az);
-      const root = v3(H.rx * Math.cos((el * Math.PI) / 180) * Math.sin((az * Math.PI) / 180), -H.ry * Math.sin((el * Math.PI) / 180), H.cz + H.rz * Math.cos((el * Math.PI) / 180) * Math.cos((az * Math.PI) / 180));
-      const fd = fieldDir(P.field, root);
-      const base = F.aim ? add(mul(fd, F.follow), mul(norm(F.aim), 1 - F.follow + 0.0001)) : fd;
-      // Écart de cap : rotation du vecteur autour de la verticale de la racine (rapide, suffisant pour l'éventail).
-      const e = (g() * 2 - 1) * F.fan;
-      const dir = v3(base.x * Math.cos(e) + base.z * Math.sin(e), base.y, -base.x * Math.sin(e) + base.z * Math.cos(e));
-      const sign = F.bendSign === 0 ? 0 : (F.bendSign ?? (i % 2 === 0 ? 1 : -1));
-      out.push({
-        id: `${F.id}-${i}`, family: F.id, root: { el, az }, aim: norm(dir), length: pick(g, F.length),
-        bend: sign * pick(g, F.bend), wave: { amp: pick(g, F.waveAmp) * (g() < 0.5 ? 1 : -1), freq: pick(g, F.waveFreq), phase: g() },
-        flick: { amt: pick(g, F.flickAmt) * (g() < 0.5 ? 1 : -1), len: pick(g, F.flickLen) },
-        lift0: pick(g, F.lift0), lift1: pick(g, F.lift1), liftPow: pick(g, F.liftPow), gravity: pick(g, F.gravity),
-        width: pick(g, F.width), peak: pick(g, F.peak), taper: pick(g, F.taper), tone: pick(g, F.tone), strands: Math.round(pick(g, F.strands)), layer: F.layer,
-      });
-    }
-  }
+  for (const F of P.families) for (let i = 0; i < F.count; i++) out.push(sampleLock(P, F, i, g));
   return out;
 }

@@ -1,0 +1,113 @@
+{
+  "cell": "01-tousled",
+  "locks": 50,
+  "svgKB": 408,
+  "buildMsMedian": 23.8,
+  "rasterMsMedian312": 36.7,
+  "reference": {
+    "silhouetteIoU": 0.5266202376858115,
+    "inkRecall": 0.7504478121179381,
+    "inkPrecision": 0.7255296711724667,
+    "inkFraction": {
+      "ref": 0.21349917443667443,
+      "mine": 0.15829873251748253
+    }
+  },
+  "verification": {
+    "geo": {
+      "layer": "geometry",
+      "checks": [
+        {
+          "name": "mèches non finies",
+          "value": 0,
+          "min": 0,
+          "max": 0,
+          "ok": true
+        },
+        {
+          "name": "lames dégénérées",
+          "value": 0,
+          "min": 0,
+          "max": 0,
+          "ok": true
+        },
+        {
+          "name": "décollement minimal ≥ 0",
+          "value": 0.04187705112621188,
+          "min": 0,
+          "max": 1,
+          "ok": true
+        }
+      ],
+      "ok": true
+    },
+    "ana": {
+      "layer": "anatomy",
+      "checks": [
+        {
+          "name": "volume au-dessus du crâne / H",
+          "value": 0.21657766636557568,
+          "min": 0.1,
+          "max": 0.5,
+          "ok": true
+        },
+        {
+          "name": "débord avant (gauche) / H",
+          "value": 0.28783420608502375,
+          "min": 0,
+          "max": 0.6,
+          "ok": true
+        },
+        {
+          "name": "frange : pointe la plus basse vs ligne des yeux (/H)",
+          "value": 0.07773174206722606,
+          "min": -0.05,
+          "max": 0.3,
+          "ok": true
+        },
+        {
+          "name": "frange : ne dépasse pas la pointe du nez (/H)",
+          "value": -0.11081510739688043,
+          "min": -0.5,
+          "max": 0.02,
+          "ok": true
+        },
+        {
+          "name": "hauteur totale des cheveux / H",
+          "value": 1.343805328863632,
+          "min": 0.7,
+          "max": 1.45,
+          "ok": true
+        }
+      ],
+      "ok": true
+    },
+    "sty": {
+      "layer": "style",
+      "checks": [
+        {
+          "name": "épaisseur du trait (unités image)",
+          "value": 0.85,
+          "min": 0.5,
+          "max": 1.6,
+          "ok": true
+        },
+        {
+          "name": "rapport longueur/largeur moyen des mèches",
+          "value": 5.96423238732273,
+          "min": 3,
+          "max": 14,
+          "ok": true
+        },
+        {
+          "name": "variété de tons (classes)",
+          "value": 6,
+          "min": 2,
+          "max": 12,
+          "ok": true
+        }
+      ],
+      "ok": true
+    }
+  }
+}

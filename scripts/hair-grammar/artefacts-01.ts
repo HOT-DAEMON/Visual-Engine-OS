@@ -1,7 +1,8 @@
+import type { LockSpec } from '../../src/hair-grammar/lock';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { Resvg } from '@resvg/resvg-js';
 import { drawFace } from '../../src/hair-grammar/face3q';
-import { generate } from '../../src/hair-grammar/grammar';
+import { TOUSLED_FITTED } from '../../src/hair-grammar/profiles/tousled.fitted';
 import { paintHair } from '../../src/hair-grammar/paint';
 import { TOUSLED } from '../../src/hair-grammar/profiles/tousled';
 import { VIEW_01 } from '../../src/hair-grammar/views';
@@ -12,9 +13,9 @@ import { decodePng } from '../../src/regression/png';
 const DIR = 'artefacts/hair-grammar';
 mkdirSync(DIR, { recursive: true });
 const ROI = { w: 156, h: 150 };
-const build = (seed: number): { svg: string; hair: ReturnType<typeof paintHair>; specs: ReturnType<typeof generate> } => {
+const build = (_seed: number): { svg: string; hair: ReturnType<typeof paintHair>; specs: LockSpec[] } => {
   const face = drawFace(TOUSLED.head, VIEW_01);
-  const specs = generate(TOUSLED, seed);
+  const specs = [...TOUSLED_FITTED];
   const hair = paintHair(TOUSLED.head, specs, VIEW_01);
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${ROI.w} ${ROI.h}" width="${ROI.w * 4}" height="${ROI.h * 4}"><rect width="100%" height="100%" fill="#fff"/>${hair.back}${face.neckBack}${face.ear}${face.skin}${face.lines}${face.eyes}${hair.front}${hair.over}</svg>`;
   return { svg, hair, specs };

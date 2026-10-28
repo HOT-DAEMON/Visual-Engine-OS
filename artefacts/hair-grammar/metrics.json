@@ -1,16 +1,16 @@
 {
   "cell": "01-tousled",
-  "locks": 50,
-  "svgKB": 408,
-  "buildMsMedian": 12.4,
-  "rasterMsMedian312": 24,
+  "locks": 56,
+  "svgKB": 498,
+  "buildMsMedian": 47.5,
+  "rasterMsMedian312": 82.9,
   "reference": {
-    "silhouetteIoU": 0.5266202376858115,
-    "inkRecall": 0.7504478121179381,
-    "inkPrecision": 0.7255296711724667,
+    "silhouetteIoU": 0.7058219277178159,
+    "inkRecall": 0.949589150152114,
+    "inkPrecision": 0.9301082453561406,
     "inkFraction": {
       "ref": 0.21349917443667443,
-      "mine": 0.15829873251748253
+      "mine": 0.2271209693084693
     }
   },
   "verification": {
@@ -33,7 +33,7 @@
         },
         {
           "name": "décollement minimal ≥ 0",
-          "value": 0.04187705112621188,
+          "value": 0.006229773896252521,
           "min": 0,
           "max": 1,
           "ok": true
@@ -46,35 +46,35 @@
       "checks": [
         {
           "name": "volume au-dessus du crâne / H",
-          "value": 0.21657766636557568,
+          "value": 0.34850903438561,
           "min": 0.1,
           "max": 0.5,
           "ok": true
         },
         {
           "name": "débord avant (gauche) / H",
-          "value": 0.28783420608502375,
+          "value": 0.408465282149612,
           "min": 0,
           "max": 0.6,
           "ok": true
         },
         {
           "name": "frange : pointe la plus basse vs ligne des yeux (/H)",
-          "value": 0.07773174206722606,
+          "value": 0.1689224681730848,
           "min": -0.05,
           "max": 0.3,
           "ok": true
         },
         {
           "name": "frange : ne dépasse pas la pointe du nez (/H)",
-          "value": -0.11081510739688043,
+          "value": -0.019624381291021713,
           "min": -0.5,
           "max": 0.02,
           "ok": true
         },
         {
           "name": "hauteur totale des cheveux / H",
-          "value": 1.343805328863632,
+          "value": 1.359949337621882,
           "min": 0.7,
           "max": 1.45,
           "ok": true
@@ -94,7 +94,7 @@
         },
         {
           "name": "rapport longueur/largeur moyen des mèches",
-          "value": 5.96423238732273,
+          "value": 6.35481531256128,
           "min": 3,
           "max": 14,
           "ok": true

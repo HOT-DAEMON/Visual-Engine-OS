@@ -1,16 +1,15 @@
 # Grammaire de coiffure — reste à faire (par composant)
 
-## Fait
-Tête 3D + vue 3/4 calée ; coque ; primitive de mèche ; générateur par familles et champ d'écoulement ; peinture d'encre sans filtre ; vérification géométrique/anatomique/style + IoU contre la référence ; profil 01 ; tests (7) ; artefacts ; pipeline rapide.
+## Fait (cumul)
+Tête 3D + vue 3/4 ; coque ; mèche ; générateur par familles ; peinture sans filtre ; vérification 3 couches ; profil 01 ; **ajustement par synthèse** (voir HAIR-GRAMMAR-FIT.md) ; tests (11) ; artefacts.
 
 ## Pas fait / insuffisant
-1. **Fidélité de la cellule 01 (priorité 1)** — IoU de silhouette ≈ 0,53, pas « parfait ». À faire : recaler le volume (cheveux décalés à droite/bas, trop bas de ≈ 10 px) ; épi + touffe haut-gauche ; chaînes de S avec retroussés de pointe à plusieurs ruptures ; mèches moins régulières ; boucle d'optimisation automatique des paramètres de famille sur l'IoU (non écrite).
-2. **Hachures et gris** : dégradé racine → pointe, hachures aux pointes, bandes de ton par mèche (l'original a des gris doux) — absents.
-3. **Occultation** : couche d'une mèche décidée par sa normale moyenne ; pas de découpe des mèches qui traversent la silhouette de la tête (segments cachés/visibles).
-4. **Yeux** : primitives 3/4 simplifiées dans `face3q.ts` ; le moteur d'yeux complet n'est pas branché sur la vue 3/4. Sourcils, oreille détaillée, vêtements (col, nœud papillon) non traités.
-5. **Pôle du crâne** : le paramétrage (y, azimut) est dégénéré au sommet → mèches aplaties près de l'épi.
-6. **Les 11 autres coiffures** : aucun profil écrit (volontairement, consigne : finir la 01 d'abord). Le générateur est prêt ; il faudra sans doute ajouter des familles (chignon, tresses/rangées, zone rasée).
-7. **Intégration** : le module est autonome (`src/hair-grammar/`), non branché au moteur de visage de face (`src/face/hair`). Aucun test de régression visuelle (snapshot) ajouté.
-8. **Mesure de vitesse comparative** : pas de mesure sur le même cas avec l'ancien moteur ; seules les médianes de ce module sont mesurées.
-9. **Vue calée sur 6 repères** : le repère « œil lointain » est caché par les cheveux dans la référence (±4 px d'incertitude) ; lacet −46° vs ~35° estimé à l'œil non arbitré.
-10. **Sécurité** : le jeton GitHub fourni dans la conversation doit être révoqué (voir la réponse).
+1. **Fidélité visuelle de la cellule 01 (priorité 1)** — NON atteinte : IoU 0,71, encre 0,95/0,93 mais aspect brouillon (mèches trop nombreuses, aplats, peu de S enchaînés, épi/touffe haut-gauche absents). Pistes : (a) recaler le modèle de tête (visage trop frontal/grand) avant de refitter ; (b) mèches à plusieurs ruptures de cap (S + retroussés) ; (c) pénaliser le nombre de croisements et le contenu d'encre hors silhouette ; (d) fit multi-échelle (×1 puis ×2) ; (e) comparer par DISTANCE perceptuelle, pas seulement chamfer.
+2. **Dégradé et hachures** : racine → pointe, hachures de pointe, bords effilés des deux côtés — absents du rendu ET du rastériseur de l'optimiseur.
+3. **Occultation** : pas de découpe des mèches traversant la silhouette de la tête.
+4. **Yeux/sourcils/oreille/vêtements** : primitives simplifiées en 3/4, moteur d'yeux non branché.
+5. **Pôle du crâne** : paramétrage dégénéré au sommet.
+6. **Les 11 autres coiffures** : aucun profil ; il faudra des familles (chignon, tresses, zone rasée). `fit-01.ts` se généralise (cible + calque de visage par cellule).
+7. **Intégration** au moteur de visage de face ; pas de test de régression visuelle.
+8. **Vitesse** : pas de mesure comparative propre (machine à 1 cœur, mesures bruitées pendant l'optimisation) ; pistes : moins de points par lame, une seule `<path>` de brins par mèche.
+9. **Sécurité** : le jeton GitHub collé dans la conversation doit être révoqué.

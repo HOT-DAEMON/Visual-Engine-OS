@@ -10,3 +10,6 @@ export * from './face3q';
 export * from './verify';
 export * from './views';
 export { TOUSLED } from './profiles/tousled';
+export { TOUSLED_FITTED } from './profiles/tousled.fitted';
+export * from './raster';
+export * from './autofit';

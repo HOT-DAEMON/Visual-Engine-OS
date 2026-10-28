@@ -28,3 +28,6 @@ Tolérance : 8 px sur l'image ×4, soit 2 px sur la cellule d'origine. Les trait
 
 ## Vérification (trois couches, `verify.ts`)
 Géométrie, anatomie, style : toutes **vertes** sur le rendu courant. Elles ont d'abord signalé deux échecs réels (frange 0,45 H sous la ligne des yeux, au-delà du nez) ; la frange a été raccourcie. Un test vérifie que la couche anatomique échoue bien sur une frange doublée.
+
+## Mise à jour : ajustement par synthèse
+Voir `HAIR-GRAMMAR-FIT.md`. Mesures actuelles : IoU de silhouette 0,71 (avant 0,53), rappel d'encre 0,95, précision 0,93. Verdict inchangé : **pas « parfait »**, rendu encore brouillon ; la liste complète est dans `HAIR-GRAMMAR-REMAINING.md`.
