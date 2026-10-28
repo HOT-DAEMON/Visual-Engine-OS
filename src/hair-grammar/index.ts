@@ -13,3 +13,6 @@ export { TOUSLED } from './profiles/tousled';
 export { TOUSLED_FITTED } from './profiles/tousled.fitted';
 export * from './raster';
 export * from './autofit';
+export * from './ribbon';
+export * from './ribbon-scene';
+export * from './ribbon-verify';

@@ -13,3 +13,6 @@ Tête 3D + vue 3/4 ; coque ; mèche ; générateur par familles ; peinture sans 
 7. **Intégration** au moteur de visage de face ; pas de test de régression visuelle.
 8. **Vitesse** : pas de mesure comparative propre (machine à 1 cœur, mesures bruitées pendant l'optimisation) ; pistes : moins de points par lame, une seule `<path>` de brins par mèche.
 9. **Sécurité** : le jeton GitHub collé dans la conversation doit être révoqué.
+
+## Mise à jour (session rubans)
+Point 1 (fidélité cellule 01) : nouvelle approche par **rubans de trait** extraits de la référence, structure nettement plus fidèle mais pas parfaite — voir `HAIR-GRAMMAR-RIBBONS.md` et `HAIR-GRAMMAR-RIBBONS-REMAINING.md` (liste à jour des tâches restantes).
