@@ -27,10 +27,15 @@ def mask_of(boxes, polys):
         cv2.fillPoly(m, [np.array([loc(*p) for p in pl], np.int32)], 1)
     return m
 face_m = mask_of(CFG['face_boxes'], CFG['face_polys'])
+eye_m = mask_of(CFG.get('eye_boxes', []), [])
+role_of = lambda pts_xy: ('eye' if eye_m.any() and frac_in(eye_m, pts_xy) > 0.5 else ('face' if face_frac(pts_xy) > 0.5 else 'hair'))
 tone_ex = mask_of(CFG['tone_exclude_boxes'], CFG.get('tone_exclude_polys', []))
 # seuil d'encre : plus tolérant dans la zone visage (nez, bouche = traits gris fins), sinon seuil général
 thr = np.where(face_m > 0, CFG.get('ink_t_face', CFG['ink_t']), CFG['ink_t'])
 ink = ((sm < thr) & (roi > 0)).astype(np.uint8)
+def frac_in(m, pts_xy):
+    p = np.clip(np.round(pts_xy).astype(int), 0, [big.shape[1] - 1, big.shape[0] - 1])
+    return float(m[p[:, 1], p[:, 0]].mean())
 def face_frac(pts_xy):   # part de points (sur-échantillonnés, x,y) dans la zone visage
     p = np.clip(np.round(pts_xy).astype(int), 0, [big.shape[1] - 1, big.shape[0] - 1])
     return float(face_m[p[:, 1], p[:, 0]].mean())
@@ -49,6 +54,7 @@ tf = lambda x, y: [round(float((x - OX) / UNIT), 4), round(float((y - OY) / UNIT
 def rings_of(mask, simplify, min_area):
     cs, hier = cv2.findContours(mask, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
     out = []
+    if hier is None: return out   # bande vide
     for c, h in zip(cs, hier[0]):
         if abs(cv2.contourArea(c)) < min_area: continue
         pts = c[:, 0, :].astype(np.float32)
@@ -60,7 +66,7 @@ def rings_of(mask, simplify, min_area):
     return out
 solids = []
 for ring in rings_of(solid, 1.0, 2.0 * S * S):
-    solids.append({'role': 'face' if face_frac(ring * S) > 0.5 else 'hair', 'ring': [tf(x, y) for x, y in ring]})
+    solids.append({'role': role_of(ring * S), 'ring': [tf(x, y) for x, y in ring]})
 print('masses pleines', len(solids), 'dont cheveux', sum(s['role'] == 'hair' for s in solids))
 
 # --- 2. traits fins : squelette de l'encre complète, branches, spline lissante, largeur = 2 x distance, effilement des pointes libres
@@ -82,6 +88,7 @@ for s in [p for p in pts if deg[p] == 1 or p in junction]:
     for n in nb(s):
         if (s, n) in seen: continue
         p = walk(s, n); seen.add((p[0], p[1])); seen.add((p[-1], p[-2])); branches.append(p)
+gsm = cv2.GaussianBlur(big.astype(np.float32), (0, 0), 0.6 * S)   # gris de la référence, pour le dégradé le long de chaque ruban
 ribs = []; MIN_LEN = 4.5 * S
 for path in branches:
     a = np.array(path, float)[:, ::-1]
@@ -104,10 +111,12 @@ for path in branches:
     f = np.ones(n)
     if free_a: f = np.minimum(f, 0.25 + 0.75 * np.clip(arc / Lt, 0, 1))
     if free_b: f = np.minimum(f, 0.25 + 0.75 * np.clip((L - arc) / Lt, 0, 1))
-    is_f = face_frac(np.stack([xs, ys], 1)) > 0.5
+    role = role_of(np.stack([xs, ys], 1)); is_f = role != 'hair'
     if is_f and 'face_width_cap_px' in CFG: ww = np.minimum(ww, CFG['face_width_cap_px'] * S)   # un trait de visage reste un trait
     ww = np.maximum(ww * f, 0.3 * S)
-    ribs.append({'role': 'face' if is_f else 'hair', 'p': [tf(x / S, y / S) + [round(float(q) / S / UNIT, 4)] for x, y, q in zip(xs, ys, ww)]})
+    gy = np.clip(np.round(ys).astype(int), 0, big.shape[0] - 1); gx = np.clip(np.round(xs).astype(int), 0, big.shape[1] - 1)
+    gl = ndi.gaussian_filter1d(gsm[gy, gx].astype(float), 1.5, mode='nearest')   # gris le long du ruban, lissé
+    ribs.append({'role': role, 'p': [tf(x / S, y / S) + [round(float(q) / S / UNIT, 4)] for x, y, q in zip(xs, ys, ww)], 'g': [int(round(v)) for v in gl]})
 for i, r in enumerate(ribs): r['id'] = i
 print('rubans fins', len(ribs), 'dont cheveux', sum(r['role'] == 'hair' for r in ribs))
 
@@ -138,5 +147,6 @@ if 'landmarks_px' in CFG:   # repères du visage mesurés à la grille, converti
                         'noseTipV': round((L['nose_tip_y'] - CFG['origin'][1]) / UNIT, 4), 'mouthV': round((L['mouth_y'] - CFG['origin'][1]) / UNIT, 4), 'chinV': round((L['chin_y'] - CFG['origin'][1]) / UNIT, 4)}
 if 'limits' in CFG: out['limits'] = CFG['limits']
 if 'style_limits' in CFG: out['styleLimits'] = CFG['style_limits']
+if 'eye_slot' in CFG: out['eyeSlot'] = CFG['eye_slot']
 json.dump(out, open(OUT_JSON, 'w'), separators=(',', ':'))
 cv2.imwrite(CHK + '/extraction-masks.png', np.hstack([ink * 255, solid * 255, thin * 255, zone * 255, face_m * 255]))

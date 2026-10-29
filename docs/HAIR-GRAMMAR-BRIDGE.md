@@ -22,6 +22,8 @@ La grammaire, elle, **ne génère rien** à partir de paramètres (voir `HAIR-GR
 | Statistiques (longueur, largeur, cap, courbure) en H | paramètres de `STYLES`/`flow` (non vérifié en détail) | **le plus prometteur** : alimenter des *paramètres*, pas de la géométrie |
 | Repères du visage (iris, nez, bouche, menton, crâne) | `FaceLandmarks` (`eyeY`, `noseTipY`, `mouthY`, `chinY`, `jawY`, `W`, `H`) | adaptateur de repère à écrire (iris+unité ↔ `W`,`H`) |
 
+Note : depuis `eye-slot.ts`, la grammaire appelle déjà le moteur principal **à sens unique** (`compileEye`) pour l'œil — premier point de contact réel, converti en gris d'encre ; le sens inverse n'existe pas.
+
 ## 4. Primitives incompatibles
 - `ToneMass` (bandes de gris absolues avec trous évenodd) et `SolidMass` (masses noires avec trous) : le moteur principal n'a pas d'équivalent direct (teinte relative, rendu par appearance partagée ; le type `Poly` n'a pas été vérifié pour les trous).
 - Gris **absolus** mesurés vs teinte **relative** + éclairage : mélanger les deux casse la cohérence d'ombrage.

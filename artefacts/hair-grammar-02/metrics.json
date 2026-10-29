@@ -2,19 +2,19 @@
   "cell": "02-side_sweep",
   "ribbons": 123,
   "tones": 8,
-  "svgKB": 84,
-  "buildMsMedian": 5.2,
-  "rasterMsMedian312": 9.4,
+  "svgKB": 139,
+  "buildMsMedian": 4.91,
+  "rasterMsMedian312": 15.9,
   "reference": {
-    "silhouetteIoU": 0.9755224875504842,
-    "inkRecall": 0.9952592835239629,
-    "inkPrecision": 0.99910075985792,
+    "silhouetteIoU": 0.9707224539612672,
+    "inkRecall": 0.9935122248610088,
+    "inkPrecision": 0.9988680244287631,
     "inkFraction": {
       "ref": 0.3224735915492958,
-      "mine": 0.3263057511737089
+      "mine": 0.32142899061032865
     }
   },
-  "blurDiff": 0.0352,
+  "blurDiff": 0.0398,
   "verification": {
     "geo": {
       "layer": "geometry",

@@ -29,18 +29,24 @@ Constat de forme (ce que la grammaire doit savoir dire) : raie haute côté gauc
 ## Mesures (`artefacts/hair-grammar-02/metrics.json`)
 | Mesure | Valeur |
 |---|---|
-| IoU de silhouette | 0,976 |
-| Rappel / précision d'encre (tolérance 2 px) | 0,995 / 0,999 |
-| Part d'encre (réf. 0,322) | 0,326 |
-| Écart perceptuel (flou) | 0,035 |
-| Construction SVG (médiane) | 5,2 ms |
-| Rastérisation 284 px (médiane) | 9,4 ms |
-| Taille SVG | 84 Ko |
+| IoU de silhouette | 0,971 |
+| Rappel / précision d'encre (tolérance 2 px) | 0,994 / 0,999 |
+| Part d'encre (réf. 0,322) | 0,321 |
+| Écart perceptuel (flou) | 0,040 (0,035 avant œil et dégradé) |
+| Construction SVG (médiane) | 4,9 ms (œil en cache ; 12,4 ms au premier appel) |
+| Rastérisation 284 px (médiane) | 15,9 ms |
+| Taille SVG | 139 Ko |
 | Vérification | géométrie, anatomie, style : vertes |
-Machine à 1 cœur. Avec 5 niveaux de ton : 3,3 ms / 7,1 ms / 69 Ko → les 8 niveaux coûtent environ +30 % de rastérisation pour un dégradé plus doux.
+Machine à 1 cœur. Étapes : 5 niveaux de ton = 3,3 ms / 7,1 ms / 69 Ko ; 8 niveaux = 5,2 / 9,4 / 84 Ko ; **+ œil du moteur et dégradés = 4,9 / 15,9 / 139 Ko**. L'œil (≈ 50 Ko de SVG du moteur, pour 24 px de large) est le principal surcoût : **+70 % de rastérisation par rapport aux 8 niveaux seuls**. Aucune optimisation de la rastérisation n'a été faite.
+
+## Étape 2 : œil du moteur et dégradé le long des mèches
+**Œil.** `src/hair-grammar/eye-slot.ts` compile l'œil avec le vrai moteur (`compileEye`, rotation 3D `headTurn.model = 'sphere'`, yaw −38°), le convertit en gris (`grayscaleSvg`), le pose en pixels de cellule et le borne par un cadre (le sourcil est sous la frange). Il est peint **avant** l'encre des cheveux : la frange le recouvre comme dans la référence. Les rubans tracés du rôle `eye` ne sont plus dessinés quand une place d'œil existe (sans elle, la trace est conservée). Réglages de la cellule 02 dans `cells/02-side_sweep.json` (`eye_slot`) : paupière épaisse, 7 cils courts, regard légèrement vers l'extérieur, iris gris foncé. Résultat : un œil avec iris, reflet et cils à la place de la tache noire.
+**Dégradé.** L'extracteur mesure le gris de la référence le long de chaque ligne médiane (champ `g`). Les rubans dont ce gris dépasse 90 sont peints un à un avec un dégradé linéaire racine → pointe (gain 0,7) ; les autres restent dans le trait noir commun. Effet visible : pointes de frange et trait du nez/bouche qui s'éclaircissent.
+**Essais écartés (mesurés).** Abaisser le seuil d'encre à 75 pour que les gris foncés deviennent des bandes de ton : IoU 0,97 → 0,59, écart perceptuel 0,037 → 0,054, SVG +20 % : retiré.
+**Compromis assumé.** Toute éclaircie par dégradé *augmente* l'écart perceptuel mesuré : 0,0373 sans dégradé ; 0,0377 (gain 0,35) ; 0,0398 (gain 0,7, retenu) ; 0,0435 (gain 1, seuil 70). J'ai retenu 0,7 / 90 parce que le rendu des pointes est plus proche de la référence à l'œil, au prix de ~7 % d'écart mesuré en plus. C'est un jugement visuel, pas une preuve : à trancher par toi.
 
 ## Lecture honnête de ces chiffres
 - IoU 0,976 et précision 0,999 ne mesurent **pas** la qualité d'une grammaire : le profil est une **trace** de l'image elle-même, comparée à cette même image. Ils prouvent que la chaîne d'extraction ne perd presque rien, pas que la grammaire sait produire cette coiffure à partir de paramètres.
 - Le rouge de la superposition au bord gauche (`03-…`) vient de mèches de la cellule voisine, exclues volontairement : elles sont comptées « manquantes » dans les métriques (légère sous-estimation).
-- **Écart visible restant** : les corps de mèches de la référence sont des gris foncés rayés de clair ; le rendu a du noir avec des fentes blanches. Les reflets blancs fins du balayage sont rendus en bandes lissées, pas en traits nets. Détails dans `HAIR-GRAMMAR-02-REMAINING.md`.
+- **Écart visible restant** : les corps de mèches de la référence sont des gris foncés rayés de clair ; le rendu a du noir avec des fentes blanches. Un dégradé mesuré *sur la ligne médiane* ne peut pas reproduire ces stries claires à l'intérieur d'une mèche. L'œil du moteur est plus clair et plus symétrique que celui de la référence (iris plus grand, paupière moins fermée). Détails dans `HAIR-GRAMMAR-02-REMAINING.md`.
 - Verdict : la cellule 02 n'est **pas** « parfaite pixel par pixel ». Elle est nettement plus fidèle que la 01 (IoU 0,77), surtout parce que la coiffure est lisse et faite de grandes masses.

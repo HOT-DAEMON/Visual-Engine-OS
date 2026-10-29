@@ -1,4 +1,5 @@
 import { smoothPath } from './blade';
+import type { EyeSlot } from './eye-slot';
 import type { V2 } from './vec';
 
 /**
@@ -12,18 +13,19 @@ import type { V2 } from './vec';
 export interface HeadFrame { readonly ox: number; readonly oy: number; readonly unit: number }
 /** Point de ruban : position (u, v) en hauteurs de tête depuis l'iris proche, largeur w (même unité). */
 export type RibbonPoint = readonly [number, number, number];
-export interface Ribbon { readonly id: number; readonly role: 'hair' | 'face'; readonly p: readonly RibbonPoint[] }
+export type RibbonRole = 'hair' | 'face' | 'eye';
+export interface Ribbon { readonly id: number; readonly role: RibbonRole; /** Gris de la référence (0–255) mesuré le long de la ligne médiane, un par point : racine sombre → pointe claire. */ readonly g?: readonly number[]; readonly p: readonly RibbonPoint[] }
 /** Bande de ton : `level` 1 (la plus claire) → n (la plus sombre), `gray` mesuré sur la référence (0-255), `rings` = contours (évenodd : les trous sont des anneaux). */
 export interface ToneMass { readonly level: number; readonly gray: number; readonly rings: readonly (readonly (readonly [number, number])[])[] }
 /** Masse pleine (noir franc : racines, paquets sombres) : un contour fermé dans le repère de tête. */
-export interface SolidMass { readonly role: 'hair' | 'face'; readonly ring: readonly (readonly [number, number])[] }
+export interface SolidMass { readonly role: RibbonRole; readonly ring: readonly (readonly [number, number])[] }
 /** Repères du visage de la cellule, dans le repère de tête (v vers le bas, u vers la droite). Mesurés sur la grille de la référence (voir `cells/*.json`). */
 export interface FaceLandmarks { readonly crownV: number; readonly faceContourU: number; readonly noseTipV: number; readonly mouthV: number; readonly chinV: number }
 /** Bornes [min, max] des cinq contrôles anatomiques (garde-fous autour de la référence, pas une preuve de ressemblance). */
 export interface AnatomyLimits { readonly crown: readonly [number, number]; readonly overhang: readonly [number, number]; readonly width: readonly [number, number]; readonly fringe: readonly [number, number]; readonly side: readonly [number, number] }
 /** Bornes de style [min, max] : épaisseur médiane, épaisseur maximale d'un ruban fin (px cellule), rapport longueur/largeur moyen. */
 export interface StyleLimits { readonly median: readonly [number, number]; readonly maxThin: readonly [number, number]; readonly ratio: readonly [number, number]; readonly tones?: readonly [number, number] }
-export interface RibbonProfile { readonly frame: HeadFrame & { readonly cell: number }; readonly ribbons: readonly Ribbon[]; readonly solids: readonly SolidMass[]; readonly tones: readonly ToneMass[]; readonly landmarks?: FaceLandmarks; readonly limits?: AnatomyLimits; readonly styleLimits?: StyleLimits }
+export interface RibbonProfile { readonly frame: HeadFrame & { readonly cell: number }; readonly ribbons: readonly Ribbon[]; readonly solids: readonly SolidMass[]; readonly tones: readonly ToneMass[]; readonly landmarks?: FaceLandmarks; readonly limits?: AnatomyLimits; readonly styleLimits?: StyleLimits; readonly eyeSlot?: EyeSlot }
 
 /** Repère → pixels de cellule. */
 export const toCell = (f: HeadFrame, u: number, v: number): V2 => ({ x: f.ox + u * f.unit, y: f.oy + v * f.unit });
