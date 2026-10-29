@@ -1,0 +1,83 @@
+{
+  "01-tousled": {
+    "rubansCheveux": 165,
+    "masseSolidesCheveux": 11,
+    "longueurH": {
+      "p10": 0.048,
+      "mediane": 0.086,
+      "p90": 0.202,
+      "max": 0.548
+    },
+    "largeurMoyenneH": {
+      "mediane": 0.017,
+      "p90": 0.031
+    },
+    "courbureRadParH": {
+      "mediane": 5.09,
+      "p90": 14.439
+    },
+    "directionDominanteDeg": 56,
+    "alignementR": 0.211,
+    "rapportLongLarg": 4.731,
+    "repereTete": null,
+    "unite_px": 109.5
+  },
+  "02-side_sweep": {
+    "rubansCheveux": 104,
+    "masseSolidesCheveux": 15,
+    "longueurH": {
+      "p10": 0.052,
+      "mediane": 0.102,
+      "p90": 0.219,
+      "max": 0.606
+    },
+    "largeurMoyenneH": {
+      "mediane": 0.034,
+      "p90": 0.046
+    },
+    "courbureRadParH": {
+      "mediane": 5.88,
+      "p90": 15.612
+    },
+    "directionDominanteDeg": 59,
+    "alignementR": 0.327,
+    "rapportLongLarg": 3.171,
+    "repereTete": {
+      "crownV": -0.5068,
+      "faceContourU": -0.1279,
+      "noseTipV": 0.2192,
+      "mouthV": 0.3288,
+      "chinV": 0.4932
+    },
+    "unite_px": 109.5
+  },
+  "03-swept_back": {
+    "rubansCheveux": 76,
+    "masseSolidesCheveux": 6,
+    "longueurH": {
+      "p10": 0.047,
+      "mediane": 0.097,
+      "p90": 0.253,
+      "max": 0.506
+    },
+    "largeurMoyenneH": {
+      "mediane": 0.016,
+      "p90": 0.025
+    },
+    "courbureRadParH": {
+      "mediane": 4.268,
+      "p90": 14.604
+    },
+    "directionDominanteDeg": 49,
+    "alignementR": 0.329,
+    "rapportLongLarg": 7.682,
+    "repereTete": {
+      "crownV": -0.516,
+      "faceContourU": -0.4201,
+      "noseTipV": 0.2009,
+      "mouthV": 0.3196,
+      "chinV": 0.484
+    },
+    "unite_px": 109.5
+  }
+}

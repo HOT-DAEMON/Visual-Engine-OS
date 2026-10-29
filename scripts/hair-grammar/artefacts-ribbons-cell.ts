@@ -4,6 +4,7 @@ import type { RibbonProfile } from '../../src/hair-grammar/ribbon';
 import { ribbonScene } from '../../src/hair-grammar/ribbon-scene';
 import { compareToReference, type Gray } from '../../src/hair-grammar/verify';
 import { verifyRibbonAnatomy, verifyRibbonGeometry, verifyRibbonStyle } from '../../src/hair-grammar/ribbon-verify';
+import { verifyIso } from '../../src/hair-grammar/iso-verify';
 import { decodePng } from '../../src/regression/png';
 import { encodeRgbaPng } from './png-rgba';
 
@@ -19,7 +20,8 @@ const raster = (svg: string, px: number): { png: Uint8Array; g: Gray } => {
   for (let i = 0; i < d.length; i++) d[i] = Math.round(0.299 * (rgba[i * 4] as number) + 0.587 * (rgba[i * 4 + 1] as number) + 0.114 * (rgba[i * 4 + 2] as number));
   return { png: img.asPng(), g: { w: img.width, h: img.height, data: d } };
 };
-const svg = ribbonScene(P, { w: VW, h: VH, px: 4 });
+const LAYERS = (process.env.LAYERS ?? 'auto') as 'auto' | 'bands' | 'ribbons';
+const svg = ribbonScene(P, { w: VW, h: VH, px: 4 }, undefined, undefined, LAYERS);
 const mine = raster(svg, VW * 4);
 writeFileSync(`${DIR}/${CFG.id}-rubans.png`, mine.png); writeFileSync(`${DIR}/${CFG.id}-rubans.svg`, svg);
 const rr = decodePng(readFileSync(REFP));
@@ -39,9 +41,11 @@ const blurDiff = acc / cnt;
 // Temps : construction du SVG (médiane de 15 passes après échauffement) et rastérisation 312 px.
 const med = (a: number[]): number => [...a].sort((x, y) => x - y)[Math.floor(a.length / 2)] as number;
 const tb: number[] = []; const tr: number[] = [];
-for (let i = 0; i < 17; i++) { const t0 = performance.now(); const sv = ribbonScene(P, { w: VW, h: VH, px: 2 }); const t1 = performance.now(); raster(sv, VW * 2); const t2 = performance.now(); if (i >= 2) { tb.push(t1 - t0); tr.push(t2 - t1); } }
+for (let i = 0; i < 17; i++) { const t0 = performance.now(); const sv = ribbonScene(P, { w: VW, h: VH, px: 2 }, undefined, undefined, LAYERS); const t1 = performance.now(); raster(sv, VW * 2); const t2 = performance.now(); if (i >= 2) { tb.push(t1 - t0); tr.push(t2 - t1); } }
 const geo = verifyRibbonGeometry(P); const ana = verifyRibbonAnatomy(P); const sty = verifyRibbonStyle(P);
-const out = { cell: CFG.id, ribbons: P.ribbons.length, tones: P.tones.length, svgKB: Math.round(svg.length / 1024), buildMsMedian: Number(med(tb).toFixed(2)), rasterMsMedian312: Number(med(tr).toFixed(1)), reference: m, blurDiff: Number(blurDiff.toFixed(4)), verification: { geo, ana, sty } };
+const iso = P.bands ? verifyIso(P, { w: VW, h: VH }) : null;
+if (iso) writeFileSync(`${DIR}/verification-iso.json`, JSON.stringify({ geometry: iso.geometry, anatomy: iso.anatomy, style: iso.style, measures: iso.measures }, null, 2));
+const out = { cell: CFG.id, layers: LAYERS, isoOk: iso ? iso.geometry.ok && iso.anatomy.ok && iso.style.ok : null, ribbons: P.ribbons.length, tones: P.tones.length, svgKB: Math.round(svg.length / 1024), buildMsMedian: Number(med(tb).toFixed(2)), rasterMsMedian312: Number(med(tr).toFixed(1)), reference: m, blurDiff: Number(blurDiff.toFixed(4)), verification: { geo, ana, sty } };
 writeFileSync(`${DIR}/metrics.json`, JSON.stringify(out, null, 2)); writeFileSync(`${DIR}/verification.json`, JSON.stringify({ geo, ana, sty }, null, 2));
 console.log(JSON.stringify({ ...out, verification: { geo: geo.ok, ana: ana.ok, sty: sty.ok } }));
-for (const r of [geo, ana, sty]) for (const c of r.checks) console.log(c.ok ? 'ok   ' : 'ÉCHEC', r.layer, c.name, c.value.toFixed(3));
+for (const r of iso ? [geo, ana, sty, iso.geometry, iso.anatomy, iso.style] : [geo, ana, sty]) for (const c of r.checks) console.log(c.ok ? 'ok   ' : 'ÉCHEC', r.layer, c.name, c.value.toFixed(3));

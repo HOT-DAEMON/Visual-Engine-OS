@@ -23,11 +23,20 @@ function ribbonGradient(r: Ribbon, id: string, f: { ox: number; oy: number; unit
   return `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(x2)}" y2="${f1(y2)}">${stops}</linearGradient>`;
 }
 
+/** Scène à bandes : un `<path>` évenodd par seuil, du plus clair au plus sombre. Le dernier seuil porte l'encre : son gris est remplacé par l'encre de la scène. */
+export function bandScene(P: RibbonProfile, view: { w: number; h: number; px: number }, st: RibbonStyle = RIBBON_STYLE): string {
+  const b = P.bands ?? []; const last = b.length - 1;
+  const paths = b.map((q, i) => `<path d="${q.d}" fill="${i === last ? st.ink : hex(q.gray)}" fill-rule="evenodd"/>`).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${view.w} ${view.h}" width="${view.w * view.px}" height="${view.h * view.px}"><rect width="100%" height="100%" fill="${st.paper}"/>${paths}</svg>`;
+}
+
 /**
  * Scène complète, ordre de peinture : papier → bandes de ton (claires puis sombres) → masses pleines → rubans fins.
  * SVG de chemins uniquement (aucun filtre) ; une seule balise `<path>` par bande et une pour toute l'encre → peu de nœuds, rastérisation rapide.
  */
-export function ribbonScene(P: RibbonProfile, view: { w: number; h: number; px: number }, st: RibbonStyle = RIBBON_STYLE, rolesIn: ReadonlySet<string> = new Set(['hair', 'face'])): string {
+export function ribbonScene(P: RibbonProfile, view: { w: number; h: number; px: number }, st: RibbonStyle = RIBBON_STYLE, rolesIn: ReadonlySet<string> = new Set(['hair', 'face']), layers: 'auto' | 'bands' | 'ribbons' = 'auto'): string {
+  // Profil à bandes iso-tons précompilées : papier → bandes (claires puis sombres) ; aucun chemin à reconstruire (construction = concaténation).
+  if (P.bands && layers !== 'ribbons') return bandScene(P, view, st);
   const f = P.frame;
   // Si le profil porte une place d'œil, le vrai moteur d'yeux remplace l'encre tracée du rôle `eye` ; sinon la trace est conservée.
   const eye = P.eyeSlot ? eyeInk(P.eyeSlot) : null;

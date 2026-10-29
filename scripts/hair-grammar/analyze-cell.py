@@ -145,6 +145,8 @@ if 'landmarks_px' in CFG:   # repères du visage mesurés à la grille, converti
     L = CFG['landmarks_px']
     out['landmarks'] = {'crownV': round((L['crown_y'] - CFG['origin'][1]) / UNIT, 4), 'faceContourU': round((L['face_contour_x'] - CFG['origin'][0]) / UNIT, 4),
                         'noseTipV': round((L['nose_tip_y'] - CFG['origin'][1]) / UNIT, 4), 'mouthV': round((L['mouth_y'] - CFG['origin'][1]) / UNIT, 4), 'chinV': round((L['chin_y'] - CFG['origin'][1]) / UNIT, 4)}
+if 'protect_boxes' in CFG:   # zones que les cheveux ne doivent pas recouvrir (yeux, nez, bouche) : [nom, x0, y0, x1, y1] en px image -> repère de tête
+    out['protect'] = [{'name': b[0], 'box': tf(b[1] - x0, b[2] - y0) + tf(b[3] - x0, b[4] - y0)} for b in CFG['protect_boxes']]
 if 'limits' in CFG: out['limits'] = CFG['limits']
 if 'style_limits' in CFG: out['styleLimits'] = CFG['style_limits']
 if 'eye_slot' in CFG: out['eyeSlot'] = CFG['eye_slot']

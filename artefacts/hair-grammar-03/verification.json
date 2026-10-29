@@ -1,0 +1,125 @@
+{
+  "geo": {
+    "layer": "geometry",
+    "checks": [
+      {
+        "name": "rubans non finis",
+        "value": 0,
+        "min": 0,
+        "max": 0,
+        "ok": true
+      },
+      {
+        "name": "rubans dégénérés (< 0,03 H)",
+        "value": 0,
+        "min": 0,
+        "max": 0,
+        "ok": true
+      },
+      {
+        "name": "largeurs ≤ 0",
+        "value": 0,
+        "min": 0,
+        "max": 0,
+        "ok": true
+      },
+      {
+        "name": "masses/tons dégénérés ou non finis",
+        "value": 0,
+        "min": 0,
+        "max": 0,
+        "ok": true
+      },
+      {
+        "name": "nombre de rubans de cheveux",
+        "value": 76,
+        "min": 40,
+        "max": 400,
+        "ok": true
+      }
+    ],
+    "ok": true
+  },
+  "ana": {
+    "layer": "anatomy",
+    "checks": [
+      {
+        "name": "volume au-dessus du crâne / H",
+        "value": 0.3056,
+        "min": 0.25,
+        "max": 0.45,
+        "ok": true
+      },
+      {
+        "name": "débord avant (au-delà du contour du visage) / H",
+        "value": 0.06070000000000003,
+        "min": 0,
+        "max": 0.2,
+        "ok": true
+      },
+      {
+        "name": "largeur totale des cheveux / H",
+        "value": 1.0657,
+        "min": 1,
+        "max": 1.5,
+        "ok": true
+      },
+      {
+        "name": "frange : au plus 0,1 H sous la pointe du nez",
+        "value": -0.30820000000000003,
+        "min": -0.6,
+        "max": 0.1,
+        "ok": true
+      },
+      {
+        "name": "mèches latérales : ne descendent pas sous le menton (/H)",
+        "value": -0.4679,
+        "min": -0.62,
+        "max": -0.32,
+        "ok": true
+      }
+    ],
+    "ok": true
+  },
+  "sty": {
+    "layer": "style",
+    "checks": [
+      {
+        "name": "épaisseur médiane du trait (px cellule)",
+        "value": 1.7848499999999998,
+        "min": 1.2,
+        "max": 5,
+        "ok": true
+      },
+      {
+        "name": "épaisseur maximale d'un ruban fin (px cellule)",
+        "value": 5.00415,
+        "min": 2,
+        "max": 5.1,
+        "ok": true
+      },
+      {
+        "name": "rapport longueur/largeur moyen",
+        "value": 9.679752704337586,
+        "min": 3,
+        "max": 60,
+        "ok": true
+      },
+      {
+        "name": "niveaux de ton",
+        "value": 8,
+        "min": 3,
+        "max": 8,
+        "ok": true
+      },
+      {
+        "name": "bandes de ton dans le désordre",
+        "value": 0,
+        "min": 0,
+        "max": 0,
+        "ok": true
+      }
+    ],
+    "ok": true
+  }
+}

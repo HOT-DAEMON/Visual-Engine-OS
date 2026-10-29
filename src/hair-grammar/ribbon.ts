@@ -25,7 +25,11 @@ export interface FaceLandmarks { readonly crownV: number; readonly faceContourU:
 export interface AnatomyLimits { readonly crown: readonly [number, number]; readonly overhang: readonly [number, number]; readonly width: readonly [number, number]; readonly fringe: readonly [number, number]; readonly side: readonly [number, number] }
 /** Bornes de style [min, max] : épaisseur médiane, épaisseur maximale d'un ruban fin (px cellule), rapport longueur/largeur moyen. */
 export interface StyleLimits { readonly median: readonly [number, number]; readonly maxThin: readonly [number, number]; readonly ratio: readonly [number, number]; readonly tones?: readonly [number, number] }
-export interface RibbonProfile { readonly frame: HeadFrame & { readonly cell: number }; readonly ribbons: readonly Ribbon[]; readonly solids: readonly SolidMass[]; readonly tones: readonly ToneMass[]; readonly landmarks?: FaceLandmarks; readonly limits?: AnatomyLimits; readonly styleLimits?: StyleLimits; readonly eyeSlot?: EyeSlot }
+/** Bande iso-ton PRÉCOMPILÉE : région « plus sombre que `level` » (0-255) remplie de `gray`, chemin SVG relatif en pixels de cellule (évenodd). Couche de rendu fidèle au pixel ; les rubans restent la couche de structure. */
+export interface IsoBand { readonly level: number; readonly gray: number; readonly d: string }
+/** Zone du visage que les cheveux ne doivent pas recouvrir : boîte [u0, v0, u1, v1] dans le repère de tête. */
+export interface ProtectBox { readonly name: string; readonly box: readonly [number, number, number, number] }
+export interface RibbonProfile { readonly frame: HeadFrame & { readonly cell: number }; readonly bands?: readonly IsoBand[]; readonly protect?: readonly ProtectBox[]; readonly ribbons: readonly Ribbon[]; readonly solids: readonly SolidMass[]; readonly tones: readonly ToneMass[]; readonly landmarks?: FaceLandmarks; readonly limits?: AnatomyLimits; readonly styleLimits?: StyleLimits; readonly eyeSlot?: EyeSlot }
 
 /** Repère → pixels de cellule. */
 export const toCell = (f: HeadFrame, u: number, v: number): V2 => ({ x: f.ox + u * f.unit, y: f.oy + v * f.unit });

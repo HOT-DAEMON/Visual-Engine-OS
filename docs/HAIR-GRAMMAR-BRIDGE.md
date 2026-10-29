@@ -42,3 +42,9 @@ Un import doit passer par les mêmes `guard` et mesures d'occlusion que les mèc
 3. Adaptateur **à sens unique** `Ribbon → HairLock` derrière un drapeau, pour **une** coiffure (02) ; rendu par le moteur principal.
 4. Comparer au rendu actuel et à la référence ; passer les mesures d'occlusion et la vérification existante.
 5. Seulement si 1 à 4 sont verts : décider d'une fusion plus large. Non-régression : suite `regress` du dépôt, mêmes graines.
+
+## Mise à jour (cellule 03)
+- **Données nouvelles** : `HAIR-GRAMMAR-STATS.md` (étape 2 du chemin ci-dessus, 3 cellules). Ce que la grammaire apporte de mesurable : *désordre* (alignement R 0,21 → 0,33), *finesse* (L/l 3,2 → 7,7), *portée relative aux repères* (frange, côtés, arrière). Rien n'a été branché.
+- **Nouvelle primitive incompatible** : `IsoBand` (région « plus sombre que le seuil », gris absolu, chemin précompilé). C'est une couche de **rendu** : elle ne doit pas entrer dans le moteur principal (même raison que `ToneMass`).
+- **Zones protégées** (`protect` : yeux, nez, bouche dans le repère de tête) : première brique du point 6 (graphe du visage et occlusions) ; la mesure d'occlusion (`iso-verify.ts`) rend les cheveux de la grammaire contrôlables par zone, mais n'est pas `OcclusionInfo` du moteur principal (non branchée).
+- Décision inchangée : **pas de fusion**.

@@ -11,6 +11,7 @@ import { decodePng } from '../src/regression/png';
 const CELLS = [
   { id: '01-tousled', profile: 'src/hair-grammar/profiles/tousled.ribbons.json', ref: 'artefacts/hair-grammar/refs/h01-roi-x4.png', w: 156, h: 150, iou: 0.72, recall: 0.97 },
   { id: '02-side_sweep', profile: 'src/hair-grammar/profiles/side_sweep.ribbons.json', ref: 'artefacts/hair-grammar/refs/h02-roi-x4.png', w: 142, h: 150, iou: 0.95, recall: 0.985 },
+  { id: '03-swept_back', profile: 'src/hair-grammar/profiles/swept_back.ribbons.json', ref: 'artefacts/hair-grammar/refs/h03-roi-x4.png', w: 144, h: 170, iou: 0.92, recall: 0.99 },
 ] as const;
 const gray = (png: Uint8Array, w: number, h: number): Gray => { const d = decodePng(png); return { w, h, data: Uint8Array.from({ length: w * h }, (_, i) => d.data[i * 4] as number) }; };
 

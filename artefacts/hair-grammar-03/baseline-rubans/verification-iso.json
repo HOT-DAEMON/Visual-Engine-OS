@@ -1,0 +1,157 @@
+{
+  "geometry": {
+    "layer": "geometry",
+    "checks": [
+      {
+        "name": "bandes présentes",
+        "value": 8,
+        "min": 3,
+        "max": 12,
+        "ok": true
+      },
+      {
+        "name": "seuils non strictement décroissants",
+        "value": 0,
+        "min": 0,
+        "max": 0,
+        "ok": true
+      },
+      {
+        "name": "gris non strictement décroissants",
+        "value": 0,
+        "min": 0,
+        "max": 0,
+        "ok": true
+      },
+      {
+        "name": "sous-chemins non fermés (M ≠ z)",
+        "value": 0,
+        "min": 0,
+        "max": 0,
+        "ok": true
+      },
+      {
+        "name": "nombres illisibles",
+        "value": 0,
+        "min": 0,
+        "max": 0,
+        "ok": true
+      },
+      {
+        "name": "dépassement hors cellule (px)",
+        "value": 0,
+        "min": 0,
+        "max": 1.5,
+        "ok": true
+      },
+      {
+        "name": "nœuds au total",
+        "value": 8142,
+        "min": 1,
+        "max": 20000,
+        "ok": true
+      }
+    ],
+    "ok": true
+  },
+  "anatomy": {
+    "layer": "anatomy",
+    "checks": [
+      {
+        "name": "cheveux dans « oeil_loin » (part d'encre)",
+        "value": 0,
+        "min": 0,
+        "max": 0.05,
+        "ok": true
+      },
+      {
+        "name": "traits du visage présents dans « oeil_loin »",
+        "value": 0.3589894242068155,
+        "min": 0.03,
+        "max": 0.6,
+        "ok": true
+      },
+      {
+        "name": "cheveux dans « oeil_proche » (part d'encre)",
+        "value": 0.008812260536398468,
+        "min": 0,
+        "max": 0.05,
+        "ok": true
+      },
+      {
+        "name": "traits du visage présents dans « oeil_proche »",
+        "value": 0.33524904214559387,
+        "min": 0.03,
+        "max": 0.6,
+        "ok": true
+      },
+      {
+        "name": "cheveux dans « nez » (part d'encre)",
+        "value": 0,
+        "min": 0,
+        "max": 0.05,
+        "ok": true
+      },
+      {
+        "name": "traits du visage présents dans « nez »",
+        "value": 0.04652777777777778,
+        "min": 0.03,
+        "max": 0.6,
+        "ok": true
+      },
+      {
+        "name": "cheveux dans « bouche » (part d'encre)",
+        "value": 0,
+        "min": 0,
+        "max": 0.05,
+        "ok": true
+      },
+      {
+        "name": "traits du visage présents dans « bouche »",
+        "value": 0.07774538386783285,
+        "min": 0.03,
+        "max": 0.6,
+        "ok": true
+      }
+    ],
+    "ok": true
+  },
+  "style": {
+    "layer": "style",
+    "checks": [
+      {
+        "name": "part d'encre du rendu",
+        "value": 0.17677696078431374,
+        "min": 0.1,
+        "max": 0.2,
+        "ok": true
+      },
+      {
+        "name": "niveaux de gris distincts",
+        "value": 8,
+        "min": 4,
+        "max": 12,
+        "ok": true
+      },
+      {
+        "name": "anneaux minuscules (bruit)",
+        "value": 0,
+        "min": 0,
+        "max": 121.42,
+        "ok": true
+      }
+    ],
+    "ok": true
+  },
+  "measures": {
+    "cheveux_dans_oeil_loin": 0,
+    "encre_du_rendu_dans_oeil_loin": 0.3589894242068155,
+    "cheveux_dans_oeil_proche": 0.008812260536398468,
+    "encre_du_rendu_dans_oeil_proche": 0.33524904214559387,
+    "cheveux_dans_nez": 0,
+    "encre_du_rendu_dans_nez": 0.04652777777777778,
+    "cheveux_dans_bouche": 0,
+    "encre_du_rendu_dans_bouche": 0.07774538386783285,
+    "part_encre": 0.17677696078431374
+  }
+}

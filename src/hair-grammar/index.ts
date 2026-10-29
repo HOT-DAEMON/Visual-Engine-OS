@@ -16,3 +16,5 @@ export * from './autofit';
 export * from './ribbon';
 export * from './ribbon-scene';
 export * from './ribbon-verify';
+export * from './render-fast';
+export * from './iso-verify';
