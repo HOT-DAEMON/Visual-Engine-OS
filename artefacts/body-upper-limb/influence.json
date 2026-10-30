@@ -1,0 +1,853 @@
+{
+  "base": "femme 28 ans",
+  "parametres": 51,
+  "parametresSansEffet": [],
+  "changementsNonDeclares": [],
+  "detail": {
+    "age": {
+      "changes": [
+        "abdominals",
+        "breasts",
+        "flank",
+        "forearm.L",
+        "forearm.R",
+        "hand.L",
+        "hand.R",
+        "pectorals",
+        "shoulder-girdle",
+        "skeleton",
+        "torso-shell",
+        "upper-arm.L",
+        "upper-arm.R"
+      ],
+      "declaredReaders": [
+        "torso-shell",
+        "shoulder-girdle",
+        "pectorals",
+        "breasts",
+        "abdominals",
+        "flank",
+        "skeleton",
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "sex": {
+      "changes": [
+        "abdominals",
+        "breasts",
+        "flank",
+        "forearm.L",
+        "forearm.R",
+        "hand.L",
+        "hand.R",
+        "pectorals",
+        "shoulder-girdle",
+        "skeleton",
+        "torso-shell",
+        "upper-arm.L",
+        "upper-arm.R"
+      ],
+      "declaredReaders": [
+        "torso-shell",
+        "shoulder-girdle",
+        "pectorals",
+        "breasts",
+        "abdominals",
+        "flank",
+        "skeleton",
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "adiposity": {
+      "changes": [
+        "abdominals",
+        "breasts",
+        "flank",
+        "forearm.L",
+        "forearm.R",
+        "hand.L",
+        "hand.R",
+        "pectorals",
+        "shoulder-girdle",
+        "skeleton",
+        "torso-shell",
+        "upper-arm.L",
+        "upper-arm.R"
+      ],
+      "declaredReaders": [
+        "torso-shell",
+        "shoulder-girdle",
+        "pectorals",
+        "breasts",
+        "abdominals",
+        "flank",
+        "skeleton",
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "muscularity": {
+      "changes": [
+        "abdominals",
+        "breasts",
+        "flank",
+        "forearm.L",
+        "forearm.R",
+        "hand.L",
+        "hand.R",
+        "pectorals",
+        "shoulder-girdle",
+        "skeleton",
+        "torso-shell",
+        "upper-arm.L",
+        "upper-arm.R"
+      ],
+      "declaredReaders": [
+        "torso-shell",
+        "shoulder-girdle",
+        "pectorals",
+        "breasts",
+        "abdominals",
+        "flank",
+        "skeleton",
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "frame.shoulderWidth": {
+      "changes": [
+        "forearm.L",
+        "forearm.R",
+        "hand.L",
+        "hand.R",
+        "pectorals",
+        "shoulder-girdle",
+        "skeleton",
+        "torso-shell",
+        "upper-arm.L",
+        "upper-arm.R"
+      ],
+      "declaredReaders": [
+        "torso-shell",
+        "shoulder-girdle",
+        "pectorals",
+        "breasts",
+        "abdominals",
+        "flank",
+        "skeleton",
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "frame.clavicleSlope": {
+      "changes": [
+        "flank",
+        "forearm.L",
+        "forearm.R",
+        "hand.L",
+        "hand.R",
+        "pectorals",
+        "shoulder-girdle",
+        "skeleton",
+        "torso-shell",
+        "upper-arm.L",
+        "upper-arm.R"
+      ],
+      "declaredReaders": [
+        "torso-shell",
+        "shoulder-girdle",
+        "pectorals",
+        "breasts",
+        "abdominals",
+        "flank",
+        "skeleton",
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "frame.trapezius": {
+      "changes": [
+        "flank",
+        "forearm.L",
+        "forearm.R",
+        "hand.L",
+        "hand.R",
+        "pectorals",
+        "shoulder-girdle",
+        "skeleton",
+        "torso-shell",
+        "upper-arm.L",
+        "upper-arm.R"
+      ],
+      "declaredReaders": [
+        "torso-shell",
+        "shoulder-girdle",
+        "pectorals",
+        "breasts",
+        "abdominals",
+        "flank",
+        "skeleton",
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "frame.chest": {
+      "changes": [
+        "abdominals",
+        "breasts",
+        "flank",
+        "pectorals",
+        "skeleton",
+        "torso-shell"
+      ],
+      "declaredReaders": [
+        "torso-shell",
+        "shoulder-girdle",
+        "pectorals",
+        "breasts",
+        "abdominals",
+        "flank",
+        "skeleton",
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "frame.waist": {
+      "changes": [
+        "abdominals",
+        "flank",
+        "pectorals",
+        "skeleton",
+        "torso-shell"
+      ],
+      "declaredReaders": [
+        "torso-shell",
+        "shoulder-girdle",
+        "pectorals",
+        "breasts",
+        "abdominals",
+        "flank",
+        "skeleton",
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "frame.hip": {
+      "changes": [
+        "abdominals",
+        "flank",
+        "skeleton",
+        "torso-shell"
+      ],
+      "declaredReaders": [
+        "torso-shell",
+        "shoulder-girdle",
+        "pectorals",
+        "breasts",
+        "abdominals",
+        "flank",
+        "skeleton",
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "frame.torsoLength": {
+      "changes": [
+        "abdominals",
+        "breasts",
+        "flank",
+        "pectorals",
+        "skeleton",
+        "torso-shell"
+      ],
+      "declaredReaders": [
+        "torso-shell",
+        "shoulder-girdle",
+        "pectorals",
+        "breasts",
+        "abdominals",
+        "flank",
+        "skeleton",
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "limbs.upperArm": {
+      "changes": [
+        "forearm.L",
+        "forearm.R",
+        "hand.L",
+        "hand.R",
+        "upper-arm.L",
+        "upper-arm.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "limbs.forearm": {
+      "changes": [
+        "forearm.L",
+        "forearm.R",
+        "hand.L",
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "limbs.hand": {
+      "changes": [
+        "hand.L",
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "limbs.palmWidth": {
+      "changes": [
+        "hand.L",
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "limbs.armThickness": {
+      "changes": [
+        "forearm.L",
+        "forearm.R",
+        "hand.L",
+        "hand.R",
+        "upper-arm.L",
+        "upper-arm.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "limbs.wristThickness": {
+      "changes": [
+        "forearm.L",
+        "forearm.R",
+        "hand.L",
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "limbs.thumb": {
+      "changes": [
+        "hand.L",
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "fingers.0": {
+      "changes": [
+        "hand.L",
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "hand.L",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "fingers.1": {
+      "changes": [
+        "hand.L",
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "hand.L",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "fingers.2": {
+      "changes": [
+        "hand.L",
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "hand.L",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "fingers.3": {
+      "changes": [
+        "hand.L",
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "hand.L",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "fingers.4": {
+      "changes": [
+        "hand.L",
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "hand.L",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "breast.volume": {
+      "changes": [
+        "breasts"
+      ],
+      "declaredReaders": [
+        "breasts"
+      ],
+      "undeclared": []
+    },
+    "breast.ptosis": {
+      "changes": [
+        "breasts"
+      ],
+      "declaredReaders": [
+        "breasts"
+      ],
+      "undeclared": []
+    },
+    "breast.spacing": {
+      "changes": [
+        "breasts"
+      ],
+      "declaredReaders": [
+        "breasts"
+      ],
+      "undeclared": []
+    },
+    "breast.projection": {
+      "changes": [
+        "breasts"
+      ],
+      "declaredReaders": [
+        "breasts"
+      ],
+      "undeclared": []
+    },
+    "posture.shoulderDrop": {
+      "changes": [
+        "flank",
+        "forearm.L",
+        "forearm.R",
+        "hand.L",
+        "hand.R",
+        "pectorals",
+        "shoulder-girdle",
+        "skeleton",
+        "torso-shell",
+        "upper-arm.L",
+        "upper-arm.R"
+      ],
+      "declaredReaders": [
+        "torso-shell",
+        "shoulder-girdle",
+        "pectorals",
+        "breasts",
+        "abdominals",
+        "flank",
+        "skeleton",
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "posture.kyphosis": {
+      "changes": [
+        "flank",
+        "forearm.L",
+        "forearm.R",
+        "hand.L",
+        "hand.R",
+        "pectorals",
+        "shoulder-girdle",
+        "skeleton",
+        "torso-shell",
+        "upper-arm.L",
+        "upper-arm.R"
+      ],
+      "declaredReaders": [
+        "torso-shell",
+        "shoulder-girdle",
+        "pectorals",
+        "breasts",
+        "abdominals",
+        "flank",
+        "skeleton",
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L",
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "pose.left.abduction": {
+      "changes": [
+        "forearm.L",
+        "hand.L",
+        "upper-arm.L"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L"
+      ],
+      "undeclared": []
+    },
+    "pose.left.elbowFlex": {
+      "changes": [
+        "forearm.L",
+        "hand.L"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L"
+      ],
+      "undeclared": []
+    },
+    "pose.left.forearmSwing": {
+      "changes": [
+        "forearm.L",
+        "hand.L"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L"
+      ],
+      "undeclared": []
+    },
+    "pose.left.wristDev": {
+      "changes": [
+        "hand.L"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L"
+      ],
+      "undeclared": []
+    },
+    "pose.left.pronation": {
+      "changes": [
+        "hand.L"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L"
+      ],
+      "undeclared": []
+    },
+    "pose.left.spread": {
+      "changes": [
+        "hand.L"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L"
+      ],
+      "undeclared": []
+    },
+    "pose.left.curl.0": {
+      "changes": [
+        "hand.L"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L"
+      ],
+      "undeclared": []
+    },
+    "pose.left.curl.1": {
+      "changes": [
+        "hand.L"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L"
+      ],
+      "undeclared": []
+    },
+    "pose.left.curl.2": {
+      "changes": [
+        "hand.L"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L"
+      ],
+      "undeclared": []
+    },
+    "pose.left.curl.3": {
+      "changes": [
+        "hand.L"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L"
+      ],
+      "undeclared": []
+    },
+    "pose.left.curl.4": {
+      "changes": [
+        "hand.L"
+      ],
+      "declaredReaders": [
+        "upper-arm.L",
+        "forearm.L",
+        "hand.L"
+      ],
+      "undeclared": []
+    },
+    "pose.right.abduction": {
+      "changes": [
+        "forearm.R",
+        "hand.R",
+        "upper-arm.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "pose.right.elbowFlex": {
+      "changes": [
+        "forearm.R",
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "pose.right.forearmSwing": {
+      "changes": [
+        "forearm.R",
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "pose.right.wristDev": {
+      "changes": [
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "pose.right.pronation": {
+      "changes": [
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "pose.right.spread": {
+      "changes": [
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "pose.right.curl.0": {
+      "changes": [
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "pose.right.curl.1": {
+      "changes": [
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "pose.right.curl.2": {
+      "changes": [
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "pose.right.curl.3": {
+      "changes": [
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    },
+    "pose.right.curl.4": {
+      "changes": [
+        "hand.R"
+      ],
+      "declaredReaders": [
+        "upper-arm.R",
+        "forearm.R",
+        "hand.R"
+      ],
+      "undeclared": []
+    }
+  }
+}

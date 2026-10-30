@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { Resvg } from '@resvg/resvg-js';
 import { compileScene, generateRandomFace } from '../src';
-import { anchorFromFace, bodyGeometry, composeFigure, renderBody, type Level } from '../src/body';
+import { anchorFromFace, bodyBounds, bodyGeometry, bodyMarkup, composeFigure, renderBody, type Level } from '../src/body';
+import { cacheStats, clearCaches } from '../src/perf';
 
 const f = generateRandomFace(11, { id: 'f0', transform: { x: 300, y: 200, scale: 0.4 } });
 const host = f.objects[0] as unknown as { face: Parameters<typeof anchorFromFace>[0]; width: number; height: number };
@@ -49,5 +50,19 @@ describe('rendu du corps', () => {
   });
   it('composeFigure refuse une scène de structure inattendue au lieu de produire un SVG faux', () => {
     expect(() => composeFigure('<svg></svg>', { back: '', front: '' })).toThrow(/structure/);
+  });
+  it('bodyMarkup est mémoïsé par le contenu : la 2ᵉ demande est un succès de cache et rend le même objet', () => {
+    clearCaches();
+    const a = bodyMarkup({ age: 33 }, A, { skin: SKIN }), b = bodyMarkup({ age: 33 }, A, { skin: SKIN });
+    expect(b).toBe(a);
+    expect(cacheStats().find((c) => c.name === 'body-svg')!.hits).toBe(1);
+    expect(bodyMarkup({ age: 34 }, A, { skin: SKIN })).not.toBe(a);
+  });
+  it('bodyBounds englobe tous les atomes visibles et reste borné (un bébé occupe moins de place qu’un adulte)', () => {
+    const adult = bodyGeometry({ age: 30 }, A), baby = bodyGeometry({ age: 0.5, sex: 0 }, A);
+    const b = bodyBounds(adult);
+    for (const at of adult.atoms.filter((x) => x.view === 'front' && x.id !== 'neck')) for (const q of at.poly) { expect(q.x).toBeGreaterThanOrEqual(b.x0); expect(q.x).toBeLessThanOrEqual(b.x1); expect(q.y).toBeLessThanOrEqual(b.y1); }
+    const bb = bodyBounds(baby);
+    expect((bb.x1 - bb.x0) * (bb.y1 - bb.y0)).toBeLessThan((b.x1 - b.x0) * (b.y1 - b.y0));
   });
 });

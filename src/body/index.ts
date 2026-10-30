@@ -5,3 +5,5 @@ export { renderBody, type BodyRenderOpts, type BodyMarkup } from './render';
 export { composeFigure } from './compose';
 export { canonAt, puberty, senior, stageOf, type Stage } from './canon';
 export { ARCHETYPES, ARCHETYPE_NAMES, generateBody, type ArchetypeName } from './archetypes';
+export { bodyMarkup, bodyBounds } from './markup';
+export { BODY_CONTRACTS, bodyOrder, downstream, readersOf } from './contracts';

@@ -1,4 +1,5 @@
 # Artefacts — visage complet (cheveux, cou, pilosité, asymétrie)
+> Corps (tronc, épaules, bras, mains) : `artefacts/body-upper-limb/`.
 
 > Preuves de la tâche suivante (cheveux par mèches, queue/chignon/tresses, axes indépendants) : dossier `artefacts/cheveux-pilosite/`.
 

@@ -49,7 +49,6 @@ export function renderBody(geo: BodyGeo, o: BodyRenderOpts): BodyMarkup {
   const clipId = `${uid}-crop`;
   defs.push(el('clipPath', { id: clipId }, [el('rect', { x: -9999, y: -9999, width: 19998, height: 9999 + f.y.crop })]));
   const isTorso = (a: Atom): boolean => !/^(upper-arm|forearm|hand)\./.test(a.part);
-  const cl = (a: Atom, s: string): string => (isTorso(a) ? el('g', { 'clip-path': urlRef(clipId) }, [s]) : s);
   const layerOf = (a: Atom): number => (a.part.startsWith('hand.') ? 3 : a.part.startsWith('forearm.') ? 2 : a.part.startsWith('upper-arm.') ? 1 : 0);
   const detail = (a: Atom): string => {
     const d = pathOf(a.poly, !a.open);
@@ -69,18 +68,31 @@ export function renderBody(geo: BodyGeo, o: BodyRenderOpts): BodyMarkup {
   };
   const env = shown.filter((a) => a.kind === 'skin' && a.level === 0);
   const outline = (a: Atom): string => el('path', { d: pathOf(a.poly), fill: ink, stroke: ink, 'stroke-width': 2 * sw, 'stroke-linejoin': 'round' });
-  for (const a of env) g.push(cl(a, outline(a)));
-  // Couches de l'arrière vers l'avant : tronc → bras → avant-bras → main. Chaque couche peint sa peau (opaque) PUIS ses détails :
-  // un détail du tronc ne déborde donc jamais sur un bras, ni un détail du bras sur la main.
-  let gi = 0;
-  for (let layer = 0; layer < 4; layer++) {
-    for (const a of env.filter((q) => layerOf(q) === layer)) {
-      const b = box(a.poly), gid = `${uid}-sh${gi++}`;
-      defs.push(el('linearGradient', { id: gid, gradientUnits: 'userSpaceOnUse', x1: b.x0, y1: 0, x2: b.x1, y2: 0 }, [el('stop', { offset: 0, 'stop-color': shade, 'stop-opacity': 0 }), el('stop', { offset: 0.55, 'stop-color': shade, 'stop-opacity': 0.08 }), el('stop', { offset: 1, 'stop-color': shade, 'stop-opacity': a.id === 'torso.shell' ? 0.3 : 0.5 })]));
-      g.push(cl(a, el('path', { d: pathOf(a.poly), fill: skin })), cl(a, el('path', { d: pathOf(a.poly), fill: urlRef(gid) })));
+  // Un dégradé d'ombre PAR COUCHE (tronc, bras, avant-bras, main) et non par atome : 7 dégradés au lieu de ~70 (le coût d'un corps est ses chemins).
+  const grad = new Map<string, string>();
+  const gradOf = (a: Atom): string => {
+    const key = `${layerOf(a)}${a.side}`;
+    let id = grad.get(key);
+    if (!id) {
+      const grp = env.filter((q) => layerOf(q) === layerOf(a) && q.side === a.side), b = box(grp.flatMap((q) => [...q.poly]));
+      id = `${uid}-sh${grad.size}`;
+      grad.set(key, id);
+      defs.push(el('linearGradient', { id, gradientUnits: 'userSpaceOnUse', x1: b.x0, y1: 0, x2: b.x1, y2: 0 }, [el('stop', { offset: 0, 'stop-color': shade, 'stop-opacity': 0 }), el('stop', { offset: 0.55, 'stop-color': shade, 'stop-opacity': 0.08 }), el('stop', { offset: 1, 'stop-color': shade, 'stop-opacity': layerOf(a) === 0 ? 0.3 : 0.5 })]));
     }
-    for (const a of shown.filter((q) => layerOf(q) === layer && !(q.kind === 'skin' && q.level === 0))) g.push(cl(a, detail(a)));
-  }
+    return id;
+  };
+  const visible = (a: Atom): boolean => !((a.kind === 'muscle') && vis < 0.06) && !(a.kind === 'line' && !a.part.startsWith('hand.') && !a.part.startsWith('forearm.') && !a.id.startsWith('breast') && vis < 0.08) && !(a.kind === 'bone' && f.vis < 0.03);
+  // Ordre : contours des membres (sous toutes les peaux) → tronc (UN SEUL groupe découpé : contour, peau, ombre, détails) → bras → avant-bras → main.
+  const layerAtoms = (layer: number): string[] => {
+    const out: string[] = [];
+    // Main et doigts : peau seule (leur ombre est trop petite pour justifier un 3e dessin du même chemin).
+    for (const a of env.filter((q) => layerOf(q) === layer)) out.push(el('path', { d: pathOf(a.poly), fill: skin }), ...(layer === 3 ? [] : [el('path', { d: pathOf(a.poly), fill: urlRef(gradOf(a)) })]));
+    for (const a of shown.filter((q) => layerOf(q) === layer && !(q.kind === 'skin' && q.level === 0) && visible(q))) out.push(detail(a));
+    return out;
+  };
+  for (const a of env.filter((q) => !isTorso(q))) g.push(outline(a));
+  g.push(el('g', { 'clip-path': urlRef(clipId) }, [...env.filter(isTorso).map(outline), ...layerAtoms(0)]));
+  for (let layer = 1; layer < 4; layer++) g.push(...layerAtoms(layer));
   const { a: an } = f, bx = an.baseHalf * 1.04, y0 = an.baseY - 0.09 * h, y1 = an.baseY + 0.012 * h;
   defs.push(el('linearGradient', { id: `${uid}-nk`, x1: 0, y1: 0, x2: 0, y2: 1 }, [el('stop', { offset: 0, 'stop-color': mix(skin, shade, 0.1), 'stop-opacity': 0 }), el('stop', { offset: 1, 'stop-color': mix(skin, shade, 0.1), 'stop-opacity': 1 })]));
   const front = el('path', { d: `M${-bx} ${y0}L${bx} ${y0}L${bx} ${y1}L${-bx} ${y1}Z`, fill: urlRef(`${uid}-nk`) });

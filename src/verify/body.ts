@@ -60,7 +60,7 @@ export function verifyBody(geo: BodyGeo, markup?: BodyMarkup, skin = '#c99a76'):
   C.push(check('anatomy', 'body.shoulder-band', '>=', M('shoulderWidth'), sl, `largeur d’épaules ≥ ${sl} h au stade « ${st} »`));
   C.push(check('anatomy', 'body.shoulder-band-max', '<=', M('shoulderWidth'), sh, `largeur d’épaules ≤ ${sh} h au stade « ${st} »`));
   C.push(check('anatomy', 'body.prepubertal-neutral', '<=', p.age <= 10 ? Math.abs(f.dim) : 0, 1e-9, 'avant 10 ans le sexe n’a AUCUN effet sur la silhouette'));
-  if (f.pub > 0.95 && f.dim > 0.6) C.push(check('anatomy', 'body.male-taper', '<=', M('hipToShoulder'), 0.78, 'silhouette masculine adulte : hanches ≤ 0,78 × épaules', 'warn'));
+  if (f.pub > 0.95 && f.dim > 0.6 && p.adiposity < 0.6) C.push(check('anatomy', 'body.male-taper', '<=', M('hipToShoulder'), 0.78, 'silhouette masculine adulte non obèse : hanches ≤ 0,78 × épaules (le V s’efface avec l’adiposité, comme la bande féminine)', 'warn'));
   if (f.pub > 0.95 && f.dim < -0.6 && p.adiposity < 0.6) C.push(check('anatomy', 'body.female-hip', '>=', M('hipToShoulder'), 0.56, 'silhouette féminine adulte : hanches ≥ 0,56 × épaules', 'warn'));
   C.push(check('anatomy', 'body.upper-fore-ratio', '>=', M('upperToFore'), 1.0, 'bras ≥ avant-bras'));
   C.push(check('anatomy', 'body.upper-fore-ratio-max', '<=', M('upperToFore'), 1.6, 'bras ≤ 1,6 × avant-bras'));

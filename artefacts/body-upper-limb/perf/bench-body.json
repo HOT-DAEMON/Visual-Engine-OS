@@ -1,0 +1,213 @@
+{
+  "summary": {
+    "archetypes": 13,
+    "geometryColdMs": 2.41,
+    "svgColdMs": 7.18,
+    "svgWarmMs": 0.0627,
+    "svgKB": 121.1,
+    "rasterGenericMs": 88.9,
+    "rasterCroppedMs": 66.5,
+    "caches": [
+      {
+        "name": "faceLandmarks",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "earModel",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "noseGeometry",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "structureGeometry",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "skullGeometry",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "body-geometry",
+        "hits": 0,
+        "misses": 1,
+        "size": 1
+      },
+      {
+        "name": "body-svg",
+        "hits": 200,
+        "misses": 1,
+        "size": 1
+      }
+    ]
+  },
+  "rows": [
+    {
+      "archetype": "baby",
+      "atoms": 279,
+      "geometryColdMs": 9.96,
+      "svgColdMs": 7.81,
+      "svgWarmMs": 0.0802,
+      "svgKB": 81.3,
+      "rasterGenericMs": 76.2,
+      "rasterCroppedMs": 34,
+      "pixelsGenericK": 1170,
+      "pixelsCroppedK": 306
+    },
+    {
+      "archetype": "toddler",
+      "atoms": 279,
+      "geometryColdMs": 4.49,
+      "svgColdMs": 3.84,
+      "svgWarmMs": 0.0801,
+      "svgKB": 81.6,
+      "rasterGenericMs": 64.9,
+      "rasterCroppedMs": 37.4,
+      "pixelsGenericK": 1170,
+      "pixelsCroppedK": 427
+    },
+    {
+      "archetype": "child",
+      "atoms": 279,
+      "geometryColdMs": 1.31,
+      "svgColdMs": 9.9,
+      "svgWarmMs": 0.0475,
+      "svgKB": 127.7,
+      "rasterGenericMs": 89.8,
+      "rasterCroppedMs": 81.5,
+      "pixelsGenericK": 1170,
+      "pixelsCroppedK": 572
+    },
+    {
+      "archetype": "teenFemale",
+      "atoms": 279,
+      "geometryColdMs": 1.49,
+      "svgColdMs": 5.67,
+      "svgWarmMs": 0.0487,
+      "svgKB": 128,
+      "rasterGenericMs": 95.2,
+      "rasterCroppedMs": 67.9,
+      "pixelsGenericK": 1170,
+      "pixelsCroppedK": 668
+    },
+    {
+      "archetype": "teenMale",
+      "atoms": 279,
+      "geometryColdMs": 2.17,
+      "svgColdMs": 8.48,
+      "svgWarmMs": 0.0486,
+      "svgKB": 128.2,
+      "rasterGenericMs": 90.7,
+      "rasterCroppedMs": 67.1,
+      "pixelsGenericK": 1170,
+      "pixelsCroppedK": 714
+    },
+    {
+      "archetype": "adultFemale",
+      "atoms": 285,
+      "geometryColdMs": 1.18,
+      "svgColdMs": 5.36,
+      "svgWarmMs": 0.047,
+      "svgKB": 130.6,
+      "rasterGenericMs": 88.1,
+      "rasterCroppedMs": 75.8,
+      "pixelsGenericK": 1170,
+      "pixelsCroppedK": 673
+    },
+    {
+      "archetype": "adultMale",
+      "atoms": 279,
+      "geometryColdMs": 1.75,
+      "svgColdMs": 5.6,
+      "svgWarmMs": 0.0478,
+      "svgKB": 128.2,
+      "rasterGenericMs": 100.1,
+      "rasterCroppedMs": 76.7,
+      "pixelsGenericK": 1170,
+      "pixelsCroppedK": 733
+    },
+    {
+      "archetype": "thin",
+      "atoms": 279,
+      "geometryColdMs": 1.09,
+      "svgColdMs": 4.89,
+      "svgWarmMs": 0.0476,
+      "svgKB": 128.1,
+      "rasterGenericMs": 85.7,
+      "rasterCroppedMs": 66.6,
+      "pixelsGenericK": 1170,
+      "pixelsCroppedK": 732
+    },
+    {
+      "archetype": "obese",
+      "atoms": 279,
+      "geometryColdMs": 1.1,
+      "svgColdMs": 9.13,
+      "svgWarmMs": 0.0517,
+      "svgKB": 126.1,
+      "rasterGenericMs": 90.6,
+      "rasterCroppedMs": 72.9,
+      "pixelsGenericK": 1170,
+      "pixelsCroppedK": 718
+    },
+    {
+      "archetype": "muscular",
+      "atoms": 279,
+      "geometryColdMs": 2.17,
+      "svgColdMs": 6.4,
+      "svgWarmMs": 0.0503,
+      "svgKB": 127.9,
+      "rasterGenericMs": 92.4,
+      "rasterCroppedMs": 67.4,
+      "pixelsGenericK": 1170,
+      "pixelsCroppedK": 737
+    },
+    {
+      "archetype": "veryMuscular",
+      "atoms": 279,
+      "geometryColdMs": 1.1,
+      "svgColdMs": 8.33,
+      "svgWarmMs": 0.0943,
+      "svgKB": 127.8,
+      "rasterGenericMs": 91.8,
+      "rasterCroppedMs": 68.9,
+      "pixelsGenericK": 1170,
+      "pixelsCroppedK": 741
+    },
+    {
+      "archetype": "elderFemale",
+      "atoms": 285,
+      "geometryColdMs": 2.37,
+      "svgColdMs": 8.89,
+      "svgWarmMs": 0.0895,
+      "svgKB": 130.8,
+      "rasterGenericMs": 91.5,
+      "rasterCroppedMs": 62.4,
+      "pixelsGenericK": 1170,
+      "pixelsCroppedK": 651
+    },
+    {
+      "archetype": "elderMale",
+      "atoms": 279,
+      "geometryColdMs": 1.15,
+      "svgColdMs": 9.04,
+      "svgWarmMs": 0.0821,
+      "svgKB": 128.1,
+      "rasterGenericMs": 98.7,
+      "rasterCroppedMs": 86.4,
+      "pixelsGenericK": 1170,
+      "pixelsCroppedK": 707
+    }
+  ]
+}

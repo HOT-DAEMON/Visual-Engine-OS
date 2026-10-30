@@ -76,7 +76,7 @@ export function handAtoms(f: BodyFrame, p: BodyParams, hf: HandFrame): Atom[] {
       const b = add(a, vec), nL = v(-u.y, u.x);
       const tip = s === 2, taper = 1 - 0.18 * s;
       const stn: Station[] = [{ t: 0, lat: fh * taper * 1.0, med: fh * taper * 1.0 }, { t: 0.5, lat: fh * taper * 0.9, med: fh * taper * 0.9 }, { t: 1, lat: fh * taper * (tip ? 0.8 : 1.02), med: fh * taper * (tip ? 0.8 : 1.02) }];
-      const poly = limbPoly(T(a.x, a.y), T(b.x, b.y), mul(hf.n, 1), stn.map((q) => ({ ...q, lat: q.lat * hw, med: q.med * hw })), 0.2, tip ? 0.6 : 0.25);
+      const poly = limbPoly(T(a.x, a.y), T(b.x, b.y), mul(hf.n, 1), stn.map((q) => ({ ...q, lat: q.lat * hw, med: q.med * hw })), 0.2, tip ? 0.6 : 0.25, 4);
       void nL;
       const sid = `finger.${nm}.${segNames[s]}`;
       // Vue de dos, un segment fléchi au-delà de 95° passe derrière les articulations : il existe mais n'est pas visible.

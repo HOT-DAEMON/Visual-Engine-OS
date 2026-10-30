@@ -1,0 +1,118 @@
+{
+  "total": {
+    "bodies": 325,
+    "checks": 9600,
+    "failures": 0,
+    "warnings": 0
+  },
+  "perArchetype": {
+    "baby": {
+      "bodies": 25,
+      "checks": 725,
+      "failures": 0,
+      "warnings": 0
+    },
+    "toddler": {
+      "bodies": 25,
+      "checks": 725,
+      "failures": 0,
+      "warnings": 0
+    },
+    "child": {
+      "bodies": 25,
+      "checks": 725,
+      "failures": 0,
+      "warnings": 0
+    },
+    "teenFemale": {
+      "bodies": 25,
+      "checks": 725,
+      "failures": 0,
+      "warnings": 0
+    },
+    "teenMale": {
+      "bodies": 25,
+      "checks": 725,
+      "failures": 0,
+      "warnings": 0
+    },
+    "adultFemale": {
+      "bodies": 25,
+      "checks": 750,
+      "failures": 0,
+      "warnings": 0
+    },
+    "adultMale": {
+      "bodies": 25,
+      "checks": 750,
+      "failures": 0,
+      "warnings": 0
+    },
+    "thin": {
+      "bodies": 25,
+      "checks": 750,
+      "failures": 0,
+      "warnings": 0
+    },
+    "obese": {
+      "bodies": 25,
+      "checks": 725,
+      "failures": 0,
+      "warnings": 0
+    },
+    "muscular": {
+      "bodies": 25,
+      "checks": 750,
+      "failures": 0,
+      "warnings": 0
+    },
+    "veryMuscular": {
+      "bodies": 25,
+      "checks": 750,
+      "failures": 0,
+      "warnings": 0
+    },
+    "elderFemale": {
+      "bodies": 25,
+      "checks": 750,
+      "failures": 0,
+      "warnings": 0
+    },
+    "elderMale": {
+      "bodies": 25,
+      "checks": 750,
+      "failures": 0,
+      "warnings": 0
+    }
+  },
+  "worstValues": {
+    "body.finite": 0,
+    "body.nondegenerate": 0,
+    "body.unique-ids": 285,
+    "body.parents-exist": 0,
+    "body.acyclic": 8,
+    "body.level-monotonic": 0,
+    "body.parts-in-contracts": 0,
+    "body.containment": 0,
+    "body.arm-attached": 258.51800213460047,
+    "body.neck-join": 321.0592183695091,
+    "body.shoulder-band": 2.352905789385091,
+    "body.shoulder-band-max": 2.352905789385091,
+    "body.prepubertal-neutral": 0,
+    "body.upper-fore-ratio": 1.2950079841816664,
+    "body.upper-fore-ratio-max": 1.2950079841816664,
+    "body.hand-fore-ratio": 0.7577594641138182,
+    "body.hand-fore-ratio-max": 0.7577594641138182,
+    "body.limb-taper": 0.2626331314150786,
+    "body.limb-taper-2": 0.4281827352147963,
+    "body.shoulder-gt-neck": 4.897459602472586,
+    "body.fingers.L": 15,
+    "body.fingers.R": 15,
+    "body.minor-no-breast": 0,
+    "body.level-coverage": 4,
+    "body.heads-canon": 7.468,
+    "body.female-hip": 0.8903697309894235,
+    "body.male-taper": 0.6454658142343127
+  },
+  "contracts": 14
+}

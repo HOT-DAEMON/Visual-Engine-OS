@@ -117,3 +117,7 @@ Voir `docs/CHANGELOG-4.md` (le plus récent) et `docs/CHANGELOG.md` pour l'histo
 
 ## Crâne en profil (feat/skull-profile) — fait / à faire
 Fait : contour de profil, os, tissus mous, nuque/cou, oreille projetée, 3 coiffures, génération, vérification (29 contrôles), preuves. À faire, par composant : `docs/SKULL-PROFILE-REMAINING.md`.
+
+## Corps : tronc, épaules, membres supérieurs (feat/hair-grammar) — fait / à faire
+Fait : 4 axes indépendants, ~280 atomes (épaules, tronc, bras, mains, 5 doigts × 3 segments), pose des deux bras, contrats testés, vérification en 3 couches, garde-fou mineurs, preuves (`artefacts/body-upper-limb/`).
+À faire, par composant : `docs/BODY-REMAINING.md` (dos/profil/3D, jambes, âge du visage, flexion en vraie perspective, collisions des doigts, temps de génération du visage).
