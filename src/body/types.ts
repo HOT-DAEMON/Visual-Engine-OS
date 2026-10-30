@@ -98,4 +98,6 @@ export interface Atom {
   readonly z: number;
   /** Décalage de ton (-1 ombre … +1 lumière) pour les masses. */
   readonly tone?: number;
+  /** Palier musculaire (0…5) à partir duquel l'atome apparaît (voir `muscle-tiers.ts`) ; absent = toujours montré. */
+  readonly tier?: number;
 }

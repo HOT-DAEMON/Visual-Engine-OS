@@ -16,11 +16,11 @@ export const BODY_CONTRACTS: Readonly<Record<string, BodyContract>> = {
   abdominals: { needs: ['torso-shell'], reads: CORE, provides: ['torso.rectus', 'abs.', 'torso.inguinal'] },
   flank: { needs: ['torso-shell'], reads: CORE, provides: ['torso.serratus', 'serratus.', 'torso.lat', 'torso.oblique'] },
   skeleton: { needs: ['torso-shell'], reads: CORE, provides: ['bone.'] },
-  'upper-arm.L': { needs: ['torso-shell'], reads: arm('left'), provides: ['arm.upper.L', 'arm.stump.L', 'deltoid', 'biceps', 'brachialis', 'coracobrachialis', 'triceps', 'shoulder.joint'] },
-  'forearm.L': { needs: ['upper-arm.L'], reads: arm('left'), provides: ['arm.fore.L', 'forearm.', 'brachioradialis', 'pronator-teres', 'flexor-', 'palmaris-longus', 'extensor-', 'elbow.', 'wrist.'] },
+  'upper-arm.L': { needs: ['torso-shell'], reads: arm('left'), provides: ['arm.upper.L', 'arm.stump.L', 'deltoid', 'biceps', 'brachialis', 'coracobrachialis', 'triceps', 'shoulder.joint', 'teres-major'] },
+  'forearm.L': { needs: ['upper-arm.L'], reads: arm('left'), provides: ['arm.fore.L', 'forearm.', 'brachioradialis', 'pronator-', 'anconeus', 'supinator', 'abductor-pollicis', 'flexor-', 'palmaris-longus', 'extensor-', 'elbow.', 'wrist.'] },
   'hand.L': { needs: ['forearm.L'], reads: [...arm('left'), 'fingers'], provides: ['hand.', 'finger.'] },
-  'upper-arm.R': { needs: ['torso-shell'], reads: arm('right'), provides: ['arm.upper.R', 'arm.stump.R', 'deltoid', 'biceps', 'brachialis', 'coracobrachialis', 'triceps', 'shoulder.joint'] },
-  'forearm.R': { needs: ['upper-arm.R'], reads: arm('right'), provides: ['arm.fore.R', 'forearm.', 'brachioradialis', 'pronator-teres', 'flexor-', 'palmaris-longus', 'extensor-', 'elbow.', 'wrist.'] },
+  'upper-arm.R': { needs: ['torso-shell'], reads: arm('right'), provides: ['arm.upper.R', 'arm.stump.R', 'deltoid', 'biceps', 'brachialis', 'coracobrachialis', 'triceps', 'shoulder.joint', 'teres-major'] },
+  'forearm.R': { needs: ['upper-arm.R'], reads: arm('right'), provides: ['arm.fore.R', 'forearm.', 'brachioradialis', 'pronator-', 'anconeus', 'supinator', 'abductor-pollicis', 'flexor-', 'palmaris-longus', 'extensor-', 'elbow.', 'wrist.'] },
   'hand.R': { needs: ['forearm.R'], reads: [...arm('right'), 'fingers'], provides: ['hand.', 'finger.'] },
 };
 

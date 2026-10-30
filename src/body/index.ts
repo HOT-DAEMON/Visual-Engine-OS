@@ -7,3 +7,5 @@ export { canonAt, puberty, senior, stageOf, type Stage } from './canon';
 export { ARCHETYPES, ARCHETYPE_NAMES, generateBody, type ArchetypeName } from './archetypes';
 export { bodyMarkup, bodyBounds } from './markup';
 export { BODY_CONTRACTS, bodyOrder, downstream, readersOf } from './contracts';
+export * from './lower';
+export { TIER_NAMES, MUSCLE_TIERS, tierOf, tierName, reveal, type TierName } from './muscle-tiers';

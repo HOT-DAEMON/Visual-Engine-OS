@@ -1,0 +1,2 @@
+# Artefacts — bas du corps (`npx tsx scripts/artefacts-lower.ts`)
+01a/01b 13 archétypes · 02 hiérarchie musculaire 0→5 (homme, femme) · 03 poses des jambes · 04 genou→pieds (zoom) · 05 mode atomes · 06 niveaux de présentation 0→3 · 07 comparaison aux références (verdict : écart réel, voir `docs/BODY-LOWER-REFS.md`) · 08 tête complète + haut du corps (4 morphologies) · `rapport.json` (vérification 3 couches + temps).

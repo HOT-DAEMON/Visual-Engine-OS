@@ -50,3 +50,4 @@ export function verifyFace(face: RandomFace): Report {
 export { measureEquivalence, equivalenceChecks, geometryOf, EQUIVALENCE_LIMITS, type EquivalenceMetrics } from './render-equivalence';
 export { verifyEye, type EyeReport, type EyeMetrics } from './eye';
 export { verifyBody } from './body';
+export { verifyLegs } from './lower';

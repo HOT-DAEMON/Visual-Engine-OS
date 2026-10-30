@@ -37,3 +37,6 @@ Ce qui est demandé et **n'est pas fait ou est approximatif**. Rien ici n'est ca
 
 ## Vérification
 - Les contrôles prouvent la cohérence interne (géométrie, hiérarchie, bandes) ; **aucun contrôle de qualité artistique perceptuelle** (ressemblance à une référence) ; pas de comparaison à des planches d'anatomie de référence.
+
+## Mise à jour : bas du corps
+Le membre inférieur (vue de face) est fait : voir `BODY-LOWER-REMAINING.md` pour son reste. Le haut du corps reste limité à la vue de face ; 7 muscles ajoutés au bras (`BODY-MUSCLE-TIERS.md`).

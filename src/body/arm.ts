@@ -47,6 +47,13 @@ const ROWS: readonly Row[] = [
   { id: 'extensor-carpi-radialis-brevis', seg: 'f', t0: 0.12, t1: 0.6, off: 0.25, w: 0.28, belly: 0.3, level: 2, parent: 'forearm.extensor-mass', tone: 0.08, show: 'dorsal' },
   { id: 'extensor-digitorum', seg: 'f', t0: 0.1, t1: 0.85, off: -0.05, w: 0.48, belly: 0.35, level: 2, parent: 'forearm.extensor-mass', tone: 0.1, show: 'dorsal' },
   { id: 'extensor-carpi-ulnaris', seg: 'f', t0: 0.15, t1: 0.9, off: -0.52, w: 0.3, belly: 0.3, level: 2, parent: 'forearm.extensor-mass', tone: -0.05, show: 'dorsal' },
+  { id: 'anconeus', seg: 'f', t0: 0.0, t1: 0.22, off: -0.3, w: 0.25, belly: 0.4, level: 2, parent: 'forearm.extensor-mass', tone: -0.05, show: 'dorsal' },
+  { id: 'supinator', seg: 'f', t0: 0.0, t1: 0.3, off: 0.35, w: 0.3, belly: 0.4, level: 2, parent: 'arm.fore', tone: -0.1, show: 'never' },
+  { id: 'abductor-pollicis-longus', seg: 'f', t0: 0.45, t1: 0.98, off: 0.55, w: 0.18, belly: 0.45, level: 2, parent: 'forearm.extensor-mass', tone: 0.1, show: 'dorsal' },
+  { id: 'extensor-pollicis-brevis', seg: 'f', t0: 0.55, t1: 1.0, off: 0.62, w: 0.12, belly: 0.45, level: 2, parent: 'forearm.extensor-mass', tone: 0.08, show: 'dorsal' },
+  { id: 'flexor-pollicis-longus', seg: 'f', t0: 0.25, t1: 0.95, off: 0.2, w: 0.22, belly: 0.4, level: 2, parent: 'forearm.flexor-mass', tone: -0.05, show: 'never' },
+  { id: 'pronator-quadratus', seg: 'f', t0: 0.85, t1: 1.0, off: 0.0, w: 0.5, belly: 0.5, level: 2, parent: 'arm.fore', tone: -0.1, show: 'never' },
+  { id: 'teres-major', seg: 'u', t0: 0.0, t1: 0.25, off: -0.6, w: 0.3, belly: 0.4, level: 2, parent: 'arm.upper', tone: -0.15, show: 'never' },
 ];
 
 /** Cinématique directe plane d'UN bras + enveloppes + muscles + repères de l'épaule, du coude, du poignet. */

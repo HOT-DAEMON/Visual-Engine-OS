@@ -10,6 +10,8 @@ import type { BodyParams, NeckAnchor } from './types';
  */
 export interface BodyFrame {
   readonly h: number;
+  /** Âge en années (lu par le bas du corps : source unique, jamais recopié). */
+  readonly age: number;
   readonly a: NeckAnchor;
   readonly canon: Canon;
   /** Dimorphisme effectif −1 … +1 (= sexe × puberté), adiposité courbée, musculature effective, définition visible. */
@@ -50,7 +52,7 @@ export function bodyFrame(p: BodyParams, a: NeckAnchor): BodyFrame {
   const palm0 = c.palmHalf * (1 + 0.03 * dim + 0.06 * fat) * dev(lb.palmWidth) * h;
   const palmHalf = R.limit('palm-wider-than-wrist', 'limbs.palmWidth', palm0, wristHalf, Infinity, 'la main est au moins aussi large que le poignet');
   return {
-    h, a, canon: c, dim, fat, mus, vis, pub, sen, y,
+    h, age: p.age, a, canon: c, dim, fat, mus, vis, pub, sen, y,
     x: { acr: shoulder * 0.84, shoulder, chest, waist, hip },
     arm: { upper: c.upperArm * dev(lb.upperArm) * h, fore: c.forearm * dev(lb.forearm) * h, hand: c.hand * dev(lb.hand) * h, armHalf, foreHalf, wristHalf, palmHalf },
     joint: { x: shoulder - armHalf * 1.22, y: y.acr + 0.075 * h },

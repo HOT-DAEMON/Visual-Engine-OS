@@ -51,3 +51,6 @@ paramètre doit agir. Un test fabrique volontairement un contrat menteur et vér
 
 ## Commandes
 `npx vitest run tests/body-*.test.ts` · `npx tsx scripts/artefacts-body.ts` · `npx tsx scripts/bench-body.ts [dossier]`.
+
+## Bas du corps (ajout)
+Bassin, cuisses, genoux, jambes, pieds : `docs/BODY-LOWER.md` ; hiérarchie musculaire 0→5 partagée : `docs/BODY-MUSCLE-TIERS.md` ; références : `docs/BODY-LOWER-REFS.md` ; reste : `docs/BODY-LOWER-REMAINING.md`. Commande : `npx tsx scripts/artefacts-lower.ts`.

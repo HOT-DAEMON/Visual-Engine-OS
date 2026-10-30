@@ -1,6 +1,7 @@
 import { darken, lighten, mix } from '../core/color';
 import { el, urlRef } from '../core/svg';
 import type { BodyGeo } from './geometry';
+import { reveal, tierOf } from './muscle-tiers';
 import { box, pathOf } from './shape';
 import type { Atom, Level } from './types';
 
@@ -53,7 +54,7 @@ export function renderBody(geo: BodyGeo, o: BodyRenderOpts): BodyMarkup {
   const detail = (a: Atom): string => {
     const d = pathOf(a.poly, !a.open);
     if (a.kind === 'muscle' || a.kind === 'fat') {
-      const t = a.tone ?? 0, k = a.kind === 'fat' ? (a.part === 'breasts' ? 0.9 : 0.5) : vis;
+      const t = a.tone ?? 0, k = (a.kind === 'fat' ? (a.part === 'breasts' ? 0.9 : 0.5) : vis) * (a.tier === undefined ? 1 : reveal(tierOf(f.vis), a.tier));
       return el('path', { d, fill: t >= 0 ? lighten(skin, 0.9 * t) : darken(skin, -1.4 * t), 'fill-opacity': 0.7 * k, stroke: shade, 'stroke-width': 0.4 * sw, 'stroke-opacity': 0.7 * k, 'stroke-linejoin': 'round' });
     }
     if (a.kind === 'line') {
@@ -81,7 +82,7 @@ export function renderBody(geo: BodyGeo, o: BodyRenderOpts): BodyMarkup {
     }
     return id;
   };
-  const visible = (a: Atom): boolean => !((a.kind === 'muscle') && vis < 0.06) && !(a.kind === 'line' && !a.part.startsWith('hand.') && !a.part.startsWith('forearm.') && !a.id.startsWith('breast') && vis < 0.08) && !(a.kind === 'bone' && f.vis < 0.03);
+  const visible = (a: Atom): boolean => !((a.kind === 'muscle') && (vis < 0.06 || (a.tier !== undefined && reveal(tierOf(f.vis), a.tier) < 0.04))) && !(a.kind === 'line' && !a.part.startsWith('hand.') && !a.part.startsWith('forearm.') && !a.id.startsWith('breast') && vis < 0.08) && !(a.kind === 'bone' && f.vis < 0.03);
   // Ordre : contours des membres (sous toutes les peaux) → tronc (UN SEUL groupe découpé : contour, peau, ombre, détails) → bras → avant-bras → main.
   const layerAtoms = (layer: number): string[] => {
     const out: string[] = [];
