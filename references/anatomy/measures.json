@@ -1,0 +1,59 @@
+{
+ "ref-02": {
+  "file": "references/anatomy/ref-02-homme-muscles-colores.jpg",
+  "size": [
+   736,
+   891
+  ],
+  "silhouette": "references/anatomy/ref-02.silhouette.gz (bits, row-major, np.packbits)",
+  "note": "Fond sombre ignoré (seuil luminance/saturation + plus grande composante) ; barre de cadre basse (y≥866) retirée. Mesures en px de l'image.",
+  "head": {
+   "top": 24,
+   "chin": 133,
+   "height": 109,
+   "width": 69
+  },
+  "neckBaseY": 140,
+  "centerX": 376,
+  "figureHeightHeads": 7.72,
+  "shoulders": {
+   "deltoidSpanY": [
+    204,
+    264
+   ],
+   "maxSpanPx": [
+    244,
+    509
+   ],
+   "halfSpanOverHead": 1.22
+  },
+  "armpitY": [
+   279,
+   294
+  ],
+  "torsoWidthAtChestPx": [
+   309,
+   445
+  ],
+  "waistPx": [
+   300,
+   453
+  ],
+  "armOuterXPx": [
+   198,
+   557
+  ],
+  "armSpanOverHead": 3.29,
+  "elbowY": 330,
+  "wristY": 415,
+  "fingertipY": 515,
+  "crotchY": 474,
+  "armSegmentsHeads": {
+   "upper": 1.06,
+   "fore": 0.78,
+   "hand": 0.92
+  },
+  "comparisonRegion": "y∈[140,365] entier ; y∈(365,515] seulement |x-centerX|>118 (bras/mains ; bassin et jambes exclus)",
+  "hipY": 365
+ }
+}

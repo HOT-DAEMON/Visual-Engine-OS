@@ -65,13 +65,19 @@ function outline(pr: Proj, flatEnds = false): V[] {
 }
 const bbox = (p: V[]): { x0: number; y0: number; x1: number; y1: number } => { let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity; for (const q of p) { x0 = Math.min(x0, q.x); x1 = Math.max(x1, q.x); y0 = Math.min(y0, q.y); y1 = Math.max(y1, q.y); } return { x0, y0, x1, y1 }; };
 
+/** Sélection COMMUNE aux deux rendus (vectoriel et pixel) : quels volumes sont montrés et avec quelle opacité de palier. Pure. */
+export function selectVolumes(set: VolumeSet, o: VRenderOpts): { list: Volume[]; rel: (v: Volume) => number } {
+  const vis = set.measures.vis as number, level = o.level ?? 3, tier = tierOf(vis);
+  const rel = (v: Volume): number => (o.forceTier || v.kind !== 'muscle' || v.tier === undefined ? 1 : reveal(tier, v.tier));
+  const list = set.volumes.filter((v) => v.level <= level && (o.joints || v.kind !== 'joint') && (o.hideFromLayer === undefined || v.layer < o.hideFromLayer) && !(v.kind === 'muscle' && rel(v) < 0.04) && !(o.trunkOnly && (v.group === 'arm' || v.group === 'forearm' || v.group === 'hand' || v.id.startsWith('deltoid') || v.id.startsWith('joint.shoulder') || v.id.startsWith('joint.elbow') || v.id.startsWith('joint.wrist') || v.id.startsWith('knuckle'))));
+  return { list, rel };
+}
 export interface VMarkup { readonly svg: string; readonly bounds: { x0: number; y0: number; x1: number; y1: number }; readonly drawn: number; readonly ids: readonly string[] }
 /** Rendu SVG d'un VolumeSet : tri en profondeur (peintre), dégradé de section éclairé par les normales, occlusion ambiante aux extrémités, ombre de contact, fibres. */
 export function renderVolumes(set: VolumeSet, o: VRenderOpts): VMarkup {
   const cam = o.camera ?? FRONT, L = o.light ?? DEFAULT_LIGHT, pal = paletteOf(o.skin), H = set.measures.h as number, vis = set.measures.vis as number, level = o.level ?? 3, uid = o.uid ?? 'vv';
-  const fast = o.quality === 'fast', RS = fast ? 8 : 14, tier = tierOf(vis), defs: string[] = [], g: string[] = [], ids: string[] = [], allPts: V[] = [];
-  const rel = (v: Volume): number => (o.forceTier || v.kind !== 'muscle' || v.tier === undefined ? 1 : reveal(tier, v.tier));
-  const list = set.volumes.filter((v) => v.level <= level && (o.joints || v.kind !== 'joint') && (o.hideFromLayer === undefined || v.layer < o.hideFromLayer) && !(v.kind === 'muscle' && rel(v) < 0.04) && !(o.trunkOnly && (v.group === 'arm' || v.group === 'forearm' || v.group === 'hand' || v.id.startsWith('deltoid') || v.id.startsWith('joint.shoulder') || v.id.startsWith('joint.elbow') || v.id.startsWith('joint.wrist') || v.id.startsWith('knuckle'))));
+  const fast = o.quality === 'fast', RS = fast ? 8 : 14, defs: string[] = [], g: string[] = [], ids: string[] = [], allPts: V[] = [];
+  const { list, rel } = selectVolumes(set, o);
   const bias = 0.004 * H;
   const keyed = list.map((v) => { const pr = project(v, cam, RS); return { v, pr, k: pr.zc + v.layer * bias }; }).sort((a, b) => a.k - b.k);
   let gi = 0; const gid = (): string => `${uid}${gi++}`;

@@ -5,3 +5,4 @@ export { VolumeParams, type VolumeInput } from './params';
 export { DEFAULT_LIGHT, type LightRig } from './shade';
 export type { Volume, VolumeSet, Station } from './types';
 export { volumeMarkup } from './markup';
+export { renderVolumesPixel, type PixelOpts, type VPixelMarkup } from './pixel';

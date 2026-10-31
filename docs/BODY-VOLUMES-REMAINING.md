@@ -1,5 +1,7 @@
 # Volumes 3D : ce qui reste (par composant)
 
+> Suite : rendu par pixel et fidélité mesurée à `ref-02` → `BODY-UPPER-LIMB.md` et `BODY-UPPER-LIMB-REMAINING.md`.
+
 **Bilan honnête** : la couche 3D fonctionne (caméra libre, volumes séparés, éclairage, vérification, 2388 tests verts), mais la **fidélité pixel par
 pixel aux références n'est PAS atteinte** : `artefacts/body-volumes/09-comparaison-references.png` montre un relief beaucoup plus doux et moins riche que
 les sculptures. Aucune mesure d'IoU de silhouette n'a été faite (références avec jambes et tête, nos volumes sans jambes).

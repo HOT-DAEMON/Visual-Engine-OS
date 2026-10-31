@@ -56,3 +56,5 @@ paramètre doit agir. Un test fabrique volontairement un contrat menteur et vér
 Bassin, cuisses, genoux, jambes, pieds : `docs/BODY-LOWER.md` ; hiérarchie musculaire 0→5 partagée : `docs/BODY-MUSCLE-TIERS.md` ; références : `docs/BODY-LOWER-REFS.md` ; reste : `docs/BODY-LOWER-REMAINING.md`. Commande : `npx tsx scripts/artefacts-lower.ts`.
 
 Volumes 3D (caméra libre, un volume par muscle, éclairage par normales) : `docs/BODY-VOLUMES.md` ; temps : `docs/BODY-VOLUMES-PERF.md` ; reste : `docs/BODY-VOLUMES-REMAINING.md`. Commande : `npx tsx scripts/artefacts-volume.ts`.
+
+Membre supérieur : rendu par pixel, fidélité mesurée à `ref-02` (IoU de silhouette) et vérification du rendu : `docs/BODY-UPPER-LIMB.md` ; reste : `docs/BODY-UPPER-LIMB-REMAINING.md`. Commande : `npx tsx scripts/artefacts-upper-limb.ts`.

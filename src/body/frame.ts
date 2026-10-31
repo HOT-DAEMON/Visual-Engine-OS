@@ -33,7 +33,7 @@ export function bodyFrame(p: BodyParams, a: NeckAnchor): BodyFrame {
   const mus = p.muscularity * mm * (1 - 0.35 * sen);
   const vis = clamp(mus * (1 - 0.85 * fat) + 0.1 * (1 - fat) * mm, 0, 1);
   const fr = p.frame, lb = p.limbs;
-  const shoulder0 = c.shoulder * (1 + 0.08 * dim) * (1 + 0.1 * mus) * (1 + 0.035 * fat) * dev(fr.shoulderWidth) * h;
+  const shoulder0 = c.shoulder * (1 + 0.08 * dim) * (1 + 0.23 * mus) * (1 + 0.035 * fat) * dev(fr.shoulderWidth) * h;
   const chest0 = c.chest * (1 + 0.06 * dim) * (1 + 0.1 * fat + 0.07 * mus) * dev(fr.chest) * h;
   const waist0 = c.waist * (1 + 0.06 * dim) * (1 + 0.55 * fat) * (1 - 0.04 * mus) * dev(fr.waist) * h;
   const hip0 = c.hip * (1 - 0.07 * dim) * (1 + 0.45 * fat) * dev(fr.hip) * h;
@@ -41,7 +41,7 @@ export function bodyFrame(p: BodyParams, a: NeckAnchor): BodyFrame {
   const chest = R.limit('chest-narrower-than-shoulder', 'frame.chest', chest0, 0, shoulder / 1.12, 'le tronc à l’aisselle reste plus étroit que les épaules');
   const waist = R.limit('waist-vs-shoulder', 'frame.waist', waist0, 0.3 * h, shoulder * 1.05, 'la taille ne dépasse pas les épaules de plus de 5 %');
   const hip = hip0;
-  const drop = (c.acromion + 0.035 * p.posture.shoulderDrop + 0.03 * p.posture.kyphosis + 0.03 * fr.clavicleSlope - 0.03 * fr.trapezius - 0.03 * mus) * h;
+  const drop = (c.acromion + 0.035 * p.posture.shoulderDrop + 0.03 * p.posture.kyphosis + 0.03 * fr.clavicleSlope - 0.03 * fr.trapezius + 0.0 * mus) * h;
   const dropOk = R.limit('acromion-below-base', 'posture.shoulderDrop', drop, 0.02 * h, 0.3 * h, 'l’acromion reste sous la base du cou, à moins de 0,3 h');
   const tl = c.torso * dev(fr.torsoLength) * h;
   const y = { base: a.baseY, acr: a.baseY + dropOk, axilla: a.baseY + 0.27 * tl + 0.3 * dropOk, nipple: a.baseY + 0.45 * tl, waist: a.baseY + 0.78 * tl, navel: a.baseY + tl, crop: a.baseY + tl + 0.3 * tl };
@@ -55,7 +55,7 @@ export function bodyFrame(p: BodyParams, a: NeckAnchor): BodyFrame {
     h, age: p.age, a, canon: c, dim, fat, mus, vis, pub, sen, y,
     x: { acr: shoulder * 0.84, shoulder, chest, waist, hip },
     arm: { upper: c.upperArm * dev(lb.upperArm) * h, fore: c.forearm * dev(lb.forearm) * h, hand: c.hand * dev(lb.hand) * h, armHalf, foreHalf, wristHalf, palmHalf },
-    joint: { x: shoulder - armHalf * 1.22, y: y.acr + 0.075 * h },
+    joint: { x: shoulder - armHalf * 1.22, y: y.acr + 0.095 * h },
     corrections: R.applied,
   };
 }

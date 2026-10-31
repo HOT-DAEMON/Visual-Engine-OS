@@ -1,0 +1,10 @@
+import { writeFileSync } from 'node:fs';
+import { Resvg } from '@resvg/resvg-js';
+import { ARCHETYPES, type BodyInput } from '../../src/body';
+import { bodyVolumes, renderVolumesPixel } from '../../src/body/volume';
+import { bodyHost, BG } from '../lib/body-host';
+const H = bodyHost(); const set = bodyVolumes(ARCHETYPES.veryMuscular as BodyInput, H.a, {});
+const t0 = Date.now(); const m = renderVolumesPixel(set, { skin: H.skin, uid: 'p' }); console.log('ms', Date.now() - t0, 'svg KB', (m.svg.length / 1024) | 0, m.bounds);
+const b = m.bounds, w = b.x1 - b.x0, h = b.y1 - b.y0;
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${b.x0} ${b.y0} ${w} ${h}" width="${w * 2}" height="${h * 2}"><rect x="${b.x0}" y="${b.y0}" width="${w}" height="${h}" fill="${BG}"/>${m.svg}</svg>`;
+writeFileSync(process.argv[2] ?? '/tmp/px.png', new Resvg(svg).render().asPng());

@@ -1,0 +1,63 @@
+{
+ "silhouetteApres": {
+  "iou": 0.7663142155292108,
+  "rowErr": 0.10236343508198938,
+  "spanRatio": 0.9751381215469613,
+  "shoulderRatio": 0.9451219512195121,
+  "handY": 516
+ },
+ "nbVolumes": 206,
+ "verifPixels": {
+  "ok": true,
+  "checks": [
+   {
+    "id": "px.geo.single-silhouette",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "1 composante(s) > 0,05 % de l'aire (0 îlots minuscules)"
+   },
+   {
+    "id": "px.geo.mirror-symmetry",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "IoU miroir = 0.956 (> 0,80)"
+   },
+   {
+    "id": "px.geo.elbow-seam",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "marche de rayon au coude = 0.0 % (< 12 %)"
+   },
+   {
+    "id": "px.anat.shoulders-wider-than-waist",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "largeur épaules 287 px > tronc à la taille 128 px"
+   },
+   {
+    "id": "px.anat.forearm-over-arm",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "avant-bras / bras = 0.86 (0,70–1,00)"
+   },
+   {
+    "id": "px.style.no-pure-black-white",
+    "layer": "style",
+    "ok": true,
+    "detail": "luminance min 116 / max 202 (18–250)"
+   },
+   {
+    "id": "px.style.relief",
+    "layer": "style",
+    "ok": true,
+    "detail": "écart-type de luminance = 18.8 (> 14 : relief réel, pas d'aplat)"
+   },
+   {
+    "id": "px.style.warm-skin",
+    "layer": "style",
+    "ok": true,
+    "detail": "rouge/bleu moyens = 1.31 (> 1,05 : teinte de peau)"
+   }
+  ]
+ }
+}
