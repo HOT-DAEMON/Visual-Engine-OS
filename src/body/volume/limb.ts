@@ -1,5 +1,6 @@
 import type { BodyFrame } from '../frame';
 import type { ArmPose } from '../types';
+import { deltoidMass } from './deltoid';
 import { ball, type Ctl } from './loft';
 import { vol } from './mk';
 import type { Trunk } from './trunk';
@@ -47,23 +48,19 @@ export function fusiform(p0: P3, p1: P3, ant: P3, t0: number, t1: number, offA: 
 /** Volumes d'un bras : enveloppes, DELTOÏDE (3 chefs), biceps, triceps (3 chefs), brachial, brachio-radial, fléchisseurs/extenseurs, tendons, veines. */
 export function armVolumes(ch: ArmChain, f: BodyFrame, vis: number): Volume[] {
   const H = f.h, A = f.arm, s = ch.side, sd = s > 0 ? 'L' : 'R', out: Volume[] = [], id = (k: string): string => `${k}.${sd}`;
-  const { sh, el, wr, up, fa, ant, fant } = ch, latU = norm3(cross3(up, ant));
+  const { sh, el, wr, up, fa, ant, fant } = ch;
   // `cross(a, b)` de deux vecteurs symétriques par rapport à x=0 est un pseudo-vecteur (il change de signe sous le miroir) : on le multiplie par le côté pour obtenir la direction RADIALE (côté pouce) réellement symétrique.
   const latF = mul3(norm3(cross3(fa, fant)), s);
   const rU = A.armHalf, rF = A.foreHalf, m = 0.55 + 0.6 * vis;
   const spec = (k: string, name: string, grp: 'shoulder' | 'arm' | 'forearm', layer: number, tier: number, extra: object = {}) => ({ id: id(k), name, group: grp, side: sd as 'L' | 'R', layer, tier, ...extra });
   // Enveloppes (peau + noyau) : continuité 3D de l'épaule au poignet.
-  out.push(vol({ ...spec('arm.env', 'bras (enveloppe)', 'arm', 1, 0, { kind: 'skin', level: 0 }) }, fusiform(sh, el, ant, -0.02, 1.02, 0, 0, rU * 1.0, rU * 1.0, 0.35, 7).map((c, i, arr) => { const e = (((i / (arr.length - 1)) - 0.7) / 0.3), k = e <= 0 ? 0 : e >= 1 ? 1 : e * e * (3 - 2 * e); return { ...c, a: Math.max(rU * 0.78, c.a) * (1 - k) + rF * 1.0 * k, b: Math.max(rU * 0.74, c.b) * (1 - k) + rF * 0.88 * k }; })));
+  const armEnv = fusiform(sh, el, ant, 0.0, 1.02, 0, 0, rU * 1.0, rU * 1.0, 0.35, 7).map((c, i, arr) => { const e = (((i / (arr.length - 1)) - 0.7) / 0.3), k = e <= 0 ? 0 : e >= 1 ? 1 : e * e * (3 - 2 * e); return { ...c, a: Math.max(rU * 0.78, c.a) * (1 - k) + rF * 1.0 * k, b: Math.max(rU * 0.74, c.b) * (1 - k) + rF * 0.88 * k }; });
+  // Calotte de l'épaule : la peau du bras est refermée par une demi-sphère (4 anneaux) ; le sommet de l'épaule est ensuite porté par le deltoïde.
+  const capTop = (armEnv[0] as Ctl), capSt = [0.97, 0.83, 0.55].map((u) => ({ c: add3(capTop.c, mul3(up, -0.62 * rU * u)), a: Math.max(1e-3, capTop.a * Math.sqrt(1 - u * u)), b: Math.max(1e-3, capTop.b * Math.sqrt(1 - u * u)), hint: capTop.hint }));
+  out.push(vol({ ...spec('arm.env', 'bras (enveloppe)', 'arm', 1, 0, { kind: 'skin', level: 0 }) }, [...capSt, ...armEnv]));
   out.push(vol({ ...spec('forearm.env', 'avant-bras (enveloppe)', 'forearm', 1, 0, { kind: 'skin', level: 0 }) }, fusiform(el, wr, fant, -0.03, 1.03, 0, 0, rF * 1.05, rF * 0.9, 0.18, 7).map((c, i, arr) => { const e = 1 - Math.min(1, (i / (arr.length - 1)) / 0.35), k = e * e * (3 - 2 * e); return { ...c, a: Math.max(A.wristHalf * 1.02, c.a, rF * 1.0 * k), b: Math.max(A.wristHalf * 0.78, c.b, rF * 0.88 * k) }; })));
-  // Deltoïde : trois chefs enroulés autour de l'articulation (antérieur, moyen, postérieur), de la clavicule/acromion/épine scapulaire à la V deltoïdienne.
-  const dl = (k: string, name: string, dirOff: P3, w: number, fib: number[]): void => {
-    // Le chef part DANS l'épaule (derrière l'articulation) et se referme sur la V deltoïdienne : bouts épais en haut (calotte arrondie), fins en bas.
-    const p0 = add3(sh, mul3(up, rU * 0.05)), p1 = add3(sh, mul3(up, A.upper * 0.5)), nrm = norm3(add3(dirOff, p3(0, -0.15, 0)));
-    out.push(vol(spec(k, name, 'shoulder', 4, k.includes('mid') ? 1 : 2, { fibres: fib, origin: 'clavicle/acromion/scapular-spine', insertion: 'humerus' }), fusiform(p0, p1, nrm, 0, 1, rU * 0.5, 0, rU * w * m, rU * 0.62 * m, 0.3, 7, 0.55)));
-  };
-  dl('deltoid.ant', 'deltoïde antérieur', ant, 0.55, [1.2, 1.5, 1.8]);
-  dl('deltoid.mid', 'deltoïde moyen', mul3(latU, s), 0.7, [1.1, 1.35, 1.57, 1.8, 2.05]);
-  dl('deltoid.post', 'deltoïde postérieur', mul3(ant, -1), 0.55, [1.2, 1.5, 1.8]);
+  // Deltoïde : UNE masse continue (voir deltoid.ts) ; les trois chefs sont des sillons, pas des volumes.
+  out.push(...deltoidMass(ch, f, m));
   // Biceps (2 chefs) et brachial en avant ; triceps (long, latéral, médial) en arrière.
   out.push(vol(spec('biceps.long', 'biceps — chef long', 'arm', 4, 1, { fibres: [1.35, 1.6, 1.8], origin: 'scapula', insertion: 'radius' }), fusiform(sh, el, ant, 0.15, 0.88, rU * 0.5, rU * 0.12 * s, rU * 0.5 * m, rU * 0.52 * m, 0.45)));
   out.push(vol(spec('biceps.short', 'biceps — chef court', 'arm', 4, 2, { fibres: [1.35, 1.6, 1.8], origin: 'coracoid', insertion: 'radius' }), fusiform(sh, el, ant, 0.18, 0.88, rU * 0.46, -rU * 0.2 * s, rU * 0.42 * m, rU * 0.46 * m, 0.45)));

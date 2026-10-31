@@ -42,7 +42,7 @@ export function bodyFrame(p: BodyParams, a: NeckAnchor): BodyFrame {
   const waist = R.limit('waist-vs-shoulder', 'frame.waist', waist0, 0.3 * h, shoulder * 1.05, 'la taille ne dépasse pas les épaules de plus de 5 %');
   const hip = hip0;
   const drop = (c.acromion + 0.035 * p.posture.shoulderDrop + 0.03 * p.posture.kyphosis + 0.03 * fr.clavicleSlope - 0.03 * fr.trapezius + 0.0 * mus) * h;
-  const dropOk = R.limit('acromion-below-base', 'posture.shoulderDrop', drop, 0.02 * h, 0.3 * h, 'l’acromion reste sous la base du cou, à moins de 0,3 h');
+  const dropOk = R.limit('acromion-below-base', 'posture.shoulderDrop', drop, 0.02 * h, 0.42 * h, 'l’acromion reste sous la base du cou, à moins de 0,42 h');
   const tl = c.torso * dev(fr.torsoLength) * h;
   const y = { base: a.baseY, acr: a.baseY + dropOk, axilla: a.baseY + 0.27 * tl + 0.3 * dropOk, nipple: a.baseY + 0.45 * tl, waist: a.baseY + 0.78 * tl, navel: a.baseY + tl, crop: a.baseY + tl + 0.3 * tl };
   const armHalf = c.armHalf * (1 + 0.3 * mus + 0.35 * fat + 0.06 * dim) * dev(lb.armThickness) * h;

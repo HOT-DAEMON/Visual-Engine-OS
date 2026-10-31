@@ -17,7 +17,8 @@ describe('rendu par pixel des volumes', () => {
   const m = renderVolumesPixel(set, { skin: H.skin, heightPx: 420 });
   it('SVG avec image incrustée, sans NaN, mêmes volumes que la sélection vectorielle', () => {
     expect(m.svg).toContain('data:image/png;base64,');
-    expect(m.svg).not.toMatch(/NaN|Infinity/);
+    // le PNG incrusté est du base64 : « NaN » peut y apparaître par hasard (test fragile corrigé) → on ne contrôle que les nombres du SVG.
+    expect(m.svg.replace(/base64,[A-Za-z0-9+/=]+/g, '')).not.toMatch(/NaN|Infinity/);
     expect(m.drawn).toBeGreaterThan(80);
   });
   it('déterministe : deux rendus identiques octet à octet', () => {

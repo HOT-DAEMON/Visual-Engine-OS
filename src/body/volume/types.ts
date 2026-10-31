@@ -24,6 +24,8 @@ export interface Volume {
   readonly origin?: string; readonly insertion?: string;
   /** Hauteur de chair relative (0 = nue … 1) : la peau/graisse ne masque pas les muscles dont le palier est atteint. */
   readonly sphere?: boolean;
+  /** Masse continue : les volumes qui partagent ce nom forment UN seul muscle vu de loin (trapèze, deltoïde…) ; le rendu n'y creuse pas de rainure entre eux. */
+  readonly mass?: string;
 }
 export interface VolumeSet {
   readonly volumes: readonly Volume[]; readonly byId: ReadonlyMap<string, Volume>;

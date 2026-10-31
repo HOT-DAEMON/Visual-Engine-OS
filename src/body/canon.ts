@@ -18,8 +18,8 @@ const T = {
   chest: [0.5, 0.52, 0.54, 0.58, 0.62, 0.68, 0.72, 0.7, 0.68],
   waist: [0.52, 0.52, 0.5, 0.48, 0.49, 0.52, 0.54, 0.56, 0.56],
   hip: [0.5, 0.5, 0.5, 0.52, 0.55, 0.6, 0.61, 0.61, 0.6],
-  /** base du cou → acromion (chute de l'épaule) */
-  acromion: [0.06, 0.07, 0.08, 0.09, 0.1, 0.11, 0.115, 0.13, 0.15],
+  /** base du cou → acromion (chute de l'épaule). Adulte 0,115 → 0,33 : mesuré sur ref-02 et ref-04 (coin du deltoïde à 0,42–0,43 h sous la base du cou, soit ≈ 0,5 h sous le menton : proportion classique de l'atelier). */
+  acromion: [0.11, 0.13, 0.15, 0.18, 0.22, 0.28, 0.33, 0.35, 0.38],
   upperArm: [0.9, 0.95, 1.0, 1.15, 1.28, 1.34, 1.36, 1.34, 1.3],
   forearm: [0.75, 0.8, 0.88, 0.98, 1.08, 1.13, 1.15, 1.12, 1.08],
   /** poignet → bout du majeur */

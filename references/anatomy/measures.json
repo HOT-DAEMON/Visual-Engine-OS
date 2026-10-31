@@ -55,5 +55,33 @@
   },
   "comparisonRegion": "y∈[140,365] entier ; y∈(365,515] seulement |x-centerX|>118 (bras/mains ; bassin et jambes exclus)",
   "hipY": 365
+ },
+ "ref-04": {
+  "file": "references/anatomy/ref-04-homme-ecorche-profil-face.jpg",
+  "size": [
+   564,
+   771
+  ],
+  "silhouette": "references/anatomy/ref-04.silhouette.gz (figure de FACE seule, bits, row-major, np.packbits)",
+  "silhouetteProfile": "references/anatomy/ref-04.profile.silhouette.gz (figure de PROFIL gauche, même format)",
+  "note": "Fond : surface polynomiale de degré 4 ajustée par moindres carrés robustes sur les pixels sans relief (vignettage), écart |image−fond|>20 après flou 1 px, fermeture + remplissage + ouverture, cadre de 8 px ignoré. Le bras DROIT de la figure de face est tronqué par le bord de l'image (x=563) : seule la moitié gauche du corps est complète. Halo lumineux : contour surestimé de ~1–2 px.",
+  "head": {
+   "top": 15,
+   "chin": 108,
+   "height": 93
+  },
+  "neckBaseY": 125,
+  "centerX": 410,
+  "figureHeightHeads": 8.0,
+  "fingertipY": 420,
+  "hipY": 317,
+  "armClearX": 100,
+  "comparisonRegion": "y∈[neckBaseY,hipY] entier ; y∈(hipY,fingertipY+8] seulement |x−centerX|>armClearX ; hipY et armClearX = valeurs de ref-02 (225 px, 118 px) mises à l'échelle par 93/109 (convention, pas un fait)",
+  "valid": "moitié gauche du corps (côté x<centerX) seulement pour l'envergure : bras droit tronqué",
+  "shoulderRows": [
+   135,
+   255
+  ],
+  "leftOnly": true
  }
 }

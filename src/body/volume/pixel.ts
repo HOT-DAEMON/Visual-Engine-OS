@@ -49,7 +49,7 @@ export function renderVolumesPixel(set: VolumeSet, o: PixelOpts): VPixelMarkup {
   const depth = new Float32Array(N).fill(-Infinity), id = new Int16Array(N).fill(-1), nx = new Float32Array(N), ny = new Float32Array(N), nz = new Float32Array(N), th = new Float32Array(N), tn = new Float32Array(N), ly = new Uint8Array(N), op = new Float32Array(N);
   const sd = new Float32Array(N).fill(-Infinity), sn = new Float32Array(N * 3), st = new Float32Array(N);
   const skinCover = new Uint8Array(N), isSkin = keyed.map(({ v }) => v.kind === 'skin'), isStrand = keyed.map(({ v }) => !!v.strand);
-  const meta = keyed.map(({ v }) => ({ layer: v.layer, tone: v.tone, fib: v.kind === 'muscle' && v.fibres.length > 0, kind: v.kind, rel: rel(v) }));
+  const meta = keyed.map(({ v }) => ({ layer: v.layer, tone: v.tone, fib: v.kind === 'muscle' && v.fibres.length > 0, kind: v.kind, rel: rel(v), mass: v.mass }));
   // Rasterisation d'un volume dans le tampon de travail (test de profondeur) ; renvoie les pixels touchés.
   const so = new Int16Array(N), raster = (vi: number, touched: number[]): void => {
     for (const t of keyed[vi]!.m) {
@@ -96,7 +96,7 @@ export function renderVolumesPixel(set: VolumeSet, o: PixelOpts): VPixelMarkup {
       const qx = Math.round(px + dx * r), qy = Math.round(py + dy * r); if (qx < 0 || qy < 0 || qx >= W || qy >= Hh) continue;
       const k2 = qy * W + qx, v2 = id[k2]!; if (v2 < 0) continue;
       occ += Math.min(1, Math.max(0, (depth[k2]! - z - 0.002 * H) / (0.05 * H)));
-      if (v2 !== vi && meta[v2]!.layer > md.layer && r === R * 0.5) gro += 1;
+      if (v2 !== vi && meta[v2]!.layer > md.layer && r === R * 0.5 && !(md.mass !== undefined && meta[v2]!.mass === md.mass)) gro += 1;
     }
     const nv = p3(nx[key]!, ny[key]!, nz[key]!), fib = md.fib ? 0.045 * Math.min(1, vis * 2) * Math.sin(th[key]! * 22) : 0;
     let t = tone(nv, L) + 0.14 * tn[key]! + fib;

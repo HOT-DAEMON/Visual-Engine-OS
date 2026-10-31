@@ -11,7 +11,7 @@ export function overlayPng(ref: ReturnType<typeof loadRef>, mask: Uint8Array): B
   return encodePngRgba(w, h, px);
 }
 if (process.argv[1]?.endsWith('overlay.ts')) {
-  const H = bodyHost(), ref = loadRef(), n = (process.argv[2] ?? 'veryMuscular') as keyof typeof ARCHETYPES;
+  const H = bodyHost(), ref = loadRef((process.argv[4] ?? 'ref-02') as 'ref-02' | 'ref-04'), n = (process.argv[2] ?? 'veryMuscular') as keyof typeof ARCHETYPES;
   const f = fitToRef(ref, ARCHETYPES[n] as BodyInput, H.a, H.skin);
   writeFileSync(process.argv[3] ?? '/tmp/overlay.png', overlayPng(ref, f.mask));
   console.log(silhouetteIou(ref, f));
