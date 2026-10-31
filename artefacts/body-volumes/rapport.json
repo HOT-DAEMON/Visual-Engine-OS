@@ -1,0 +1,349 @@
+{
+ "verificationMuscular": {
+  "ok": true,
+  "checks": [
+   {
+    "id": "geo.finite-positive",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "206 volumes, toutes sections finies et > 0"
+   },
+   {
+    "id": "geo.frames-orthonormal",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "écart max du repère (t,u,w) = 6.66e-16"
+   },
+   {
+    "id": "geo.unique-ids",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "0 doublon(s)"
+   },
+   {
+    "id": "geo.parents-exist",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "tous les parents existent"
+   },
+   {
+    "id": "geo.muscles-on-trunk",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "chaque muscle du torse repose sur l’enveloppe (≤ 1,3 × demi-largeur)"
+   },
+   {
+    "id": "geo.camera-periodic",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "yaw 0° et yaw 360° donnent le même SVG (au 0,1 px)"
+   },
+   {
+    "id": "geo.camera-independent",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "la géométrie ne dépend pas du point de vue"
+   },
+   {
+    "id": "ana.required-muscles",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "37 structures exigées présentes"
+   },
+   {
+    "id": "ana.origin-insertion",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "74/74 muscles avec origine et insertion"
+   },
+   {
+    "id": "ana.cobb-cervical",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "lordose cervicale 29.1° (bande 20–45° × maturation)"
+   },
+   {
+    "id": "ana.cobb-thoracic",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "cyphose dorsale 42.5° (bande 25–52°)"
+   },
+   {
+    "id": "ana.cobb-lumbar",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "lordose lombaire 47.0° (bande 35–62°)"
+   },
+   {
+    "id": "ana.thorax-depth",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "profondeur/largeur du thorax 0.77 (bande 0,60–0,85)"
+   },
+   {
+    "id": "ana.abs-irregular",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "8 blocs : coefficient de variation des aires 0.318 (> 0,05), aucun doublon à 0,2 %"
+   },
+   {
+    "id": "ana.fingers",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "longueurs des 5 doigts (px) : 130 · 142 · 157 · 139 · 113 — majeur ≥ index/annulaire, auriculaire plus court que l’annulaire, 5 longueurs distinctes (le « pouce » inclut son métacarpien)"
+   },
+   {
+    "id": "ana.joint-spheres",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "10 sphères d’articulation explicites"
+   },
+   {
+    "id": "sty.no-black",
+    "layer": "style",
+    "ok": true,
+    "detail": "luminance minimale de toutes les couleurs émises = 0.157 (> 0,02 : jamais de noir)"
+   },
+   {
+    "id": "sty.no-heavy-outline",
+    "layer": "style",
+    "ok": true,
+    "detail": "contour le plus épais 1.93 px (≤ 2.79) ; contours teintés peau, jamais noirs"
+   },
+   {
+    "id": "sty.hierarchy-levels",
+    "layer": "style",
+    "ok": true,
+    "detail": "volumes dessinés par niveau 0→3 : 6 < 8 < 114 < 176"
+   },
+   {
+    "id": "sty.tier-hierarchy",
+    "layer": "style",
+    "ok": true,
+    "detail": "74 muscles visibles au palier 4.8 (hiérarchie portée par la donnée : tier par volume)"
+   }
+  ]
+ },
+ "archetypes": {
+  "baby": {
+   "ok": true,
+   "failures": [],
+   "measures": {
+    "h": 429.222,
+    "vis": 0,
+    "cobbCervical": 10.11,
+    "cobbThoracic": 19.901,
+    "cobbLumbar": 28.289,
+    "thoraxDepthOverWidth": 0.751,
+    "bellyProjection": 0.116,
+    "gluteProjection": -0.187,
+    "volumes": 205,
+    "shoulderTiltDeg": 1.478
+   }
+  },
+  "toddler": {
+   "ok": true,
+   "failures": [],
+   "measures": {
+    "h": 429.222,
+    "vis": 0,
+    "cobbCervical": 13.582,
+    "cobbThoracic": 25.003,
+    "cobbLumbar": 32.525,
+    "thoraxDepthOverWidth": 0.755,
+    "bellyProjection": 0.028,
+    "gluteProjection": -0.211,
+    "volumes": 205,
+    "shoulderTiltDeg": 1.487
+   }
+  },
+  "child": {
+   "ok": true,
+   "failures": [],
+   "measures": {
+    "h": 429.222,
+    "vis": 0.065,
+    "cobbCervical": 22.518,
+    "cobbThoracic": 37.401,
+    "cobbLumbar": 43.892,
+    "thoraxDepthOverWidth": 0.766,
+    "bellyProjection": -0.029,
+    "gluteProjection": -0.264,
+    "volumes": 205,
+    "shoulderTiltDeg": 1.521
+   }
+  },
+  "teenFemale": {
+   "ok": true,
+   "failures": [],
+   "measures": {
+    "h": 429.222,
+    "vis": 0.261,
+    "cobbCervical": 28.015,
+    "cobbThoracic": 42.589,
+    "cobbLumbar": 47.912,
+    "thoraxDepthOverWidth": 0.772,
+    "bellyProjection": -0.04,
+    "gluteProjection": -0.361,
+    "volumes": 205,
+    "shoulderTiltDeg": 1.551
+   }
+  },
+  "teenMale": {
+   "ok": true,
+   "failures": [],
+   "measures": {
+    "h": 429.222,
+    "vis": 0.312,
+    "cobbCervical": 28.015,
+    "cobbThoracic": 42.484,
+    "cobbLumbar": 47.707,
+    "thoraxDepthOverWidth": 0.769,
+    "bellyProjection": -0.068,
+    "gluteProjection": -0.284,
+    "volumes": 206,
+    "shoulderTiltDeg": 1.553
+   }
+  },
+  "adultFemale": {
+   "ok": true,
+   "failures": [],
+   "measures": {
+    "h": 429.222,
+    "vis": 0.316,
+    "cobbCervical": 29.114,
+    "cobbThoracic": 42.949,
+    "cobbLumbar": 47.849,
+    "thoraxDepthOverWidth": 0.773,
+    "bellyProjection": -0.033,
+    "gluteProjection": -0.381,
+    "volumes": 207,
+    "shoulderTiltDeg": 1.56
+   }
+  },
+  "adultMale": {
+   "ok": true,
+   "failures": [],
+   "measures": {
+    "h": 429.222,
+    "vis": 0.417,
+    "cobbCervical": 29.114,
+    "cobbThoracic": 42.84,
+    "cobbLumbar": 47.636,
+    "thoraxDepthOverWidth": 0.77,
+    "bellyProjection": -0.069,
+    "gluteProjection": -0.282,
+    "volumes": 206,
+    "shoulderTiltDeg": 1.563
+   }
+  },
+  "thin": {
+   "ok": true,
+   "failures": [],
+   "measures": {
+    "h": 429.222,
+    "vis": 0.178,
+    "cobbCervical": 29.114,
+    "cobbThoracic": 42.415,
+    "cobbLumbar": 46.804,
+    "thoraxDepthOverWidth": 0.771,
+    "bellyProjection": -0.103,
+    "gluteProjection": -0.269,
+    "volumes": 206,
+    "shoulderTiltDeg": 1.554
+   }
+  },
+  "obese": {
+   "ok": true,
+   "failures": [],
+   "measures": {
+    "h": 429.222,
+    "vis": 0.046,
+    "cobbCervical": 29.037,
+    "cobbThoracic": 44.56,
+    "cobbLumbar": 51.061,
+    "thoraxDepthOverWidth": 0.768,
+    "bellyProjection": 0.215,
+    "gluteProjection": -0.318,
+    "volumes": 206,
+    "shoulderTiltDeg": 1.554
+   }
+  },
+  "muscular": {
+   "ok": true,
+   "failures": [],
+   "measures": {
+    "h": 429.222,
+    "vis": 0.745,
+    "cobbCervical": 29.114,
+    "cobbThoracic": 42.579,
+    "cobbLumbar": 47.125,
+    "thoraxDepthOverWidth": 0.769,
+    "bellyProjection": -0.118,
+    "gluteProjection": -0.279,
+    "volumes": 206,
+    "shoulderTiltDeg": 1.571
+   }
+  },
+  "veryMuscular": {
+   "ok": true,
+   "failures": [],
+   "measures": {
+    "h": 429.222,
+    "vis": 1,
+    "cobbCervical": 29.114,
+    "cobbThoracic": 42.458,
+    "cobbLumbar": 46.889,
+    "thoraxDepthOverWidth": 0.769,
+    "bellyProjection": -0.149,
+    "gluteProjection": -0.279,
+    "volumes": 206,
+    "shoulderTiltDeg": 1.579
+   }
+  },
+  "elderFemale": {
+   "ok": true,
+   "failures": [],
+   "measures": {
+    "h": 429.222,
+    "vis": 0.151,
+    "cobbCervical": 38.136,
+    "cobbThoracic": 52.184,
+    "cobbLumbar": 51.388,
+    "thoraxDepthOverWidth": 0.79,
+    "bellyProjection": 0.04,
+    "gluteProjection": -0.364,
+    "volumes": 207,
+    "shoulderTiltDeg": 1.528
+   }
+  },
+  "elderMale": {
+   "ok": true,
+   "failures": [],
+   "measures": {
+    "h": 429.222,
+    "vis": 0.188,
+    "cobbCervical": 38.136,
+    "cobbThoracic": 52.078,
+    "cobbLumbar": 51.175,
+    "thoraxDepthOverWidth": 0.785,
+    "bellyProjection": 0.013,
+    "gluteProjection": -0.261,
+    "volumes": 206,
+    "shoulderTiltDeg": 1.529
+   }
+  }
+ },
+ "timingsMs": {
+  "volumesGeometryColdMs": 5.55,
+  "renderFullMs": 30.05,
+  "renderFastMs": 19,
+  "markupWarmMs": 0.2356,
+  "body2dGeometryPlusSvgColdMs": 11.83,
+  "svgBytesFull": 462736,
+  "svgBytesFast": 193250,
+  "rasterFull400pxMs": 49.1,
+  "rasterFast400pxMs": 26.6,
+  "volumesDrawnFull": 176
+ }
+}

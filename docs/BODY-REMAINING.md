@@ -40,3 +40,5 @@ Ce qui est demandé et **n'est pas fait ou est approximatif**. Rien ici n'est ca
 
 ## Mise à jour : bas du corps
 Le membre inférieur (vue de face) est fait : voir `BODY-LOWER-REMAINING.md` pour son reste. Le haut du corps reste limité à la vue de face ; 7 muscles ajoutés au bras (`BODY-MUSCLE-TIERS.md`).
+
+Vues de dos/profil/3-4 et volumes 3D du haut du corps : faits (couche `src/body/volume`), voir `BODY-VOLUMES-REMAINING.md` pour le reste (pas de jambes 3D, fidélité aux références non atteinte).

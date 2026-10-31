@@ -51,3 +51,4 @@ export { measureEquivalence, equivalenceChecks, geometryOf, EQUIVALENCE_LIMITS, 
 export { verifyEye, type EyeReport, type EyeMetrics } from './eye';
 export { verifyBody } from './body';
 export { verifyLegs } from './lower';
+export { verifyVolumes, type VReport, type VCheck } from './volume';

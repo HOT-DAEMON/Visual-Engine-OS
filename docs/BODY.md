@@ -54,3 +54,5 @@ paramètre doit agir. Un test fabrique volontairement un contrat menteur et vér
 
 ## Bas du corps (ajout)
 Bassin, cuisses, genoux, jambes, pieds : `docs/BODY-LOWER.md` ; hiérarchie musculaire 0→5 partagée : `docs/BODY-MUSCLE-TIERS.md` ; références : `docs/BODY-LOWER-REFS.md` ; reste : `docs/BODY-LOWER-REMAINING.md`. Commande : `npx tsx scripts/artefacts-lower.ts`.
+
+Volumes 3D (caméra libre, un volume par muscle, éclairage par normales) : `docs/BODY-VOLUMES.md` ; temps : `docs/BODY-VOLUMES-PERF.md` ; reste : `docs/BODY-VOLUMES-REMAINING.md`. Commande : `npx tsx scripts/artefacts-volume.ts`.
