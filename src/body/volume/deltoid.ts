@@ -13,8 +13,8 @@ import { add3, mul3, norm3, cross3, type P3 } from './vec3';
  * (jamais de coordonnée absolue) ; `m` module le volume avec la musculature visible.
  */
 const PROFILE: readonly { readonly s: number; readonly off: number; readonly a: number; readonly b: number }[] = [
-  { s: -0.01, off: 0.32, a: 0.86, b: 0.58 }, { s: 0.06, off: 0.38, a: 1.06, b: 0.66 }, { s: 0.16, off: 0.40, a: 1.14, b: 0.70 },
-  { s: 0.28, off: 0.38, a: 1.04, b: 0.64 }, { s: 0.40, off: 0.36, a: 0.80, b: 0.55 }, { s: 0.52, off: 0.40, a: 0.42, b: 0.46 },
+  { s: 0.05, off: 0.26, a: 0.84, b: 0.56 }, { s: 0.12, off: 0.32, a: 1.06, b: 0.64 }, { s: 0.21, off: 0.40, a: 1.14, b: 0.70 },
+  { s: 0.33, off: 0.38, a: 1.04, b: 0.64 }, { s: 0.45, off: 0.36, a: 0.80, b: 0.55 }, { s: 0.57, off: 0.40, a: 0.42, b: 0.46 },
 ];
 export function deltoidMass(ch: ArmChain, f: BodyFrame, m: number): Volume[] {
   const { sh, up, ant } = ch, s = ch.side, sd = s > 0 ? 'L' : 'R', rU = f.arm.armHalf, L = f.arm.upper;
