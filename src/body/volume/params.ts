@@ -11,8 +11,8 @@ export const VolumeParams = z.object({
   spine: z.object({ cervical: Signed.default(0), thoracic: Signed.default(0), lumbar: Signed.default(0) }).strict().default({}),
   /** Contrapposto : 0 = symétrique ; 1 = marqué. `side` = jambe porteuse (+1 gauche du corps, −1 droite). Épaules et bassin basculent en sens opposés. */
   contrapposto: z.object({ amount: Unit.default(0.3), side: Signed.default(1), twist: Signed.default(0.2) }).strict().default({}),
-  /** Saillie du ventre (0 plat … 1 ventre marqué), additive à l'effet de l'adiposité ; profondeur du thorax (±) ; projection des seins vient de `BodyParams.breast`. */
-  torso: z.object({ belly: Unit.default(0), thoraxDepth: Signed.default(0), glute: Signed.default(0) }).strict().default({}),
+  /** `torso.pelvisShift` : décalage antéro-postérieur du bassin sous le thorax (0,3 = canon calé sur ref-04 ≈ 0,12 h vers l'avant à la crête ; ± = 0,4 h) ; `ribDepth` : profondeur du thorax inférieur (± 0,1 autour du canon 0,9). Saillie du ventre (0 plat … 1 ventre marqué), additive à l'effet de l'adiposité ; profondeur du thorax (±) ; projection des seins vient de `BodyParams.breast`. */
+  torso: z.object({ belly: Unit.default(0), thoraxDepth: Signed.default(0), glute: Signed.default(0), ribDepth: Signed.default(0), pelvisShift: Signed.default(0.3) }).strict().default({}),
   /** Balancement des bras (°, + = vers l'avant) : un par côté ; indépendants (marche = signes opposés). */
   swing: z.object({ left: z.number().min(-35).max(45).default(6), right: z.number().min(-35).max(45).default(-4) }).strict().default({}),
   /** Doigts relâchés : 0 = identiques, 1 = longueurs/orientations/flexions très variées (déterministe par `seed`). */

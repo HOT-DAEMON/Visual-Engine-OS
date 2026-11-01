@@ -6,6 +6,8 @@ import { makeSpine, type Spine } from './spine';
 import type { Station, Volume } from './types';
 import { add3, cross3, dot3, mul3, norm3, p3, sub3, type P3 } from './vec3';
 
+/** Part de la lordose visible sur la surface du dos (le reste est comblé par les érecteurs du rachis). */
+const FILL = 0.35;
 const sm = (u: number): number => { const x = Math.min(1, Math.max(0, u)); return x * x * (3 - 2 * x); };
 const prof = (ys: readonly number[], vs: readonly number[], y: number): number => {
   if (y <= (ys[0] as number)) return vs[0] as number;
@@ -28,26 +30,33 @@ export interface Trunk {
 export function makeTrunk(f: BodyFrame, _bp: BodyParams, vp: VolumeParams): Trunk {
   void _bp;
   const h = f.h, spine = makeSpine(f, vp), y = f.y, x = f.x, tl = y.navel - y.base;
-  const yt = y.base - 0.06 * h, yk = y.base + 0.45 * (y.acr - y.base), ky = [yt, y.base, yk, y.acr, y.axilla, y.nipple, y.waist, y.navel, y.crop];
-  const X = (yy: number): number => prof(ky, [f.a.baseHalf * 1.15, x.acr * 0.36, x.acr * 0.62, x.acr * 0.9, x.chest, x.chest * 1.02, x.waist, x.waist * 1.03, x.hip], yy);
+  // `yr` = bas de la cage thoracique (entre mamelon et taille) : point-clé ajouté à l'itération 04 (profil ref-04 : le thorax inférieur manquait de 0,14–0,19 h de profondeur).
+  const yt = y.base - 0.06 * h, yk = y.base + 0.45 * (y.acr - y.base), yr = (y.nipple + y.waist) / 2, ky = [yt, y.base, yk, y.acr, y.axilla, y.nipple, yr, y.waist, y.navel, y.crop];
+  const X = (yy: number): number => prof(ky, [f.a.baseHalf * 1.15, x.acr * 0.36, x.acr * 0.62, x.acr * 0.9, x.chest, x.chest * 1.02, (x.chest * 1.02 + x.waist) / 2 + 0.02 * x.chest, x.waist, x.waist * 1.03, x.hip], yy);
   const td = 1 + 0.15 * vp.torso.thoraxDepth;
   // Profondeur de l'ABDOMEN (taille → crête iliaque) : mesurée sur le profil de ref-04 (largeur par ligne, indépendante de l'alignement) — le canon était ≈ 20 % trop plat ; +15 % à musculature visible maximale. Le thorax (aisselle, mamelon) n'est PAS touché : il collait déjà (1,29 h contre 1,35 h) et sa bande D/L reste 0,60–0,85.
   const DM = 1 + 0.15 * f.vis;
-  const k = (yy: number): number => prof(ky, [0.65, 0.58, 0.5, 0.46 * td, 0.7 * td, 0.74 * td, 0.74 * DM, 0.76 * DM, 0.78 * DM], yy);
+  const k = (yy: number): number => prof(ky, [0.65, 0.58, 0.5, 0.46 * td, 0.7 * td, 0.74 * td, (0.9 + 0.1 * vp.torso.ribDepth) * DM, 0.74 * DM, 0.76 * DM, 0.64 * DM], yy);
   const bellyAmt = Math.min(1.2, 0.55 * f.fat + 0.6 * vp.torso.belly), yb = (y.waist + y.navel) / 2 + 0.05 * tl;
   const belly = (yy: number): number => bellyAmt * x.waist * 0.42 * Math.exp(-(((yy - yb) / (0.2 * tl)) ** 2));
-  const gl = (yy: number): number => x.hip * (0.2 + 0.1 * vp.torso.glute) * Math.exp(-(((yy - (y.navel + 0.2 * tl)) / (0.2 * tl)) ** 2));
+  // Fessier : sommet SOUS la crête iliaque (≈ niveau du grand trochanter) — avant l'itération 04 il culminait à la crête et poussait le dos 0,29 h trop en arrière dans la bande navel→crête de ref-04.
+  const gl = (yy: number): number => x.hip * (0.2 + 0.1 * vp.torso.glute) * Math.exp(-(((yy - (y.navel + 0.5 * tl)) / (0.2 * tl)) ** 2));
   const s = vp.contrapposto, tiltS = s.amount * 5.5 * s.side, twist = s.amount * s.twist * 9;
+  // Bassin sous le thorax : lissé de la taille à la crête (aucun effet au-dessus de la taille). Appliqué ICI, une seule fois, comme le contrapposto.
+  const pel = (yy: number): number => vp.torso.pelvisShift * 0.4 * h * sm((yy - y.waist) / (y.crop - y.waist));
   /** Transformation de pose : bascule (z), décalage latéral du bassin vers la jambe porteuse, torsion (y). */
   const T = (pt: P3): P3 => {
     const u = sm((pt.y - y.base) / (y.crop - y.base)), tilt = ((tiltS * (1 - u) - tiltS * 1.15 * u) * Math.PI) / 180, yaw = ((twist * (1 - 2 * u)) * Math.PI) / 180;
     const zc = spine.z(pt.y), cz = pt.z - zc, c = Math.cos(yaw), sn = Math.sin(yaw);
     const xr = pt.x * c + cz * sn, zr = -pt.x * sn + cz * c;
-    return p3(xr + s.amount * s.side * 0.035 * h * u, pt.y + xr * Math.sin(tilt), zr + zc);
+    return p3(xr + s.amount * s.side * 0.035 * h * u, pt.y + xr * Math.sin(tilt), zr + zc + pel(pt.y));
   };
   const Tn = (n: P3, yy: number): P3 => { const u = sm((yy - y.base) / (y.crop - y.base)), yaw = ((twist * (1 - 2 * u)) * Math.PI) / 180; return p3(n.x * Math.cos(yaw) + n.z * Math.sin(yaw), n.y, -n.x * Math.sin(yaw) + n.z * Math.cos(yaw)); };
   const at = (yy: number): { c: P3; X: number; D: number; zb: number; zf: number } => {
-    const XX = X(yy), D0 = k(yy) * XX, zs = spine.z(yy), zb = zs - D0 - gl(yy), zf = 0.5 * zs + D0 + belly(yy);
+    const XX = X(yy), D0 = k(yy) * XX, zs = spine.z(yy);
+    // Le DOS ne reproduit pas toute la lordose : les érecteurs du rachis comblent le creux osseux (surface dorsale plus plate que l'axe vertébral, ref-04) ;
+    // la cyphose (zs < 0), elle, est pleinement visible. Les angles de Cobb restent mesurés sur l'axe osseux `spine.z` (inchangé).
+    const zsb = zs < 0 ? zs : FILL * zs, zb = zsb - D0 - gl(yy), zf = 0.5 * zs + D0 + belly(yy);
     return { c: p3(0, yy, (zb + zf) / 2), X: XX, D: (zf - zb) / 2, zb, zf };
   };
   /** Point de peau et normale SORTANTE exacte (produit vectoriel des dérivées de la surface P(y,ψ) : correct aussi sur la pente d'épaule). */

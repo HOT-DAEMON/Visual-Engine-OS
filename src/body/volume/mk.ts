@@ -6,13 +6,13 @@ import { add3, mul3, type P3 } from './vec3';
 export interface VSpec {
   readonly id: string; readonly name: string; readonly group: VGroup; readonly kind?: VKind; readonly side?: 'L' | 'R' | 'C';
   readonly parent?: string | null; readonly level?: 0 | 1 | 2 | 3; readonly layer: number; readonly tier?: number; readonly tone?: number;
-  readonly fibres?: readonly number[]; readonly strand?: boolean; readonly origin?: string; readonly insertion?: string; readonly n?: number; readonly mass?: string;
+  readonly fibres?: readonly number[]; readonly strand?: boolean; readonly origin?: string; readonly insertion?: string; readonly n?: number; readonly mass?: string; readonly hidden?: boolean;
 }
 /** Fabrique un Volume depuis des points de contrôle (valeurs par défaut explicites : muscle, niveau 2, côté central). */
 export const vol = (s: VSpec, ctl: readonly Ctl[]): Volume => ({
   id: s.id, name: s.name, group: s.group, kind: s.kind ?? 'muscle', side: s.side ?? 'C', parent: s.parent ?? null, level: s.level ?? 2, layer: s.layer,
   ...(s.tier !== undefined ? { tier: s.tier } : {}), stations: loft(ctl, s.n ?? 9), fibres: s.fibres ?? [], tone: s.tone ?? 0,
-  ...(s.strand ? { strand: true } : {}), ...(s.mass ? { mass: s.mass } : {}), ...(s.origin ? { origin: s.origin } : {}), ...(s.insertion ? { insertion: s.insertion } : {}),
+  ...(s.strand ? { strand: true } : {}), ...(s.mass ? { mass: s.mass } : {}), ...(s.hidden ? { hidden: true } : {}), ...(s.origin ? { origin: s.origin } : {}), ...(s.insertion ? { insertion: s.insertion } : {}),
 });
 /** Ancre sur la peau du tronc : hauteur y, angle ψ, demi-largeur tangentielle a, demi-épaisseur b (px). */
 export interface Anchor { readonly y: number; readonly psi: number; readonly a: number; readonly b: number; readonly lift?: number }

@@ -23,3 +23,7 @@
 
 ## Prochaine étape la plus rentable
 Modéliser le haut du dos et l'omoplate (débord arrière de `ref-04`) et redresser la colonne du tronc, puis mesurer la vue de DOS ; ensuite, comparer les mains à `ref-05-mains`.
+
+
+## Suite (itération 04)
+La « prochaine étape la plus rentable » ci-dessus a été traitée en partie dans `BODY-UPPER-LIMB-04.md` (tronc redressé : IoU de profil 0,801 → 0,840 ; omoplate placée ; première mesure de la vue de dos) ; le reste est dans `BODY-UPPER-LIMB-04-REMAINING.md`. Les écarts chiffrés ci-dessus sont ceux d'AVANT l'itération 04.

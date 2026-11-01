@@ -31,7 +31,7 @@ describe('rendu par pixel des volumes', () => {
     expect(r.checks.length).toBeGreaterThanOrEqual(8);
   });
   it('plusieurs points de vue : le rendu reste fini et non vide', () => {
-    for (const yaw of [35, 90, 180]) { const q = renderVolumesPixel(set, { skin: H.skin, heightPx: 260, camera: { yaw, pitch: 0, pivot: { x: 0, y: 0, z: 0 } } }); expect(q.pixels.w * q.pixels.h).toBeGreaterThan(1000); expect(q.svg).not.toMatch(/NaN/); }
+    for (const yaw of [35, 90, 180]) { const q = renderVolumesPixel(set, { skin: H.skin, heightPx: 260, camera: { yaw, pitch: 0, pivot: { x: 0, y: 0, z: 0 } } }); expect(q.pixels.w * q.pixels.h).toBeGreaterThan(1000); expect(q.svg.replace(/href="data:[^"]*"/g, '')).not.toMatch(/NaN/); /* l'image PNG est en base64 : « NaN » peut y apparaître par hasard (faux positif), on ne contrôle donc que le balisage */ }
   });
 });
 describe('fidélité de silhouette à ref-02 (plancher de non-régression)', () => {

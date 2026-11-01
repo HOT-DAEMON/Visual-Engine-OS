@@ -10,6 +10,8 @@ import type { Station, Volume, VolumeSet } from './types';
 import { dot3, p3 } from './vec3';
 
 export interface VRenderOpts {
+  /** Affiche aussi les atomes cachés (`Volume.hidden`) : diagnostic / écorché profond. */
+  readonly showHidden?: boolean;
   readonly skin: string; readonly camera?: Camera; readonly light?: LightRig;
   /** Niveau de présentation (0 enveloppes … 3 fibres, repères, mécanique). */
   readonly level?: 0 | 1 | 2 | 3;
@@ -69,7 +71,7 @@ const bbox = (p: V[]): { x0: number; y0: number; x1: number; y1: number } => { l
 export function selectVolumes(set: VolumeSet, o: VRenderOpts): { list: Volume[]; rel: (v: Volume) => number } {
   const vis = set.measures.vis as number, level = o.level ?? 3, tier = tierOf(vis);
   const rel = (v: Volume): number => (o.forceTier || v.kind !== 'muscle' || v.tier === undefined ? 1 : reveal(tier, v.tier));
-  const list = set.volumes.filter((v) => v.level <= level && (o.joints || v.kind !== 'joint') && (o.hideFromLayer === undefined || v.layer < o.hideFromLayer) && !(v.kind === 'muscle' && rel(v) < 0.04) && !(o.trunkOnly && (v.group === 'arm' || v.group === 'forearm' || v.group === 'hand' || v.id.startsWith('deltoid') || v.id.startsWith('joint.shoulder') || v.id.startsWith('joint.elbow') || v.id.startsWith('joint.wrist') || v.id.startsWith('knuckle'))));
+  const list = set.volumes.filter((v) => (!v.hidden || o.showHidden) && v.level <= level && (o.joints || v.kind !== 'joint') && (o.hideFromLayer === undefined || v.layer < o.hideFromLayer) && !(v.kind === 'muscle' && rel(v) < 0.04) && !(o.trunkOnly && (v.group === 'arm' || v.group === 'forearm' || v.group === 'hand' || v.id.startsWith('deltoid') || v.id.startsWith('joint.shoulder') || v.id.startsWith('joint.elbow') || v.id.startsWith('joint.wrist') || v.id.startsWith('knuckle'))));
   return { list, rel };
 }
 export interface VMarkup { readonly svg: string; readonly bounds: { x0: number; y0: number; x1: number; y1: number }; readonly drawn: number; readonly ids: readonly string[] }

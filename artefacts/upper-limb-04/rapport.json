@@ -1,0 +1,490 @@
+{
+ "profil": {
+  "avant": {
+   "iou": 0.8014,
+   "rowErr": 0.1289
+  },
+  "apres": {
+   "iou": 0.8401,
+   "rowErr": 0.0732
+  },
+  "bandes": [
+   {
+    "t": 0.0625,
+    "dos": -0.09042033235581622,
+    "avant": 0.014662756598240468,
+    "profRef": 0.7991202346041055,
+    "profMot": 0.7233626588465297
+   },
+   {
+    "t": 0.1875,
+    "dos": 0.04198668714797747,
+    "avant": -0.06041986687147977,
+    "profRef": 1.0542754736303124,
+    "profMot": 1.03584229390681
+   },
+   {
+    "t": 0.3125,
+    "dos": 0.03128054740957967,
+    "avant": 0.012218963831867059,
+    "profRef": 1.3074291300097751,
+    "profMot": 1.350928641251222
+   },
+   {
+    "t": 0.4375,
+    "dos": 0.012218963831867059,
+    "avant": 0.033235581622678395,
+    "profRef": 1.347507331378299,
+    "profMot": 1.3929618768328444
+   },
+   {
+    "t": 0.5625,
+    "dos": 0.015873015873015876,
+    "avant": -0.051715309779825906,
+    "profRef": 1.2739375320020483,
+    "profMot": 1.2380952380952381
+   },
+   {
+    "t": 0.6875,
+    "dos": -0.050342130987292275,
+    "avant": -0.026881720430107527,
+    "profRef": 1.1764418377321604,
+    "profMot": 1.0992179863147606
+   },
+   {
+    "t": 0.8125,
+    "dos": 0.004608294930875576,
+    "avant": -0.059907834101382486,
+    "profRef": 1.134152585765489,
+    "profMot": 1.078853046594982
+   },
+   {
+    "t": 0.9375,
+    "dos": 0.12512218963831867,
+    "avant": -0.10557184750733138,
+    "profRef": 1.0283479960899315,
+    "profMot": 1.0478983382209188
+   }
+  ]
+ },
+ "vueDeDos": {
+  "dos": [
+   {
+    "k": 0.5,
+    "ref": 1.71,
+    "mot": 1.75,
+    "ecart": 0.0233918128654971
+   },
+   {
+    "k": 1,
+    "ref": 1.71,
+    "mot": 2,
+    "ecart": 0.16959064327485382
+   },
+   {
+    "k": 1.5,
+    "ref": 1.85,
+    "mot": 2.12,
+    "ecart": 0.14594594594594595
+   },
+   {
+    "k": 2,
+    "ref": 2.04,
+    "mot": 2.29,
+    "ecart": 0.12254901960784313
+   },
+   {
+    "k": 2.5,
+    "ref": 2.19,
+    "mot": 2.44,
+    "ecart": 0.11415525114155252
+   },
+   {
+    "k": 3,
+    "ref": 1.86,
+    "mot": 2.6,
+    "ecart": 0.3978494623655914
+   }
+  ],
+  "profil": [
+   {
+    "k": 0.5,
+    "ref": 1.1,
+    "mot": 1.11,
+    "ecart": 0.009090909090909097
+   },
+   {
+    "k": 1,
+    "ref": 1.06,
+    "mot": 1.11,
+    "ecart": 0.047169811320754755
+   },
+   {
+    "k": 1.5,
+    "ref": 0.97,
+    "mot": 1.03,
+    "ecart": 0.06185567010309284
+   },
+   {
+    "k": 2,
+    "ref": 1.14,
+    "mot": 0.63,
+    "ecart": -0.4473684210526315
+   },
+   {
+    "k": 2.5,
+    "ref": 1.05,
+    "mot": 0.61,
+    "ecart": -0.41904761904761906
+   },
+   {
+    "k": 3,
+    "ref": 0.84,
+    "mot": 0.83,
+    "ecart": -0.011904761904761916
+   }
+  ]
+ },
+ "verifyBack": {
+  "adultMale": [
+   {
+    "id": "back.geo.scapula-pair",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "omoplates gauche et droite présentes"
+   },
+   {
+    "id": "back.geo.scapula-symmetry",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "distance à la ligne médiane G 0.42 h · D 0.42 h (écart ≤ 0,08 h : le contrapposto décale légèrement)"
+   },
+   {
+    "id": "back.geo.scapula-lateral",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "centre de la lame à 0.44 × la demi-largeur des épaules (bande 0,30–0,80 : ni sur la colonne ni hors du tronc)"
+   },
+   {
+    "id": "back.geo.scapula-finite",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "14 sections finies et > 0"
+   },
+   {
+    "id": "back.ana.scapula-height",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "hauteur de la lame 5.4 vertèbres thoraciques (T2→T7/T8 ≈ 5,5 ; bande 4,2–6,8)"
+   },
+   {
+    "id": "back.ana.inferior-angle-level",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "angle inférieur à 9.3 vertèbres sous C7 (T7–T9 ; bande 7–10,5)"
+   },
+   {
+    "id": "back.ana.spine-oblique",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "épine : racine y=477 plus basse que son extrémité latérale y=466 (oblique vers le haut et en dehors)"
+   },
+   {
+    "id": "back.ana.trunk-axis-vertical",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "axe C7→crête incliné de 0.8° (bande ±4°)"
+   },
+   {
+    "id": "back.ana.front-line-vertical",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "ligne avant poitrine→crête à -0.9° (ref-04 : −1° ; bande ±8°, le buste féminin et le ventre l'écartent)"
+   },
+   {
+    "id": "back.sty.blade-hidden",
+    "layer": "style",
+    "ok": true,
+    "detail": "lame cachée par défaut, révélée par showHidden"
+   },
+   {
+    "id": "back.sty.relief-drawn",
+    "layer": "style",
+    "ok": true,
+    "detail": "relief dessiné selon le palier 2.2 : 3/3 volumes (épine toujours)"
+   }
+  ],
+  "adultFemale": [
+   {
+    "id": "back.geo.scapula-pair",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "omoplates gauche et droite présentes"
+   },
+   {
+    "id": "back.geo.scapula-symmetry",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "distance à la ligne médiane G 0.35 h · D 0.35 h (écart ≤ 0,08 h : le contrapposto décale légèrement)"
+   },
+   {
+    "id": "back.geo.scapula-lateral",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "centre de la lame à 0.44 × la demi-largeur des épaules (bande 0,30–0,80 : ni sur la colonne ni hors du tronc)"
+   },
+   {
+    "id": "back.geo.scapula-finite",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "14 sections finies et > 0"
+   },
+   {
+    "id": "back.ana.scapula-height",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "hauteur de la lame 5.5 vertèbres thoraciques (T2→T7/T8 ≈ 5,5 ; bande 4,2–6,8)"
+   },
+   {
+    "id": "back.ana.inferior-angle-level",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "angle inférieur à 9.3 vertèbres sous C7 (T7–T9 ; bande 7–10,5)"
+   },
+   {
+    "id": "back.ana.spine-oblique",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "épine : racine y=477 plus basse que son extrémité latérale y=465 (oblique vers le haut et en dehors)"
+   },
+   {
+    "id": "back.ana.trunk-axis-vertical",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "axe C7→crête incliné de 0.8° (bande ±4°)"
+   },
+   {
+    "id": "back.ana.front-line-vertical",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "ligne avant poitrine→crête à 5.1° (ref-04 : −1° ; bande ±8°, le buste féminin et le ventre l'écartent)"
+   },
+   {
+    "id": "back.sty.blade-hidden",
+    "layer": "style",
+    "ok": true,
+    "detail": "lame cachée par défaut, révélée par showHidden"
+   },
+   {
+    "id": "back.sty.relief-drawn",
+    "layer": "style",
+    "ok": true,
+    "detail": "relief dessiné selon le palier 1.6 : 1/3 volumes (épine toujours)"
+   }
+  ],
+  "veryMuscular": [
+   {
+    "id": "back.geo.scapula-pair",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "omoplates gauche et droite présentes"
+   },
+   {
+    "id": "back.geo.scapula-symmetry",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "distance à la ligne médiane G 0.47 h · D 0.47 h (écart ≤ 0,08 h : le contrapposto décale légèrement)"
+   },
+   {
+    "id": "back.geo.scapula-lateral",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "centre de la lame à 0.44 × la demi-largeur des épaules (bande 0,30–0,80 : ni sur la colonne ni hors du tronc)"
+   },
+   {
+    "id": "back.geo.scapula-finite",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "14 sections finies et > 0"
+   },
+   {
+    "id": "back.ana.scapula-height",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "hauteur de la lame 5.4 vertèbres thoraciques (T2→T7/T8 ≈ 5,5 ; bande 4,2–6,8)"
+   },
+   {
+    "id": "back.ana.inferior-angle-level",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "angle inférieur à 9.3 vertèbres sous C7 (T7–T9 ; bande 7–10,5)"
+   },
+   {
+    "id": "back.ana.spine-oblique",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "épine : racine y=478 plus basse que son extrémité latérale y=467 (oblique vers le haut et en dehors)"
+   },
+   {
+    "id": "back.ana.trunk-axis-vertical",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "axe C7→crête incliné de 0.8° (bande ±4°)"
+   },
+   {
+    "id": "back.ana.front-line-vertical",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "ligne avant poitrine→crête à -1.5° (ref-04 : −1° ; bande ±8°, le buste féminin et le ventre l'écartent)"
+   },
+   {
+    "id": "back.sty.blade-hidden",
+    "layer": "style",
+    "ok": true,
+    "detail": "lame cachée par défaut, révélée par showHidden"
+   },
+   {
+    "id": "back.sty.relief-drawn",
+    "layer": "style",
+    "ok": true,
+    "detail": "relief dessiné selon le palier 5.0 : 3/3 volumes (épine toujours)"
+   }
+  ],
+  "muscular": [
+   {
+    "id": "back.geo.scapula-pair",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "omoplates gauche et droite présentes"
+   },
+   {
+    "id": "back.geo.scapula-symmetry",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "distance à la ligne médiane G 0.45 h · D 0.44 h (écart ≤ 0,08 h : le contrapposto décale légèrement)"
+   },
+   {
+    "id": "back.geo.scapula-lateral",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "centre de la lame à 0.44 × la demi-largeur des épaules (bande 0,30–0,80 : ni sur la colonne ni hors du tronc)"
+   },
+   {
+    "id": "back.geo.scapula-finite",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "14 sections finies et > 0"
+   },
+   {
+    "id": "back.ana.scapula-height",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "hauteur de la lame 5.4 vertèbres thoraciques (T2→T7/T8 ≈ 5,5 ; bande 4,2–6,8)"
+   },
+   {
+    "id": "back.ana.inferior-angle-level",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "angle inférieur à 9.3 vertèbres sous C7 (T7–T9 ; bande 7–10,5)"
+   },
+   {
+    "id": "back.ana.spine-oblique",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "épine : racine y=477 plus basse que son extrémité latérale y=466 (oblique vers le haut et en dehors)"
+   },
+   {
+    "id": "back.ana.trunk-axis-vertical",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "axe C7→crête incliné de 0.8° (bande ±4°)"
+   },
+   {
+    "id": "back.ana.front-line-vertical",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "ligne avant poitrine→crête à -1.3° (ref-04 : −1° ; bande ±8°, le buste féminin et le ventre l'écartent)"
+   },
+   {
+    "id": "back.sty.blade-hidden",
+    "layer": "style",
+    "ok": true,
+    "detail": "lame cachée par défaut, révélée par showHidden"
+   },
+   {
+    "id": "back.sty.relief-drawn",
+    "layer": "style",
+    "ok": true,
+    "detail": "relief dessiné selon le palier 3.9 : 3/3 volumes (épine toujours)"
+   }
+  ],
+  "child": [
+   {
+    "id": "back.geo.scapula-pair",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "omoplates gauche et droite présentes"
+   },
+   {
+    "id": "back.geo.scapula-symmetry",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "distance à la ligne médiane G 0.32 h · D 0.32 h (écart ≤ 0,08 h : le contrapposto décale légèrement)"
+   },
+   {
+    "id": "back.geo.scapula-lateral",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "centre de la lame à 0.44 × la demi-largeur des épaules (bande 0,30–0,80 : ni sur la colonne ni hors du tronc)"
+   },
+   {
+    "id": "back.geo.scapula-finite",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "14 sections finies et > 0"
+   },
+   {
+    "id": "back.ana.scapula-height",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "hauteur de la lame 5.5 vertèbres thoraciques (T2→T7/T8 ≈ 5,5 ; bande 4,2–6,8)"
+   },
+   {
+    "id": "back.ana.inferior-angle-level",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "angle inférieur à 8.4 vertèbres sous C7 (T7–T9 ; bande 7–10,5)"
+   },
+   {
+    "id": "back.ana.spine-oblique",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "épine : racine y=411 plus basse que son extrémité latérale y=403 (oblique vers le haut et en dehors)"
+   },
+   {
+    "id": "back.ana.trunk-axis-vertical",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "axe C7→crête incliné de 0.5° (bande ±4°)"
+   },
+   {
+    "id": "back.ana.front-line-vertical",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "ligne avant poitrine→crête à 3.3° (ref-04 : −1° ; bande ±8°, le buste féminin et le ventre l'écartent)"
+   },
+   {
+    "id": "back.sty.blade-hidden",
+    "layer": "style",
+    "ok": true,
+    "detail": "lame cachée par défaut, révélée par showHidden"
+   },
+   {
+    "id": "back.sty.relief-drawn",
+    "layer": "style",
+    "ok": true,
+    "detail": "relief dessiné selon le palier 0.3 : 1/3 volumes (épine toujours)"
+   }
+  ]
+ }
+}

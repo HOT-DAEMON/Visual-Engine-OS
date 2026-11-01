@@ -8,7 +8,7 @@
 import { Resvg } from '@resvg/resvg-js';
 import { gunzipSync } from 'node:zlib';
 import { readFileSync } from 'node:fs';
-import { bodyVolumes, renderVolumes, type Camera } from '../../src/body/volume';
+import { bodyVolumes, renderVolumes, type Camera, type VolumeInput } from '../../src/body/volume';
 import { ARCHETYPES, type BodyInput } from '../../src/body';
 import { bodyHost } from '../lib/body-host';
 
@@ -18,8 +18,8 @@ export const profileMask = (): Uint8Array => { const m = new Uint8Array(W * H); 
 const meas = JSON.parse(readFileSync('references/anatomy/measures.json', 'utf8'))['ref-04'];
 
 export interface ProfFit { readonly rowErr: number; readonly iou: number; readonly mask: Uint8Array; readonly rgba: Uint8Array; readonly dx: number; readonly s: number; readonly oy: number }
-export function profileFit(arch: BodyInput, yaw: 90 | -90, host = bodyHost(), shiftX = 0): ProfFit {
-  const ref = profileMask(), set = bodyVolumes(arch, host.a, {});
+export function profileFit(arch: BodyInput, yaw: 90 | -90, host = bodyHost(), shiftX = 0, vp: VolumeInput = {}): ProfFit {
+  const ref = profileMask(), set = bodyVolumes(arch, host.a, vp);
   const cam: Camera = { yaw, pitch: 0, pivot: { x: 0, y: 0, z: 0 } };
   const m = renderVolumes(set, { skin: host.skin, camera: cam, uid: 'pf' });
   const s = (meas.head.height / host.a.h) * (754 / 747), topRef = 8;

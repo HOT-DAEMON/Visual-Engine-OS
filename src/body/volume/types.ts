@@ -26,6 +26,8 @@ export interface Volume {
   readonly sphere?: boolean;
   /** Masse continue : les volumes qui partagent ce nom forment UN seul muscle vu de loin (trapèze, deltoïde…) ; le rendu n'y creuse pas de rainure entre eux. */
   readonly mass?: string;
+  /** Atome CACHÉ : présent dans les données (repères, collisions, vérification) mais non dessiné par défaut (os sous les muscles, ex. lame de l'omoplate). `showHidden` du rendu l'affiche. */
+  readonly hidden?: boolean;
 }
 export interface VolumeSet {
   readonly volumes: readonly Volume[]; readonly byId: ReadonlyMap<string, Volume>;

@@ -83,5 +83,38 @@
    255
   ],
   "leftOnly": true
+ },
+ "ref-01": {
+  "size": [
+   874,
+   826
+  ],
+  "back": {
+   "top": 18,
+   "bottom": 803,
+   "headHeight": 100,
+   "neckRow": 100,
+   "neckBaseRow": 118,
+   "neckWidth": 41,
+   "height": 786
+  },
+  "front": {
+   "top": 19,
+   "bottom": 802,
+   "headHeight": 94,
+   "neckRow": 94,
+   "neckBaseRow": 121,
+   "neckWidth": 38,
+   "height": 784
+  },
+  "side": {
+   "top": 20,
+   "bottom": 799,
+   "headHeight": 106,
+   "neckRow": 106,
+   "neckBaseRow": 153,
+   "neckWidth": 44,
+   "height": 780
+  }
  }
 }

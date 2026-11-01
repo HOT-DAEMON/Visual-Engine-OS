@@ -28,7 +28,10 @@ const build = (bp: BodyParams, a: NeckAnchor, vp: VolumeParams): VolumeSet => {
   for (const s of [1, -1]) vols.push({ id: `joint.hip.${s > 0 ? 'L' : 'R'}`, name: 'sphère d’articulation coxo-fémorale', group: 'joint', kind: 'joint', side: s > 0 ? 'L' : 'R', parent: null, level: 3, layer: 8, stations: ball(tr.point(y.crop + 0.02 * H, s * 1.15, -0.04 * H).p, 0.045 * H), fibres: [], tone: 0, sphere: true });
   const ang = spineAngles(tr.spine), nv = tr.at(y.navel), ch = tr.at(y.nipple);
   const landmarks = new Map([['sternal-notch', tr.point(y.base + 0.03 * H, 0, 0).p], ['c7', jc7], ['sacrum', tr.point(y.crop, Math.PI, 0).p], ['acromion.L', p3(f.x.acr, y.acr, tr.shoulder(1).z)], ['acromion.R', p3(-f.x.acr, y.acr, tr.shoulder(-1).z)]]);
-  const measures = { h: H, vis, cobbCervical: ang.cervical, cobbThoracic: ang.thoracic, cobbLumbar: ang.lumbar, thoraxDepthOverWidth: ch.D / ch.X, bellyProjection: (nv.zf - ch.zf) / H, gluteProjection: (tr.at(y.navel + 0.2 * (y.navel - y.base)).zb - tr.at(y.waist).zb) / H, volumes: vols.length, shoulderTiltDeg: Math.atan2(tr.shoulder(1).y - tr.shoulder(-1).y, tr.shoulder(1).x - tr.shoulder(-1).x) * 180 / Math.PI };
+  // Verticalité du tronc (itération 04) : axe osseux C7→crête, et ligne de la surface AVANT (poitrine→crête) ; ref-04 : ligne avant à −1° (le dos de la référence est masqué par le bras).
+  const zfr = (yy: number): number => tr.point(yy, 0, 0).p.z, deg = (dz: number, dy: number): number => (Math.atan2(dz, dy) * 180) / Math.PI;
+  const trunkLeanDeg = deg(tr.spine.z(y.crop) - tr.spine.z(tr.spine.lv.c7), y.crop - tr.spine.lv.c7), frontLineDeg = deg(zfr(y.crop) - zfr(y.nipple), y.crop - y.nipple);
+  const measures = { h: H, vis, trunkLeanDeg, frontLineDeg, c7Y: tr.spine.lv.c7, t12Y: tr.spine.lv.t12, cobbCervical: ang.cervical, cobbThoracic: ang.thoracic, cobbLumbar: ang.lumbar, thoraxDepthOverWidth: ch.D / ch.X, bellyProjection: (nv.zf - ch.zf) / H, gluteProjection: (tr.at(y.navel + 0.2 * (y.navel - y.base)).zb - tr.at(y.waist).zb) / H, volumes: vols.length, shoulderTiltDeg: Math.atan2(tr.shoulder(1).y - tr.shoulder(-1).y, tr.shoulder(1).x - tr.shoulder(-1).x) * 180 / Math.PI };
   return { volumes: vols, byId: new Map(vols.map((v) => [v.id, v])), measures, landmarks };
 };
 const memo = memoPure('body-volumes', 'geometry', build, 64);
