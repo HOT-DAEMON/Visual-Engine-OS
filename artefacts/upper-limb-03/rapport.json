@@ -1,0 +1,141 @@
+{
+ "face": {
+  "avant": {
+   "ref-02": {
+    "iou": 0.7886280374857645,
+    "rowErr": 0.06360781736004059,
+    "spanRatio": 1.0248618784530388,
+    "shoulderRatio": 0.9085365853658537
+   },
+   "ref-04": {
+    "iou": 0.7971744271385468,
+    "rowErr": 0.03765367295558092,
+    "spanRatio": 1.0308641975308641,
+    "shoulderRatio": 1.0072463768115942
+   }
+  },
+  "apres": {
+   "ref-02": {
+    "iou": 0.7904574045464577,
+    "rowErr": 0.06041924653984438,
+    "spanRatio": 1.0248618784530388,
+    "shoulderRatio": 0.9085365853658537
+   },
+   "ref-04": {
+    "iou": 0.7979224717259465,
+    "rowErr": 0.03402757915088073,
+    "spanRatio": 1.0308641975308641,
+    "shoulderRatio": 1.0072463768115942
+   }
+  }
+ },
+ "profil_ref04": {
+  "avant": {
+   "iou": 0.7755591054313099,
+   "rowErr": 0.19648664861826948
+  },
+  "apres": {
+   "iou": 0.7987810424815792,
+   "rowErr": 0.12821802106436583
+  }
+ },
+ "verification_epaule": {
+  "ok": true,
+  "checks": [
+   {
+    "id": "sh.geo.contour-continuous",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "plus grande marche du contour d'épaule = 0.051 h entre colonnes de 0,03 h (< 0,07 : pas de marche)"
+   },
+   {
+    "id": "sh.geo.contour-descends",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "remontée maximale du contour en s'éloignant du cou = 0.000 h (< 0,025 : pente continue cou → acromion)"
+   },
+   {
+    "id": "sh.ana.slope-neck-acromion",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "pente du trapèze (0,50 → 0,94 h) = 0.55 (références : 0,41 – 0,56 ; bande 0,30 – 0,90)"
+   },
+   {
+    "id": "sh.ana.acromion-under-chin",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "acromion à 0.49 h sous le menton (références ≈ 0,5 – 0,6 ; bande 0,40 – 0,70)"
+   },
+   {
+    "id": "sh.ana.deltoid-single-mass",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "2 masse(s) deltoïdienne(s) (attendu 2), 0 chef(s) séparé(s) (attendu 0)"
+   },
+   {
+    "id": "sh.ana.trapezius-single-mass",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "6 parties du trapèze, toutes dans la masse « trapezius »"
+   },
+   {
+    "id": "sh.style.no-seam-in-deltoid",
+    "layer": "style",
+    "ok": true,
+    "detail": "5e centile de luminance dans la calotte = 0.74 × la médiane (> 0,55 : pas de couture sombre)"
+   },
+   {
+    "id": "sh.style.deltoid-relief",
+    "layer": "style",
+    "ok": true,
+    "detail": "écart-type de luminance dans la calotte = 22.0 (> 5 : volume modelé, pas d'aplat)"
+   }
+  ]
+ },
+ "verification_profil": {
+  "ok": true,
+  "checks": [
+   {
+    "id": "pf.geo.depth-continuous",
+    "layer": "geometry",
+    "ok": true,
+    "detail": "plus grand saut de profondeur entre lignes espacées de 0,05 h = 0.069 h (< 0,2 : pas de marche)"
+   },
+   {
+    "id": "pf.ana.chest-depth",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "profondeur du thorax à 0,75 h sous le cou = 1.27 h (ref-04 : 1,38 ; bande 1,0 – 1,7)"
+   },
+   {
+    "id": "pf.ana.abdomen-depth",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "profondeur de l'abdomen = 1.03 h à 1,3 h et 1.10 h à 1,55 h (ref-04 : 1,18 et 1,11 ; bandes 0,8 – 1.52 et 0,8 – 1.47, élargies de 0,5 × adiposité)"
+   },
+   {
+    "id": "pf.ana.abdomen-vs-chest",
+    "layer": "anatomy",
+    "ok": true,
+    "detail": "abdomen / thorax = 0.81 (0,60 – 1.13 ; ref-04 : 0,86)"
+   },
+   {
+    "id": "pf.style.modelled",
+    "layer": "style",
+    "ok": true,
+    "detail": "écart-type de luminance du tronc de profil = 19.0 (> 5 : volume modelé)"
+   },
+   {
+    "id": "pf.style.no-black-edge",
+    "layer": "style",
+    "ok": true,
+    "detail": "pixels pleins quasi noirs = 0.00 % (< 1 % : aucun contour noir)"
+   }
+  ],
+  "depth": {
+   "chest": 1.2664280114699522,
+   "belly": 1.0304118820596428,
+   "waist": 1.0994897735943676
+  }
+ }
+}

@@ -54,3 +54,4 @@ export { verifyLegs } from './lower';
 export { verifyVolumes, type VReport, type VCheck } from './volume';
 export { verifyPixels } from './pixel';
 export { verifyShoulders } from './shoulder';
+export { verifyProfileDepth } from './profile';

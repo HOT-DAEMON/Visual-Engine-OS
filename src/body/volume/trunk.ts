@@ -31,7 +31,9 @@ export function makeTrunk(f: BodyFrame, _bp: BodyParams, vp: VolumeParams): Trun
   const yt = y.base - 0.06 * h, yk = y.base + 0.45 * (y.acr - y.base), ky = [yt, y.base, yk, y.acr, y.axilla, y.nipple, y.waist, y.navel, y.crop];
   const X = (yy: number): number => prof(ky, [f.a.baseHalf * 1.15, x.acr * 0.36, x.acr * 0.62, x.acr * 0.9, x.chest, x.chest * 1.02, x.waist, x.waist * 1.03, x.hip], yy);
   const td = 1 + 0.15 * vp.torso.thoraxDepth;
-  const k = (yy: number): number => prof(ky, [0.65, 0.58, 0.5, 0.46 * td, 0.7 * td, 0.74 * td, 0.62, 0.64, 0.68], yy);
+  // Profondeur de l'ABDOMEN (taille → crête iliaque) : mesurée sur le profil de ref-04 (largeur par ligne, indépendante de l'alignement) — le canon était ≈ 20 % trop plat ; +15 % à musculature visible maximale. Le thorax (aisselle, mamelon) n'est PAS touché : il collait déjà (1,29 h contre 1,35 h) et sa bande D/L reste 0,60–0,85.
+  const DM = 1 + 0.15 * f.vis;
+  const k = (yy: number): number => prof(ky, [0.65, 0.58, 0.5, 0.46 * td, 0.7 * td, 0.74 * td, 0.74 * DM, 0.76 * DM, 0.78 * DM], yy);
   const bellyAmt = Math.min(1.2, 0.55 * f.fat + 0.6 * vp.torso.belly), yb = (y.waist + y.navel) / 2 + 0.05 * tl;
   const belly = (yy: number): number => bellyAmt * x.waist * 0.42 * Math.exp(-(((yy - yb) / (0.2 * tl)) ** 2));
   const gl = (yy: number): number => x.hip * (0.2 + 0.1 * vp.torso.glute) * Math.exp(-(((yy - (y.navel + 0.2 * tl)) / (0.2 * tl)) ** 2));

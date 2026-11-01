@@ -56,3 +56,5 @@ Première exécution : un contrôle a échoué à cause de **ma mesure** (la lig
 `01` corps + tête complète · `02` vues 0/35/90/145/180° · `03a/03b` silhouette avant/après · `04` référence vs moteur · `05` avant-bras et mains · `rapport.json`.
 
 > Itération 02 (deltoïde et trapèze en masses continues, masque `ref-04`, couche de vérification de l'épaule) : `docs/BODY-UPPER-LIMB-02.md` ; reste à faire : `docs/BODY-UPPER-LIMB-02-REMAINING.md`.
+
+> Itération 03 (épaule resserrée, abdomen plus profond, premier profil mesuré contre `ref-04`, vérification de profil) : `docs/BODY-UPPER-LIMB-03.md` ; reste à faire : `docs/BODY-UPPER-LIMB-03-REMAINING.md`.

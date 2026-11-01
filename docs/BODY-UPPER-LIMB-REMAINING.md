@@ -30,3 +30,5 @@
 - Contrôles d'anatomie limités à deux rapports (épaules/taille, avant-bras/bras) ; rien sur les insertions musculaires visibles.
 
 > **Mis à jour** : la chute d'acromion, le deltoïde en un volume, la masse du trapèze et le masque `ref-04` sont traités — voir `docs/BODY-UPPER-LIMB-02.md` ; la liste à jour des restes est dans `docs/BODY-UPPER-LIMB-02-REMAINING.md` (les lignes « Trapèze », « Deltoïde » et « ref-04 : seuillage à refaire » ci-dessus sont périmées).
+
+> Voir aussi `docs/BODY-UPPER-LIMB-03-REMAINING.md` (état après l'itération 03).

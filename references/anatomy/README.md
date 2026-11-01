@@ -3,3 +3,5 @@ Images fournies par Daemon (fond noir et les lignes graphiques ignoré au rendu)
 
 ## ref-04 (écorché, profil + face) — masques
 `ref-04.silhouette.gz` (figure de face) et `ref-04.profile.silhouette.gz` (profil) : bits `np.packbits`, ligne par ligne, 564×771. Mesures dans `measures.json` (entrée `ref-04`). Bras droit de la figure de face tronqué par le cadre. Méthode et limites : `docs/BODY-UPPER-LIMB-02.md`.
+
+Profil de `ref-04` : comparé au moteur depuis l'itération 03 (`scripts/body-refs/profile-iou.ts`, recalage en translation) — voir `docs/BODY-UPPER-LIMB-03.md`.
