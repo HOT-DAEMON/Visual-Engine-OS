@@ -1,0 +1,6 @@
+ref-02 veryMuscular   IoU=0.792 erreur-largeur/ligne=6.4% envergure×=0.964 épaules×=0.896 échelle=0.254
+ref-02 muscular       IoU=0.750 erreur-largeur/ligne=9.6% envergure×=0.931 épaules×=0.854 échelle=0.254
+ref-02 adultMale      IoU=0.697 erreur-largeur/ligne=13.6% envergure×=0.898 épaules×=0.811 échelle=0.254
+ref-04 veryMuscular   IoU=0.698 erreur-largeur/ligne=7.7% envergure×=0.926 épaules×=0.906 échelle=0.217
+ref-04 muscular       IoU=0.654 erreur-largeur/ligne=11.9% envergure×=0.895 épaules×=0.862 échelle=0.217
+ref-04 adultMale      IoU=0.615 erreur-largeur/ligne=16.3% envergure×=0.858 épaules×=0.819 échelle=0.217

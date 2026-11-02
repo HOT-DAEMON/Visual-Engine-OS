@@ -4,6 +4,7 @@ import { BodyParams, type BodyInput, type NeckAnchor } from '../types';
 import { backVolumes } from './back';
 import { frontVolumes } from './front';
 import { handVolumes } from './hand3d';
+import { legVolumes } from './legs';
 import { armChain, armVolumes, jointBalls } from './limb';
 import { ball } from './loft';
 import { makeNeck } from './neck';
@@ -15,7 +16,7 @@ import { p3 } from './vec3';
 
 const build = (bp: BodyParams, a: NeckAnchor, vp: VolumeParams): VolumeSet => {
   const f = bodyFrame(bp, a), tr = makeTrunk(f, bp, vp), nk = makeNeck(tr, a, f.dim), H = f.h, y = f.y;
-  const vis = f.vis, vols: Volume[] = [tr.envelope, nk.envelope, ...frontVolumes(tr, nk, f, bp, vp), ...backVolumes(tr, nk, f)];
+  const vis = f.vis, vols: Volume[] = [tr.envelope, nk.envelope, ...legVolumes(tr, f), ...frontVolumes(tr, nk, f, bp, vp), ...backVolumes(tr, nk, f)];
   const chains = ([1, -1] as const).map((s) => armChain(tr, f, s > 0 ? bp.pose.left : bp.pose.right, s > 0 ? vp.swing.left : vp.swing.right, s));
   for (const ch of chains) {
     const pose = ch.side > 0 ? bp.pose.left : bp.pose.right;

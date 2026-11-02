@@ -12,8 +12,9 @@ import { add3, mul3, norm3, cross3, type P3 } from './vec3';
  * ce sont deux sillons (brins fins posés sur la surface) et la direction des fibres. Toutes les cotes sont des multiples du rayon du bras `rU`
  * (jamais de coordonnée absolue) ; `m` module le volume avec la musculature visible.
  */
+// Itération 05 : la masse démarrait à s = 0,05 (0,07 tête SOUS l'articulation, 0,18 sous l'acromion) et laissait la pente du trapèze sans épaule sous elle. Deux points de contrôle ajoutés AU-DESSUS du pivot : le sommet de la masse atteint la hauteur de l'acromion (s = −0,075 × longueur d'humérus ≈ −0,1 tête) et se referme en coupole.
 const PROFILE: readonly { readonly s: number; readonly off: number; readonly a: number; readonly b: number }[] = [
-  { s: 0.05, off: 0.14, a: 0.66, b: 0.50 }, { s: 0.12, off: 0.22, a: 0.90, b: 0.60 }, { s: 0.21, off: 0.26, a: 1.0, b: 0.66 },
+  { s: -0.075, off: 0.02, a: 0.40, b: 0.34 }, { s: -0.02, off: 0.10, a: 0.74, b: 0.52 }, { s: 0.05, off: 0.16, a: 0.86, b: 0.58 }, { s: 0.12, off: 0.22, a: 0.94, b: 0.62 }, { s: 0.21, off: 0.26, a: 1.0, b: 0.66 },
   { s: 0.33, off: 0.32, a: 1.0, b: 0.64 }, { s: 0.45, off: 0.36, a: 0.80, b: 0.55 }, { s: 0.57, off: 0.40, a: 0.42, b: 0.46 },
 ];
 export function deltoidMass(ch: ArmChain, f: BodyFrame, m: number): Volume[] {

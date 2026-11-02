@@ -1,0 +1,4 @@
+veryMuscular -90 iou 0.7698 rowErr 0.0854
+veryMuscular 90 iou 0.8576 rowErr 0.0854
+adultMale 90 iou 0.8630 rowErr 0.0621
+muscular 90 iou 0.8584 rowErr 0.0757

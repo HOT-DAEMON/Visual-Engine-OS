@@ -1,0 +1,1 @@
+ANCIEN/COURANT | ref-02/veryMuscular: |e|=0.031 biais=0.031 [0.03 0.02 0.02 0.01 0.05 0.07] | ref-04/veryMuscular: |e|=0.053 biais=0.039 [0.09 0.03 -0.03 -0.04 -0.01 0.06] | ref-04/muscular: |e|=0.032 biais=-0.023 [0.05 -0.01 -0.08 -0.09 -0.10 -0.01]

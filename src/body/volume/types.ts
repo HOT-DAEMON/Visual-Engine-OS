@@ -4,7 +4,7 @@ import type { P3 } from './vec3';
 /** Section elliptique d'un volume : centre `c`, demi-axes `a` (le long de `u`) et `b` (le long de `w`), tangente `t` de l'axe. Repère (t,u,w) orthonormé. */
 export interface Station { readonly c: P3; readonly a: number; readonly b: number; readonly t: P3; readonly u: P3; readonly w: P3 }
 export type VKind = 'muscle' | 'bone' | 'fat' | 'skin' | 'joint' | 'tendon' | 'vein' | 'landmark';
-export type VGroup = 'neck' | 'back' | 'chest' | 'abdomen' | 'pelvis' | 'shoulder' | 'arm' | 'forearm' | 'hand' | 'trunk' | 'joint';
+export type VGroup = 'neck' | 'back' | 'chest' | 'abdomen' | 'pelvis' | 'shoulder' | 'arm' | 'forearm' | 'hand' | 'trunk' | 'joint' | 'leg';
 /**
  * VOLUME : unité 3D indépendante et combinable (contrat de `volume/contracts.ts`). Chaque muscle a son propre volume, séparé dans la donnée ET
  * dans l'image. `layer` = classe de profondeur anatomique (0 squelette/noyau … 5 le plus superficiel) ; `level` = niveau de présentation (0 enveloppe,

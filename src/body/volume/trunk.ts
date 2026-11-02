@@ -1,4 +1,6 @@
 import type { BodyFrame } from '../frame';
+import { legFrame } from '../lower/frame';
+import { LegParams } from '../lower/types';
 import type { BodyParams } from '../types';
 import { loft, type Ctl } from './loft';
 import type { VolumeParams } from './params';
@@ -25,18 +27,27 @@ export interface Trunk {
   readonly at: (y: number) => { c: P3; X: number; D: number; zb: number; zf: number };
   readonly point: (y: number, psi: number, lift?: number) => { p: P3; n: P3 };
   readonly shoulder: (side: 1 | -1) => P3;
+  /** Transformation de pose du tronc (contrapposto, torsion, décalage du bassin) : les jambes s'y accrochent pour suivre le bassin sans rien recalculer. */
+  readonly xf: (p: P3) => P3;
+  /** Hauteur de la fourche (y, px) : fin du bassin, début des cuisses (cotes du module du bas du corps). */
+  readonly crotchY: number;
   readonly envelope: Volume;
 }
 export function makeTrunk(f: BodyFrame, _bp: BodyParams, vp: VolumeParams): Trunk {
   void _bp;
   const h = f.h, spine = makeSpine(f, vp), y = f.y, x = f.x, tl = y.navel - y.base;
   // `yr` = bas de la cage thoracique (entre mamelon et taille) : point-clé ajouté à l'itération 04 (profil ref-04 : le thorax inférieur manquait de 0,14–0,19 h de profondeur).
-  const yt = y.base - 0.06 * h, yk = y.base + 0.45 * (y.acr - y.base), yr = (y.nipple + y.waist) / 2, ky = [yt, y.base, yk, y.acr, y.axilla, y.nipple, yr, y.waist, y.navel, y.crop];
-  const X = (yy: number): number => prof(ky, [f.a.baseHalf * 1.15, x.acr * 0.36, x.acr * 0.62, x.acr * 0.9, x.chest, x.chest * 1.02, (x.chest * 1.02 + x.waist) / 2 + 0.02 * x.chest, x.waist, x.waist * 1.03, x.hip], yy);
+  // BASSIN (itération 05) : le tronc ne s'arrêtait plus à la crête par une coupe plate ; il se prolonge jusqu'à la fourche (mêmes cotes que `lower/frame.ts`) en passant par le grand trochanter (`yh`, plus large que la crête), ce qui donne au haut et au bas du corps UNE seule enveloppe de peau.
+  const crotch = legFrame(f, LegParams.parse({})).y.crotch, yh = y.crop + 0.4 * (crotch - y.crop);
+  const yt = y.base - 0.06 * h, yk = y.base + 0.45 * (y.acr - y.base), yr = (y.nipple + y.waist) / 2, ky = [yt, y.base, yk, y.acr, y.axilla, y.nipple, yr, y.waist, y.navel, y.crop, yh, crotch];
+  // PENTE DU TRAPÈZE (itération 05) : coefficients balayés (voir docs/BODY-UPPER-LIMB-05.md) sur la SILHOUETTE complète alignée sur l'axe du corps (ref-02 : écart moyen 0,031 tête ; ref-04 : 0,032–0,053) ET sur le dépassement muscles/os − peau (≤ 0,03 h sur la pente, des deux côtés). Plus étroit (0,36 / 0,62 / 0,90, ancien) : les muscles débordent de 0,05 h ; plus large (0,40 / 0,73 / 1,00) : la silhouette dépasse ref-02 de 0,05 h.
+  const SL = { base: 0.38, yk: 0.66, acr: 0.94 };
+  const X = (yy: number): number => prof(ky, [f.a.baseHalf * 1.15, x.acr * SL.base, x.acr * SL.yk, x.acr * SL.acr, x.chest, x.chest * 1.02, (x.chest * 1.02 + x.waist) / 2 + 0.02 * x.chest, x.waist, x.waist * 1.03, x.hip, x.hip * 1.05, x.hip * 1.0], yy);
   const td = 1 + 0.15 * vp.torso.thoraxDepth;
   // Profondeur de l'ABDOMEN (taille → crête iliaque) : mesurée sur le profil de ref-04 (largeur par ligne, indépendante de l'alignement) — le canon était ≈ 20 % trop plat ; +15 % à musculature visible maximale. Le thorax (aisselle, mamelon) n'est PAS touché : il collait déjà (1,29 h contre 1,35 h) et sa bande D/L reste 0,60–0,85.
   const DM = 1 + 0.15 * f.vis;
-  const k = (yy: number): number => prof(ky, [0.65, 0.58, 0.5, 0.46 * td, 0.7 * td, 0.74 * td, (0.9 + 0.1 * vp.torso.ribDepth) * DM, 0.74 * DM, 0.76 * DM, 0.64 * DM], yy);
+  // Rapport profondeur/largeur : divisé par le même facteur que la largeur a augmenté (0,40/0,36, 0,73/0,62, 1,0/0,9) → la PROFONDEUR du haut du tronc reste celle mesurée sur le profil de ref-04.
+  const k = (yy: number): number => prof(ky, [0.65, 0.58 * (0.36 / SL.base), 0.5 * (0.62 / SL.yk), 0.46 * td * (0.9 / SL.acr), 0.7 * td, 0.74 * td, (0.9 + 0.1 * vp.torso.ribDepth) * DM, 0.74 * DM, 0.76 * DM, 0.64 * DM, 0.7 * DM, 0.62 * DM], yy);
   const bellyAmt = Math.min(1.2, 0.55 * f.fat + 0.6 * vp.torso.belly), yb = (y.waist + y.navel) / 2 + 0.05 * tl;
   const belly = (yy: number): number => bellyAmt * x.waist * 0.42 * Math.exp(-(((yy - yb) / (0.2 * tl)) ** 2));
   // Fessier : sommet SOUS la crête iliaque (≈ niveau du grand trochanter) — avant l'itération 04 il culminait à la crête et poussait le dos 0,29 h trop en arrière dans la bande navel→crête de ref-04.
@@ -68,9 +79,16 @@ export function makeTrunk(f: BodyFrame, _bp: BodyParams, vp: VolumeParams): Trun
     return { p: T(add3(P, mul3(n, lift))), n: Tn(n, yy) };
   };
   // Sections de l'enveloppe : aux hauteurs-clés du cadre ET entre elles (le dessus d'épaule varie vite : il en faut 4 sur ses 35 premiers px).
-  const ys = [...new Set([...ky, y.base + 0.7 * (y.acr - y.base), (y.acr + y.axilla) / 2, (y.axilla + y.nipple) / 2, (y.nipple + y.waist) / 2, (y.waist + y.navel) / 2, (y.navel + y.crop) / 2, y.base - 0.025 * h, y.base + 0.22 * (y.acr - y.base)])].sort((p, q) => p - q);
+  const ys = [...new Set([...ky, y.base + 0.7 * (y.acr - y.base), (y.acr + y.axilla) / 2, (y.axilla + y.nipple) / 2, (y.nipple + y.waist) / 2, (y.waist + y.navel) / 2, (y.navel + y.crop) / 2, y.base - 0.025 * h, y.base + 0.22 * (y.acr - y.base), (y.crop + yh) / 2, (yh + crotch) / 2])].sort((p, q) => p - q);
   const ctl: Ctl[] = ys.map((yy) => { const t = at(yy); return { c: T(t.c), a: t.X, b: t.D, hint: p3(0, 0, 1) }; });
-  const envelope: Volume = { id: 'trunk', name: 'tronc (cage thoracique, abdomen)', group: 'trunk', kind: 'skin', side: 'C', parent: null, level: 0, layer: 0, stations: loft(ctl, 3 * ys.length) as Station[], fibres: [], tone: 0 };
+  // Fermeture du périnée : le bassin se referme en deux sections sous la fourche (les cuisses la recouvrent) — jamais de coupe ouverte.
+  { const t = at(crotch); for (const [dy, ka, kb] of [[0.04, 0.62, 0.8], [0.075, 0.28, 0.5]] as const) ctl.push({ c: T(p3(0, crotch + dy * h, t.c.z)), a: t.X * ka, b: t.D * kb, hint: p3(0, 0, 1) }); }
+  // Les muscles lisent `point()`, qui applique la pose (bascule des épaules, torsion) à CHAQUE point ; l'enveloppe, elle, ne déplaçait que le CENTRE de ses sections (anneaux restés horizontaux). L'épaule haute voyait donc ses muscles flotter au-dessus de la peau (jusqu'à 0,08 h), l'épaule basse les voyait s'y enfoncer : asymétrie mesurée à l'itération 05. Le repère de chaque anneau est maintenant celui de la pose, déduit de T (différences finies d'1 px).
+  const poseFrames = (st: Station[]): Station[] => st.map((q) => {
+    const y0 = q.c.y, z0 = spine.z(y0), P0 = T(p3(0, y0, z0)), u = norm3(sub3(T(p3(-1, y0, z0)), P0)), w0 = norm3(sub3(T(p3(0, y0, z0 + 1)), P0)), w = norm3(sub3(w0, mul3(u, dot3(w0, u))));
+    return { ...q, u, w, t: cross3(u, w) };
+  });
+  const envelope: Volume = { id: 'trunk', name: 'tronc (cage thoracique, abdomen)', group: 'trunk', kind: 'skin', side: 'C', parent: null, level: 0, layer: 0, stations: poseFrames(loft(ctl, 3 * ctl.length)) as Station[], fibres: [], tone: 0 };
   const shoulder = (side: 1 | -1): P3 => { const t = at(f.joint.y); return T(p3(side * f.joint.x, f.joint.y, t.c.z - 0.06 * t.D)); };
-  return { spine, f, at, point, shoulder, envelope };
+  return { spine, f, at, point, shoulder, xf: T, crotchY: crotch, envelope };
 }

@@ -48,7 +48,7 @@ export function renderVolumesPixel(set: VolumeSet, o: PixelOpts): VPixelMarkup {
   // G-buffer
   const depth = new Float32Array(N).fill(-Infinity), id = new Int16Array(N).fill(-1), nx = new Float32Array(N), ny = new Float32Array(N), nz = new Float32Array(N), th = new Float32Array(N), tn = new Float32Array(N), ly = new Uint8Array(N), op = new Float32Array(N);
   const sd = new Float32Array(N).fill(-Infinity), sn = new Float32Array(N * 3), st = new Float32Array(N);
-  const skinCover = new Uint8Array(N), isSkin = keyed.map(({ v }) => v.kind === 'skin'), isStrand = keyed.map(({ v }) => !!v.strand);
+  const skn = new Float32Array(N * 3), skinCover = new Uint8Array(N), isSkin = keyed.map(({ v }) => v.kind === 'skin'), isStrand = keyed.map(({ v }) => !!v.strand);
   const meta = keyed.map(({ v }) => ({ layer: v.layer, tone: v.tone, fib: v.kind === 'muscle' && v.fibres.length > 0, kind: v.kind, rel: rel(v), mass: v.mass }));
   // Rasterisation d'un volume dans le tampon de travail (test de profondeur) ; renvoie les pixels touchés.
   const so = new Int16Array(N), raster = (vi: number, touched: number[]): void => {
@@ -80,7 +80,7 @@ export function renderVolumesPixel(set: VolumeSet, o: PixelOpts): VPixelMarkup {
   // Passe PEAU : toutes les enveloppes partagent un tampon de profondeur (épaule, coude, cou se raccordent sans couture) ; puis les autres volumes en ordre du peintre.
   const skinKeys: number[] = [];
   keyed.forEach((_, vi) => { if (isSkin[vi]) raster(vi, skinKeys); });
-  commit(skinKeys); for (const key of skinKeys) skinCover[key] = 1;
+  commit(skinKeys); for (const key of skinKeys) { skinCover[key] = 1; skn[key * 3] = nx[key]!; skn[key * 3 + 1] = ny[key]!; skn[key * 3 + 2] = nz[key]!; }
   // Les volumes profonds situés DERRIÈRE la surface de la peau (dos vu de face…) sont masqués ; les muscles sous la peau, à moins d'une demi-épaisseur, restent visibles.
   const skinZ = Float32Array.from(depth), hideMargin = 0.05 * H;
   keyed.forEach((_, vi) => { if (isSkin[vi]) return; const t: number[] = []; raster(vi, t); commit(t); });
@@ -96,14 +96,20 @@ export function renderVolumesPixel(set: VolumeSet, o: PixelOpts): VPixelMarkup {
       const qx = Math.round(px + dx * r), qy = Math.round(py + dy * r); if (qx < 0 || qy < 0 || qx >= W || qy >= Hh) continue;
       const k2 = qy * W + qx, v2 = id[k2]!; if (v2 < 0) continue;
       occ += Math.min(1, Math.max(0, (depth[k2]! - z - 0.002 * H) / (0.05 * H)));
-      if (v2 !== vi && meta[v2]!.layer > md.layer && r === R * 0.5 && !(md.mass !== undefined && meta[v2]!.mass === md.mass)) gro += 1;
+      if (v2 !== vi && meta[v2]!.layer > md.layer && r === R * 0.5 && !(md.mass !== undefined && meta[v2]!.mass === md.mass) && !(md.kind === 'skin' && meta[v2]!.kind === 'skin')) gro += 1; // peau/peau : une seule surface (épaule, hanche), pas de rainure (itération 05)
     }
     const nv = p3(nx[key]!, ny[key]!, nz[key]!), fib = md.fib ? 0.045 * Math.min(1, vis * 2) * Math.sin(th[key]! * 22) : 0;
     let t = tone(nv, L) + 0.14 * tn[key]! + fib;
     t *= 1 - aoK * Math.min(1, occ / 10) - grK * 0.45 * Math.min(1, gro / 4);
     const c = t < 0.55 ? mixc(sh, sk, Math.max(0, t) / 0.55) : mixc(sk, li, Math.min(1, (t - 0.55) / 0.6) * 0.62);
     rg[key] = t;
-    out.set([c[0]!, c[1]!, c[2]!, 255 * Math.min(1, md.kind === 'skin' ? 1 : op[key]! * 1.2 + 0.0)], key * 4);
+    // Opacité de palier : un muscle PEU VISIBLE se fond sur la PEAU située dessous (couleur mêlée, alpha 1), il ne perce jamais le corps. Avant la correction de l'itération 05, l'opacité partait dans le canal alpha : le fond apparaissait à travers le ventre, les côtes et les bras (« creux » bleu-gris).
+    const o1 = md.kind === 'skin' ? 1 : Math.min(1, op[key]! * 1.2);
+    if (o1 < 0.5 && !skinCover[key]) continue; // frange FAIBLE (< 50 %) d'un muscle dont le palier n'est pas atteint : fantôme hors de la peau, supprimé ; au-delà, le muscle reste visible (profil du pectoral)
+    if (o1 < 1 && skinCover[key]) {
+      const ts = tone(p3(skn[key * 3]!, skn[key * 3 + 1]!, skn[key * 3 + 2]!), L) * (1 - aoK * Math.min(1, occ / 10)), cs = ts < 0.55 ? mixc(sh, sk, Math.max(0, ts) / 0.55) : mixc(sk, li, Math.min(1, (ts - 0.55) / 0.6) * 0.62), m2 = mixc(cs, c, o1);
+      out.set([m2[0]!, m2[1]!, m2[2]!, 255], key * 4);
+    } else out.set([c[0]!, c[1]!, c[2]!, 255 * o1], key * 4);
   }
   // Sur-échantillonnage → résolution finale (moyenne pondérée par la couverture).
   const w2 = Math.max(1, Math.floor(W / ss)), h2 = Math.max(1, Math.floor(Hh / ss)), fin = new Uint8ClampedArray(w2 * h2 * 4);

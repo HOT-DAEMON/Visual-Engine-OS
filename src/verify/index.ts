@@ -55,4 +55,5 @@ export { verifyVolumes, type VReport, type VCheck } from './volume';
 export { verifyPixels } from './pixel';
 export { verifyShoulders } from './shoulder';
 export { verifyBack } from './back';
+export { verifyJunctions } from './junction';
 export { verifyProfileDepth } from './profile';

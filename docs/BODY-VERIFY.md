@@ -41,3 +41,6 @@ Les bandes de proportions sont des **conventions d'atelier** (`BODY-CANON.md`), 
 - `artefacts/body-upper-limb/verification.json` : 325 corps (13 archétypes × 25 graines), 9 600 contrôles, 0 erreur, 0 avertissement.
 - Les balayages ont trouvé de vrais défauts avant correction (`ERRORS-10.md` : parents latéraux inexistants, trapèze hors enveloppe chez les sujets maigres/âgés).
 - Limite : ces contrôles prouvent la cohérence interne, pas la qualité artistique ni l'exactitude biologique (voir `BODY-REMAINING.md`).
+
+## Raccords (itération 05)
+`verifyJunctions(set, raw, anchor)` (`src/verify/junction.ts`, contrôles de rendu dans `junction-render.ts`) : 12 contrôles en 3 couches pour le raccord épaule ↔ bras et haut ↔ bas du corps. Détail, seuils et limites : `BODY-JUNCTIONS-05.md`. Tests : `tests/body-junction.test.ts`.
