@@ -33,11 +33,12 @@ function legBony(lf: LegFrame, sk: LegSkel): Volume[] {
   const anc = { K: sk.K, A: sk.A }, dirs = [sk.d0, sk.d1] as const, lats = [sk.lat0, sk.lat1] as const, ants = [sk.ant0, sk.ant1] as const, wref = { K: lf.w.knee, A: lf.w.ankle };
   for (const q of LEG_LANDMARKS) {
     const n = ants[q.n], c = add3(add3(add3(anc[q.at], mul3(lats[q.n], q.lat * wref[q.at])), mul3(dirs[q.dir], q.along * h)), mul3(n, (q.dz ?? 0) * wref[q.at])), r = q.rad * h;
-    const rx = (q.rx ?? q.rad) * h, ry = (q.ry ?? q.rad) * h, t = Math.max(0.008 * h, 0.4 * r);
-    // Disque aplati posé sur la surface (rotule, coussinet) ou petite bosse (condyle, malléole) : trois sections empilées le long de la direction de sortie.
-    const outDir = Math.abs(q.dz ?? 0) > 0.3 ? n : lats[q.n], sgn = q.lat < 0 ? -1 : 1, od = outDir === n ? n : mul3(outDir, sgn);
-    out.push(vol({ id: id(q.id), name: q.id, group: 'leg', kind: q.kind, side: sd, parent: id('leg.env'), level: q.level, layer: 5, tier: 0, tone: q.tone ?? 0, mass: `leg.skin.${sd}`, n: 5 },
-      [[-1, 0.55], [0, 1], [1, 0.55]].map(([o, k]) => ({ c: add3(c, mul3(od, (o as number) * t)), a: (q.rx ? rx : r) * (k as number), b: (q.ry ? ry : r) * (k as number), hint: dirs[q.dir] }))));
+    const rx = (q.rx ?? q.rad) * h, ry = (q.ry ?? q.rad) * h, t = Math.max(0.009 * h, 0.45 * Math.min(rx, ry));
+    // Dôme aplati posé sur la surface (rotule, coussinet, tubérosité) ou petite bosse (condyle, malléole) : sections empilées le long de la direction de sortie, profil d'ellipsoïde
+    // (décalage sin θ, rayon cos θ) — la moitié enfouie sous la peau n'est pas vue ; pas de pointe conique.
+    const outDir = Math.abs(q.dz ?? 0) > 0.3 ? n : mul3(lats[q.n], q.lat < 0 ? -1 : 1);
+    out.push(vol({ id: id(q.id), name: q.id, group: 'leg', kind: q.kind, side: sd, parent: id('leg.env'), level: q.level, layer: 5, tier: 0, tone: q.tone ?? 0, mass: `leg.skin.${sd}`, n: 7 },
+      [-72, -48, -24, 0, 24, 48, 72].map((deg) => { const th = (deg * Math.PI) / 180, k = Math.max(0.2, Math.cos(th)); return { c: add3(c, mul3(outDir, Math.sin(th) * t)), a: (q.rx ? rx : r) * k, b: (q.ry ? ry : r) * k, hint: dirs[q.dir] }; })));
   }
   for (const [k, c, r] of [['joint.knee', sk.K, lf.w.knee * 0.6], ['joint.ankle', sk.A, lf.w.ankle * 0.7]] as const) out.push({ id: id(k), name: `sphère d’articulation ${k.split('.')[1]}`, group: 'joint', kind: 'joint', side: sd, parent: null, level: 3, layer: 8, stations: ball(c, r), fibres: [], tone: 0, sphere: true });
   return out;

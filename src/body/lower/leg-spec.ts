@@ -63,9 +63,9 @@ export const LEG_LANDMARKS: readonly LegLandmark[] = [
   { id: 'knee.patella', kind: 'bone', parent: 'leg.thigh', level: 2, at: 'K', dir: 0, n: 0, lat: 0, along: -0.045, rad: 0.044, rx: 0.04, ry: 0.048, z: 120, dz: 0.9 },
   { id: 'knee.condyle.lateral', kind: 'landmark', parent: 'leg.thigh', level: 3, at: 'K', dir: 0, n: 0, lat: 0.82, along: 0, rad: 0.02 },
   { id: 'knee.condyle.medial', kind: 'landmark', parent: 'leg.thigh', level: 3, at: 'K', dir: 0, n: 0, lat: -0.85, along: 0, rad: 0.022 },
-  { id: 'knee.tibial-tuberosity', kind: 'landmark', parent: 'leg.shin', level: 3, at: 'K', dir: 1, n: 1, lat: 0, along: 0.085, rad: 0.016, dz: 0.8 },
+  { id: 'knee.tibial-tuberosity', kind: 'landmark', parent: 'leg.shin', level: 3, at: 'K', dir: 1, n: 1, lat: 0, along: 0.085, rad: 0.016, rx: 0.013, ry: 0.024, dz: 0.8 },
   { id: 'knee.fibula-head', kind: 'landmark', parent: 'leg.shin', level: 3, at: 'K', dir: 1, n: 1, lat: 0.72, along: 0.05, rad: 0.016, dz: -0.1 },
-  { id: 'knee.fat-pad', kind: 'fat', parent: 'leg.shin', level: 3, at: 'K', dir: 1, n: 1, lat: 0, along: 0.05, rad: 0.03, tone: -0.2, dz: 0.62 },
+  { id: 'knee.fat-pad', kind: 'fat', parent: 'leg.shin', level: 3, at: 'K', dir: 1, n: 1, lat: 0, along: 0.05, rad: 0.03, rx: 0.05, ry: 0.026, tone: -0.2, dz: 0.62 },
   { id: 'ankle.malleolus.medial', kind: 'landmark', parent: 'leg.shin', level: 3, at: 'A', dir: 1, n: 1, lat: -0.95, along: 0, rad: 0.022 },
   { id: 'ankle.malleolus.lateral', kind: 'landmark', parent: 'leg.shin', level: 3, at: 'A', dir: 1, n: 1, lat: 0.95, along: 0.02, rad: 0.02 },
 ];

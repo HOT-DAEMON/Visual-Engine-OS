@@ -16,22 +16,17 @@
 - Le fessier est maintenant continu mais n'a pas été recalé : `gluteus.max` et `gluteus.medius` gardent leurs angles ψ de l'itération 04 ; pas de pli sous-fessier.
 - Pas de pli inguinal de la peau (le « V » existant est un trait de repère).
 
-## 3. Jambes 3D (nouveau, très incomplet)
-- **Peau seule** : aucune musculature 3D (quadriceps, adducteurs, sartorius, ischio-jambiers, gastrocnémien, tibial…). Elles existent dans le module 2D (`lower/leg.ts`) mais pas dans la couche de volumes. Le haut du corps (très relief) et les jambes (tubes lisses) ne sont donc **pas dans le même style** : visible sur `01-corps-avec-tete.png`.
-- Pas de pied : l'enveloppe se ferme à la cheville.
-- Pas de rotule ni de relief du genou ; le mollet bombe vers l'arrière par un simple décalage de centre.
-- Les cotes viennent de `legFrame` avec `LegParams` par défaut (abduction 4°, pas de flexion du genou, pas de poses individuelles) ; l'entrée `legs` du module 2D n'est pas relayée aux volumes.
-- Aucune comparaison de la forme des jambes (face, profil) à une référence : seules les cotes du canon sont utilisées. `BODY-LOWER-REFS.md` décrit les références du bas du corps ; non exploitées en 3D.
-- Les vues trois-quarts et de dos des jambes ne sont contrôlées que par la symétrie et la continuité de la paroi du bassin.
+## 3. Jambes 3D — **traité à l'itération 06** (l'état de l'itération 05 est périmé)
+Les jambes 3D ont désormais muscles, os cachés, genou, pied, orteils et ongles, tous lus dans les tables du module 2D ; la peau n'est plus que le pont de continuité du bassin ; l'entrée `legs` est relayée aux volumes. Voir `BODY-LEGS-3D-06.md` (ce qui est fait) et `BODY-LEGS-3D-06-REMAINING.md` (ce qui reste, par composant). L'ancien constat « peau seule, tubes lisses, pas de pied, pas de rotule, `legs` non relayé » ne vaut plus.
 
 ## 4. Profil et profondeur du tronc
-- **Rampe poitrine → ventre trop abrupte** : saut de profondeur de 0,21 h entre le bas du pectoral et le ventre contre 0,086 h dans ref-04. Le garde-fou `pf.geo.depth-continuous` a été desserré de 0,2 à 0,25 h pour ne pas bloquer l'itération (voir `BODY-JUNCTIONS-05.md`). Piste : modeler la profondeur de peau `k(y)` entre la poitrine et la taille et amincir le bord inférieur du pectoral.
+- **[TRAITÉ à l'itération 06 : saut maximal mesuré 0,126 h, garde-fou resserré à 0,15 h ; voir `BODY-LEGS-3D-06.md`]** Rampe poitrine → ventre trop abrupte à l'itération 05 : saut de profondeur de 0,21 h entre le bas du pectoral et le ventre contre 0,086 h dans ref-04. Le garde-fou `pf.geo.depth-continuous` a été desserré de 0,2 à 0,25 h pour ne pas bloquer l'itération (voir `BODY-JUNCTIONS-05.md`). Piste : modeler la profondeur de peau `k(y)` entre la poitrine et la taille et amincir le bord inférieur du pectoral.
 - Profil −90° : IoU 0,770 (0,776 avant) ; plancher abaissé de 0,77 à 0,76. Cause non isolée plus finement que « la peau suit la pose ».
 
 ## 5. Rendu
 - Le tampon de profondeur de la peau garde la normale de la surface la plus proche : pas de fondu aux intersections (voir 2). Facettes visibles sur le trapèze en profil : maillage trop lâche, non réglé.
 - Les franges d'opacité < 50 % hors de la peau sont supprimées ; une valeur entre 0,5 et 1 est conservée. Seuil fixé à l'œil, non optimisé.
-- Temps de rendu : **non mesuré** cette itération (ajout de deux enveloppes de 48 sections et prolongement du tronc). À faire avant d'étendre les jambes.
+- Temps de rendu : mesuré à l'itération 06 (voir `BODY-LEGS-3D-06.md`) ; à l'itération 05 : **non mesuré** (ajout de deux enveloppes de 48 sections et prolongement du tronc). À faire avant d'étendre les jambes.
 
 ## 6. Mesures et vérification
 - Deux références seulement (ref-02 de face, ref-04 de profil) ; rien pour le trois-quarts. `ref-01`, `ref-03`, `ref-05-mains` toujours non exploitées pour ces raccords.
@@ -39,8 +34,8 @@
 - Seuils de `verifyJunctions` fixés après observation de sept archétypes (voir `BODY-JUNCTIONS-05.md`) ; la borne de dépassement (0,08 h) ne discrimine pas l'ancien défaut, seule la symétrie le fait.
 - **`baby` échoue** `junction.geo.shoulder-symmetry` : 0,058 h pour un seuil de 0,05 h (seuil non retouché ; asymétrie d'épaule du nourrisson non analysée, chute d'acromion très courte). Les douze autres archétypes passent : adultMale, adultFemale, veryMuscular, muscular, child, toddler, teenFemale, teenMale, obese, thin, elderMale, elderFemale (`tests/body-junction.test.ts`).
 
-## Prochaine étape la plus rentable
-1. Muscles 3D de la cuisse et de la jambe (style cohérent avec le tronc), pied.
-2. Rampe de profondeur poitrine → ventre contre ref-04, puis remonter le garde-fou à 0,2 h.
-3. Deltoïde enveloppant et recouvrement par le grand pectoral (ref-02), suppression de la pointe d'acromion.
+## Prochaine étape la plus rentable (mise à jour itération 06)
+1. Muscles 3D de la cuisse et de la jambe, pied, rampe poitrine → ventre : **faits** (itération 06).
+2. Deltoïde enveloppant et recouvrement par le grand pectoral (ref-02), suppression de la pointe d'acromion : **non fait**.
+3. Brancher le corps au pipeline principal : **non fait** (voir `BODY-LEGS-3D-06-REMAINING.md`).
 4. Fondu des normales aux intersections peau/peau (aine, épaule).

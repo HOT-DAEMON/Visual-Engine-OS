@@ -45,8 +45,12 @@ export function makeTrunk(f: BodyFrame, _bp: BodyParams, vp: VolumeParams, lf: L
   const td = 1 + 0.15 * vp.torso.thoraxDepth;
   // Profondeur de l'ABDOMEN (taille → crête iliaque) : mesurée sur le profil de ref-04 (largeur par ligne, indépendante de l'alignement) — le canon était ≈ 20 % trop plat ; +15 % à musculature visible maximale. Le thorax (aisselle, mamelon) n'est PAS touché : il collait déjà (1,29 h contre 1,35 h) et sa bande D/L reste 0,60–0,85.
   const DM = 1 + 0.15 * f.vis;
+  // RAMPE POITRINE → VENTRE (itération 06). Sur le profil de ref-04 (bandes de 1/16 du tronc, `scripts/body-refs/profile-edges.ts`) la profondeur du moteur dépassait la référence au niveau des côtes
+  // (1,40–1,46 h contre 1,32) puis tombait trop tôt (1,22 h contre 1,33 à la taille) : une marche de 0,21 h là où la référence décroît de 0,11 h. `YR` allège la clé des côtes (−5 %), `RAMP` relève
+  // la taille et le haut de l'abdomen (+12 %) ; les clés des hanches ne bougent pas (le fessier dépasse déjà de ≈ 0,1 h vers l'arrière, tâche restante). Balayage : docs/BODY-LEGS-3D-06.md.
+  const RAMP = 1.12, YR = 0.95;
   // Rapport profondeur/largeur : divisé par le même facteur que la largeur a augmenté (0,40/0,36, 0,73/0,62, 1,0/0,9) → la PROFONDEUR du haut du tronc reste celle mesurée sur le profil de ref-04.
-  const k = (yy: number): number => prof(ky, [0.65, 0.58 * (0.36 / SL.base), 0.5 * (0.62 / SL.yk), 0.46 * td * (0.9 / SL.acr), 0.7 * td, 0.74 * td, (0.9 + 0.1 * vp.torso.ribDepth) * DM, 0.74 * DM, 0.76 * DM, 0.64 * DM, 0.7 * DM, 0.62 * DM], yy);
+  const k = (yy: number): number => prof(ky, [0.65, 0.58 * (0.36 / SL.base), 0.5 * (0.62 / SL.yk), 0.46 * td * (0.9 / SL.acr), 0.7 * td, 0.74 * td, (0.9 + 0.1 * vp.torso.ribDepth) * DM * YR, 0.74 * DM * RAMP, 0.76 * DM * RAMP, 0.64 * DM, 0.7 * DM, 0.62 * DM], yy);
   const bellyAmt = Math.min(1.2, 0.55 * f.fat + 0.6 * vp.torso.belly), yb = (y.waist + y.navel) / 2 + 0.05 * tl;
   const belly = (yy: number): number => bellyAmt * x.waist * 0.42 * Math.exp(-(((yy - yb) / (0.2 * tl)) ** 2));
   // Fessier : sommet SOUS la crête iliaque (≈ niveau du grand trochanter) — avant l'itération 04 il culminait à la crête et poussait le dos 0,29 h trop en arrière dans la bande navel→crête de ref-04.

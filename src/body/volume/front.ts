@@ -11,6 +11,8 @@ const A = (y: number, psi: number, a: number, b: number, lift?: number): Anchor 
 const fan = (n: number, w: number): number[] => Array.from({ length: n }, (_, i) => Math.PI / 2 + w * ((i / (n - 1)) * 2 - 1));
 
 /** Face antérieure : pectoraux (faisceaux + striations), seins, abdominaux IRRÉGULIERS (4 × 2 blocs distincts), obliques, dentelé, intercostaux, crête iliaque, V inguinal, clavicule, cou. */
+/** Épaisseur du bord inférieur du grand pectoral (× canon) : −20 % pour que la poitrine rejoigne le ventre par une rampe (mesure : profil de ref-04, bande du mamelon). */
+const PEC = 0.8;
 export function frontVolumes(tr: Trunk, nk: Neck, f: BodyFrame, bp: BodyParams, vp: VolumeParams): Volume[] {
   const H = f.h, y = f.y, tl = y.navel - y.base, out: Volume[] = [], r = rng(vp.seed * 977 + 13), jit = (k: number): number => 1 + k * (r() * 2 - 1);
   const mid = (a: number, b: number): number => (a + b) / 2;
@@ -18,7 +20,7 @@ export function frontVolumes(tr: Trunk, nk: Neck, f: BodyFrame, bp: BodyParams, 
   out.push(...both(tr, { id: 'pectoralis.clav', name: 'grand pectoral — chef claviculaire', group: 'chest', layer: 4, tier: 2, fibres: fan(5, 0.8), origin: 'clavicle', insertion: 'humerus' },
     [A(y.base + 0.07 * H, 0.14, 0.04 * H, 0.02 * H), A(mid(y.base, y.acr) + 0.07 * H, 0.55, 0.05 * H, 0.03 * H), A(y.axilla - 0.1 * H, 1.1, 0.035 * H, 0.03 * H)]));
   out.push(...both(tr, { id: 'pectoralis.sternal', name: 'grand pectoral — chef sterno-costal', group: 'chest', layer: 4, tier: 1, fibres: fan(7, 0.95), origin: 'sternum', insertion: 'humerus' },
-    [A(mid(y.axilla, y.nipple) + 0.05 * H, 0.1, 0.13 * H, 0.04 * H), A(mid(y.axilla, y.nipple) + 0.01 * H, 0.55, 0.12 * H, 0.052 * H), A(y.axilla - 0.01 * H, 1.12, 0.05 * H, 0.04 * H)]));
+    [A(mid(y.axilla, y.nipple) + 0.05 * H, 0.1, 0.13 * H, 0.04 * H * PEC), A(mid(y.axilla, y.nipple) + 0.01 * H, 0.55, 0.12 * H, 0.052 * H * PEC), A(y.axilla - 0.01 * H, 1.12, 0.05 * H, 0.04 * H)]));
   // Seins (adulte seulement : garde-fou hérité du moteur 2D) : volume 3D posé sur le pectoral, projection indépendante.
   const bAmt = f.age >= 18 ? Math.max(0, Math.min(1, 0.5 - 0.55 * f.dim)) : 0;
   if (bAmt > 0.08) {
