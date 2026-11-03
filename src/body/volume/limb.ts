@@ -31,7 +31,7 @@ export function armChain(tr: Trunk, f: BodyFrame, pose: ArmPose, swing: number, 
   return { side, sh, el, wr, up, fa, ant: ant0, fant };
 }
 
-const sinProf = (t: number, belly: number, tend = 0.12): number => { const k = Math.log(0.5) / Math.log(Math.min(0.95, Math.max(0.05, belly))); return Math.max(tend, Math.sin(Math.PI * t ** k) ** 0.8); };
+export const sinProf = (t: number, belly: number, tend = 0.12): number => { const k = Math.log(0.5) / Math.log(Math.min(0.95, Math.max(0.05, belly))); return Math.max(tend, Math.sin(Math.PI * t ** k) ** 0.8); };
 /**
  * Fuseau musculaire 3D le long d'un os (p0→p1) : de t0 à t1, décalé de (offA devant, offL latéral) × demi-épaisseur, ventre en `belly`, gaines tendineuses aux bouts.
  * `ant` donne la face visible. Renvoie les points de contrôle prêts pour `vol`.

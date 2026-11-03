@@ -1,6 +1,5 @@
 import type { BodyFrame } from '../frame';
-import { legFrame } from '../lower/frame';
-import { LegParams } from '../lower/types';
+import type { LegFrame } from '../lower/frame';
 import type { BodyParams } from '../types';
 import { loft, type Ctl } from './loft';
 import type { VolumeParams } from './params';
@@ -33,12 +32,12 @@ export interface Trunk {
   readonly crotchY: number;
   readonly envelope: Volume;
 }
-export function makeTrunk(f: BodyFrame, _bp: BodyParams, vp: VolumeParams): Trunk {
+export function makeTrunk(f: BodyFrame, _bp: BodyParams, vp: VolumeParams, lf: LegFrame): Trunk {
   void _bp;
   const h = f.h, spine = makeSpine(f, vp), y = f.y, x = f.x, tl = y.navel - y.base;
   // `yr` = bas de la cage thoracique (entre mamelon et taille) : point-clé ajouté à l'itération 04 (profil ref-04 : le thorax inférieur manquait de 0,14–0,19 h de profondeur).
   // BASSIN (itération 05) : le tronc ne s'arrêtait plus à la crête par une coupe plate ; il se prolonge jusqu'à la fourche (mêmes cotes que `lower/frame.ts`) en passant par le grand trochanter (`yh`, plus large que la crête), ce qui donne au haut et au bas du corps UNE seule enveloppe de peau.
-  const crotch = legFrame(f, LegParams.parse({})).y.crotch, yh = y.crop + 0.4 * (crotch - y.crop);
+  const crotch = lf.y.crotch, yh = y.crop + 0.4 * (crotch - y.crop);
   const yt = y.base - 0.06 * h, yk = y.base + 0.45 * (y.acr - y.base), yr = (y.nipple + y.waist) / 2, ky = [yt, y.base, yk, y.acr, y.axilla, y.nipple, yr, y.waist, y.navel, y.crop, yh, crotch];
   // PENTE DU TRAPÈZE (itération 05) : coefficients balayés (voir docs/BODY-UPPER-LIMB-05.md) sur la SILHOUETTE complète alignée sur l'axe du corps (ref-02 : écart moyen 0,031 tête ; ref-04 : 0,032–0,053) ET sur le dépassement muscles/os − peau (≤ 0,03 h sur la pente, des deux côtés). Plus étroit (0,36 / 0,62 / 0,90, ancien) : les muscles débordent de 0,05 h ; plus large (0,40 / 0,73 / 1,00) : la silhouette dépasse ref-02 de 0,05 h.
   const SL = { base: 0.38, yk: 0.66, acr: 0.94 };

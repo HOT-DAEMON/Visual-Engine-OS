@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { LegParams } from '../lower/types';
 
 const Signed = z.number().min(-1).max(1);
 const Unit = z.number().min(0).max(1);
@@ -16,6 +17,8 @@ export const VolumeParams = z.object({
   /** Balancement des bras (°, + = vers l'avant) : un par côté ; indépendants (marche = signes opposés). */
   swing: z.object({ left: z.number().min(-35).max(45).default(6), right: z.number().min(-35).max(45).default(-4) }).strict().default({}),
   /** Doigts relâchés : 0 = identiques, 1 = longueurs/orientations/flexions très variées (déterministe par `seed`). */
+  /** Jambes (proportions et poses) : MÊME schéma que le module 2D du bas du corps — `legGeometry` en dérive les cotes, la 3D n'en recalcule aucune. */
+  legs: LegParams.default({}),
   fingerRelax: Unit.default(0.6),
   seed: z.number().int().default(7),
 }).strict();
