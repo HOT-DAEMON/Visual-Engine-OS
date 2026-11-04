@@ -1,8 +1,7 @@
-import { luminance, darken } from '../core/color';
 import { BODY_CONTRACTS } from '../body/contracts';
 import { canonAt, stageOf } from '../body/canon';
 import type { BodyGeo } from '../body/geometry';
-import type { BodyMarkup } from '../body/render';
+import { contrastRatio, inkOf, inkTarget, type BodyMarkup } from '../body/render';
 import { area, box, centroid, inPoly } from '../body/shape';
 import type { Atom } from '../body/types';
 import { check, report, type Check, type Report } from './types';
@@ -84,8 +83,8 @@ export function verifyBody(geo: BodyGeo, markup?: BodyMarkup, skin = '#c99a76'):
     C.push(check('style', 'body.no-filter', '==', (svg.match(/<filter/g) ?? []).length, 0, 'aucun filtre SVG : le coût d’un corps est ses chemins'));
     const widths = new Set([...svg.matchAll(/stroke-width="([^"]+)"/g)].map((x) => x[1]));
     C.push(check('style', 'body.stroke-budget', '<=', widths.size, 12, 'épaisseurs de trait en nombre limité (trait homogène)', 'warn'));
-    const ink = darken(skin, 0.62);
-    C.push(check('style', 'body.ink-contrast', '>=', Math.abs(luminance(skin) - luminance(ink)), 0.2, 'contraste trait / peau suffisant'));
+    // Rapport de contraste RELATIF (une différence absolue de luminance pénalise toute peau foncée par construction) ; le trait lui-même s'adapte (`inkOf`).
+    C.push(check('style', 'body.ink-contrast', '>=', contrastRatio(skin, inkOf(skin)), inkTarget(skin), 'contraste trait / peau suffisant (rapport relatif)'));
     C.push(check('style', 'body.svg-weight', '<=', svg.length, 400_000, 'poids du SVG du corps ≤ 400 Ko', 'warn'));
   }
   return report(C);

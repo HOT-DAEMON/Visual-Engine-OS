@@ -167,6 +167,8 @@ Tout fichier de `docs/` est limité à ~200 lignes ; au-delà, une suite numéro
 
 ## Moteur de visage (anatomie, peau, éclairage, contact)
 
+> Identité des composants, relations et branchement tête + corps : `ANATOMY-CONTRACT.md`, `PIPELINE-WIRING.md` (restes : `TODO-HEAD-BODY-PIPELINE.md`).
+
 Voir `docs/FACE-ANATOMY.md` (nez, menton, mâchoire), `docs/SKIN-LIGHT.md` (matériau de peau, éclairage, Rendu = f(géométrie, matériaux, éclairage, caméra)),
 `docs/CONTACT-RIM.md` (ombres de contact, lumières de contour), `docs/TODO-FACE.md` (reste à faire). Modules : `src/face/{nose,jaw}`, `src/skin`, `src/contact`, `src/lighting/rig.ts`.
 

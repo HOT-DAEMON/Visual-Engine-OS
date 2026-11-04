@@ -1,4 +1,4 @@
-import { darken, lighten, mix } from '../core/color';
+import { darken, lighten, luminance, mix } from '../core/color';
 import { el, urlRef } from '../core/svg';
 import type { BodyGeo } from './geometry';
 import { reveal, tierOf } from './muscle-tiers';
@@ -23,6 +23,20 @@ function hslHex(hh: number, s: number, l: number): string {
   const f = (n: number): string => Math.round(255 * (l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))))).toString(16).padStart(2, '0');
   return `#${f(0)}${f(8)}${f(4)}`;
 }
+/** Rapport de contraste (lumière relative + 0,05) entre deux couleurs. */
+export const contrastRatio = (a: string, b: string): number => { const x = luminance(a), y = luminance(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+/** Rapport visé entre la peau et son trait : 2,0, ou 80 % du maximum atteignable (trait noir) quand la peau est si foncée que 2,0 est inatteignable. */
+export const inkTarget = (skin: string): number => Math.min(2, 0.8 * contrastRatio(skin, '#000000'));
+/**
+ * Couleur du trait d'une peau. Historique : `darken(peau, 0,62)` — suffisant sur peau claire (rapport ≥ 2,2) mais un assombrissement RELATIF
+ * donne un trait presque invisible sur peau foncée (rapport 1,23 sur #3b2219). On assombrit alors davantage, jusqu'au rapport visé ;
+ * sur peau claire le résultat est IDENTIQUE à l'historique (aucune régression visuelle).
+ */
+export function inkOf(skin: string): string {
+  let t = 0.62, ink = darken(skin, t);
+  while (contrastRatio(skin, ink) < inkTarget(skin) && t < 0.97) { t = Math.min(0.97, t + 0.02); ink = darken(skin, t); }
+  return ink;
+}
 const hash = (s: string): number => { let x = 2166136261; for (let i = 0; i < s.length; i++) x = Math.imul(x ^ s.charCodeAt(i), 16777619); return x >>> 0; };
 
 /**
@@ -32,7 +46,7 @@ const hash = (s: string): number => { let x = 2166136261; for (let i = 0; i < s.
  */
 export function renderBody(geo: BodyGeo, o: BodyRenderOpts): BodyMarkup {
   const { frame: f } = geo, h = f.h, level = o.level ?? 3, uid = o.uid ?? 'bd';
-  const skin = o.skin, ink = darken(skin, 0.62), shade = darken(skin, 0.2), sw = 0.0085 * h;
+  const skin = o.skin, ink = inkOf(skin), shade = darken(skin, 0.2), sw = 0.0085 * h;
   /** Visibilité du relief musculaire : STRICTEMENT nulle quand la définition est nulle (un nourrisson n'a ni abdominaux ni pectoraux visibles). */
   const vis = clamp01(1.4 * f.vis);
   const shown = geo.atoms.filter((a) => a.view === 'front' && a.level <= level).sort((a, b) => a.z - b.z);

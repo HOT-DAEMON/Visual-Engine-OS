@@ -6,3 +6,4 @@ export { compileHost } from './host';
 export { compileCompoundEye } from './compound';
 export { compileGemEye } from './gem';
 export { objectTransform, type CompiledObject } from './object';
+export { compileBody } from './body';

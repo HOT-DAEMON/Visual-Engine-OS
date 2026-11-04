@@ -53,10 +53,18 @@ function contactSpecs(p: FaceParams, lm: FaceLandmarks): Record<string, ContactS
   return { ...c, jaw: { ...c.jaw, softness: Math.min(1, c.jaw.softness * 0.5 + 0.5 * j.neckTransition), strength: Math.min(1, c.jaw.strength * (1 + 0.6 * lm.jaw.tissue.submentalTension)) } };
 }
 
-export function faceParts(h: HostSpec, L: LightVector, rot: number): FaceParts {
+/**
+ * Source UNIQUE des paramètres STYLISÉS et des repères d'un hôte `shape: 'face'`. Le visage (`faceParts`) et tout enfant du cou (le corps)
+ * lisent le même objet : aucune deuxième définition du cou n'existe.
+ */
+export function hostFace(h: HostSpec): { readonly params: FaceParams; readonly lm: FaceLandmarks } {
   // Profil de stylisation appliqué UNE fois (idempotent, neutre par défaut) : la géométrie lue partout ensuite est la géométrie stylisée.
   const params = applyStylization(FaceParams.parse(h.face ?? {}));
-  const lm = faceLandmarks(params, h.width, h.height);
+  return { params, lm: faceLandmarks(params, h.width, h.height) };
+}
+
+export function faceParts(h: HostSpec, L: LightVector, rot: number): FaceParts {
+  const { params, lm } = hostFace(h);
   const skin = dominantColor(h.material.base);
   // Apparence de la peau : teinte d'ombre (proche de la peau, légèrement bleutée), lumière et contour lues par TOUS les enfants.
   // Mode de rendu `anime` : aplats à bords nets (ombrage `cel`) ; la géométrie n'est pas touchée.

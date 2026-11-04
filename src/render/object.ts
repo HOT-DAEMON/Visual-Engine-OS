@@ -6,6 +6,8 @@ export interface CompiledObject {
   readonly markup: string;
   /** Dessiné APRÈS tous les objets de la scène (mèches de cheveux qui passent devant les yeux) ; même transformation que `markup`. */
   readonly overlay?: string;
+  /** Dessiné AVANT tous les objets (juste après le fond) ; même transformation que `markup` (corps derrière le visage). */
+  readonly underlay?: string;
 }
 
 export function objectTransform(t: Transform): string {

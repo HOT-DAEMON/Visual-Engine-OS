@@ -2,40 +2,11 @@ import { getNoiseMode } from './noise';
 import { clock } from './perf/clock';
 import { ContentCache, canonical, type CacheStats } from './perf/content-cache';
 import type { z } from 'zod';
-import {
-  compileCompoundEye,
-  compileEye,
-  compileGemEye,
-  compileHost,
-  compilePanel,
-  compileRobotEye,
-  type CompiledObject,
-} from './render';
-import { expandScene, type SceneObject } from './composition/expand';
-import { lightVector, type LightVector } from './lighting/light';
-import { SceneSpec } from './schema';
+import { compileObject } from './render/registry';
+import { expandScene } from './composition/expand';
+import { lightVector } from './lighting/light';
+import { SceneSpec, type HostSpec } from './schema';
 import { el } from './core/svg';
-
-function compileObject(obj: SceneObject, light: LightVector): CompiledObject {
-  switch (obj.kind) {
-    case 'eye':
-      return compileEye(obj, light);
-    case 'robot_eye':
-      return compileRobotEye(obj, light);
-    case 'panel':
-      return compilePanel(obj, light);
-    case 'host':
-      return compileHost(obj, light);
-    case 'compound_eye':
-      return compileCompoundEye(obj, light);
-    case 'gem_eye':
-      return compileGemEye(obj, light);
-    default: {
-      const unreachable: never = obj;
-      throw new Error(`Type d'objet non géré : ${JSON.stringify(unreachable)}`);
-    }
-  }
-}
 
 /** Compile une scène DÉJÀ validée en SVG. Pure et déterministe : même scène => même chaîne. */
 export function renderScene(scene: SceneSpec): string {
@@ -45,15 +16,22 @@ export function renderScene(scene: SceneSpec): string {
 
 function renderSceneUntimed(scene: SceneSpec): string {
   const light = lightVector(scene.light);
+  const hosts = new Map<string, HostSpec>();
+  for (const o of scene.objects) if (o.kind === 'host') hosts.set(o.id, o);
+  const ctx = { light, hosts };
   const defs: string[] = [];
+  const underlays: string[] = [];
   const body: string[] = [];
   const overlays: string[] = [];
   for (const obj of expandScene(scene)) {
-    const out = compileObject(obj, light);
+    const out = compileObject(obj, ctx);
     defs.push(...out.defs);
+    if (out.underlay) underlays.push(out.underlay);
     body.push(out.markup);
     if (out.overlay) overlays.push(out.overlay);
   }
+  // Calque sous la scène : ce qui passe DERRIÈRE les hôtes (corps derrière le visage), juste après le fond.
+  body.unshift(...underlays);
   // Calque final : ce qui passe DEVANT les enfants posés sur l'hôte (cheveux devant les yeux).
   body.push(...overlays);
   const background = scene.background

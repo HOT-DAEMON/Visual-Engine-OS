@@ -7,6 +7,7 @@ import { CompoundEyeSpec } from './compound-eye';
 import { GemEyeSpec } from './gem-eye';
 import { PanelSpec } from './panel';
 import { HostSpec } from './host';
+import { BodySpec } from './body';
 import { LightSpec } from './light-transform';
 
 export const SceneSpec = z
@@ -21,7 +22,7 @@ export const SceneSpec = z
       .regex(/^[^\u0000-\u001f]*$/, 'caractères de contrôle interdits')
       .optional(),
     light: LightSpec.default({}),
-    objects: z.array(z.discriminatedUnion('kind', [EyeSpec, RobotEyeSpec, PanelSpec, HostSpec, CompoundEyeSpec, GemEyeSpec])).min(1).max(256),
+    objects: z.array(z.discriminatedUnion('kind', [EyeSpec, RobotEyeSpec, PanelSpec, HostSpec, CompoundEyeSpec, GemEyeSpec, BodySpec])).min(1).max(256),
   })
   .strict()
   .superRefine((scene, ctx) => {
@@ -48,6 +49,15 @@ export const SceneSpec = z
           if (seen.has(a.id)) issue(['objects', i, 'anchors'], `ancre dupliquée dans l'hôte ${o.id} : ${a.id}`);
           seen.add(a.id);
         }
+      }
+
+      if (o.kind === 'body') {
+        const host = hosts.get(o.host);
+        if (!host) issue(['objects', i, 'host'], `hôte introuvable : ${o.host}`);
+        else if (host.shape !== 'face') issue(['objects', i, 'host'], `le corps se suspend au cou d'un hôte shape: 'face' (${o.host} est ${host.shape})`);
+        else if (scene.objects.some((q, j) => j < i && q.kind === 'body' && q.host === o.host)) issue(['objects', i, 'host'], `un seul corps par hôte : ${o.host}`);
+        claim(o.id, i);
+        return;
       }
 
       if ('place' in o && o.place) {

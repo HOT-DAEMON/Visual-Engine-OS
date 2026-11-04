@@ -91,7 +91,7 @@ export function armChain(f: BodyFrame, p: BodyParams, side: 'L' | 'R'): ArmResul
   out.push(mk(part('shoulder.joint'), 'landmark', part('upper-arm'), part('arm.upper'), 3, dot(J, 0.02 * h), { side: sd }));
   out.push(mk(part('elbow.epicondyle.lateral'), 'landmark', part('forearm'), part('arm.fore'), 3, dot(add(E, mul(n0, w * 0.78)), 0.018 * h), { side: sd }));
   out.push(mk(part('elbow.epicondyle.medial'), 'landmark', part('forearm'), part('arm.fore'), 3, dot(sub(E, mul(n0, w * 0.82)), 0.02 * h), { side: sd }));
-  out.push(mk(part('elbow.olecranon'), 'bone', part('forearm'), part('arm.fore'), 3, dot(add(E, mul(d1, 0.02 * h)), 0.03 * h, 7), { side: sd, view: palmar ? 'occluded' : 'front' }));
+  out.push(mk(part('elbow.olecranon'), 'bone', part('forearm'), part('arm.fore'), 3, dot(add(E, mul(d1, 0.02 * h)), 0.03 * h, 8), { side: sd, view: palmar ? 'occluded' : 'front' }));
   out.push(mk(part('elbow.cubital-fossa'), 'fat', part('forearm'), part('arm.fore'), 3, [add(E, mul(d0, -0.1 * h)), add(add(E, mul(n0, w * 0.3)), mul(d1, 0.08 * h)), add(sub(E, mul(n0, w * 0.3)), mul(d1, 0.08 * h))], { side: sd, tone: -0.25, ...(palmar ? {} : { view: 'occluded' as const }) }));
   const tau = (palmar ? 1 : -1) as 1 | -1;
   out.push(mk(part('wrist.styloid.radial'), 'landmark', part('forearm'), part('arm.fore'), 3, dot(add(Wp, mul(n1, tau * arm.wristHalf * 0.85)), 0.016 * h), { side: sd }));

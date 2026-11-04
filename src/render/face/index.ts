@@ -1,1 +1,1 @@
-export { faceSurface, faceParts, type FaceParts } from './face';
+export { faceSurface, faceParts, hostFace, type FaceParts } from './face';
