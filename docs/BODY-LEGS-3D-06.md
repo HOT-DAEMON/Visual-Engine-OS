@@ -14,7 +14,7 @@ Branche `feat/hair-grammar`. Suite de `BODY-JUNCTIONS-05.md`. Ce qui reste, comp
 | 5 | Brancher le corps au pipeline principal | **Non fait** (`BODY-LEGS-3D-06-REMAINING.md` §8) |
 | 6 | Rampe poitrine → ventre | **Fait** (mesuré contre ref-04) |
 | 7 | Deltoïde enveloppant | **Non fait** |
-| 8 | Continuer le membre supérieur / fidélité pixel par pixel « parfaite » | **Non atteint** : seule la rampe touche le haut du corps ; jambes mesurées surtout à l'œil (§ bilan) |
+| 8 | Continuer le membre supérieur / fidélité pixel par pixel « parfaite » | **Non atteint** : seule la rampe touche le haut du corps ; jambes : IoU de silhouette mesuré 0,436 → 0,788 avec un préréglage (§ Fidélité des jambes), formes encore différentes |
 | 9 | Extraire toute l'information de l'image de référence | **Partiel** : inventaire musculaire de ref-02 (quadriceps à 3 chefs, sartorius oblique, adducteurs, tibial antérieur, gastrocnémien, soléaire) ; profil de ref-04 mesuré par bandes ; rien d'autre n'a été mesuré |
 | 10 | Dossier artefacts avec preuves visuelles (toute la tête) | **Fait** (`01-corps-avec-tete.png` : tête et corps entier) |
 | 11 | Docs ≤ 200 lignes, suites si besoin | **Fait** (tous < 100 lignes) |
@@ -42,17 +42,28 @@ Branche `feat/hair-grammar`. Suite de `BODY-JUNCTIONS-05.md`. Ce qui reste, comp
 | Plus grand saut de profondeur (ref-04 : 0,086 h) | 0,21 h | ≤ 0,126 h (6 morphologies × 2 profils) |
 | Atomes 2D du bas du corps ayant un volume 3D de même id | 0 | 148 / 148 |
 | Longueur fémur/tibia 3D contre `legGeometry` | — | écart ≤ 0,23 % |
-| Dépassement max des muscles hors de la peau (très musclé) | — | 0,042 h (borne 0,05 h) |
+| Dépassement max des muscles hors de la peau (très musclé ; enfant) | — | 14,1 % = 0,031 h ; 6,2 % = 0,008 h (borne 20 %) |
 
 Sorties brutes : `artefacts/upper-limb-06/avant|apres/rampe-profil.json`. Outils : `scripts/body-refs/profile-edges.ts`, `legs-snap.ts`.
 
+## Fidélité des jambes à ref-02 (mesurée)
+`scripts/body-refs/legs-iou.ts` : IoU de silhouette dans la région y ≥ crotchY (bras exclus), même alignement que `iou.ts` (une hauteur de tête, base du cou). Archétype `veryMuscular`, vue de face.
+| | Défauts | `LEGS_REF02` |
+|---|---|---|
+| IoU des jambes | **0,436** | **0,788** |
+| Largeur de ligne (erreur moyenne) | 0,302 | 0,056 |
+| Cuisses, ref → moteur (px) | 184 → 139 | 184 → 194 |
+| Genoux, ref → moteur (px) | 221 → 141 | 221 → 221 |
+| Sol, ref → moteur (px) | 865 → 836 | 865 → 865 |
+`LEGS_REF02` (`lower/presets.ts`) vient d'une descente de coordonnées (`legs-fit.ts`, 2 passes) : écartement 10° (défaut 4°), pieds droits, cuisse +1, jambe +0,8, tour de cuisse +1, mollet +0,8. **Cuisse et tour de cuisse sont à leur borne** : ref-02 est plus massive que le canon, ce n'est pas un défaut à corriger dans les valeurs par défaut. Ce n'est pas un réglage universel (une seule planche, un seul archétype). Le gain vient surtout de l'écartement (0,436 → 0,669 avec 10° seuls). Limite : l'écartement relève les pieds (le bassin ne s'abaisse pas), le réglage compense en allongeant les jambes. Formes toujours différentes (`16-jambes-ref02-prereglage.png`). Tests : `tests/body-legs-ref02.test.ts`.
+
 ## Vérification des jambes (`verifyLegs3D`, 13 contrôles)
-- **Géométrie** : parité d'identifiants 2D↔3D ; cotes 3D = `legGeometry` (≤ 3 %) ; muscles dans la coque de peau (≤ 0,05 h, section **interpolée exactement** à la hauteur mesurée) ; symétrie gauche/droite ; pied posé au sol (si genou non fléchi).
-- **Anatomie** : rotule au-dessus de la tubérosité, toutes deux en avant du genou, tête du péroné plus latérale ; malléole latérale plus distale ; loges avant/arrière distinctes (> 0,04 h) ; orteils décroissants, gros orteil médial ; origine/insertion ≥ 85 % des muscles de niveau 2.
+- **Géométrie** : parité d'identifiants 2D↔3D ; cotes 3D = `legGeometry` (≤ 3 %) ; muscles dans la coque de peau (≤ 20 % de la demi-épaisseur locale ; la coque du modèle va jusqu'à 14 % ; section **interpolée exactement** à la hauteur mesurée) ; symétrie gauche/droite ; pied à la hauteur attendue pour la chaîne du squelette (écartement compris, si genou non fléchi).
+- **Anatomie** : rotule au-dessus de la tubérosité, toutes deux en avant du genou, tête du péroné plus latérale ; malléole latérale plus distale **dans le repère de la jambe** ; loges avant/arrière distinctes (> 0,04 h) ; orteils décroissants, gros orteil médial ; origine/insertion ≥ 85 % des muscles de niveau 2.
 - **Style** : peau, pied et orteils fusionnés dans le tampon de peau, muscles en couches ≥ 3, os cachés sauf la rotule ; relief de luminance de la cuisse comparé à celui du tronc (bande 0,4–3 si définition ≥ 0,25) ; aucun trou translucide.
-Contrôles négatifs (3) : mollet gonflé, quadriceps passé derrière le fémur, volume 2D sans équivalent 3D. **Une erreur de ma première version** : le contrôle de coque échantillonnait des tranches trop fines et donnait des dépassements de 0,35 h faux ; remplacé par l'interpolation exacte. Seuils fixés après observation des 13 archétypes : ils protègent d'une régression, ils ne prouvent pas la fidélité.
+Contrôles négatifs (3) : mollet gonflé, quadriceps passé derrière le fémur, volume 2D sans équivalent 3D. **Une erreur de ma première version** : le contrôle de coque échantillonnait des tranches trop fines et donnait des dépassements de 0,35 h faux ; remplacé par l'interpolation exacte. **Trois contrôles corrigés après le préréglage `LEGS_REF02`** (c'étaient mes contrôles qui avaient tort) : borne de coque absolue → relative ; sol attendu sans tenir compte de l'écartement → chaîne exacte ; malléoles comparées dans le repère du monde → repère de la jambe. Seuils fixés après observation des 13 archétypes : ils protègent d'une régression, ils ne prouvent pas la fidélité.
 
 ## Bilan honnête
 - Les jambes ne sont plus des tubes lisses sous un tronc sculpté et se lisent comme des jambes dans toutes les vues et poses testées (genou fléchi, écartement, pieds tournés, orteils écartés) ; `artefacts` 02–09 et 13.
-- Comparée à ref-02 (`10-jambes-ref02-vs-moteur.png`), la forme reste loin : jambes plus rapprochées et plus étroites aux cuisses, pieds plus petits, quadriceps en fuseaux séparés. **Aucun IoU de jambes n'a été mesuré** : c'est le premier reste.
+- Comparée à ref-02 (`10`, `16`), la silhouette est loin avec les défauts (IoU 0,436) et correcte avec le préréglage (0,788) ; la forme reste différente (quadriceps en fuseaux séparés au lieu de la goutte de ref-02, genou plus petit, pieds plus petits).
 - Le style est vérifié par des écarts-types de luminance, pas par un jugement artistique ; les images restent à juger à l'œil.

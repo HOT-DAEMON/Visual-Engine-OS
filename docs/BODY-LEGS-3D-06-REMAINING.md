@@ -3,8 +3,10 @@
 Rien de ce qui suit n'est fait. Fait : `BODY-LEGS-3D-06.md`. Constats tirés des artefacts `artefacts/upper-limb-06/` ; ce qui n'est pas mesuré est dit « à l'œil ».
 
 ## 1. Fidélité aux références (le gros manque)
-- **Aucun IoU de silhouette des jambes** contre ref-02. À l'œil (`10-jambes-ref02-vs-moteur.png`) : jambes plus rapprochées, cuisses plus étroites (vaste latéral sans le renflement de ref-02), pieds plus petits, figure d'environ 0,1 tête plus courte (non mesuré). À faire : masque de jambes de ref-02, alignement par axe et base du cou, IoU par bandes comme `profile-edges.ts`.
-- La planche ref-03 (pieds) n'a pas été exploitée ; les profils du pied (`FOOT` dans `foot3d.ts`) sont des conventions d'atelier, pas des mesures.
+- IoU des jambes contre ref-02 : 0,436 (défauts) → 0,788 (`LEGS_REF02`) ; mesuré, voir `BODY-LEGS-3D-06.md`. Restent : une seule planche (ref-02) et un seul archétype ; ni ref-01 ni ref-04 pour les jambes ; vue de face seulement (aucune référence de profil ou de dos des jambes mesurée).
+- Cuisse et tour de cuisse du préréglage sont à leur borne : décider d'élargir la plage des paramètres (±12 %) ou d'ajouter un archétype « héroïque ».
+- Pas de compensation de la hauteur quand les jambes s'écartent (le bassin ne s'abaisse pas) : le réglage allonge les jambes à la place.
+- La planche ref-03 (pieds) n'a pas été exploitée ; les profils du pied (`FOOT` dans `foot3d.ts`) sont des conventions d'atelier, pas des mesures. Pieds plus petits que ceux de ref-02 (non mesuré).
 
 ## 2. Peau et raccord au bassin
 - Liseré horizontal à l'aine : le bas du tronc se termine net et les cuisses, plus larges que le bassin, en sortent (`01-corps-avec-tete.png`). Il faut un fondu des normales aux intersections peau/peau (déjà listé en 05).

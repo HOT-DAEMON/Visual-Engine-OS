@@ -21,8 +21,8 @@ export function loadRef(name: RefName = 'ref-02'): Ref {
 export interface Fit { readonly s: number; readonly ox: number; readonly oy: number; readonly mask: Uint8Array; readonly rgba: Uint8Array }
 const CAM: Camera = { yaw: 0, pitch: 0, pivot: { x: 0, y: 0, z: 0 } };
 /** Rend le corps (de face, sans fond) dans la grille de la référence. `svgOf` permet de brancher un autre rendu (ex. pixel). */
-export function fitToRef(ref: Ref, body: BodyInput, a: NeckAnchor, skin: string, svgOf?: (set: ReturnType<typeof bodyVolumes>) => string): Fit {
-  const set = bodyVolumes(body, a, {});
+export function fitToRef(ref: Ref, body: BodyInput, a: NeckAnchor, skin: string, svgOf?: (set: ReturnType<typeof bodyVolumes>) => string, extra: object = {}): Fit {
+  const set = bodyVolumes(body, a, extra);
   let fy = -Infinity, xl = Infinity, xr = -Infinity;
   for (const v of set.volumes) if (v.group === 'hand') for (const s of v.stations) { fy = Math.max(fy, s.c.y); xl = Math.min(xl, s.c.x); xr = Math.max(xr, s.c.x); }
   const m = renderVolumes(set, { skin, camera: CAM, uid: 'iou' });

@@ -4,7 +4,9 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { ARCHETYPES, composeFigure, type BodyInput } from '../src/body';
-import { figureBounds, figureMarkup, legGeometry } from '../src/body/lower';
+import { LEGS_REF02, figureBounds, figureMarkup, legGeometry } from '../src/body/lower';
+import { legsIou } from './body-refs/legs-iou';
+import { fitToRef } from './body-refs/iou';
 import { bodyVolumes, renderVolumes, renderVolumesPixel, type Camera } from '../src/body/volume';
 import { verifyLegs3D } from '../src/verify';
 import { BG, bodyHost } from './lib/body-host';
@@ -34,6 +36,12 @@ pair('08-pied-trois-quarts-avant-apres', 'pied-trois-quarts', 0.53, 900, ['AVANT
   const left = `<svg x="10" y="35" width="520" height="${hh}" viewBox="${vb}"><image width="${ref.w}" height="${ref.h}" href="${uri(ref.meas.file as string, 'image/jpeg')}"/></svg>`;
   const right = `<svg x="540" y="35" width="520" height="${hh}" viewBox="${vb}"><rect width="${ref.w}" height="${ref.h}" fill="${BG}"/><g transform="translate(${ref.meas.centerX} ${ref.meas.neckBaseY - H.a.baseY * s}) scale(${s})">${r.svg}</g></svg>`;
   png('10-jambes-ref02-vs-moteur', 1070, hh + 50, left + right + T(270, 24, 'ref-02 (muscles colorés par groupe)', 16) + T(800, 24, 'moteur itération 06 (très musclé)', 16)); }
+// 16 — ref-02 | moteur par défaut | moteur avec le préréglage LEGS_REF02 (IoU des jambes mesuré)
+{ const ref = loadRef('ref-02'), raw = ARCHETYPES.veryMuscular as BodyInput, hd = ref.meas.head.height as number, s = hd / H.a.h, y0 = (ref.meas.crotchY as number) - 0.3 * hd, hv = ref.h - y0, vb = `${ref.meas.centerX - 1.6 * hd} ${y0} ${3.2 * hd} ${hv}`, k = 420 / (3.2 * hd), hh = hv * k;
+  const col = (i: number, inner: string): string => `<svg x="${10 + i * 430}" y="35" width="420" height="${hh}" viewBox="${vb}">${inner}</svg>`;
+  const eng = (extra: object, uid: string): string => `<rect width="${ref.w}" height="${ref.h}" fill="${BG}"/><g transform="translate(${ref.meas.centerX} ${ref.meas.neckBaseY - H.a.baseY * s}) scale(${s})">${renderVolumes(bodyVolumes(raw, H.a, extra), { skin: H.skin, camera: cam(0), uid }).svg}</g>`;
+  const i0 = legsIou(ref, fitToRef(ref, raw, H.a, H.skin)), i1 = legsIou(ref, fitToRef(ref, raw, H.a, H.skin, undefined, { legs: LEGS_REF02 }));
+  png('16-jambes-ref02-prereglage', 1300, hh + 80, col(0, `<image width="${ref.w}" height="${ref.h}" href="${uri(ref.meas.file as string, 'image/jpeg')}"/>`) + col(1, eng({}, 'p0')) + col(2, eng({ legs: LEGS_REF02 }, 'p1')) + T(220, 24, 'ref-02', 16) + T(650, 24, `moteur, valeurs par défaut — IoU jambes ${i0.iou.toFixed(3)}`, 15) + T(1080, 24, `moteur, LEGS_REF02 — IoU jambes ${i1.iou.toFixed(3)}`, 15) + T(650, hh + 62, 'cuisses et tour de cuisse du préréglage à leur borne (+12 %) : la figure de ref-02 est plus massive que le canon', 13, '#cfd6e6')); }
 // 11 — source unique : jambes 2D (module lower) | jambes 3D, même morphologie, mêmes paramètres
 { const mk = figureMarkup(ARCHETYPES.veryMuscular as BodyInput, {}, H.a, { skin: H.skin, uid: 'p2d' }), r = m('veryMuscular', 0, 1400), b = r.bounds, hh = b.y1 - b.y0, W = 0.5 * hh * (760 / (0.6 * hh)) * 0 + 560;
   const mb = figureBounds(legGeometry(ARCHETYPES.veryMuscular as BodyInput, {}, H.a)), mh = mb.y1 - mb.y0, mw = mb.x1 - mb.x0;

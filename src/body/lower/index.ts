@@ -3,4 +3,5 @@ export { legGeometry, type LegGeo } from './geometry';
 export { renderLegs } from './render';
 export { figureMarkup, figureBounds } from './markup';
 export { lowerCanonAt } from './canon';
+export { LEGS_REF02 } from './presets';
 export { LOWER_CONTRACTS } from './contracts';
