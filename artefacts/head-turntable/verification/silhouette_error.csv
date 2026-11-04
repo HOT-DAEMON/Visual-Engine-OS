@@ -1,0 +1,10 @@
+yaw_deg,statut,erreur_moyenne_U,erreur_moyenne_px_planche
+0,calage,0.0135,2.03
+20,hors-echantillon,0.0255,3.83
+45,hors-echantillon,0.0243,3.65
+70,hors-echantillon,0.0181,2.71
+90,calage,0.0098,1.47
+110,hors-echantillon,0.0153,2.29
+135,hors-echantillon,0.0220,3.31
+160,hors-echantillon,0.0229,3.44
+180,calage,0.0270,4.05

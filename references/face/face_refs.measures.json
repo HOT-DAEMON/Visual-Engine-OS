@@ -1,0 +1,38 @@
+{
+ "method": "points relevés à la main sur grille ; rapports et angles calculés",
+ "images": {
+  "01.jpg": {
+   "interocular_px": 220.1,
+   "eye_line_roll_deg": 5.74,
+   "interocular_over_eye_width": 1.797,
+   "iris_over_eye_width": 0.457,
+   "eye_width_ratio_near_far": 1.112,
+   "nose_tip_below_eyes_over_interocular": 0.577,
+   "nose_width_over_interocular": 0.395,
+   "mouth_width_over_interocular": 0.582,
+   "mouth_below_eyes_over_interocular": 0.909,
+   "chin_below_eyes_over_interocular": 1.386,
+   "face_axis_tilt_deg": -13.93,
+   "brow_right_tilt_deg": 7.83,
+   "ear_span_over_interocular": 0.682
+  },
+  "05.png": {
+   "interocular_px": 710.0,
+   "eye_line_roll_deg": 0.32,
+   "interocular_over_eye_width": 1.569,
+   "iris_over_eye_width": 0.248,
+   "eye_aspect_height_over_width": 0.583,
+   "eye_width_ratio_near_far": 1.002,
+   "nose_tip_below_eyes_over_interocular": 0.489
+  },
+  "02.png": {
+   "interocular_px": 534.4,
+   "eye_line_roll_deg": -2.25,
+   "interocular_over_eye_width": 1.707,
+   "eye_width_ratio_near_far": 1.204,
+   "nose_tip_below_eyes_over_interocular": 0.847,
+   "brow_left_tilt_deg": 31.16,
+   "brow_right_tilt_deg": 28.56
+  }
+ }
+}

@@ -1,0 +1,12 @@
+export * from './types';
+export * from './math';
+export { REF_SPEC } from './spec';
+export { REF_PITCH, REF_RESIDUAL, REF_FIT, REF_ROWS } from './ref-fit';
+export { sectionAt, hairlineY, headPoint } from './sections';
+export { buildParts, earFrame } from './parts';
+export { rasterize, type Frame, type GBuf } from './raster';
+export { renderHead, refView, defaultFrame, type RenderOpts } from './render';
+export { silhouetteProfile, centroids, topRow } from './silhouette';
+export { verifyHeadTurn, cachedRenderer, verifyGeometry, verifyAnatomy, verifyStyle, type RotationMeasures, type RenderAt } from './verify';
+export type { Check, Layer, LayerReport, TurnReport } from './verify-types';
+export { FIT_YAWS, HOLDOUT_YAWS, silhouetteError, maskIoU } from './verify-geo';

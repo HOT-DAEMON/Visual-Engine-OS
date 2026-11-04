@@ -62,3 +62,4 @@ Statut de chaque tâche tenu à jour dans `docs/FACE-STRUCTURE-STATUS.md` (fait 
 - [✅ 3 couches + image + mutations ; campagne d’image à étendre] T14 Couche de vérification de rendu : cohérence géométrique, anatomique, style artistique (y compris mesures sur l'IMAGE rendue).
 - [✅ artefacts/face-structure/] T15 Artefacts (images de preuve) dans `artefacts/face-structure/`.
 - [✅ docs ≤ 200 lignes ; reste-à-faire par composant] T16 Docs : fichiers ≤ 200 lignes, suites créées, reste-à-faire documenté par composant.
+- [⚠️ tête rigide calée sur la planche 0° → 180° ; reste à faire par composant] T17 Rotation de la tête complète (`src/head-turntable`, `docs/HEAD-TURNTABLE*.md`) : première brique de la rotation de tête que T9 signalait absente ; mâchoire / bouche / yeux / cheveux à relier aux moteurs existants.

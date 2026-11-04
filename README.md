@@ -168,3 +168,9 @@ Moteur de structure du visage (`anatomyEngine: 'structured'` : régions du nez, 
 `renderProfile(face, skull, {mode: 'skin'|'anatomy'|'bone'})` dessine la tête de profil (nuque, cou, voûte, os, tissus mous) à partir des MÊMES repères que la face ;
 `generateRandomProfile(seed)` et `verifyProfile(...)` (29 contrôles, géométrie / anatomie / style). Documentation : `docs/SKULL-PROFILE.md` (+ `-ANATOMY`, `-VERIFY`,
 `-REMAINING`), vitesse : `docs/PERF-3.md`, preuves : `artefacts/skull-profile/`.
+
+## Tête en rotation sur 360° (feat/hair-grammar)
+
+`renderHead(refView(yaw))` rend la TÊTE COMPLÈTE (crâne, mâchoire, cou, oreilles, nez, bouche, yeux, sourcils, cheveux) sous n'importe quel lacet, calée sur les
+mesures de `references/face/rotation_head.jpg` (silhouettes à 1,5 – 4,1 px sur 150 px, dont 6 lacets hors échantillon ; vérification en 3 couches).
+Documentation : `docs/HEAD-TURNTABLE.md` (+ `-REFERENCES`, `-VERIFY`, `-REMAINING`) ; preuves : `artefacts/head-turntable/` ; tests : `tests/head-turntable.test.ts`.
