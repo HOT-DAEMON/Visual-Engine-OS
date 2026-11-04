@@ -58,3 +58,4 @@ export { verifyBack } from './back';
 export { verifyJunctions } from './junction';
 export { verifyProfileDepth } from './profile';
 export { verifyLegs3D, PORTED_2D } from './legs3d';
+export { verifyLit, litStats, type LitStats } from './lit';

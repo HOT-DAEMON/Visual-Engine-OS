@@ -1,0 +1,179 @@
+{
+ "diagnostic": [
+  {
+   "azimuth": 270,
+   "elevation": 25,
+   "ratioAvant": 1.038,
+   "ratioApres": 2.011
+  },
+  {
+   "azimuth": 90,
+   "elevation": 25,
+   "ratioAvant": 0.941,
+   "ratioApres": 0.489
+  },
+  {
+   "azimuth": 330,
+   "elevation": 55,
+   "ratioAvant": 0.998,
+   "ratioApres": 1.05
+  },
+  {
+   "azimuth": 0,
+   "elevation": 60,
+   "ratioAvant": 0.988,
+   "ratioApres": 0.989
+  }
+ ],
+ "motifs": [
+  {
+   "id": "side-left",
+   "stats": {
+    "left": 0.995,
+    "right": 0.07,
+    "top": 0.581,
+    "bottom": 0.544,
+    "orbit": 0.521,
+    "neck": 0.616,
+    "face": 0.565,
+    "transition": 0.003,
+    "shadow": 0.435,
+    "neckCast": 0.013,
+    "neckTop": 0.735
+   },
+   "ok": true,
+   "failures": []
+  },
+  {
+   "id": "side-right",
+   "stats": {
+    "left": 0.071,
+    "right": 0.996,
+    "top": 0.581,
+    "bottom": 0.544,
+    "orbit": 0.522,
+    "neck": 0.616,
+    "face": 0.565,
+    "transition": 0.003,
+    "shadow": 0.435,
+    "neckCast": 0.012,
+    "neckTop": 0.735
+   },
+   "ok": true,
+   "failures": []
+  },
+  {
+   "id": "three-quarter-left",
+   "stats": {
+    "left": 0.993,
+    "right": 0.445,
+    "top": 0.889,
+    "bottom": 0.564,
+    "orbit": 0.604,
+    "neck": 0.764,
+    "face": 0.737,
+    "transition": 0.003,
+    "shadow": 0.263,
+    "neckCast": 0.313,
+    "neckTop": 0.687
+   },
+   "ok": true,
+   "failures": []
+  },
+  {
+   "id": "three-quarter-right",
+   "stats": {
+    "left": 0.447,
+    "right": 0.993,
+    "top": 0.889,
+    "bottom": 0.564,
+    "orbit": 0.604,
+    "neck": 0.765,
+    "face": 0.736,
+    "transition": 0.003,
+    "shadow": 0.264,
+    "neckCast": 0.311,
+    "neckTop": 0.689
+   },
+   "ok": true,
+   "failures": []
+  },
+  {
+   "id": "overhead",
+   "stats": {
+    "left": 0.788,
+    "right": 0.787,
+    "top": 1,
+    "bottom": 0.363,
+    "orbit": 0.586,
+    "neck": 0.866,
+    "face": 0.789,
+    "transition": 0.001,
+    "shadow": 0.211,
+    "neckCast": 0.677,
+    "neckTop": 0.324
+   },
+   "ok": true,
+   "failures": []
+  },
+  {
+   "id": "underlight",
+   "stats": {
+    "left": 0.378,
+    "right": 0.379,
+    "top": 0,
+    "bottom": 0.987,
+    "orbit": 0.547,
+    "neck": 0,
+    "face": 0.374,
+    "transition": 0.001,
+    "shadow": 0.626,
+    "neckCast": 0,
+    "neckTop": 0
+   },
+   "ok": true,
+   "failures": []
+  },
+  {
+   "id": "frontal",
+   "stats": {
+    "left": 0.998,
+    "right": 0.995,
+    "top": 1,
+    "bottom": 0.996,
+    "orbit": 0.984,
+    "neck": 1,
+    "face": 0.997,
+    "transition": 0.004,
+    "shadow": 0.003,
+    "neckCast": 0,
+    "neckTop": 1
+   },
+   "ok": true,
+   "failures": []
+  }
+ ],
+ "tempsRenduFigureMs": {
+  "ANCIEN éclairage (avant)": 2591,
+  "APRÈS · peint, 305°/38°": 6756,
+  "APRÈS · cel 3 tons, 305°/38°": 7132
+ },
+ "referencesDeltaL": {
+  "cel": {
+   "01": 0.20571293125406076,
+   "06": 0.3031714518072578
+  },
+  "peint": {
+   "10": 0.4108697124062958,
+   "02": 0.4551516439669086,
+   "03": 0.4956468622215497,
+   "04": 0.40041247708448235,
+   "05": 0.48769670277457633
+  }
+ },
+ "verification": {
+  "motif": "three-quarter-right",
+  "ok": true,
+  "controles": 11
+ }
+}

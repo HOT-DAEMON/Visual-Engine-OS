@@ -4,6 +4,8 @@
 
 **Bilan honnête** : le résultat n'est pas « parfait sur tous les axes ». Chiffres = écarts mesurés ; ce qui n'a pas été mesuré est dit tel quel. Les points des itérations précédentes non repris ici restent ouverts (`BODY-UPPER-LIMB-03-REMAINING.md`, `-02-REMAINING.md`).
 
+> **Mise à jour itération 06 (éclairage)** : « aucune mesure de couleur ou d'ombrage par pixel » est partiellement levé : le rendu par pixel utilise désormais un modèle de lumière unique avec ombres portées entre volumes ; voir `LIGHT-VISIBLE-06.md`. Le haut du dos reste à reprendre.
+
 ## Rendu du haut du dos et de l'omoplate
 - **Le rendu visuel n'est pas convaincant.** Comparer `artefacts/upper-limb-04/04-dos-omoplate-avant-apres.png` : après, le haut du dos est plus chargé et plus désordonné qu'avant. Le moteur ne sait dessiner que des volumes à sections elliptiques : infra-épineux, grand rond et épine se lisent comme des bâtonnets posés sur la peau, pas comme une masse continue avec un relief d'omoplate. Les écorchés de référence ne sont pas atteints.
 - **Piste non faite** : un champ de relief (hauteur) appliqué à la surface du tronc, avec ombrage par normales, pour obtenir bord médial, épine, fosse infra-épineuse et angle inférieur en continu ; l'enveloppe actuelle est une loft d'ellipses et ne peut pas le porter.

@@ -3,7 +3,11 @@ import { toView, dirToView, FRONT } from './camera';
 import { ringPoint } from './loft';
 import { selectVolumes, type VMarkup, type VRenderOpts } from './render';
 import { DEFAULT_LIGHT, tone, paletteOf } from './shade';
-import { p3 } from './vec3';
+import { p3, type P3 } from './vec3';
+import { castShadowScaled } from '../../relief/cast';
+import { lightModelOf, shadeAt, tonesOf, type LightModel } from '../../relief/model';
+import { hexOf } from '../../relief/oklab';
+import { parseHex } from '../../core/color';
 import type { Volume, VolumeSet } from './types';
 
 /**
@@ -12,7 +16,15 @@ import type { Volume, VolumeSet } from './types';
  * section) → éclairage global `tone` → occlusion ambiante par horizon sur la profondeur → rainures de séparation entre volumes → stries de
  * fibres → sur-échantillonnage (`ss`) → PNG incrusté dans le SVG (le moteur reste un moteur SVG affichable dans le navigateur).
  */
-export interface PixelOpts extends VRenderOpts { readonly heightPx?: number; readonly ss?: number; readonly ao?: number; readonly groove?: number }
+export interface PixelOpts extends VRenderOpts {
+  readonly heightPx?: number; readonly ss?: number; readonly ao?: number; readonly groove?: number;
+  /** Modèle de lumière unique (`relief/model.ts`) : ombres portées, terminateur, tons en OKLab, styles cel. `undefined` = modèle par défaut (ombres visibles) ; `null` = ancien éclairage (comparaisons avant/après). */
+  readonly lightModel?: LightModel | null;
+  /** Occulteur sans surface visible (la tête, dessinée par le moteur de visage) : profondeur en un point du repère du corps, `-Infinity` = rien. Il PROJETTE son ombre (menton → cou, poitrine). */
+  readonly proxy?: (x: number, y: number) => number;
+  /** Portée de l'ombre portée, en unités du monde (défaut : 1,2 hauteur de tête). */
+  readonly shadowReach?: number;
+}
 interface Tri { readonly x: number[]; readonly y: number[]; readonly z: number[]; readonly n: number[][]; readonly th: number[] }
 const hex = (c: string): [number, number, number] => { const m = /^#?([0-9a-f]{6})$/i.exec(c); const v = m ? parseInt(m[1] as string, 16) : 0xc99a76; return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; };
 const mixc = (a: number[], b: number[], t: number): number[] => [a[0]! + (b[0]! - a[0]!) * t, a[1]! + (b[1]! - a[1]!) * t, a[2]! + (b[2]! - a[2]!) * t];
@@ -87,6 +99,19 @@ export function renderVolumesPixel(set: VolumeSet, o: PixelOpts): VPixelMarkup {
   // Éclairage par pixel, occlusion ambiante (horizon sur la profondeur) et rainures de séparation.
   const out = new Uint8ClampedArray(N * 4), aoK = o.ao ?? 0.55, grK = o.groove ?? 0.5, R = Math.max(2, Math.round(0.018 * H * ppu)), DIR = [[1, 0], [-1, 0], [0, 1], [0, -1], [0.7, 0.7], [-0.7, 0.7], [0.7, -0.7], [-0.7, -0.7]] as const;
   const sh = hex(pal.shadow), sk = hex(pal.skin), li = hex(pal.light), rg = new Float32Array(N);
+  // Modèle de lumière unique : ombres portées (marche de rayon sur la profondeur, tête comprise), terminateur, tons d'ombre en OKLab (relief/model.ts).
+  const M = o.lightModel === null ? null : (o.lightModel ?? lightModelOf({}, { style: 'soft' }));
+  let castArr: Float32Array | null = null;
+  if (M) {
+    const comb = new Float32Array(N); for (let k = 0; k < N; k++) comb[k] = id[k]! >= 0 ? depth[k]! : -Infinity;
+    if (o.proxy) for (let py = 0; py < Hh; py++) for (let px = 0; px < W; px++) { const z = o.proxy(x0 + (px + 0.5) / ppu, y0 + (py + 0.5) / ppu); if (z > comb[py * W + px]!) comb[py * W + px] = z; }
+    castArr = castShadowScaled({ x0, y0, ppu, w: W, h: Hh }, comb, M.dir, { reach: o.shadowReach ?? 1.2 * H, penumbra: 0.06 + 0.4 * M.soft, growth: 0.05, blur: 1 }, 2);
+  }
+  const alb = M ? mixc(sk, li, 0.38) : sk, T = M ? tonesOf(hexOf(alb), M) : null, rc = M ? parseHex(M.rimColor) : [0, 0, 0], lc = M ? parseHex(M.color) : [0, 0, 0];
+  const paint = (n: P3, cs: number, occ1: number, add: number, gk: number): number[] => {
+    const d = shadeAt(M!, n, cs, aoK * Math.min(1, occ1 / 10)), lit = Math.min(1, Math.max(0, d.lit + add)) * gk, ra = Math.min(1, d.rim * 0.9), sa = Math.min(1, d.spec * 0.5);
+    return [0, 1, 2].map((ch) => { let m = T!.shadowMul[ch]! + (T!.lightMul[ch]! - T!.shadowMul[ch]!) * lit; m += (T!.coreMul[ch]! - m) * d.core; const v = alb[ch]! * m; return v + (255 - v) * (ra * (rc[ch]! / 255) + sa * (lc[ch]! / 255)); });
+  };
   for (let key = 0; key < N; key++) {
     const vi = id[key]!; if (vi < 0) continue;
     const px = key % W, py = (key / W) | 0, z = depth[key]!, md = meta[vi]!;
@@ -98,16 +123,16 @@ export function renderVolumesPixel(set: VolumeSet, o: PixelOpts): VPixelMarkup {
       occ += Math.min(1, Math.max(0, (depth[k2]! - z - 0.002 * H) / (0.05 * H)));
       if (v2 !== vi && meta[v2]!.layer > md.layer && r === R * 0.5 && !(md.mass !== undefined && meta[v2]!.mass === md.mass) && !(md.kind === 'skin' && meta[v2]!.kind === 'skin')) gro += 1; // peau/peau : une seule surface (épaule, hanche), pas de rainure (itération 05)
     }
-    const nv = p3(nx[key]!, ny[key]!, nz[key]!), fib = md.fib ? 0.045 * Math.min(1, vis * 2) * Math.sin(th[key]! * 22) : 0;
+    const nv = p3(nx[key]!, ny[key]!, nz[key]!), fib = md.fib ? 0.045 * Math.min(1, vis * 2) * Math.sin(th[key]! * 22) : 0, gk = 1 - grK * 0.45 * Math.min(1, gro / 4);
     let t = tone(nv, L) + 0.14 * tn[key]! + fib;
     t *= 1 - aoK * Math.min(1, occ / 10) - grK * 0.45 * Math.min(1, gro / 4);
-    const c = t < 0.55 ? mixc(sh, sk, Math.max(0, t) / 0.55) : mixc(sk, li, Math.min(1, (t - 0.55) / 0.6) * 0.62);
+    const c = M ? paint(nv, castArr![key]!, occ, 0.1 * tn[key]! + 2 * fib, gk) : t < 0.55 ? mixc(sh, sk, Math.max(0, t) / 0.55) : mixc(sk, li, Math.min(1, (t - 0.55) / 0.6) * 0.62);
     rg[key] = t;
     // Opacité de palier : un muscle PEU VISIBLE se fond sur la PEAU située dessous (couleur mêlée, alpha 1), il ne perce jamais le corps. Avant la correction de l'itération 05, l'opacité partait dans le canal alpha : le fond apparaissait à travers le ventre, les côtes et les bras (« creux » bleu-gris).
     const o1 = md.kind === 'skin' ? 1 : Math.min(1, op[key]! * 1.2);
     if (o1 < 0.5 && !skinCover[key]) continue; // frange FAIBLE (< 50 %) d'un muscle dont le palier n'est pas atteint : fantôme hors de la peau, supprimé ; au-delà, le muscle reste visible (profil du pectoral)
     if (o1 < 1 && skinCover[key]) {
-      const ts = tone(p3(skn[key * 3]!, skn[key * 3 + 1]!, skn[key * 3 + 2]!), L) * (1 - aoK * Math.min(1, occ / 10)), cs = ts < 0.55 ? mixc(sh, sk, Math.max(0, ts) / 0.55) : mixc(sk, li, Math.min(1, (ts - 0.55) / 0.6) * 0.62), m2 = mixc(cs, c, o1);
+      const sn3 = p3(skn[key * 3]!, skn[key * 3 + 1]!, skn[key * 3 + 2]!), ts = tone(sn3, L) * (1 - aoK * Math.min(1, occ / 10)), cs = M ? paint(sn3, castArr![key]!, occ, 0, 1) : ts < 0.55 ? mixc(sh, sk, Math.max(0, ts) / 0.55) : mixc(sk, li, Math.min(1, (ts - 0.55) / 0.6) * 0.62), m2 = mixc(cs, c, o1);
       out.set([m2[0]!, m2[1]!, m2[2]!, 255], key * 4);
     } else out.set([c[0]!, c[1]!, c[2]!, 255 * o1], key * 4);
   }

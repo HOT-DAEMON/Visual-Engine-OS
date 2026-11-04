@@ -45,3 +45,8 @@ La peau lit les axes de `Appearance` : `light` (ombre, lumière, contour), `grad
 `saturation`, `brightness`, `opacity`, `emission`, `reflection` (intensité, taille, teinte), `refraction`, `glow`, `bloom`. `generation/random-face-anatomy.ts`
 tire chacun d'eux avec des bornes réalistes, à partir d'un flux de hasard DÉRIVÉ (les tirages existants ne bougent pas). Deux défauts du moteur d'apparence
 trouvés et corrigés : voir `docs/ERRORS-4.md`.
+
+## Mise à jour — ombres visibles (itération 06)
+
+Le terminateur en dégradé linéaire (`skin/compile.ts`) reste le rendu « legacy » du visage ; il n'écartait que de 4,6 % la luminance gauche/droite sous une lumière rasante. Une couche d'éclairage par pixel
+(`src/relief/overlay.ts`), calculée sur un relief déduit des repères, s'ajoute PAR-DESSUS : ombres portées du nez, du sourcil, du menton ; terminateur qui suit la forme. Voir `LIGHT-VISIBLE-06.md`.

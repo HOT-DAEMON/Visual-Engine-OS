@@ -62,3 +62,8 @@ résoudre la sienne et lire `.shadow` / `.light` / `.ramp`.
   sur sa longueur curviligne.
 - `refraction` déforme l'arrière-plan du groupe filtré, pas une vraie réfraction optique (pas d'indice, pas de profondeur).
 - `texture` : un seul bruit fractal anisotrope ; ce n'est pas un matériau procédural complet.
+
+## Éclairage visible (itération 06)
+
+L'apparence ne suffisait pas à rendre l'ombre lisible : la teinte d'ombre « proche de la couleur principale » donnait un contraste de ~5 % (mesuré). Le **modèle de lumière unique** (`src/relief/model.ts`) calcule
+l'écart ombre-lumière en OKLab (ΔL, teinte chaude ou froide) pour la tête ET le corps ; une teinte d'ombre **imposée** (`light.shadow`) fixe la teinte, mais sa clarté est plafonnée à `base − ΔL` (sinon le contraste redevient invisible). Voir `LIGHT-VISIBLE-06.md`.
