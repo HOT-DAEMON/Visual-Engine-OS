@@ -50,16 +50,13 @@ Une transformation règle le placement ; elle ne garantit ni la correspondance a
 
 Chaque relation est **mesurée sur la scène compilée** (transformations monde de l'œil et de l'hôte), jamais lue dans un paramètre.
 
-### Divergence trouvée : l'orbite (non corrigée)
+### Divergence trouvée : l'orbite — CORRIGÉE le 5 nov. 2026
 
-Sur 80 visages, 12 ont l'ouverture de l'œil hors de l'ellipse d'orbite (rapport > 1 ; médiane 0,66 ; p95 1,25 ; max 1,86).
-Cause : deux définitions de la même région. `face/landmarks.ts` donne `ry = 0,085 H` fixe et `rx` lié au temple ; `face/fit-eye.ts` borne l'œil
-par l'arcade et le nez, bien plus larges. Planche `03-relations-oeil-orbite.png` : graines 1, 20, 35.
-Le test `anatomy-contract` borne cette dette (≤ 25 % des yeux, pire ≤ 2,0) pour qu'elle ne puisse pas empirer sans alerte.
-Correctif sûr : l'orbite doit être publiée par le composant œil après ajustement et consommée par les ombres (voir `TODO-HEAD-BODY-PIPELINE.md`).
-Il modifie les ombres de contact de ~15 % des visages : il demande une mise à jour réfléchie des références de régression.
+Deux définitions de la même région (repères a priori vs borne d'ajustement de l'œil) : 12 yeux sur 80 hors orbite (le « rapport 1,86 » était le carré du rapport linéaire 1,364 ;
+« 80 visages » désignait 80 yeux). L'œil publie maintenant son orbite et les ombres de contact la consomment : voir `ORBIT-PUBLISH.md`.
+Le test `anatomy-contract` exige désormais **zéro** œil hors de l'orbite publiée et borne encore la dette de l'a priori (12 yeux sur 80, pire < 1,4).
 
 ## 5. Ce que ce contrat ne fait pas encore
 
 Il n'impose pas encore que le matériau, la texture ou l'ombre d'un composant référencent son identifiant canonique (ils utilisent leurs propres noms).
-Seule l'identité et les relations de l'œil sont couvertes ; nez, bouche, oreille et mâchoire n'ont pas encore de relations explicites.
+Les relations de l'œil sont dans `anatomy/relations.ts` ; celles du nez, de la bouche, de l'oreille, de la mâchoire et des cheveux dans `anatomy/face-relations.ts` (`FACE-RELATIONS.md`).

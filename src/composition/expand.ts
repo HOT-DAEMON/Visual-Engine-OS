@@ -14,10 +14,21 @@ const sideFor = (anchorX: number): 'left' | 'right' => (anchorX < -1e-9 ? 'left'
  * Suppose une scène déjà validée (références d'hôte et d'ancres existantes).
  */
 export function expandScene(scene: SceneSpec): SceneObject[] {
+  return expandPlacements(scene).map((e) => e.obj);
+}
+
+/** Un objet expansé et l'hôte sur lequel il était posé (`null` : objet libre). Source UNIQUE du lien enfant → hôte (plus de déduction par préfixe d'identifiant). */
+export interface ExpandedObject {
+  readonly obj: SceneObject;
+  readonly hostId: string | null;
+}
+
+/** Même expansion que `expandScene`, en conservant l'hôte d'origine de chaque exemplaire. */
+export function expandPlacements(scene: SceneSpec): ExpandedObject[] {
   const hosts = new Map<string, HostSpec>();
   for (const o of scene.objects) if (o.kind === 'host') hosts.set(o.id, o);
 
-  const out: SceneObject[] = [];
+  const out: ExpandedObject[] = [];
   for (const o of scene.objects) {
     if ('place' in o && o.place) {
       const host = hosts.get(o.place.host);
@@ -29,22 +40,25 @@ export function expandScene(scene: SceneSpec): SceneObject[] {
         const world = compose(compose(hostT, anchorT), o.transform);
         if (o.kind === 'eye') {
           out.push({
-            ...o,
-            id: `${o.id}-${a.id}`,
-            place: undefined,
-            transform: world,
-            seed: o.place?.variation === 'vary' ? (o.seed + i * 7919) >>> 0 : o.seed,
-            skin: o.skin ?? host.material,
-            shape: { ...o.shape, outerSide: o.shape.outerSide === 'auto' ? sideFor(a.x) : o.shape.outerSide },
+            hostId: host.id,
+            obj: {
+              ...o,
+              id: `${o.id}-${a.id}`,
+              place: undefined,
+              transform: world,
+              seed: o.place?.variation === 'vary' ? (o.seed + i * 7919) >>> 0 : o.seed,
+              skin: o.skin ?? host.material,
+              shape: { ...o.shape, outerSide: o.shape.outerSide === 'auto' ? sideFor(a.x) : o.shape.outerSide },
+            },
           });
         } else {
-          out.push({ ...o, id: `${o.id}-${a.id}`, place: undefined, transform: world });
+          out.push({ hostId: host.id, obj: { ...o, id: `${o.id}-${a.id}`, place: undefined, transform: world } });
         }
       });
     } else if (o.kind === 'eye') {
-      out.push({ ...o, shape: { ...o.shape, outerSide: o.shape.outerSide === 'auto' ? 'right' : o.shape.outerSide } });
+      out.push({ hostId: null, obj: { ...o, shape: { ...o.shape, outerSide: o.shape.outerSide === 'auto' ? 'right' : o.shape.outerSide } } });
     } else {
-      out.push(o);
+      out.push({ hostId: null, obj: o });
     }
   }
   return out;

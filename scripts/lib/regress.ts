@@ -63,3 +63,23 @@ export function updateRefs(cases: readonly VisualCase[] = ALL_CASES): void {
   }
   writeFileSync(join(REF_DIR, 'manifest.json'), JSON.stringify({ size: { w: REF_W, h: REF_H }, cases: out }, null, 1));
 }
+
+/**
+ * Réécrit SEULEMENT les références des cas nommés et FUSIONNE dans le manifeste (les autres entrées ne bougent pas).
+ * Utilisé quand un changement voulu ne concerne que quelques cas (ex. orbite publiée : docs/ORBIT-PUBLISH.md) : on n'écrase pas les références
+ * des cas inchangés avec le rendu de l'environnement courant.
+ */
+export function updateSome(ids: readonly string[]): string[] {
+  const m = manifest();
+  if (!m) throw new Error('manifeste absent : lancer `regress update` une première fois');
+  const cases = { ...m.cases };
+  const done: string[] = [];
+  for (const c of ALL_CASES.filter((q) => ids.includes(q.id))) {
+    const { svg } = renderCase(c);
+    writeFileSync(join(REF_DIR, `${c.id}.png`), rasterPng(svg));
+    cases[c.id] = { svgSha1: sha1(svg), kind: c.kind, why: c.why };
+    done.push(c.id);
+  }
+  writeFileSync(join(REF_DIR, 'manifest.json'), JSON.stringify({ size: m.size, cases }, null, 1));
+  return done;
+}

@@ -1,5 +1,6 @@
 import { dominantColor } from '../materials';
 import { bodyMarkup } from '../body/markup';
+import { figureMarkup } from '../body/lower';
 import type { NeckAnchor } from '../body/types';
 import { objectTransform, type CompiledObject } from './object';
 import { hostFace } from './face';
@@ -19,7 +20,9 @@ export function neckAnchor(host: HostSpec): NeckAnchor {
 }
 
 export function compileBody(b: BodySpec, host: HostSpec): CompiledObject {
-  const m = bodyMarkup(b.body, neckAnchor(host), { skin: dominantColor(host.material.base), level: b.level, mode: b.mode, uid: b.id });
+  const opts = { skin: dominantColor(host.material.base), level: b.level, mode: b.mode, uid: b.id };
+  // `legs: false` → buste (sortie historique identique) ; sinon figure : bassin et jambes DERRIÈRE le tronc, même ancre de cou, même peau.
+  const m = b.legs === false ? bodyMarkup(b.body, neckAnchor(host), opts) : figureMarkup(b.body, b.legs, neckAnchor(host), opts);
   const g = (inner: string): string => el('g', { transform: objectTransform(host.transform) }, [inner]);
   return { defs: [], markup: '', underlay: g(m.back), overlay: g(m.front) };
 }

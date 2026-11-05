@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { compileScene, generateRandomFace, renderScene, SceneSpec } from '../src';
 import { bodyMarkup, composeFigure } from '../src/body';
+import { figureMarkup } from '../src/body/lower';
+import { verifyPipeline } from '../src/verify';
 import { dominantColor } from '../src/materials';
 import { hostFace } from '../src/render/face';
 import type { HostSpec } from '../src/schema';
@@ -59,5 +61,29 @@ describe('corps dans le pipeline principal', () => {
     const a = compileScene(withBody(scene));
     const b = compileScene(withBody(scene));
     expect(a.ok && b.ok && a.svg === b.svg).toBe(true);
+  });
+
+  it('legs: false (défaut) = buste identique ; legs: {} = figure : même SVG que composeFigure(visage, figureMarkup) et bassin + jambes présents', () => {
+    const { scene, host } = sceneOf(11);
+    const { params, lm } = hostFace(host);
+    const a = { h: lm.H, chinY: lm.chinY, baseY: lm.neck.bottomY, baseHalf: lm.neck.half * (1 + params.neck.flare) };
+    const body = { age: 28, sex: 1, muscularity: 0.6 };
+    const bust = compileScene(withBody(scene)), explicitBust = compileScene(withBody(scene, { legs: false }));
+    expect(bust.ok && explicitBust.ok && bust.svg === explicitBust.svg).toBe(true);
+    const m = figureMarkup(body, {}, a, { skin: dominantColor(host.material.base), level: 3, mode: 'skin', uid: 'b0' });
+    const legacy = composeFigure(renderScene(SceneSpec.parse(scene)), m);
+    const fig = compileScene(withBody(scene, { legs: {} }));
+    expect(fig.ok).toBe(true);
+    if (fig.ok && bust.ok) { expect(fig.svg).toBe(legacy); expect(fig.svg.length - bust.svg.length).toBeGreaterThan(20000); } // le bas du corps ajoute des dizaines de Ko de chemins
+  });
+
+  it('figure complète : verifyPipeline valide (3 couches, bas du corps inclus) pour 3 graines et 3 morphologies', () => {
+    const bodies = [{ age: 28, sex: 1, muscularity: 0.6 }, { age: 34, sex: -0.8, adiposity: 0.45 }, { age: 8, sex: 0, adiposity: 0.2 }];
+    bodies.forEach((body, i) => {
+      const { scene } = sceneOf([3, 11, 42][i] as number);
+      const rep = verifyPipeline(withBody(scene, { body, legs: {} }));
+      expect(rep.failures.map((c) => `${c.id}=${c.value}`)).toEqual([]);
+      expect(rep.checks.some((c) => c.id.startsWith('lower.'))).toBe(true);
+    });
   });
 });

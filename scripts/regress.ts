@@ -1,9 +1,10 @@
 /** `npx tsx scripts/regress.ts check|update` — voir docs/REGRESSION.md. */
 import { ALL_CASES } from '../src/regression/cases';
-import { checkCase, updateRefs } from './lib/regress';
+import { checkCase, updateRefs, updateSome } from './lib/regress';
 
 const mode = process.argv[2] ?? 'check';
 if (mode === 'update') { updateRefs(); console.log(`${ALL_CASES.length} références écrites dans references/visual/`); }
+else if (mode === 'update-some') { console.log('références mises à jour :', updateSome((process.argv[3] ?? '').split(',').filter(Boolean)).join(', ')); }
 else {
   const res = ALL_CASES.map(checkCase);
   for (const r of res) console.log(r.verdict.padEnd(8), r.id, r.stats ? `rms=${r.stats.rms.toFixed(2)} >8:${(r.stats.fracOver8 * 100).toFixed(2)}%` : '');

@@ -38,3 +38,9 @@ Un registre dynamique (enregistrement à l'exécution) ferait perdre l'exhaustiv
 Défauts trouvés et corrigés pendant cette vérification : olécrâne en heptagone (asymétrie 1,3 px, maintenant octogone) ;
 contraste du trait comparé en luminance absolue (échec par construction sur toute peau foncée) → rapport relatif + trait adaptatif (`body/render.ts: inkOf`,
 identique à l'ancien sur peau claire).
+
+## Ajouts du 5 nov. 2026
+
+- `kind: 'head_profile'` (`PIPELINE-PROFILE.md`), `kind: 'head_lit'` (`PIPELINE-RELIEF.md`), `legs` dans `kind: 'body'` (`PIPELINE-LOWER.md`).
+- `expandPlacements` (source unique du lien enfant → hôte) ; `CompileCtx.orbits` et `lightSpec` ; `CompiledObject.top`.
+- Reste : `PIPELINE-WIRING-REMAINING.md`.

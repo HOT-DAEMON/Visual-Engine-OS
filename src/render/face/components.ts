@@ -4,6 +4,7 @@ import { hairGeometry } from '../../face/hair';
 import type { Poly } from '../../face/poly';
 import type { FaceComponent, Receivers } from '../../contact';
 import type { FaceParams } from '../../schema';
+import type { PublishedOrbits } from '../../anatomy/orbit';
 import { neckPath } from './neck';
 
 /** Arête ouverte du menton : le contour réel du sillon mentolabial au bas, puis symétriquement (sans la corde du sillon). */
@@ -22,7 +23,7 @@ const ell = (cx: number, cy: number, rx: number, ry: number): Poly => superEllip
  * Chaque composant lit ses silhouettes dans la géométrie pure (jamais dans le SVG) : le sous-moteur travaille donc sur les mêmes formes
  * que le rendu et que la vérification. Pour ajouter un composant futur : l'ajouter ici (identité, parent, silhouette, receveurs).
  */
-export function faceComponents(p: FaceParams, lm: FaceLandmarks, nose?: NoseGeometry): { components: FaceComponent[]; receivers: Receivers } {
+export function faceComponents(p: FaceParams, lm: FaceLandmarks, nose?: NoseGeometry, orbits?: PublishedOrbits): { components: FaceComponent[]; receivers: Receivers } {
   const n = nose ?? noseGeometry(p, lm);
   const H = lm.H;
   const proj = n.tip.projectionPx;
@@ -33,7 +34,8 @@ export function faceComponents(p: FaceParams, lm: FaceLandmarks, nose?: NoseGeom
     { id: 'alaL', parent: 'nose', kind: 'caster', polys: [n.alae.left.poly], rimEdge: [n.alae.left.outerEdge], depth: 1 + n.alae.left.thicknessPx * 0.6, receivers: ['head'], contact: 'alae', rim: 'alae' },
     { id: 'alaR', parent: 'nose', kind: 'caster', polys: [n.alae.right.poly], rimEdge: [n.alae.right.outerEdge], depth: 1 + n.alae.right.thicknessPx * 0.6, receivers: ['head'], contact: 'alae', rim: 'alae' },
     ...(['left', 'right'] as const).map((s): FaceComponent => {
-      const o = lm.orbit[s];
+      // Orbite PUBLIÉE par l'œil posé (docs/ORBIT-PUBLISH.md) ; sans œil posé (visage seul), l'a priori des repères.
+      const o = orbits?.[s] ?? lm.orbit[s];
       return { id: s === 'left' ? 'orbitL' : 'orbitR', parent: 'head', kind: 'socket', edge: 'soft', polys: [ell(o.cx, o.cy, o.rx, o.ry)], depth: 0.012 * H, receivers: ['head'], contact: 'orbits' };
     }),
     ...earGeometry(p, lm).map((e): FaceComponent => ({ id: e.side < 0 ? 'earL' : 'earR', parent: 'head', kind: 'socket', polys: [e.poly], depth: 0.008 * H, receivers: ['head'], contact: 'ears', rim: 'ears' })),

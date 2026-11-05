@@ -1,7 +1,10 @@
 import { COMPONENTS, canonicalId, componentOf } from '../anatomy/components';
-import { eyeRelations, relationChecks, type PlacedEye } from '../anatomy/relations';
+import { eyeRelations, relationChecks } from '../anatomy/relations';
 import { compileScene } from '../compile';
-import { expandScene } from '../composition/expand';
+import { placedEyesByHost } from '../anatomy/placed';
+import { publishedOrbits, sideOf } from '../anatomy/orbit';
+import { verifyOrbits } from './orbit';
+import { faceRelations } from '../anatomy/face-relations';
 import { bodyGeometry } from '../body/geometry';
 import { bodyMarkup } from '../body/markup';
 import { BodyParams } from '../body/types';
@@ -12,6 +15,11 @@ import { hostFace } from '../render/face';
 import { noseGeometry } from '../face';
 import { SceneSpec, type HostSpec } from '../schema';
 import { verifyBody } from './body';
+import { verifyLegs } from './lower';
+import { verifyProfile } from './skull';
+import { deriveSkull } from '../skull/derive';
+import { figureMarkup, legGeometry } from '../body/lower';
+import { LegParams } from '../body/lower/types';
 import { check, report, type Check, type Report } from './types';
 
 /**
@@ -30,16 +38,22 @@ export function verifyPipeline(input: unknown): Report {
   const hosts = new Map<string, HostSpec>();
   for (const o of scene.objects) if (o.kind === 'host') hosts.set(o.id, o);
 
-  // Œil ↔ visage : relations mesurées sur les yeux POSÉS (transformation monde après expansion).
-  for (const o of expandScene(scene)) {
-    if (o.kind !== 'eye') continue;
-    // L'objet d'origine (avec `place`) donne l'hôte ; l'expansion a nommé l'exemplaire `<id>-<ancre>`.
-    const src = scene.objects.find((q) => q.kind === 'eye' && q.place && o.id.startsWith(`${q.id}-`));
-    const hostId = src && src.kind === 'eye' ? src.place?.host : undefined;
-    const host = hostId ? hosts.get(hostId) : undefined;
-    if (!host || host.shape !== 'face') continue;
-    const pe: PlacedEye = { eye: o, world: o.transform, host: host.transform };
-    checks.push(...relationChecks(eyeRelations(pe, hostFace(host).lm)));
+  // Œil ↔ visage : relations mesurées sur les yeux POSÉS (transformation monde après expansion), contre l'orbite PUBLIÉE que le rendu consomme.
+  const placed = placedEyesByHost(scene);
+  for (const [hostId, eyes] of placed) {
+    const host = hosts.get(hostId) as HostSpec;
+    const { params, lm } = hostFace(host);
+    const orbits = publishedOrbits(lm, eyes);
+    for (const pe of eyes) checks.push(...relationChecks(eyeRelations(pe, lm, orbits[sideOf(pe)])));
+    checks.push(...verifyOrbits(hostId, params, lm, eyes, orbits));
+  }
+
+  // Nez, bouche, oreille, mâchoire, cheveux : relations explicites mesurées sur la géométrie produite (docs/FACE-RELATIONS.md).
+  for (const host of hosts.values()) {
+    if (host.shape !== 'face') continue;
+    const { params, lm } = hostFace(host);
+    const orbits = publishedOrbits(lm, placed.get(host.id) ?? []);
+    checks.push(...relationChecks(faceRelations(params, lm, noseGeometry(params, lm), orbits)).map((c) => ({ ...c, id: `${host.id}.${c.id}` })));
   }
 
   // Identité : chaque composant du graphe de contact du visage a un identifiant canonique et un parent compatible.
@@ -60,6 +74,19 @@ export function verifyPipeline(input: unknown): Report {
     const geo = bodyGeometry(BodyParams.parse(o.body), a);
     const m = bodyMarkup(o.body, a, { skin: dominantColor(host.material.base), level: o.level, mode: o.mode, uid: o.id });
     checks.push(...verifyBody(geo, m, dominantColor(host.material.base)).checks);
+    if (o.legs !== false) {
+      const fig = figureMarkup(o.body, o.legs, a, { skin: dominantColor(host.material.base), level: o.level, mode: o.mode, uid: o.id });
+      checks.push(...verifyLegs(legGeometry(BodyParams.parse(o.body), LegParams.parse(o.legs), a), fig).checks);
+    }
+  }
+  // Tête de profil : crâne dérivé du visage de l'hôte ; 3 couches du profil + contrôles croisés face ↔ profil (même personne vue de côté).
+  for (const o of scene.objects) {
+    if (o.kind !== 'head_profile') continue;
+    const host = hosts.get(o.host) as HostSpec;
+    const { params, lm } = hostFace(host);
+    const d = deriveSkull(params, lm.W / lm.H, { hair: 'auto', ...o.skull }, o.variation);
+    const rep = verifyProfile(params, d.skull, { skin: dominantColor(host.material.base), hair: o.hair ?? params.hair.color ?? '#4a3222', faceSize: { width: lm.W, height: lm.H }, derivation: d });
+    checks.push(...rep.checks.map((c) => ({ ...c, id: `profile.${o.id}.${c.id}` })));
   }
   return report(checks);
 }

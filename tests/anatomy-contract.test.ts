@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { ancestors, canonicalId, COMPONENTS, componentOf, type AliasSpace } from '../src/anatomy/components';
-import { eyeRelations, type PlacedEye } from '../src/anatomy/relations';
+import { eyeRelations } from '../src/anatomy/relations';
+import { placedEyesByHost } from '../src/anatomy/placed';
+import { publishedOrbits, sideOf } from '../src/anatomy/orbit';
 import { BODY_CONTRACTS } from '../src/body';
 import { CONTRACTS } from '../src/face/contracts';
 import { faceNodes, posedFace } from '../src/face/pose';
 import { faceLandmarks, noseGeometry } from '../src/face';
-import { expandScene, generateRandomFace, SceneSpec } from '../src';
+import { generateRandomFace, SceneSpec } from '../src';
 import { faceComponents } from '../src/render/face/components';
 import { hostFace } from '../src/render/face';
 import { registryChecks, verifyPipeline } from '../src/verify';
@@ -58,27 +60,30 @@ describe('contrat central des composants', () => {
 });
 
 describe('relations géométrique / anatomique / visuelle', () => {
-  it("sur 40 visages : aucune erreur ; dette « œil hors orbite » bornée (ne peut pas empirer en silence)", () => {
-    let eyes = 0, outside = 0, worst = 0;
+  it("sur 40 visages (80 yeux) : aucune erreur ; l'œil tient TOUJOURS dans l'orbite publiée ; la dette de l'a priori reste mesurée et bornée", () => {
+    let eyes = 0, outsidePrior = 0, worstPrior = 0, worstPublished = 0;
     for (let seed = 1; seed <= 40; seed++) {
       const scene = SceneSpec.parse(sceneOf(seed, false));
       const host = scene.objects.find((o) => o.kind === 'host') as HostSpec;
       const lm = hostFace(host).lm;
-      for (const e of expandScene(scene)) {
-        if (e.kind !== 'eye') continue;
-        const pe: PlacedEye = { eye: e, world: e.transform, host: host.transform };
-        for (const r of eyeRelations(pe, lm)) {
+      const placed = placedEyesByHost(scene).get('f0') ?? [];
+      const orbits = publishedOrbits(lm, placed);
+      for (const pe of placed) {
+        for (const r of eyeRelations(pe, lm, orbits[sideOf(pe)])) {
           expect(Number.isFinite(r.value)).toBe(true);
           const ok = r.cmp === '<=' ? r.value <= r.limit + 1e-9 : r.value >= r.limit - 1e-9;
           if (!ok && r.severity === 'error') throw new Error(`seed ${seed} ${r.id} : ${r.value.toFixed(3)} (limite ${r.cmp} ${r.limit}) — ${r.message}`);
-          if (r.id.startsWith('eye.in-orbit')) { eyes++; worst = Math.max(worst, r.value); if (!ok) outside++; }
-          else expect(r.severity === 'warn' ? true : ok).toBe(true);
+          if (r.id.startsWith('eye.in-orbit-prior')) { eyes++; worstPrior = Math.max(worstPrior, r.value); if (!ok) outsidePrior++; }
+          else if (r.id.startsWith('eye.in-orbit')) worstPublished = Math.max(worstPublished, r.value);
         }
       }
     }
-    // Mesuré le 4 nov. 2026 sur 80 visages : 12 visages concernés, pire 1,86. Garde-fou : toute dégradation fait échouer ce test.
-    expect(outside / eyes).toBeLessThanOrEqual(0.25);
-    expect(worst).toBeLessThanOrEqual(2);
+    // Mesuré le 4 nov. 2026 : 12 yeux sur 80 hors de l'orbite a priori (pire 1,364 en rapport LINÉAIRE ; 1,86 était son carré). Ce nombre ne doit pas dériver en silence.
+    expect(eyes).toBe(80);
+    expect(outsidePrior).toBe(12);
+    expect(worstPrior).toBeLessThan(1.4);
+    // Après publication : aucun œil hors orbite, avec marge.
+    expect(worstPublished).toBeLessThanOrEqual(1);
   });
 
   it('verifyPipeline : scène tête + corps valide sur 3 couches pour 3 graines', () => {

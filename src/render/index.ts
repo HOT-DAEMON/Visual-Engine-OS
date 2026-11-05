@@ -7,3 +7,5 @@ export { compileCompoundEye } from './compound';
 export { compileGemEye } from './gem';
 export { objectTransform, type CompiledObject } from './object';
 export { compileBody } from './body';
+export { compileHeadProfile } from './head-profile';
+export { compileHeadLit } from './head-lit';

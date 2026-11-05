@@ -1,12 +1,17 @@
 import type { SceneObject } from '../composition/expand';
 import type { LightVector } from '../lighting/light';
-import type { HostSpec } from '../schema';
-import { compileBody, compileCompoundEye, compileEye, compileGemEye, compileHost, compilePanel, compileRobotEye, type CompiledObject } from './index';
+import type { PublishedOrbits } from '../anatomy/orbit';
+import type { HostSpec, LightSpec } from '../schema';
+import { compileBody, compileHeadProfile, compileHeadLit, compileCompoundEye, compileEye, compileGemEye, compileHost, compilePanel, compileRobotEye, type CompiledObject } from './index';
 
 /** Ce que tout compilateur d'objet peut lire de la scène : la lumière MONDE et les hôtes (pour les enfants qui en dépendent, ex. le corps). */
 export interface CompileCtx {
   readonly light: LightVector;
+  /** Lumière de la scène telle que déclarée (azimut, élévation, couleur, taille de source…) : l'éclairage par relief la lit. */
+  readonly lightSpec: LightSpec;
   readonly hosts: ReadonlyMap<string, HostSpec>;
+  /** Orbites publiées par les yeux posés, par hôte `face` (consommées par les ombres de contact). */
+  readonly orbits: ReadonlyMap<string, PublishedOrbits>;
 }
 
 export type ObjectKind = SceneObject['kind'];
@@ -21,9 +26,19 @@ export const COMPILERS: { readonly [K in ObjectKind]: ObjectCompiler<K> } = {
   eye: (o, c) => compileEye(o, c.light),
   robot_eye: (o, c) => compileRobotEye(o, c.light),
   panel: (o, c) => compilePanel(o, c.light),
-  host: (o, c) => compileHost(o, c.light),
+  host: (o, c) => compileHost(o, c.light, c.orbits.get(o.id)),
   compound_eye: (o, c) => compileCompoundEye(o, c.light),
   gem_eye: (o, c) => compileGemEye(o, c.light),
+  head_lit: (o, c) => {
+    const host = c.hosts.get(o.host);
+    if (!host) throw new Error(`Hôte introuvable : ${o.host}`); // jamais atteint après validation du schéma
+    return compileHeadLit(o, host, c.lightSpec);
+  },
+  head_profile: (o, c) => {
+    const host = c.hosts.get(o.host);
+    if (!host) throw new Error(`Hôte introuvable : ${o.host}`); // jamais atteint après validation du schéma
+    return compileHeadProfile(o, host);
+  },
   body: (o, c) => {
     const host = c.hosts.get(o.host);
     if (!host) throw new Error(`Hôte introuvable : ${o.host}`); // jamais atteint après validation du schéma

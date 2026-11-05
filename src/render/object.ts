@@ -8,6 +8,8 @@ export interface CompiledObject {
   readonly overlay?: string;
   /** Dessiné AVANT tous les objets (juste après le fond) ; même transformation que `markup` (corps derrière le visage). */
   readonly underlay?: string;
+  /** Dessiné APRÈS les calques `overlay` (éclairage par relief : il multiplie TOUT ce qui est dessiné dessous, cheveux compris) ; même transformation que l'hôte. */
+  readonly top?: string;
 }
 
 export function objectTransform(t: Transform): string {

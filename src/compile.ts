@@ -3,7 +3,10 @@ import { clock } from './perf/clock';
 import { ContentCache, canonical, type CacheStats } from './perf/content-cache';
 import type { z } from 'zod';
 import { compileObject } from './render/registry';
-import { expandScene } from './composition/expand';
+import { expandPlacements } from './composition/expand';
+import { placedEyesOf } from './anatomy/placed';
+import { publishedOrbits, type PublishedOrbits } from './anatomy/orbit';
+import { hostFace } from './render/face';
 import { lightVector } from './lighting/light';
 import { SceneSpec, type HostSpec } from './schema';
 import { el } from './core/svg';
@@ -18,22 +21,31 @@ function renderSceneUntimed(scene: SceneSpec): string {
   const light = lightVector(scene.light);
   const hosts = new Map<string, HostSpec>();
   for (const o of scene.objects) if (o.kind === 'host') hosts.set(o.id, o);
-  const ctx = { light, hosts };
+  const expanded = expandPlacements(scene);
+  // Orbites PUBLIÉES par les yeux posés (docs/ORBIT-PUBLISH.md) : les ombres de contact du visage les consomment à la place de l'a priori des repères.
+  const placed = placedEyesOf(expanded, hosts);
+  const orbits = new Map<string, PublishedOrbits>();
+  for (const h of hosts.values()) if (h.shape === 'face') orbits.set(h.id, publishedOrbits(hostFace(h).lm, placed.get(h.id) ?? []));
+  const ctx = { light, lightSpec: scene.light, hosts, orbits };
   const defs: string[] = [];
   const underlays: string[] = [];
   const body: string[] = [];
   const overlays: string[] = [];
-  for (const obj of expandScene(scene)) {
+  const tops: string[] = [];
+  for (const { obj } of expanded) {
     const out = compileObject(obj, ctx);
     defs.push(...out.defs);
     if (out.underlay) underlays.push(out.underlay);
     body.push(out.markup);
     if (out.overlay) overlays.push(out.overlay);
+    if (out.top) tops.push(out.top);
   }
   // Calque sous la scène : ce qui passe DERRIÈRE les hôtes (corps derrière le visage), juste après le fond.
   body.unshift(...underlays);
   // Calque final : ce qui passe DEVANT les enfants posés sur l'hôte (cheveux devant les yeux).
   body.push(...overlays);
+  // Calque tout au-dessus : l'éclairage par relief (multiplie et éclaire tout ce qui est dessiné dessous).
+  body.push(...tops);
   const background = scene.background
     ? [el('rect', { x: 0, y: 0, width: scene.width, height: scene.height, fill: scene.background })]
     : [];

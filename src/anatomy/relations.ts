@@ -3,6 +3,7 @@ import type { FaceLandmarks } from '../face';
 import { openingGeometry, openingPolygon, type Vec } from '../geometry/eye';
 import { irisCenter, irisRadii } from '../render/eye/helpers';
 import { check, type Check, type VerifyLayer } from '../verify/types';
+import type { PublishedOrbit } from './orbit';
 
 /**
  * RELATIONS entre composants : trois familles DISTINCTES (une transformation ne règle que la première).
@@ -41,7 +42,7 @@ export function toHostFrame(p: Vec, pe: PlacedEye): Vec {
   const b = rad(-h.rotationDeg), dx = (wx - h.x) / h.scale, dy = (wy - h.y) / h.scale;
   return { x: dx * Math.cos(b) - dy * Math.sin(b), y: dx * Math.sin(b) + dy * Math.cos(b) };
 }
-const inside = (p: Vec, poly: readonly Vec[]): boolean => {
+export const inside = (p: Vec, poly: readonly Vec[]): boolean => {
   let c = false;
   for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
     const a = poly[i] as Vec, b = poly[j] as Vec;
@@ -50,8 +51,13 @@ const inside = (p: Vec, poly: readonly Vec[]): boolean => {
   return c;
 };
 
-/** Relations de l'œil `pe` avec le visage `lm` : 1 géométrique, 3 anatomiques, 2 visuelles. */
-export function eyeRelations(pe: PlacedEye, lm: FaceLandmarks): Relation[] {
+/**
+ * Relations de l'œil `pe` avec le visage `lm` : 1 géométrique, 4 anatomiques, 2 visuelles.
+ * `published` = l'orbite PUBLIÉE pour ce côté (docs/ORBIT-PUBLISH.md) : c'est elle que les ombres de contact consomment, donc l'œil DOIT y tenir (erreur).
+ * L'orbite a priori des repères reste mesurée à part (`eye.in-orbit-prior`, avertissement) : c'est la dette que la publication résorbe.
+ * Les rapports d'orbite sont LINÉAIRES (1 = sur le bord ; avant le 4 nov. 2026 la mesure était le carré de ce rapport : 1,86 = 1,364 en linéaire).
+ */
+export function eyeRelations(pe: PlacedEye, lm: FaceLandmarks, published?: PublishedOrbit): Relation[] {
   const g = openingGeometry(pe.eye.shape, pe.eye.canthi);
   const poly = openingPolygon(g, 48).map((p) => toHostFrame(p, pe));
   const side = pe.eye.shape.outerSide === 'left' ? 'left' : 'right';
@@ -60,7 +66,8 @@ export function eyeRelations(pe: PlacedEye, lm: FaceLandmarks): Relation[] {
   const rel = (id: string, kind: RelationKind, between: readonly [string, string], value: number, limit: number, cmp: '<=' | '>=', unit: string, message: string, severity: 'error' | 'warn' = 'error'): Relation => ({ id: `${id}.${side}`, kind, between, value, limit, cmp, unit, message, severity });
 
   // Anatomique : plus grande « distance orbitaire » normalisée d'un point de la fente (≤ 1 : dedans).
-  const orbitMax = Math.max(...poly.map((p) => ((p.x - orb.cx) / orb.rx) ** 2 + ((p.y - orb.cy) / orb.ry) ** 2));
+  const orbitOf = (o: { cx: number; cy: number; rx: number; ry: number }): number => Math.sqrt(Math.max(...poly.map((p) => ((p.x - o.cx) / o.rx) ** 2 + ((p.y - o.cy) / o.ry) ** 2)));
+  const priorRatio = orbitOf(orb);
   // Visuel : part de l'iris (échantillonnée) HORS de la fente = recouverte par les paupières.
   const ir = irisRadii(pe.eye), ic = irisCenter(pe.eye, g);
   let tot = 0, out = 0;
@@ -72,7 +79,10 @@ export function eyeRelations(pe: PlacedEye, lm: FaceLandmarks): Relation[] {
   }
   return [
     rel('eye.canthus-anchor', 'geometric', ['eye', 'face'], Math.hypot(pi.x - canthus.x, pi.y - canthus.y), 0.5, '<=', 'px', "le canthus interne n'est pas sur son ancre"),
-    rel('eye.in-orbit', 'anatomical', ['eye', 'cranium'], orbitMax, 1, '<=', 'rapport', "l'ouverture de l'œil sort de l'orbite (deux définitions de l'orbite : repères vs ajustement de l'œil, voir docs/ANATOMY-CONTRACT.md §4)", 'warn'),
+    published
+      ? rel('eye.in-orbit', 'anatomical', ['eye', 'orbit'], orbitOf(published), 1, '<=', 'rapport', "l'ouverture de l'œil sort de l'orbite PUBLIÉE (consommée par les ombres de contact)")
+      : rel('eye.in-orbit', 'anatomical', ['eye', 'orbit'], priorRatio, 1, '<=', 'rapport', "l'ouverture de l'œil sort de l'orbite a priori des repères (aucune orbite publiée : visage mesuré hors scène)", 'warn'),
+    rel('eye.in-orbit-prior', 'anatomical', ['eye', 'orbit'], priorRatio, 1, '<=', 'rapport', "l'ouverture de l'œil sort de l'orbite a priori (dette résorbée par la publication, docs/ORBIT-PUBLISH.md)", 'warn'),
     rel('eye.below-brow', 'anatomical', ['eye', 'brow'], Math.min(...poly.map((p) => p.y)) - lm.browLimitY, 0, '>=', 'px', "l'œil remonte au-dessus de la limite de l'arcade"),
     rel('eye.above-nose', 'anatomical', ['eye', 'nose'], lm.lowerLimitY - Math.max(...poly.map((p) => p.y)), 0, '>=', 'px', "l'œil descend sur le nez"),
     rel('lid.iris-centered', 'visual', ['eye', 'iris'], inside(toHostFrame(ic, pe), poly) ? 1 : 0, 1, '>=', 'bool', "le centre de l'iris est hors de la fente palpébrale"),

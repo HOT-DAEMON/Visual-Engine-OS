@@ -8,6 +8,7 @@ import { dominantColor, spotGradient, type Surface } from '../../materials';
 import { compileSkin, type CompiledSkin } from '../../skin';
 import { FaceParams, type ContactSpec, type HostSpec } from '../../schema';
 import type { LightVector } from '../../lighting/light';
+import type { PublishedOrbits } from '../../anatomy/orbit';
 import { renderEars } from './ears';
 import { faceComponents } from './components';
 import { renderFacialHair } from './facial-hair';
@@ -63,7 +64,7 @@ export function hostFace(h: HostSpec): { readonly params: FaceParams; readonly l
   return { params, lm: faceLandmarks(params, h.width, h.height) };
 }
 
-export function faceParts(h: HostSpec, L: LightVector, rot: number): FaceParts {
+export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: PublishedOrbits): FaceParts {
   const { params, lm } = hostFace(h);
   const skin = dominantColor(h.material.base);
   // Apparence de la peau : teinte d'ombre (proche de la peau, légèrement bleutée), lumière et contour lues par TOUS les enfants.
@@ -78,7 +79,7 @@ export function faceParts(h: HostSpec, L: LightVector, rot: number): FaceParts {
   if (skinLayer) defs.push(...skinLayer.defs);
 
   // Sous-moteur : composants → ombres de contact → lumières de contour.
-  const { components, receivers } = faceComponents(params, lm, g);
+  const { components, receivers } = faceComponents(params, lm, g, orbits);
   const shadowColor = mix(skinRa.shadow, '#000000', 0.45);
   const ct = compileContact(h.id, components, contactSpecs(params, lm), params.lighting.contacts.master, L, shadowColor, receivers, u);
   const rims = resolveRims(components, params.lighting.rims, skinRa);
