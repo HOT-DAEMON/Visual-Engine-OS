@@ -109,7 +109,7 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
     defs.push(el('clipPath', { id: cid }, [el('path', { d: outlinePath(lm.outline) })]), el('filter', { id: fid, x: '-10%', y: '-10%', width: '120%', height: '120%' }, [el('feGaussianBlur', { stdDeviation: lm.W * 0.006 })]));
     shadows.push(el('g', { 'clip-path': urlRef(cid) }, [el('g', { filter: urlRef(fid), opacity: h.sim.skinShadow }, geo.skinShadows.map((q) => el('path', { d: polyPath(q), fill: mix(skin, '#1a0f0a', 0.55) })))]));
   }
-  const front: string[] = [...hairlineTransition(geo, p, lm, skinShadow), ...shadows, fx.filter ? el('g', { filter: fx.filter }, body) : body.join('')];
+  const front: string[] = [...hairlineTransition(geo, p, lm, skinShadow, skin), ...shadows, fx.filter ? el('g', { filter: fx.filter }, body) : body.join('')];
   const over = geo.locks.filter((q) => q.layer === 'over').flatMap((l) => draw(l, 0, false));
   return { defs, back, front, over };
 }

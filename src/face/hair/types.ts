@@ -1,6 +1,7 @@
 import type { Vec } from '../../geometry/eye/primitives';
 import type { HairTexture } from '../../schema';
 import type { Poly } from '../poly';
+import type { HairBoundary } from './boundary/types';
 
 /**
  * ÉPAISSEUR : `mass` grosse masse ; `main` mèche moyenne ; `fine` mèche secondaire (fine, reflets) ;
@@ -75,6 +76,8 @@ export interface HairGeometry {
   readonly texture: HairTexture;
   /** Ligne d'implantation, de la tempe gauche à la tempe droite (repère de l'hôte). */
   readonly hairline: Vec[];
+  /** LISIÈRE complète (front, pattes, oreilles, nuque) posée sur le crâne : voir `boundary/` et `docs/HAIR-BOUNDARY.md`. */
+  readonly boundary: HairBoundary;
   /** Zone du cuir chevelu (ligne d'implantation → contour du crâne). */
   readonly scalp: Poly;
   /** Sous-couche racine (volume dense sous les mèches) — AVANT. */

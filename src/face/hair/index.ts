@@ -7,7 +7,9 @@ import { buildFringe } from './fringe';
 import { engineFringe } from './fringe2';
 import { capTo, growLock, STYLES, type HairCtx } from './flow';
 import { makeGuard } from './guard';
-import { arcAt, buildHairline, skullArc } from './hairline';
+import { buildBoundary } from './boundary';
+import { wingLocks } from './boundary/wings';
+import { arcAt, skullArc } from './hairline';
 import { hairlineStrands, massLocks, tierMasses } from './layers';
 import { lockFrom } from './flow';
 import { noise1 } from './noise';
@@ -23,6 +25,8 @@ import { canonical, ContentCache } from '../../perf/content-cache';
 import { clock } from '../../perf/clock';
 import { makeGain, makeLift, puffWidth } from './volume';
 
+export { buildBoundary, rootFrames, windDir, projectBoundary } from './boundary';
+export type { HairBoundary, BoundaryPoint, EdgeKind, HairMarks, RootFrame } from './boundary';
 export type { HairGeometry, HairLock, LockRank, LockKind, BareScalp, TierMass, OcclusionInfo, SideInfo } from './types';
 
 /**
@@ -36,18 +40,19 @@ function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null 
   const h = p.hair;
   if (h.style === 'bald') return null;
   const { W, H } = lm;
-  const hl = buildHairline(p, lm);
+  const boundary = buildBoundary(p, lm);
+  const hl = boundary.hairline;
   const arc = skullArc(lm, hl);
   const tex = resolveTexture(h.style, h.texture);
   const nz = noise1(h.seed ^ 0x5a5a);
   const partX = h.part * 0.1 * W;
   const ctx: HairCtx = {
-    h, lm, hl, arc, guard: makeGuard(p, lm, hl), rnd: mulberry32(h.seed), nz, tex, spec: textureSpec(tex, h.curl, W, H), def: STYLES[h.style],
+    h, lm, hl, arc, guard: makeGuard(p, lm, hl), boundary, rnd: mulberry32(h.seed), nz, tex, spec: textureSpec(tex, h.curl, W, H), def: STYLES[h.style],
     C: { x: 0, y: h.style === 'spiky' ? lm.eyeY : lm.hair.sideY }, partX,
     gain: makeGain(h.silhouette, nz), puffW: puffWidth(h.silhouette.puff), lift: makeLift(h, partX, W),
   };
   const { rnd, def } = ctx;
-  const { base, scalp } = capBase(ctx);
+  const { base, scalp, wings, crown } = capBase(ctx);
   const spots = !h.sim.enabled && (h.style === 'ponytail' || h.style === 'bun') ? tieSpots(ctx) : [];
   const braids = !h.sim.enabled && h.style === 'braids' ? braidRoots(ctx) : [];
   const yHang = (): number => (h.style === 'long' ? H / 2 + (0.08 + 0.3 * h.length) * H : lm.jawY + (0.03 + 0.1 * h.length) * H) + (rnd() - 0.5) * h.lengthVariance * 0.18 * H;
@@ -61,7 +66,7 @@ function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null 
   const grow = (R: Vec): Vec[] => (def.hang ? growLock(ctx, R, 2.2 * H, { yEnd: yHang() }) : growLock(ctx, R, 0.3 * H));
   // Cheveux SIMULÉS (Verlet) : remplacent les générateurs dessinés à la main ; frange, côtés et occlusions restent actifs.
   const sim = h.sim.enabled ? simLocks(ctx) : null;
-  let front: HairLock[] = sim ? [] : [...classicLocks(ctx, { spots, braids, yHang }), ...massLocks(ctx, grow)];
+  let front: HairLock[] = sim ? [] : [...wingLocks(ctx, wings, crown), ...classicLocks(ctx, { spots, braids, yHang }), ...massLocks(ctx, grow)];
   if (!sim) {
     front.push(...flowLocks(ctx), ...coneLocks(ctx), ...wispLocks(ctx));
     front.push(...hairlineStrands(ctx, front), ...fringeLocks);
@@ -95,7 +100,7 @@ function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null 
   const simOver = sim ? sim.locks.filter((l) => l.layer === 'over') : [];
   const all = [...sides.back, ...sides.front, ...occ.locks, ...simOver];
   return {
-    texture: tex, hairline: hl.pts, scalp, base: [base], bare: bareScalp(ctx), locks: all, backBase,
+    texture: tex, hairline: hl.pts, boundary, scalp, base: [base], bare: bareScalp(ctx), locks: all, backBase,
     front: [base, ...(classic ? [classic.base] : []), ...sides.front.map((l) => l.poly)], back: [...(backBase ? [backBase] : []), ...sides.back.map((l) => l.poly)],
     fringeBottom, ties, over: [...occ.locks, ...simOver].map((l) => l.poly), skinShadows: sim?.skinShadows ?? [], simMass: sim?.mass ?? null, shaved: sim?.shaved ?? [], tierMasses: masses, occlusions: occ.info, sides: sides.info,
   };

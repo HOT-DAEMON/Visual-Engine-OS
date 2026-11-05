@@ -9,6 +9,8 @@ import { toLocal, type LightVector } from '../../lighting/light';
 import { spotGradient } from '../../materials';
 import type { FaceParams } from '../../schema';
 import { polyPath } from './path';
+import { edgeStyle } from '../../face/hair/boundary/edge-style';
+import { resolveTexture } from '../../face/hair/texture';
 
 /** Polygone → chemin lissé (quadratiques entre milieux d'arêtes : reste dans l'enveloppe convexe des sommets). */
 export function smoothPath(poly: Poly): string {
@@ -28,25 +30,37 @@ export function smoothPath(poly: Poly): string {
 }
 
 /**
- * Transition peau / cheveux : ombre portée douce sous l'implantation (deux traits larges très transparents)
- * et fins « baby hairs » qui franchissent la ligne. Reste au-dessus de la limite des sourcils (déjà garantie
- * par la ligne d'implantation) : 0,02 H d'amplitude au plus.
+ * Transition peau / cheveux le long de TOUTE la lisière visible de face (implantation du front + bord avant des pattes) : ombre portée
+ * douce posée sur la peau, côté du visage, et petits poils qui franchissent le bord. Netteté, opacité et densité viennent de
+ * `edgeStyle` (coiffure, texture, contraste cheveux / peau). Reste dans la bande de 0,02 H autour de la lisière.
  */
-export function hairlineTransition(geo: HairGeometry, p: FaceParams, lm: FaceLandmarks, skinShadow: string): string[] {
+export function hairlineTransition(geo: HairGeometry, p: FaceParams, lm: FaceLandmarks, skinShadow: string, skin: string = skinShadow): string[] {
   const h = p.hair;
+  const es = edgeStyle(h.style as Exclude<typeof h.style, 'bald'>, resolveTexture(h.style, h.texture), h.color, skin, h.irregularity);
   const rnd = mulberry32(h.seed ^ 0xbabe);
-  const line = (dy: number): string => `M${geo.hairline.map((q) => `${num(q.x)} ${num(q.y + dy * lm.H)}`).join('L')}`;
+  const b = geo.boundary;
+  // Polyligne continue : bord avant de la patte gauche (de la pointe vers la tempe), implantation, patte droite (de la tempe vers la pointe).
+  const chain = [...b.segment('sideburn', -1), ...b.loop.filter((q) => q.kind === 'front'), ...b.segment('sideburn', 1)];
+  // Décalage vers la peau : vers le bas sur l'implantation, vers le centre du visage sur les pattes.
+  const toSkin = (q: (typeof chain)[number], d: number): string => {
+    const dx = q.kind === 'sideburn' ? -Math.sign(q.p.x || 1) * d * lm.H * 0.9 : 0;
+    const dy = q.kind === 'sideburn' ? 0 : d * lm.H;
+    return `${num(q.p.x + dx)} ${num(q.p.y + dy)}`;
+  };
+  const line = (d: number): string => `M${chain.map((q) => toSkin(q, d)).join('L')}`;
   const out = [
-    el('path', { d: line(0.011), fill: 'none', stroke: skinShadow, 'stroke-width': lm.W * 0.024, 'stroke-linecap': 'round', opacity: 0.05 }),
-    el('path', { d: line(0.005), fill: 'none', stroke: skinShadow, 'stroke-width': lm.W * 0.014, 'stroke-linecap': 'round', opacity: 0.1 }),
+    el('path', { d: line(0.011), fill: 'none', stroke: skinShadow, 'stroke-width': lm.W * 0.024 * es.shadowWidth, 'stroke-linecap': 'round', opacity: es.shadowAlpha * 0.5 }),
+    el('path', { d: line(0.005), fill: 'none', stroke: skinShadow, 'stroke-width': lm.W * 0.014 * es.shadowWidth, 'stroke-linecap': 'round', opacity: es.shadowAlpha }),
   ];
-  const n = geo.hairline.length;
-  for (let i = 2; i < n - 2; i++) {
-    if (rnd() < 0.25 + 0.3 * h.irregularity) continue;
-    const q = geo.hairline[i] as { x: number; y: number };
-    const ang = Math.PI / 2 + (rnd() - 0.5) * 1.6;
+  // Petits poils : sur l'implantation (vers le haut/bas, éventail de ±0,8 rad) ; sur les pattes (vers l'intérieur).
+  const keep = es.strayShare;
+  for (let i = 2; i < chain.length - 2; i++) {
+    if (rnd() >= keep) continue;
+    const q = chain[i] as (typeof chain)[number];
+    const side = q.kind === 'sideburn';
+    const ang = (side ? (q.p.x < 0 ? 0 : Math.PI) : Math.PI / 2) + (rnd() - 0.5) * 1.6;
     const len = (0.006 + 0.01 * rnd()) * lm.H;
-    out.push(el('path', { d: `M${num(q.x)} ${num(q.y - 0.002 * lm.H)}l${num(Math.cos(ang) * len)} ${num(Math.sin(ang) * len)}`, fill: 'none', stroke: darken(h.color, 0.1), 'stroke-width': lm.W * 0.0011, 'stroke-linecap': 'round', opacity: 0.22 + 0.3 * rnd() }));
+    out.push(el('path', { d: `M${num(q.p.x)} ${num(q.p.y - (side ? 0 : 0.002 * lm.H))}l${num(Math.cos(ang) * len)} ${num(Math.sin(ang) * len)}`, fill: 'none', stroke: darken(h.color, 0.1), 'stroke-width': lm.W * 0.0011, 'stroke-linecap': 'round', opacity: (0.22 + 0.3 * rnd()) * (es.strayAlpha / 0.4) }));
   }
   return out;
 }

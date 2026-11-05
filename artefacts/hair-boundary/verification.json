@@ -1,0 +1,95 @@
+{
+ "faces": 600,
+ "checks": {
+  "boundary-finite": {
+   "layer": "geometry",
+   "severity": "error",
+   "n": 600,
+   "fail": 0
+  },
+  "boundary-inside-contour": {
+   "layer": "geometry",
+   "severity": "error",
+   "n": 600,
+   "fail": 0
+  },
+  "boundary-matches-face-projection": {
+   "layer": "geometry",
+   "severity": "error",
+   "n": 600,
+   "fail": 0
+  },
+  "boundary-no-self-crossing": {
+   "layer": "geometry",
+   "severity": "error",
+   "n": 600,
+   "fail": 0
+  },
+  "boundary-closed-no-hole": {
+   "layer": "geometry",
+   "severity": "error",
+   "n": 600,
+   "fail": 0
+  },
+  "boundary-above-brows": {
+   "layer": "anatomy",
+   "severity": "error",
+   "n": 600,
+   "fail": 0
+  },
+  "boundary-sideburn-above-eyes": {
+   "layer": "anatomy",
+   "severity": "error",
+   "n": 600,
+   "fail": 0
+  },
+  "boundary-clears-ear": {
+   "layer": "anatomy",
+   "severity": "error",
+   "n": 600,
+   "fail": 0
+  },
+  "boundary-nape-below-ears": {
+   "layer": "anatomy",
+   "severity": "error",
+   "n": 600,
+   "fail": 0
+  },
+  "shell-off-face-skin": {
+   "layer": "anatomy",
+   "severity": "error",
+   "n": 600,
+   "fail": 0
+  },
+  "shell-clears-free-ear-left": {
+   "layer": "anatomy",
+   "severity": "error",
+   "n": 395,
+   "fail": 0
+  },
+  "shell-clears-free-ear-right": {
+   "layer": "anatomy",
+   "severity": "error",
+   "n": 415,
+   "fail": 0
+  },
+  "hairline-smooth": {
+   "layer": "style",
+   "severity": "warn",
+   "n": 600,
+   "fail": 0
+  },
+  "hairline-balance": {
+   "layer": "style",
+   "severity": "warn",
+   "n": 600,
+   "fail": 0
+  },
+  "hairline-edge-readable": {
+   "layer": "style",
+   "severity": "warn",
+   "n": 600,
+   "fail": 0
+  }
+ }
+}

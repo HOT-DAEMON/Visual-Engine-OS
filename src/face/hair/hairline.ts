@@ -36,6 +36,22 @@ export function buildHairline(p: FaceParams, lm: FaceLandmarks): Hairline {
   const partX = h.part * 0.1 * W;
   const rnd = mulberry32(h.seed ^ 0x77);
   const notches = Array.from({ length: Math.floor(rnd() * (1 + 2 * h.irregularity)) }, () => ({ c: -0.8 + 1.6 * rnd(), w: 0.05 + 0.06 * rnd(), d: (0.4 + 0.6 * rnd()) * h.irregularity * 0.025 * H }));
+  // L'implantation est POSÉE SUR LE CRÂNE : un point dont l'abscisse dépasse le contour à son ordonnée (recul fort, implantation haute : le crâne est
+  // étroit près du sommet) est descendu jusqu'à l'ordonnée où le crâne est assez large ; sinon, ramené sur le contour.
+  const inside = 0.985;
+  const yWide = lm.hair.templeY;
+  const onSkull = (q: Vec): Vec => {
+    if (inside * hw(q.y) >= Math.abs(q.x)) return q;
+    let lo = q.y;
+    let hi = Math.max(q.y, Math.min(low, yWide));
+    if (inside * hw(hi) < Math.abs(q.x)) return { x: Math.sign(q.x) * inside * hw(q.y), y: q.y };
+    for (let k = 0; k < 24; k++) {
+      const mid = (lo + hi) / 2;
+      if (inside * hw(mid) >= Math.abs(q.x)) hi = mid;
+      else lo = mid;
+    }
+    return { x: q.x, y: hi };
+  };
   const pts: Vec[] = Array.from({ length: N + 1 }, (_, i) => {
     const s = -1 + (2 * i) / N;
     const x = s * xEnd;
@@ -53,7 +69,7 @@ export function buildHairline(p: FaceParams, lm: FaceLandmarks): Hairline {
     y -= h.recession * 0.12 * H * Math.exp(-(((a - 0.78) / 0.17) ** 2));
     y += h.irregularity * 0.014 * H * (s < 0 ? nzL : nzR)(a * 8 + 3);
     for (const q of notches) y -= q.d * Math.exp(-(((s - q.c) / q.w) ** 2));
-    return { x, y: clamp(y, high, low) };
+    return onSkull({ x, y: clamp(y, high, low) });
   });
   const at = (s: number): Vec => {
     const f = clamp((s + 1) / 2, 0, 1) * N;

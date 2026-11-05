@@ -10,9 +10,11 @@ import { checkStructure } from './structure';
 import { checkContracts } from './contracts';
 import { checkHairSim } from './hair-sim';
 import { checkHairZones } from './hair-zones';
+import { checkHairBoundary } from './hair-boundary';
 import { report, type Check, type Report } from './types';
 
 export { checkHairZones } from './hair-zones';
+export { checkHairBoundary, selfCrossings } from './hair-boundary';
 export { checkHairSim, hairSimStats, toleranceOf, type HairSimStats } from './hair-sim';
 
 export { paletteStats, isVivid } from './style';
@@ -45,6 +47,7 @@ export function verifyFace(face: RandomFace): Report {
   checks.push(...checkContracts(face, svg));
   checks.push(...checkHairSim(face));
   checks.push(...checkHairZones(face));
+  checks.push(...checkHairBoundary(face));
   return report(checks);
 }
 export { measureEquivalence, equivalenceChecks, geometryOf, EQUIVALENCE_LIMITS, type EquivalenceMetrics } from './render-equivalence';

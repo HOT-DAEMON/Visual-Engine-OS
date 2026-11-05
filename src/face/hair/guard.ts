@@ -3,6 +3,7 @@ import type { Vec } from '../../geometry/eye/primitives';
 import type { FaceParams } from '../../schema';
 import type { FaceLandmarks } from '../landmarks';
 import { halfWidthAt, rightSamples } from '../outline';
+import { sideburnProfile } from './boundary/sideburn';
 import type { Hairline } from './hairline';
 
 export type GuardMode = 'cap' | 'fringe' | 'cheek';
@@ -30,13 +31,9 @@ export function makeGuard(p: FaceParams, lm: FaceLandmarks, hl: Hairline): Guard
   const { W, H, outline } = lm;
   const samples = rightSamples(outline);
   const hw = (y: number): number => halfWidthAt(outline, y, samples);
-  const yT = lm.hair.templeY;
-  const sb = p.hair.sideburns;
-  const yBs = Math.max(yT + 0.02 * H, Math.min(yT + (0.1 + 0.9 * sb) * (lm.eyeY - yT) * 0.8, lm.eyeY - 0.03 * H));
-  const w0 = 0.03 * hw(yT);
-  const wSB = (0.022 + 0.018 * sb) * W;
+  const profile = sideburnProfile(p, lm);
   const yF = lm.browLimitY - 0.008 * H;
-  const sideMargin = (y: number): number => (y <= yBs ? w0 + (wSB - w0) * clamp((y - yT) / (yBs - yT), 0, 1) : 0);
+  const sideMargin = profile.margin;
   // Mode `cheek` : une mèche peut longer la joue DEVANT l'oreille. Marge bornée par la marge de l'œil au niveau des yeux
   // (le bord extérieur d'un œil reste à 0,045 W du contour : `fit-eye.ts`), plus large sous le nez où il n'y a que la joue.
   const cheekMargin = (y: number): number => {

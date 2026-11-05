@@ -3,6 +3,7 @@ import type { Vec } from '../../geometry/eye/primitives';
 import type { FaceParams, HairStyle, HairTexture } from '../../schema';
 import type { FaceLandmarks } from '../landmarks';
 import type { Poly } from '../poly';
+import type { HairBoundary } from './boundary/types';
 import type { Guard } from './guard';
 import type { Hairline } from './hairline';
 import { rot, sub, unit } from './noise';
@@ -47,6 +48,8 @@ export interface HairCtx {
   readonly h: FaceParams['hair'];
   readonly lm: FaceLandmarks;
   readonly hl: Hairline;
+  /** Lisière complète (front, pattes, oreilles, nuque) : l'implantation `hl` en est le tronçon `front`. */
+  readonly boundary: HairBoundary;
   readonly arc: Vec[];
   readonly guard: Guard;
   readonly rnd: () => number;

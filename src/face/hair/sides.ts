@@ -53,7 +53,7 @@ export function coverageOf(polys: Poly[], zone: Poly): number {
 }
 
 /** Comportement 'auto' : les coiffures longues / volumineuses cachent l'oreille ; les courtes et les attaches la dégagent ; les tresses la rangent. */
-function resolveEar(ctx: HairCtx, want: FaceParams['hair']['sides']['left']['ear']): SideInfo['ear'] {
+export function resolveEar(ctx: HairCtx, want: FaceParams['hair']['sides']['left']['ear']): SideInfo['ear'] {
   if (want !== 'auto') return want;
   const s = ctx.h.style;
   return s === 'bob' || s === 'long' || s === 'afro' || s === 'curly' ? 'covered' : s === 'braids' ? 'tucked' : 'free';

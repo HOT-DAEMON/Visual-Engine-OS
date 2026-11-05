@@ -2,33 +2,33 @@ import { clamp } from '../../core/math';
 import type { Vec } from '../../geometry/eye/primitives';
 import { orient, type Poly } from '../poly';
 import type { HairCtx } from './flow';
+import { SHELL, capShell, type Reach } from './boundary/shell';
+import type { WingInfo } from './boundary/wings';
 import { arcAt } from './hairline';
-import { smoothstep, sub, unit } from './noise';
+import { resolveEar } from './sides';
 import { liftBump } from './volume';
 import { ribbon } from './ribbon';
 import type { BareScalp } from './types';
 
 /**
- * Sous-couche racine et cuir chevelu : la sous-couche remplit la zone entre la ligne d'implantation et le
- * contour du crâne (légèrement gonflée selon la coiffure et le volume) ; les mèches sont dessinées PAR-DESSUS,
- * c'est ce qui sépare le volume capillaire du cuir chevelu.
+ * Sous-couche racine et cuir chevelu : la sous-couche est la COQUE de la chevelure (`boundary/shell.ts`) : son bord intérieur est la
+ * lisière (implantation, pattes, arche de l'oreille), son bord extérieur le contour du crâne épaissi selon la coiffure et le volume,
+ * qui descend sur les côtés jusqu'au-dessus de l'oreille. Les mèches sont dessinées PAR-DESSUS : c'est ce qui sépare le volume
+ * capillaire du cuir chevelu.
  */
-export function capBase(ctx: HairCtx): { base: Poly; scalp: Poly } {
-  const { h, lm, hl, arc, guard, C, def } = ctx;
-  // Enveloppe = volume de la coiffure + GONFLEMENT (`puff`, toutes textures) ; chaque point est mis à l'échelle par le gain de
-  // silhouette de son côté (asymétrie) et relevé par la bosse des racines à la raie.
-  const off = (def.off[0] + def.off[1] * h.volume + ctx.puffW) * lm.W;
-  const outer = arc.map((q, i) => {
-    const k = i / (arc.length - 1);
-    // Évanouissement court aux deux extrémités (temples) : la masse dépasse du crâne en haut ET sur les côtés.
-    const f = off * ctx.gain(2 * k - 1) * smoothstep(Math.min(1, Math.min(k, 1 - k) * (ctx.puffW > 0.01 ? 16 : 6)));
-    const n = unit(sub(q, C));
-    const bump = liftBump(h, ctx.partX, lm.W, lm.H, q.x);
-    return { x: q.x + n.x * f, y: q.y + n.y * f - bump };
-  });
+export function capBase(ctx: HairCtx): { base: Poly; scalp: Poly; wings: { left: WingInfo; right: WingInfo }; crown: number } {
+  const { h, lm, hl, arc, guard, def } = ctx;
+  const crown = (def.off[0] + def.off[1] * h.volume + ctx.puffW) * lm.W;
+  const spec = SHELL[h.style as Exclude<typeof h.style, 'bald'>];
+  // Archétype simulé avec masses de région : tempes et pattes viennent des masses, la coque garde seulement le dessus.
+  const own = h.sim.enabled && h.sim.regions;
+  // Oreille couverte : l'aile passe devant l'oreille ; sinon elle s'arrête au-dessus (jamais de couverture involontaire d'une oreille « libre »).
+  const reachOf = (name: 'left' | 'right'): Reach => (own || !spec || spec.reach === 'none' ? 'none' : resolveEar(ctx, h.sides[name].ear) === 'covered' ? 'cover' : 'ear');
+  const shell = capShell({ lm, boundary: ctx.boundary, crown, side: spec?.side ?? 1, reach: { left: reachOf('left'), right: reachOf('right') }, gain: ctx.gain, bump: (x) => liftBump(h, ctx.partX, lm.W, lm.H, x), C: ctx.C });
   const scalp = orient([...hl.pts, ...[...arc].reverse()]);
-  const base = guard.fit(orient([...hl.pts, ...[...outer].reverse()]));
-  return { base, scalp };
+  const base = guard.fit(orient(shell.ring));
+  const wings = { left: { reach: reachOf('left'), yEnd: shell.yEnd.left }, right: { reach: reachOf('right'), yEnd: shell.yEnd.right } };
+  return { base, scalp, wings, crown };
 }
 
 const ellipse = (cx: number, cy: number, rx: number, ry: number): Poly => Array.from({ length: 28 }, (_, i) => ({ x: cx + rx * Math.cos((2 * Math.PI * i) / 28), y: cy + ry * Math.sin((2 * Math.PI * i) / 28) }));
