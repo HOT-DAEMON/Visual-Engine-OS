@@ -24,6 +24,7 @@ import { simLocks } from './sim';
 import { canonical, ContentCache } from '../../perf/content-cache';
 import { clock } from '../../perf/clock';
 import { makeGain, makeLift, puffWidth } from './volume';
+import { applyWind } from './wind';
 
 export { buildBoundary, rootFrames, windDir, projectBoundary } from './boundary';
 export type { HairBoundary, BoundaryPoint, EdgeKind, HairMarks, RootFrame } from './boundary';
@@ -99,11 +100,13 @@ function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null 
   const masses = tierMasses(ctx, sides.front);
   const simOver = sim ? sim.locks.filter((l) => l.layer === 'over') : [];
   const all = [...sides.back, ...sides.front, ...occ.locks, ...simOver];
-  return {
+  const geo: HairGeometry = {
     texture: tex, hairline: hl.pts, boundary, scalp, base: [base], bare: bareScalp(ctx), locks: all, backBase,
     front: [base, ...(classic ? [classic.base] : []), ...sides.front.map((l) => l.poly)], back: [...(backBase ? [backBase] : []), ...sides.back.map((l) => l.poly)],
     fringeBottom, ties, over: [...occ.locks, ...simOver].map((l) => l.poly), skinShadows: sim?.skinShadows ?? [], simMass: sim?.mass ?? null, shaved: sim?.shaved ?? [], tierMasses: masses, occlusions: occ.info, sides: sides.info,
   };
+  // Vent (aucun par défaut : la même géométrie, sans copie) : mèches déplacées en levier autour de leur racine, sans jamais recouvrir la peau du visage.
+  return applyWind(geo, h.wind, lm.H);
 }
 
 /**

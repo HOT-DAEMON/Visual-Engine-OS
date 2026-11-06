@@ -1,0 +1,202 @@
+[
+  {
+    "coiffure": "buzz",
+    "geometry": [
+      0,
+      0
+    ],
+    "anatomy": [
+      0,
+      0
+    ],
+    "style": [
+      0,
+      0
+    ],
+    "turn": [
+      0,
+      0
+    ],
+    "full": 0
+  },
+  {
+    "coiffure": "short",
+    "geometry": [
+      0,
+      0
+    ],
+    "anatomy": [
+      0,
+      0
+    ],
+    "style": [
+      0,
+      0
+    ],
+    "turn": [
+      0,
+      0
+    ],
+    "full": 0
+  },
+  {
+    "coiffure": "spiky",
+    "geometry": [
+      0,
+      4
+    ],
+    "anatomy": [
+      0,
+      0
+    ],
+    "style": [
+      0,
+      0
+    ],
+    "turn": [
+      0,
+      0
+    ],
+    "full": 0
+  },
+  {
+    "coiffure": "curly",
+    "geometry": [
+      0,
+      0
+    ],
+    "anatomy": [
+      0,
+      0
+    ],
+    "style": [
+      0,
+      0
+    ],
+    "turn": [
+      0,
+      0
+    ],
+    "full": 0
+  },
+  {
+    "coiffure": "afro",
+    "geometry": [
+      0,
+      5
+    ],
+    "anatomy": [
+      0,
+      0
+    ],
+    "style": [
+      0,
+      0
+    ],
+    "turn": [
+      0,
+      0
+    ],
+    "full": 0
+  },
+  {
+    "coiffure": "bob",
+    "geometry": [
+      0,
+      0
+    ],
+    "anatomy": [
+      0,
+      0
+    ],
+    "style": [
+      0,
+      0
+    ],
+    "turn": [
+      0,
+      0
+    ],
+    "full": 0
+  },
+  {
+    "coiffure": "long",
+    "geometry": [
+      0,
+      0
+    ],
+    "anatomy": [
+      0,
+      0
+    ],
+    "style": [
+      0,
+      0
+    ],
+    "turn": [
+      0,
+      0
+    ],
+    "full": 0
+  },
+  {
+    "coiffure": "ponytail",
+    "geometry": [
+      0,
+      0
+    ],
+    "anatomy": [
+      0,
+      0
+    ],
+    "style": [
+      0,
+      0
+    ],
+    "turn": [
+      0,
+      0
+    ],
+    "full": 0
+  },
+  {
+    "coiffure": "bun",
+    "geometry": [
+      0,
+      2
+    ],
+    "anatomy": [
+      0,
+      0
+    ],
+    "style": [
+      0,
+      0
+    ],
+    "turn": [
+      0,
+      0
+    ],
+    "full": 0
+  },
+  {
+    "coiffure": "braids",
+    "geometry": [
+      0,
+      0
+    ],
+    "anatomy": [
+      0,
+      0
+    ],
+    "style": [
+      0,
+      0
+    ],
+    "turn": [
+      0,
+      0
+    ],
+    "full": 0
+  }
+]

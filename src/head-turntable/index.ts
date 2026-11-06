@@ -10,3 +10,5 @@ export { silhouetteProfile, centroids, topRow } from './silhouette';
 export { verifyHeadTurn, cachedRenderer, verifyGeometry, verifyAnatomy, verifyStyle, type RotationMeasures, type RenderAt } from './verify';
 export type { Check, Layer, LayerReport, TurnReport } from './verify-types';
 export { FIT_YAWS, HOLDOUT_YAWS, silhouetteError, maskIoU } from './verify-geo';
+export { headSpecFromFace, regionFromBoundary, faceYToU } from './hair-bridge';
+export { inRegion, edgeDistance, regionKnots, regionField, signedDistance, smoothRegion, type HairRegion, type RegionField } from './hair-region';

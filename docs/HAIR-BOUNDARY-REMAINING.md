@@ -9,19 +9,19 @@ Ce qui est fait : `HAIR-BOUNDARY.md`. Rien ci-dessous n'est caché : chaque lign
 4. **Visage non symétrique** : le miroir gauche utilise les oreilles gauches, mais pas de patte asymétrique indépendante (la patte vient d'un seul profil).
 
 ## Formes de cheveux et coque
-5. **Moteur v2 — défauts d'origine hors lisière, non traités** : frange « en dents de peigne », bob avec masse grise asymétrique, `spiky` et `afro` très volumineux, mèche de queue de cheval qui descend sous le cou.
-6. **Moteur classic** : frange à l'aspect « peigne » sur `short` (planche 06, colonne 1).
+5. **Moteur v2 — partiellement traité** (voir `HAIR-SHAPES.md`) : cônes, ailes, queue de cheval corrigés ; `spiky`/`afro` encore volumineux, bob à masse asymétrique non traité.
+6. **Moteur classic** : frange `short` refaite en festons arrondis (voir `HAIR-SHAPES.md`) ; jugement d'élégance = revue humaine.
 7. **Archétypes simulés (Verlet)** : intouchés ; régions `own` → portée de coque `none`. Leur lisière propre n'est pas reliée à `boundary`.
 8. **Vue de profil des cheveux** (`src/skull/hair-shape.ts`) : n'utilise pas la nouvelle lisière.
 9. **Coque** : épaisseur par table `SHELL` (10 coiffures), pas dérivée du volume réel de la masse ; pas de coupe en dégradé ni de raie rasée.
 
 ## Rotation de la tête
-10. **Interface seulement** (+ module voisin non relié) : `projectBoundary` et `skullSurface.project` tournent la lisière de façon rigide (testé) ; le **rendu complet d'un visage tourné n'est pas branché** (planche 04 = schéma de géométrie). Le commit distant `327f2b9` (`src/head-turntable`, `docs/HEAD-TURNTABLE.md`) rend une tête complète en rotation avec sa PROPRE ligne d'implantation (`hairlineY`) : il n'importe rien de `src/face` ; relier cette lisière à ce module n'est pas fait (et aucun conflit : fichiers disjoints).
+10. **Relié depuis `HEAD-TURNTABLE-HAIR.md`** : la lisière alimente la tête tournante (`headSpecFromFace`). Reste : volume 3D. Historique : interface seulement (+ module voisin) : `projectBoundary` et `skullSurface.project` tournent la lisière de façon rigide (testé) ; le **rendu complet d'un visage tourné n'est pas branché** (planche 04 = schéma de géométrie). Le commit distant `327f2b9` (`src/head-turntable`, `docs/HEAD-TURNTABLE.md`) rend une tête complète en rotation avec sa PROPRE ligne d'implantation (`hairlineY`) : il n'importe rien de `src/face` ; relier cette lisière à ce module n'est pas fait (et aucun conflit : fichiers disjoints).
 11. Les mèches (`front`, `wings`, masses) ne sont pas encore implantées en 3D sur les repères de racine : elles restent en 2D de face.
 12. Visibilité : la pente verticale de la normale est négligée (seule l'azimut compte) ; suffisant pour la lisière, pas pour des mèches.
 
 ## Vent
-13. `windDir` ne donne que **la direction et la portance** par racine ; aucune intégration (Verlet, ressort) ni soufflage dans les moteurs de rendu. Planche 05 = champ de flèches.
+13. Vent 2D de face intégré (`HAIR-WIND.md`). `windDir` ne donne que **la direction et la portance** par racine ; aucune intégration (Verlet, ressort) ni soufflage dans les moteurs de rendu. Planche 05 = champ de flèches.
 14. Pas de turbulence, pas de rafale, pas de couplage avec `sim/`.
 
 ## Rendu du bord

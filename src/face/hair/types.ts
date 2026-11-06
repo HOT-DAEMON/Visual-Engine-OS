@@ -28,6 +28,8 @@ export interface HairLock {
   readonly w0?: number;
   readonly sharp?: number;
   readonly profile?: 'ribbon' | 'cone';
+  /** Largeur relative de la racine (voir `ribbon`) : lue par le rendu pour rester sur la même formule. */
+  readonly rootW?: number;
   /** Concavité du cône (profil `cone`). */
   readonly power?: number;
   /** Étage de longueur (0 = le plus long / le plus au fond). */

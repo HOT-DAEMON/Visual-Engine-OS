@@ -4,7 +4,8 @@ import { orient, type Poly } from '../poly';
 import { lockFrom, type HairCtx } from './flow';
 import type { HairLock } from './types';
 
-const tri = (u: number): number => 1 - Math.abs(2 * (u - Math.floor(u)) - 1);
+/** Feston arrondi (0 aux jonctions, 1 au milieu de la mèche) : un bord de frange est une suite de mèches à bout rond, pas une scie à dents triangulaires. */
+const tri = (u: number): number => 0.5 - 0.5 * Math.cos(2 * Math.PI * (u - Math.floor(u)));
 
 export interface Fringe {
   readonly locks: HairLock[];
@@ -26,7 +27,7 @@ export function buildFringe(ctx: HairCtx): Fringe | null {
   const d = 0.012 * H;
   const xF = guard.hw(yF) * 0.985;
   const yC = lm.hair.centerY;
-  const teeth = 9 + Math.floor(rnd() * 5);
+  const teeth = 6 + Math.floor(rnd() * 4);
   const depth = Array.from({ length: teeth }, () => (0.3 + 0.7 * rnd()) * d * (0.4 + 0.6 * h.lengthVariance + 0.4));
   const sp = h.part >= 0 ? 1 : -1;
   const room = yF - d - yC - 0.015 * H;
@@ -59,7 +60,7 @@ export function buildFringe(ctx: HairCtx): Fringe | null {
       const t = j / 8;
       return { x: (1 - t) ** 2 * R.x + 2 * (1 - t) * t * C.x + t * t * E.x, y: (1 - t) ** 2 * R.y + 2 * (1 - t) * t * C.y + t * t * E.y };
     });
-    locks.push(...lockFrom(ctx, centre, { width: (2 * xF * 1.6) / K, rank: 'main', tone: -(0.05 + 0.3 * rnd()) * h.highlight, layer: 'front', sharp: 0.5, mode: 'fringe' }));
+    locks.push(...lockFrom(ctx, centre, { width: (2 * xF * 2.0) / K, rank: 'main', tone: -(0.05 + 0.3 * rnd()) * h.highlight, layer: 'front', sharp: 0.15, mode: 'fringe' }));
   }
   return { locks, base, bottom };
 }
