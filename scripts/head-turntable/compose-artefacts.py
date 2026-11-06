@@ -8,7 +8,7 @@ import json, os, subprocess, sys
 import cv2
 import numpy as np
 
-A = 'artefacts/head-turntable'
+A = os.environ.get('OUT', 'artefacts/head-turntable')
 for d in ('comparison', 'extraction', 'references'): os.makedirs(f'{A}/{d}', exist_ok=True)
 meas = json.load(open('references/face/rotation_head.measures.json'))
 ref = cv2.imread('references/face/rotation_head.jpg')

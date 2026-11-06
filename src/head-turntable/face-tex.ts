@@ -1,7 +1,7 @@
-import { clamp, dot, smooth } from './math';
+import { clamp, smooth } from './math';
 import { hex, mix, type RGB } from './color';
-import { earFrame } from './parts';
 import { REGION, type HeadTurnSpec, type V3 } from './types';
+import { distPolyline, eyeGeo, facePartsU, inPoly } from './engines/face-parts';
 
 /** Texel peint : couleur, région et indicateur d'encre. */
 export interface Tex { readonly c: RGB; readonly region: number; readonly ink?: boolean }
@@ -16,6 +16,7 @@ const dseg = (px: number, py: number, ax: number, ay: number, bx: number, by: nu
 
 /** Œil (texture sur la surface du visage, en coordonnées tête : x vers l'extérieur, y vers le bas). k = compensation de largeur de trait. */
 export function eyeTex(spec: HeadTurnSpec, p: V3, k: number, pal: Pal): Tex | null {
+  if (spec.engine) return eyeTexEngine(spec, p, k, pal);
   const e = spec.eye, hw = e.w / 2, u = Math.abs(p.x) - e.x, v = p.y - e.y, au = u / hw;
   if (Math.abs(au) > 1.45 || Math.abs(v) > 0.2) return null;
   const curve = (a: number): { up: number; lo: number } => { const q = Math.max(0, 1 - a * a); return { up: -e.hUp * Math.pow(q, 0.75) - 0.012 * a, lo: e.hLo * Math.pow(q, 0.9) - 0.012 * a }; };
@@ -48,6 +49,7 @@ export function browTex(spec: HeadTurnSpec, p: V3, k: number, pal: Pal): Tex | n
 
 /** Bouche : ligne de sourire, intérieur (dents + langue) selon `open`, lèvres teintées. */
 export function mouthTex(spec: HeadTurnSpec, p: V3, k: number, pal: Pal): Tex | null {
+  if (spec.engine) return mouthTexEngine(spec, p, k, pal);
   const m = spec.mouth, hw = m.halfW, x = p.x;
   if (Math.abs(x) > hw * 1.04 || Math.abs(p.y - m.y) > 0.1) return null;
   const q = Math.min(1, (x / hw) ** 2), yU = m.y - 0.012 * q, e = Math.sqrt(1 - q), yD = yU + m.open * 0.07 * Math.pow(1 - q, 0.8), th = 0.0055 * k;
@@ -62,6 +64,7 @@ export function mouthTex(spec: HeadTurnSpec, p: V3, k: number, pal: Pal): Tex | 
 
 /** Narines : deux petites marques sombres sous le bout du nez. */
 export function nostrilTex(spec: HeadTurnSpec, p: V3, pal: Pal): Tex | null {
+  if (spec.engine) { const q = { x: Math.abs(p.x), y: p.y }; return inPoly(facePartsU(spec.engine).nostril, q.x, q.y) ? { c: mix(pal.shade, pal.ink, 0.45), region: REGION.skin } : null; }
   const dx = (Math.abs(p.x) - 0.03) / 0.011, dy = (p.y - (spec.nose.baseY - 0.008)) / 0.007;
   return dx * dx + dy * dy < 1 ? { c: mix(pal.shade, pal.ink, 0.45), region: REGION.skin } : null;
 }
@@ -69,12 +72,41 @@ export function nostrilTex(spec: HeadTurnSpec, p: V3, pal: Pal): Tex | null {
 /** Rougeur des joues : opacité douce (0–0,3). */
 export const blushAlpha = (p: V3): number => 0.3 * smooth(1 - Math.hypot((Math.abs(p.x) - 0.26) / 0.1, (p.y - 0.74) / 0.07));
 
-/** Oreille : repère local (u avant → arrière, v haut → bas) ; hélix ombré, conque rosée, arc d'antihélix à l'encre (face externe seulement). */
-export function earTex(spec: HeadTurnSpec, p: V3, n: V3, sg: 1 | -1, k: number, pal: Pal): Tex {
-  const f = earFrame(spec, sg), d = { x: p.x - f.c.x, y: p.y - f.c.y, z: p.z - f.c.z };
-  if (dot(n, f.n) < 0.05) return { c: pal.skin, region: REGION.ear };
-  const uu = dot(d, f.d) / f.rd, vv = dot(d, f.h) / f.rh, rho = Math.hypot(uu, vv);
-  if (Math.abs(rho - 0.72) < 0.028 * k && uu > -0.45) return { c: pal.ink, region: REGION.ear, ink: true };
-  if (rho < 0.55) return { c: mix(pal.skin, pal.shade, 0.75), region: REGION.ear };
-  return { c: rho > 0.72 ? mix(pal.skin, pal.shade, 0.3) : pal.skin, region: REGION.ear };
+/** Œil dont l'OUVERTURE vient du moteur `geometry/eye` (polygone des paupières) ; iris, pupille et reflets restent ceux de la planche. */
+function eyeTexEngine(spec: HeadTurnSpec, p: V3, k: number, pal: Pal): Tex | null {
+  const e = spec.eye, g = eyeGeo(spec), hw = e.w / 2, u = Math.abs(p.x) - e.x, v = p.y - e.y;
+  if (Math.abs(u) > hw * 1.45 || Math.abs(v) > 0.2) return null;
+  const oy = g.outer.y, lash = dseg(u, v, g.outer.x * 0.9, oy - 0.01, g.outer.x * 1.3, oy - 0.034);
+  if (lash < 0.0045 * k) return { c: pal.ink, region: REGION.eye, ink: true };
+  const au = u / hw, inside = inPoly(g.poly, u, v);
+  const th = 0.0115 * k * (0.7 + 0.5 * Math.pow(Math.max(0, 1 - au * au), 0.5)), dU = distPolyline(g.upper, u, v);
+  if (Math.abs(au) <= 1.02 && (dU < th * 0.6 || (dU < th && !inside && v < 0))) return { c: pal.ink, region: REGION.eye, ink: true };
+  if (Math.abs(au) < 0.95 && distPolyline(g.lower, u, v) < 0.0035 * k) return { c: pal.ink, region: REGION.eye, ink: true };
+  if (!inside) return null;
+  const r = Math.hypot(u, v + 0.004), rr = r / e.irisR, up = g.upper.reduce((m, q) => (Math.abs(q.x - u) < Math.abs(m.x - u) ? q : m)).y;
+  if (rr < 1) {
+    if (Math.hypot(u + 0.018, v + 0.026) < 0.016) return { c: WHITE, region: REGION.eye };
+    if (Math.hypot(u - 0.021, v - 0.022) < 0.007) return { c: mix(LIGHT_IRIS, WHITE, 0.7), region: REGION.eye };
+    if (rr < 0.36) return { c: PUPIL, region: REGION.eye };
+    if (rr > 0.8) return { c: pal.deep, region: REGION.eye };
+    return { c: mix(pal.iris, LIGHT_IRIS, smooth((v + 0.004) / e.irisR * 1.2) * 0.8), region: REGION.eye };
+  }
+  return { c: v < up + 0.022 ? LID_SHADOW : WHITE, region: REGION.eye };
+}
+
+/** Bouche dont la cavité, les dents, la langue, les lèvres et la ligne de fermeture viennent du moteur de bouche. */
+function mouthTexEngine(spec: HeadTurnSpec, p: V3, k: number, pal: Pal): Tex | null {
+  const f = facePartsU(spec.engine!), x = p.x, y = p.y;
+  if (Math.abs(x) > spec.mouth.halfW * 1.05 || Math.abs(y - spec.mouth.y) > 0.12) return null;
+  const th = 0.0055 * k, open = f.cavity.length > 0;
+  if (open && inPoly(f.cavity, x, y)) {
+    if (inPoly(f.teethU, x, y) || inPoly(f.teethL, x, y)) { const edge = distPolyline([...f.teethU, f.teethU[0]!], x, y); return edge < th * 0.6 ? { c: pal.ink, region: REGION.mouth, ink: true } : { c: WHITE, region: REGION.mouth }; }
+    const edge = Math.min(distPolyline([...f.cavity, f.cavity[0]!], x, y));
+    if (edge < th) return { c: pal.ink, region: REGION.mouth, ink: true };
+    return { c: inPoly(f.tongue, x, y) ? [226, 120, 128] : mix(pal.mouthIn, [226, 120, 128], smooth((y - spec.mouth.y) / 0.06 - 0.3)), region: REGION.mouth };
+  }
+  if (open ? distPolyline([...f.cavity, f.cavity[0]!], x, y) < th : distPolyline(f.closure, x, y) < th) return { c: pal.ink, region: REGION.mouth, ink: true };
+  if (inPoly(f.lowerLip, x, y) && y < spec.mouth.y + (open ? 0.085 : 0.04)) return { c: pal.lip, region: REGION.mouth };
+  if (inPoly(f.upperLip, x, y)) return { c: mix(pal.lip, pal.ink, 0.08), region: REGION.mouth };
+  return null;
 }

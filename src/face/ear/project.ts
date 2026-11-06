@@ -31,11 +31,13 @@ export interface EarPlacement {
   readonly pivotV: number;
 }
 
-/** Point (u, v, h) du plan → hôte (px), pour le lacet `yawDeg` de la caméra. `h` en px (relief × épaisseur). */
-export function projectPoint(pl: EarPlacement, q: Vec, h: number, yawDeg: number, pivot: Vec): Vec {
+/**
+ * Point (u, v, h) du plan → monde 3D de l'hôte (X latéral sortant, y vers le bas, Z vers l'avant), AVANT toute caméra. `h` en px (relief × épaisseur).
+ * C'est la seule définition du placement : `projectPoint` (vues 2D) et les moteurs 3D (`head-turntable`) l'appellent, il n'y a pas de deuxième formule.
+ */
+export function placeEarPoint(pl: EarPlacement, q: Vec, h: number, pivot: Vec): { X: number; y: number; Z: number } {
   const s = pl.side;
   const a = (pl.openingDeg * Math.PI) / 180;
-  const f = (yawDeg * Math.PI) / 180;
   // Rotation locale dans le plan, autour de la racine de l'hélix (sens miroir pour l'oreille gauche).
   const r = rotate({ x: q.x - pivot.x, y: q.y - pivot.y }, s * pl.rotationDeg);
   const u = r.x + pivot.x;
@@ -43,8 +45,13 @@ export function projectPoint(pl: EarPlacement, q: Vec, h: number, yawDeg: number
   const y = pl.topY + v * pl.hPx;
   const sk = pl.skullX(y);
   const pitch = ((v - pl.pivotV) * pl.hPx * Math.sin((pl.pitchDeg * Math.PI) / 180));
-  const X = s * (sk + Math.sin(a) * u * pl.hPx + Math.cos(a) * h);
-  const Z = -Math.cos(a) * u * pl.hPx + Math.sin(a) * h + pitch;
+  return { X: s * (sk + Math.sin(a) * u * pl.hPx + Math.cos(a) * h), y, Z: -Math.cos(a) * u * pl.hPx + Math.sin(a) * h + pitch };
+}
+
+/** Point (u, v, h) du plan → hôte (px), pour le lacet `yawDeg` de la caméra. */
+export function projectPoint(pl: EarPlacement, q: Vec, h: number, yawDeg: number, pivot: Vec): Vec {
+  const { X, y, Z } = placeEarPoint(pl, q, h, pivot);
+  const f = (yawDeg * Math.PI) / 180;
   return { x: X * Math.cos(f) - Z * Math.sin(f), y };
 }
 

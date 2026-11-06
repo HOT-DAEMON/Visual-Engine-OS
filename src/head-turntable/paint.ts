@@ -1,6 +1,8 @@
 import { hex, mix, type RGB } from './color';
-import { blushAlpha, browTex, earTex, eyeTex, mouthTex, nostrilTex, paletteOf, type Pal, type Tex } from './face-tex';
-import { norm, smooth, toCam, v3 } from './math';
+import { blushAlpha, browTex, eyeTex, mouthTex, nostrilTex, paletteOf, type Pal, type Tex } from './face-tex';
+import { norm, rad, smooth, toCam, v3 } from './math';
+import { earRig } from './engines/ear3d';
+import { earColor } from './engines/ear-paint';
 import { PART } from './mesh';
 import type { GBuf } from './raster';
 import { hairlineY, headPoint, sectionAt } from './sections';
@@ -10,7 +12,7 @@ import { REGION, type HeadTurnSpec, type View } from './types';
 const LIGHT = norm(v3(-0.25, -0.55, 0.8));
 const NECK_CUT: RGB = [217, 169, 143];
 /** Groupe de contour : les pièces d'un même groupe n'ont pas de trait entre elles (nez et lèvres font partie de la tête). */
-const group = (id: number): number => (id === PART.head || id === PART.bump ? 1 : id === PART.neck ? 2 : id === PART.ear ? 3 : id === PART.neckCut ? 4 : 0);
+const group = (id: number): number => (id === PART.head || id === PART.bump ? 1 : id === PART.neck ? 2 : id === PART.ear || id === PART.earBack ? 3 : id === PART.neckCut ? 4 : 0);
 
 /** Tolérance verticale (repère tête) du trait de lisière pour qu'il garde 0,0055 U d'épaisseur À L'ÉCRAN : elle croît avec la pente de la lisière projetée. */
 function hairTol(spec: HeadTurnSpec, view: View, az: number, hl: number, kw: number): number {
@@ -37,7 +39,11 @@ export function paint(spec: HeadTurnSpec, g: GBuf, view: View, o: PaintOpts): Pa
     let col = mix(pal.shade, pal.skin, t), reg: number = REGION.skin;
     if (id === PART.neckCut) { col = NECK_CUT; reg = REGION.neck; }
     else if (id === PART.neck) { col = mix(pal.shade, pal.skin, Math.min(t, smooth((p.y - 0.98) / 0.2))); reg = REGION.neck; }
-    else if (id === PART.ear) { const tx = earTex(spec, p, nh, p.x >= 0 ? 1 : -1, kw, pal); col = mix(tx.c, mix(pal.shade, tx.c, 0.55), 1 - t); reg = tx.region; }
+    else if (id === PART.ear) {
+      const rig = earRig(spec, p.x >= 0 ? 1 : -1), front = nh.x * (p.x >= 0 ? 1 : -1) * Math.cos(rad(rig.pl.openingDeg)) + nh.z * Math.sin(rad(rig.pl.openingDeg)) > -0.05;
+      const tx = earColor(rig.field, g.uv[2 * k]!, g.uv[2 * k + 1]!, front, kw, pal, 0.0055 * 2, rig.pl.hPx);
+      col = tx.ink ? tx.c : mix(tx.c, mix(pal.shade, tx.c, 0.55), 1 - t); reg = tx.region;
+    }
     else {
       const s = sectionAt(spec, p.y), az = (Math.atan2(p.x, p.z - s.zc) * 180) / Math.PI;
       if (id === PART.head && p.y < hairlineY(spec, az)) {
@@ -58,7 +64,7 @@ export function paint(spec: HeadTurnSpec, g: GBuf, view: View, o: PaintOpts): Pa
 
 /** Contours : discontinuités de silhouette (fond), de groupe (côté proche) ou de profondeur (oreilles, > 0,045 U), élargies d'un disque. */
 function outline(g: GBuf, rgba: Float32Array, ink: RGB, o: PaintOpts): void {
-  const { w, h } = g, sil = new Uint8Array(w * h), inner = new Uint8Array(w * h), thin = new Uint8Array(w * h), r = Math.max(1, Math.round((o.lineU * o.ppuHi) / 2)), ri = Math.max(1, Math.round(r / 2));
+  const { w, h } = g, sil = new Uint8Array(w * h), earSil = new Uint8Array(w * h), inner = new Uint8Array(w * h), thin = new Uint8Array(w * h), r = Math.max(1, Math.round((o.lineU * o.ppuHi) / 2)), ri = Math.max(1, Math.round(r / 2));
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
     const k = y * w + x, gi = group(g.id[k]!);
     if (!gi) continue;
@@ -66,10 +72,10 @@ function outline(g: GBuf, rgba: Float32Array, ink: RGB, o: PaintOpts): void {
       const xx = x + dx, yy = y + dy;
       if (xx < 0 || yy < 0 || xx >= w || yy >= h) { sil[k] = 1; break; }
       const j = yy * w + xx, gj = group(g.id[j]!);
-      if (gj === 0) { sil[k] = 1; break; }
+      if (gj === 0) { (gi === 3 ? earSil : sil)[k] = 1; break; }
       if (gj !== gi && g.depth[k]! > g.depth[j]! && (gi === 4 || gj === 4)) { thin[k] = 1; break; }   // plan de coupe du cou : trait fin, comme sur la planche
       if (gj !== gi && g.depth[k]! > g.depth[j]!) { inner[k] = 1; break; }
-      if (gj === gi && gi === 3 && g.depth[k]! - g.depth[j]! > 0.045) { inner[k] = 1; break; }
+      if (gj === gi && gi === 3 && g.depth[k]! - g.depth[j]! > 0.07) { inner[k] = 1; break; }
     }
   }
   // Silhouette : disque de rayon r, grandit vers l'intérieur ; arête INTERNE : rayon r/2 de part et d'autre, pour la même épaisseur visible.
@@ -82,7 +88,7 @@ function outline(g: GBuf, rgba: Float32Array, ink: RGB, o: PaintOpts): void {
       }
     }
   };
-  stamp(sil, r); stamp(inner, ri); stamp(thin, Math.max(1, Math.round(ri / 2)));
+  stamp(sil, r); stamp(earSil, Math.max(1, Math.round(r * 0.6))); stamp(inner, ri); stamp(thin, Math.max(1, Math.round(ri / 2)));
   for (let k = 0; k < w * h; k++) if (out[k]) { rgba[4 * k] = ink[0]; rgba[4 * k + 1] = ink[1]; rgba[4 * k + 2] = ink[2]; }
 }
 

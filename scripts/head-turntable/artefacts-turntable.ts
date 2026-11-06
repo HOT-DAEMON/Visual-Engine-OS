@@ -8,7 +8,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { encodePngRgba } from '../../src/core/png';
 import { cachedRenderer, defaultFrame, FIT_YAWS, REF_PITCH, REF_RESIDUAL, REF_SPEC, refView, renderHead, silhouetteError, verifyHeadTurn, type RotationMeasures } from '../../src/head-turntable';
 
-const OUT = 'artefacts/head-turntable';
+const OUT = process.env.OUT ?? 'artefacts/head-turntable';
 const measures = JSON.parse(readFileSync('references/face/rotation_head.measures.json', 'utf8')) as RotationMeasures;
 for (const d of ['turntable', 'details', 'verification']) mkdirSync(`${OUT}/${d}`, { recursive: true });
 const save = (path: string, r: { w: number; h: number; rgba: Uint8ClampedArray }): void => writeFileSync(`${OUT}/${path}`, encodePngRgba(r.w, r.h, r.rgba));

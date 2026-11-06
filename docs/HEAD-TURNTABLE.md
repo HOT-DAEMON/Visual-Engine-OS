@@ -1,11 +1,12 @@
 # Tête en rotation (`src/head-turntable`)
 
 Moteur de TÊTE COMPLÈTE vue sous n'importe quel lacet (0° → 360°) : crâne, mâchoire, cou, oreilles, nez, bouche, yeux, sourcils, cheveux.
-Il est CALÉ sur des mesures prises sur `references/face/rotation_head.jpg` (planche de rotation 0° → 180°), pas sur l'œil.
+Sa géométrie est DÉRIVÉE des moteurs existants du dépôt (`src/face`, `src/skull`, `src/geometry/eye`), CALÉS sur des mesures prises sur `references/face/rotation_head.jpg` (planche de rotation 0° → 180°), pas sur l'œil.
 Ne pas confondre avec `src/lighting/head-turn.ts` / `src/geometry/eye/turn3d.ts` : ceux-là font tourner un ŒIL ; ici c'est la tête entière.
 
-Suites : références et méthode de mesure `HEAD-TURNTABLE-REFERENCES.md` · vérification `HEAD-TURNTABLE-VERIFY.md` · reste à faire `HEAD-TURNTABLE-REMAINING.md`.
-Preuves visuelles : `artefacts/head-turntable/` (voir son `README.md`).
+Suites : branchement sur les moteurs existants `HEAD-TURNTABLE-ENGINES.md` (+ calage `HEAD-TURNTABLE-ENGINES-FIT.md`) · références et méthode de mesure `HEAD-TURNTABLE-REFERENCES.md` ·
+vérification `HEAD-TURNTABLE-VERIFY.md` (+ tous les contrôles `HEAD-TURNTABLE-VERIFY-CHECKS.md`) · reste à faire `HEAD-TURNTABLE-REMAINING.md`.
+Preuves visuelles : `artefacts/head-turntable-engines/` (version actuelle, moteurs branchés ; voir son `README.md`) et `artefacts/head-turntable/` (version précédente, module autonome).
 
 ## Utilisation
 
@@ -34,22 +35,26 @@ Conséquence : les hauteurs d'image des traits du visage dérivent avec le lacet
 
 ## Modèle (tête à plat)
 
-| Pièce | Représentation | Fichier |
+La géométrie vient des moteurs existants (détail : `HEAD-TURNTABLE-ENGINES.md`) ; `head-turntable` fournit l'assemblage, la rotation, la caméra et le rendu.
+
+| Pièce | Représentation | Source / fichier |
 |---|---|---|
-| Crâne + mâchoire | pile de 26 sections elliptiques (y, demi-largeur a, face avant zf, face arrière zb), spline de Catmull-Rom | `ref-fit.ts` (généré), `sections.ts`, `mesh.ts` |
-| Cou | cylindre elliptique évasé en bas, plan de coupe fermé (disque) | `mesh.ts` (`neckMeshes`) |
-| Nez, lèvres | « bosses » demi-elliptiques posées sur la surface, hauteur = profil mesuré − face avant | `parts.ts` (`bumpOf`), `spec.ts` |
-| Ailes du nez | deux ellipsoïdes | `parts.ts` |
-| Oreilles | ellipsoïde aplati, bord antérieur sur le crâne, bord postérieur ouvert de 50° | `parts.ts` (`earFrame`) |
-| Yeux, sourcils, bouche, narines, joues | TEXTURES calculées sur la surface (coordonnées tête x, y) : le raccourcissement en 3/4 vient de la géométrie | `face-tex.ts` |
+| Crâne + mâchoire | 27 sections elliptiques (y, a, zf, zb), spline de Catmull-Rom | DÉRIVÉES de `face/outline`, `skull/geometry`, `face/landmarks` : `engines/rows.ts` ; assemblage `sections.ts`, `mesh.ts` |
+| Cou | sections elliptiques le long des lignes du cou du moteur de crâne, plan de coupe fermé | `engines/neck3d.ts`, `mesh.ts` (`neckMeshes`) |
+| Nez, lèvres | « bosses » demi-elliptiques posées sur la surface ; profil et largeur lus sur `skull/` et `face/nose`, `face/mouth` | `engines/nose-mouth.ts`, `parts.ts` (`bumpOf`) |
+| Ailes du nez | deux ellipsoïdes à la crête d'aile du moteur de nez | `parts.ts` |
+| Oreilles | maillage fermé issu de `face/ear` (relief réel : hélix, anthélix, conque, tragus, lobe), posé par `placeEarPoint` | `engines/ear3d.ts`, `ear-field.ts`, `ear-paint.ts` |
+| Yeux | ouverture du moteur `geometry/eye` (polygone) ; iris, pupille, reflets : planche | `engines/face-parts.ts`, `face-tex.ts` |
+| Bouche, narines | cavité, dents, langue, lèvres, narines des moteurs de bouche et de nez | `engines/face-parts.ts`, `face-tex.ts` |
+| Sourcils, joues | TEXTURES calculées sur la surface (coordonnées tête x, y) : le raccourcissement en 3/4 vient de la géométrie | `face-tex.ts` |
 | Cheveux | région de la surface au-dessus d'une lisière y(azimut), spline monotone de Hermite | `sections.ts` (`hairlineY`), `paint.ts` |
 
-Rendu (`render.ts`) : maillages → tampon de profondeur sur-échantillonné (`raster.ts`) → peinture par pixel (`paint.ts` : ombrage à deux tons, lumière FIXE
+Rendu (`render.ts`) : maillages → tampon de profondeur sur-échantillonné (`raster.ts`, avec coordonnées de texture par pixel) → peinture par pixel (`paint.ts` : ombrage à deux tons, lumière FIXE
 en repère caméra, lisière, textures, ombre sous le menton) → contours (silhouette + arêtes internes, épaisseur visible ≈ 0,011 U) → réduction → SVG.
 
 ## D'où vient chaque constante (`spec.ts`)
 
-Chaque constante est étiquetée : **[ajusté]** moindres carrés sur les 9 vues · **[mesuré]** lu sur un masque de couleur · **[annoté]** relevé à la main sur grille (±0,01 U).
+Les constantes MESURÉES restent dans `spec.ts` (`MEASURED_SPEC`) ; la géométrie des moteurs est calée par `fit-engines.ts` (`engines/engine-fit.ts`, généré ; `engines/engine-fixed.ts` pour le reste). Chaque constante est étiquetée : **[ajusté]** moindres carrés sur les 9 vues · **[mesuré]** lu sur un masque de couleur · **[annoté]** relevé à la main sur grille (±0,01 U).
 
 | Constante | Valeur | Origine |
 |---|---|---|
@@ -57,8 +62,9 @@ Chaque constante est étiquetée : **[ajusté]** moindres carrés sur les 9 vues
 | Œil : x, y, z | 0,170 ; 0,629 ; 0,386 U | [ajusté] |
 | Bouche : y, z | 0,861 ; 0,373 U | [ajusté] (centre de la cavité, en retrait des lèvres) |
 | Bout du nez : y, z | 0,735 ; 0,527 U | [mesuré] avancée max. du profil 90° |
-| Sections a, zf, zb | 26 rangées | [mesuré] face 0°/180° et profil 90°, hauteurs ÷ cos b, lissées ([1 2 1], 2 passes) |
-| Dessous de mâchoire, menton | rangées y ≥ 0,85 | [annoté] caché par le cou sur la planche |
+| Sections a, zf, zb | 27 rangées (`ref-fit.ts`, généré) | [mesuré] face 0°/180° et profil 90°, hauteurs ÷ cos b, lissées : CIBLE du calage des moteurs, plus utilisées pour le rendu |
+| Dessous de mâchoire, menton | rangées y ≥ 0,85 | [annoté] caché par le cou : cible à poids réduit ; le rendu utilise le plan mandibulaire dérivé de l'angle gonial |
+| Paramètres des moteurs | 34 | [ajusté] `fit-engines.ts` (voir `HEAD-TURNTABLE-ENGINES-FIT.md`) |
 | Taille d'œil, d'iris, de bouche, d'oreille, de narines | voir `spec.ts` | [mesuré] / [annoté] |
 | Lisière des cheveux | 9 nœuds en azimut | [ajusté] IoU sur masques de cheveux, 5 lacets de calage, 4 hors échantillon |
 | Palette | peau `#fde7cd`, cheveux `#f3e290`, encre `#493831`… | [mesuré] médianes de couleur sur la planche |
@@ -67,10 +73,16 @@ Chaque constante est étiquetée : **[ajusté]** moindres carrés sur les 9 vues
 
     python3 scripts/head-turntable/measure-rotation.py            # planche -> references/face/rotation_head.measures.json
     npx tsx scripts/head-turntable/fit-rotation.ts                # mesures  -> src/head-turntable/ref-fit.ts (généré)
+    npx tsx scripts/head-turntable/fit-engines.ts                 # ref-fit -> paramètres des moteurs (engines/engine-fit.ts, généré) + fit_report.json
     python3 scripts/head-turntable/annotate-face-refs.py          # 01 / 02 / 05 -> references/face/face_refs.measures.json
     npx tsx scripts/head-turntable/artefacts-turntable.ts         # rendus + rapport de vérification
     python3 scripts/head-turntable/compose-artefacts.py           # montages, superpositions, détails
     python3 scripts/head-turntable/hair-iou.py                    # recouvrement des cheveux
+    npx tsx scripts/head-turntable/artefacts-engines.ts && python3 scripts/head-turntable/compose-engines.py   # gros plans oreille / mâchoire, avant-après
+    python3 scripts/head-turntable/doc-checks.py && python3 scripts/head-turntable/doc-fit.py                  # tableaux de la doc, générés
     # recalage optionnel de la lisière : export-hair-masks.py .scratch/refhair puis fit-hairline.ts .scratch/refhair
 
-Tests : `npx vitest run tests/head-turntable.test.ts` (13 tests, ≈ 17 s : déterminisme, symétrie, périodicité, vérification des 3 couches, détection de défauts injectés).
+Variables : `OUT=<dossier>` pour `artefacts-turntable.ts`, `compose-artefacts.py`, `artefacts-engines.ts`, `compose-engines.py` (défaut : `artefacts/head-turntable`).
+
+Tests : `npx vitest run tests/head-turntable.test.ts tests/head-turntable-engines.test.ts` (26 tests, ≈ 25 s : déterminisme, symétrie, périodicité, vérification des 3 couches, défauts injectés,
+usage réel des moteurs, équivalence `projectPoint`/`placeEarPoint`, oreilles symétriques et attachées).

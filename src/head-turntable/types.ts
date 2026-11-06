@@ -27,10 +27,14 @@ export interface NeckSpec { readonly a: number; readonly b: number; readonly zc:
 export interface HairlineSpec { readonly knots: readonly (readonly [number, number])[] }
 export interface PaletteSpec { readonly skin: string; readonly skinShade: string; readonly hair: string; readonly hairShade: string; readonly ink: string; readonly iris: string; readonly irisDeep: string; readonly lip: string; readonly mouthIn: string; readonly blush: string }
 
+import type { EngineHead } from './engines/face-model';
+
 export interface HeadTurnSpec {
   readonly rows: readonly Row[];
   readonly eye: EyeSpec; readonly brow: BrowSpec; readonly nose: NoseSpec; readonly mouth: MouthSpec;
   readonly ear: EarSpec; readonly neck: NeckSpec; readonly hairline: HairlineSpec; readonly palette: PaletteSpec;
+  /** Tête issue des moteurs existants (crâne, mâchoire, nez, bouche, oreille) : absente pour une spec purement mesurée. */
+  readonly engine?: EngineHead;
 }
 
 /** Résultat d'un rendu : pixels RGBA, SVG autonome (PNG incrusté) et tampon d'identifiants pour la vérification. */

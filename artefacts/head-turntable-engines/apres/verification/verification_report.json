@@ -1,0 +1,820 @@
+{
+ "pitchDeg": 17.73,
+ "rigidFitResidualU": {
+  "eye": 0.0121,
+  "mouth": 0.0063,
+  "observations": 26
+ },
+ "pass": true,
+ "layers": [
+  {
+   "layer": "geometry",
+   "checks": [
+    {
+     "layer": "geometry",
+     "id": "mesh.finite",
+     "label": "Maillages : sommets ou normales non finis (NaN / Infinity)",
+     "value": 0,
+     "min": 0,
+     "max": 0,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "sil.fit.0",
+     "label": "Silhouette à 0° (vue de calage) : erreur moyenne vs mesure, en U",
+     "value": 0.0177,
+     "min": 0,
+     "max": 0.03,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "sil.fit.90",
+     "label": "Silhouette à 90° (vue de calage) : erreur moyenne vs mesure, en U",
+     "value": 0.026,
+     "min": 0,
+     "max": 0.03,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "sil.fit.180",
+     "label": "Silhouette à 180° (vue de calage) : erreur moyenne vs mesure, en U",
+     "value": 0.0204,
+     "min": 0,
+     "max": 0.03,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "sil.holdout.20",
+     "label": "Silhouette à 20° (HORS échantillon) : erreur moyenne vs mesure, en U",
+     "value": 0.0249,
+     "min": 0,
+     "max": 0.035,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "sil.holdout.45",
+     "label": "Silhouette à 45° (HORS échantillon) : erreur moyenne vs mesure, en U",
+     "value": 0.0244,
+     "min": 0,
+     "max": 0.035,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "sil.holdout.70",
+     "label": "Silhouette à 70° (HORS échantillon) : erreur moyenne vs mesure, en U",
+     "value": 0.0264,
+     "min": 0,
+     "max": 0.035,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "sil.holdout.110",
+     "label": "Silhouette à 110° (HORS échantillon) : erreur moyenne vs mesure, en U",
+     "value": 0.0287,
+     "min": 0,
+     "max": 0.035,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "sil.holdout.135",
+     "label": "Silhouette à 135° (HORS échantillon) : erreur moyenne vs mesure, en U",
+     "value": 0.0273,
+     "min": 0,
+     "max": 0.035,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "sil.holdout.160",
+     "label": "Silhouette à 160° (HORS échantillon) : erreur moyenne vs mesure, en U",
+     "value": 0.0238,
+     "min": 0,
+     "max": 0.035,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "mirror.45",
+     "label": "Symétrie : rendu à +45° = miroir du rendu à −45° (IoU)",
+     "value": 0.9901,
+     "min": 0.985,
+     "max": 1,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "period.315",
+     "label": "Périodicité : rendu à 315° = rendu à −45° (IoU)",
+     "value": 1,
+     "min": 0.999,
+     "max": 1,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "eyes.0",
+     "label": "Yeux visibles à 0° (attendu 2)",
+     "value": 2,
+     "min": 2,
+     "max": 2,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "eyes.90",
+     "label": "Yeux visibles à 90° (attendu 1)",
+     "value": 1,
+     "min": 1,
+     "max": 1,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "eyes.180",
+     "label": "Yeux visibles à 180° (attendu 0)",
+     "value": 0,
+     "min": 0,
+     "max": 0,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "iris.0",
+     "label": "Iris proche à 0° : écart de position vs mesure, en U",
+     "value": 0.0276,
+     "min": 0,
+     "max": 0.05,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "iris.20",
+     "label": "Iris proche à 20° : écart de position vs mesure, en U",
+     "value": 0.0263,
+     "min": 0,
+     "max": 0.05,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "iris.45",
+     "label": "Iris proche à 45° : écart de position vs mesure, en U",
+     "value": 0.0321,
+     "min": 0,
+     "max": 0.05,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "iris.70",
+     "label": "Iris proche à 70° : écart de position vs mesure, en U",
+     "value": 0.0318,
+     "min": 0,
+     "max": 0.05,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "iris.90",
+     "label": "Iris proche à 90° : écart de position vs mesure, en U",
+     "value": 0.0117,
+     "min": 0,
+     "max": 0.05,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "iris.110",
+     "label": "Iris proche à 110° : écart de position vs mesure, en U",
+     "value": 0.0347,
+     "min": 0,
+     "max": 0.05,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "mouth.0",
+     "label": "Bouche à 0° : écart de position vs mesure, en U",
+     "value": 0.047,
+     "min": 0,
+     "max": 0.08,
+     "ok": true,
+     "kind": "hard",
+     "note": "seuil 0,08 : la planche mesure la cavité de la bouche ouverte (≈ 0,076 U en retrait des lèvres) ; le moteur peint l'intérieur sur la surface des lèvres (cavité non modélisée : voir docs)"
+    },
+    {
+     "layer": "geometry",
+     "id": "mouth.20",
+     "label": "Bouche à 20° : écart de position vs mesure, en U",
+     "value": 0.0393,
+     "min": 0,
+     "max": 0.08,
+     "ok": true,
+     "kind": "hard",
+     "note": "seuil 0,08 : la planche mesure la cavité de la bouche ouverte (≈ 0,076 U en retrait des lèvres) ; le moteur peint l'intérieur sur la surface des lèvres (cavité non modélisée : voir docs)"
+    },
+    {
+     "layer": "geometry",
+     "id": "mouth.45",
+     "label": "Bouche à 45° : écart de position vs mesure, en U",
+     "value": 0.0592,
+     "min": 0,
+     "max": 0.08,
+     "ok": true,
+     "kind": "hard",
+     "note": "seuil 0,08 : la planche mesure la cavité de la bouche ouverte (≈ 0,076 U en retrait des lèvres) ; le moteur peint l'intérieur sur la surface des lèvres (cavité non modélisée : voir docs)"
+    },
+    {
+     "layer": "geometry",
+     "id": "mouth.70",
+     "label": "Bouche à 70° : écart de position vs mesure, en U",
+     "value": 0.0418,
+     "min": 0,
+     "max": 0.08,
+     "ok": true,
+     "kind": "hard",
+     "note": "seuil 0,08 : la planche mesure la cavité de la bouche ouverte (≈ 0,076 U en retrait des lèvres) ; le moteur peint l'intérieur sur la surface des lèvres (cavité non modélisée : voir docs)"
+    },
+    {
+     "layer": "geometry",
+     "id": "nose.protrusion",
+     "label": "Profil 90° : le nez dépasse le front de (U) — la planche : 0,04",
+     "value": 0.0505,
+     "min": 0.02,
+     "max": 0.1,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "eng.present",
+     "label": "La tête est dérivée des moteurs existants (1 = oui)",
+     "value": 1,
+     "min": 1,
+     "max": 1,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "eng.fit.a",
+     "label": "Résidu du calage du contour de face sur la planche (rms, U)",
+     "value": 0.0067,
+     "min": 0,
+     "max": 0.015,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "eng.fit.zf",
+     "label": "Résidu du calage du profil avant sur la planche (rms, U)",
+     "value": 0.0166,
+     "min": 0,
+     "max": 0.025,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "eng.fit.zb",
+     "label": "Résidu du calage de l'arrière / dessous de la mâchoire (rms, U)",
+     "value": 0.0313,
+     "min": 0,
+     "max": 0.045,
+     "ok": true,
+     "kind": "hard",
+     "note": "dessous de mâchoire dérivé de l'angle gonial : limite connue"
+    },
+    {
+     "layer": "geometry",
+     "id": "eng.landmarks",
+     "label": "Ligne des yeux de la spec = ligne des yeux du moteur de repères (écart, U)",
+     "value": 0,
+     "min": 0,
+     "max": 0.000001,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "eng.ear.mirror",
+     "label": "Oreilles gauche / droite symétriques, hors asymétrie naturelle du moteur (écart max, U)",
+     "value": 0,
+     "min": 0,
+     "max": 0.012,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "eng.ear.root",
+     "label": "L'oreille est attachée au crâne : |x racine − x surface du crâne| (U)",
+     "value": 0.0071,
+     "min": 0,
+     "max": 0.02,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "eng.ear.buried",
+     "label": "L'oreille ne s'enfonce pas dans le crâne : enfoncement max du contour (U)",
+     "value": 0,
+     "min": 0,
+     "max": 0.03,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "eng.neck.hidden",
+     "label": "Haut du cou enfoui dans le crâne : marge de largeur (U, ≥ 0)",
+     "value": 0.2077,
+     "min": 0,
+     "max": 1,
+     "ok": true,
+     "kind": "hard",
+     "note": "le bord haut du cou ne doit jamais se voir"
+    },
+    {
+     "layer": "geometry",
+     "id": "eng.neck.zrange",
+     "label": "Face antérieure du cou derrière la face du crâne (z cou − z avant du crâne à y0, U)",
+     "value": -0.3056,
+     "min": -1,
+     "max": 0,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "eng.jaw.smooth",
+     "label": "Mâchoire sans angle vif : dérivée seconde max de la demi-largeur (U)",
+     "value": 0.0132,
+     "min": 0,
+     "max": 0.035,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "geometry",
+     "id": "eng.nose.knots",
+     "label": "Profil du nez : ordonnées croissantes et largeurs positives (1 = oui)",
+     "value": 1,
+     "min": 1,
+     "max": 1,
+     "ok": true,
+     "kind": "hard"
+    }
+   ],
+   "pass": true
+  },
+  {
+   "layer": "anatomy",
+   "checks": [
+    {
+     "layer": "anatomy",
+     "id": "eye.line",
+     "label": "Ligne des yeux / hauteur de tête (canon 0,50 ; planche stylisée plus bas)",
+     "value": 0.5902,
+     "min": 0.45,
+     "max": 0.65,
+     "ok": true,
+     "kind": "hard",
+     "note": "canon 0,50"
+    },
+    {
+     "layer": "anatomy",
+     "id": "eye.spacing",
+     "label": "Écart entre les yeux en largeurs d'œil (canon : 1,0 — règle des cinq yeux)",
+     "value": 0.9959,
+     "min": 0.8,
+     "max": 1.3,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "nose.width",
+     "label": "Largeur du nez / écart entre les yeux (canon réaliste 1,0 ; dessin animé plus étroit)",
+     "value": 0.6102,
+     "min": 0.4,
+     "max": 1.1,
+     "ok": true,
+     "kind": "hard",
+     "note": "canon 1,0"
+    },
+    {
+     "layer": "anatomy",
+     "id": "mouth.width",
+     "label": "Largeur de bouche / écart des pupilles (canon 0,7 – 1,0)",
+     "value": 0.5895,
+     "min": 0.45,
+     "max": 1.1,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "thirds.lower",
+     "label": "Tiers : base du nez → menton / sourcil → base du nez (canon 1,0 ; menton court sur la planche)",
+     "value": 0.7779,
+     "min": 0.55,
+     "max": 1.2,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "mouth.third",
+     "label": "Bouche dans le tiers inférieur : (bouche − base du nez) / (menton − base du nez) (canon 0,33)",
+     "value": 0.2689,
+     "min": 0.2,
+     "max": 0.5,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "ear.top",
+     "label": "Haut de l'oreille vs sourcil : écart en U (canon : à la hauteur du sourcil)",
+     "value": 0.0771,
+     "min": 0,
+     "max": 0.12,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "ear.bottom",
+     "label": "Bas de l'oreille vs base du nez : écart en U (canon : à la hauteur de la base du nez)",
+     "value": 0,
+     "min": 0,
+     "max": 0.1,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "ear.z",
+     "label": "Oreille au milieu de la profondeur du crâne : z de l'attache − centre du crâne (U)",
+     "value": 0.005,
+     "min": 0,
+     "max": 0.12,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "skull.ratio",
+     "label": "Crâne : longueur (avant-arrière) / largeur (canon 1,1 – 1,4)",
+     "value": 1.0316,
+     "min": 1,
+     "max": 1.4,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "neck.ratio",
+     "label": "Cou : largeur / largeur du crâne (canon 0,35 – 0,55)",
+     "value": 0.3657,
+     "min": 0.3,
+     "max": 0.6,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "neck.behind",
+     "label": "Le cou est sous l'arrière du visage : z du cou − z du centre du crâne (U, ≤ 0,02)",
+     "value": -0.0233,
+     "min": -0.2,
+     "max": 0.02,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "chin.narrow",
+     "label": "Menton plus étroit que le crâne : demi-largeur du menton / demi-largeur du crâne",
+     "value": 0.3584,
+     "min": 0.1,
+     "max": 0.6,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "brow.eye",
+     "label": "Sourcil au-dessus de l'œil : écart / hauteur d'œil (canon 1,0 – 1,5)",
+     "value": 1.0977,
+     "min": 0.6,
+     "max": 1.6,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "eye.on.face",
+     "label": "Œil posé sur la surface du visage : |z œil − z surface| (U)",
+     "value": 0.0261,
+     "min": 0,
+     "max": 0.05,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "iris.ratio",
+     "label": "Iris / largeur d'œil (réaliste 0,45 ; planche et animation 0,6 – 0,8)",
+     "value": 0.7353,
+     "min": 0.55,
+     "max": 0.85,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "eye.aspect",
+     "label": "Hauteur / largeur de l'œil (réaliste 0,35 – 0,45 ; planche ronde)",
+     "value": 0.8824,
+     "min": 0.6,
+     "max": 1,
+     "ok": true,
+     "kind": "info",
+     "note": "canon 0,40 : écart de style assumé"
+    },
+    {
+     "layer": "anatomy",
+     "id": "hair.front",
+     "label": "Lisière avant des cheveux au-dessus du sourcil (U de marge, ≥ 0,1)",
+     "value": 0.26,
+     "min": 0.1,
+     "max": 0.5,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "hair.sideburn",
+     "label": "Pattes : la lisière à 85° descend au haut de l'oreille (écart en U)",
+     "value": 0.0121,
+     "min": 0,
+     "max": 0.08,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "eng.gonial",
+     "label": "Angle gonial (canon adulte 110° – 140° ; enfant et dessin plus ouverts)",
+     "value": 135.5,
+     "min": 95,
+     "max": 145,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "eng.mandplane",
+     "label": "Inclinaison du plan mandibulaire sur l'horizontale, ° (canon 15° – 35°)",
+     "value": 45.3845,
+     "min": 12,
+     "max": 50,
+     "ok": true,
+     "kind": "info",
+     "note": "dérivé : angle gonial − 90° − ramus"
+    },
+    {
+     "layer": "anatomy",
+     "id": "eng.ear.height",
+     "label": "Hauteur de l'oreille / hauteur de la tête (canon 0,22 – 0,27)",
+     "value": 0.2452,
+     "min": 0.2,
+     "max": 0.3,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "eng.ear.crus",
+     "label": "Racine de l'hélix sur la ligne des yeux : écart (U)",
+     "value": 0,
+     "min": 0,
+     "max": 0.03,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "eng.ear.angle",
+     "label": "Angle d'ouverture de l'oreille, ° (canon 21° – 38° ; dessin jusqu'à 45°)",
+     "value": 28,
+     "min": 18,
+     "max": 45,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "eng.ear.width",
+     "label": "Largeur / hauteur de l'oreille (canon 0,50 – 0,62 ; dessin plus large)",
+     "value": 0.7129,
+     "min": 0.45,
+     "max": 0.8,
+     "ok": true,
+     "kind": "info",
+     "note": "canon 0,56"
+    },
+    {
+     "layer": "anatomy",
+     "id": "eng.neck.tilt",
+     "label": "Inclinaison du cou en avant, ° (canon 10° – 30°)",
+     "value": 25.7,
+     "min": 5,
+     "max": 32,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "eng.nose.proj",
+     "label": "Projection du nez devant le plan du visage (U, canon 0,03 – 0,1)",
+     "value": 0.0974,
+     "min": 0.02,
+     "max": 0.12,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "anatomy",
+     "id": "eng.lips.order",
+     "label": "Lèvres : sup. au-dessus de la inf. et toutes deux sous le nez (1 = oui)",
+     "value": 1,
+     "min": 1,
+     "max": 1,
+     "ok": true,
+     "kind": "hard"
+    }
+   ],
+   "pass": true
+  },
+  {
+   "layer": "style",
+   "checks": [
+    {
+     "layer": "style",
+     "id": "tones.skin",
+     "label": "Peau en aplats : part des pixels à ±16 du ton clair ou ombré (0°)",
+     "value": 0.9183,
+     "min": 0.7,
+     "max": 1,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "style",
+     "id": "tones.hair",
+     "label": "Cheveux en aplats : part des pixels à ±16 du ton clair ou ombré (135°)",
+     "value": 0.9193,
+     "min": 0.8,
+     "max": 1,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "style",
+     "id": "pixels.black",
+     "label": "Pixels noirs purs dans la tête (0,0,0 : valeur NaN peinte ; l'encre est #493831)",
+     "value": 0,
+     "min": 0,
+     "max": 0,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "style",
+     "id": "ink.width",
+     "label": "Épaisseur du contour (U) — planche : ≈ 0,015",
+     "value": 0.0135,
+     "min": 0.008,
+     "max": 0.022,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "style",
+     "id": "ink.closure.0",
+     "label": "Contour fermé à 0° (part du bord en encre)",
+     "value": 0.999,
+     "min": 0.9,
+     "max": 1,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "style",
+     "id": "ink.closure.135",
+     "label": "Contour fermé à 135° (part du bord en encre)",
+     "value": 1,
+     "min": 0.9,
+     "max": 1,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "style",
+     "id": "ink.specks.0",
+     "label": "Bruit d'encre à 0° (îlots < 6 px, ≤ 6)",
+     "value": 1,
+     "min": 0,
+     "max": 6,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "style",
+     "id": "ink.specks.45",
+     "label": "Bruit d'encre à 45° (îlots < 6 px, ≤ 6)",
+     "value": 0,
+     "min": 0,
+     "max": 6,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "style",
+     "id": "iris.highlight",
+     "label": "Reflet blanc dans chaque iris à 0° (attendu 2)",
+     "value": 2,
+     "min": 2,
+     "max": 2,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "style",
+     "id": "eng.ear.ink",
+     "label": "Part d'encre dans l'oreille de profil (dessin lisible : 0,08 – 0,45)",
+     "value": 0.4171,
+     "min": 0.08,
+     "max": 0.45,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "style",
+     "id": "eng.ear.noise",
+     "label": "Plages d'encre séparées dans l'oreille de profil (≤ 14 : pas de bruit)",
+     "value": 3,
+     "min": 1,
+     "max": 14,
+     "ok": true,
+     "kind": "hard"
+    },
+    {
+     "layer": "style",
+     "id": "eng.ear.size",
+     "label": "Oreille de profil : hauteur / hauteur de la tête (planche ≈ 0,25)",
+     "value": 0.2692,
+     "min": 0.18,
+     "max": 0.34,
+     "ok": true,
+     "kind": "hard"
+    }
+   ],
+   "pass": true
+  }
+ ]
+}
