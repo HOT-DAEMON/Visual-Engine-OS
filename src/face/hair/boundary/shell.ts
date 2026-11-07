@@ -20,7 +20,7 @@ export interface ShellSpec {
 }
 
 export const SHELL: Record<Exclude<HairStyle, 'bald'>, ShellSpec> = {
-  buzz: { side: 0.9, reach: 'ear' },
+  buzz: { side: 0.9, reach: 'none' },
   short: { side: 0.75, reach: 'ear' },
   spiky: { side: 0.55, reach: 'ear' },
   curly: { side: 1, reach: 'ear' },
@@ -39,6 +39,8 @@ export interface ShellInput {
   readonly boundary: HairBoundary;
   /** Épaisseur de la couronne (px). */
   readonly crown: number;
+  /** Épaisseur maximale de la coque (px), gain d'asymétrie compris : voir `thickness.ts`. */
+  readonly maxT: number;
   readonly side: number;
   readonly reach: { readonly left: Reach; readonly right: Reach };
   /** Gain de silhouette à l'abscisse normalisée s ∈ [−1, 1] et relèvement des racines (bosse de la raie) à l'abscisse x. */
@@ -95,9 +97,11 @@ function sidePath(inp: ShellInput, sg: -1 | 1): { inner: Vec[]; outer: Vec[]; yE
     const toSide = smoothstep(clamp((q.y - (top + 0.1 * H)) / Math.max(1e-6, yCorner - top - 0.1 * H), 0, 1));
     const wing = q.y > yCorner ? 1 - 0.85 * smoothstep(clamp((q.y - yCorner) / Math.max(1e-6, yEnd - yCorner), 0, 1)) : 1;
     const closeNone = reach === 'none' ? 1 - smoothstep(clamp((q.y - (yCorner - 0.07 * H)) / (0.07 * H), 0, 1)) : 1;
-    const T = crown * inp.gain(s) * (1 + (side - 1) * toSide) * wing * closeNone;
+    const T = Math.min(inp.maxT, crown * inp.gain(s) * (1 + (side - 1) * toSide) * wing * closeNone);
     const nrm = unit({ x: q.x - C.x, y: q.y - C.y });
-    return { x: sg * (q.x + nrm.x * T), y: q.y + nrm.y * T - inp.bump(sg * q.x) };
+    // Le soulèvement des racines (bosse de la raie) fait partie de l'épaisseur des cheveux : T + soulèvement ≤ épaisseur maximale de la coiffure.
+    const lift = Math.min(inp.bump(sg * q.x), Math.max(0, inp.maxT - T));
+    return { x: sg * (q.x + nrm.x * T), y: q.y + nrm.y * T - lift };
   });
   return { inner, outer: outerUp.reverse(), yEnd };
 }

@@ -7,6 +7,7 @@ import type { WingInfo } from './boundary/wings';
 import { arcAt } from './hairline';
 import { resolveEar } from './sides';
 import { liftBump } from './volume';
+import { maxShell, shellThickness, THICKNESS } from './thickness';
 import { ribbon } from './ribbon';
 import type { BareScalp } from './types';
 
@@ -18,13 +19,13 @@ import type { BareScalp } from './types';
  */
 export function capBase(ctx: HairCtx): { base: Poly; scalp: Poly; wings: { left: WingInfo; right: WingInfo }; crown: number } {
   const { h, lm, hl, arc, guard, def } = ctx;
-  const crown = (def.off[0] + def.off[1] * h.volume + ctx.puffW) * lm.W;
+  const crown = shellThickness(h.style as Exclude<typeof h.style, 'bald'>, def.off[0] + def.off[1] * h.volume + ctx.puffW) * lm.W;
   const spec = SHELL[h.style as Exclude<typeof h.style, 'bald'>];
   // Archétype simulé avec masses de région : tempes et pattes viennent des masses, la coque garde seulement le dessus.
   const own = h.sim.enabled && h.sim.regions;
   // Oreille couverte : l'aile passe devant l'oreille ; sinon elle s'arrête au-dessus (jamais de couverture involontaire d'une oreille « libre »).
   const reachOf = (name: 'left' | 'right'): Reach => (own || !spec || spec.reach === 'none' ? 'none' : resolveEar(ctx, h.sides[name].ear) === 'covered' ? 'cover' : 'ear');
-  const shell = capShell({ lm, boundary: ctx.boundary, crown, side: spec?.side ?? 1, reach: { left: reachOf('left'), right: reachOf('right') }, gain: ctx.gain, bump: (x) => liftBump(h, ctx.partX, lm.W, lm.H, x), C: ctx.C });
+  const shell = capShell({ lm, boundary: ctx.boundary, crown, maxT: maxShell(h.style as Exclude<typeof h.style, 'bald'>, lm.W), side: spec?.side ?? 1, reach: { left: reachOf('left'), right: reachOf('right') }, gain: ctx.gain, bump: (x) => liftBump(h, ctx.partX, lm.W, lm.H, x) * (0.3 + 0.7 * THICKNESS[h.style as Exclude<typeof h.style, 'bald'>].puff), C: ctx.C });
   const scalp = orient([...hl.pts, ...[...arc].reverse()]);
   const base = guard.fit(orient(shell.ring));
   const wings = { left: { reach: reachOf('left'), yEnd: shell.yEnd.left }, right: { reach: reachOf('right'), yEnd: shell.yEnd.right } };
@@ -61,19 +62,6 @@ export function keepRoot(ctx: HairCtx, s: number, t: number): boolean {
   dens *= 1 - h.thinning * 0.85 * (front + crown);
   dens *= 1 - h.densityVariance * 0.6 * ((nz(s * 3.1 + 11) + nz(t * 3.1 + 23)) / 4 + 0.5);
   return ctx.rnd() < clamp(dens, 0.05, 1);
-}
-
-/** Silhouette (profil extérieur par tranches) d'un ensemble de sommets : masse sombre derrière la tête (bob / long). */
-export function envelope(points: Vec[], y0: number, y1: number, bins = 28): Poly | null {
-  const prof: Vec[] = [];
-  for (let i = 0; i < bins; i++) {
-    const a = y0 + ((y1 - y0) * i) / bins;
-    const b = y0 + ((y1 - y0) * (i + 1)) / bins;
-    const xs = points.filter((q) => q.y >= a && q.y < b).map((q) => Math.abs(q.x));
-    if (xs.length) prof.push({ x: Math.max(...xs), y: (a + b) / 2 });
-  }
-  if (prof.length < 3) return null;
-  return orient([...prof, ...[...prof].reverse().map((q) => ({ x: -q.x, y: q.y }))]);
 }
 
 export { arcAt };

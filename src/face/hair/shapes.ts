@@ -3,6 +3,7 @@ import { arcAt } from './hairline';
 import type { HairCtx } from './flow';
 import { lockFrom } from './flow';
 import { smoothstep, unit } from './noise';
+import { fitReach } from './reach';
 import type { HairLock } from './types';
 
 const lerpV = (a: Vec, b: Vec, t: number): Vec => ({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
@@ -53,8 +54,10 @@ export function flowLocks(ctx: HairCtx): HairLock[] {
     const len = Math.min(0.42 * lm.H, (0.07 + 0.5 * f.span) * lm.H * (0.55 + 0.6 * rnd()) * g);
     const dir = outward(ctx, R, 0.35 + 0.45 * rnd());
     const back = rnd() < 0.4;
-    const c = sCentre(R, dir, len, (0.06 + 0.16 * f.sWave) * (rnd() < 0.5 ? -1 : 1), rnd() * 0.9 - 0.45, f.float);
-    out.push(...lockFrom(ctx, c, { width: lm.W * (0.05 + 0.05 * rnd()) * (0.8 + 0.4 * g), rank: 'mass', tone: back ? -0.3 - 0.2 * rnd() : (rnd() - 0.55) * 0.5 * h.highlight, layer: back ? 'back' : 'front', sharp: 0.92, raw: true, kind: 'flow', fade: 0.25 + 0.5 * h.tips.fade, edgeFade: h.tips.edgeFade, flick: h.tips.flick, ragged: h.tips.irregular }));
+    const c0 = sCentre(R, dir, len, (0.06 + 0.16 * f.sWave) * (rnd() < 0.5 ? -1 : 1), rnd() * 0.9 - 0.45, f.float);
+    const wd = lm.W * (0.05 + 0.05 * rnd()) * (0.8 + 0.4 * g); // tiré ici (même ordre qu'avant) : la portée tient compte de la largeur du ruban
+    const c = fitReach(ctx, c0, wd / 2);
+    out.push(...lockFrom(ctx, c, { width: wd, rank: 'mass', tone: back ? -0.3 - 0.2 * rnd() : (rnd() - 0.55) * 0.5 * h.highlight, layer: back ? 'back' : 'front', sharp: 0.92, raw: true, kind: 'flow', fade: 0.25 + 0.5 * h.tips.fade, edgeFade: h.tips.edgeFade, flick: h.tips.flick, ragged: h.tips.irregular }));
   }
   return out;
 }
@@ -85,11 +88,12 @@ export function coneLocks(ctx: HairCtx): HairLock[] {
       // Longueur : décroît vers les côtés (|s| → 1) et reste bornée à 0,3 H (un cône plus long qu'un tiers de tête n'est plus une mèche).
       const len = Math.min(0.3 * lm.H, (0.1 + 0.2 * rnd() + 0.1 * h.silhouette.lift) * lm.H * ctx.gain(s) * (1 - 0.5 * Math.abs(s) ** 2));
       const bend = (rnd() - 0.5) * 0.14;
-      const c = Array.from({ length: 12 }, (_, i) => {
+      const wd = lm.W * (0.09 + 0.07 * rnd()); // tiré ici (même ordre qu'avant) ; le cône s'effile : un quart de sa largeur de base compte pour la portée
+      const c = fitReach(ctx, Array.from({ length: 12 }, (_, i) => {
         const u = i / 11;
         return { x: R.x + (d.x + bend * u) * len * u, y: R.y + d.y * len * u };
-      });
-      out.push(...lockFrom(ctx, c, { width: lm.W * (0.09 + 0.07 * rnd()), rank: 'mass', tone: -(0.05 + 0.3 * rnd()) * (0.4 + h.highlight), layer: 'front', profile: 'cone', power: 1 + 0.6 * f.coneSharp, raw: true, kind: 'cone', edgeFade: h.tips.edgeFade, ragged: h.tips.irregular * 0.5 }));
+      }), wd / 4);
+      out.push(...lockFrom(ctx, c, { width: wd, rank: 'mass', tone: -(0.05 + 0.3 * rnd()) * (0.4 + h.highlight), layer: 'front', profile: 'cone', power: 1 + 0.6 * f.coneSharp, raw: true, kind: 'cone', edgeFade: h.tips.edgeFade, ragged: h.tips.irregular * 0.5 }));
     }
   }
   return out;
@@ -121,7 +125,7 @@ export function wispLocks(ctx: HairCtx): HairLock[] {
       c.push({ x: p.x + Math.cos(th) * ds, y: p.y + Math.sin(th) * ds * (1 - 0.15 * (1 - h.flow.float)) });
     }
     const back = rnd() < 0.3;
-    out.push(...lockFrom(ctx, c, { width: lm.W * (0.007 + 0.008 * rnd()), rank: 'fine', tone: back ? -0.2 : 0.2 + 0.5 * rnd() * h.highlight, layer: back ? 'back' : 'front', sharp: 1, raw: true, kind: 'wisp', fade: 0.75 }));
+    out.push(...lockFrom(ctx, fitReach(ctx, c), { width: lm.W * (0.007 + 0.008 * rnd()), rank: 'fine', tone: back ? -0.2 : 0.2 + 0.5 * rnd() * h.highlight, layer: back ? 'back' : 'front', sharp: 1, raw: true, kind: 'wisp', fade: 0.75 }));
   }
   return out;
 }

@@ -16,3 +16,13 @@ export function hairAppearance(h: FaceParams['hair']): ResolvedAppearance {
     : [{ offset: 0, color: h.color, opacity: 1 }, { offset: 1 - h.look.tipReach, color: h.color, opacity: 1 }, { offset: 1, color: h.look.tipColor, opacity: 1 }];
   return resolveAppearance(h.color, { ...spec, gradient: stops });
 }
+
+/** Ton relatif de la masse arrière : celui des mèches arrière qu'elle double (`tone` −0,25 … −0,45 dans `generate` des mèches pendantes). */
+export const BACK_MASS_TONE = -0.4;
+
+/**
+ * Teinte de la masse arrière (sous-couche derrière la tête) : le ton MOYEN des mèches arrière, donc jamais plus sombre que ce qu'elle double.
+ * L'ancienne teinte (`mix(mix(base, ombre, 0,8), noir, 0,2)`) valait 0,27–0,37 × la luminance des cheveux : une masse noire visible entre et au-delà
+ * des mèches. Source unique pour le rendu ET la vérification.
+ */
+export const backMassColor = (ra: ResolvedAppearance): string => ra.tone(BACK_MASS_TONE);

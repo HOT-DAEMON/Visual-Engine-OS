@@ -2,7 +2,11 @@ import type { Vec } from '../../geometry/eye/primitives';
 import { orient, type Poly } from '../poly';
 import { growLock, lockFrom, lockLen, type HairCtx } from './flow';
 import { arcAt } from './hairline';
+import { TIP_INSET } from './back-mass';
+import { fitReach } from './reach';
+import { withinShell } from './thickness';
 import type { HairLock, TierMass } from './types';
+import type { HairStyle } from '../../schema';
 
 const lerpV = (a: Vec, b: Vec, t: number): Vec => ({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
 
@@ -37,8 +41,15 @@ export function tierMasses(ctx: HairCtx, locks: HairLock[]): TierMass[] {
   if (ctx.h.tiers.count < 2 || ctx.h.tiers.underVisible < 0.02) return [];
   const out: TierMass[] = [];
   for (let t = 1; t < ctx.h.tiers.count; t++) {
-    const pts = locks.filter((l) => (l.tier ?? 0) === t && l.layer === 'front' && (l.kind === 'lock' || l.kind === 'flow')).flatMap((l) => l.poly);
-    const poly = radialEnvelope(pts, ctx.C);
+    const own = locks.filter((l) => (l.tier ?? 0) === t && l.layer === 'front' && (l.kind === 'lock' || (l.kind === 'flow' && l.sim === true)));
+    const pts = own.flatMap((l) => l.poly);
+    const raw = radialEnvelope(pts, ctx.C);
+    // Volume admis autour du crâne : une masse d'étage ne dépasse pas l'épaisseur anatomique de la coiffure (sinon elle suit la mèche la plus lointaine).
+    // Bas : l'enveloppe radiale relie les pointes les plus basses par un coin qui pend jusqu'à 0,22 H sous le cou (coin coloré visible sous le menton, cheveux longs) ;
+    // la masse s'arrête au 85ᵉ centile des pointes, relevé de `TIP_INSET` H : les pointes dépassent dessous, comme pour la masse arrière.
+    const tips = own.map((l) => Math.max(...l.poly.map((q) => q.y))).sort((a, b) => a - b);
+    const yCap = tips.length >= 3 ? (tips[Math.floor(0.85 * (tips.length - 1))] as number) - TIP_INSET * ctx.lm.H : Infinity;
+    const poly = raw ? raw.map((q) => withinShell(ctx.h.style as Exclude<HairStyle, 'bald'>, ctx.boundary.skull, ctx.lm.W, { x: q.x, y: Math.min(q.y, yCap) })) : null;
     if (poly) out.push({ poly: ctx.guard.fit(poly), tier: t });
   }
   return out;
@@ -49,12 +60,15 @@ export function tierMasses(ctx: HairCtx, locks: HairLock[]): TierMass[] {
  * sous les mèches moyennes. `grow` donne la ligne médiane depuis la racine (même champ de direction que les autres mèches).
  */
 export function massLocks(ctx: HairCtx, grow: (R: Vec) => Vec[]): HairLock[] {
-  const n = Math.round(ctx.h.strands.mass * 8);
+  // Une coupe rase (`buzz`, longueur 0,012 H) n'a pas de grandes masses : `strands.mass` du tirage v2 ne s'y applique pas (0,07 H mesuré au-dessus du crâne).
+  const n = ctx.def.len[0] < 0.03 ? 0 : Math.round(ctx.h.strands.mass * 8);
   const out: HairLock[] = [];
   for (let i = 0; i < n; i++) {
     const s = -1 + (2 * (i + ctx.rnd())) / n;
     const R = lerpV(ctx.hl.at(s), arcAt(ctx.arc, s), 0.55 + 0.45 * ctx.rnd());
-    out.push(...lockFrom(ctx, grow(R), { width: ctx.lm.W * (0.1 + 0.08 * ctx.rnd()) * ctx.gain(s), rank: 'mass', tone: -(0.1 + 0.25 * ctx.rnd()), layer: 'front', sharp: 0.55, tier: tierOf(ctx), edgeFade: ctx.h.tips.edgeFade, flick: ctx.h.tips.flick, ragged: ctx.h.tips.irregular }));
+    // Grand ruban de corps : le champ de flux peut le faire monter bien au-dessus du crâne (0,21 H mesuré sur une queue de cheval) : montée bornée par la coiffure.
+    const wd = ctx.lm.W * (0.1 + 0.08 * ctx.rnd()) * ctx.gain(s);
+    out.push(...lockFrom(ctx, fitReach(ctx, grow(R), wd / 2, 'cranial'), { width: wd, rank: 'mass', tone: -(0.1 + 0.25 * ctx.rnd()), layer: 'front', sharp: 0.55, tier: tierOf(ctx), edgeFade: ctx.h.tips.edgeFade, flick: ctx.h.tips.flick, ragged: ctx.h.tips.irregular }));
   }
   return out;
 }

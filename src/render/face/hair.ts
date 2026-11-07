@@ -10,7 +10,8 @@ import { compileSurface, resolvePreset, spotGradient, type Surface } from '../..
 import type { FaceParams } from '../../schema';
 import { hairGloss, hairlineTransition, smoothPath } from './hair-detail';
 import { lockMarkup, type LockStyle } from './hair-lock';
-import { hairAppearance } from './hair-look';
+import { backMassFill } from './hair-back-fade';
+import { backMassColor, hairAppearance } from './hair-look';
 import { polyPath } from './path';
 import { profileOf } from '../../face/hair/sim/profiles';
 import { sheenBands } from '../../face/hair/sim/sheen';
@@ -57,7 +58,15 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
     return m.markup;
   };
   const back: string[] = [];
-  if (geo.backBase) back.push(el('path', { d: smoothPath(geo.backBase), fill: ink ?? mix(mix(ra.base, ra.shadow, 0.8), '#000000', 0.2), stroke: ink, 'stroke-width': ink ? lm.W * 0.0042 : undefined, 'stroke-linejoin': 'round' }));
+  if (geo.backBase) {
+    // Encre (noir et blanc, explicite) : aplat cerné, voulu. Sinon : dégradé d'opacité, la masse s'estompe sous la mâchoire (voir `hair-back-fade.ts`).
+    if (ink) back.push(el('path', { d: smoothPath(geo.backBase), fill: ink, stroke: ink, 'stroke-width': lm.W * 0.0042, 'stroke-linejoin': 'round' }));
+    else {
+      const f = backMassFill(`${id}-hair-bm`, geo.backBase, lm, backMassColor(ra));
+      defs.push(f.def);
+      back.push(el('path', { d: smoothPath(geo.backBase), fill: f.fill }));
+    }
+  }
   for (const l of geo.locks.filter((q) => q.layer === 'back')) back.push(...draw(l, 0.12, false));
   for (const t of geo.ties) back.push(el('ellipse', { cx: t.at.x, cy: t.at.y, rx: t.rx, ry: t.rx * 0.55, fill: mix(ra.base, '#000000', 0.55), stroke: ra.light, 'stroke-width': lm.W * 0.003 }));
 
