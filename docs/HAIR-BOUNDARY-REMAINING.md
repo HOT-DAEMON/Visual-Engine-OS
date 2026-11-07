@@ -1,6 +1,6 @@
 # Lisière des cheveux — reste à faire et limites (par composant)
 
-Ce qui est fait : `HAIR-BOUNDARY.md`. Rien ci-dessous n'est caché : chaque ligne est une limite mesurée ou constatée sur les planches.
+Ce qui est fait : `HAIR-BOUNDARY.md`. Suite traitée (coque, portée, masse arrière, vérification crâne ↔ cheveux) : `HAIR-SKULL.md`, ses limites : `HAIR-SKULL-REMAINING.md`. Rien ci-dessous n'est caché : chaque ligne est une limite mesurée ou constatée sur les planches.
 
 ## Lisière (`boundary/`)
 1. **Seuils à la main** : 0,12 H (trou), 0,05 H (dents de scie), 0,25 (oreille libre), 0,1 (bord lisible) sont posés sur le corpus de 600 visages, pas appris d'une référence. À recaler sur des visages dessinés par un illustrateur.
@@ -9,11 +9,11 @@ Ce qui est fait : `HAIR-BOUNDARY.md`. Rien ci-dessous n'est caché : chaque lign
 4. **Visage non symétrique** : le miroir gauche utilise les oreilles gauches, mais pas de patte asymétrique indépendante (la patte vient d'un seul profil).
 
 ## Formes de cheveux et coque
-5. **Moteur v2 — partiellement traité** (voir `HAIR-SHAPES.md`) : cônes, ailes, queue de cheval corrigés ; `spiky`/`afro` encore volumineux, bob à masse asymétrique non traité.
+5. **Moteur v2 — traité pour l'extension** (`HAIR-SKULL.md`) : toutes les formes libres et les mèches de corps sont bornées par une portée par coiffure ; la masse arrière du bob/long est reconstruite (`HAIR-BACK-MASS.md`). `afro` (0,256 H) et `curly` (0,164 H) restent volumineux par conception ; élégance = revue humaine (`HAIR-SKULL-REMAINING.md` 2, 9).
 6. **Moteur classic** : frange `short` refaite en festons arrondis (voir `HAIR-SHAPES.md`) ; jugement d'élégance = revue humaine.
-7. **Archétypes simulés (Verlet)** : intouchés ; régions `own` → portée de coque `none`. Leur lisière propre n'est pas reliée à `boundary`.
+7. **Archétypes simulés (Verlet)** : leurs mèches restent non bornées (drapé déjà résolu) ; ils reçoivent la nouvelle masse arrière ; régions `own` → portée de coque `none`. Leur lisière propre n'est pas reliée à `boundary`.
 8. **Vue de profil des cheveux** (`src/skull/hair-shape.ts`) : n'utilise pas la nouvelle lisière.
-9. **Coque** : épaisseur par table `SHELL` (10 coiffures), pas dérivée du volume réel de la masse ; pas de coupe en dégradé ni de raie rasée.
+9. **Coque** : épaisseur plafonnée par coiffure (`THICKNESS`, `HAIR-SKULL.md`) en plus de la table `SHELL` ; toujours pas dérivée du volume réel de la masse, pas de coupe en dégradé ni de raie rasée. `SHELL.buzz.reach` passe à `none` (plateau de tempe supprimé).
 
 ## Rotation de la tête
 10. **Relié depuis `HEAD-TURNTABLE-HAIR.md`** : la lisière alimente la tête tournante (`headSpecFromFace`). Reste : volume 3D. Historique : interface seulement (+ module voisin) : `projectBoundary` et `skullSurface.project` tournent la lisière de façon rigide (testé) ; le **rendu complet d'un visage tourné n'est pas branché** (planche 04 = schéma de géométrie). Le commit distant `327f2b9` (`src/head-turntable`, `docs/HEAD-TURNTABLE.md`) rend une tête complète en rotation avec sa PROPRE ligne d'implantation (`hairlineY`) : il n'importe rien de `src/face` ; relier cette lisière à ce module n'est pas fait (et aucun conflit : fichiers disjoints).
@@ -30,9 +30,9 @@ Ce qui est fait : `HAIR-BOUNDARY.md`. Rien ci-dessous n'est caché : chaque lign
 17. Cheveux fous (`strayShare`) : tirage seedé, pas de lien avec le flux local.
 
 ## Vérification
-18. « Rapport OK » ≠ beauté : la couche style vérifie lissé, équilibre, lisibilité du bord. Elle ne juge ni l'élégance de la coupe ni la cohérence de silhouette. **Revue humaine nécessaire** sur `artefacts/hair-boundary/07`.
+18. « Rapport OK » ≠ beauté : la couche style vérifie lissé, équilibre, lisibilité du bord. Elle ne juge ni l'élégance de la coupe ni la cohérence de silhouette. **Revue humaine nécessaire** sur `artefacts/hair-boundary/07` et `artefacts/hair-skull/`. Cohérence crâne ↔ cheveux : 12 contrôles de plus (`HAIR-SKULL-VERIFY.md`).
 19. Corpus : coiffures et textures du schéma ; pas de visage d'enfant ni de coiffure hors table (`SHELL`).
-20. Régression visuelle : `npm run regress` passe, mais ses 34 images n'ont pas bougé (rms ≤ 0,26/255) : soit elles ne montrent pas les cheveux modifiés, soit le changement y est sous le seuil (cause non vérifiée). Ajouter des références avec cheveux (non fait : actualiser les références est une décision explicite).
+20. Régression visuelle : `npm run regress` passe, mais ses 34 images n'ont pas bougé (rms ≤ 0,26/255) : soit elles ne montrent pas les cheveux modifiés, soit le changement y est sous le seuil (cause non vérifiée). Ajouter des références avec cheveux (non fait : actualiser les références est une décision explicite). Revérifié après les changements crâne ↔ cheveux : exit 0, 34 images, rms ≤ 0,26/255.
 
 ## Sécurité
 21. **Un jeton GitHub a été collé en clair dans la conversation : à révoquer** (GitHub → Settings → Developer settings → Tokens). Il n'est écrit nulle part dans le dépôt, ni dans l'URL du dépôt distant ; il n'a servi que par un en-tête temporaire.

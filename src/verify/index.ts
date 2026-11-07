@@ -13,12 +13,14 @@ import { checkHairZones } from './hair-zones';
 import { checkHairBoundary } from './hair-boundary';
 import { checkNeck } from './neck';
 import { checkHairShape } from './hair-shape';
+import { checkHairSkull } from './hair-skull';
 import { checkHeadHair } from './head-hair';
 import { report, type Check, type Report } from './types';
 
 export { checkHairZones } from './hair-zones';
 export { checkHairBoundary, selfCrossings } from './hair-boundary';
 export { checkHairShape, sharpTeeth } from './hair-shape';
+export { checkHairSkull } from './hair-skull';
 export { checkHeadHair } from './head-hair';
 export { checkHairSim, hairSimStats, toleranceOf, type HairSimStats } from './hair-sim';
 
@@ -56,6 +58,7 @@ export function verifyFace(face: RandomFace): Report {
   checks.push(...checkHairZones(face));
   checks.push(...checkHairBoundary(face));
   checks.push(...checkHairShape(face));
+  checks.push(...checkHairSkull(face));
   checks.push(...checkHeadHair(face));
   return report(checks);
 }

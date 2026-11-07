@@ -1,12 +1,12 @@
-# Changelog 18 — moteur de cou (branche `hair-grammar`)
+# Changelog 18 — cheveux ↔ crâne : coque, portée, masse arrière, vérification (branche `feat/hair-grammar`)
 
-- **Audit** : le cou existait en 5 calculs indépendants ; aucun moteur unique. Détail et décisions : `docs/NECK-ENGINE.md` (pas de nouveau compilateur enregistré, justifié §2).
-- **Moteur** (`src/neck/`, 18 fichiers) : contrats (6 objets), cadre unique `lm.neck`, morphologie, géométrie primaire (sections superelliptiques par rayon), 12 opérateurs + garde-fous, rig, 3 contrôleurs, M01–M10, espèces, styles, accessoires et collisions, anatomie (12 structures), secondaire M09.
-- **Rendu** (`src/render/neck/`) : contour, ombrage par normales, muscles, reliefs, écailles/plaques/plumes, accessoires. Remplace `render/face/neck.ts` (supprimé).
-- **Doublons retirés** : formule du cadre (`landmarks.ts`), SCM de la structure, formule du platysma (unique), constantes `0,85` et `TWIST` de la pose, `half × (1+flare)` de l'ancre du corps (désormais dernière section du cou).
-- **Défauts trouvés par les tests et corrigés** : section rectangulaire mal paramétrée (trou de 14 px) ; cou plus large que la joue visible à côté de la tête ; roulis d'expression sortant le cou de sous la tête ; 11 paramètres sans effet visible renforcés ; champ `simplify` ignoré du rendu ; marche entre le cou et le torse.
-- **Contrat** : `FaceNeck.system` ajouté ; `FaceNeck.length` max 0,4 → 1,6.
-- **Tests** : `neck-engine` (22), `neck-criteria` (14), `neck-visible` (67, un cas par paramètre + garde de couverture). Vérification : `src/verify/neck.ts` dans `verifyFace` (24 visages, 0 erreur ; 5 contrôles négatifs détectés).
-- **Artefacts** : `artefacts/neck/` (planches 01–09, `10-verification.json`, `11-tableau-preuves.json`), `docs/NECK-PROOF.md`. `npx tsx scripts/artefacts-neck.ts`.
-- **Références visuelles** : 34 régénérées (le cou change) — voir `docs/NECK-REMAINING.md` §E.
-- Reste à faire : `docs/NECK-REMAINING.md`.
+- **Coque anatomique** (`src/face/hair/thickness.ts`) : plafond d'épaisseur par coiffure (`THICKNESS`), genou doux, gain d'asymétrie ≤ ×1,35, soulèvement compté dans l'épaisseur (`shell.ts`). Dôme max : short 0,142 → 0,055 H, long 0,165 → 0,061 H, queue 0,150 → 0,040 H. `HAIR-SKULL.md`.
+- **Portée des formes libres** (`reach.ts`, `fitReach`) : cônes, rubans, volutes, mèches `mass`, mèches classiques et mèches arrière recourbées. Montée max : buzz 0,268 → 0,013 H, short 0,440 → 0,057 H, long 0,351 → 0,058 H, afro 0,373 → 0,256 H.
+- **Masse arrière** (`back-mass.ts`, `hair-back-fade.ts`, `hair-look.ts`) : fin du bavoir noir, du couvercle plat (0,93–0,95 → 0,54–0,63) et des « oreilles de chat » ; fondu autour de la mâchoire ; teinte 0,27–0,37 → 0,72 (médiane) de la luminance des cheveux. `HAIR-BACK-MASS.md`.
+- **Masses d'étage** : plafonnées au 85ᵉ centile des pointes (coin coloré sous le menton supprimé).
+- **Coupe rase** : `SHELL.buzz.reach = 'none'` (plateau de tempe de 14 px, 6 % des visages) ; oreille couverte / rangée et favori long écartés à la génération (`random-hair-v2.ts`, après le tirage : les autres valeurs d'une graine sont inchangées).
+- **Vérification** (`src/verify/hair-skull.ts`, dans `verifyFace`) : 12 contrôles (géométrie 6, anatomie 4, style 2), contrôles négatifs. `HAIR-SKULL-VERIFY.md`.
+- **Test modifié délibérément** : `tests/hair-v2.test.ts` (le gonflement d'une coupe courte est maintenant plafonné ; la mécanique se teste sur `curly`).
+- Tests : `tests/hair-skull.test.ts` (39 ; suite complète 2689/2689). `tsc` propre, `npm run regress` exit 0 (rms ≤ 0,26/255).
+- Artefacts : `artefacts/hair-skull/` (planches 01–05, `avant/`, `apres/`, `rapport-verification.md`) ; `npx tsx scripts/artefacts-hair-skull.ts`.
+- Reste à faire : `HAIR-SKULL-REMAINING.md`.

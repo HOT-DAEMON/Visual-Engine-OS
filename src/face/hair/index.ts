@@ -14,7 +14,10 @@ import { hairlineStrands, massLocks, tierMasses } from './layers';
 import { lockFrom } from './flow';
 import { noise1 } from './noise';
 import { occluders } from './occlusion';
-import { bareScalp, capBase, envelope } from './scalp';
+import { bareScalp, capBase } from './scalp';
+import { fitReach } from './reach';
+import { backMassShape } from './back-mass';
+import { isBodyLock } from './body-lock';
 import { coneLocks, flowLocks, wispLocks } from './shapes';
 import { applySides } from './sides';
 import { braidLocks, braidRoots, bunLocks, tailLocks, tieRing, tieSpots } from './tie';
@@ -24,6 +27,7 @@ import { simLocks } from './sim';
 import { canonical, ContentCache } from '../../perf/content-cache';
 import { clock } from '../../perf/clock';
 import { makeGain, makeLift, puffWidth } from './volume';
+import { THICKNESS } from './thickness';
 import { applyWind } from './wind';
 
 export { buildBoundary, rootFrames, windDir, projectBoundary } from './boundary';
@@ -50,7 +54,7 @@ function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null 
   const ctx: HairCtx = {
     h, lm, hl, arc, guard: makeGuard(p, lm, hl), boundary, rnd: mulberry32(h.seed), nz, tex, spec: textureSpec(tex, h.curl, W, H), def: STYLES[h.style],
     C: { x: 0, y: h.style === 'spiky' ? lm.eyeY : lm.hair.sideY }, partX,
-    gain: makeGain(h.silhouette, nz), puffW: puffWidth(h.silhouette.puff), lift: makeLift(h, partX, W),
+    gain: makeGain(h.silhouette, nz), puffW: puffWidth(h.silhouette.puff) * THICKNESS[h.style].puff, lift: makeLift(h, partX, W),
   };
   const { rnd, def } = ctx;
   const { base, scalp, wings, crown } = capBase(ctx);
@@ -74,17 +78,16 @@ function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null 
   } else front.push(...sim.locks.filter((l) => l.layer !== 'over'));
 
   let back: HairLock[] = [];
-  let backBase = null as HairGeometry['backBase'];
   if (def.hang && !sim) {
     const braided = tex === 'braided';
     const nMain = Math.round((braided ? 9 : 16) + (braided ? 8 : 26) * h.density);
     for (let i = 0; i < Math.round(nMain * 0.8); i++) {
       const R = arcAt(arc, -1 + 2 * rnd());
-      back.push(...lockFrom(ctx, growLock(ctx, R, 2.2 * H, { yEnd: yHang() }), { width: (def.mainW[0] + def.mainW[1] * h.volume) * W, rank: 'main', tone: -0.25 - 0.2 * rnd(), layer: 'back' }));
+      // Le champ de flux peut recourber une mèche arrière par-dessus le sommet (0,20 H mesuré en bob) : montée et envol bornés par la coiffure.
+      const wd = (def.mainW[0] + def.mainW[1] * h.volume) * W;
+      back.push(...lockFrom(ctx, fitReach(ctx, growLock(ctx, R, 2.2 * H, { yEnd: yHang() }), wd / 2, 'cranial'), { width: wd, rank: 'main', tone: -0.25 - 0.2 * rnd(), layer: 'back' }));
     }
-    backBase = envelope([...front, ...back].flatMap((l) => l.poly).filter((q) => q.y >= lm.hair.sideY), lm.hair.sideY, back.flatMap((l) => l.poly).reduce((a, q) => Math.max(a, q.y), lm.jawY) - 0.04 * H);
   }
-  if (sim?.backMass && !backBase) backBase = sim.backMass;
   const ties: HairGeometry['ties'] = [];
   for (const T of spots) {
     back.push(...(h.style === 'bun' ? bunLocks(ctx, T) : tailLocks(ctx, T)));
@@ -96,6 +99,10 @@ function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null 
   front = front.filter((l) => l.layer === 'front');
 
   const sides = applySides(ctx, p, front, back);
+  // Masse arrière : posée sur le crâne, doublée par les mèches définitives (voir `back-mass.ts`). Coiffures pendantes classiques et archétypes simulés à masse.
+  const backBase: HairGeometry['backBase'] = (def.hang && !sim) || sim?.backMass
+    ? backMassShape({ lm, skull: boundary.skull, polys: [...sides.back, ...sides.front].filter(isBodyLock).map((l) => l.poly), backPolys: sides.back.filter(isBodyLock).map((l) => l.poly), crown })
+    : null;
   const occ = occluders(ctx, p);
   const masses = tierMasses(ctx, sides.front);
   const simOver = sim ? sim.locks.filter((l) => l.layer === 'over') : [];

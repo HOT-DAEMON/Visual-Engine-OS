@@ -50,18 +50,30 @@ describe('formes de mèches', () => {
     expect(w?.locks.filter((l) => l.kind === 'wisp').every((l) => l.rank === 'fine')).toBe(true);
   });
 
+  // Le gonflement est une propriété de la COIFFURE (`face/hair/thickness.ts`) : une coupe courte n'a pas le volume d'une coiffure bouclée.
+  // La mécanique (puff gonfle, asymétrie dissymétrise) se vérifie donc sur un style qui l'admet, texture RAIDE imposée.
+  const extent = (hair: Record<string, unknown>) => {
+    const g = geoOf(12, { ...BASE, ...hair }).geo;
+    const pts = (g?.base[0] ?? []);
+    return { L: Math.max(...pts.map((q) => -q.x)), R: Math.max(...pts.map((q) => q.x)), T: Math.min(...pts.map((q) => q.y)) };
+  };
+
   it('puff gonfle l\'enveloppe pour une texture RAIDE ; l\'asymétrie rend la silhouette dissymétrique', () => {
-    const ext = (hair: Record<string, unknown>) => {
-      const g = geoOf(12, { ...BASE, ...hair }).geo;
-      const pts = (g?.base[0] ?? []);
-      return { L: Math.max(...pts.map((q) => -q.x)), R: Math.max(...pts.map((q) => q.x)), T: Math.min(...pts.map((q) => q.y)) };
-    };
-    const a = ext({});
-    const b = ext({ silhouette: { puff: 0.8 } });
+    const a = extent({ style: 'curly' });
+    const b = extent({ style: 'curly', silhouette: { puff: 0.8 } });
     expect(b.R).toBeGreaterThan(a.R + 8);
     expect(b.T).toBeLessThan(a.T - 8);
-    const c = ext({ silhouette: { puff: 0.5, asymmetry: 0.9, bias: 1 } });
+    const c = extent({ style: 'curly', silhouette: { puff: 0.5, asymmetry: 0.9, bias: 1 } });
     expect(c.R).toBeGreaterThan(c.L * 1.04);
+  });
+
+  it('coupe courte : le gonflement existe mais reste plafonné (coque anatomique), très en deçà d\'une coiffure bouclée', () => {
+    const a = extent({}), b = extent({ silhouette: { puff: 0.8 } });
+    const ca = extent({ style: 'curly' }), cb = extent({ style: 'curly', silhouette: { puff: 0.8 } });
+    expect(b.R).toBeGreaterThan(a.R);
+    expect(b.T).toBeLessThan(a.T);
+    expect(b.R - a.R).toBeLessThan(0.5 * (cb.R - ca.R));
+    expect(a.T - b.T).toBeLessThan(0.6 * (ca.T - cb.T));
   });
 });
 

@@ -159,6 +159,8 @@ Voir `docs/HAIR-V2.md`, `docs/HAIR-V2-FACE.md`, `docs/APPEARANCE.md`, `docs/VERI
 
 Lisière des cheveux (boucle fermée sur la surface du crâne, coque, bord peau / cheveux, vérification 3 couches, repères pour rotation et vent) : `docs/HAIR-BOUNDARY.md`, reste à faire `docs/HAIR-BOUNDARY-REMAINING.md`, preuves `artefacts/hair-boundary/` (`npx tsx scripts/artefacts-hair-boundary.ts`).
 
+Cheveux ↔ crâne (coque anatomique par coiffure, portée des formes libres, masse arrière sans « masse noire », vérification 3 couches) : `docs/HAIR-SKULL.md`, `docs/HAIR-BACK-MASS.md`, `docs/HAIR-SKULL-VERIFY.md`, reste à faire `docs/HAIR-SKULL-REMAINING.md`, preuves `artefacts/hair-skull/` (`npx tsx scripts/artefacts-hair-skull.ts compose`).
+
 Formes de cheveux face au crâne (ailes, frange, implantation, queue, cônes v2), vent 2D, lisière sur la tête tournante, vérification 3 couches : `docs/HAIR-SHAPES.md`, `docs/HAIR-WIND.md`, `docs/HEAD-TURNTABLE-HAIR.md`, reste à faire `docs/HAIR-SHAPES-REMAINING.md`, preuves `artefacts/hair-shapes/` (`npx tsx scripts/artefacts-hair-shapes.ts`).
 
 Moteur de visage (nez, menton / mâchoire, matériau de peau, éclairage, ombres de contact, lumières de contour) : `docs/FACE-ANATOMY.md`, `docs/SKIN-LIGHT.md`,

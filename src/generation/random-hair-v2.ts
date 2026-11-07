@@ -81,6 +81,9 @@ export function drawHairV2(rnd: () => number, hair: { style: FaceHair['style']; 
   const rootLift = flat || !maybe(rnd, 0.5) ? { amount: 0, width: 0.35, fall: 0.5 } : { amount: range(rnd, 0.3, 0.9), width: range(rnd, 0.25, 0.6), fall: range(rnd, 0.3, 0.9) };
   const side = (): { ear: 'auto' | 'covered' | 'free' | 'tucked'; cheek: 'none' | 'short' | 'long' } => ({ ear: weighted(rnd, ['auto', 'covered', 'free', 'tucked'] as const, [40, 20, 25, 15]), cheek: weighted(rnd, ['none', 'short', 'long'] as const, [55, 25, 20]) });
   const sides = { left: side(), right: side() };
+  // Coupe rase : pas de rideau devant l'oreille, pas d'oreille rangée sous une mèche ni de favori long (0,3 H de lanière pendante à côté du visage mesuré).
+  // Corrigé APRÈS le tirage : la suite des tirages, donc toutes les autres valeurs de la graine, ne bouge pas.
+  if (flat) for (const sd of [sides.left, sides.right]) { if (sd.ear === 'covered' || sd.ear === 'tucked') sd.ear = 'free'; if (sd.cheek === 'long') sd.cheek = 'short'; }
   const tc = flat ? 1 : weighted(rnd, [1, 2, 3, 4], [30, 30, 25, 15]);
   const tiers = { count: tc, step: range(rnd, 0.15, 0.4), underTone: range(rnd, -0.5, -0.15), underHue: range(rnd, -30, 30), underVisible: tc > 1 ? range(rnd, 0.5, 0.9) : 0 };
   const tips = { irregular: maybe(rnd, 0.7) ? range(rnd, 0.2, 0.9) : 0, flick: maybe(rnd, 0.5) ? range(rnd, 0.1, 0.8) : 0, fade: maybe(rnd, 0.5) ? range(rnd, 0.1, 0.7) : 0, edgeFade: maybe(rnd, 0.4) ? range(rnd, 0.1, 0.6) : 0 };
