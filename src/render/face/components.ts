@@ -5,7 +5,7 @@ import type { Poly } from '../../face/poly';
 import type { FaceComponent, Receivers } from '../../contact';
 import type { FaceParams } from '../../schema';
 import type { PublishedOrbits } from '../../anatomy/orbit';
-import { neckPath } from './neck';
+import { neckPath } from '../neck';
 
 /** Arête ouverte du menton : le contour réel du sillon mentolabial au bas, puis symétriquement (sans la corde du sillon). */
 const chinEdge = (lm: FaceLandmarks): { x: number; y: number }[] => {

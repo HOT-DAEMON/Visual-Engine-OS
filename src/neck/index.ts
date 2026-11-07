@@ -1,0 +1,9 @@
+export { neckModelOf } from './model';
+export { neckModelFor, contextFromLandmarks } from './link';
+export { neckFrame, NECK_REF, type NeckFrame } from './frame';
+export { frontSilhouette, profileSilhouette, sectionPoint, stationAt, fieldAt, uAtY } from './geometry';
+export { OPERATORS } from './operators';
+export { SPECIES } from './species';
+export { BODY_LANGUAGE, expressionDelta } from './expressions';
+export type * from './types';
+export { secondaryStep, secondaryTrack, SECONDARY_DEFAULT } from './secondary';

@@ -1,5 +1,6 @@
 import { memoPure } from '../perf';
 import { Resolver, type Correction } from '../core/resolve';
+import { neckFrame, type NeckFrame } from '../neck/frame';
 import { halfWidthAt, headOutline, minHalfWidth, type Outline } from './outline';
 import { jawDerived, mouthOpenPx, NOSE_MOUTH_GAP, type JawDerived } from './jaw/params';
 import { tipLift } from './nose/frame';
@@ -19,12 +20,8 @@ export interface LipLandmarks {
   readonly bottomY: number;
 }
 
-/** Cou : demi-largeur bornée entre le menton et la mâchoire, du haut (caché derrière la tête) jusqu'en bas. */
-export interface NeckLandmarks {
-  readonly half: number;
-  readonly topY: number;
-  readonly bottomY: number;
-}
+/** Cou : cadre produit par le moteur de cou (`neck/frame.ts`) — demi-largeur, haut caché derrière la tête, base, rapport de profondeur, part de rotation suivie. */
+export type NeckLandmarks = NeckFrame;
 
 /** Naissance des cheveux (toujours au-dessus de `browLimitY`) : hauteur au centre, au point de tempe, ancrage du dôme. */
 export interface HairLandmarks {
@@ -154,7 +151,7 @@ function faceLandmarksRaw(p: FaceParams, W: number, H: number): FaceLandmarks {
     jaw: { gonion: outline.keys.gonion, gonialDeg: jd.gonialDeg, drop: jd.drop, tissue: jd.tissue },
     orbit: { left: orbitOf(-1), right: orbitOf(1) },
     // Largeur du cou : paramètre propre (`neck.width`) ; le menton ne l'agrandit QUE si `neck.chinCoupling` > 0 (0 par défaut : menton et cou indépendants).
-    neck: { half: R.limit('neck-between-chin-and-jaw', 'neck.width', (p.neck.width * W) / 2 + p.neck.chinCoupling * (p.chin.projection - 0.5) * 0.05 * W, outline.chinHalf * 1.15, jawHalf * 0.85, 'le cou reste plus large que le menton et plus étroit que la mâchoire'), topY: -H / 2 + 0.6 * H, bottomY: H / 2 + p.neck.length * H },
+    neck: neckFrame(p.neck, W, H, outline.chinHalf, jawHalf, p.chin.projection, R),
     hair: { centerY: -H / 2 + (0.25 + 0.25 * hl) * zone, templeY, sideY: Math.max(-H / 2 + 0.08 * H, templeY - 0.05 * H) },
     asymmetry: p.asymmetry,
     corrections: R.applied,

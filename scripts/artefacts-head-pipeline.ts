@@ -5,7 +5,7 @@ import { openingGeometry, openingPolygon } from '../src/geometry/eye';
 import { noseGeometry } from '../src/face';
 import { faceComponents } from '../src/render/face/components';
 import { hostFace } from '../src/render/face';
-import { neckPath } from '../src/render/face/neck';
+import { neckPath } from '../src/render/neck';
 import { verifyPipeline } from '../src/verify';
 import type { HostSpec } from '../src/schema';
 import { rasterPng } from './lib/raster';

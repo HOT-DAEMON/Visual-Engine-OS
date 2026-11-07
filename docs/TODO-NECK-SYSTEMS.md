@@ -1,3 +1,5 @@
+> **Statut** : implémenté en grande partie — voir `NECK-ENGINE.md` (architecture), `NECK-PROOF.md` (preuve par paramètre) et `NECK-REMAINING.md` (ce qui n'est PAS fait). Ce fichier reste la spécification d'origine, non modifiée.
+
 # Renforcement du moteur des yeux
 Le moteur doit être traité comme une veritable chef d'oeuvre d'ingénierie avec la plus grande attention possible.
 L'objectif est de créer un véritable système de génération de cou capable de fusionner la précision anatomique, l'exagération caricaturale, la stylisation artistique et l'imagination fantastique, sans perdre la cohérence des volumes, des matières et de l'éclairage par rapport au reste du corps.

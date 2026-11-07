@@ -11,6 +11,7 @@ import { checkContracts } from './contracts';
 import { checkHairSim } from './hair-sim';
 import { checkHairZones } from './hair-zones';
 import { checkHairBoundary } from './hair-boundary';
+import { checkNeck } from './neck';
 import { report, type Check, type Report } from './types';
 
 export { checkHairZones } from './hair-zones';
@@ -45,6 +46,8 @@ export function verifyFace(face: RandomFace): Report {
   checks.push(...checkStructure(face));
   // Contrats entre composants : mesures observables, corrections du résolveur, ordre anatomique, budget de rendu.
   checks.push(...checkContracts(face, svg));
+  // Cou (moteur de cou) : géométrie, anatomie, style — voir `neck.ts`.
+  checks.push(...checkNeck(face, svg));
   checks.push(...checkHairSim(face));
   checks.push(...checkHairZones(face));
   checks.push(...checkHairBoundary(face));
@@ -53,6 +56,7 @@ export function verifyFace(face: RandomFace): Report {
 export { measureEquivalence, equivalenceChecks, geometryOf, EQUIVALENCE_LIMITS, type EquivalenceMetrics } from './render-equivalence';
 export { verifyEye, type EyeReport, type EyeMetrics } from './eye';
 export { verifyBody } from './body';
+export { checkNeck, checkNeckModel } from './neck';
 export { verifyLegs } from './lower';
 export { verifyVolumes, type VReport, type VCheck } from './volume';
 export { verifyPixels } from './pixel';

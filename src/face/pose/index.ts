@@ -54,7 +54,7 @@ export function faceNodes(lm: FaceLandmarks, skull: Skull, neck: Neck): PoseNode
     { id: 'mouth', parent: 'face', local: rel(at(0, lm.mouthY, 0.05 * W), faceO), azimuth: 0 },
     { id: 'jaw', parent: 'head', local: rel(at(0, lm.jawY), { x: 0, y: skull.cy, z: 0 }), azimuth: 0 },
     { id: 'chin', parent: 'jaw', local: rel(at(0, lm.chinY, 0.03 * W), at(0, lm.jawY)), azimuth: 0 },
-    { id: 'neck', parent: 'head', local: { x: 0, y: (neck.topY + neck.bottomY) / 2 - skull.cy, z: neck.zAxis }, ratio: TWIST, azimuth: 0 },
+    { id: 'neck', parent: 'head', local: { x: 0, y: (neck.topY + neck.bottomY) / 2 - skull.cy, z: neck.zAxis }, ratio: neck.twistShare, azimuth: 0 },
   ];
   return nodes;
 }

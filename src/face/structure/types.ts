@@ -75,14 +75,12 @@ export interface CheekGeo {
   readonly lateralWidthPx: number;
 }
 
-/** Cou (G) : angle cervico-mentonnier effectif, largeur, tissu sous-mandibulaire, muscles, tension du platysma. */
+/** Cou (G), part « tête » : angle cervico-mentonnier effectif, largeur, tissu sous-mandibulaire, tension du platysma. Les muscles (SCM…) appartiennent au moteur de cou (`src/neck`). */
 export interface NeckGeo {
   /** Angle cervico-mentonnier EFFECTIF (degrés) : de base, plus l'inclinaison de la tête et l'ouverture de la bouche. */
   readonly cervicomentalDeg: number;
   readonly halfWidthPx: number;
   readonly submentalBand: Blob;
-  /** Sterno-cléido-mastoïdiens : polylignes de l'arrière de l'oreille vers la base du cou. */
-  readonly scm: { readonly left: readonly Vec[]; readonly right: readonly Vec[] };
   /** Tension du platysma (0–1) : bouche ouverte et tête inclinée. */
   readonly platysmaTension: number;
   /** Profondeur de l'ombre portée du menton sur le cou, en px : croît quand l'angle cervico-mentonnier se ferme. */

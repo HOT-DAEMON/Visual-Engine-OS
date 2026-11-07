@@ -15,7 +15,7 @@ import { renderFacialHair } from './facial-hair';
 import { renderHair } from './hair';
 import { renderChin } from './jaw';
 import { renderMouth } from './mouth';
-import { renderNeck } from './neck';
+import { renderNeck } from '../neck';
 import { renderNose } from './nose';
 import { softKit } from './soft';
 import { renderStructure, type StructureLayers } from './structure';

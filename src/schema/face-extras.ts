@@ -1,6 +1,7 @@
 import { HairSim } from './hair-sim';
 import { z } from 'zod';
 import { Hex, Unit } from './primitives';
+import { NeckSystem } from './neck-system';
 import { Appearance } from './appearance';
 import { HairFlow, HairFringeEngine, HairLook, HairOcclusion, HairRootLift, HairSides, HairSilhouette, HairStrands, HairTextureMix, HairTiers, HairTips } from './hair-v2';
 import { HAIR_FRINGES, HAIR_STYLES, HAIR_TEXTURE_CHOICES, HAIRLINES, HairBraids, HairTie } from './hair-system';
@@ -20,7 +21,7 @@ export const FaceNeck = z
     /** Largeur du cou, fraction de W (bornée entre le menton et la mâchoire par les repères). */
     width: z.number().min(0.2).max(0.8).default(0.42),
     /** Longueur sous le menton, fraction de H. */
-    length: z.number().min(0.06).max(0.4).default(0.2),
+    length: z.number().min(0.06).max(1.6).default(0.2),
     /** Élargissement du bas du cou (trapèzes), 0 = cylindre. */
     flare: z.number().min(0).max(0.6).default(0.25),
     /** Assombrissement du cou par rapport au visage (il est dans l'ombre du menton). */
@@ -35,6 +36,8 @@ export const FaceNeck = z
     platysma: Unit.default(0.4),
     /** Couplage menton → cou : 0 = INDÉPENDANTS (défaut : un menton projeté n'élargit pas le cou), 1 = le cou suit la projection du menton. */
     chinCoupling: Unit.default(0),
+    /** Système de cou complet (familles morphologie / anatomie / espèce / style / déformations / surface) : voir `neck-system.ts` et docs/NECK-ENGINE.md. */
+    system: NeckSystem.default({}),
   })
   .strict();
 

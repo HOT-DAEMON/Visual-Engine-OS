@@ -10,7 +10,7 @@ import type { LightSpec, SceneInput } from '../../src/schema';
  * Outillage des artefacts du moteur de visage. Chaque CELLULE est une scène rendue seule (visage centré sur un point d'intérêt,
  * à l'échelle voulue : le gros plan est un simple recadrage du canevas) ; un PLANCHE assemble des cellules PNG avec des légendes.
  */
-export type Focus = 'face' | 'nose' | 'lower' | 'chin' | 'eyes';
+export type Focus = 'face' | 'nose' | 'lower' | 'chin' | 'eyes' | 'neck';
 
 export interface CellSpec {
   readonly seed?: number;
@@ -47,6 +47,7 @@ function framing(f: Focus, lm: FaceLandmarks, nose: NoseGeometry, w: number): { 
     case 'nose': return { fx: 0, fy: (nose.root.y + nose.baseY) / 2 + 0.035 * lm.H, s: w / (lm.W * 0.5) };
     case 'lower': return { fx: 0, fy: (lm.mouthY + lm.chinY) / 2 + 0.02 * lm.H, s: w / (lm.W * 0.95) };
     case 'chin': return { fx: 0, fy: (lm.lips.bottomY + lm.chinY) / 2 + 0.03 * lm.H, s: w / (lm.W * 0.7) };
+    case 'neck': return { fx: 0, fy: lm.chinY + 0.45 * (lm.neck.bottomY - lm.chinY), s: Math.min(w / (lm.W * 0.95), (w * 1.25) / (1.35 * (lm.neck.bottomY - lm.chinY) + 0.5 * lm.H)) };
     case 'eyes': return { fx: 0, fy: lm.eyeY, s: w / (lm.W * 1.1) };
     default: return { fx: 0, fy: (lm.neck.bottomY - lm.H / 2) / 2 * 0.9, s: Math.min(w / (lm.W * 1.18), (w * 1.3) / (lm.neck.bottomY + lm.H / 2) / 1.1) };
   }

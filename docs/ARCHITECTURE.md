@@ -186,3 +186,7 @@ mémoïsée (`geometry.ts`) → rendu sans filtre (`render*.ts`) ; oreille = mod
 `src/body/` : enfant du cou (ancre `NeckAnchor` lue sur `faceLandmarks`), 4 axes indépendants (âge, sexe, adiposité, musculature) + charpente + pose de chaque bras → cadre en px
 (canon par âge, Résolveur) → ~280 atomes hiérarchiques → rendu SVG sans filtre en 4 niveaux. Contrats testés par perturbation de chaque paramètre ; vérification en 3 couches
 `src/verify/body.ts`. Voir `BODY.md`, `BODY-CANON.md`, `BODY-ATOMS.md`, `BODY-VERIFY.md`, `BODY-PERF.md` ; reste à faire : `BODY-REMAINING.md`.
+
+## Moteur de cou (feat/hair-grammar)
+`src/neck/` (modèle pur : cadre unique `lm.neck`, morphologie, sections, 12 opérateurs, rig, contrôleurs, espèces, anatomie) + `src/render/neck/` (contour, ombrage par normales, muscles, reliefs, surfaces, accessoires) + `src/verify/neck.ts`. Enfant de la tête, parent du corps (l'ancre du corps est sa dernière section). Voir `NECK-ENGINE.md`, preuves `NECK-PROOF.md`, reste à faire `NECK-REMAINING.md`.
+
