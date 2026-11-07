@@ -5,7 +5,7 @@ Sa géométrie est DÉRIVÉE des moteurs existants du dépôt (`src/face`, `src/
 Ne pas confondre avec `src/lighting/head-turn.ts` / `src/geometry/eye/turn3d.ts` : ceux-là font tourner un ŒIL ; ici c'est la tête entière.
 
 Suites : branchement sur les moteurs existants `HEAD-TURNTABLE-ENGINES.md` (+ calage `HEAD-TURNTABLE-ENGINES-FIT.md`) · références et méthode de mesure `HEAD-TURNTABLE-REFERENCES.md` ·
-vérification `HEAD-TURNTABLE-VERIFY.md` (+ tous les contrôles `HEAD-TURNTABLE-VERIFY-CHECKS.md`) · reste à faire `HEAD-TURNTABLE-REMAINING.md`.
+vérification `HEAD-TURNTABLE-VERIFY.md` (+ tous les contrôles `HEAD-TURNTABLE-VERIFY-CHECKS.md`) · reste à faire `HEAD-TURNTABLE-REMAINING.md` · mâchoire, menton, joues `HEAD-TURNTABLE-JAW.md` · têtes variées (crâne dérivé du visage) `HEAD-TURNTABLE-VARIETY.md` · vérification de toute tête et audit pixel `HEAD-TURNTABLE-VERIFY-HEAD.md`.
 Preuves visuelles : `artefacts/head-turntable-engines/` (version actuelle, moteurs branchés ; voir son `README.md`) et `artefacts/head-turntable/` (version précédente, module autonome).
 
 ## Utilisation
@@ -80,9 +80,12 @@ Les constantes MESURÉES restent dans `spec.ts` (`MEASURED_SPEC`) ; la géométr
     python3 scripts/head-turntable/hair-iou.py                    # recouvrement des cheveux
     npx tsx scripts/head-turntable/artefacts-engines.ts && python3 scripts/head-turntable/compose-engines.py   # gros plans oreille / mâchoire, avant-après
     python3 scripts/head-turntable/doc-checks.py && python3 scripts/head-turntable/doc-fit.py                  # tableaux de la doc, générés
+    python3 scripts/head-turntable/measure-sheet2.py <dossier>     # rotation_head_1.jpg -> references/face/rotation_head_1.measures.json (+ image annotée)
+    npx tsx scripts/head-turntable/audit-planche.ts <dossier>     # courbure du contour + écart signé à la planche ; à lancer dans l'arbre d'origine ET l'arbre corrigé pour comparer
+    npx tsx scripts/head-turntable/artefacts-annotate.ts <dossier> && npx tsx scripts/head-turntable/artefacts-gallery.ts <dossier>/galerie && python3 scripts/head-turntable/compose-v2.py   # artefacts/head-turntable-v2
     # recalage optionnel de la lisière : export-hair-masks.py .scratch/refhair puis fit-hairline.ts .scratch/refhair
 
 Variables : `OUT=<dossier>` pour `artefacts-turntable.ts`, `compose-artefacts.py`, `artefacts-engines.ts`, `compose-engines.py` (défaut : `artefacts/head-turntable`).
 
-Tests : `npx vitest run tests/head-turntable.test.ts tests/head-turntable-engines.test.ts` (26 tests, ≈ 25 s : déterminisme, symétrie, périodicité, vérification des 3 couches, défauts injectés,
+Tests : `npx vitest run tests/head-turntable.test.ts tests/head-turntable-engines.test.ts tests/head-turntable-jaw.test.ts` (26 tests, ≈ 25 s, plus 19 tests de mâchoire / variété / vérification de toute tête, ≈ 60 s ; les 26 couvrent : déterminisme, symétrie, périodicité, vérification des 3 couches, défauts injectés,
 usage réel des moteurs, équivalence `projectPoint`/`placeEarPoint`, oreilles symétriques et attachées).

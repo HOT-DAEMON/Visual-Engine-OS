@@ -13,7 +13,12 @@ export interface V3 { readonly x: number; readonly y: number; readonly z: number
 export interface View { readonly yaw: number; readonly pitch: number }
 
 /** Une section horizontale du crâne/mâchoire à la hauteur y : demi-largeur a, face avant zf, face arrière zb (ellipse de centre (zf+zb)/2). */
-export interface Row { readonly y: number; readonly a: number; readonly zf: number; readonly zb: number }
+/**
+ * Rangée de la table de sections : demi-largeur `a`, avant `zf`, arrière `zb`. Champs OPTIONNELS de forme (absents = ellipse, comportement d'origine) :
+ * `zw` profondeur du point le plus large (mâchoire : au coin gonial, loin derrière le centre) ; `pf` exposant de PROFONDEUR de la moitié avant, `qf` exposant de
+ * LARGEUR. Moitié avant : x = a·sin(φ)^(2/qf), z = zw + (zf − zw)·cos(φ)^(2/pf). (pf, qf) = (2, 2) ellipse ; (1, 2) parabole en U ; (1, 1) V ; (3, 3) carré arrondi.
+ */
+export interface Row { readonly y: number; readonly a: number; readonly zf: number; readonly zb: number; readonly zw?: number; readonly pf?: number; readonly qf?: number }
 
 export interface EyeSpec { readonly x: number; readonly y: number; readonly z: number; readonly w: number; readonly hUp: number; readonly hLo: number; readonly irisR: number }
 export interface BrowSpec { readonly xIn: number; readonly xOut: number; readonly yIn: number; readonly yMid: number; readonly yOut: number; readonly thick: number }

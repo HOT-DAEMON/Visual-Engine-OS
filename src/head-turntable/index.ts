@@ -2,7 +2,7 @@ export * from './types';
 export * from './math';
 export { REF_SPEC } from './spec';
 export { REF_PITCH, REF_RESIDUAL, REF_FIT, REF_ROWS } from './ref-fit';
-export { sectionAt, hairlineY, headPoint } from './sections';
+export { sectionAt, sectionPoint, surfaceZ, halfWidthAtZ, hairlineY, headPoint } from './sections';
 export { buildParts } from './parts';
 export { rasterize, type Frame, type GBuf } from './raster';
 export { renderHead, refView, defaultFrame, type RenderOpts } from './render';

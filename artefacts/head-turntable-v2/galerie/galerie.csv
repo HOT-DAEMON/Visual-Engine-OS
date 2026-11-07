@@ -1,0 +1,14 @@
+seed;aspect;ci_moteur;longueur_crane_H;largeur_visage_U;largeur_machoire_95;gonion_y;menton_forme;taper;verdict;controles_hors_bornes
+planche;;;0.802;0.782;0.473;0.857;;;PASS;0
+seed1;0.908;0.857;0.847;0.988;0.395;0.780;cleft;0.39;PASS;0
+seed2;0.835;0.829;0.807;0.924;0.403;0.789;round;0.60;PASS;0
+seed3;0.900;0.854;0.850;0.995;0.442;0.830;round;0.77;PASS;0
+seed4;0.833;0.815;0.810;0.919;0.468;0.833;round;0.34;PASS;0
+seed5;0.751;0.777;0.757;0.820;0.486;0.836;round;0.36;PASS;0
+seed6;0.909;0.861;0.840;0.993;0.441;0.780;cleft;0.49;PASS;0
+seed7;0.894;0.843;0.854;0.985;0.458;0.837;square;0.35;PASS;0
+seed8;0.777;0.780;0.795;0.873;0.358;0.810;cleft;0.33;PASS;0
+seed9;0.738;0.762;0.767;0.815;0.473;0.780;round;0.78;PASS;0
+seed10;0.727;0.751;0.780;0.821;0.514;0.785;round;0.45;PASS;0
+seed11;0.794;0.799;0.807;0.856;0.423;0.799;cleft;0.72;PASS;0
+seed12;0.891;0.863;0.834;0.943;0.412;0.780;round;0.46;PASS;0

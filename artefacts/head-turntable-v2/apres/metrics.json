@@ -1,0 +1,92 @@
+[
+ {
+  "yaw": 0,
+  "minRadiusU": 0.1277,
+  "inflections": 0,
+  "concavityU": 0.0002,
+  "jawBandErrU": 0.0074,
+  "jawBandMaxU": 0.0253,
+  "signedLeftU": -0.0055,
+  "signedRightU": 0.0028
+ },
+ {
+  "yaw": 20,
+  "minRadiusU": 0.0777,
+  "inflections": 0,
+  "concavityU": 0.0014,
+  "jawBandErrU": 0.0231,
+  "jawBandMaxU": 0.0909,
+  "signedLeftU": -0.0315,
+  "signedRightU": -0.0047
+ },
+ {
+  "yaw": 45,
+  "minRadiusU": 0.0441,
+  "inflections": 0,
+  "concavityU": 0.002,
+  "jawBandErrU": 0.0184,
+  "jawBandMaxU": 0.0696,
+  "signedLeftU": -0.0179,
+  "signedRightU": -0.0005
+ },
+ {
+  "yaw": 70,
+  "minRadiusU": 0.0464,
+  "inflections": 1,
+  "concavityU": 0.0106,
+  "jawBandErrU": 0.0325,
+  "jawBandMaxU": 0.2065,
+  "signedLeftU": -0.0383,
+  "signedRightU": 0.0088
+ },
+ {
+  "yaw": 90,
+  "minRadiusU": 0.0539,
+  "inflections": 0,
+  "concavityU": 0.0015,
+  "jawBandErrU": 0.0277,
+  "jawBandMaxU": 0.0683,
+  "signedLeftU": -0.0059,
+  "signedRightU": 0.0235
+ },
+ {
+  "yaw": 110,
+  "minRadiusU": 0.0739,
+  "inflections": 0,
+  "concavityU": 0.0008,
+  "jawBandErrU": 0.0219,
+  "jawBandMaxU": 0.0699,
+  "signedLeftU": -0.0029,
+  "signedRightU": 0.0217
+ },
+ {
+  "yaw": 135,
+  "minRadiusU": 0.0708,
+  "inflections": 1,
+  "concavityU": 0.0095,
+  "jawBandErrU": 0.0265,
+  "jawBandMaxU": 0.1268,
+  "signedLeftU": 0.0016,
+  "signedRightU": 0.0238
+ },
+ {
+  "yaw": 160,
+  "minRadiusU": 0.0131,
+  "inflections": 2,
+  "concavityU": 0.0075,
+  "jawBandErrU": 0.0215,
+  "jawBandMaxU": 0.0584,
+  "signedLeftU": 0.0169,
+  "signedRightU": 0.0111
+ },
+ {
+  "yaw": 180,
+  "minRadiusU": 0.0135,
+  "inflections": 0,
+  "concavityU": 0.0005,
+  "jawBandErrU": 0.0132,
+  "jawBandMaxU": 0.0414,
+  "signedLeftU": -0.0126,
+  "signedRightU": 0.0122
+ }
+]

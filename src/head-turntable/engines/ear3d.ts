@@ -4,7 +4,7 @@ import { placeEarPoint, type EarPlacement } from '../../face/ear/project';
 import type { EarModel } from '../../face/ear/types';
 import { rad, v3 } from '../math';
 import { gridMesh, PART, type Mesh } from '../mesh';
-import { sectionAt } from '../sections';
+import { halfWidthAtZ, sectionAt } from '../sections';
 import type { HeadTurnSpec, V3 } from '../types';
 import { earField, reliefAt, type EarField } from './ear-field';
 import { fy } from './units';
@@ -18,7 +18,7 @@ export function earRig(spec: HeadTurnSpec, side: 1 | -1): EarRig {
   const model = earModel(e.p.ears, side), { pl: px } = earPlacement(e.p, e.lm, model);
   const hU = px.hPx / 1000, zA = e.fit.zPorion + Math.cos(rad(px.openingDeg)) * (model.landmarks.canal as { x: number }).x * hU, sink = e.p.ears.attach.insertion * 0.04 * hU;
   // Attache : abscisse de la surface du crâne à la hauteur y ET à la profondeur zA (ellipse de la section), pas la largeur maximale du contour.
-  const skullX = (y: number): number => { const s = sectionAt(spec, y), d = (zA - s.zc) / s.b; return Math.max(0, s.a * Math.sqrt(Math.max(0, 1 - d * d)) - sink); };
+  const skullX = (y: number): number => { return Math.max(0, halfWidthAtZ(sectionAt(spec, y), zA) - sink); };
   // `placeEarPoint` applique `side × rotationDeg`, alors que le plan de l'oreille gauche n'est PAS miroité (u : avant → arrière pour les deux côtés) : sans compensation
   // l'oreille gauche pencherait à l'opposé de la droite (écart mesuré 0,067 U). On passe `side × rotationDeg` pour que la rotation dans le plan soit la même des deux côtés.
   const pl: EarPlacement = { ...px, hPx: hU, topY: fy(px.topY), skullX, rotationDeg: side * px.rotationDeg };

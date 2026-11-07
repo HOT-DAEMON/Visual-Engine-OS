@@ -13,9 +13,9 @@ import { fx, fy } from './units';
  * SPEC DE LA TÊTE DE LA PLANCHE, DÉRIVÉE DES MOTEURS EXISTANTS (skull, face/landmarks, face/jaw, face/nose, face/mouth) recalés par `fit-engines.ts`.
  * Ce qui reste MESURÉ ici (et pas dérivé) est étiqueté : tailles d'œil, de sourcil, de bouche ouverte, lisière des cheveux, palette.
  */
-export function engineSpec(fit: EngineFit = ENGINE_FIT, base: HeadTurnSpec): HeadTurnSpec {
+export function engineSpec(fit: EngineFit = ENGINE_FIT, base: HeadTurnSpec, ys?: readonly number[]): HeadTurnSpec {
   const e = engineHead(fit), P = skinPoints(e), nl = noseLandmarks(e);
-  const rows = engineRows(e, undefined, fit.hairTh);
+  const rows = engineRows(e, ys, fit.hairTh);
   const eyeX = fx(e.lm.innerCanthus.right.x) + base.eye.w / 2;
   const out: HeadTurnSpec = {
     ...base,

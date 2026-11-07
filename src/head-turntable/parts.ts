@@ -3,6 +3,12 @@ import { v3 } from './math';
 import { sectionAt } from './sections';
 import type { BumpKnots, HeadTurnSpec } from './types';
 import { earMesh, earRig } from './engines/ear3d';
+import { engineHead } from './engines/face-model';
+import { noseLandmarks } from './engines/nose-mouth';
+
+/** Largeur d'ailes (U) et décalage hauteur ↔ base du nez de la planche : les ailes des autres têtes sont posées et dimensionnées par rapport à ces valeurs. */
+const REF_ALA = ((): number => noseLandmarks(engineHead()).crestX)();
+const ALA_ABOVE_BASE = 0.0147;   // les ailes sont centrées 0,0147 U au-dessus de la base du nez (planche : base 0,7897 → y = 0,775, comme avant)
 
 /** Interpolation linéaire d'une colonne (1 = z, 2 = demi-largeur) des nœuds d'une bosse à la hauteur y. */
 function knotAt(k: BumpKnots, y: number, col: 1 | 2): number {
@@ -20,9 +26,9 @@ function bumpOf(spec: HeadTurnSpec, k: BumpKnots): Mesh {
 /** Toutes les pièces du modèle, dans le repère de la tête. Les oreilles viennent du moteur d'oreille (`src/face/ear`) : modèle, relief, placement. */
 export function buildParts(spec: HeadTurnSpec): Mesh[] {
   const meshes: Mesh[] = [headMesh(spec), ...neckMeshes(spec), bumpOf(spec, spec.nose.knots), bumpOf(spec, spec.mouth.knots)];
-  const ys = 0.775, sa = sectionAt(spec, ys), ax = v3(1, 0, 0), ay = v3(0, 1, 0), az = v3(0, 0, 1);
+  const ys = spec.nose.baseY - ALA_ABOVE_BASE, sa = sectionAt(spec, ys), ax = v3(1, 0, 0), ay = v3(0, 1, 0), az = v3(0, 0, 1), ka = spec.engine ? spec.nose.alaX / REF_ALA : 1;
   for (const sg of [1, -1] as const) {
-    meshes.push(ellipsoid(PART.bump, v3(sg * spec.nose.alaX, ys, sa.zf + 0.022), ax, ay, az, 0.026, 0.024, 0.026, 10, 16));
+    meshes.push(ellipsoid(PART.bump, v3(sg * spec.nose.alaX, ys, sa.zf + 0.022 * ka), ax, ay, az, 0.026 * ka, 0.024 * ka, 0.026 * ka, 10, 16));
     meshes.push(...earMesh(earRig(spec, sg)));
   }
   return meshes;

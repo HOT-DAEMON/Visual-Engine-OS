@@ -1,4 +1,4 @@
-import { sectionAt } from './sections';
+import { sectionAt, surfaceZ } from './sections';
 import { check, layerOf, type Check, type LayerReport } from './verify-types';
 import type { HeadTurnSpec } from './types';
 
@@ -11,7 +11,7 @@ export function verifyAnatomy(s: HeadTurnSpec): LayerReport {
   const c: Check[] = [], A = 'anatomy' as const, last = s.rows[s.rows.length - 1]!, hT = last.y;
   const cr = s.rows.filter((r) => r.y <= 0.6), W = 2 * Math.max(...cr.map((r) => r.a)), D = Math.max(...s.rows.filter((r) => r.y <= 0.5).map((r) => r.zf - r.zb));
   const e = s.eye, gap = 2 * e.x - e.w, mid = s.brow.yMid, base = s.nose.baseY, chinHalf = sectionAt(s, 1.0).a;
-  const surfZ = ((): number => { const q = sectionAt(s, e.y); return q.zc + q.b * Math.sqrt(Math.max(0, 1 - (e.x / q.a) ** 2)); })();
+  const surfZ = ((): number => { return surfaceZ(sectionAt(s, e.y), e.x, true); })();
   c.push(check(A, 'eye.line', 'Ligne des yeux / hauteur de tête (canon 0,50 ; planche stylisée plus bas)', e.y / hT, 0.45, 0.65, 'hard', 'canon 0,50'));
   c.push(check(A, 'eye.spacing', 'Écart entre les yeux en largeurs d\'œil (canon : 1,0 — règle des cinq yeux)', gap / e.w, 0.8, 1.3));
   c.push(check(A, 'nose.width', 'Largeur du nez / écart entre les yeux (canon réaliste 1,0 ; dessin animé plus étroit)', (2 * s.nose.alaX) / gap, 0.4, 1.1, 'hard', 'canon 1,0'));

@@ -8,7 +8,7 @@ Preuves : `artefacts/head-turntable/extraction/` et `artefacts/head-turntable/re
 | Fichier | Contenu | Traitement |
 |---|---|---|
 | `rotation_head.jpg` (756 × 567) | 9 vues d'une même tête, 0°, 20°, 45°, 70°, 90°, 110°, 135°, 160°, 180° | **mesurée automatiquement** (masques de couleur) → `rotation_head.measures.json` |
-| `rotation_head_1.jpg` | 8 vues d'un personnage à coupe au carré (face, profil, 3/4 haut et bas, dos) avec VARIATION DE TANGAGE | observée seulement ; non mesurée (voir reste à faire) |
+| `rotation_head_1.jpg` | 8 vues d'un personnage à coupe au carré (face, profil, 3/4 haut et bas, dos) avec VARIATION DE TANGAGE | **mesurée** (face et profil, `scripts/head-turntable/measure-sheet2.py`) → `rotation_head_1.measures.json` ; autres vues (3/4, tangage variable) non mesurées |
 | `01.jpg` (564 × 564) | portrait semi-réaliste, tête inclinée, grands yeux | relevé à la main → `face_refs.measures.json` |
 | `02.png` (1920 × 1080) | colère, plan serré, léger lacet, ombre en aile sur les yeux | relevé à la main |
 | `05.png` (1920 × 1080) | yeux écarquillés (peur / surprise), face, chapeau | relevé à la main |
@@ -73,3 +73,23 @@ Les points bruts sont dans `annotate-face-refs.py` ; les rapports sont CALCULÉS
 Lecture : la planche (animation) a un nez court et des yeux ronds à grand iris ; 01 est semi-réaliste (iris 0,46, nez plus long) ; 05 montre l'iris
 RÉTRÉCI de la peur (0,25) ; 02 donne le froncement (≈ 30°) et une asymétrie d'œil de 1,2 due au lacet. Ces trois profils d'expression ne sont PAS encore
 branchés sur le moteur (voir `HEAD-TURNTABLE-REMAINING.md`) ; leurs mesures sont prêtes à devenir des paramètres.
+
+## Planche 2 : `rotation_head_1.jpg` — proportions mesurées (face et profil) → `rotation_head_1.measures.json`
+
+Second personnage (visage rond, coupe au carré). Méthode : segmentation par couleur (peau très pâle : R ≥ 240, R − B ∈ [6, 45] ; cheveux gris ; encre sombre), composante connexe de peau dans une région d'intérêt posée à la main autour de
+chaque visage (la peau du cou touche celle du visage par le col), puis lectures ligne par ligne. Unité : fraction de la hauteur de tête H (sommet de la chevelure → bas du menton). Image annotée : `artefacts/head-turntable-v2/06-planche2-mesures.png`.
+
+| Grandeur | Face | Profil |
+|---|---|---|
+| Hauteur de tête H | 636 px | 602 px |
+| Largeur / profondeur de la chevelure sur H | 0,997 | 1,038 |
+| Ligne des yeux sur H (depuis le sommet de la chevelure) | **0,623** | — |
+| Écart des yeux sur H | 0,330 | — |
+| Largeur de PEAU visible aux yeux / à 70 % / 88 % / 96 % de la hauteur du visage | 0,563 / 0,481 / 0,354 / 0,171 | — |
+| Largeur du menton (96 %) / largeur aux yeux | **0,304** (mâchoire très convergente) | — |
+| Bout du nez sur H | — | 0,769 |
+| Saillie du nez sur la ligne du front | — | 0,022 (visage plat) |
+| Saillie du menton sur la ligne du front | — | **−0,088** (menton en retrait) |
+
+Limites : les largeurs sont celles de la PEAU VISIBLE (les mèches couvrent les joues : minorants de la vraie largeur) ; régions d'intérêt manuelles ; une seule vue de face et une de profil ; les vues à tangage variable ne sont pas mesurées.
+Usage : canon de plausibilité (la borne haute de `head.anat.eyeline`, 0,66, admet 0,62 ; planche 1 : 0,59) et cible pour un futur ajustement de `FaceParams` (`HEAD-TURNTABLE-REMAINING.md`, étape 6). **Aucun paramètre du moteur n'est encore ajusté sur cette planche.**

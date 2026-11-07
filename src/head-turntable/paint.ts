@@ -11,7 +11,8 @@ import { REGION, type HeadTurnSpec, type View } from './types';
 
 /** Lumière en repère CAMÉRA (haut-gauche, de face) : la lumière ne tourne pas avec la tête, comme sur la planche. */
 const LIGHT = norm(v3(-0.25, -0.55, 0.8));
-const NECK_CUT: RGB = [217, 169, 143];
+/** Coupe du cou : ombre de la peau × rapport de la planche (230,188,164 → 217,169,143), donc identique sur la planche et teintée par la peau des autres têtes. */
+const NECK_CUT_K: RGB = [217 / 230, 169 / 188, 143 / 164];
 /** Groupe de contour : les pièces d'un même groupe n'ont pas de trait entre elles (nez et lèvres font partie de la tête). */
 const group = (id: number): number => (id === PART.head || id === PART.bump ? 1 : id === PART.neck ? 2 : id === PART.ear || id === PART.earBack ? 3 : id === PART.neckCut ? 4 : 0);
 
@@ -38,7 +39,7 @@ export function paint(spec: HeadTurnSpec, g: GBuf, view: View, o: PaintOpts): Pa
     const nc = toCam(nh, view), lam = nc.x * LIGHT.x + nc.y * LIGHT.y + nc.z * LIGHT.z, t = smooth((lam - 0.02) / 0.22);
     const kw = Math.min(1.4, 1 / Math.max(0.7, nc.z));                         // compensation du raccourcissement des traits sur les faces obliques
     let col = mix(pal.shade, pal.skin, t), reg: number = REGION.skin;
-    if (id === PART.neckCut) { col = NECK_CUT; reg = REGION.neck; }
+    if (id === PART.neckCut) { col = [pal.shade[0] * NECK_CUT_K[0], pal.shade[1] * NECK_CUT_K[1], pal.shade[2] * NECK_CUT_K[2]]; reg = REGION.neck; }
     else if (id === PART.neck) { col = mix(pal.shade, pal.skin, Math.min(t, smooth((p.y - 0.98) / 0.2))); reg = REGION.neck; }
     else if (id === PART.ear) {
       const rig = earRig(spec, p.x >= 0 ? 1 : -1), front = nh.x * (p.x >= 0 ? 1 : -1) * Math.cos(rad(rig.pl.openingDeg)) + nh.z * Math.sin(rad(rig.pl.openingDeg)) > -0.05;
@@ -53,10 +54,10 @@ export function paint(spec: HeadTurnSpec, g: GBuf, view: View, o: PaintOpts): Pa
         if (R ? sd < half : Math.abs(p.y - hl) < 0.03 && Math.abs(p.y - hl) < hairTol(spec, view, az, hl, kw)) col = pal.ink;
       } else if (id === PART.head && R && -sd < half && p.y < 0.98) {
         col = pal.ink;
-      } else if (p.z > 0.2) {
+      } else if (p.z > 0.2 && nh.z > 0.05) {   // le visage ne se peint que sur une surface tournée vers l'avant : sans cette condition la bouche et la rougeur débordaient sur le DESSOUS du menton (rectangle rose à 90° – 135°)
         const tx = eyeTex(spec, p, kw, pal) ?? browTex(spec, p, kw, pal) ?? mouthTex(spec, p, kw, pal) ?? nostrilTex(spec, p, pal);
         if (tx) { col = tx.ink ? tx.c : mix(mix(tx.c, pal.shade, 0.35), tx.c, t); reg = tx.region; }
-        else { const a = blushAlpha(p); if (a > 0) col = mix(col, pal.blush, a); }
+        else { const a = blushAlpha(p, spec); if (a > 0) col = mix(col, pal.blush, a); }
       }
     }
     rgba[4 * k] = col[0]; rgba[4 * k + 1] = col[1]; rgba[4 * k + 2] = col[2]; rgba[4 * k + 3] = 1; region[k] = reg;

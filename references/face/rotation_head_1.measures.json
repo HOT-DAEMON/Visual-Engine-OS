@@ -1,0 +1,26 @@
+{
+ "source": "references/face/rotation_head_1.jpg",
+ "unite": "fractions de la hauteur de tête H (sommet de la chevelure → bas du menton), sauf mention",
+ "vues": {
+  "face": {
+   "hauteur_tete_px": 636,
+   "largeur_chevelure_sur_H": 0.997,
+   "sommet_visage_sur_H": 0.296,
+   "ligne_yeux_sur_H": 0.623,
+   "ecart_yeux_sur_H": 0.33,
+   "largeur_visage_aux_yeux_sur_H": 0.563,
+   "largeur_visage_a_70pct_menton_sur_H": 0.481,
+   "largeur_visage_a_88pct_menton_sur_H": 0.354,
+   "largeur_visage_a_96pct_menton_sur_H": 0.171,
+   "rapport_largeur_menton_96_sur_yeux": 0.304
+  },
+  "profil": {
+   "hauteur_tete_px": 602,
+   "profondeur_chevelure_sur_H": 1.038,
+   "bout_du_nez_sur_H": 0.769,
+   "saillie_nez_sur_front_H": 0.022,
+   "menton_saillie_sur_front_H": -0.088,
+   "sommet_visage_sur_H": 0.49
+  }
+ }
+}

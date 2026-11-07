@@ -1,0 +1,6580 @@
+{
+ "planche": {
+  "pass": true,
+  "checks": 47,
+  "hors_bornes": [],
+  "couches": [
+   {
+    "layer": "geometry",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "geometry",
+      "id": "head.geo.rows",
+      "label": "Table de sections saine : valeurs finies, avant > arrière, point large jamais reculé (nombre de rangées fautives)",
+      "value": 0,
+      "min": 0,
+      "max": 0,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.front2d",
+      "label": "Face 3D (tangage 0) vs contour 2D du moteur de visage : écart moyen de demi-largeur (U) [rendu : trait ≈ 0,011]",
+      "value": 0.0254,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.profile2d",
+      "label": "Profil 3D (90°, tangage 0) vs z avant du crâne du moteur : écart moyen sur le front (U)",
+      "value": 0.0009,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.concavity",
+      "label": "Mâchoire à 0° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0001,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.inflections",
+      "label": "Mâchoire à 0° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.radius",
+      "label": "Mâchoire à 0° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.1175,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.ink",
+      "label": "Mâchoire à 0° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.concavity",
+      "label": "Mâchoire à 20° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0012,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.inflections",
+      "label": "Mâchoire à 20° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.radius",
+      "label": "Mâchoire à 20° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0741,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.ink",
+      "label": "Mâchoire à 20° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.concavity",
+      "label": "Mâchoire à 45° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0017,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.inflections",
+      "label": "Mâchoire à 45° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.radius",
+      "label": "Mâchoire à 45° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0405,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.ink",
+      "label": "Mâchoire à 45° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.concavity",
+      "label": "Mâchoire à 70° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0091,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.inflections",
+      "label": "Mâchoire à 70° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.radius",
+      "label": "Mâchoire à 70° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.05,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.ink",
+      "label": "Mâchoire à 70° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.concavity",
+      "label": "Mâchoire à 90° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0016,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.inflections",
+      "label": "Mâchoire à 90° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.radius",
+      "label": "Mâchoire à 90° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.051,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.ink",
+      "label": "Mâchoire à 90° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.135.concavity",
+      "label": "Mâchoire à 135° : creux maximal du contour (U)",
+      "value": 0.0101,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.180.concavity",
+      "label": "Mâchoire à 180° : creux maximal du contour (U)",
+      "value": 0.0008,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "anatomy",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "anatomy",
+      "id": "head.anat.eyeline",
+      "label": "Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]",
+      "value": 0.5902,
+      "min": 0.4,
+      "max": 0.66,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.depth",
+      "label": "Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]",
+      "value": 0.7638,
+      "min": 0.66,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.jaw.plane",
+      "label": "Plan mandibulaire (gonion → menton) par rapport à l'horizontale (°) [canon : 15–35° ; extrêmes admis 10–42°]",
+      "value": 26.9283,
+      "min": 10,
+      "max": 42,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.height",
+      "label": "Gonion vs ligne de la bouche (U ; + = plus bas) [canon : le gonion est au niveau de la bouche ± 0,15]",
+      "value": -0.0028,
+      "min": -0.15,
+      "max": 0.35,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.rest",
+      "label": "Distance gonion → bas du menton (U) [canon : ≥ 0,06]",
+      "value": 0.1931,
+      "min": 0.06,
+      "max": 0.4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.bigonial",
+      "label": "Largeur bigoniale / largeur bizygomatique du contour [canon : 0,55–0,95 ; planche 0,64]",
+      "value": 0.6102,
+      "min": 0.5,
+      "max": 0.97,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.top",
+      "label": "Haut de l'oreille vs ligne des sourcils (U ; + = au-dessus) [canon : haut de l'oreille ≈ sourcil]",
+      "value": -0.0771,
+      "min": -0.12,
+      "max": 0.2,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.bottom",
+      "label": "Bas de l'oreille vs base du nez (U ; + = plus haut) [canon : bas de l'oreille ≈ base du nez]",
+      "value": 0,
+      "min": -0.16,
+      "max": 0.12,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.neck",
+      "label": "Largeur du cou / largeur du crâne [canon : 0,35–0,65]",
+      "value": 0.3737,
+      "min": 0.3,
+      "max": 0.72,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.chin.lowest",
+      "label": "Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)",
+      "value": -0.3569,
+      "min": -0.7,
+      "max": -0.1,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "style",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "style",
+      "id": "head.style.ink.contrast",
+      "label": "Contraste encre / peau (rapport WCAG) : le contour reste lisible sur toute teinte [planche : ≈ 9]",
+      "value": 9.237,
+      "min": 2.5,
+      "max": 30,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.hair.contrast",
+      "label": "Contraste cheveux / peau (WCAG) : la lisière se lit",
+      "value": 1.0868,
+      "min": 1.05,
+      "max": 30,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.0",
+      "label": "Épaisseur médiane du trait de la mâchoire à 0° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0101,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.90",
+      "label": "Épaisseur médiane du trait de la mâchoire à 90° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0135,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.0",
+      "label": "Contour fermé à 0° (part des pixels de bord couverts d'encre)",
+      "value": 0.999,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.45",
+      "label": "Contour fermé à 45° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.90",
+      "label": "Contour fermé à 90° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.180",
+      "label": "Contour fermé à 180° (part des pixels de bord couverts d'encre)",
+      "value": 0.999,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.0",
+      "label": "Îlots d'encre isolés à 0° (points, traits pointillés) [planche ≤ 6]",
+      "value": 1,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.45",
+      "label": "Îlots d'encre isolés à 45° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.90",
+      "label": "Îlots d'encre isolés à 90° (points, traits pointillés) [planche ≤ 6]",
+      "value": 1,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.180",
+      "label": "Îlots d'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)",
+      "value": 33,
+      "min": 0,
+      "max": 60,
+      "ok": true,
+      "kind": "info"
+     }
+    ]
+   }
+  ]
+ },
+ "seed1": {
+  "pass": true,
+  "checks": 48,
+  "hors_bornes": [],
+  "couches": [
+   {
+    "layer": "geometry",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "geometry",
+      "id": "head.geo.rows",
+      "label": "Table de sections saine : valeurs finies, avant > arrière, point large jamais reculé (nombre de rangées fautives)",
+      "value": 0,
+      "min": 0,
+      "max": 0,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.front2d",
+      "label": "Face 3D (tangage 0) vs contour 2D du moteur de visage : écart moyen de demi-largeur (U) [rendu : trait ≈ 0,011]",
+      "value": 0.0255,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.profile2d",
+      "label": "Profil 3D (90°, tangage 0) vs z avant du crâne du moteur : écart moyen sur le front (U)",
+      "value": 0.001,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.concavity",
+      "label": "Mâchoire à 0° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0018,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.inflections",
+      "label": "Mâchoire à 0° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.radius",
+      "label": "Mâchoire à 0° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.1078,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.ink",
+      "label": "Mâchoire à 0° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.concavity",
+      "label": "Mâchoire à 20° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.002,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.inflections",
+      "label": "Mâchoire à 20° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.radius",
+      "label": "Mâchoire à 20° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.1272,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.ink",
+      "label": "Mâchoire à 20° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.concavity",
+      "label": "Mâchoire à 45° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0028,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.inflections",
+      "label": "Mâchoire à 45° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.radius",
+      "label": "Mâchoire à 45° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0854,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.ink",
+      "label": "Mâchoire à 45° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.concavity",
+      "label": "Mâchoire à 70° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0082,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.inflections",
+      "label": "Mâchoire à 70° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.radius",
+      "label": "Mâchoire à 70° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0558,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.ink",
+      "label": "Mâchoire à 70° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.concavity",
+      "label": "Mâchoire à 90° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0024,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.inflections",
+      "label": "Mâchoire à 90° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.radius",
+      "label": "Mâchoire à 90° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0567,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.ink",
+      "label": "Mâchoire à 90° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.135.concavity",
+      "label": "Mâchoire à 135° : creux maximal du contour (U)",
+      "value": 0.0058,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.180.concavity",
+      "label": "Mâchoire à 180° : creux maximal du contour (U)",
+      "value": 0.0004,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "anatomy",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "anatomy",
+      "id": "head.anat.eyeline",
+      "label": "Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]",
+      "value": 0.5015,
+      "min": 0.4,
+      "max": 0.66,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.depth",
+      "label": "Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]",
+      "value": 0.807,
+      "min": 0.66,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.jaw.plane",
+      "label": "Plan mandibulaire (gonion → menton) par rapport à l'horizontale (°) [canon : 15–35° ; extrêmes admis 10–42°]",
+      "value": 31.5026,
+      "min": 10,
+      "max": 42,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.height",
+      "label": "Gonion vs ligne de la bouche (U ; + = plus bas) [canon : le gonion est au niveau de la bouche ± 0,15]",
+      "value": -0.0459,
+      "min": -0.15,
+      "max": 0.35,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.rest",
+      "label": "Distance gonion → bas du menton (U) [canon : ≥ 0,06]",
+      "value": 0.27,
+      "min": 0.06,
+      "max": 0.4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.bigonial",
+      "label": "Largeur bigoniale / largeur bizygomatique du contour [canon : 0,55–0,95 ; planche 0,64]",
+      "value": 0.818,
+      "min": 0.5,
+      "max": 0.97,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.skull.length",
+      "label": "Longueur 3D du crâne vs longueur dérivée par le moteur de crâne (0.848 H) : écart (U) [crâne figé : jusqu'à 0,044]",
+      "value": 0.0023,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.top",
+      "label": "Haut de l'oreille vs ligne des sourcils (U ; + = au-dessus) [canon : haut de l'oreille ≈ sourcil]",
+      "value": -0.1035,
+      "min": -0.12,
+      "max": 0.2,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.bottom",
+      "label": "Bas de l'oreille vs base du nez (U ; + = plus haut) [canon : bas de l'oreille ≈ base du nez]",
+      "value": 0,
+      "min": -0.16,
+      "max": 0.12,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.neck",
+      "label": "Largeur du cou / largeur du crâne [canon : 0,35–0,65]",
+      "value": 0.3033,
+      "min": 0.3,
+      "max": 0.72,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.chin.lowest",
+      "label": "Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)",
+      "value": -0.4117,
+      "min": -0.7,
+      "max": -0.1,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "style",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "style",
+      "id": "head.style.ink.contrast",
+      "label": "Contraste encre / peau (rapport WCAG) : le contour reste lisible sur toute teinte [planche : ≈ 9]",
+      "value": 5.3985,
+      "min": 2.5,
+      "max": 30,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.hair.contrast",
+      "label": "Contraste cheveux / peau (WCAG) : la lisière se lit",
+      "value": 1.9365,
+      "min": 1.05,
+      "max": 30,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.0",
+      "label": "Épaisseur médiane du trait de la mâchoire à 0° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0135,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.90",
+      "label": "Épaisseur médiane du trait de la mâchoire à 90° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0135,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.0",
+      "label": "Contour fermé à 0° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.45",
+      "label": "Contour fermé à 45° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.90",
+      "label": "Contour fermé à 90° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.180",
+      "label": "Contour fermé à 180° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.0",
+      "label": "Îlots d'encre isolés à 0° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.45",
+      "label": "Îlots d'encre isolés à 45° (points, traits pointillés) [planche ≤ 6]",
+      "value": 1,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.90",
+      "label": "Îlots d'encre isolés à 90° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.180",
+      "label": "Îlots d'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)",
+      "value": 0,
+      "min": 0,
+      "max": 60,
+      "ok": true,
+      "kind": "info"
+     }
+    ]
+   }
+  ]
+ },
+ "seed2": {
+  "pass": true,
+  "checks": 48,
+  "hors_bornes": [],
+  "couches": [
+   {
+    "layer": "geometry",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "geometry",
+      "id": "head.geo.rows",
+      "label": "Table de sections saine : valeurs finies, avant > arrière, point large jamais reculé (nombre de rangées fautives)",
+      "value": 0,
+      "min": 0,
+      "max": 0,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.front2d",
+      "label": "Face 3D (tangage 0) vs contour 2D du moteur de visage : écart moyen de demi-largeur (U) [rendu : trait ≈ 0,011]",
+      "value": 0.0254,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.profile2d",
+      "label": "Profil 3D (90°, tangage 0) vs z avant du crâne du moteur : écart moyen sur le front (U)",
+      "value": 0.0011,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.concavity",
+      "label": "Mâchoire à 0° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0002,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.inflections",
+      "label": "Mâchoire à 0° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.radius",
+      "label": "Mâchoire à 0° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.2002,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.ink",
+      "label": "Mâchoire à 0° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.concavity",
+      "label": "Mâchoire à 20° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0009,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.inflections",
+      "label": "Mâchoire à 20° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.radius",
+      "label": "Mâchoire à 20° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0757,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.ink",
+      "label": "Mâchoire à 20° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.concavity",
+      "label": "Mâchoire à 45° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0002,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.inflections",
+      "label": "Mâchoire à 45° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.radius",
+      "label": "Mâchoire à 45° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.059,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.ink",
+      "label": "Mâchoire à 45° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.concavity",
+      "label": "Mâchoire à 70° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0167,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.inflections",
+      "label": "Mâchoire à 70° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.radius",
+      "label": "Mâchoire à 70° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0524,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.ink",
+      "label": "Mâchoire à 70° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.concavity",
+      "label": "Mâchoire à 90° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0048,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.inflections",
+      "label": "Mâchoire à 90° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.radius",
+      "label": "Mâchoire à 90° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0584,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.ink",
+      "label": "Mâchoire à 90° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.135.concavity",
+      "label": "Mâchoire à 135° : creux maximal du contour (U)",
+      "value": 0.0018,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.180.concavity",
+      "label": "Mâchoire à 180° : creux maximal du contour (U)",
+      "value": 0.0011,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "anatomy",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "anatomy",
+      "id": "head.anat.eyeline",
+      "label": "Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]",
+      "value": 0.559,
+      "min": 0.4,
+      "max": 0.66,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.depth",
+      "label": "Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]",
+      "value": 0.7682,
+      "min": 0.66,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.jaw.plane",
+      "label": "Plan mandibulaire (gonion → menton) par rapport à l'horizontale (°) [canon : 15–35° ; extrêmes admis 10–42°]",
+      "value": 31.6209,
+      "min": 10,
+      "max": 42,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.height",
+      "label": "Gonion vs ligne de la bouche (U ; + = plus bas) [canon : le gonion est au niveau de la bouche ± 0,15]",
+      "value": -0.0389,
+      "min": -0.15,
+      "max": 0.35,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.rest",
+      "label": "Distance gonion → bas du menton (U) [canon : ≥ 0,06]",
+      "value": 0.2606,
+      "min": 0.06,
+      "max": 0.4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.bigonial",
+      "label": "Largeur bigoniale / largeur bizygomatique du contour [canon : 0,55–0,95 ; planche 0,64]",
+      "value": 0.5791,
+      "min": 0.5,
+      "max": 0.97,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.skull.length",
+      "label": "Longueur 3D du crâne vs longueur dérivée par le moteur de crâne (0.806 H) : écart (U) [crâne figé : jusqu'à 0,044]",
+      "value": 0.0087,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.top",
+      "label": "Haut de l'oreille vs ligne des sourcils (U ; + = au-dessus) [canon : haut de l'oreille ≈ sourcil]",
+      "value": -0.1035,
+      "min": -0.12,
+      "max": 0.2,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.bottom",
+      "label": "Bas de l'oreille vs base du nez (U ; + = plus haut) [canon : bas de l'oreille ≈ base du nez]",
+      "value": 0,
+      "min": -0.16,
+      "max": 0.12,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.neck",
+      "label": "Largeur du cou / largeur du crâne [canon : 0,35–0,65]",
+      "value": 0.3352,
+      "min": 0.3,
+      "max": 0.72,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.chin.lowest",
+      "label": "Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)",
+      "value": -0.3947,
+      "min": -0.7,
+      "max": -0.1,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "style",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "style",
+      "id": "head.style.ink.contrast",
+      "label": "Contraste encre / peau (rapport WCAG) : le contour reste lisible sur toute teinte [planche : ≈ 9]",
+      "value": 3.2593,
+      "min": 2.5,
+      "max": 30,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.hair.contrast",
+      "label": "Contraste cheveux / peau (WCAG) : la lisière se lit",
+      "value": 3.4171,
+      "min": 1.05,
+      "max": 30,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.0",
+      "label": "Épaisseur médiane du trait de la mâchoire à 0° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0135,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.90",
+      "label": "Épaisseur médiane du trait de la mâchoire à 90° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0135,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.0",
+      "label": "Contour fermé à 0° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.45",
+      "label": "Contour fermé à 45° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.90",
+      "label": "Contour fermé à 90° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.180",
+      "label": "Contour fermé à 180° (part des pixels de bord couverts d'encre)",
+      "value": 0.9979,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.0",
+      "label": "Îlots d'encre isolés à 0° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.45",
+      "label": "Îlots d'encre isolés à 45° (points, traits pointillés) [planche ≤ 6]",
+      "value": 1,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.90",
+      "label": "Îlots d'encre isolés à 90° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.180",
+      "label": "Îlots d'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)",
+      "value": 0,
+      "min": 0,
+      "max": 60,
+      "ok": true,
+      "kind": "info"
+     }
+    ]
+   }
+  ]
+ },
+ "seed3": {
+  "pass": true,
+  "checks": 48,
+  "hors_bornes": [],
+  "couches": [
+   {
+    "layer": "geometry",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "geometry",
+      "id": "head.geo.rows",
+      "label": "Table de sections saine : valeurs finies, avant > arrière, point large jamais reculé (nombre de rangées fautives)",
+      "value": 0,
+      "min": 0,
+      "max": 0,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.front2d",
+      "label": "Face 3D (tangage 0) vs contour 2D du moteur de visage : écart moyen de demi-largeur (U) [rendu : trait ≈ 0,011]",
+      "value": 0.0253,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.profile2d",
+      "label": "Profil 3D (90°, tangage 0) vs z avant du crâne du moteur : écart moyen sur le front (U)",
+      "value": 0.0011,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.concavity",
+      "label": "Mâchoire à 0° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0015,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.inflections",
+      "label": "Mâchoire à 0° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.radius",
+      "label": "Mâchoire à 0° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.1486,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.ink",
+      "label": "Mâchoire à 0° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.concavity",
+      "label": "Mâchoire à 20° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0036,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.inflections",
+      "label": "Mâchoire à 20° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.radius",
+      "label": "Mâchoire à 20° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.166,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.ink",
+      "label": "Mâchoire à 20° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.concavity",
+      "label": "Mâchoire à 45° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0046,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.inflections",
+      "label": "Mâchoire à 45° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.radius",
+      "label": "Mâchoire à 45° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0662,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.ink",
+      "label": "Mâchoire à 45° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.concavity",
+      "label": "Mâchoire à 70° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0017,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.inflections",
+      "label": "Mâchoire à 70° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.radius",
+      "label": "Mâchoire à 70° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0585,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.ink",
+      "label": "Mâchoire à 70° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.concavity",
+      "label": "Mâchoire à 90° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0011,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.inflections",
+      "label": "Mâchoire à 90° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.radius",
+      "label": "Mâchoire à 90° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0596,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.ink",
+      "label": "Mâchoire à 90° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.135.concavity",
+      "label": "Mâchoire à 135° : creux maximal du contour (U)",
+      "value": 0.0059,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.180.concavity",
+      "label": "Mâchoire à 180° : creux maximal du contour (U)",
+      "value": 0.0017,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "anatomy",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "anatomy",
+      "id": "head.anat.eyeline",
+      "label": "Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]",
+      "value": 0.5112,
+      "min": 0.4,
+      "max": 0.66,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.depth",
+      "label": "Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]",
+      "value": 0.8091,
+      "min": 0.66,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.jaw.plane",
+      "label": "Plan mandibulaire (gonion → menton) par rapport à l'horizontale (°) [canon : 15–35° ; extrêmes admis 10–42°]",
+      "value": 28.2641,
+      "min": 10,
+      "max": 42,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.height",
+      "label": "Gonion vs ligne de la bouche (U ; + = plus bas) [canon : le gonion est au niveau de la bouche ± 0,15]",
+      "value": -0.0071,
+      "min": -0.15,
+      "max": 0.35,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.rest",
+      "label": "Distance gonion → bas du menton (U) [canon : ≥ 0,06]",
+      "value": 0.2211,
+      "min": 0.06,
+      "max": 0.4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.bigonial",
+      "label": "Largeur bigoniale / largeur bizygomatique du contour [canon : 0,55–0,95 ; planche 0,64]",
+      "value": 0.7108,
+      "min": 0.5,
+      "max": 0.97,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.skull.length",
+      "label": "Longueur 3D du crâne vs longueur dérivée par le moteur de crâne (0.843 H) : écart (U) [crâne figé : jusqu'à 0,044]",
+      "value": 0.0047,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.top",
+      "label": "Haut de l'oreille vs ligne des sourcils (U ; + = au-dessus) [canon : haut de l'oreille ≈ sourcil]",
+      "value": -0.1035,
+      "min": -0.12,
+      "max": 0.2,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.bottom",
+      "label": "Bas de l'oreille vs base du nez (U ; + = plus haut) [canon : bas de l'oreille ≈ base du nez]",
+      "value": 0,
+      "min": -0.16,
+      "max": 0.12,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.neck",
+      "label": "Largeur du cou / largeur du crâne [canon : 0,35–0,65]",
+      "value": 0.3094,
+      "min": 0.3,
+      "max": 0.72,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.chin.lowest",
+      "label": "Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)",
+      "value": -0.3801,
+      "min": -0.7,
+      "max": -0.1,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "style",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "style",
+      "id": "head.style.ink.contrast",
+      "label": "Contraste encre / peau (rapport WCAG) : le contour reste lisible sur toute teinte [planche : ≈ 9]",
+      "value": 3.7207,
+      "min": 2.5,
+      "max": 30,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.hair.contrast",
+      "label": "Contraste cheveux / peau (WCAG) : la lisière se lit",
+      "value": 4.2199,
+      "min": 1.05,
+      "max": 30,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.0",
+      "label": "Épaisseur médiane du trait de la mâchoire à 0° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0101,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.90",
+      "label": "Épaisseur médiane du trait de la mâchoire à 90° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0135,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.0",
+      "label": "Contour fermé à 0° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.45",
+      "label": "Contour fermé à 45° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.90",
+      "label": "Contour fermé à 90° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.180",
+      "label": "Contour fermé à 180° (part des pixels de bord couverts d'encre)",
+      "value": 0.998,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.0",
+      "label": "Îlots d'encre isolés à 0° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.45",
+      "label": "Îlots d'encre isolés à 45° (points, traits pointillés) [planche ≤ 6]",
+      "value": 2,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.90",
+      "label": "Îlots d'encre isolés à 90° (points, traits pointillés) [planche ≤ 6]",
+      "value": 2,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.180",
+      "label": "Îlots d'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)",
+      "value": 0,
+      "min": 0,
+      "max": 60,
+      "ok": true,
+      "kind": "info"
+     }
+    ]
+   }
+  ]
+ },
+ "seed4": {
+  "pass": true,
+  "checks": 48,
+  "hors_bornes": [],
+  "couches": [
+   {
+    "layer": "geometry",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "geometry",
+      "id": "head.geo.rows",
+      "label": "Table de sections saine : valeurs finies, avant > arrière, point large jamais reculé (nombre de rangées fautives)",
+      "value": 0,
+      "min": 0,
+      "max": 0,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.front2d",
+      "label": "Face 3D (tangage 0) vs contour 2D du moteur de visage : écart moyen de demi-largeur (U) [rendu : trait ≈ 0,011]",
+      "value": 0.0255,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.profile2d",
+      "label": "Profil 3D (90°, tangage 0) vs z avant du crâne du moteur : écart moyen sur le front (U)",
+      "value": 0.0007,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.concavity",
+      "label": "Mâchoire à 0° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0028,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.inflections",
+      "label": "Mâchoire à 0° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.radius",
+      "label": "Mâchoire à 0° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.1813,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.ink",
+      "label": "Mâchoire à 0° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.concavity",
+      "label": "Mâchoire à 20° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0054,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.inflections",
+      "label": "Mâchoire à 20° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.radius",
+      "label": "Mâchoire à 20° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.1286,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.ink",
+      "label": "Mâchoire à 20° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.concavity",
+      "label": "Mâchoire à 45° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0006,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.inflections",
+      "label": "Mâchoire à 45° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.radius",
+      "label": "Mâchoire à 45° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0868,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.ink",
+      "label": "Mâchoire à 45° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.concavity",
+      "label": "Mâchoire à 70° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0095,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.inflections",
+      "label": "Mâchoire à 70° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.radius",
+      "label": "Mâchoire à 70° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0494,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.ink",
+      "label": "Mâchoire à 70° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.concavity",
+      "label": "Mâchoire à 90° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0017,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.inflections",
+      "label": "Mâchoire à 90° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.radius",
+      "label": "Mâchoire à 90° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0462,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.ink",
+      "label": "Mâchoire à 90° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.135.concavity",
+      "label": "Mâchoire à 135° : creux maximal du contour (U)",
+      "value": 0.0033,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.180.concavity",
+      "label": "Mâchoire à 180° : creux maximal du contour (U)",
+      "value": 0.0049,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "anatomy",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "anatomy",
+      "id": "head.anat.eyeline",
+      "label": "Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]",
+      "value": 0.5644,
+      "min": 0.4,
+      "max": 0.66,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.depth",
+      "label": "Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]",
+      "value": 0.771,
+      "min": 0.66,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.jaw.plane",
+      "label": "Plan mandibulaire (gonion → menton) par rapport à l'horizontale (°) [canon : 15–35° ; extrêmes admis 10–42°]",
+      "value": 26.3267,
+      "min": 10,
+      "max": 42,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.height",
+      "label": "Gonion vs ligne de la bouche (U ; + = plus bas) [canon : le gonion est au niveau de la bouche ± 0,15]",
+      "value": -0.0579,
+      "min": -0.15,
+      "max": 0.35,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.rest",
+      "label": "Distance gonion → bas du menton (U) [canon : ≥ 0,06]",
+      "value": 0.2184,
+      "min": 0.06,
+      "max": 0.4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.bigonial",
+      "label": "Largeur bigoniale / largeur bizygomatique du contour [canon : 0,55–0,95 ; planche 0,64]",
+      "value": 0.7638,
+      "min": 0.5,
+      "max": 0.97,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.skull.length",
+      "label": "Longueur 3D du crâne vs longueur dérivée par le moteur de crâne (0.818 H) : écart (U) [crâne figé : jusqu'à 0,044]",
+      "value": 0.0008,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.top",
+      "label": "Haut de l'oreille vs ligne des sourcils (U ; + = au-dessus) [canon : haut de l'oreille ≈ sourcil]",
+      "value": -0.1035,
+      "min": -0.12,
+      "max": 0.2,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.bottom",
+      "label": "Bas de l'oreille vs base du nez (U ; + = plus haut) [canon : bas de l'oreille ≈ base du nez]",
+      "value": 0,
+      "min": -0.16,
+      "max": 0.12,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.neck",
+      "label": "Largeur du cou / largeur du crâne [canon : 0,35–0,65]",
+      "value": 0.3303,
+      "min": 0.3,
+      "max": 0.72,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.chin.lowest",
+      "label": "Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)",
+      "value": -0.4063,
+      "min": -0.7,
+      "max": -0.1,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "style",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "style",
+      "id": "head.style.ink.contrast",
+      "label": "Contraste encre / peau (rapport WCAG) : le contour reste lisible sur toute teinte [planche : ≈ 9]",
+      "value": 2.8498,
+      "min": 2.5,
+      "max": 30,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.hair.contrast",
+      "label": "Contraste cheveux / peau (WCAG) : la lisière se lit",
+      "value": 2.4001,
+      "min": 1.05,
+      "max": 30,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.0",
+      "label": "Épaisseur médiane du trait de la mâchoire à 0° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0135,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.90",
+      "label": "Épaisseur médiane du trait de la mâchoire à 90° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0135,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.0",
+      "label": "Contour fermé à 0° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.45",
+      "label": "Contour fermé à 45° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.90",
+      "label": "Contour fermé à 90° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.180",
+      "label": "Contour fermé à 180° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.0",
+      "label": "Îlots d'encre isolés à 0° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.45",
+      "label": "Îlots d'encre isolés à 45° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.90",
+      "label": "Îlots d'encre isolés à 90° (points, traits pointillés) [planche ≤ 6]",
+      "value": 2,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.180",
+      "label": "Îlots d'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)",
+      "value": 0,
+      "min": 0,
+      "max": 60,
+      "ok": true,
+      "kind": "info"
+     }
+    ]
+   }
+  ]
+ },
+ "seed5": {
+  "pass": true,
+  "checks": 48,
+  "hors_bornes": [
+   {
+    "id": "head.style.specks.0",
+    "value": 22,
+    "min": 0,
+    "max": 6,
+    "kind": "info"
+   },
+   {
+    "id": "head.style.specks.45",
+    "value": 13,
+    "min": 0,
+    "max": 6,
+    "kind": "info"
+   }
+  ],
+  "couches": [
+   {
+    "layer": "geometry",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "geometry",
+      "id": "head.geo.rows",
+      "label": "Table de sections saine : valeurs finies, avant > arrière, point large jamais reculé (nombre de rangées fautives)",
+      "value": 0,
+      "min": 0,
+      "max": 0,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.front2d",
+      "label": "Face 3D (tangage 0) vs contour 2D du moteur de visage : écart moyen de demi-largeur (U) [rendu : trait ≈ 0,011]",
+      "value": 0.0253,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.profile2d",
+      "label": "Profil 3D (90°, tangage 0) vs z avant du crâne du moteur : écart moyen sur le front (U)",
+      "value": 0.001,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.concavity",
+      "label": "Mâchoire à 0° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0003,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.inflections",
+      "label": "Mâchoire à 0° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.radius",
+      "label": "Mâchoire à 0° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0887,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.ink",
+      "label": "Mâchoire à 0° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.concavity",
+      "label": "Mâchoire à 20° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0008,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.inflections",
+      "label": "Mâchoire à 20° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.radius",
+      "label": "Mâchoire à 20° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0601,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.ink",
+      "label": "Mâchoire à 20° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.concavity",
+      "label": "Mâchoire à 45° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0033,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.inflections",
+      "label": "Mâchoire à 45° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.radius",
+      "label": "Mâchoire à 45° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0404,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.ink",
+      "label": "Mâchoire à 45° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.concavity",
+      "label": "Mâchoire à 70° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0035,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.inflections",
+      "label": "Mâchoire à 70° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.radius",
+      "label": "Mâchoire à 70° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0393,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.ink",
+      "label": "Mâchoire à 70° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.concavity",
+      "label": "Mâchoire à 90° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0021,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.inflections",
+      "label": "Mâchoire à 90° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.radius",
+      "label": "Mâchoire à 90° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0463,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.ink",
+      "label": "Mâchoire à 90° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.135.concavity",
+      "label": "Mâchoire à 135° : creux maximal du contour (U)",
+      "value": 0.0063,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.180.concavity",
+      "label": "Mâchoire à 180° : creux maximal du contour (U)",
+      "value": 0.0008,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "anatomy",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "anatomy",
+      "id": "head.anat.eyeline",
+      "label": "Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]",
+      "value": 0.4495,
+      "min": 0.4,
+      "max": 0.66,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.depth",
+      "label": "Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]",
+      "value": 0.7206,
+      "min": 0.66,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.jaw.plane",
+      "label": "Plan mandibulaire (gonion → menton) par rapport à l'horizontale (°) [canon : 15–35° ; extrêmes admis 10–42°]",
+      "value": 33.4355,
+      "min": 10,
+      "max": 42,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.height",
+      "label": "Gonion vs ligne de la bouche (U ; + = plus bas) [canon : le gonion est au niveau de la bouche ± 0,15]",
+      "value": 0.0679,
+      "min": -0.15,
+      "max": 0.35,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.rest",
+      "label": "Distance gonion → bas du menton (U) [canon : ≥ 0,06]",
+      "value": 0.2535,
+      "min": 0.06,
+      "max": 0.4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.bigonial",
+      "label": "Largeur bigoniale / largeur bizygomatique du contour [canon : 0,55–0,95 ; planche 0,64]",
+      "value": 0.6152,
+      "min": 0.5,
+      "max": 0.97,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.skull.length",
+      "label": "Longueur 3D du crâne vs longueur dérivée par le moteur de crâne (0.773 H) : écart (U) [crâne figé : jusqu'à 0,044]",
+      "value": 0.0018,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.top",
+      "label": "Haut de l'oreille vs ligne des sourcils (U ; + = au-dessus) [canon : haut de l'oreille ≈ sourcil]",
+      "value": -0.1035,
+      "min": -0.12,
+      "max": 0.2,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.bottom",
+      "label": "Bas de l'oreille vs base du nez (U ; + = plus haut) [canon : bas de l'oreille ≈ base du nez]",
+      "value": 0,
+      "min": -0.16,
+      "max": 0.12,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.neck",
+      "label": "Largeur du cou / largeur du crâne [canon : 0,35–0,65]",
+      "value": 0.3639,
+      "min": 0.3,
+      "max": 0.72,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.chin.lowest",
+      "label": "Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)",
+      "value": -0.333,
+      "min": -0.7,
+      "max": -0.1,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "style",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "style",
+      "id": "head.style.ink.contrast",
+      "label": "Contraste encre / peau (rapport WCAG) : le contour reste lisible sur toute teinte [planche : ≈ 9]",
+      "value": 3.225,
+      "min": 2.5,
+      "max": 30,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.hair.contrast",
+      "label": "Contraste cheveux / peau (WCAG) : la lisière se lit",
+      "value": 3.7825,
+      "min": 1.05,
+      "max": 30,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.0",
+      "label": "Épaisseur médiane du trait de la mâchoire à 0° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0101,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.90",
+      "label": "Épaisseur médiane du trait de la mâchoire à 90° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0101,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.0",
+      "label": "Contour fermé à 0° (part des pixels de bord couverts d'encre)",
+      "value": 0.999,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.45",
+      "label": "Contour fermé à 45° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.90",
+      "label": "Contour fermé à 90° (part des pixels de bord couverts d'encre)",
+      "value": 0.999,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.180",
+      "label": "Contour fermé à 180° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.0",
+      "label": "Îlots d'encre isolés à 0° (points, traits pointillés) [planche ≤ 6]",
+      "value": 22,
+      "min": 0,
+      "max": 6,
+      "ok": false,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.45",
+      "label": "Îlots d'encre isolés à 45° (points, traits pointillés) [planche ≤ 6]",
+      "value": 13,
+      "min": 0,
+      "max": 6,
+      "ok": false,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.90",
+      "label": "Îlots d'encre isolés à 90° (points, traits pointillés) [planche ≤ 6]",
+      "value": 3,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.180",
+      "label": "Îlots d'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)",
+      "value": 11,
+      "min": 0,
+      "max": 60,
+      "ok": true,
+      "kind": "info"
+     }
+    ]
+   }
+  ]
+ },
+ "seed6": {
+  "pass": true,
+  "checks": 48,
+  "hors_bornes": [
+   {
+    "id": "head.style.specks.0",
+    "value": 15,
+    "min": 0,
+    "max": 6,
+    "kind": "info"
+   }
+  ],
+  "couches": [
+   {
+    "layer": "geometry",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "geometry",
+      "id": "head.geo.rows",
+      "label": "Table de sections saine : valeurs finies, avant > arrière, point large jamais reculé (nombre de rangées fautives)",
+      "value": 0,
+      "min": 0,
+      "max": 0,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.front2d",
+      "label": "Face 3D (tangage 0) vs contour 2D du moteur de visage : écart moyen de demi-largeur (U) [rendu : trait ≈ 0,011]",
+      "value": 0.0253,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.profile2d",
+      "label": "Profil 3D (90°, tangage 0) vs z avant du crâne du moteur : écart moyen sur le front (U)",
+      "value": 0.0004,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.concavity",
+      "label": "Mâchoire à 0° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0001,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.inflections",
+      "label": "Mâchoire à 0° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.radius",
+      "label": "Mâchoire à 0° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.1568,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.ink",
+      "label": "Mâchoire à 0° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.concavity",
+      "label": "Mâchoire à 20° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.001,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.inflections",
+      "label": "Mâchoire à 20° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.radius",
+      "label": "Mâchoire à 20° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0985,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.ink",
+      "label": "Mâchoire à 20° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.concavity",
+      "label": "Mâchoire à 45° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.002,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.inflections",
+      "label": "Mâchoire à 45° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.radius",
+      "label": "Mâchoire à 45° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0473,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.ink",
+      "label": "Mâchoire à 45° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.concavity",
+      "label": "Mâchoire à 70° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0054,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.inflections",
+      "label": "Mâchoire à 70° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.radius",
+      "label": "Mâchoire à 70° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0507,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.ink",
+      "label": "Mâchoire à 70° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.concavity",
+      "label": "Mâchoire à 90° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0015,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.inflections",
+      "label": "Mâchoire à 90° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.radius",
+      "label": "Mâchoire à 90° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0497,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.ink",
+      "label": "Mâchoire à 90° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.135.concavity",
+      "label": "Mâchoire à 135° : creux maximal du contour (U)",
+      "value": 0.0061,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.180.concavity",
+      "label": "Mâchoire à 180° : creux maximal du contour (U)",
+      "value": 0.0003,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "anatomy",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "anatomy",
+      "id": "head.anat.eyeline",
+      "label": "Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]",
+      "value": 0.4545,
+      "min": 0.4,
+      "max": 0.66,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.depth",
+      "label": "Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]",
+      "value": 0.8003,
+      "min": 0.66,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.jaw.plane",
+      "label": "Plan mandibulaire (gonion → menton) par rapport à l'horizontale (°) [canon : 15–35° ; extrêmes admis 10–42°]",
+      "value": 32.1724,
+      "min": 10,
+      "max": 42,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.height",
+      "label": "Gonion vs ligne de la bouche (U ; + = plus bas) [canon : le gonion est au niveau de la bouche ± 0,15]",
+      "value": 0.0054,
+      "min": -0.15,
+      "max": 0.35,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.rest",
+      "label": "Distance gonion → bas du menton (U) [canon : ≥ 0,06]",
+      "value": 0.27,
+      "min": 0.06,
+      "max": 0.4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.bigonial",
+      "label": "Largeur bigoniale / largeur bizygomatique du contour [canon : 0,55–0,95 ; planche 0,64]",
+      "value": 0.6153,
+      "min": 0.5,
+      "max": 0.97,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.skull.length",
+      "label": "Longueur 3D du crâne vs longueur dérivée par le moteur de crâne (0.844 H) : écart (U) [crâne figé : jusqu'à 0,044]",
+      "value": 0.0052,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.top",
+      "label": "Haut de l'oreille vs ligne des sourcils (U ; + = au-dessus) [canon : haut de l'oreille ≈ sourcil]",
+      "value": -0.1035,
+      "min": -0.12,
+      "max": 0.2,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.bottom",
+      "label": "Bas de l'oreille vs base du nez (U ; + = plus haut) [canon : bas de l'oreille ≈ base du nez]",
+      "value": 0,
+      "min": -0.16,
+      "max": 0.12,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.neck",
+      "label": "Largeur du cou / largeur du crâne [canon : 0,35–0,65]",
+      "value": 0.3064,
+      "min": 0.3,
+      "max": 0.72,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.chin.lowest",
+      "label": "Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)",
+      "value": -0.3951,
+      "min": -0.7,
+      "max": -0.1,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "style",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "style",
+      "id": "head.style.ink.contrast",
+      "label": "Contraste encre / peau (rapport WCAG) : le contour reste lisible sur toute teinte [planche : ≈ 9]",
+      "value": 5.4542,
+      "min": 2.5,
+      "max": 30,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.hair.contrast",
+      "label": "Contraste cheveux / peau (WCAG) : la lisière se lit",
+      "value": 1.8705,
+      "min": 1.05,
+      "max": 30,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.0",
+      "label": "Épaisseur médiane du trait de la mâchoire à 0° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0101,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.90",
+      "label": "Épaisseur médiane du trait de la mâchoire à 90° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0101,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.0",
+      "label": "Contour fermé à 0° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.45",
+      "label": "Contour fermé à 45° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.90",
+      "label": "Contour fermé à 90° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.180",
+      "label": "Contour fermé à 180° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.0",
+      "label": "Îlots d'encre isolés à 0° (points, traits pointillés) [planche ≤ 6]",
+      "value": 15,
+      "min": 0,
+      "max": 6,
+      "ok": false,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.45",
+      "label": "Îlots d'encre isolés à 45° (points, traits pointillés) [planche ≤ 6]",
+      "value": 5,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.90",
+      "label": "Îlots d'encre isolés à 90° (points, traits pointillés) [planche ≤ 6]",
+      "value": 1,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.180",
+      "label": "Îlots d'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)",
+      "value": 21,
+      "min": 0,
+      "max": 60,
+      "ok": true,
+      "kind": "info"
+     }
+    ]
+   }
+  ]
+ },
+ "seed7": {
+  "pass": true,
+  "checks": 48,
+  "hors_bornes": [],
+  "couches": [
+   {
+    "layer": "geometry",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "geometry",
+      "id": "head.geo.rows",
+      "label": "Table de sections saine : valeurs finies, avant > arrière, point large jamais reculé (nombre de rangées fautives)",
+      "value": 0,
+      "min": 0,
+      "max": 0,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.front2d",
+      "label": "Face 3D (tangage 0) vs contour 2D du moteur de visage : écart moyen de demi-largeur (U) [rendu : trait ≈ 0,011]",
+      "value": 0.0257,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.profile2d",
+      "label": "Profil 3D (90°, tangage 0) vs z avant du crâne du moteur : écart moyen sur le front (U)",
+      "value": 0.0015,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.concavity",
+      "label": "Mâchoire à 0° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0011,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.inflections",
+      "label": "Mâchoire à 0° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.radius",
+      "label": "Mâchoire à 0° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.2021,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.ink",
+      "label": "Mâchoire à 0° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.concavity",
+      "label": "Mâchoire à 20° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0035,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.inflections",
+      "label": "Mâchoire à 20° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.radius",
+      "label": "Mâchoire à 20° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.1861,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.ink",
+      "label": "Mâchoire à 20° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.concavity",
+      "label": "Mâchoire à 45° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0013,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.inflections",
+      "label": "Mâchoire à 45° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.radius",
+      "label": "Mâchoire à 45° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0948,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.ink",
+      "label": "Mâchoire à 45° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.concavity",
+      "label": "Mâchoire à 70° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0053,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.inflections",
+      "label": "Mâchoire à 70° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.radius",
+      "label": "Mâchoire à 70° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0563,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.ink",
+      "label": "Mâchoire à 70° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.concavity",
+      "label": "Mâchoire à 90° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0032,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.inflections",
+      "label": "Mâchoire à 90° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.radius",
+      "label": "Mâchoire à 90° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0436,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.ink",
+      "label": "Mâchoire à 90° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.135.concavity",
+      "label": "Mâchoire à 135° : creux maximal du contour (U)",
+      "value": 0.0042,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.180.concavity",
+      "label": "Mâchoire à 180° : creux maximal du contour (U)",
+      "value": 0.0022,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "anatomy",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "anatomy",
+      "id": "head.anat.eyeline",
+      "label": "Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]",
+      "value": 0.5167,
+      "min": 0.4,
+      "max": 0.66,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.depth",
+      "label": "Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]",
+      "value": 0.8133,
+      "min": 0.66,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.jaw.plane",
+      "label": "Plan mandibulaire (gonion → menton) par rapport à l'horizontale (°) [canon : 15–35° ; extrêmes admis 10–42°]",
+      "value": 27.4132,
+      "min": 10,
+      "max": 42,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.height",
+      "label": "Gonion vs ligne de la bouche (U ; + = plus bas) [canon : le gonion est au niveau de la bouche ± 0,15]",
+      "value": 0.0022,
+      "min": -0.15,
+      "max": 0.35,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.rest",
+      "label": "Distance gonion → bas du menton (U) [canon : ≥ 0,06]",
+      "value": 0.213,
+      "min": 0.06,
+      "max": 0.4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.bigonial",
+      "label": "Largeur bigoniale / largeur bizygomatique du contour [canon : 0,55–0,95 ; planche 0,64]",
+      "value": 0.7749,
+      "min": 0.5,
+      "max": 0.97,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.skull.length",
+      "label": "Longueur 3D du crâne vs longueur dérivée par le moteur de crâne (0.848 H) : écart (U) [crâne figé : jusqu'à 0,044]",
+      "value": 0.0042,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.top",
+      "label": "Haut de l'oreille vs ligne des sourcils (U ; + = au-dessus) [canon : haut de l'oreille ≈ sourcil]",
+      "value": -0.1035,
+      "min": -0.12,
+      "max": 0.2,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.bottom",
+      "label": "Bas de l'oreille vs base du nez (U ; + = plus haut) [canon : bas de l'oreille ≈ base du nez]",
+      "value": 0,
+      "min": -0.16,
+      "max": 0.12,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.neck",
+      "label": "Largeur du cou / largeur du crâne [canon : 0,35–0,65]",
+      "value": 0.3094,
+      "min": 0.3,
+      "max": 0.72,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.chin.lowest",
+      "label": "Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)",
+      "value": -0.376,
+      "min": -0.7,
+      "max": -0.1,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "style",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "style",
+      "id": "head.style.ink.contrast",
+      "label": "Contraste encre / peau (rapport WCAG) : le contour reste lisible sur toute teinte [planche : ≈ 9]",
+      "value": 8.2666,
+      "min": 2.5,
+      "max": 30,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.hair.contrast",
+      "label": "Contraste cheveux / peau (WCAG) : la lisière se lit",
+      "value": 5.3816,
+      "min": 1.05,
+      "max": 30,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.0",
+      "label": "Épaisseur médiane du trait de la mâchoire à 0° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0101,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.90",
+      "label": "Épaisseur médiane du trait de la mâchoire à 90° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0135,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.0",
+      "label": "Contour fermé à 0° (part des pixels de bord couverts d'encre)",
+      "value": 0.9982,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.45",
+      "label": "Contour fermé à 45° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.90",
+      "label": "Contour fermé à 90° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.180",
+      "label": "Contour fermé à 180° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.0",
+      "label": "Îlots d'encre isolés à 0° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.45",
+      "label": "Îlots d'encre isolés à 45° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.90",
+      "label": "Îlots d'encre isolés à 90° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.180",
+      "label": "Îlots d'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)",
+      "value": 0,
+      "min": 0,
+      "max": 60,
+      "ok": true,
+      "kind": "info"
+     }
+    ]
+   }
+  ]
+ },
+ "seed8": {
+  "pass": true,
+  "checks": 48,
+  "hors_bornes": [],
+  "couches": [
+   {
+    "layer": "geometry",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "geometry",
+      "id": "head.geo.rows",
+      "label": "Table de sections saine : valeurs finies, avant > arrière, point large jamais reculé (nombre de rangées fautives)",
+      "value": 0,
+      "min": 0,
+      "max": 0,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.front2d",
+      "label": "Face 3D (tangage 0) vs contour 2D du moteur de visage : écart moyen de demi-largeur (U) [rendu : trait ≈ 0,011]",
+      "value": 0.0251,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.profile2d",
+      "label": "Profil 3D (90°, tangage 0) vs z avant du crâne du moteur : écart moyen sur le front (U)",
+      "value": 0.001,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.concavity",
+      "label": "Mâchoire à 0° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0006,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.inflections",
+      "label": "Mâchoire à 0° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.radius",
+      "label": "Mâchoire à 0° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.159,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.ink",
+      "label": "Mâchoire à 0° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.concavity",
+      "label": "Mâchoire à 20° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0029,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.inflections",
+      "label": "Mâchoire à 20° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.radius",
+      "label": "Mâchoire à 20° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.1294,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.ink",
+      "label": "Mâchoire à 20° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.concavity",
+      "label": "Mâchoire à 45° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0035,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.inflections",
+      "label": "Mâchoire à 45° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.radius",
+      "label": "Mâchoire à 45° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0657,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.ink",
+      "label": "Mâchoire à 45° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.concavity",
+      "label": "Mâchoire à 70° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0072,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.inflections",
+      "label": "Mâchoire à 70° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.radius",
+      "label": "Mâchoire à 70° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0581,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.ink",
+      "label": "Mâchoire à 70° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.concavity",
+      "label": "Mâchoire à 90° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0032,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.inflections",
+      "label": "Mâchoire à 90° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.radius",
+      "label": "Mâchoire à 90° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0587,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.ink",
+      "label": "Mâchoire à 90° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.135.concavity",
+      "label": "Mâchoire à 135° : creux maximal du contour (U)",
+      "value": 0.0029,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.180.concavity",
+      "label": "Mâchoire à 180° : creux maximal du contour (U)",
+      "value": 0.0004,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "anatomy",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "anatomy",
+      "id": "head.anat.eyeline",
+      "label": "Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]",
+      "value": 0.477,
+      "min": 0.4,
+      "max": 0.66,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.depth",
+      "label": "Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]",
+      "value": 0.757,
+      "min": 0.66,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.jaw.plane",
+      "label": "Plan mandibulaire (gonion → menton) par rapport à l'horizontale (°) [canon : 15–35° ; extrêmes admis 10–42°]",
+      "value": 30.9088,
+      "min": 10,
+      "max": 42,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.height",
+      "label": "Gonion vs ligne de la bouche (U ; + = plus bas) [canon : le gonion est au niveau de la bouche ± 0,15]",
+      "value": 0.0054,
+      "min": -0.15,
+      "max": 0.35,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.rest",
+      "label": "Distance gonion → bas du menton (U) [canon : ≥ 0,06]",
+      "value": 0.2403,
+      "min": 0.06,
+      "max": 0.4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.bigonial",
+      "label": "Largeur bigoniale / largeur bizygomatique du contour [canon : 0,55–0,95 ; planche 0,64]",
+      "value": 0.5655,
+      "min": 0.5,
+      "max": 0.97,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.skull.length",
+      "label": "Longueur 3D du crâne vs longueur dérivée par le moteur de crâne (0.797 H) : écart (U) [crâne figé : jusqu'à 0,044]",
+      "value": 0.0014,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.top",
+      "label": "Haut de l'oreille vs ligne des sourcils (U ; + = au-dessus) [canon : haut de l'oreille ≈ sourcil]",
+      "value": -0.1035,
+      "min": -0.12,
+      "max": 0.2,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.bottom",
+      "label": "Bas de l'oreille vs base du nez (U ; + = plus haut) [canon : bas de l'oreille ≈ base du nez]",
+      "value": 0,
+      "min": -0.16,
+      "max": 0.12,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.neck",
+      "label": "Largeur du cou / largeur du crâne [canon : 0,35–0,65]",
+      "value": 0.3611,
+      "min": 0.3,
+      "max": 0.72,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.chin.lowest",
+      "label": "Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)",
+      "value": -0.3729,
+      "min": -0.7,
+      "max": -0.1,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "style",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "style",
+      "id": "head.style.ink.contrast",
+      "label": "Contraste encre / peau (rapport WCAG) : le contour reste lisible sur toute teinte [planche : ≈ 9]",
+      "value": 3.4979,
+      "min": 2.5,
+      "max": 30,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.hair.contrast",
+      "label": "Contraste cheveux / peau (WCAG) : la lisière se lit",
+      "value": 2.039,
+      "min": 1.05,
+      "max": 30,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.0",
+      "label": "Épaisseur médiane du trait de la mâchoire à 0° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0101,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.90",
+      "label": "Épaisseur médiane du trait de la mâchoire à 90° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0101,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.0",
+      "label": "Contour fermé à 0° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.45",
+      "label": "Contour fermé à 45° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.90",
+      "label": "Contour fermé à 90° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.180",
+      "label": "Contour fermé à 180° (part des pixels de bord couverts d'encre)",
+      "value": 0.9989,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.0",
+      "label": "Îlots d'encre isolés à 0° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.45",
+      "label": "Îlots d'encre isolés à 45° (points, traits pointillés) [planche ≤ 6]",
+      "value": 1,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.90",
+      "label": "Îlots d'encre isolés à 90° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.180",
+      "label": "Îlots d'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)",
+      "value": 0,
+      "min": 0,
+      "max": 60,
+      "ok": true,
+      "kind": "info"
+     }
+    ]
+   }
+  ]
+ },
+ "seed9": {
+  "pass": true,
+  "checks": 48,
+  "hors_bornes": [],
+  "couches": [
+   {
+    "layer": "geometry",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "geometry",
+      "id": "head.geo.rows",
+      "label": "Table de sections saine : valeurs finies, avant > arrière, point large jamais reculé (nombre de rangées fautives)",
+      "value": 0,
+      "min": 0,
+      "max": 0,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.front2d",
+      "label": "Face 3D (tangage 0) vs contour 2D du moteur de visage : écart moyen de demi-largeur (U) [rendu : trait ≈ 0,011]",
+      "value": 0.0252,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.profile2d",
+      "label": "Profil 3D (90°, tangage 0) vs z avant du crâne du moteur : écart moyen sur le front (U)",
+      "value": 0.0016,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.concavity",
+      "label": "Mâchoire à 0° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0006,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.inflections",
+      "label": "Mâchoire à 0° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.radius",
+      "label": "Mâchoire à 0° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.1505,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.ink",
+      "label": "Mâchoire à 0° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.concavity",
+      "label": "Mâchoire à 20° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0013,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.inflections",
+      "label": "Mâchoire à 20° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.radius",
+      "label": "Mâchoire à 20° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.1184,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.ink",
+      "label": "Mâchoire à 20° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.concavity",
+      "label": "Mâchoire à 45° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0007,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.inflections",
+      "label": "Mâchoire à 45° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.radius",
+      "label": "Mâchoire à 45° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0402,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.ink",
+      "label": "Mâchoire à 45° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.concavity",
+      "label": "Mâchoire à 70° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.019,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.inflections",
+      "label": "Mâchoire à 70° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.radius",
+      "label": "Mâchoire à 70° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0379,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.ink",
+      "label": "Mâchoire à 70° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.concavity",
+      "label": "Mâchoire à 90° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0078,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.inflections",
+      "label": "Mâchoire à 90° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.radius",
+      "label": "Mâchoire à 90° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0493,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.ink",
+      "label": "Mâchoire à 90° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 3,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.135.concavity",
+      "label": "Mâchoire à 135° : creux maximal du contour (U)",
+      "value": 0.0014,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.180.concavity",
+      "label": "Mâchoire à 180° : creux maximal du contour (U)",
+      "value": 0.0005,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "anatomy",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "anatomy",
+      "id": "head.anat.eyeline",
+      "label": "Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]",
+      "value": 0.5727,
+      "min": 0.4,
+      "max": 0.66,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.depth",
+      "label": "Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]",
+      "value": 0.7305,
+      "min": 0.66,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.jaw.plane",
+      "label": "Plan mandibulaire (gonion → menton) par rapport à l'horizontale (°) [canon : 15–35° ; extrêmes admis 10–42°]",
+      "value": 36.9203,
+      "min": 10,
+      "max": 42,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.height",
+      "label": "Gonion vs ligne de la bouche (U ; + = plus bas) [canon : le gonion est au niveau de la bouche ± 0,15]",
+      "value": -0.1166,
+      "min": -0.15,
+      "max": 0.35,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.rest",
+      "label": "Distance gonion → bas du menton (U) [canon : ≥ 0,06]",
+      "value": 0.2848,
+      "min": 0.06,
+      "max": 0.4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.bigonial",
+      "label": "Largeur bigoniale / largeur bizygomatique du contour [canon : 0,55–0,95 ; planche 0,64]",
+      "value": 0.7698,
+      "min": 0.5,
+      "max": 0.97,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.skull.length",
+      "label": "Longueur 3D du crâne vs longueur dérivée par le moteur de crâne (0.774 H) : écart (U) [crâne figé : jusqu'à 0,044]",
+      "value": 0.001,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.top",
+      "label": "Haut de l'oreille vs ligne des sourcils (U ; + = au-dessus) [canon : haut de l'oreille ≈ sourcil]",
+      "value": -0.1035,
+      "min": -0.12,
+      "max": 0.2,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.bottom",
+      "label": "Bas de l'oreille vs base du nez (U ; + = plus haut) [canon : bas de l'oreille ≈ base du nez]",
+      "value": 0,
+      "min": -0.16,
+      "max": 0.12,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.neck",
+      "label": "Largeur du cou / largeur du crâne [canon : 0,35–0,65]",
+      "value": 0.3703,
+      "min": 0.3,
+      "max": 0.72,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.chin.lowest",
+      "label": "Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)",
+      "value": -0.3527,
+      "min": -0.7,
+      "max": -0.1,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "style",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "style",
+      "id": "head.style.ink.contrast",
+      "label": "Contraste encre / peau (rapport WCAG) : le contour reste lisible sur toute teinte [planche : ≈ 9]",
+      "value": 2.8657,
+      "min": 2.5,
+      "max": 30,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.hair.contrast",
+      "label": "Contraste cheveux / peau (WCAG) : la lisière se lit",
+      "value": 1.0693,
+      "min": 1.05,
+      "max": 30,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.0",
+      "label": "Épaisseur médiane du trait de la mâchoire à 0° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0101,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.90",
+      "label": "Épaisseur médiane du trait de la mâchoire à 90° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0135,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.0",
+      "label": "Contour fermé à 0° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.45",
+      "label": "Contour fermé à 45° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.90",
+      "label": "Contour fermé à 90° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.180",
+      "label": "Contour fermé à 180° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.0",
+      "label": "Îlots d'encre isolés à 0° (points, traits pointillés) [planche ≤ 6]",
+      "value": 1,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.45",
+      "label": "Îlots d'encre isolés à 45° (points, traits pointillés) [planche ≤ 6]",
+      "value": 4,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.90",
+      "label": "Îlots d'encre isolés à 90° (points, traits pointillés) [planche ≤ 6]",
+      "value": 3,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.180",
+      "label": "Îlots d'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)",
+      "value": 0,
+      "min": 0,
+      "max": 60,
+      "ok": true,
+      "kind": "info"
+     }
+    ]
+   }
+  ]
+ },
+ "seed10": {
+  "pass": true,
+  "checks": 48,
+  "hors_bornes": [],
+  "couches": [
+   {
+    "layer": "geometry",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "geometry",
+      "id": "head.geo.rows",
+      "label": "Table de sections saine : valeurs finies, avant > arrière, point large jamais reculé (nombre de rangées fautives)",
+      "value": 0,
+      "min": 0,
+      "max": 0,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.front2d",
+      "label": "Face 3D (tangage 0) vs contour 2D du moteur de visage : écart moyen de demi-largeur (U) [rendu : trait ≈ 0,011]",
+      "value": 0.0254,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.profile2d",
+      "label": "Profil 3D (90°, tangage 0) vs z avant du crâne du moteur : écart moyen sur le front (U)",
+      "value": 0.0014,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.concavity",
+      "label": "Mâchoire à 0° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0002,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.inflections",
+      "label": "Mâchoire à 0° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.radius",
+      "label": "Mâchoire à 0° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.1381,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.ink",
+      "label": "Mâchoire à 0° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.concavity",
+      "label": "Mâchoire à 20° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0002,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.inflections",
+      "label": "Mâchoire à 20° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.radius",
+      "label": "Mâchoire à 20° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.2007,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.ink",
+      "label": "Mâchoire à 20° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.concavity",
+      "label": "Mâchoire à 45° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0009,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.inflections",
+      "label": "Mâchoire à 45° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.radius",
+      "label": "Mâchoire à 45° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0915,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.ink",
+      "label": "Mâchoire à 45° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.concavity",
+      "label": "Mâchoire à 70° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0094,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.inflections",
+      "label": "Mâchoire à 70° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.radius",
+      "label": "Mâchoire à 70° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0477,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.ink",
+      "label": "Mâchoire à 70° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.concavity",
+      "label": "Mâchoire à 90° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0031,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.inflections",
+      "label": "Mâchoire à 90° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.radius",
+      "label": "Mâchoire à 90° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0582,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.ink",
+      "label": "Mâchoire à 90° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.135.concavity",
+      "label": "Mâchoire à 135° : creux maximal du contour (U)",
+      "value": 0.0024,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.180.concavity",
+      "label": "Mâchoire à 180° : creux maximal du contour (U)",
+      "value": 0.001,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "anatomy",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "anatomy",
+      "id": "head.anat.eyeline",
+      "label": "Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]",
+      "value": 0.4994,
+      "min": 0.4,
+      "max": 0.66,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.depth",
+      "label": "Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]",
+      "value": 0.7427,
+      "min": 0.66,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.jaw.plane",
+      "label": "Plan mandibulaire (gonion → menton) par rapport à l'horizontale (°) [canon : 15–35° ; extrêmes admis 10–42°]",
+      "value": 37.7787,
+      "min": 10,
+      "max": 42,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.height",
+      "label": "Gonion vs ligne de la bouche (U ; + = plus bas) [canon : le gonion est au niveau de la bouche ± 0,15]",
+      "value": -0.0399,
+      "min": -0.15,
+      "max": 0.35,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.rest",
+      "label": "Distance gonion → bas du menton (U) [canon : ≥ 0,06]",
+      "value": 0.265,
+      "min": 0.06,
+      "max": 0.4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.bigonial",
+      "label": "Largeur bigoniale / largeur bizygomatique du contour [canon : 0,55–0,95 ; planche 0,64]",
+      "value": 0.8315,
+      "min": 0.5,
+      "max": 0.97,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.skull.length",
+      "label": "Longueur 3D du crâne vs longueur dérivée par le moteur de crâne (0.775 H) : écart (U) [crâne figé : jusqu'à 0,044]",
+      "value": 0.0031,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.top",
+      "label": "Haut de l'oreille vs ligne des sourcils (U ; + = au-dessus) [canon : haut de l'oreille ≈ sourcil]",
+      "value": -0.1035,
+      "min": -0.12,
+      "max": 0.2,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.bottom",
+      "label": "Bas de l'oreille vs base du nez (U ; + = plus haut) [canon : bas de l'oreille ≈ base du nez]",
+      "value": 0,
+      "min": -0.16,
+      "max": 0.12,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.neck",
+      "label": "Largeur du cou / largeur du crâne [canon : 0,35–0,65]",
+      "value": 0.3758,
+      "min": 0.3,
+      "max": 0.72,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.chin.lowest",
+      "label": "Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)",
+      "value": -0.3245,
+      "min": -0.7,
+      "max": -0.1,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "style",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "style",
+      "id": "head.style.ink.contrast",
+      "label": "Contraste encre / peau (rapport WCAG) : le contour reste lisible sur toute teinte [planche : ≈ 9]",
+      "value": 6.2948,
+      "min": 2.5,
+      "max": 30,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.hair.contrast",
+      "label": "Contraste cheveux / peau (WCAG) : la lisière se lit",
+      "value": 7.9088,
+      "min": 1.05,
+      "max": 30,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.0",
+      "label": "Épaisseur médiane du trait de la mâchoire à 0° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0135,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.90",
+      "label": "Épaisseur médiane du trait de la mâchoire à 90° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0135,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.0",
+      "label": "Contour fermé à 0° (part des pixels de bord couverts d'encre)",
+      "value": 0.999,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.45",
+      "label": "Contour fermé à 45° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.90",
+      "label": "Contour fermé à 90° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.180",
+      "label": "Contour fermé à 180° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.0",
+      "label": "Îlots d'encre isolés à 0° (points, traits pointillés) [planche ≤ 6]",
+      "value": 1,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.45",
+      "label": "Îlots d'encre isolés à 45° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.90",
+      "label": "Îlots d'encre isolés à 90° (points, traits pointillés) [planche ≤ 6]",
+      "value": 1,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.180",
+      "label": "Îlots d'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)",
+      "value": 0,
+      "min": 0,
+      "max": 60,
+      "ok": true,
+      "kind": "info"
+     }
+    ]
+   }
+  ]
+ },
+ "seed11": {
+  "pass": true,
+  "checks": 48,
+  "hors_bornes": [],
+  "couches": [
+   {
+    "layer": "geometry",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "geometry",
+      "id": "head.geo.rows",
+      "label": "Table de sections saine : valeurs finies, avant > arrière, point large jamais reculé (nombre de rangées fautives)",
+      "value": 0,
+      "min": 0,
+      "max": 0,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.front2d",
+      "label": "Face 3D (tangage 0) vs contour 2D du moteur de visage : écart moyen de demi-largeur (U) [rendu : trait ≈ 0,011]",
+      "value": 0.0255,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.profile2d",
+      "label": "Profil 3D (90°, tangage 0) vs z avant du crâne du moteur : écart moyen sur le front (U)",
+      "value": 0.0013,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.concavity",
+      "label": "Mâchoire à 0° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0002,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.inflections",
+      "label": "Mâchoire à 0° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.radius",
+      "label": "Mâchoire à 0° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0968,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.ink",
+      "label": "Mâchoire à 0° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.concavity",
+      "label": "Mâchoire à 20° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0003,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.inflections",
+      "label": "Mâchoire à 20° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.radius",
+      "label": "Mâchoire à 20° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.1063,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.ink",
+      "label": "Mâchoire à 20° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.concavity",
+      "label": "Mâchoire à 45° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0049,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.inflections",
+      "label": "Mâchoire à 45° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.radius",
+      "label": "Mâchoire à 45° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0311,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.ink",
+      "label": "Mâchoire à 45° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.concavity",
+      "label": "Mâchoire à 70° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0051,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.inflections",
+      "label": "Mâchoire à 70° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.radius",
+      "label": "Mâchoire à 70° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0363,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.ink",
+      "label": "Mâchoire à 70° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.concavity",
+      "label": "Mâchoire à 90° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0007,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.inflections",
+      "label": "Mâchoire à 90° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.radius",
+      "label": "Mâchoire à 90° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0429,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.ink",
+      "label": "Mâchoire à 90° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.135.concavity",
+      "label": "Mâchoire à 135° : creux maximal du contour (U)",
+      "value": 0.0057,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.180.concavity",
+      "label": "Mâchoire à 180° : creux maximal du contour (U)",
+      "value": 0.0001,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "anatomy",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "anatomy",
+      "id": "head.anat.eyeline",
+      "label": "Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]",
+      "value": 0.537,
+      "min": 0.4,
+      "max": 0.66,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.depth",
+      "label": "Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]",
+      "value": 0.7689,
+      "min": 0.66,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.jaw.plane",
+      "label": "Plan mandibulaire (gonion → menton) par rapport à l'horizontale (°) [canon : 15–35° ; extrêmes admis 10–42°]",
+      "value": 37.4169,
+      "min": 10,
+      "max": 42,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.height",
+      "label": "Gonion vs ligne de la bouche (U ; + = plus bas) [canon : le gonion est au niveau de la bouche ± 0,15]",
+      "value": -0.0234,
+      "min": -0.15,
+      "max": 0.35,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.rest",
+      "label": "Distance gonion → bas du menton (U) [canon : ≥ 0,06]",
+      "value": 0.2808,
+      "min": 0.06,
+      "max": 0.4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.bigonial",
+      "label": "Largeur bigoniale / largeur bizygomatique du contour [canon : 0,55–0,95 ; planche 0,64]",
+      "value": 0.7019,
+      "min": 0.5,
+      "max": 0.97,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.skull.length",
+      "label": "Longueur 3D du crâne vs longueur dérivée par le moteur de crâne (0.795 H) : écart (U) [crâne figé : jusqu'à 0,044]",
+      "value": 0.0109,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.top",
+      "label": "Haut de l'oreille vs ligne des sourcils (U ; + = au-dessus) [canon : haut de l'oreille ≈ sourcil]",
+      "value": -0.1035,
+      "min": -0.12,
+      "max": 0.2,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.bottom",
+      "label": "Bas de l'oreille vs base du nez (U ; + = plus haut) [canon : bas de l'oreille ≈ base du nez]",
+      "value": 0,
+      "min": -0.16,
+      "max": 0.12,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.neck",
+      "label": "Largeur du cou / largeur du crâne [canon : 0,35–0,65]",
+      "value": 0.345,
+      "min": 0.3,
+      "max": 0.72,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.chin.lowest",
+      "label": "Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)",
+      "value": -0.3322,
+      "min": -0.7,
+      "max": -0.1,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "style",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "style",
+      "id": "head.style.ink.contrast",
+      "label": "Contraste encre / peau (rapport WCAG) : le contour reste lisible sur toute teinte [planche : ≈ 9]",
+      "value": 5.595,
+      "min": 2.5,
+      "max": 30,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.hair.contrast",
+      "label": "Contraste cheveux / peau (WCAG) : la lisière se lit",
+      "value": 5.6402,
+      "min": 1.05,
+      "max": 30,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.0",
+      "label": "Épaisseur médiane du trait de la mâchoire à 0° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0101,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.90",
+      "label": "Épaisseur médiane du trait de la mâchoire à 90° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0135,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.0",
+      "label": "Contour fermé à 0° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.45",
+      "label": "Contour fermé à 45° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.90",
+      "label": "Contour fermé à 90° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.180",
+      "label": "Contour fermé à 180° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.0",
+      "label": "Îlots d'encre isolés à 0° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.45",
+      "label": "Îlots d'encre isolés à 45° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.90",
+      "label": "Îlots d'encre isolés à 90° (points, traits pointillés) [planche ≤ 6]",
+      "value": 1,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.180",
+      "label": "Îlots d'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)",
+      "value": 0,
+      "min": 0,
+      "max": 60,
+      "ok": true,
+      "kind": "info"
+     }
+    ]
+   }
+  ]
+ },
+ "seed12": {
+  "pass": true,
+  "checks": 48,
+  "hors_bornes": [],
+  "couches": [
+   {
+    "layer": "geometry",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "geometry",
+      "id": "head.geo.rows",
+      "label": "Table de sections saine : valeurs finies, avant > arrière, point large jamais reculé (nombre de rangées fautives)",
+      "value": 0,
+      "min": 0,
+      "max": 0,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.front2d",
+      "label": "Face 3D (tangage 0) vs contour 2D du moteur de visage : écart moyen de demi-largeur (U) [rendu : trait ≈ 0,011]",
+      "value": 0.0258,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.profile2d",
+      "label": "Profil 3D (90°, tangage 0) vs z avant du crâne du moteur : écart moyen sur le front (U)",
+      "value": 0.0008,
+      "min": 0,
+      "max": 0.03,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.concavity",
+      "label": "Mâchoire à 0° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0012,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.inflections",
+      "label": "Mâchoire à 0° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.radius",
+      "label": "Mâchoire à 0° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.1211,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.0.ink",
+      "label": "Mâchoire à 0° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.concavity",
+      "label": "Mâchoire à 20° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0029,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.inflections",
+      "label": "Mâchoire à 20° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.radius",
+      "label": "Mâchoire à 20° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0999,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.20.ink",
+      "label": "Mâchoire à 20° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.concavity",
+      "label": "Mâchoire à 45° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0009,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.inflections",
+      "label": "Mâchoire à 45° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.radius",
+      "label": "Mâchoire à 45° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0825,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.45.ink",
+      "label": "Mâchoire à 45° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.concavity",
+      "label": "Mâchoire à 70° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0125,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.inflections",
+      "label": "Mâchoire à 70° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 1,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.radius",
+      "label": "Mâchoire à 70° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0513,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.70.ink",
+      "label": "Mâchoire à 70° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.concavity",
+      "label": "Mâchoire à 90° : creux maximal du contour par rapport à son enveloppe convexe (U) : une poche qui pend en crée un",
+      "value": 0.0016,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.inflections",
+      "label": "Mâchoire à 90° : inflexions du contour (ondulation, dents de scie) [canon : ≤ 3 : lèvre/sillon]",
+      "value": 0,
+      "min": 0,
+      "max": 3,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.radius",
+      "label": "Mâchoire à 90° : rayon de courbure minimal (U) : en dessous, un angle vif",
+      "value": 0.0671,
+      "min": 0.025,
+      "max": 10,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.90.ink",
+      "label": "Mâchoire à 90° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)",
+      "value": 0,
+      "min": 0,
+      "max": 4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.135.concavity",
+      "label": "Mâchoire à 135° : creux maximal du contour (U)",
+      "value": 0.0023,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "geometry",
+      "id": "head.geo.jaw.180.concavity",
+      "label": "Mâchoire à 180° : creux maximal du contour (U)",
+      "value": 0.0007,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "anatomy",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "anatomy",
+      "id": "head.anat.eyeline",
+      "label": "Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]",
+      "value": 0.5163,
+      "min": 0.4,
+      "max": 0.66,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.depth",
+      "label": "Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]",
+      "value": 0.7943,
+      "min": 0.66,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.jaw.plane",
+      "label": "Plan mandibulaire (gonion → menton) par rapport à l'horizontale (°) [canon : 15–35° ; extrêmes admis 10–42°]",
+      "value": 32.6501,
+      "min": 10,
+      "max": 42,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.height",
+      "label": "Gonion vs ligne de la bouche (U ; + = plus bas) [canon : le gonion est au niveau de la bouche ± 0,15]",
+      "value": -0.0605,
+      "min": -0.15,
+      "max": 0.35,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.gonion.rest",
+      "label": "Distance gonion → bas du menton (U) [canon : ≥ 0,06]",
+      "value": 0.27,
+      "min": 0.06,
+      "max": 0.4,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.bigonial",
+      "label": "Largeur bigoniale / largeur bizygomatique du contour [canon : 0,55–0,95 ; planche 0,64]",
+      "value": 0.7999,
+      "min": 0.5,
+      "max": 0.97,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.skull.length",
+      "label": "Longueur 3D du crâne vs longueur dérivée par le moteur de crâne (0.826 H) : écart (U) [crâne figé : jusqu'à 0,044]",
+      "value": 0.0061,
+      "min": 0,
+      "max": 0.02,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.top",
+      "label": "Haut de l'oreille vs ligne des sourcils (U ; + = au-dessus) [canon : haut de l'oreille ≈ sourcil]",
+      "value": -0.1035,
+      "min": -0.12,
+      "max": 0.2,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.ear.bottom",
+      "label": "Bas de l'oreille vs base du nez (U ; + = plus haut) [canon : bas de l'oreille ≈ base du nez]",
+      "value": 0,
+      "min": -0.16,
+      "max": 0.12,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.neck",
+      "label": "Largeur du cou / largeur du crâne [canon : 0,35–0,65]",
+      "value": 0.3095,
+      "min": 0.3,
+      "max": 0.72,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "anatomy",
+      "id": "head.anat.chin.lowest",
+      "label": "Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)",
+      "value": -0.3988,
+      "min": -0.7,
+      "max": -0.1,
+      "ok": true,
+      "kind": "hard"
+     }
+    ]
+   },
+   {
+    "layer": "style",
+    "pass": true,
+    "checks": [
+     {
+      "layer": "style",
+      "id": "head.style.ink.contrast",
+      "label": "Contraste encre / peau (rapport WCAG) : le contour reste lisible sur toute teinte [planche : ≈ 9]",
+      "value": 5.6041,
+      "min": 2.5,
+      "max": 30,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.hair.contrast",
+      "label": "Contraste cheveux / peau (WCAG) : la lisière se lit",
+      "value": 1.8656,
+      "min": 1.05,
+      "max": 30,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.0",
+      "label": "Épaisseur médiane du trait de la mâchoire à 0° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0101,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.line.90",
+      "label": "Épaisseur médiane du trait de la mâchoire à 90° (U) [planche ≈ 0,013 ; rendu 0,011]",
+      "value": 0.0135,
+      "min": 0.006,
+      "max": 0.022,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.0",
+      "label": "Contour fermé à 0° (part des pixels de bord couverts d'encre)",
+      "value": 0.9982,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.45",
+      "label": "Contour fermé à 45° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.90",
+      "label": "Contour fermé à 90° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.closure.180",
+      "label": "Contour fermé à 180° (part des pixels de bord couverts d'encre)",
+      "value": 1,
+      "min": 0.96,
+      "max": 1,
+      "ok": true,
+      "kind": "hard"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.0",
+      "label": "Îlots d'encre isolés à 0° (points, traits pointillés) [planche ≤ 6]",
+      "value": 4,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.45",
+      "label": "Îlots d'encre isolés à 45° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.90",
+      "label": "Îlots d'encre isolés à 90° (points, traits pointillés) [planche ≤ 6]",
+      "value": 0,
+      "min": 0,
+      "max": 6,
+      "ok": true,
+      "kind": "info"
+     },
+     {
+      "layer": "style",
+      "id": "head.style.specks.180",
+      "label": "Îlots d'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)",
+      "value": 2,
+      "min": 0,
+      "max": 60,
+      "ok": true,
+      "kind": "info"
+     }
+    ]
+   }
+  ]
+ }
+}

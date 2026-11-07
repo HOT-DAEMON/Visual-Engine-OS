@@ -14,11 +14,12 @@ export function flatTones(r: TurnRender, region: number, tones: readonly (readon
 }
 
 /** Épaisseur médiane du trait de contour (U) : longueur des plages d'encre en partant du bord gauche de la silhouette, sur les lignes du crâne. */
-export function inkWidth(r: TurnRender, ink: readonly number[]): number {
+export function inkWidth(r: TurnRender, ink: readonly number[], tol = 45, rows?: readonly [number, number]): number {
   const runs: number[] = [];
-  for (let y = Math.round(r.h * 0.2); y < r.h * 0.45; y += 3) {
+  for (let y = Math.round(rows ? rows[0] : r.h * 0.2); y < (rows ? rows[1] : r.h * 0.45); y += 3) {
     let x = 0; while (x < r.w && !r.ids[y * r.w + x]) x++;
-    let n = 0; while (x + n < r.w && dist(r, 4 * (y * r.w + x + n), ink) < 45) n++;
+    for (let skip = 0; skip < 3 && x < r.w && dist(r, 4 * (y * r.w + x), ink) >= tol; skip++) x++;   // pixel de bord mélangé au fond (antialiasing)
+    let n = 0; while (x + n < r.w && dist(r, 4 * (y * r.w + x + n), ink) < tol) n++;
     if (n) runs.push(n);
   }
   runs.sort((a, b) => a - b);
@@ -26,20 +27,20 @@ export function inkWidth(r: TurnRender, ink: readonly number[]): number {
 }
 
 /** Part des pixels de bord de la silhouette qui sont de l'encre : le contour est-il fermé ? */
-export function outlineClosure(r: TurnRender, ink: readonly number[]): number {
+export function outlineClosure(r: TurnRender, ink: readonly number[], tol = 70): number {
   let edge = 0, inked = 0;
   for (let y = 1; y < r.h - 1; y++) for (let x = 1; x < r.w - 1; x++) {
     const k = y * r.w + x;
     if (!r.ids[k] || (r.ids[k - 1] && r.ids[k + 1] && r.ids[k - r.w] && r.ids[k + r.w])) continue;
     // pixel de bord = mélange encre/fond (antialiasing) : on teste aussi ses voisins couverts
-    edge++; if ([k, k - 1, k + 1, k - r.w, k + r.w].some((j) => r.ids[j] && dist(r, 4 * j, ink) < 70)) inked++;
+    edge++; if ([k, k - 1, k + 1, k - r.w, k + r.w].some((j) => r.ids[j] && dist(r, 4 * j, ink) < tol)) inked++;
   }
   return edge ? inked / edge : 0;
 }
 
 /** Petits îlots d'encre (< 6 px, connexité 8, seuil large pour inclure l'antialiasing) : bruit de contour — points isolés, traits pointillés. */
-export function inkSpecks(r: TurnRender, ink: readonly number[]): number {
-  const seen = new Uint8Array(r.w * r.h), is = (k: number): boolean => dist(r, 4 * k, ink) < 95;
+export function inkSpecks(r: TurnRender, ink: readonly number[], tol = 95): number {
+  const seen = new Uint8Array(r.w * r.h), is = (k: number): boolean => dist(r, 4 * k, ink) < tol;
   let specks = 0;
   for (let s = 0; s < r.w * r.h; s++) {
     if (seen[s] || !is(s)) continue;

@@ -1,5 +1,5 @@
 import { cross, norm, sub, v3 } from './math';
-import { sectionAt } from './sections';
+import { sectionAt, sectionPoint, surfaceZ } from './sections';
 import type { HeadTurnSpec, V3 } from './types';
 import { neckSection } from './engines/neck3d';
 
@@ -31,8 +31,8 @@ export function gridMesh(id: number, rows: V3[][], wrap: boolean, inside: (i: nu
 export function headMesh(spec: HeadTurnSpec, K = 96, dy = 0.0125): Mesh {
   const y0 = spec.rows[0]!.y, y1 = spec.rows[spec.rows.length - 1]!.y;
   const ys: number[] = []; for (let y = y0; y < y1 - 1e-9; y += dy) ys.push(y); ys.push(y1);
-  const rows = ys.map((y) => { const s = sectionAt(spec, y); return Array.from({ length: K }, (_, j) => { const th = (j / K) * 2 * Math.PI; return v3(s.a * Math.sin(th), y, s.zc + s.b * Math.cos(th)); }); });
-  return gridMesh(PART.head, rows, true, (i) => { const s = sectionAt(spec, ys[i]!); return v3(0, ys[i]!, s.zc); });
+  const rows = ys.map((y) => { const s = sectionAt(spec, y); return Array.from({ length: K }, (_, j) => { const q = sectionPoint(s, (j / K) * 2 * Math.PI); return v3(q.x, y, q.z); }); });
+  return gridMesh(PART.head, rows, true, (i) => { const s = sectionAt(spec, ys[i]!); return v3(0, ys[i]!, s.zw); });
 }
 
 /** Cou : cylindre elliptique ; le bas est refermé par un disque (id neckCut), comme le socle de la planche. */
@@ -55,7 +55,7 @@ export function bumpMesh(spec: HeadTurnSpec, y0: number, y1: number, h: (y: numb
   for (let i = 0; i <= steps; i++) {
     const y = y0 + ((y1 - y0) * i) / steps, s = sectionAt(spec, y), hh = Math.max(1e-4, h(y)), ww = Math.max(1e-3, w(y));
     rows.push(Array.from({ length: K }, (_, j) => {
-      const u = -1 + (2 * j) / (K - 1), x = u * ww, zs = s.zc + s.b * Math.sqrt(Math.max(0, 1 - (x / s.a) ** 2));
+      const u = -1 + (2 * j) / (K - 1), x = u * ww, zs = surfaceZ(s, x, true);
       return v3(x, y, zs + hh * Math.sqrt(Math.max(0, 1 - u * u)) - 0.004);
     }));
   }

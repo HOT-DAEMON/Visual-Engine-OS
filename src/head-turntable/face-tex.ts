@@ -1,3 +1,4 @@
+import { sectionAt } from './sections';
 import { clamp, smooth } from './math';
 import { hex, mix, type RGB } from './color';
 import { REGION, type HeadTurnSpec, type V3 } from './types';
@@ -70,7 +71,18 @@ export function nostrilTex(spec: HeadTurnSpec, p: V3, pal: Pal): Tex | null {
 }
 
 /** Rougeur des joues : opacité douce (0–0,3). */
-export const blushAlpha = (p: V3): number => 0.3 * smooth(1 - Math.hypot((Math.abs(p.x) - 0.26) / 0.1, (p.y - 0.74) / 0.07));
+export function blushAlpha(p: V3, spec: HeadTurnSpec): number {
+  const b = blushOf(spec);
+  return 0.3 * smooth(1 - Math.hypot((Math.abs(p.x) - b.cx) / b.rx, (p.y - b.cy) / 0.07));
+}
+/** Centre et rayon de la rougeur : à mi-hauteur entre les yeux et la bouche, au 0,897 de la demi-largeur du visage à cette hauteur (planche : y 0,74, x 0,26, rayon 0,1 ; mêmes rapports pour toute tête). */
+const BLUSH = new WeakMap<HeadTurnSpec, { cx: number; cy: number; rx: number }>();
+const REF_BLUSH_A = 0.28972905323251513;
+function blushOf(spec: HeadTurnSpec): { cx: number; cy: number; rx: number } {
+  let b = BLUSH.get(spec);
+  if (!b) { const cy = (spec.eye.y + spec.mouth.y) / 2 + (0.74 - 0.7396585273280446), k = sectionAt(spec, cy).a / REF_BLUSH_A; BLUSH.set(spec, (b = { cx: 0.26 * k, cy, rx: 0.1 * k })); }
+  return b;
+}
 
 /** Œil dont l'OUVERTURE vient du moteur `geometry/eye` (polygone des paupières) ; iris, pupille et reflets restent ceux de la planche. */
 function eyeTexEngine(spec: HeadTurnSpec, p: V3, k: number, pal: Pal): Tex | null {
