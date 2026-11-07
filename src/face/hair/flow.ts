@@ -147,6 +147,8 @@ export interface LockOpts {
   readonly ragged?: number;
   /** Pas de garde-fou binaire : le drapé (cheveux simulés) a déjà résolu les contacts avec le visage. */
   readonly noGuard?: boolean;
+  /** Largeur relative de la racine (0–1, défaut 0,8) : une racine étroite se fond sous la sous-couche au lieu de former un bout plat. */
+  readonly root?: number;
 }
 
 const samplesOf = (c: Vec[], sp: TexSpec): number => samplesFor(Math.hypot((c[c.length - 1] as Vec).x - (c[0] as Vec).x, (c[c.length - 1] as Vec).y - (c[0] as Vec).y) * 1.25, sp);
@@ -170,7 +172,7 @@ export function lockFrom(ctx: HairCtx, centre: Vec[], o: LockOpts): HairLock[] {
   if (o.flick) c = flickTip(c, (c[0] as Vec).x < 0 ? -1 : 1, o.flick);
   const w0 = o.width * wide;
   const sharp = o.sharp ?? ctx.def.sharp;
-  let poly = o.profile === 'cone' ? cone(c, w0, o.power ?? 1) : ribbon(c, w0, sharp);
+  let poly = o.profile === 'cone' ? cone(c, w0, o.power ?? 1) : ribbon(c, w0, sharp, o.root);
   if (o.ragged) poly = raggedTip(poly, o.ragged, ctx.rnd() * 2 - 1, w0 * 1.1);
-  return [{ poly: guardPoly(poly), rank: o.rank, tone: o.tone, layer: o.layer, edge: o.rank === 'main' || o.rank === 'mass', spine: c, w0, sharp, profile: o.profile ?? 'ribbon', power: o.power ?? 1, ...meta }];
+  return [{ poly: guardPoly(poly), rank: o.rank, tone: o.tone, layer: o.layer, edge: o.rank === 'main' || o.rank === 'mass', spine: c, w0, sharp, profile: o.profile ?? 'ribbon', power: o.power ?? 1, rootW: o.root, ...meta }];
 }

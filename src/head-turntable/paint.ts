@@ -5,6 +5,7 @@ import { earRig } from './engines/ear3d';
 import { earColor } from './engines/ear-paint';
 import { PART } from './mesh';
 import type { GBuf } from './raster';
+import { regionField, signedDistance } from './hair-region';
 import { hairlineY, headPoint, sectionAt } from './sections';
 import { REGION, type HeadTurnSpec, type View } from './types';
 
@@ -46,10 +47,12 @@ export function paint(spec: HeadTurnSpec, g: GBuf, view: View, o: PaintOpts): Pa
     }
     else {
       const s = sectionAt(spec, p.y), az = (Math.atan2(p.x, p.z - s.zc) * 180) / Math.PI;
-      if (id === PART.head && p.y < hairlineY(spec, az)) {
-        const hl = hairlineY(spec, az);
+      const R = spec.hairline.region, hl = hairlineY(spec, az), sd = R ? signedDistance(regionField(R), az, p.y) : 0, half = 0.0055 * kw * 0.5;
+      if (id === PART.head && (R ? sd > 0 : p.y < hl)) {
         col = mix(hairShade, pal.hair, t); reg = REGION.hair;
-        if (Math.abs(p.y - hl) < 0.03 && Math.abs(p.y - hl) < hairTol(spec, view, az, hl, kw)) col = pal.ink;
+        if (R ? sd < half : Math.abs(p.y - hl) < 0.03 && Math.abs(p.y - hl) < hairTol(spec, view, az, hl, kw)) col = pal.ink;
+      } else if (id === PART.head && R && -sd < half && p.y < 0.98) {
+        col = pal.ink;
       } else if (p.z > 0.2) {
         const tx = eyeTex(spec, p, kw, pal) ?? browTex(spec, p, kw, pal) ?? mouthTex(spec, p, kw, pal) ?? nostrilTex(spec, p, pal);
         if (tx) { col = tx.ink ? tx.c : mix(mix(tx.c, pal.shade, 0.35), tx.c, t); reg = tx.region; }

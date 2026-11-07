@@ -37,6 +37,19 @@ export const HairBraids = z
   })
   .strict();
 
+/**
+ * VENT sur la chevelure (vue de face). `x` : −1 (plein vent venant de la droite de l'image, cheveux poussés à gauche) … +1 (poussés à droite) ;
+ * `y` : −1 (rabat vers le bas) … +1 (soulève) ; `flex` : souplesse des mèches (0 = raides, ignorent le vent ; 1 = très souples). Par défaut : pas de vent,
+ * géométrie strictement identique. Voir `docs/HAIR-WIND.md`.
+ */
+export const HairWind = z
+  .object({
+    x: z.number().min(-1).max(1).default(0),
+    y: z.number().min(-1).max(1).default(0),
+    flex: Unit.default(0.6),
+  })
+  .strict();
+
 export type HairStyle = (typeof HAIR_STYLES)[number];
 export type HairTextureChoice = (typeof HAIR_TEXTURE_CHOICES)[number];
 export type HairTexture = (typeof HAIR_TEXTURES)[number];

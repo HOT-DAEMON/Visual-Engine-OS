@@ -50,7 +50,7 @@ export function flowLocks(ctx: HairCtx): HairLock[] {
     const s = -1 + (2 * (i + 0.15 + 0.7 * rnd())) / f.ribbons;
     const R = rootAt(ctx, s, 0.6 + 0.4 * rnd());
     const g = ctx.gain(s);
-    const len = (0.07 + 0.5 * f.span) * lm.H * (0.55 + 0.6 * rnd()) * g;
+    const len = Math.min(0.42 * lm.H, (0.07 + 0.5 * f.span) * lm.H * (0.55 + 0.6 * rnd()) * g);
     const dir = outward(ctx, R, 0.35 + 0.45 * rnd());
     const back = rnd() < 0.4;
     const c = sCentre(R, dir, len, (0.06 + 0.16 * f.sWave) * (rnd() < 0.5 ? -1 : 1), rnd() * 0.9 - 0.45, f.float);
@@ -73,13 +73,17 @@ export function coneLocks(ctx: HairCtx): HairLock[] {
   const per = Math.ceil(f.cones / clusters);
   let made = 0;
   for (let k = 0; k < clusters && made < f.cones; k++) {
-    const s = -0.85 + (1.7 * (k + 0.5)) / clusters + (rnd() - 0.5) * 0.12;
-    const axis = unit({ x: s * 0.55 + (rnd() - 0.5) * 0.3, y: -1 });
+    // Racines sur le DESSUS du crâne (|s| ≤ 0,7) : plus bas, l'arc passe à la tempe et le cône sortait de la joue de la tête.
+    const s = -0.7 + (1.4 * (k + 0.5)) / clusters + (rnd() - 0.5) * 0.1;
+    // L'axe d'un paquet est RADIAL : il part de la surface du crâne vers l'extérieur et le haut (les côtés restent courts et couchés),
+    // au lieu d'un éventail vertical indépendant du crâne — c'est ce qui faisait des cônes collés autour de la tête.
+    const axis = unit({ x: s * 0.9 + (rnd() - 0.5) * 0.3, y: -1.1 + 0.5 * Math.abs(s) });
     for (let j = 0; j < per && made < f.cones; j++, made++) {
-      const R = rootAt(ctx, s + (rnd() - 0.5) * 0.12, 0.7 + 0.3 * rnd());
+      const R = rootAt(ctx, s + (rnd() - 0.5) * 0.12, 0.85 + 0.15 * rnd());
       const a = (rnd() - 0.5) * 0.7 + (j - (per - 1) / 2) * 0.22;
       const d = unit({ x: axis.x * Math.cos(a) - axis.y * Math.sin(a), y: axis.x * Math.sin(a) + axis.y * Math.cos(a) });
-      const len = (0.1 + 0.2 * rnd() + 0.1 * h.silhouette.lift) * lm.H * ctx.gain(s);
+      // Longueur : décroît vers les côtés (|s| → 1) et reste bornée à 0,3 H (un cône plus long qu'un tiers de tête n'est plus une mèche).
+      const len = Math.min(0.3 * lm.H, (0.1 + 0.2 * rnd() + 0.1 * h.silhouette.lift) * lm.H * ctx.gain(s) * (1 - 0.5 * Math.abs(s) ** 2));
       const bend = (rnd() - 0.5) * 0.14;
       const c = Array.from({ length: 12 }, (_, i) => {
         const u = i / 11;

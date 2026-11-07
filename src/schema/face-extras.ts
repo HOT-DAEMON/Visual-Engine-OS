@@ -4,7 +4,7 @@ import { Hex, Unit } from './primitives';
 import { NeckSystem } from './neck-system';
 import { Appearance } from './appearance';
 import { HairFlow, HairFringeEngine, HairLook, HairOcclusion, HairRootLift, HairSides, HairSilhouette, HairStrands, HairTextureMix, HairTiers, HairTips } from './hair-v2';
-import { HAIR_FRINGES, HAIR_STYLES, HAIR_TEXTURE_CHOICES, HAIRLINES, HairBraids, HairTie } from './hair-system';
+import { HAIR_FRINGES, HAIR_STYLES, HAIR_TEXTURE_CHOICES, HAIRLINES, HairBraids, HairTie, HairWind } from './hair-system';
 
 export { HAIR_FRINGES, HAIR_STYLES, HAIR_TEXTURES, HAIR_TEXTURE_CHOICES, HAIRLINES } from './hair-system';
 
@@ -103,6 +103,8 @@ export const FaceHair = z
     appearance: Appearance.default({}),
     /** Cheveux simulés (Verlet) : voir `hair-sim.ts`. Désactivé par défaut. */
     sim: HairSim.default({}),
+    /** Vent sur la chevelure (aucun par défaut) : `hair/wind.ts`. */
+    wind: HairWind.default({}),
   })
   .strict();
 

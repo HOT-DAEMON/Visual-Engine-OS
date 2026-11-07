@@ -24,7 +24,11 @@ export interface MouthSpec { readonly y: number; readonly z: number; readonly ha
 export interface EarSpec { readonly x: number; readonly y0: number; readonly y1: number; readonly z: number; readonly depth: number; readonly thick: number; readonly openDeg: number; readonly tiltDeg: number }
 export interface NeckSpec { readonly a: number; readonly b: number; readonly zc: number; readonly y0: number; readonly y1: number }
 /** Ligne d'implantation des cheveux : hauteur y de la lisière en fonction de l'azimut (0° = face, 90° = côté, 180° = nuque), symétrique. */
-export interface HairlineSpec { readonly knots: readonly (readonly [number, number])[] }
+export interface HairlineSpec {
+  readonly knots: readonly (readonly [number, number])[];
+  /** Région exacte des cheveux (polygone dans le plan déroulé azimut° × y) : si elle est donnée, elle PRIME sur `knots` pour la peinture (`hair-region.ts`). */
+  readonly region?: readonly (readonly [number, number])[];
+}
 export interface PaletteSpec { readonly skin: string; readonly skinShade: string; readonly hair: string; readonly hairShade: string; readonly ink: string; readonly iris: string; readonly irisDeep: string; readonly lip: string; readonly mouthIn: string; readonly blush: string }
 
 import type { EngineHead } from './engines/face-model';

@@ -36,14 +36,17 @@ export function tailLocks(ctx: HairCtx, T: Vec): HairLock[] {
     const a = (rnd() - 0.5) * 1.5;
     return kind === 'top' ? unit({ x: Math.sin(a) * 1.3, y: -Math.cos(a) }) : kind === 'side' ? unit({ x: sg, y: -0.15 + (rnd() - 0.5) * 0.6 }) : unit({ x: (rnd() - 0.5) * 0.6, y: 1 });
   };
-  const core = lockFrom(ctx, growLock(ctx, T, len, { dir: dirOf(), gravity: 0.9 }), { width: bw * 1.6, rank: 'main', tone: -0.3, layer: 'back', sharp: 0.45 });
+  // Une queue basse retombe DANS LE DOS : vue de face elle est arrêtée aux épaules (bas du cou rendu), jamais sous lui (mèches parasites).
+  const yMax = lm.neck.bottomY - 0.012 * H;
+  const rest = (c: Vec[]): Vec[] => c.map((q) => (q.y > yMax ? { x: q.x, y: yMax } : q));
+  const core = lockFrom(ctx, rest(growLock(ctx, T, len, { dir: dirOf(), gravity: 0.9 })), { width: bw * 1.6, rank: 'main', tone: -0.3, layer: 'back', sharp: 0.45 });
   if (ctx.tex === 'braided') return core;
   const locks = [...core];
   const count = Math.round(12 + 22 * h.tie.thickness);
   for (let i = 0; i < count; i++) {
     const start = { x: T.x + (rnd() - 0.5) * bw, y: T.y + (rnd() - 0.5) * 0.01 * H };
     const L = len * (0.8 + 0.4 * rnd() - (0.5 - rnd()) * h.lengthVariance * 0.4) * ctx.spec.shrink;
-    locks.push(...lockFrom(ctx, growLock(ctx, start, L, { dir: dirOf(), gravity: 0.9 }), { width: bw * 0.5 * (0.6 + 0.8 * rnd()), rank: i % 3 === 0 ? 'main' : 'fine', tone: (rnd() - 0.4) * h.highlight, layer: 'back', sharp: 0.6 }));
+    locks.push(...lockFrom(ctx, rest(growLock(ctx, start, L, { dir: dirOf(), gravity: 0.9 })), { width: bw * 0.5 * (0.6 + 0.8 * rnd()), rank: i % 3 === 0 ? 'main' : 'fine', tone: (rnd() - 0.4) * h.highlight, layer: 'back', sharp: 0.6 }));
   }
   return locks;
 }

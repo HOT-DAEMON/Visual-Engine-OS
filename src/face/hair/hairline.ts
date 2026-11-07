@@ -52,7 +52,7 @@ export function buildHairline(p: FaceParams, lm: FaceLandmarks): Hairline {
     }
     return { x: q.x, y: hi };
   };
-  const pts: Vec[] = Array.from({ length: N + 1 }, (_, i) => {
+  const ys: number[] = Array.from({ length: N + 1 }, (_, i) => {
     const s = -1 + (2 * i) / N;
     const x = s * xEnd;
     const a = Math.abs(s);
@@ -69,8 +69,15 @@ export function buildHairline(p: FaceParams, lm: FaceLandmarks): Hairline {
     y -= h.recession * 0.12 * H * Math.exp(-(((a - 0.78) / 0.17) ** 2));
     y += h.irregularity * 0.014 * H * (s < 0 ? nzL : nzR)(a * 8 + 3);
     for (const q of notches) y -= q.d * Math.exp(-(((s - q.c) / q.w) ** 2));
-    return onSkull({ x, y: clamp(y, high, low) });
+    return clamp(y, high, low);
   });
+  // LISSAGE : les encoches (gaussiennes étroites) et le recul fabriquaient des paliers à angle droit ; trois passes [1 2 1] arrondissent les
+  // marches sans bouger les extrémités (coins de tempe : ils portent les pattes). La hauteur reste bornée, puis le point est reposé sur le crâne.
+  for (let pass = 0; pass < 3; pass++) {
+    const prev = ys.slice();
+    for (let i = 1; i < N; i++) ys[i] = 0.25 * (prev[i - 1] as number) + 0.5 * (prev[i] as number) + 0.25 * (prev[i + 1] as number);
+  }
+  const pts: Vec[] = ys.map((y, i) => onSkull({ x: (-1 + (2 * i) / N) * xEnd, y: clamp(y, high, low) }));
   const at = (s: number): Vec => {
     const f = clamp((s + 1) / 2, 0, 1) * N;
     const i = Math.min(N - 1, Math.floor(f));

@@ -29,7 +29,7 @@ export function celBands(l: HairLock, ld: Vec, band: number, wantCore: boolean, 
   const n = sp.length;
   const nn = normals(sp);
   const profile = l.profile ?? 'ribbon';
-  const hw = (i: number): number => halfWidth(i / (n - 1), l.w0 as number, l.sharp ?? 0.5, profile, l.power ?? 1);
+  const hw = (i: number): number => halfWidth(i / (n - 1), l.w0 as number, l.sharp ?? 0.5, profile, l.power ?? 1, l.rootW);
   const at = (i: number, lam: number): Vec => {
     const q = nn[i] as Vec;
     const w = hw(i) * lam;
