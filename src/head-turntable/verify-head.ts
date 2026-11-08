@@ -1,3 +1,4 @@
+import { reliefAnatomyChecks, reliefGeometryChecks, reliefStyleChecks } from './verify-relief';
 import { halfWidthAt } from '../face/outline';
 import { CHIN_CAP_Y } from './engines/rows';
 import { contrastRatio, hex } from './color';
@@ -68,6 +69,7 @@ export function headGeometry(h: HeadSubject, R: HeadRenders): LayerReport {
   }
   for (const yaw of [135, 180]) c.push(check(G, `head.geo.jaw.${yaw}.concavity`, `Mâchoire à ${yaw}° : creux maximal du contour (U)`, jawContourStats(R.at(yaw), { yMinU: 0.8, yMaxU: 1.25 }).concavityU, 0, 0.02));
   c.push(...skullGeometryChecks(s, R));
+  c.push(...reliefGeometryChecks(s));
   return layerOf(G, c);
 }
 
@@ -98,6 +100,7 @@ export function headAnatomy(h: HeadSubject, R: HeadRenders): LayerReport {
   const st = jawContourStats(R.at(90), { yMinU: 0.8, yMaxU: 1.25 });
   c.push(check(A, 'head.anat.chin.lowest', 'Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)', st.lowest.x, -0.7, -0.1));
   c.push(...skullAnatomyChecks(s));
+  c.push(...reliefAnatomyChecks(s, R));
   return layerOf(A, c);
 }
 
@@ -113,6 +116,7 @@ export function headStyle(h: HeadSubject, R: HeadRenders): LayerReport {
   for (const yaw of [0, 45, 90]) c.push(check(S, `head.style.specks.${yaw}`, `Îlots d'encre isolés à ${yaw}° (points, traits pointillés) [planche ≤ 6]`, inkSpecks(R.at(yaw), ink, tolS), 0, 6, h.spec.engine && h.id !== 'planche' ? 'info' : 'hard'));
   c.push(check(S, 'head.style.specks.180', 'Îlots d\'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)', inkSpecks(R.at(180), ink, tolS), 0, 60, 'info'));
   c.push(...skullStyleChecks(h.spec, R));
+  c.push(...reliefStyleChecks(h.spec, R));
   return layerOf(S, c);
 }
 

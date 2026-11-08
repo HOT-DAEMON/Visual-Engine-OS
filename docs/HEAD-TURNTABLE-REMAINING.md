@@ -33,6 +33,11 @@ Crâne : longueur 3D amplifiée et bornée (`cranialLength`), portée par l'arri
 issues d'un visage sont plus larges que longues (1,05 – 1,13 contre 0,975 pour la planche). Détail, limites et reste à faire : `HEAD-TURNTABLE-SKULL-2.md`. Le reste du tableau ci-dessus n'a pas été retravaillé pendant ce travail :
 sourcils (`browGeometry`), oreille lointaine à 20°, pic du menton à 70°, jonction cou / épaules, lisière des cheveux restent ⬜ / ⚠️ comme indiqué.
 
+## Mise à jour — reliefs (artefacts `head-turntable-v5`)
+
+Traités dans `HEAD-TURNTABLE-RELIEF.md` (suite de ce fichier) : bosses pariétales et asymétrie du crâne ⚠️, modelé des joues ⚠️, oreille lointaine à 20° ⚠️ (omise, convention de la planche), pic du menton à 70° ⚠️ (DIAGNOSTIQUÉ par recalage vertical, forme non modifiée), jonction cou / épaules ⚠️ (évasement, pas de muscles).
+Contrôles : `HEAD-TURNTABLE-RELIEF-VERIFY.md` ; reste à faire par composant : `HEAD-TURNTABLE-RELIEF-REMAINING.md`. Les autres lignes du tableau ci-dessus ne sont pas retravaillées.
+
 ## Défauts visibles connus (voir `apres/comparison/side_by_side_sheet.png`)
 
 1. Jonction cou / mâchoire en angle vif (la planche : transition douce avec ombre).

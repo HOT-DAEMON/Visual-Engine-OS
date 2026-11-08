@@ -2,6 +2,7 @@ import { cross, norm, sub, v3 } from './math';
 import { sectionAt, sectionPoint, surfaceZ } from './sections';
 import type { HeadTurnSpec, V3 } from './types';
 import { neckSection } from './engines/neck3d';
+import { headRelief } from './engines/head-relief';
 
 /** Identifiants de parties (groupes de contour : 1 et 4 = peau de la tête, sans trait entre eux ; 2 et 5 = cou ; 3 = oreilles). */
 export const PART = { head: 1, neck: 2, ear: 3, bump: 4, neckCut: 5, earBack: 6 } as const;
@@ -31,7 +32,17 @@ export function gridMesh(id: number, rows: V3[][], wrap: boolean, inside: (i: nu
 export function headMesh(spec: HeadTurnSpec, K = 96, dy = 0.0125): Mesh {
   const y0 = spec.rows[0]!.y, y1 = spec.rows[spec.rows.length - 1]!.y;
   const ys: number[] = []; for (let y = y0; y < y1 - 1e-9; y += dy) ys.push(y); ys.push(y1);
-  const rows = ys.map((y) => { const s = sectionAt(spec, y); return Array.from({ length: K }, (_, j) => { const q = sectionPoint(s, (j / K) * 2 * Math.PI); return v3(q.x, y, q.z); }); });
+  const relief = headRelief(spec.engine);   // bosses pariétales, asymétrie, joues : déplacement radial sur la superellipse (têtes issues d'un visage seulement)
+  const rows = ys.map((y) => {
+    const s = sectionAt(spec, y);
+    return Array.from({ length: K }, (_, j) => {
+      const th = (j / K) * 2 * Math.PI, q = sectionPoint(s, th), d = relief ? relief(y, th) : 0;
+      if (d === 0) return v3(q.x, y, q.z);
+      const rx = q.x, rz = q.z - s.zc, rl = Math.hypot(rx, rz) || 1;   // direction radiale depuis l'axe vertical du centre de la section
+      const xr = q.x + (d * rx) / rl;
+      return v3(Math.max(-s.a, Math.min(s.a, xr)), y, q.z + (d * rz) / rl);   // jamais plus large que la demi-largeur de la section : le contour de FACE reste celui du moteur de visage (`head.geo.front2d`), les bosses se lisent de profil et de trois quarts
+    });
+  });
   return gridMesh(PART.head, rows, true, (i) => { const s = sectionAt(spec, ys[i]!); return v3(0, ys[i]!, s.zw); });
 }
 

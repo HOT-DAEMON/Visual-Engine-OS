@@ -1,0 +1,74 @@
+[
+ {
+  "yaw": 0,
+  "dtU": 0.0075,
+  "meanAvant": 0.0135,
+  "maxAvant": 0.0567,
+  "meanApres": 0.0064,
+  "maxApres": 0.0183
+ },
+ {
+  "yaw": 20,
+  "dtU": 0.0525,
+  "meanAvant": 0.0223,
+  "maxAvant": 0.0894,
+  "meanApres": 0.0138,
+  "maxApres": 0.0519
+ },
+ {
+  "yaw": 45,
+  "dtU": 0,
+  "meanAvant": 0.0177,
+  "maxAvant": 0.0706,
+  "meanApres": 0.0177,
+  "maxApres": 0.0706
+ },
+ {
+  "yaw": 70,
+  "dtU": 0.045,
+  "meanAvant": 0.0331,
+  "maxAvant": 0.2075,
+  "meanApres": 0.0155,
+  "maxApres": 0.0475
+ },
+ {
+  "yaw": 90,
+  "dtU": 0.03,
+  "meanAvant": 0.026,
+  "maxAvant": 0.0708,
+  "meanApres": 0.0172,
+  "maxApres": 0.0583
+ },
+ {
+  "yaw": 110,
+  "dtU": 0.055,
+  "meanAvant": 0.0222,
+  "maxAvant": 0.0694,
+  "meanApres": 0.0134,
+  "maxApres": 0.0536
+ },
+ {
+  "yaw": 135,
+  "dtU": 0.0475,
+  "meanAvant": 0.0273,
+  "maxAvant": 0.1353,
+  "meanApres": 0.0149,
+  "maxApres": 0.0389
+ },
+ {
+  "yaw": 160,
+  "dtU": 0.015,
+  "meanAvant": 0.0186,
+  "maxAvant": 0.0439,
+  "meanApres": 0.0175,
+  "maxApres": 0.0464
+ },
+ {
+  "yaw": 180,
+  "dtU": 0.015,
+  "meanAvant": 0.0133,
+  "maxAvant": 0.0419,
+  "meanApres": 0.0104,
+  "maxApres": 0.0344
+ }
+]

@@ -147,3 +147,4 @@ cassé, ancrage inter-yeux cassé) : les 5 détectées. Détail dans
 
 - 10 : `CHANGELOG-10.md` (vitesse de génération, feat/render-speed).
 - 11 : `CHANGELOG-11.md` (moteur de crâne en profil, feat/skull-profile).
+- 20 : `CHANGELOG-20.md` (reliefs de la tête en rotation, feat/hair-grammar).

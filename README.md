@@ -179,4 +179,4 @@ Moteur de structure du visage (`anatomyEngine: 'structured'` : régions du nez, 
 
 `renderHead(refView(yaw))` rend la TÊTE COMPLÈTE (crâne, mâchoire, cou, oreilles, nez, bouche, yeux, sourcils, cheveux) sous n'importe quel lacet, calée sur les
 mesures de `references/face/rotation_head.jpg` (silhouettes à 1,5 – 4,1 px sur 150 px, dont 6 lacets hors échantillon ; vérification en 3 couches).
-Documentation : `docs/HEAD-TURNTABLE.md` (+ `-REFERENCES`, `-VERIFY`, `-REMAINING`) ; preuves : `artefacts/head-turntable/` ; tests : `tests/head-turntable.test.ts`.
+Documentation : `docs/HEAD-TURNTABLE.md` (+ `-REFERENCES`, `-VERIFY`, `-REMAINING`, `-RELIEF`, `-RELIEF-VERIFY`, `-RELIEF-REMAINING`) ; preuves : `artefacts/head-turntable/`, `artefacts/head-turntable-v5/` ; tests : `tests/head-turntable.test.ts`, `tests/head-turntable-relief.test.ts`.

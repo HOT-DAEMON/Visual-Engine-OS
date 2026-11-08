@@ -1,5 +1,6 @@
 import { encodePngRgba } from '../core/png';
 import { buildParts } from './parts';
+import { cullFarEar } from './engines/ear-cull';
 import { paint } from './paint';
 import { rasterize, type Frame } from './raster';
 import { REF_SPEC } from './spec';
@@ -19,7 +20,7 @@ export interface RenderOpts { readonly frame?: Frame; readonly ss?: number; read
 export function renderHead(view: View, spec: HeadTurnSpec = REF_SPEC, o: RenderOpts = {}): TurnRender {
   const f = o.frame ?? defaultFrame(), ss = o.ss ?? 2;
   const hi: Frame = { w: f.w * ss, h: f.h * ss, ppu: f.ppu * ss, ox: f.ox * ss, oy: f.oy * ss };
-  const g = rasterize(buildParts(spec), view, hi);
+  const g = rasterize(cullFarEar(buildParts(spec), view), view, hi);   // l'oreille lointaine à 8° – 35° est omise (convention de la planche)
   const pa = paint(spec, g, view, { lineU: o.lineU ?? 0.022, ppuHi: hi.ppu });
   const rgba = new Uint8ClampedArray(f.w * f.h * 4), ids = new Uint8Array(f.w * f.h), regions = new Uint8Array(f.w * f.h);
   const bg = o.background === undefined ? [255, 255, 255] : o.background === null ? null : [parseInt(o.background.slice(1, 3), 16), parseInt(o.background.slice(3, 5), 16), parseInt(o.background.slice(5, 7), 16)];
