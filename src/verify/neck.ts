@@ -1,4 +1,5 @@
 import { hueDelta, resolveAppearance, toHsl } from '../appearance';
+import { neckBase } from '../render/neck/skin';
 import { faceLandmarks } from '../face';
 import type { RandomFace } from '../generation/random-face';
 import { frontSilhouette, profileSilhouette } from '../neck/geometry';
@@ -45,7 +46,7 @@ export function checkNeckModel(m: NeckModel, tint?: { readonly skin: string; rea
   }
   c.push(check('anatomy', 'neck.visibility-range', '==', m.composition.structures.every((s) => s.visibility >= 0 && s.visibility <= 1) ? 1 : 0, 1, 'visibilité de structure hors [0, 1]'));
   // --- STYLE : teinte de la peau du cou = teinte de la tête (le cou n'a pas sa propre couleur)
-  if (tint) c.push(check('style', 'neck.skin-hue', '<=', Math.abs(hueDelta(toHsl(tint.skin).h, toHsl(tint.neckTone).h)), 25, 'la peau du cou dérive de la teinte de la tête', 'warn'));
+  if (tint) c.push(check('style', 'neck.skin-hue', '<=', Math.abs(hueDelta(toHsl(tint.skin).h, toHsl(tint.neckTone).h)), 12, 'la peau du cou dérive de la teinte de la tête', 'error'));
   return c;
 }
 
@@ -55,8 +56,10 @@ export function checkNeck(face: RandomFace, svg: string): Check[] {
   if (!p.neck.visible) return [];
   const lm = faceLandmarks(p, face.width, face.height), m = neckModelFor(p, lm);
   const skin = (face.objects[0] as { material: { color: string } }).material.color;
-  const out = checkNeckModel(m, { skin, neckTone: resolveAppearance(skin, p.skin).tone(-(0.12 + 0.28 * p.neck.shade), skin) });
+  const out = checkNeckModel(m, { skin, neckTone: neckBase(resolveAppearance(skin, p.skin), p.neck.shade, null) });
   out.push(check('geometry', 'neck.frame-source', '==', lm.neck.half, m.composition.morphology.aTop, 'lm.neck.half doit être la demi-largeur du haut du cou du moteur', 'error', 1e-9));
+  // ÉCLAIRAGE : la peau du cou est émise par le moteur de peau PARTAGÉ (découpe `-skin-clip` de `skin/layers.ts`), pas par un ombrage propre au cou.
+  out.push(check('style', 'neck.shared-skin-engine', '==', svg.includes(`${(face.objects[0] as { id: string }).id}-neck-skin-clip`) ? 1 : 0, 1, 'le cou doit passer par le moteur de peau partagé (couches de skin/layers.ts)'));
   // Mode cel : l'ombrage du cou n'utilise que trois aplats.
   if (p.renderMode === 'anime') {
     const tones = new Set([...svg.matchAll(/<linearGradient id="[^"]*-neck-band-\d+"[^>]*>(.*?)<\/linearGradient>/g)].flatMap((g) => [...g[1]!.matchAll(/stop-color="([^"]+)"/g)].map((s) => s[1]!.toLowerCase())));

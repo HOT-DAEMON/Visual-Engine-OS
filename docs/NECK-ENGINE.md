@@ -42,8 +42,8 @@ Cinq couches indépendantes (TODO §3) : morphologie · anatomie · espèce · s
 
 ## 5. Rendu — `src/render/neck/`
 
-`path.ts` contour (lisse ou à facettes selon l'angularité) · `shade.ts` ombrage par bandes depuis les **normales réelles** (Lambert, mode cel = 3 aplats) · `muscles.ts` SCM/trapèzes/platysma · `reliefs.ts` larynx, hyoïde, trachée, vaisseaux, clavicules, fosse, plis, fanon · `surface.ts` écailles/plaques/plumes (rangées, spirale, pavage, amas, gorge lisse) · `attach.ts` collier, écharpe, crête, collerette, pointes.
-Couleur : `ra.tone(…, skin)` avec **la peau du visage** (même objet que tête et corps) ; `elementColor: null` ⇒ éléments en peau.
+`path.ts` contour (lisse ou à facettes selon l'angularité) · `skin.ts` peau du cou : assemble les couches du moteur de peau PARTAGÉ (`skin/layers.ts`), le terminateur venant des **normales réelles** (détail : `NECK-APPEARANCE.md`) · `muscles.ts` SCM/trapèzes/platysma · `reliefs.ts` larynx, hyoïde, trachée, vaisseaux, clavicules, fosse, plis, fanon · `surface.ts` écailles/plaques/plumes (rangées, spirale, pavage, amas, gorge lisse) · `attach.ts` collier, écharpe, crête, collerette, pointes.
+Couleur : `ra.base` de l'apparence (la peau de la tête) ; tout ce qui est éclairé (peau, écailles, plaques, plumes, accessoires, fanon) passe par `toneOfNormal` = arrêts du terminateur partagé. **Aucune formule d'éclairage propre au cou.** `elementColor: null` ⇒ éléments en peau.
 `GAIN` (`ctx.ts`) : calibrage visuel des reliefs, appliqué en un seul endroit.
 
 ## 6. Espèces, styles, mouvements
@@ -54,14 +54,14 @@ Mouvements : M01 flexion/extension, M02 inclinaison, M03 rotation (`twistShare`)
 
 ## 7. Vérification (TODO §9) — `src/verify/neck.ts`, dans `verifyFace`
 
-Géométrie (finitude, axe monotone, ancrages haut/base, plancher de section, contour non croisé, accord face/sections, axe partagé face/profil) · anatomie (sous la tête, structures conformes à l'espèce, proportions humaines, visibilités) · style (teinte de la peau du cou, mode cel ≤ 3 tons).
+Géométrie (finitude, axe monotone, ancrages haut/base, plancher de section, contour non croisé, accord face/sections, axe partagé face/profil) · anatomie (sous la tête, structures conformes à l'espèce, proportions humaines, visibilités) · style (teinte de la peau du cou à ≤ 12° de la tête, passage par le moteur de peau partagé, mode cel ≤ 3 tons).
 24 visages : 0 erreur. 5 contrôles négatifs détectés (`artefacts/neck/10-verification.json`).
 
 ## 8. Tests
 
-`neck-engine` (22) cadre/déterminisme/opérateurs/espèces/pose/vérification · `neck-criteria` (13) critères §10 · `neck-visible` (67) un cas par paramètre du schéma, **garde de couverture** : une feuille du schéma sans preuve fait échouer le test.
+`neck-engine` (22) cadre/déterminisme/opérateurs/espèces/pose/vérification · `neck-criteria` (14) critères §10 · `neck-appearance` (3) un seul moteur d'apparence · `neck-visible` (67) un cas par paramètre du schéma, **garde de couverture** : une feuille du schéma sans preuve fait échouer le test.
 
 ## 9. Artefacts
 
-`artefacts/neck/` : 01 morphologies · 02 anatomie · 03 opérateurs · 04 mouvements · 05 espèces · 06 styles · 07 lumière · 08 têtes entières · 09 silhouettes sous lacet · 10 vérification · 11 tableau de preuves.
+`artefacts/neck/` : 01 morphologies · 02 anatomie · 03 opérateurs · 04 mouvements · 05 espèces · 06 styles · 07 lumière · 08 têtes entières · 09 silhouettes sous lacet · 10 vérification · 11 tableau de preuves · 12a/12b apparence **avant** (ombrage propre) / **après** (moteur de peau partagé), 8 conditions : lumière gauche/droite, cel, torsion, dragon, autre identité, massif.
 Régénérer : `npx tsx scripts/artefacts-neck.ts [préfixe …]`.

@@ -1,7 +1,6 @@
 import { el, num } from '../../core/svg';
 import { surfaceNormal } from '../../neck/geometry';
 import type { P2 } from '../../neck/types';
-import { mix } from '../../core/color';
 import type { NeckCtx } from './ctx';
 
 /**
@@ -9,10 +8,7 @@ import type { NeckCtx } from './ctx';
  * surface déformée (u le long du cou) et suit ses sections ; le collier/l'écharpe serrent AUSSI la géométrie du cou (contrôleur de déformation, M10 :
  * le tissu déborde de part et d'autre). `behind` se dessine derrière le cou (crête et collerette dépassent de ses bords), `front` par-dessus.
  */
-const shadeOf = (c: NeckCtx, color: string, n: { x: number; y: number; z: number }): string => {
-  const lit = Math.max(0, n.x * c.L.x + n.y * c.L.y + n.z * c.L.z);
-  return mix(c.ra.shadow, color, 0.45 + 0.55 * Math.min(1, lit * (0.6 + 0.6 * c.I)));
-};
+const shadeOf = (c: NeckCtx, color: string, n: { x: number; y: number; z: number }): string => c.tone(color, n);
 const path = (pts: readonly P2[]): string => `M${pts.map((p) => `${num(p.x)} ${num(p.y)}`).join('L')}Z`;
 
 export function renderAttachments(c: NeckCtx): { behind: string[]; front: string[] } {

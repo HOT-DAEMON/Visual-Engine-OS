@@ -8,7 +8,7 @@ Rien ici n'est présenté comme fait. Référence : `docs/TODO-NECK-SYSTEMS.md`,
 |---|---|
 | §3 catalogue « plusieurs variantes » par famille | **Pas de bibliothèque de préréglages** (`presets`) : les morphologies s'obtiennent en combinant les paramètres (planche 01). |
 | §4 stratégie « cage / réseau de contrôle » | Non implémentée (retirée du schéma). `chain`, `weighted`, `centerline`, `fields` existent. |
-| §7 Famille Surface : `roughness`, `microrelief`, `wrinkle_scale` | **Absents** (retirés du schéma faute d'effet). Seul `skinTension` existe. |
+| §7 Famille Surface : `roughness`, `microrelief`, `wrinkle_scale` | **Absents** (retirés du schéma faute d'effet ; `roughness`/`microrelief` réessayés via le moteur de peau partagé, 0,18 % / 0 % de pixels : `NECK-APPEARANCE.md` §6). Seul `skinTension` existe. |
 | §7 matériau : réflexion, transmission, matière translucide | Non séparés : la couleur vient de l'apparence du visage, rien d'autre. |
 | §7 microtexture (pores, grain, fibres) | Aucune. |
 | §7 « placements pilotés par des masques », densité variable par zone | Seul `smoothThroat` (gorge lisse) ; la densité est globale. |
@@ -38,13 +38,17 @@ Rien ici n'est présenté comme fait. Référence : `docs/TODO-NECK-SYSTEMS.md`,
 - Cou « taureau » : bloc large, raccord au torse non traité (le corps n'est pas dessiné sur les planches).
 - Plumes : texture fine ressemblant à du poil quand `size` est petit.
 - Cou très fin exagéré : tube sans évasement lisible.
+- Cou à écailles (dragon, reptile) : peu de volume de lumière visible d'un bord à l'autre, la couleur des éléments étant la base éclairée par la loi partagée (contraste directionnel faible).
 
 ## D. Couverture de test et de vérification à compléter
 
 - Pas de mesure de performance du cou (modèle mémoïsé ; ≤ 2 600 éléments de surface).
 - La vérification de style ne contrôle que la teinte de la peau et les 3 tons du mode cel ; aucun critère de « beauté ».
 - Pas de test de non-collision entre un accessoire et la mâchoire/les épaules (seulement entre accessoires).
-- La peau du cou n'est vérifiée que sur le contrat (teinte dérivée), pas sur le SVG final pour toutes les identités.
+- La teinte de peau est vérifiée sur le rendu final pour 3 identités seulement (`neck-appearance`), pas pour toutes.
+- **Marges de preuve faibles** : `reliefs.clavicle` (0,71 %), `modifiers.age` (0,88 %), `softTissue.dewlap` (1,39 %) pour un seuil de 0,6 %.
+- **Torse hors moteur d'apparence** : `body/volume/shade.ts` garde sa palette (écart de teinte jusqu'à 11° avec le cou) ; unifier le corps reste à faire.
+- Contraste directionnel du cou faible (±3,7/255) : décision de matériau (`skinMaterial`), pas du cou.
 
 ## E. Références visuelles
 

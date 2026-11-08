@@ -103,7 +103,7 @@ export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: Pub
     for (const sg of [-1, 1] as const) front.push(el('ellipse', { cx: sg * lm.W * 0.2, cy: lm.eyeY + 0.12 * lm.H, rx: lm.W * 0.1, ry: lm.H * 0.05, fill: urlRef(gid) }));
   }
   const hair = renderHair(h.id, params, lm, L, rot, mix(skin, skinRa.shadow, 0.9), skin);
-  const neck = renderNeck(h.id, params, lm, skin, skinRa, L);
+  const neck = renderNeck(h.id, params, lm, skin, skinRa, L, regions);
   const chin = renderChin(h.id, params, lm, skinRa, L);
   const fh = renderFacialHair(h.id, params, lm, L, rot);
   defs.push(...hair.defs, ...neck.defs, ...chin.defs, ...fh.defs);

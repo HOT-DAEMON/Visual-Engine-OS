@@ -49,6 +49,23 @@ export interface SkinShading {
   readonly cel: boolean;
 }
 
+/** Position du terminateur (offset 0 = côté lumière → 1 = côté ombre) : plus la lumière est frontale, plus la part éclairée est grande. Source unique : tête ET cou. */
+export const terminatorPosition = (L: LightVector): number => 0.45 + 0.25 * L.z;
+
+/**
+ * Couleur du terminateur à un offset donné, composée sur `base` (interpolation des mêmes arrêts que le dégradé SVG de la tête). Permet à une surface
+ * dont l'ombrage vient d'une GÉOMÉTRIE (normales du cou) d'utiliser la loi de couleur de la peau au lieu d'en inventer une.
+ */
+export function terminatorColorAt(stops: readonly ShadeStop[], offset: number, base: string): string {
+  const x = clamp01(offset);
+  for (let i = 1; i < stops.length; i++) {
+    const a = stops[i - 1]!, b = stops[i]!;
+    if (x <= b.offset) { const f = b.offset - a.offset <= 1e-9 ? 1 : (x - a.offset) / (b.offset - a.offset); return mix(base, mix(a.color, b.color, f), a.alpha + (b.alpha - a.alpha) * f); }
+  }
+  const last = stops[stops.length - 1]!;
+  return mix(base, last.color, last.alpha);
+}
+
 export function skinShading(mat: SkinMaterial, L: LightVector, regions: SkinRegions, ra: ResolvedAppearance, base: string): SkinShading {
   const dir = direction2D(L);
   const soft = softness(L);
@@ -78,7 +95,7 @@ export function skinShading(mat: SkinMaterial, L: LightVector, regions: SkinRegi
   // Terminateur : position (0,45 + 0,25 · L.z : une lumière plus frontale éclaire davantage), largeur croissante avec la douceur du
   // matériau ET de la lumière. Au milieu, la diffusion sous-cutanée rougit la transition (la peau n'est pas un plâtre).
   const width = cel ? 0.01 : clamp01(0.12 + 0.5 * mat.softness * (0.5 + 0.5 * soft));
-  const t0 = 0.45 + 0.25 * L.z;
+  const t0 = terminatorPosition(L);
   // Diffusion sous-cutanée : une rougeur CHAUDE mais retenue (mélange 30 % avec un rouge sang) — plus saturée, elle forme des taches au lieu d'une transition.
   const sss = mat.subsurface.color ?? mix(ra.shadow, '#c25048', 0.3);
   const shadowA = clamp01(0.22 + 0.5 * I * (0.4 + 0.6 * (L.hardness ?? 0.5)));

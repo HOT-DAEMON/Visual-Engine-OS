@@ -12,7 +12,7 @@ import type { FaceLighting } from '../schema';
  * source (directionnalité) : l'éclairage est doux mais on sait d'où il vient. Les épaules (cou évasé) reçoivent la même logique.
  * Elles ne sont pas des reflets (qui dépendent de la rugosité) : elles modélisent la lumière DIFFUSE reçue par les volumes larges.
  */
-export function compileZones(id: string, lm: FaceLandmarks, regions: SkinRegions, zones: FaceLighting['zones'], L: LightVector, ra: ResolvedAppearance, dir: { x: number; y: number }): { defs: string[]; markup: string[] } {
+export function compileZones(id: string, lm: FaceLandmarks, regions: SkinRegions, zones: FaceLighting['zones'], L: LightVector, ra: ResolvedAppearance, dir: { x: number; y: number }, only?: ReadonlySet<string>): { defs: string[]; markup: string[] } {
   const defs: string[] = [];
   const markup: string[] = [];
   const I = intensityFor(L, 'skin');
@@ -22,8 +22,11 @@ export function compileZones(id: string, lm: FaceLandmarks, regions: SkinRegions
     ['nose', regions.nose, zones.nose],
     ['cheeks', regions.cheeks, zones.cheeks],
     ['shoulders', regions.shoulders, zones.shoulders],
+    // Le cou est, comme les épaules, un grand volume évasé : même lumière diffuse, mêmes réglages (`zones.shoulders`). Réservé à la surface du cou (`only`) : la tête ne l'émet pas.
+    ['neck', regions.neck, zones.shoulders],
   ];
   for (const [name, ells, z] of list) {
+    if (only ? !only.has(name) : name === 'neck') continue;
     // Étalement : de 0,8 à 1,6 fois la région ; bord adouci par `zones.softness` ET par la douceur de la lumière.
     const k = 1 + 0.9 * z.spread;
     const edge = clamp01(0.4 + 0.45 * zones.softness + 0.15 * soft);

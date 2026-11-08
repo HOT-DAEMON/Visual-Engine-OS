@@ -132,18 +132,29 @@ describe('critères §10 — raccord cou-torse, style, matériau, accessoires', 
 });
 
 describe('lumière', () => {
-  it('l\'ombrage du cou suit la lumière : l\'écart de luminance droite−gauche change de signe avec l\'azimut', () => {
-    const rl = (az: number): number => {
-      const c = cellSvg({ seed: 321, patch: neckPatch({ length: 0.5 }), focus: 'neck', light: { azimuthDeg: az, elevationDeg: 50 } } as never, 260, 380), img = decodePng(rasterPng(c.svg)), lm = c.meta.lm;
-      const [x0, y0] = c.meta.px(-lm.neck.half * 0.9, lm.chinY + 0.3 * (lm.neck.bottomY - lm.chinY)), [x1, y1] = c.meta.px(lm.neck.half * 0.9, lm.neck.bottomY - 8), mid = (x0 + x1) / 2;
+  /** Écart de luminance moyenne droite − gauche d'une zone, sur un rendu réel (cadrage tête entière : cou ET joues dans la même image). */
+  const rl = (az: number): { neck: number; head: number } => {
+    const c = cellSvg({ seed: 321, patch: neckPatch({ length: 0.5 }), focus: 'face', light: { azimuthDeg: az, elevationDeg: 50 } } as never, 300, 440), img = decodePng(rasterPng(c.svg)), lm = c.meta.lm;
+    const zone = (xa: number, ya: number, xb: number, yb: number): number => {
+      const [x0, y0] = c.meta.px(xa, ya), [x1, y1] = c.meta.px(xb, yb), mid = (x0 + x1) / 2;
       let L = 0, R = 0, nL = 0, nR = 0;
       for (let y = Math.floor(y0); y < y1; y++) for (let x = Math.floor(x0); x < x1; x++) { const i = (y * img.width + x) * 4, v = 0.3 * img.data[i]! + 0.59 * img.data[i + 1]! + 0.11 * img.data[i + 2]!; if (x < mid) { L += v; nL++; } else { R += v; nR++; } }
       return R / nR - L / nL;
     };
-    expect(rl(40)).toBeGreaterThan(10);
-    expect(rl(220)).toBeLessThan(-10);
+    const h = lm.neck.half;
+    return { neck: zone(-h * 0.9, lm.chinY + 0.3 * (lm.neck.bottomY - lm.chinY), h * 0.9, lm.neck.bottomY - 8), head: zone(-lm.W * 0.4, lm.eyeY + 0.12 * lm.H, lm.W * 0.4, lm.mouthY) };
+  };
+  it('le cou suit la lumière : l\'écart droite−gauche change de signe avec l\'azimut, du même côté que la tête', () => {
+    // Le cou n'a PAS sa propre loi d'éclairage : il passe par le moteur de peau de la tête (`skin/layers.ts`). Son contraste est donc de l'ordre de celui de la peau
+    // (≈ 4 niveaux de luminance sur 255 ; l'ancien ombrage privé donnait > 10, au prix d'un second modèle de lumière). Seuil : nettement au-dessus du bruit (0), de même signe que la tête.
+    const a = rl(40), b = rl(220);
+    expect(a.neck).toBeGreaterThan(2.5);
+    expect(b.neck).toBeLessThan(-2.5);
+    expect(Math.sign(a.neck)).toBe(Math.sign(a.head));
+    expect(Math.sign(b.neck)).toBe(Math.sign(b.head));
   });
 });
+
 
 describe('critères §10 — rendu 3D, cas limites, mouvement secondaire', () => {
   it('rendu 3D : le backend de la planche tournante lit le même cadre (largeur, exagération, compression passent du contrat commun au maillage)', () => {

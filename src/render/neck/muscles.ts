@@ -39,14 +39,14 @@ export function renderMuscles(c: NeckCtx): string[] {
       const inner = s > 0 ? a : b, outer = s > 0 ? b : a;
       // Ventre : reflet sur le côté éclairé, creux ombré le long du bord interne (séparation avec la trachée), bord externe plus doux.
       out.push(kit.stroke(lineD(mid), ra.light, (5 + 7 * v) * U * c.detail, (lit ? 0.16 : 0.07) * (0.4 + 0.9 * v) * (0.5 + 1.0 * c.sys.surface.skinTension) * c.I, 3.2 * U));
-      out.push(kit.stroke(lineD(inner), ra.shadow, (2 + 3.5 * v) * U, clamp((0.08 + 0.34 * v) * (0.25 + 1.5 * sep) * (0.3 + 1.4 * c.sys.surface.skinTension), 0, 0.75) * c.detail, (3 - 1.8 * c.sys.surface.skinTension) * U));
-      out.push(kit.stroke(lineD(outer), ra.shadow, (1.4 + 2.4 * v) * U, (0.05 + 0.3 * v) * sep * c.detail, 2.6 * U));
+      out.push(kit.stroke(lineD(inner), c.dark, (2 + 3.5 * v) * U, clamp((0.08 + 0.34 * v) * (0.25 + 1.5 * sep) * (0.3 + 1.4 * c.sys.surface.skinTension), 0, 0.75) * c.detail, (3 - 1.8 * c.sys.surface.skinTension) * U));
+      out.push(kit.stroke(lineD(outer), c.dark, (1.4 + 2.4 * v) * U, (0.05 + 0.3 * v) * sep * c.detail, 2.6 * U));
     }
     // Insertions basses : les deux chefs (sternal, claviculaire) apparaissent comme deux cordes quand le muscle est tendu / la peau tendue.
     const tv = tend * v * (0.4 + 1.2 * c.sys.surface.skinTension) * c.detail;
     if (tv > 0.06) for (const d of [-0.05, 0.06]) {
       const run = visibleRun(c, ramp(0.86, 0.985, 6), (t) => lerp(s * 0.2 * Math.PI, s * (0.1 + d) * Math.PI, t));
-      if (run.length > 2) out.push(kit.stroke(lineD(run), ra.shadow, 2.2 * U, clamp(0.55 * tv, 0, 0.8), 1 * U));
+      if (run.length > 2) out.push(kit.stroke(lineD(run), c.dark, 2.2 * U, clamp(0.55 * tv, 0, 0.8), 1 * U));
     }
   }
   // Trapèzes : creux le long de la pente nuque → épaule (u de 0,6 à la base), reflet côté éclairé.
@@ -54,7 +54,7 @@ export function renderMuscles(c: NeckCtx): string[] {
   if (tz > 0.03) for (const s of [-1, 1] as const) {
     const run = visibleRun(c, ramp(0.6, 0.99, 12), (t) => s * lerp(0.44, 0.4, t) * Math.PI);
     if (run.length > 3) {
-      out.push(kit.stroke(lineD(run), ra.shadow, 3 * U, (0.07 + 0.2 * tz) * c.detail, 3 * U));
+      out.push(kit.stroke(lineD(run), c.dark, 3 * U, (0.07 + 0.2 * tz) * c.detail, 3 * U));
       if (s * dir.x >= 0) out.push(kit.stroke(lineD(run.map((p) => ({ x: p.x - s * 3 * U, y: p.y }))), ra.light, 2.2 * U, 0.12 * tz * c.I * c.detail, 2.2 * U));
     }
   }
@@ -62,7 +62,7 @@ export function renderMuscles(c: NeckCtx): string[] {
   const pl = c.vis('platysma-infrahyoid');
   if (pl > 0.06) for (const s of [-1, 1] as const) {
     const run = visibleRun(c, ramp(c.chinU + 0.01, c.chinU + 0.55 * (1 - c.chinU), 8), (t) => s * lerp(0.2, 0.12, t) * Math.PI);
-    if (run.length > 2) out.push(kit.stroke(lineD(run), ra.shadow, 1.6 * U, 0.3 * pl, 1.6 * U));
+    if (run.length > 2) out.push(kit.stroke(lineD(run), c.dark, 1.6 * U, 0.3 * pl, 1.6 * U));
   }
   return out.filter((x) => x !== '');
 }

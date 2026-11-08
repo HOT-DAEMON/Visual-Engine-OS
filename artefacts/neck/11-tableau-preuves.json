@@ -2,15 +2,15 @@
  {
   "parametre": "dimensions.depthRatio",
   "cas": "profondeur AP ×1,6",
-  "pixelsBoiteCou": 1.21,
+  "pixelsBoiteCou": 0,
   "silhouetteFace": 0,
   "profil": 11.04,
-  "preuve": "face"
+  "preuve": "profil"
  },
  {
   "parametre": "dimensions.topWidth",
   "cas": "largeur du haut ×0,65",
-  "pixelsBoiteCou": 38.91,
+  "pixelsBoiteCou": 37.81,
   "silhouetteFace": 6.92,
   "profil": 0,
   "preuve": "face"
@@ -18,7 +18,7 @@
  {
   "parametre": "profile.taper",
   "cas": "cône (large en bas)",
-  "pixelsBoiteCou": 32.99,
+  "pixelsBoiteCou": 35.4,
   "silhouetteFace": 8.01,
   "profil": 3.8,
   "preuve": "face"
@@ -26,7 +26,7 @@
  {
   "parametre": "profile.waist",
   "cas": "sablier",
-  "pixelsBoiteCou": 17.61,
+  "pixelsBoiteCou": 19.18,
   "silhouetteFace": 6.46,
   "profil": 5.49,
   "preuve": "face"
@@ -34,23 +34,23 @@
  {
   "parametre": "profile.curvature",
   "cas": "courbure sagittale",
-  "pixelsBoiteCou": 5.31,
+  "pixelsBoiteCou": 0,
   "silhouetteFace": 0,
   "profil": 6.63,
-  "preuve": "face"
+  "preuve": "profil"
  },
  {
   "parametre": "profile.sCurve",
   "cas": "cou en S",
-  "pixelsBoiteCou": 8.88,
+  "pixelsBoiteCou": 0,
   "silhouetteFace": 0,
   "profil": 5.41,
-  "preuve": "face"
+  "preuve": "profil"
  },
  {
   "parametre": "profile.crossSection",
   "cas": "section rectangulaire",
-  "pixelsBoiteCou": 2.26,
+  "pixelsBoiteCou": 4.88,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -58,7 +58,7 @@
  {
   "parametre": "profile.segments",
   "cas": "segments (anneaux)",
-  "pixelsBoiteCou": 1.72,
+  "pixelsBoiteCou": 1.91,
   "silhouetteFace": 3.38,
   "profil": 1.94,
   "preuve": "face"
@@ -74,7 +74,7 @@
  {
   "parametre": "orientation.rollDeg",
   "cas": "inclinaison latérale 12°",
-  "pixelsBoiteCou": 4.95,
+  "pixelsBoiteCou": 6.34,
   "silhouetteFace": 5.14,
   "profil": 0,
   "preuve": "face"
@@ -82,7 +82,7 @@
  {
   "parametre": "orientation.torsionDeg",
   "cas": "torsion 50°",
-  "pixelsBoiteCou": 10.25,
+  "pixelsBoiteCou": 15.11,
   "silhouetteFace": 1.45,
   "profil": 1.54,
   "preuve": "face"
@@ -90,7 +90,7 @@
  {
   "parametre": "orientation.axisOffset",
   "cas": "axe décalé",
-  "pixelsBoiteCou": 40.97,
+  "pixelsBoiteCou": 39.89,
   "silhouetteFace": 5.14,
   "profil": 0,
   "preuve": "face"
@@ -98,7 +98,7 @@
  {
   "parametre": "asymmetry.leftRightBias",
   "cas": "côté droit plus massif",
-  "pixelsBoiteCou": 25.64,
+  "pixelsBoiteCou": 27.46,
   "silhouetteFace": 4.45,
   "profil": 0,
   "preuve": "face"
@@ -122,7 +122,7 @@
  {
   "parametre": "asymmetry.seed",
   "cas": "graine (variation 1)",
-  "pixelsBoiteCou": 4.62,
+  "pixelsBoiteCou": 5.11,
   "silhouetteFace": 2.93,
   "profil": 2.15,
   "preuve": "face"
@@ -130,7 +130,7 @@
  {
   "parametre": "musculature.trapezius",
   "cas": "trapèzes volumineux",
-  "pixelsBoiteCou": 6.7,
+  "pixelsBoiteCou": 7.49,
   "silhouetteFace": 2.27,
   "profil": 0.5,
   "preuve": "face"
@@ -138,7 +138,7 @@
  {
   "parametre": "musculature.separation",
   "cas": "sillons musculaires marqués",
-  "pixelsBoiteCou": 3.65,
+  "pixelsBoiteCou": 10.58,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -146,7 +146,7 @@
  {
   "parametre": "musculature.tendonVisibility",
   "cas": "tendons visibles",
-  "pixelsBoiteCou": 1.71,
+  "pixelsBoiteCou": 2.44,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -154,7 +154,7 @@
  {
   "parametre": "musculature.tension",
   "cas": "cou tendu",
-  "pixelsBoiteCou": 8.8,
+  "pixelsBoiteCou": 13.32,
   "silhouetteFace": 1.28,
   "profil": 0.87,
   "preuve": "face"
@@ -162,7 +162,7 @@
  {
   "parametre": "softTissue.foldDepth",
   "cas": "plis profonds",
-  "pixelsBoiteCou": 4.51,
+  "pixelsBoiteCou": 8.6,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -170,7 +170,7 @@
  {
   "parametre": "softTissue.foldDistribution",
   "cas": "plis sur toute la longueur",
-  "pixelsBoiteCou": 8.12,
+  "pixelsBoiteCou": 16.59,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -178,7 +178,7 @@
  {
   "parametre": "softTissue.dewlap",
   "cas": "fanon",
-  "pixelsBoiteCou": 11.74,
+  "pixelsBoiteCou": 1.39,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -186,7 +186,7 @@
  {
   "parametre": "reliefs.larynx",
   "cas": "larynx forcé",
-  "pixelsBoiteCou": 1.73,
+  "pixelsBoiteCou": 1.88,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -194,7 +194,7 @@
  {
   "parametre": "reliefs.hyoid",
   "cas": "hyoïde forcé",
-  "pixelsBoiteCou": 1.07,
+  "pixelsBoiteCou": 1.05,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -202,7 +202,7 @@
  {
   "parametre": "reliefs.trachea",
   "cas": "trachée forcée",
-  "pixelsBoiteCou": 2.23,
+  "pixelsBoiteCou": 2.72,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -210,7 +210,7 @@
  {
   "parametre": "reliefs.vessels",
   "cas": "jugulaire forcée",
-  "pixelsBoiteCou": 2.12,
+  "pixelsBoiteCou": 5.2,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -218,7 +218,7 @@
  {
   "parametre": "reliefs.clavicle",
   "cas": "clavicules forcées",
-  "pixelsBoiteCou": 1.21,
+  "pixelsBoiteCou": 0.71,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -226,7 +226,7 @@
  {
   "parametre": "species",
   "cas": "dragon (sans larynx ni SCM)",
-  "pixelsBoiteCou": 7.45,
+  "pixelsBoiteCou": 8.14,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -234,7 +234,7 @@
  {
   "parametre": "style.mode",
   "cas": "mode caricature",
-  "pixelsBoiteCou": 20.13,
+  "pixelsBoiteCou": 18.98,
   "silhouetteFace": 0.6,
   "profil": 0.44,
   "preuve": "face"
@@ -242,7 +242,7 @@
  {
   "parametre": "style.exaggeration",
   "cas": "exagération 1",
-  "pixelsBoiteCou": 29.25,
+  "pixelsBoiteCou": 29.11,
   "silhouetteFace": 1.01,
   "profil": 0.8,
   "preuve": "face"
@@ -250,7 +250,7 @@
  {
   "parametre": "style.simplification",
   "cas": "simplification 1",
-  "pixelsBoiteCou": 15.57,
+  "pixelsBoiteCou": 16.79,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -258,7 +258,7 @@
  {
   "parametre": "style.angularity",
   "cas": "facettes (angularité 1)",
-  "pixelsBoiteCou": 5.5,
+  "pixelsBoiteCou": 6.75,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -266,7 +266,7 @@
  {
   "parametre": "style.silhouettePriority",
   "cas": "silhouette prioritaire",
-  "pixelsBoiteCou": 12.42,
+  "pixelsBoiteCou": 14.9,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -274,7 +274,7 @@
  {
   "parametre": "modifiers.age",
   "cas": "âge avancé",
-  "pixelsBoiteCou": 3.13,
+  "pixelsBoiteCou": 0.88,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -282,7 +282,7 @@
  {
   "parametre": "modifiers.mass",
   "cas": "corpulence maximale",
-  "pixelsBoiteCou": 28.39,
+  "pixelsBoiteCou": 34.12,
   "silhouetteFace": 5.27,
   "profil": 3.55,
   "preuve": "face"
@@ -290,15 +290,15 @@
  {
   "parametre": "pose.headTranslate",
   "cas": "tête avancée",
-  "pixelsBoiteCou": 8.3,
+  "pixelsBoiteCou": 0,
   "silhouetteFace": 0,
   "profil": 17.03,
-  "preuve": "face"
+  "preuve": "profil"
  },
  {
   "parametre": "pose.compression",
   "cas": "compression axiale",
-  "pixelsBoiteCou": 47.63,
+  "pixelsBoiteCou": 56,
   "silhouetteFace": 1.9,
   "profil": 1.5,
   "preuve": "face"
@@ -306,7 +306,7 @@
  {
   "parametre": "pose.stretch",
   "cas": "étirement",
-  "pixelsBoiteCou": 27.27,
+  "pixelsBoiteCou": 29.92,
   "silhouetteFace": 1.58,
   "profil": 1.25,
   "preuve": "face"
@@ -322,7 +322,7 @@
  {
   "parametre": "pose.tissueLag",
   "cas": "inertie du fanon et de l'écharpe",
-  "pixelsBoiteCou": 8.96,
+  "pixelsBoiteCou": 5.79,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -330,7 +330,7 @@
  {
   "parametre": "pose.bodyLanguage",
   "cas": "expression « honte »",
-  "pixelsBoiteCou": 24.42,
+  "pixelsBoiteCou": 27.98,
   "silhouetteFace": 0.71,
   "profil": 8.92,
   "preuve": "face"
@@ -338,7 +338,7 @@
  {
   "parametre": "pose.bodyLanguageAmount",
   "cas": "intensité de l'expression",
-  "pixelsBoiteCou": 24.42,
+  "pixelsBoiteCou": 27.98,
   "silhouetteFace": 0.71,
   "profil": 8.92,
   "preuve": "face"
@@ -346,15 +346,15 @@
  {
   "parametre": "strategies",
   "cas": "stratégie « chain » (honte)",
-  "pixelsBoiteCou": 1.21,
+  "pixelsBoiteCou": 0,
   "silhouetteFace": 0,
   "profil": 2.77,
-  "preuve": "face"
+  "preuve": "profil"
  },
  {
   "parametre": "operators.length_warp",
   "cas": "opérateur length_warp",
-  "pixelsBoiteCou": 2.74,
+  "pixelsBoiteCou": 3.42,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -362,7 +362,7 @@
  {
   "parametre": "operators.width_profile_warp",
   "cas": "opérateur width_profile_warp",
-  "pixelsBoiteCou": 28.66,
+  "pixelsBoiteCou": 31.54,
   "silhouetteFace": 10.22,
   "profil": 0,
   "preuve": "face"
@@ -378,7 +378,7 @@
  {
   "parametre": "operators.centerline_bend",
   "cas": "opérateur centerline_bend",
-  "pixelsBoiteCou": 50.66,
+  "pixelsBoiteCou": 45.5,
   "silhouetteFace": 18.04,
   "profil": 0,
   "preuve": "face"
@@ -386,7 +386,7 @@
  {
   "parametre": "operators.local_bulge",
   "cas": "opérateur local_bulge",
-  "pixelsBoiteCou": 10.23,
+  "pixelsBoiteCou": 12.49,
   "silhouetteFace": 8.51,
   "profil": 7.24,
   "preuve": "face"
@@ -394,7 +394,7 @@
  {
   "parametre": "operators.local_compression",
   "cas": "opérateur local_compression",
-  "pixelsBoiteCou": 17.28,
+  "pixelsBoiteCou": 19.52,
   "silhouetteFace": 5.11,
   "profil": 4.34,
   "preuve": "face"
@@ -402,7 +402,7 @@
  {
   "parametre": "operators.asymmetric_deformation",
   "cas": "opérateur asymmetric_deformation",
-  "pixelsBoiteCou": 28.85,
+  "pixelsBoiteCou": 30.83,
   "silhouetteFace": 9.36,
   "profil": 0,
   "preuve": "face"
@@ -410,7 +410,7 @@
  {
   "parametre": "operators.muscle_exaggeration",
   "cas": "opérateur muscle_exaggeration",
-  "pixelsBoiteCou": 2.85,
+  "pixelsBoiteCou": 3.98,
   "silhouetteFace": 1.99,
   "profil": 0,
   "preuve": "face"
@@ -418,7 +418,7 @@
  {
   "parametre": "operators.fold_amplification",
   "cas": "opérateur fold_amplification",
-  "pixelsBoiteCou": 1.56,
+  "pixelsBoiteCou": 2.74,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -426,7 +426,7 @@
  {
   "parametre": "operators.silhouette_simplification",
   "cas": "opérateur silhouette_simplification",
-  "pixelsBoiteCou": 9.22,
+  "pixelsBoiteCou": 10.86,
   "silhouetteFace": 0.03,
   "profil": 0.01,
   "preuve": "face"
@@ -434,7 +434,7 @@
  {
   "parametre": "operators.topology_extension",
   "cas": "opérateur topology_extension",
-  "pixelsBoiteCou": 1.17,
+  "pixelsBoiteCou": 1.18,
   "silhouetteFace": 0.9,
   "profil": 0.76,
   "preuve": "face"
@@ -450,7 +450,7 @@
  {
   "parametre": "surface.pattern",
   "cas": "écailles",
-  "pixelsBoiteCou": 18.69,
+  "pixelsBoiteCou": 33.79,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -458,7 +458,7 @@
  {
   "parametre": "surface.layout",
   "cas": "spirale vs rangées",
-  "pixelsBoiteCou": 5.24,
+  "pixelsBoiteCou": 1.61,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -466,7 +466,7 @@
  {
   "parametre": "surface.size",
   "cas": "éléments ×3",
-  "pixelsBoiteCou": 4.92,
+  "pixelsBoiteCou": 1.51,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -474,7 +474,7 @@
  {
   "parametre": "surface.density",
   "cas": "densité 1 vs 0",
-  "pixelsBoiteCou": 4.45,
+  "pixelsBoiteCou": 1.39,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -482,7 +482,7 @@
  {
   "parametre": "surface.overlap",
   "cas": "imbrication 1 vs 0",
-  "pixelsBoiteCou": 5.26,
+  "pixelsBoiteCou": 7.15,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -490,7 +490,7 @@
  {
   "parametre": "surface.variation",
   "cas": "variation 1 vs 0",
-  "pixelsBoiteCou": 19.27,
+  "pixelsBoiteCou": 8.36,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -498,7 +498,7 @@
  {
   "parametre": "surface.smoothThroat",
   "cas": "gorge lisse",
-  "pixelsBoiteCou": 16.11,
+  "pixelsBoiteCou": 25.81,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -506,7 +506,7 @@
  {
   "parametre": "surface.skinTension",
   "cas": "peau tendue",
-  "pixelsBoiteCou": 12.05,
+  "pixelsBoiteCou": 15.51,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"
@@ -514,7 +514,7 @@
  {
   "parametre": "surface.elementColor",
   "cas": "couleur propre des éléments",
-  "pixelsBoiteCou": 74.61,
+  "pixelsBoiteCou": 74.66,
   "silhouetteFace": 0,
   "profil": 0,
   "preuve": "face"

@@ -1,3 +1,4 @@
+import { mix } from '../../core/color';
 import { clamp } from '../../core/math';
 import { mulberry32 } from '../../core/prng';
 import { el, num } from '../../core/svg';
@@ -56,21 +57,22 @@ export function renderSurface(c: NeckCtx): string[] {
   if (s.pattern === 'smooth') return [];
   const out: string[] = [], U = c.u, ra = c.ra, base = s.elementColor ?? c.skin;
   const h = Math.max(6 * U, s.sizePx * (s.pattern === 'plates' ? 0.9 : 1)), stepPx = h * (1.05 - 0.55 * s.density) * (s.pattern === 'feathers' ? 0.8 : 1);
-  const S = c.model.stations, vBase = -0.1;
+  const S = c.model.stations;
   if (s.pattern === 'plates') return plates(c, h);
   const cells = layout(c, h, stepPx).sort((a, b) => b.row - a.row || a.k - b.k);
   for (const cl of cells) {
     const idx = Math.round(cl.u * (S.length - 1)), face = c.facing(cl.u, cl.psi);
     if (face < 0.12) continue;
     const rnd = mulberry32(c.model.composition.morphology.seed + cl.row * 7919 + cl.k * 104729), jit = (rnd() - 0.5) * 2 * s.variation;
-    const n = surfaceNormal(c.model, idx, cl.psi), lit = Math.max(0, n.x * c.L.x + n.y * c.L.y + n.z * c.L.z);
+    const n = surfaceNormal(c.model, idx, cl.psi), proj = c.proj(n);
     const p = c.at(cl.u, cl.psi), w = stepPx * (1 + 0.55 * s.overlap) * clamp(face, 0.28, 1) * (1 + 0.25 * jit), hh = h * (1 + 0.2 * jit);
     const rot = jit * 0.5 + (s.pattern === 'feathers' ? -n.x * 0.35 : 0);
     const d = shape(s.pattern, p.x, p.y, w, hh, rot);
     const cel = ra.spec.shading?.mode === 'cel';
-    const fill = cel ? (lit > 0.6 ? ra.cel(base).lit : lit > 0.3 ? ra.cel(base).shade : ra.cel(base).core) : ra.tone(vBase + 1.0 * c.I * (lit - 0.4) + 0.25 * jit, base);
+    // Couleur : loi partagée du terminateur (comme la peau) ; la variation `jit` ne fait que décaler légèrement vers la lumière ou l'ombre.
+    const fill = mix(c.tone(base, n), jit > 0 ? ra.light : ra.shadow, cel ? 0 : 0.1 * Math.abs(jit));
     out.push(el('path', { d, fill, stroke: ra.shadow, 'stroke-width': 0.9 * U, 'stroke-opacity': 0.55 * c.detail }));
-    if (!cel && lit > 0.5) out.push(el('path', { d: `M${num(p.x - w * 0.25)} ${num(p.y - hh * 0.22)}Q${num(p.x)} ${num(p.y - hh * 0.4)} ${num(p.x + w * 0.25)} ${num(p.y - hh * 0.22)}`, fill: 'none', stroke: ra.light, 'stroke-width': 0.9 * U, 'stroke-opacity': 0.3 * lit * c.I, 'stroke-linecap': 'round' }));
+    if (!cel && proj > 0.5) out.push(el('path', { d: `M${num(p.x - w * 0.25)} ${num(p.y - hh * 0.22)}Q${num(p.x)} ${num(p.y - hh * 0.4)} ${num(p.x + w * 0.25)} ${num(p.y - hh * 0.22)}`, fill: 'none', stroke: ra.light, 'stroke-width': 0.9 * U, 'stroke-opacity': 0.3 * proj * c.I, 'stroke-linecap': 'round' }));
   }
   return out;
 }
