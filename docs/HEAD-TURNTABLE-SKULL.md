@@ -52,7 +52,7 @@ seuil choisi). Le style est jugé par un proxy (lisibilité du contour), pas par
 
 ## 7. Reste à faire (crâne)
 
-1. ⬜ Étendre la longueur de tête (dolicho- / brachycéphale marqués) : exige de modifier `skull/derive.ts` (`CI_FREE`, `LENGTH_SPAN`) ET `skull/frame.ts`, donc le moteur de profil et ses tests ; non fait ici pour ne pas casser le contrat partagé.
+1. ⚠️ Étendre la longueur de tête (dolicho- / brachycéphale marqués) : fait côté `head-turntable` par amplification bornée de la longueur dérivée, voir `HEAD-TURNTABLE-SKULL-2.md` ; `skull/derive.ts` reste inchangé. Version complète : exigerait de modifier `skull/derive.ts` (`CI_FREE`, `LENGTH_SPAN`) ET `skull/frame.ts`, donc le moteur de profil et ses tests ; non fait ici pour ne pas casser le contrat partagé.
 2. ⬜ Bosses pariétales et méplat temporal : la coupe est une superellipse, pas un crâne ; pas de crête sagittale, pas de plan occipital marqué.
 3. ⬜ Variation gauche / droite (asymétrie crânienne) : toutes les coupes sont symétriques.
 4. ⬜ Calibrer `SKULL_SHAPE` sur des vues de dessus mesurées (la planche n'en contient pas ; `rotation_head_1.jpg` donne face et profil seulement).

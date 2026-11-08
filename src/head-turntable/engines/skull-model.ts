@@ -1,4 +1,5 @@
 import { clamp, smooth } from '../math';
+import { LENGTH_REF } from '../../skull/derive';
 import { SkullParams } from '../../skull/types';
 import type { EngineHead } from './face-model';
 
@@ -43,7 +44,7 @@ export function skullFields(e: EngineHead, y: number, a: number, zf: number, zb:
   if (w <= 0) return null;
   const k = SkullParams.parse(e.fit.skull), d = zf - zb, zc = (zf + zb) / 2, zPor = (e.fit as { zPorion: number }).zPorion;
   const faceW = smooth((y - sp.face0) / (sp.face1 - sp.face0));
-  const flat = clamp((2 * a / Math.max(0.05, d) - sp.ci0) / sp.ciSpan, -1, 1);
+  const flat = clamp((2 * a / Math.max(0.05, d + cranialBackShift(e, y)) - sp.ci0) / sp.ciSpan, -1, 1);   // indice local du moteur (profondeur AVANT amplification) : l'aplatissement de l'occiput suit le visage, pas l'amplification
   const wfSkull = clamp(sp.wf0 + sp.wfPeak * (k.vaultPeak - 0.45) - sp.wfOcc * (k.occiput - 0.5), sp.wfMin, sp.wfMax);
   const wfFace = clamp((zPor - 0.02 - zb) / d, sp.wfMin + 0.02, sp.wfMax + 0.02);
   const wf = wfSkull + (wfFace - wfSkull) * faceW;
@@ -53,4 +54,18 @@ export function skullFields(e: EngineHead, y: number, a: number, zf: number, zb:
   const pbT = 2 + sp.pbFlat * flat - sp.pbBun * (k.occiput - 0.5), qbT = 2 + sp.qbFlat * flat;
   const lerp = (t: number): number => 2 + (t - 2) * w;
   return { zw: zc + (zwT - zc) * w, pf: lerp(clamp(pfT, 1.6, 2.7)), qf: lerp(clamp(qfT, 1.6, 2.7)), pb: lerp(clamp(pbT, 1.5, 2.8)), qb: lerp(clamp(qbT, 1.8, 2.5)) };
+}
+
+/**
+ * FORME CRÂNIENNE (dolicho- / brachycéphale) — AMPLIFICATION DE LA LONGUEUR DÉRIVÉE. Le moteur de crâne dérive la longueur de tête du visage (`Derivation.lengthH`) mais l'axe
+ * `length` la borne à ±6 % (0,74 – 0,86 H) : les têtes tournent sur un volume presque identique. Ici la longueur utilisée en 3D est L = LENGTH_REF + gain·(lengthH − LENGTH_REF),
+ * bornée à [lMin, lMax] (indice céphalique humain 0,70 – 0,90 pour une largeur de crâne ≈ 0,65 H). Conventions de proportion, PAS des moyennes mesurées : voir `docs/HEAD-TURNTABLE-SKULL-2.md`.
+ * Tout l'écart est porté par l'ARRIÈRE du crâne (occiput) : le plan du visage, le front, le porion (oreille) et la largeur de face ne bougent pas ; le profil de la planche (sans `cranialL`) non plus.
+ */
+export const CRANIAL = { gain: 2.0, lMin: 0.72, lMax: 0.92 } as const;
+export const cranialLength = (lengthH: number): number => clamp(LENGTH_REF + CRANIAL.gain * (lengthH - LENGTH_REF), CRANIAL.lMin, CRANIAL.lMax);
+/** Décalage de l'arrière du crâne (U, négatif = plus long) à la hauteur y ; 0 sans `cranialL` (planche) et hors de la zone du crâne (poids `skullWeight`). */
+export function cranialBackShift(e: EngineHead, y: number): number {
+  const L0 = (e.fit as { cranialL?: number }).cranialL;
+  return L0 === undefined ? 0 : -(cranialLength(L0) - L0) * skullWeight(y);
 }

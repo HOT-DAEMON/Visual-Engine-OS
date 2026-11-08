@@ -49,7 +49,7 @@ describe('modèle de crâne (skull-model)', () => {
       expect(hasSkullModel(h.spec.engine!)).toBe(true);
       const g = skullGeometryChecks(h.spec, new HeadRenders(h.spec, 200)).filter((c) => c.id !== 'head.geo.skull.45.concavity' && c.id !== 'head.geo.skull.135.concavity');
       expect(g.filter((c) => !c.ok).map((c) => `${c.id}=${c.value}`)).toEqual([]);
-      expect(skullAnatomyChecks(h.spec).filter((c) => !c.ok).map((c) => c.id)).toEqual([]);
+      expect(skullAnatomyChecks(h.spec).filter((c) => !c.ok && c.kind !== 'info').map((c) => c.id)).toEqual([]);
     }
   });
   it('les têtes ont des vues de dessus DIFFÉRENTES (pas une ellipse unique) : étendue de pb ≥ 0,4 et de la position du point large ≥ 0,05', () => {

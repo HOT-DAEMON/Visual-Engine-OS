@@ -4,6 +4,7 @@ import { contrastRatio, hex } from './color';
 import { JAW_SHAPE, jawCtx } from './engines/jaw-model';
 import { toEngineY } from './engines/rows';
 import { py } from './engines/units';
+import { cranialLength } from './engines/skull-model';
 import { defaultFrame, refView, renderHead } from './render';
 import { sectionAt } from './sections';
 import { headEdges, jawContourStats } from './verify-contour';
@@ -85,7 +86,8 @@ export function headAnatomy(h: HeadSubject, R: HeadRenders): LayerReport {
       // Le moteur de crâne dérive la longueur de tête du visage (largeur d'hôte → indice céphalique → longueur) : la profondeur 3D (avant du sourcil → arrière du crâne) doit la retrouver.
       // Un crâne figé (celui de la planche) s'en écarte dès que le visage est plus large ou plus étroit que la planche (0,044 U pour un visage de rapport 0,91).
       const L = Math.max(...[0.3, 0.4, 0.5].map((y) => sectionAt(s, y).zf)) - Math.min(...[0.25, 0.3, 0.35, 0.4, 0.45].map((y) => sectionAt(s, y).zb));
-      c.push(check(A, 'head.anat.skull.length', `Longueur 3D du crâne vs longueur dérivée par le moteur de crâne (${h.lengthH.toFixed(3)} H) : écart (U) [crâne figé : jusqu'à 0,044]`, Math.abs(L - h.lengthH), 0, 0.02));
+      const Lf = cranialLength(h.lengthH);
+      c.push(check(A, 'head.anat.skull.length', `Longueur 3D du crâne vs longueur de forme crânienne (${Lf.toFixed(3)} H = dérivée ${h.lengthH.toFixed(3)} amplifiée, bornée) : écart (U)`, Math.abs(L - Lf), 0, 0.02));
     }
   }
   const ear = s.ear, nb = s.nose.baseY;

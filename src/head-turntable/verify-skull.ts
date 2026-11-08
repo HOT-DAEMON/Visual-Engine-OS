@@ -41,7 +41,10 @@ export function skullGeometryChecks(spec: HeadTurnSpec, R: { at: (yaw: number, p
 export function skullAnatomyChecks(spec: HeadTurnSpec): Check[] {
   if (!spec.engine || !hasSkullModel(spec.engine)) return [];
   const A = 'anatomy' as const, wf = [0.15, 0.3, 0.45, 0.6].map((y) => { const s = sectionAt(spec, y); return (s.zw - s.zb) / (s.zf - s.zb); });
-  return [check(A, 'head.anat.skull.widest', 'Point le plus large de la coupe, en fraction de la profondeur depuis l\'arrière [canon : pariétal / tempe, légèrement en arrière de la mi-profondeur : 0,40–0,60]', Math.min(...wf), 0.38, 0.62), check(A, 'head.anat.skull.widest.max', 'Id., maximum sur la voûte et le visage', Math.max(...wf), 0.38, 0.62)];
+  // Indice céphalique 3D = largeur du contour de face au niveau du crâne / longueur 3D. Humain : 0,70 – 0,90 ; PLANCHE mesurée : 0,975 (personnage de dessin). Information : les têtes issues d'un visage sont plus larges que longues.
+  const ys3 = [0.3, 0.4, 0.5], L3 = Math.max(...ys3.map((y) => sectionAt(spec, y).zf)) - Math.min(...[0.25, 0.3, 0.35, 0.4, 0.45].map((y) => sectionAt(spec, y).zb)), ci3 = (2 * Math.max(...ys3.map((y) => sectionAt(spec, y).a))) / Math.max(0.05, L3);
+  const ci = check(A, 'head.anat.skull.cephalic3d', 'Indice céphalique 3D (largeur du contour / longueur 3D) [humain 0,70–0,90 ; planche mesurée 0,975 ; au-delà de 0,98 le crâne est plus large que long]', ci3, 0.7, 0.98, 'info');
+  return [ci, check(A, 'head.anat.skull.widest', 'Point le plus large de la coupe, en fraction de la profondeur depuis l\'arrière [canon : pariétal / tempe, légèrement en arrière de la mi-profondeur : 0,40–0,60]', Math.min(...wf), 0.38, 0.62), check(A, 'head.anat.skull.widest.max', 'Id., maximum sur la voûte et le visage', Math.max(...wf), 0.38, 0.62)];
 }
 
 export function skullStyleChecks(spec: HeadTurnSpec, R: { at: (yaw: number, pitch0?: boolean) => TurnRender }): Check[] {

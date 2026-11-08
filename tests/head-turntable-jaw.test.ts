@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { defaultFrame, REF_SPEC, refView, renderHead, sectionAt, sectionPoint, surfaceZ, halfWidthAtZ, type RotationMeasures } from '../src/head-turntable';
 import { ENGINE_FIT } from '../src/head-turntable/engines/engine-fit';
+import { cranialLength } from '../src/head-turntable/engines/skull-model';
 import { fitFromProfile, variedHead } from '../src/head-turntable/engines/from-face';
 import { JAW_SHAPE, borderZ, jawCtx, jawFields } from '../src/head-turntable/engines/jaw-model';
 import { CHIN_CAP_Y, DENSE_YS, closeChin, engineRows } from '../src/head-turntable/engines/rows';
@@ -111,13 +112,13 @@ describe('variété : le crâne et la mâchoire suivent le visage du moteur', ()
     expect(sd(heads.map((h) => jawCtx(h.spec.engine!).yG))).toBeGreaterThan(0.01);
   });
   const L = (spec: HeadTurnSpec): number => Math.max(...[0.3, 0.4, 0.5].map((y) => at(spec, y).zf)) - Math.min(...[0.25, 0.3, 0.35, 0.4, 0.45].map((y) => at(spec, y).zb));
-  it('couplage crâne ↔ visage : la longueur 3D du crâne retrouve la longueur dérivée par le moteur de crâne (écart ≤ 0,02 U) et suit la largeur du visage ; figée, elle ne bouge plus', () => {
+  it('couplage crâne ↔ visage : la longueur 3D du crâne retrouve la longueur de forme crânienne (dérivée du moteur, amplifiée et bornée ; écart ≤ 0,02 U) et suit la largeur du visage ; figée, elle ne bouge plus', () => {
     const wide = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(variedHead), a = wide.map((h) => h.profile.derivation.aspect), l = wide.map((h) => L(h.spec));
-    wide.forEach((h, i) => expect(Math.abs(l[i]! - h.profile.derivation.lengthH)).toBeLessThan(0.02));
+    wide.forEach((h, i) => expect(Math.abs(l[i]! - cranialLength(h.profile.derivation.lengthH))).toBeLessThan(0.02));
     const ma = a.reduce((x, y) => x + y, 0) / a.length, ml = l.reduce((x, y) => x + y, 0) / l.length;
     const corr = a.reduce((s2, v, i) => s2 + (v - ma) * (l[i]! - ml), 0) / Math.sqrt(a.reduce((s2, v) => s2 + (v - ma) ** 2, 0) * l.reduce((s2, v) => s2 + (v - ml) ** 2, 0));
-    expect(corr).toBeGreaterThan(0.9); expect(Math.max(...l) - Math.min(...l)).toBeGreaterThan(0.08);
-    const frozen = wide.map((h) => L(engineSpec({ ...fitFromProfile(h.profile), skull: ENGINE_FIT.skull }, MEASURED_SPEC, DENSE_YS)));
+    expect(corr).toBeGreaterThan(0.9); expect(Math.max(...l) - Math.min(...l)).toBeGreaterThan(0.12);   // 0,08 avant l'amplification de la forme crânienne
+    const frozen = wide.map((h) => L(engineSpec({ ...fitFromProfile(h.profile), skull: ENGINE_FIT.skull, cranialL: undefined } as never, MEASURED_SPEC, DENSE_YS)));
     expect(Math.max(...frozen) - Math.min(...frozen)).toBeLessThan(0.01);
   });
   it('les rangées de chaque tête sont saines (finies, monotones, avant > arrière)', () => {
@@ -130,7 +131,7 @@ describe('variété : le crâne et la mâchoire suivent le visage du moteur', ()
     }
   }, 120_000);
   it('un crâne figé est détecté par la vérification (longueur 3D du crâne ≠ longueur dérivée du visage)', () => {
-    const h = heads[0]!, spec = engineSpec({ ...fitFromProfile(h.profile), skull: ENGINE_FIT.skull }, MEASURED_SPEC, DENSE_YS);   // visage large (rapport 0,91) + crâne de la planche
+    const h = heads[0]!, spec = engineSpec({ ...fitFromProfile(h.profile), skull: ENGINE_FIT.skull, cranialL: undefined } as never, MEASURED_SPEC, DENSE_YS);   // visage large (rapport 0,91) + crâne de la planche
     const r = verifyHeadSubject({ id: 'frozen', spec, lengthH: h.profile.derivation.lengthH }, new HeadRenders(spec, 420));
     expect(r.hardFailures.some((c) => c.id === 'head.anat.skull.length')).toBe(true);
   }, 120_000);

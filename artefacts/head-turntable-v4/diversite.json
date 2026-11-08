@@ -1,0 +1,37 @@
+{
+ "graines": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6
+ ],
+ "diversite_silhouettes_xor_union": {
+  "0": {
+   "avant": 0.144,
+   "apres": 0.1424,
+   "gain_relatif": -0.011
+  },
+  "45": {
+   "avant": 0.1122,
+   "apres": 0.1158,
+   "gain_relatif": 0.032
+  },
+  "90": {
+   "avant": 0.0845,
+   "apres": 0.1068,
+   "gain_relatif": 0.264
+  },
+  "135": {
+   "avant": 0.09,
+   "apres": 0.0951,
+   "gain_relatif": 0.057
+  },
+  "180": {
+   "avant": 0.1186,
+   "apres": 0.1199,
+   "gain_relatif": 0.011
+  }
+ }
+}

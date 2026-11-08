@@ -5,7 +5,7 @@ Sa géométrie est DÉRIVÉE des moteurs existants du dépôt (`src/face`, `src/
 Ne pas confondre avec `src/lighting/head-turn.ts` / `src/geometry/eye/turn3d.ts` : ceux-là font tourner un ŒIL ; ici c'est la tête entière.
 
 Suites : branchement sur les moteurs existants `HEAD-TURNTABLE-ENGINES.md` (+ calage `HEAD-TURNTABLE-ENGINES-FIT.md`) · références et méthode de mesure `HEAD-TURNTABLE-REFERENCES.md` ·
-vérification `HEAD-TURNTABLE-VERIFY.md` (+ tous les contrôles `HEAD-TURNTABLE-VERIFY-CHECKS.md`) · reste à faire `HEAD-TURNTABLE-REMAINING.md` · mâchoire, menton, joues `HEAD-TURNTABLE-JAW.md` · têtes variées (crâne dérivé du visage) `HEAD-TURNTABLE-VARIETY.md` · vérification de toute tête et audit pixel `HEAD-TURNTABLE-VERIFY-HEAD.md`.
+vérification `HEAD-TURNTABLE-VERIFY.md` (+ tous les contrôles `HEAD-TURNTABLE-VERIFY-CHECKS.md`) · reste à faire `HEAD-TURNTABLE-REMAINING.md` · mâchoire, menton, joues `HEAD-TURNTABLE-JAW.md` · têtes variées (crâne dérivé du visage) `HEAD-TURNTABLE-VARIETY.md` · vérification de toute tête et audit pixel `HEAD-TURNTABLE-VERIFY-HEAD.md` · crâne : coupes `HEAD-TURNTABLE-SKULL.md`, longueur amplifiée (forme crânienne) `HEAD-TURNTABLE-SKULL-2.md`.
 Preuves visuelles : `artefacts/head-turntable-engines/` (version actuelle, moteurs branchés ; voir son `README.md`) et `artefacts/head-turntable/` (version précédente, module autonome).
 
 ## Utilisation

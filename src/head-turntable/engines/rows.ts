@@ -5,7 +5,7 @@ import type { EngineHead } from './face-model';
 import { backChain, frontChain, skinPoints, smax, zAt, type PV } from './profile';
 import { Y0, fy, py } from './units';
 import { JAW_SHAPE, borderZ, jawCtx, jawFields, type JawShapeParams } from './jaw-model';
-import { hasSkullModel, skullFields } from './skull-model';
+import { cranialBackShift, hasSkullModel, skullFields } from './skull-model';
 
 /** Hauteurs de la table de sections (celles de la planche : comparables ligne à ligne). */
 export const ROW_YS: readonly number[] = [0, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1, 1.025, 1.04, 1.05];
@@ -77,7 +77,8 @@ export function engineRows(e: EngineHead, ys: readonly number[] = ROW_YS, hairTh
     // Têtes issues d'un visage : l'arrière quitte la nuque et rejoint le dessous de la mâchoire PROGRESSIVEMENT (NAPE_BLEND U), sans marche ; la planche garde son ajustement.
     const jawBack = smax(zbBack, mand(y), lm ? 0.06 : 0.025);
     const zb = y <= yNuchal ? zBackTop(back, ye, zbBack) : lm ? zbBack + (jawBack - zbBack) * smooth((y - yNuchal) / NAPE_BLEND) : jawBack;
-    return { y, a, zf: Math.max(zf, zb + 0.02), zb: Math.min(zb, zf - 0.02) };
+    const zbC = zb + cranialBackShift(e, y);   // forme crânienne : l'arrière suit la longueur amplifiée (0 pour la planche)
+    return { y, a, zf: Math.max(zf, zbC + 0.02), zb: Math.min(zbC, zf - 0.02) };
   });
   const ctx = jawCtx(e);
   const sk = hasSkullModel(e);

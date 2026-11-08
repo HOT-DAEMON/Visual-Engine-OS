@@ -27,6 +27,12 @@ Les références de `references/face/` ne contiennent aucune information sur le 
 | **Variété (têtes)** | ✅ / ⚠️ | `variedHead(seed)` : visage + crâne dérivé + mâchoire + œil / sourcil / bouche à l'échelle + peau / cheveux de la graine ; 12 graines, silhouettes différentes (`04-silhouettes-superposees.png`) | yeux proportionnés mais forme `round` unique ; cheveux = calotte courte ; lisière dérivée du front et de la tempe seulement ; aucune graine comparée à une référence mesurée |
 | **Vérification** | ✅ / ⚠️ | planche : 78 contrôles, 3 couches, 13 tests ; **toute tête** : 47 – 48 contrôles (géométrie 25, anatomie 10 – 11, style 12), 13 têtes sans échec bloquant, crâne figé détecté, audit pixel du contour (`verify-contour.ts`), 19 tests (`head-turntable-jaw.test.ts`) | bornes écrites après avoir vu les valeurs ; `head.anat.ear.bottom` tautologique ; marge faible sur `head.geo.front2d` ; style jugé par proxys (lisibilité du trait, pas goût) ; voir `HEAD-TURNTABLE-VERIFY-HEAD.md` §5 |
 
+## Mise à jour — forme crânienne (artefacts `head-turntable-v4`)
+
+Crâne : longueur 3D amplifiée et bornée (`cranialLength`), portée par l'arrière du crâne ; diversité des silhouettes +26 % à 90°, +3 % à 45°, +6 % à 135° ; contrôle d'information `head.anat.skull.cephalic3d` : les têtes
+issues d'un visage sont plus larges que longues (1,05 – 1,13 contre 0,975 pour la planche). Détail, limites et reste à faire : `HEAD-TURNTABLE-SKULL-2.md`. Le reste du tableau ci-dessus n'a pas été retravaillé pendant ce travail :
+sourcils (`browGeometry`), oreille lointaine à 20°, pic du menton à 70°, jonction cou / épaules, lisière des cheveux restent ⬜ / ⚠️ comme indiqué.
+
 ## Défauts visibles connus (voir `apres/comparison/side_by_side_sheet.png`)
 
 1. Jonction cou / mâchoire en angle vif (la planche : transition douce avec ombre).

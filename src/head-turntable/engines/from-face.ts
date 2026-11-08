@@ -31,7 +31,7 @@ const REF = (() => { const e = engineHead(); return { rx: e.lm.orbit.right.rx, l
 
 /** Réglage des moteurs pour un profil aléatoire : visage, crâne dérivé, largeur d'hôte ; les constantes de repère viennent de la planche. */
 export function fitFromProfile(p: RandomProfile, base: EngineFit = ENGINE_FIT): EngineFit {
-  return { ...base, mandLandmarks: true, face: p.face.params as unknown as Readonly<Record<string, unknown>>, skull: p.skull as unknown as Readonly<Record<string, unknown>>, W: (H_PX * p.face.width) / p.face.height } as EngineFit;
+  return { ...base, mandLandmarks: true, cranialL: p.derivation.lengthH, face: p.face.params as unknown as Readonly<Record<string, unknown>>, skull: p.skull as unknown as Readonly<Record<string, unknown>>, W: (H_PX * p.face.width) / p.face.height } as unknown as EngineFit;
 }
 
 /** Palette de la graine : peau et cheveux du profil, ombres déduites (même rapport que la planche), reste de la planche. */
