@@ -1,3 +1,4 @@
+import { mix, luminance } from '../../core/color';
 import { resolveAppearance, type ResolvedAppearance } from '../../appearance';
 import type { Appearance, FaceParams } from '../../schema';
 
@@ -26,3 +27,25 @@ export const BACK_MASS_TONE = -0.4;
  * des mèches. Source unique pour le rendu ET la vérification.
  */
 export const backMassColor = (ra: ResolvedAppearance): string => ra.tone(BACK_MASS_TONE);
+
+/** Luminance minimale de la sous-couche racine, en fraction de celle des cheveux : des racines foncées (repousse), jamais un casque noir sous des mèches claires. */
+export const ROOT_MIN_RATIO = 0.42;
+
+/**
+ * Teinte de la sous-couche racine (coque). `rootColor` explicite (repousse brune sur cheveux teints, 15 % des visages) ou ombre à 55 %. Mesuré avant :
+ * rapport de luminance racine / cheveux jusqu'à 0,02 (#2b2320 sous #c58614) : un dôme noir sous des mèches clairsemées, où le reflet satin de la coque
+ * se lit comme un trou gris. La teinte est ramenée vers la couleur des cheveux juste assez pour atteindre `ROOT_MIN_RATIO` (dichotomie, direction de teinte conservée).
+ * Source unique pour le rendu ET la vérification (`crown-tone-not-black`).
+ */
+export function rootColorOf(ra: ResolvedAppearance, h: FaceParams['hair']): string {
+  const root = h.rootColor ?? mix(ra.base, ra.shadow, 0.55);
+  const lum = luminance(ra.base);
+  if (lum < 0.02 || luminance(root) >= ROOT_MIN_RATIO * lum) return root;
+  let lo = 0, hi = 1;
+  for (let i = 0; i < 8; i++) {
+    const m = (lo + hi) / 2;
+    if (luminance(mix(root, ra.base, m)) >= ROOT_MIN_RATIO * lum) hi = m;
+    else lo = m;
+  }
+  return mix(root, ra.base, hi);
+}

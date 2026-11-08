@@ -48,7 +48,8 @@ export function tierMasses(ctx: HairCtx, locks: HairLock[]): TierMass[] {
     // Bas : l'enveloppe radiale relie les pointes les plus basses par un coin qui pend jusqu'à 0,22 H sous le cou (coin coloré visible sous le menton, cheveux longs) ;
     // la masse s'arrête au 85ᵉ centile des pointes, relevé de `TIP_INSET` H : les pointes dépassent dessous, comme pour la masse arrière.
     const tips = own.map((l) => Math.max(...l.poly.map((q) => q.y))).sort((a, b) => a - b);
-    const yCap = tips.length >= 3 ? (tips[Math.floor(0.85 * (tips.length - 1))] as number) - TIP_INSET * ctx.lm.H : Infinity;
+    // 1 ou 2 mèches : pas de centile, la pointe la plus basse relevée de l'inset (avant : aucun plafond, donc un coin pendant entre les pointes).
+    const yCap = tips.length >= 3 ? (tips[Math.floor(0.85 * (tips.length - 1))] as number) - TIP_INSET * ctx.lm.H : tips.length > 0 ? (tips[tips.length - 1] as number) - TIP_INSET * ctx.lm.H : Infinity;
     const poly = raw ? raw.map((q) => withinShell(ctx.h.style as Exclude<HairStyle, 'bald'>, ctx.boundary.skull, ctx.lm.W, { x: q.x, y: Math.min(q.y, yCap) })) : null;
     if (poly) out.push({ poly: ctx.guard.fit(poly), tier: t });
   }
@@ -68,7 +69,7 @@ export function massLocks(ctx: HairCtx, grow: (R: Vec) => Vec[]): HairLock[] {
     const R = lerpV(ctx.hl.at(s), arcAt(ctx.arc, s), 0.55 + 0.45 * ctx.rnd());
     // Grand ruban de corps : le champ de flux peut le faire monter bien au-dessus du crâne (0,21 H mesuré sur une queue de cheval) : montée bornée par la coiffure.
     const wd = ctx.lm.W * (0.1 + 0.08 * ctx.rnd()) * ctx.gain(s);
-    out.push(...lockFrom(ctx, fitReach(ctx, grow(R), wd / 2, 'cranial'), { width: wd, rank: 'mass', tone: -(0.1 + 0.25 * ctx.rnd()), layer: 'front', sharp: 0.55, tier: tierOf(ctx), edgeFade: ctx.h.tips.edgeFade, flick: ctx.h.tips.flick, ragged: ctx.h.tips.irregular }));
+    out.push(...lockFrom(ctx, fitReach(ctx, grow(R), wd / 2, 'cranial'), { width: wd, rank: 'mass', tone: -(0.1 + 0.25 * ctx.rnd()), layer: 'front', sharp: 0.55, tier: tierOf(ctx), edgeFade: ctx.h.tips.edgeFade, flick: ctx.h.tips.flick, ragged: ctx.h.tips.irregular, reach: 'cranial' }));
   }
   return out;
 }
@@ -95,7 +96,7 @@ export function hairlineStrands(ctx: HairCtx, parents: HairLock[]): HairLock[] {
       const g = off * (0.4 + 0.6 * (k / Math.max(1, a.length - 1)));
       return { x: q.x - ((b.y - z.y) / l) * g, y: q.y + ((b.x - z.x) / l) * g };
     });
-    out.push(...lockFrom(ctx, c, { width: ctx.lm.W * (0.0014 + 0.0016 * ctx.rnd()), rank: 'hairline', tone: par.tone + (ctx.rnd() - 0.4) * 0.5, layer: par.layer === 'back' ? 'back' : 'front', sharp: 1, raw: true, kind: 'lock', tier: par.tier, fade: 0.55 }));
+    out.push(...lockFrom(ctx, c, { width: ctx.lm.W * (0.0014 + 0.0016 * ctx.rnd()), rank: 'hairline', tone: par.tone + (ctx.rnd() - 0.4) * 0.5, layer: par.layer === 'back' ? 'back' : 'front', sharp: 1, raw: true, kind: 'lock', tier: par.tier, fade: 0.55, ...(par.bounded ? { reach: 'cranial' as const } : {}) }));
   }
   return out;
 }

@@ -11,7 +11,7 @@ import type { FaceParams } from '../../schema';
 import { hairGloss, hairlineTransition, smoothPath } from './hair-detail';
 import { lockMarkup, type LockStyle } from './hair-lock';
 import { backMassFill } from './hair-back-fade';
-import { backMassColor, hairAppearance } from './hair-look';
+import { backMassColor, hairAppearance, rootColorOf } from './hair-look';
 import { polyPath } from './path';
 import { profileOf } from '../../face/hair/sim/profiles';
 import { sheenBands } from '../../face/hair/sim/sheen';
@@ -49,7 +49,7 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
   const ra: ResolvedAppearance = hairAppearance(h);
   const ink = h.sim.enabled && h.sim.ink ? '#08080c' : undefined;
   const st: LockStyle = { id: `${id}-hl`, ra, ld: direction2D(L), W: lm.W, ink };
-  const rootColor = h.rootColor ?? mix(ra.base, ra.shadow, 0.55);
+  const rootColor = rootColorOf(ra, h);
   const defs: string[] = [];
   let k = 0;
   const draw = (l: HairLock, depth: number, cast: boolean): string[] => {

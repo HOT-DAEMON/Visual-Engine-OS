@@ -7,6 +7,7 @@ import type { HairBoundary } from './boundary/types';
 import type { Guard } from './guard';
 import type { Hairline } from './hairline';
 import { rot, sub, unit } from './noise';
+import { conformReach, type ReachMode } from './reach';
 import { cone, plait, ribbon } from './ribbon';
 import { flickTip, raggedTip } from './tips';
 import { displace, resample, samplesFor, textureSpec, type TexSpec } from './texture';
@@ -149,6 +150,10 @@ export interface LockOpts {
   readonly noGuard?: boolean;
   /** Largeur relative de la racine (0–1, défaut 0,8) : une racine étroite se fond sous la sous-couche au lieu de former un bout plat. */
   readonly root?: number;
+  /** Borne de l'ENVELOPPE réelle (polygone) par la portée de la coiffure (`reach.ts`, `docs/HAIR-REACH-POLY.md`). Absent : non borné (queue, chignon, tresses, mèches simulées). */
+  readonly reach?: ReachMode;
+  /** Pièce d'une coiffure attachée (voir `HairLock.part`). */
+  readonly part?: 'tail' | 'bun' | 'braid';
 }
 
 const samplesOf = (c: Vec[], sp: TexSpec): number => samplesFor(Math.hypot((c[c.length - 1] as Vec).x - (c[0] as Vec).x, (c[c.length - 1] as Vec).y - (c[0] as Vec).y) * 1.25, sp);
@@ -163,16 +168,19 @@ export function lockFrom(ctx: HairCtx, centre: Vec[], o: LockOpts): HairLock[] {
   const spec = o.tex ? textureSpec(tex, ctx.h.curl, ctx.lm.W, ctx.lm.H) : ctx.spec;
   const wide = o.rank === 'main' || o.rank === 'mass' ? spec.wide : 1;
   const guardPoly = (poly: Poly): Poly => (o.layer === 'front' && !o.noGuard ? ctx.guard.fit(poly, o.mode ?? 'cap') : poly);
-  const meta = { kind: o.kind ?? ('lock' as LockKind), tier: o.tier ?? 0, fade: o.fade ?? 0, edgeFade: o.edgeFade ?? 0 };
+  const meta = { kind: o.kind ?? ('lock' as LockKind), tier: o.tier ?? 0, fade: o.fade ?? 0, edgeFade: o.edgeFade ?? 0, ...(o.reach ? { bounded: true } : {}), ...(o.part ? { part: o.part } : {}) };
   if (tex === 'braided' && o.rank === 'main' && !o.raw) {
     const c = resample(centre, 36);
-    return plait(c, o.width * 0.9).segs.map((poly, i) => ({ poly: guardPoly(poly), rank: 'plait', tone: i % 2 === 0 ? o.tone : o.tone - 0.18, layer: o.layer, edge: true, ...meta }));
+    return plait(c, o.width * 0.9).segs.map((poly, i) => ({ poly: guardPoly(o.reach ? conformReach(ctx, c, poly, o.reach).poly : poly), rank: 'plait', tone: i % 2 === 0 ? o.tone : o.tone - 0.18, layer: o.layer, edge: true, ...meta }));
   }
   let c = o.raw ? centre : displace(resample(centre, samplesOf(centre, spec)), spec, ctx.rnd() * 6.283, ctx.nz);
   if (o.flick) c = flickTip(c, (c[0] as Vec).x < 0 ? -1 : 1, o.flick);
   const w0 = o.width * wide;
   const sharp = o.sharp ?? ctx.def.sharp;
+  // Axe borné APRÈS ondulation et retroussé de la pointe (ils le déplacent), puis enveloppe bornée APRÈS pointe irrégulière : c'est le polygone qui est dessiné.
+  if (o.reach) c = conformReach(ctx, c, [], o.reach).spine;
   let poly = o.profile === 'cone' ? cone(c, w0, o.power ?? 1) : ribbon(c, w0, sharp, o.root);
   if (o.ragged) poly = raggedTip(poly, o.ragged, ctx.rnd() * 2 - 1, w0 * 1.1);
+  if (o.reach) poly = conformReach(ctx, c, poly, o.reach).poly;
   return [{ poly: guardPoly(poly), rank: o.rank, tone: o.tone, layer: o.layer, edge: o.rank === 'main' || o.rank === 'mass', spine: c, w0, sharp, profile: o.profile ?? 'ribbon', power: o.power ?? 1, rootW: o.root, ...meta }];
 }

@@ -84,6 +84,8 @@ export function drawHairV2(rnd: () => number, hair: { style: FaceHair['style']; 
   // Coupe rase : pas de rideau devant l'oreille, pas d'oreille rangée sous une mèche ni de favori long (0,3 H de lanière pendante à côté du visage mesuré).
   // Corrigé APRÈS le tirage : la suite des tirages, donc toutes les autres valeurs de la graine, ne bouge pas.
   if (flat) for (const sd of [sides.left, sides.right]) { if (sd.ear === 'covered' || sd.ear === 'tucked') sd.ear = 'free'; if (sd.cheek === 'long') sd.cheek = 'short'; }
+  // Coupes courtes ou en volume (short, spiky, afro) : pas de favori en lanière longue pendant le long du visage (même correction après tirage, `docs/HAIR-SKULL-REMAINING.md` n°14-16).
+  if (s === 'short' || s === 'spiky' || s === 'afro') for (const sd of [sides.left, sides.right]) if (sd.cheek === 'long') sd.cheek = 'short';
   const tc = flat ? 1 : weighted(rnd, [1, 2, 3, 4], [30, 30, 25, 15]);
   const tiers = { count: tc, step: range(rnd, 0.15, 0.4), underTone: range(rnd, -0.5, -0.15), underHue: range(rnd, -30, 30), underVisible: tc > 1 ? range(rnd, 0.5, 0.9) : 0 };
   const tips = { irregular: maybe(rnd, 0.7) ? range(rnd, 0.2, 0.9) : 0, flick: maybe(rnd, 0.5) ? range(rnd, 0.1, 0.8) : 0, fade: maybe(rnd, 0.5) ? range(rnd, 0.1, 0.7) : 0, edgeFade: maybe(rnd, 0.4) ? range(rnd, 0.1, 0.6) : 0 };

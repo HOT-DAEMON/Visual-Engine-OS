@@ -1,6 +1,6 @@
 # Lisière des cheveux — reste à faire et limites (par composant)
 
-Ce qui est fait : `HAIR-BOUNDARY.md`. Suite traitée (coque, portée, masse arrière, vérification crâne ↔ cheveux) : `HAIR-SKULL.md`, ses limites : `HAIR-SKULL-REMAINING.md`. Rien ci-dessous n'est caché : chaque ligne est une limite mesurée ou constatée sur les planches.
+Ce qui est fait : `HAIR-BOUNDARY.md`. Suite traitée (coque, portée, masse arrière, vérification crâne ↔ cheveux) : `HAIR-SKULL.md`, ses limites : `HAIR-SKULL-REMAINING.md`. Suite 2 (portée au polygone, attaches, vent, vocabulaire, 13 contrôles) : `HAIR-COHERENCE.md`, limites `HAIR-COHERENCE-REMAINING.md`. Rien ci-dessous n'est caché : chaque ligne est une limite mesurée ou constatée sur les planches.
 
 ## Lisière (`boundary/`)
 1. **Seuils à la main** : 0,12 H (trou), 0,05 H (dents de scie), 0,25 (oreille libre), 0,1 (bord lisible) sont posés sur le corpus de 600 visages, pas appris d'une référence. À recaler sur des visages dessinés par un illustrateur.
@@ -21,7 +21,7 @@ Ce qui est fait : `HAIR-BOUNDARY.md`. Suite traitée (coque, portée, masse arri
 12. Visibilité : la pente verticale de la normale est négligée (seule l'azimut compte) ; suffisant pour la lisière, pas pour des mèches.
 
 ## Vent
-13. Vent 2D de face intégré (`HAIR-WIND.md`). `windDir` ne donne que **la direction et la portance** par racine ; aucune intégration (Verlet, ressort) ni soufflage dans les moteurs de rendu. Planche 05 = champ de flèches.
+13. Vent 2D de face intégré (`HAIR-WIND.md`), borné par la portée de la coiffure (`HAIR-WIND-REACH.md`). `windDir` ne donne que **la direction et la portance** par racine ; aucune intégration (Verlet, ressort) ni soufflage dans les moteurs de rendu. Planche 05 = champ de flèches.
 14. Pas de turbulence, pas de rafale, pas de couplage avec `sim/`.
 
 ## Rendu du bord

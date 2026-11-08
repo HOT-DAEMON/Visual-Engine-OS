@@ -15,7 +15,7 @@ import { lockFrom } from './flow';
 import { noise1 } from './noise';
 import { occluders } from './occlusion';
 import { bareScalp, capBase } from './scalp';
-import { fitReach } from './reach';
+import { cranialLimit, fitReach, windReach } from './reach';
 import { backMassShape } from './back-mass';
 import { isBodyLock } from './body-lock';
 import { coneLocks, flowLocks, wispLocks } from './shapes';
@@ -85,7 +85,7 @@ function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null 
       const R = arcAt(arc, -1 + 2 * rnd());
       // Le champ de flux peut recourber une mèche arrière par-dessus le sommet (0,20 H mesuré en bob) : montée et envol bornés par la coiffure.
       const wd = (def.mainW[0] + def.mainW[1] * h.volume) * W;
-      back.push(...lockFrom(ctx, fitReach(ctx, growLock(ctx, R, 2.2 * H, { yEnd: yHang() }), wd / 2, 'cranial'), { width: wd, rank: 'main', tone: -0.25 - 0.2 * rnd(), layer: 'back' }));
+      back.push(...lockFrom(ctx, fitReach(ctx, growLock(ctx, R, 2.2 * H, { yEnd: yHang() }), wd / 2, 'cranial'), { width: wd, rank: 'main', tone: -0.25 - 0.2 * rnd(), layer: 'back', reach: 'cranial' }));
     }
   }
   const ties: HairGeometry['ties'] = [];
@@ -113,7 +113,7 @@ function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null 
     fringeBottom, ties, over: [...occ.locks, ...simOver].map((l) => l.poly), skinShadows: sim?.skinShadows ?? [], simMass: sim?.mass ?? null, shaved: sim?.shaved ?? [], tierMasses: masses, occlusions: occ.info, sides: sides.info,
   };
   // Vent (aucun par défaut : la même géométrie, sans copie) : mèches déplacées en levier autour de leur racine, sans jamais recouvrir la peau du visage.
-  return applyWind(geo, h.wind, lm.H);
+  return applyWind(geo, h.wind, lm.H, windReach(h.style as Exclude<typeof h.style, 'bald'>, boundary.skull, lm.W, lm.H, cranialLimit(ctx), Math.hypot(h.wind.x, h.wind.y) * h.wind.flex));
 }
 
 /**

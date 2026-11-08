@@ -1,6 +1,6 @@
 # Cheveux ↔ crâne — reste à faire et limites (par composant)
 
-Ce qui est fait : `HAIR-SKULL.md`, `HAIR-BACK-MASS.md`, `HAIR-SKULL-VERIFY.md`. Rien ci-dessous n'est caché : chaque ligne est une limite mesurée ou constatée sur les planches `artefacts/hair-skull/`.
+Ce qui est fait : `HAIR-SKULL.md`, `HAIR-BACK-MASS.md`, `HAIR-SKULL-VERIFY.md`. Suite (portée au polygone, attaches, vent, vocabulaire) : `HAIR-COHERENCE.md` ; ses limites : `HAIR-COHERENCE-REMAINING.md`. Mises à jour de cette liste : lignes marquées « MAJ ». Rien ci-dessous n'est caché : chaque ligne est une limite mesurée ou constatée sur les planches `artefacts/hair-skull/`.
 
 ## Coque et épaisseur (`thickness.ts`, `scalp.ts`, `boundary/shell.ts`)
 1. Les plafonds `THICKNESS` (0,01 à 0,32 W) sont des valeurs d'illustrateur posées à la main, pas apprises d'une référence. À recaler sur des visages dessinés.
@@ -9,17 +9,17 @@ Ce qui est fait : `HAIR-SKULL.md`, `HAIR-BACK-MASS.md`, `HAIR-SKULL-VERIFY.md`. 
 4. Arche de l'oreille : exclue de `skull-shell-bound` (l'oreille dépasse du crâne). Sa forme propre n'a pas de borne.
 
 ## Portée des formes libres (`reach.ts`)
-5. Les mèches des coiffures attachées (queue, chignon, tresses) qui vont VERS l'attache ne sont pas bornées : leur point d'arrivée est l'attache, qui peut être au-dessus du crâne. La **longueur et le volume de la queue** ne sont pas contrôlés (une queue haute de 0,25 H est admise).
+5. MAJ : attaches posées sur le crâne et bornées (`HAIR-TIE.md`) ; les mèches de corps des coiffures attachées restent non bornées (`HAIR-COHERENCE-REMAINING.md` 1). Avant : les mèches des coiffures attachées (queue, chignon, tresses) qui vont VERS l'attache ne sont pas bornées : leur point d'arrivée est l'attache, qui peut être au-dessus du crâne. La **longueur et le volume de la queue** ne sont pas contrôlés (une queue haute de 0,25 H est admise).
 6. Les mèches de frange (`fringe`) et de joue ne passent pas par `fitReach` : une frange peut s'éloigner de 0,15 W du contour sans alerte.
 7. Les mèches `hairline` (fines) suivent leur parent : bornées indirectement, pas directement.
 8. `REACH` est posé à la main (0,03 à 0,32 H en montée) ; `free-reach-bound` et `body-reach-bound` sont des AVERTISSEMENTS, pas des erreurs : un écart ne casse pas la vérification d'ensemble.
-9. Les formes libres de la **v2 `mixed`** (cônes + rubans) n'ont pas été revues une à une pour leur élégance : seulement leur extension.
+9. MAJ : cônes proscrits hors `short/spiky/curly/afro` (`HAIR-VOCAB.md`) ; portée au polygone (`HAIR-REACH-POLY.md`). L'élégance reste une revue humaine. Avant : les formes libres de la **v2 `mixed`** (cônes + rubans) n'ont pas été revues une à une pour leur élégance : seulement leur extension.
 
 ## Masse arrière (`back-mass.ts`, `hair-back-fade.ts`)
 10. Le bas (0,76–0,81) et l'aire/boîte (0,85–0,88) gagnent peu (voir `HAIR-BACK-MASS.md`) : la masse reste proche d'un rectangle arrondi pour une chevelure qui tombe droit. Une vraie forme de tombé (poids, ondulation) n'est pas modélisée.
 11. Le **fondu** est une bande fixe autour de la mâchoire (0,04 H avant, 0,1 H après) : pas d'adaptation à une couleur très claire ou à un fond clair. Mode encre : aplat sans dégradé (choix).
 12. Archétypes simulés (Verlet) : utilisent la masse arrière mais leurs mèches ne passent pas par `fitReach` (leur drapé est déjà résolu par le collisionneur) ; non revus mèche par mèche.
-13. Masses d'étage (`tierMasses`) : plafonnées au 85ᵉ centile des pointes. Les étages à moins de 3 mèches ne sont pas plafonnés. Le cas de forme en coin d'une enveloppe radiale est traité par le bas seulement, pas par les flancs.
+13. MAJ : masses d'étage (`tierMasses`) plafonnées au 85ᵉ centile des pointes ; les étages de 1–2 mèches le sont désormais à la pointe la plus basse relevée de `TIP_INSET`. Le cas de forme en coin d'une enveloppe radiale est traité par le bas seulement, pas par les flancs.
 
 ## Génération (`random-hair-v2.ts`)
 14. Seule la coupe rase est rendue cohérente (oreille, favori). `short` et `spiky` peuvent encore tirer une oreille couverte ou un favori long : plausible, non jugé.
@@ -33,7 +33,7 @@ Ce qui est fait : `HAIR-SKULL.md`, `HAIR-BACK-MASS.md`, `HAIR-SKULL-VERIFY.md`. 
 
 ## Intégration
 20. Tête tournante (`src/head-turntable`) et vue de profil (`src/skull/hair-shape.ts`) : n'utilisent ni la masse arrière, ni `REACH`, ni `THICKNESS` (2D de face uniquement). Voir `HEAD-TURNTABLE-REMAINING.md`.
-21. Vent (`HAIR-WIND.md`) : non couplé aux nouvelles bornes (le vent peut pousser une mèche hors de sa portée).
+21. MAJ : vent couplé à la portée (`HAIR-WIND-REACH.md`) ; les mèches déjà hors portée (queue, tresse) restent libres.
 22. `npm run regress` : exit 0, 34 images stables (rms ≤ 0,26/255) ; mais comme avant elles ne montrent presque pas les cheveux modifiés. Aucune référence n'a été actualisée (décision explicite de l'équipe).
 
 ## Revue humaine à faire sur `artefacts/hair-skull/`

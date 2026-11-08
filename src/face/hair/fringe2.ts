@@ -92,7 +92,7 @@ export function engineFringe(ctx: HairCtx): FringeEngineResult | null {
       const t = j / 9;
       return { x: (1 - t) ** 2 * R.x + 2 * (1 - t) * t * C.x + t * t * E.x, y: (1 - t) ** 2 * R.y + 2 * (1 - t) * t * C.y + t * t * E.y };
     });
-    locks.push(...lockFrom(ctx, c, { width: b.w0, rank: b.rank, tone: tone(), layer: 'front', mode: 'fringe', raw: true, kind: 'fringe', profile: b.profile, power: b.power, sharp: 0.85, fade: Math.max(b.fade, h.tips.fade), edgeFade: h.tips.edgeFade, ragged: Math.max(b.ragged, h.tips.irregular), flick: h.tips.flick * 0.5 }));
+    locks.push(...lockFrom(ctx, c, { width: b.w0, rank: b.rank, tone: tone(), layer: 'front', mode: 'fringe', raw: true, kind: 'fringe', profile: b.profile, power: b.power, sharp: 0.85, fade: Math.max(b.fade, h.tips.fade), edgeFade: h.tips.edgeFade, ragged: Math.max(b.ragged, h.tips.irregular), flick: h.tips.flick * 0.5, reach: 'cranial' }));
   }
   // Bord inférieur de droite à gauche : le point le plus bas des pointes proches de chaque abscisse (jamais sous yF).
   const bottom = Array.from({ length: 49 }, (_, i) => {

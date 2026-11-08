@@ -3,6 +3,7 @@ import type { Vec } from '../../geometry/eye/primitives';
 import type { FaceParams } from '../../schema';
 import type { Poly } from '../poly';
 import type { HairBoundary } from './boundary/types';
+import type { windReach } from './reach';
 import type { HairGeometry, HairLock } from './types';
 
 /**
@@ -13,9 +14,10 @@ import type { HairGeometry, HairLock } from './types';
  *  - COHÉRENCE : un sommet déplacé qui tomberait sur la PEAU DU VISAGE (`boundary.isFace`, sous l'implantation, hors patte) est ramené
  *    vers sa position d'origine (dichotomie, 6 pas) : le vent ne découvre ni ne recouvre le visage.
  *  - Les mèches `over` (qui passent devant le visage) et les mèches sans ligne médiane (cheveux simulés) ne bougent pas.
+ *  - PORTÉE : avec `reach`, un sommet qui respectait la portée de la coiffure au repos la respecte encore (à la tolérance du vent près, `reach.ts`) : même dichotomie.
  * `flex = 0` ou vent nul : la géométrie rendue est l'objet d'origine, sans copie.
  */
-export function applyWind(geo: HairGeometry, wind: FaceParams['hair']['wind'], H: number): HairGeometry {
+export function applyWind(geo: HairGeometry, wind: FaceParams['hair']['wind'], H: number, reach?: ReturnType<typeof windReach>): HairGeometry {
   const power = Math.hypot(wind.x, wind.y) * wind.flex;
   if (power < 1e-6) return geo;
   const moved = new Map<Poly, Poly>();
@@ -36,6 +38,11 @@ export function applyWind(geo: HairGeometry, wind: FaceParams['hair']['wind'], H
       let t = 1, p = { x: v.x + dx, y: v.y + dy + arc };
       for (let i = 0; i < 6 && !wasFace && b.isFace(p.x, p.y); i++) { t *= 0.5; p = { x: v.x + dx * t, y: v.y + (dy + arc) * t }; }
       if (!wasFace && b.isFace(p.x, p.y)) p = { x: v.x, y: v.y };
+      if (reach && reach.ok(v) && !reach.allowed(p)) {
+        let lo = 0, hi = 1;
+        for (let i = 0; i < 6; i++) { const m = (lo + hi) / 2; if (reach.allowed({ x: v.x + (p.x - v.x) * m, y: v.y + (p.y - v.y) * m })) lo = m; else hi = m; }
+        p = { x: v.x + (p.x - v.x) * lo, y: v.y + (p.y - v.y) * lo };
+      }
       return { x: p.x, y: clamp(p.y, -H, H) };
     });
   };

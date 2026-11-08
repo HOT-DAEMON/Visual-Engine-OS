@@ -60,7 +60,7 @@ export function buildFringe(ctx: HairCtx): Fringe | null {
       const t = j / 8;
       return { x: (1 - t) ** 2 * R.x + 2 * (1 - t) * t * C.x + t * t * E.x, y: (1 - t) ** 2 * R.y + 2 * (1 - t) * t * C.y + t * t * E.y };
     });
-    locks.push(...lockFrom(ctx, centre, { width: (2 * xF * 2.0) / K, rank: 'main', tone: -(0.05 + 0.3 * rnd()) * h.highlight, layer: 'front', sharp: 0.15, mode: 'fringe' }));
+    locks.push(...lockFrom(ctx, centre, { width: (2 * xF * 2.0) / K, rank: 'main', tone: -(0.05 + 0.3 * rnd()) * h.highlight, layer: 'front', sharp: 0.15, mode: 'fringe', reach: 'cranial' }));
   }
   return { locks, base, bottom };
 }

@@ -51,10 +51,11 @@ export function classicLocks(ctx: HairCtx, inp: ClassicInput): HairLock[] {
       else centre = growLock(ctx, R, lockLen(ctx, rank === 'fine') * g);
       const width = rank === 'main' ? wMain : Math.max(0.004 * W, wMain * 0.28);
       // Mèche libre (ni vers l'attache ni vers la tresse) : montée et envol bornés par la coiffure (afro 0,53 H, bouclé 0,26 H mesurés avant).
-      if (!inp.spots.length && !inp.braids.length) centre = fitReach(ctx, centre, width / 2, 'cranial');
+      const free = !inp.spots.length && !inp.braids.length;
+      if (free) centre = fitReach(ctx, centre, width / 2, 'cranial');
       const dark = rnd() < 0.25;
       const tone = rank === 'main' ? -(0.1 + 0.4 * rnd()) * h.highlight - 0.08 * tier : (dark ? -0.5 : 1) * (0.1 + 0.7 * rnd()) * h.highlight;
-      entries.push({ t, rank, locks: lockFrom(ctx, centre, { width, rank, tone, layer: 'front', tier, tex: tex === ctx.tex ? undefined : tex, edgeFade: h.tips.edgeFade, fade: rank === 'fine' ? h.tips.fade : h.tips.fade * 0.6, flick: h.tips.flick, ragged: h.tips.irregular }) });
+      entries.push({ t, rank, locks: lockFrom(ctx, centre, { width, rank, tone, layer: 'front', tier, tex: tex === ctx.tex ? undefined : tex, edgeFade: h.tips.edgeFade, fade: rank === 'fine' ? h.tips.fade : h.tips.fade * 0.6, flick: h.tips.flick, ragged: h.tips.irregular, ...(free ? { reach: 'cranial' as const } : {}) }) });
     }
   }
   // Étages les plus longs d'abord (au fond), puis profondeur décroissante, `main` avant `fine`.

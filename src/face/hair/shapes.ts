@@ -4,6 +4,7 @@ import type { HairCtx } from './flow';
 import { lockFrom } from './flow';
 import { smoothstep, unit } from './noise';
 import { fitReach } from './reach';
+import { VOCAB } from './vocab';
 import type { HairLock } from './types';
 
 const lerpV = (a: Vec, b: Vec, t: number): Vec => ({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
@@ -57,7 +58,7 @@ export function flowLocks(ctx: HairCtx): HairLock[] {
     const c0 = sCentre(R, dir, len, (0.06 + 0.16 * f.sWave) * (rnd() < 0.5 ? -1 : 1), rnd() * 0.9 - 0.45, f.float);
     const wd = lm.W * (0.05 + 0.05 * rnd()) * (0.8 + 0.4 * g); // tiré ici (même ordre qu'avant) : la portée tient compte de la largeur du ruban
     const c = fitReach(ctx, c0, wd / 2);
-    out.push(...lockFrom(ctx, c, { width: wd, rank: 'mass', tone: back ? -0.3 - 0.2 * rnd() : (rnd() - 0.55) * 0.5 * h.highlight, layer: back ? 'back' : 'front', sharp: 0.92, raw: true, kind: 'flow', fade: 0.25 + 0.5 * h.tips.fade, edgeFade: h.tips.edgeFade, flick: h.tips.flick, ragged: h.tips.irregular }));
+    out.push(...lockFrom(ctx, c, { width: wd, rank: 'mass', tone: back ? -0.3 - 0.2 * rnd() : (rnd() - 0.55) * 0.5 * h.highlight, layer: back ? 'back' : 'front', sharp: 0.92, raw: true, kind: 'flow', fade: 0.25 + 0.5 * h.tips.fade, edgeFade: h.tips.edgeFade, flick: h.tips.flick, ragged: h.tips.irregular, reach: true }));
   }
   return out;
 }
@@ -93,10 +94,11 @@ export function coneLocks(ctx: HairCtx): HairLock[] {
         const u = i / 11;
         return { x: R.x + (d.x + bend * u) * len * u, y: R.y + d.y * len * u };
       }), wd / 4);
-      out.push(...lockFrom(ctx, c, { width: wd, rank: 'mass', tone: -(0.05 + 0.3 * rnd()) * (0.4 + h.highlight), layer: 'front', profile: 'cone', power: 1 + 0.6 * f.coneSharp, raw: true, kind: 'cone', edgeFade: h.tips.edgeFade, ragged: h.tips.irregular * 0.5 }));
+      out.push(...lockFrom(ctx, c, { width: wd, rank: 'mass', tone: -(0.05 + 0.3 * rnd()) * (0.4 + h.highlight), layer: 'front', profile: 'cone', power: 1 + 0.6 * f.coneSharp, raw: true, kind: 'cone', edgeFade: h.tips.edgeFade, ragged: h.tips.irregular * 0.5, reach: true }));
     }
   }
-  return out;
+  // Vocabulaire de la coiffure : les cônes sont tirés PUIS écartés (le flux aléatoire, donc le reste de la graine, ne bouge pas).
+  return VOCAB[h.style as keyof typeof VOCAB].cones ? out : [];
 }
 
 /**
@@ -125,7 +127,7 @@ export function wispLocks(ctx: HairCtx): HairLock[] {
       c.push({ x: p.x + Math.cos(th) * ds, y: p.y + Math.sin(th) * ds * (1 - 0.15 * (1 - h.flow.float)) });
     }
     const back = rnd() < 0.3;
-    out.push(...lockFrom(ctx, fitReach(ctx, c), { width: lm.W * (0.007 + 0.008 * rnd()), rank: 'fine', tone: back ? -0.2 : 0.2 + 0.5 * rnd() * h.highlight, layer: back ? 'back' : 'front', sharp: 1, raw: true, kind: 'wisp', fade: 0.75 }));
+    out.push(...lockFrom(ctx, fitReach(ctx, c), { width: lm.W * (0.007 + 0.008 * rnd()), rank: 'fine', tone: back ? -0.2 : 0.2 + 0.5 * rnd() * h.highlight, layer: back ? 'back' : 'front', sharp: 1, raw: true, kind: 'wisp', fade: 0.75, reach: true }));
   }
   return out;
 }

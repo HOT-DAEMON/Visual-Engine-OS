@@ -50,7 +50,7 @@ export function wingLocks(ctx: HairCtx, wings: { readonly left: WingInfo; readon
       const xMax = (yy: number): number => b.skull.a(yy) + 0.5 * crown * ctx.gain(sg);
       const centre = growLock(ctx, R, len, { dir: { x: dir.x / dn, y: dir.y / dn }, gravity: 0.15 }).map((q) => ({ x: sg * Math.min(Math.abs(q.x), xMax(q.y)), y: q.y }));
       const tone = -(0.1 + 0.4 * rnd()) * h.highlight - 0.04;
-      out.push(...lockFrom(ctx, centre, { width: wMain * (0.7 + 0.6 * rnd()), rank: 'main', tone, layer: 'front', kind: 'lock', edgeFade: h.tips.edgeFade, fade: h.tips.fade * 0.6, ragged: h.tips.irregular, root: 0.25, sharp: 0.75 }));
+      out.push(...lockFrom(ctx, centre, { width: wMain * (0.7 + 0.6 * rnd()), rank: 'main', tone, layer: 'front', kind: 'lock', edgeFade: h.tips.edgeFade, fade: h.tips.fade * 0.6, ragged: h.tips.irregular, root: 0.25, sharp: 0.75, reach: 'cranial' }));
     }
   }
   return out;

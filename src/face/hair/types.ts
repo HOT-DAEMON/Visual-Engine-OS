@@ -34,6 +34,10 @@ export interface HairLock {
   readonly power?: number;
   /** Étage de longueur (0 = le plus long / le plus au fond). */
   readonly tier?: number;
+  /** Construite sous la borne de portée de la coiffure (`reach.ts`) : la vérification contrôle que les étapes suivantes (garde, côtés, vent) la respectent encore. */
+  readonly bounded?: boolean;
+  /** Pièce d'une coiffure attachée (queue, chignon, tresse) : bornée par `tie.ts`, hors portée de la coque. */
+  readonly part?: 'tail' | 'bun' | 'braid';
   /** Fondu d'opacité vers la pointe et translucidité des bords (0–1). */
   readonly fade?: number;
   readonly edgeFade?: number;
