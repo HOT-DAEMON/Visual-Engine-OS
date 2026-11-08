@@ -65,3 +65,7 @@ npx tsx scripts/head-turntable/verify-head-run.ts 1,2,3     # planche + graines
 npx tsx scripts/head-turntable/audit-planche.ts <dossier>    # 9 lacets : courbure + écart signé à la planche (à lancer dans n'importe quel arbre : avant/après)
 npx tsx scripts/head-turntable/artefacts-annotate.ts <dossier>  # contour coloré par courbure
 ```
+
+## Contrôles du modèle de crâne (ajout)
+
+Les têtes issues d'un visage portent 11 contrôles supplémentaires (6 géométrie, 2 anatomie, 3 style dont 3 informatifs) (`verify-skull.ts` : `head.geo.skull.*`, `head.anat.skull.*`, `head.style.skull.*`) ; leur définition, leurs bornes et leurs limites sont dans `HEAD-TURNTABLE-SKULL.md` §6. La règle « point large jamais reculé » (`head.geo.rows`) ne porte plus que sur la zone de mâchoire (y ≥ 0,76) : sur la voûte, le point large suit l'occiput et peut reculer.

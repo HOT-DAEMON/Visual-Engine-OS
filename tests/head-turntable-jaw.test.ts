@@ -66,7 +66,7 @@ describe('modèle de mâchoire : bordure mandibulaire, calotte du menton', () =>
     const d = cap.map((r) => r.zf - r.zb); for (let i = 1; i < d.length; i++) expect(d[i]!).toBeLessThanOrEqual(d[i - 1]! + 1e-9);
   });
   it('la table de la planche : point large monotone, jamais devant l\'avant, avant > arrière', () => {
-    const rows = REF_SPEC.rows; rows.forEach((r, i) => { expect(r.zf).toBeGreaterThan(r.zb); if (r.y < CHIN_CAP_Y && r.zw !== undefined && rows[i - 1]?.zw !== undefined) expect(r.zw).toBeGreaterThanOrEqual(rows[i - 1]!.zw! - 1e-6); });
+    const rows = REF_SPEC.rows; rows.forEach((r, i) => { expect(r.zf).toBeGreaterThan(r.zb); if (r.y >= JAW_SHAPE.y0 && r.y < CHIN_CAP_Y && r.zw !== undefined && rows[i - 1]?.zw !== undefined) expect(r.zw).toBeGreaterThanOrEqual(rows[i - 1]!.zw! - 1e-6); });
   });
 });
 
@@ -121,7 +121,7 @@ describe('variété : le crâne et la mâchoire suivent le visage du moteur', ()
     expect(Math.max(...frozen) - Math.min(...frozen)).toBeLessThan(0.01);
   });
   it('les rangées de chaque tête sont saines (finies, monotones, avant > arrière)', () => {
-    for (const h of heads) h.spec.rows.forEach((r, i, a) => { expect([r.a, r.zf, r.zb, r.zw ?? 0].every(Number.isFinite)).toBe(true); expect(r.zf).toBeGreaterThan(r.zb); if (i > 0 && r.y < CHIN_CAP_Y && r.zw !== undefined && a[i - 1]!.zw !== undefined) expect(r.zw).toBeGreaterThanOrEqual(a[i - 1]!.zw! - 1e-6); });
+    for (const h of heads) h.spec.rows.forEach((r, i, a) => { expect([r.a, r.zf, r.zb, r.zw ?? 0].every(Number.isFinite)).toBe(true); expect(r.zf).toBeGreaterThan(r.zb); if (i > 0 && r.y >= JAW_SHAPE.y0 && r.y < CHIN_CAP_Y && r.zw !== undefined && a[i - 1]!.zw !== undefined) expect(r.zw).toBeGreaterThanOrEqual(a[i - 1]!.zw! - 1e-6); });
   });
   it('la ligne de mâchoire des têtes variées est continue : couche de vérification (géométrie, anatomie, style) sans échec bloquant', () => {
     for (const h of [heads[0]!, heads[3]!]) {

@@ -1,7 +1,7 @@
 import { halfWidthAt } from '../face/outline';
 import { CHIN_CAP_Y } from './engines/rows';
 import { contrastRatio, hex } from './color';
-import { jawCtx } from './engines/jaw-model';
+import { JAW_SHAPE, jawCtx } from './engines/jaw-model';
 import { toEngineY } from './engines/rows';
 import { py } from './engines/units';
 import { defaultFrame, refView, renderHead } from './render';
@@ -9,6 +9,7 @@ import { sectionAt } from './sections';
 import { headEdges, jawContourStats } from './verify-contour';
 import { topRow } from './silhouette';
 import { inkSpecks, inkWidth, outlineClosure } from './verify-style';
+import { skullAnatomyChecks, skullGeometryChecks, skullStyleChecks } from './verify-skull';
 import { check, layerOf, reportOf, type Check, type LayerReport, type TurnReport } from './verify-types';
 import type { HeadTurnSpec, TurnRender } from './types';
 
@@ -43,7 +44,7 @@ const sep = (spec: HeadTurnSpec): number => { const a = hex(spec.palette.ink), b
 
 export function headGeometry(h: HeadSubject, R: HeadRenders): LayerReport {
   const s = h.spec, c: Check[] = [], rows = s.rows, inkOpts = { ink: hex(s.palette.ink) as [number, number, number], inkTol: Math.min(70, 0.7 * sep(s)) };
-  const bad = rows.filter((r, i) => ![r.a, r.zf, r.zb, r.zw ?? 0, r.pf ?? 2, r.qf ?? 2].every(Number.isFinite) || r.zf <= r.zb || (i > 0 && r.y < CHIN_CAP_Y && r.zw !== undefined && rows[i - 1]!.zw !== undefined && r.zw < rows[i - 1]!.zw! - 1e-6)).length;
+  const bad = rows.filter((r, i) => ![r.a, r.zf, r.zb, r.zw ?? 0, r.pf ?? 2, r.qf ?? 2, r.pb ?? 2, r.qb ?? 2].every(Number.isFinite) || r.zf <= r.zb || (i > 0 && r.y >= JAW_SHAPE.y0 && r.y < CHIN_CAP_Y && r.zw !== undefined && rows[i - 1]!.zw !== undefined && r.zw < rows[i - 1]!.zw! - 1e-6)).length;
   c.push(check(G, 'head.geo.rows', 'Table de sections saine : valeurs finies, avant > arrière, point large jamais reculé (nombre de rangées fautives)', bad, 0, 0));
   if (s.engine) {
     // Face : demi-largeur du rendu à tangage 0 vs contour du moteur de visage, sur le crâne (0,15–0,5) et la mâchoire (0,85–1,0), hors oreilles.
@@ -65,6 +66,7 @@ export function headGeometry(h: HeadSubject, R: HeadRenders): LayerReport {
     c.push(check(G, `head.geo.jaw.${yaw}.ink`, `Mâchoire à ${yaw}° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)`, st.inkGapPx, 0, 4));
   }
   for (const yaw of [135, 180]) c.push(check(G, `head.geo.jaw.${yaw}.concavity`, `Mâchoire à ${yaw}° : creux maximal du contour (U)`, jawContourStats(R.at(yaw), { yMinU: 0.8, yMaxU: 1.25 }).concavityU, 0, 0.02));
+  c.push(...skullGeometryChecks(s, R));
   return layerOf(G, c);
 }
 
@@ -93,6 +95,7 @@ export function headAnatomy(h: HeadSubject, R: HeadRenders): LayerReport {
   c.push(check(A, 'head.anat.neck', 'Largeur du cou / largeur du crâne [canon : 0,35–0,65]', neckW / ear2, 0.3, 0.72, 'info'));
   const st = jawContourStats(R.at(90), { yMinU: 0.8, yMaxU: 1.25 });
   c.push(check(A, 'head.anat.chin.lowest', 'Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)', st.lowest.x, -0.7, -0.1));
+  c.push(...skullAnatomyChecks(s));
   return layerOf(A, c);
 }
 
@@ -107,6 +110,7 @@ export function headStyle(h: HeadSubject, R: HeadRenders): LayerReport {
   // Information : le pavillon des têtes autres que la planche est encore pointillé (hachures du moteur d'oreille sous-échantillonnées) ; la planche reste ≤ 6 (voir docs/HEAD-TURNTABLE-REMAINING.md).
   for (const yaw of [0, 45, 90]) c.push(check(S, `head.style.specks.${yaw}`, `Îlots d'encre isolés à ${yaw}° (points, traits pointillés) [planche ≤ 6]`, inkSpecks(R.at(yaw), ink, tolS), 0, 6, h.spec.engine && h.id !== 'planche' ? 'info' : 'hard'));
   c.push(check(S, 'head.style.specks.180', 'Îlots d\'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)', inkSpecks(R.at(180), ink, tolS), 0, 60, 'info'));
+  c.push(...skullStyleChecks(h.spec, R));
   return layerOf(S, c);
 }
 

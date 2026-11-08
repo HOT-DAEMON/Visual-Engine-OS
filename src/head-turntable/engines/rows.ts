@@ -5,6 +5,7 @@ import type { EngineHead } from './face-model';
 import { backChain, frontChain, skinPoints, smax, zAt, type PV } from './profile';
 import { Y0, fy, py } from './units';
 import { JAW_SHAPE, borderZ, jawCtx, jawFields, type JawShapeParams } from './jaw-model';
+import { hasSkullModel, skullFields } from './skull-model';
 
 /** Hauteurs de la table de sections (celles de la planche : comparables ligne à ligne). */
 export const ROW_YS: readonly number[] = [0, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1, 1.025, 1.04, 1.05];
@@ -79,10 +80,11 @@ export function engineRows(e: EngineHead, ys: readonly number[] = ROW_YS, hairTh
     return { y, a, zf: Math.max(zf, zb + 0.02), zb: Math.min(zb, zf - 0.02) };
   });
   const ctx = jawCtx(e);
-  const rows = closeChin(base).map((r) => { const j = jawFields(e, r.y, r.zf, r.zb, shape, ctx); return j ? { ...r, ...j } : r; });
+  const sk = hasSkullModel(e);
+  const rows = closeChin(base).map((r) => { const j = jawFields(e, r.y, r.zf, r.zb, shape, ctx) ?? (sk ? skullFields(e, r.y, r.a, r.zf, r.zb) : null); return j ? { ...r, ...j } : r; });
   // Le point le plus large ne recule jamais quand on descend (sinon le contour oscille en vue inclinée) : maximum courant sur la zone de mâchoire.
   let zw = -Infinity;
-  return rows.map((r) => { if (r.zw === undefined) return r; zw = Math.max(zw, r.zw); return { ...r, zw: Math.min(zw, r.zf - 0.04) }; });
+  return rows.map((r) => { if (r.zw === undefined || r.y < shape.y0) return r; zw = Math.max(zw, r.zw); return { ...r, zw: Math.min(zw, r.zf - 0.04) }; });
 }
 const zBackTop = (_b: readonly PV[], _y: number, z: number): number => z;
 function mandibularFront(e: EngineHead, y: number): number { const f = frontChain(e); return zAt(f, y) ?? skinPoints(e).get('menton')!.z; }
