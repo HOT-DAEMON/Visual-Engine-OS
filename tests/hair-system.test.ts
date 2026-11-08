@@ -96,7 +96,7 @@ describe('mèches principales et secondaires, longueur et densité', () => {
 
   it('la variance de longueur allonge la dispersion des pointes ; l\'éclaircissement retire des mèches et montre le cuir chevelu', () => {
     const spread = (lengthVariance: number): number => {
-      const ys = (geo(withHair(21, { style: 'bob', texture: 'straight', seed: 4, lengthVariance, fringe: 'none' }))?.locks.filter((l) => l.layer === 'front' && l.rank === 'main') ?? []).map((l) => Math.max(...l.poly.map((q) => q.y)));
+      const ys = (geo(withHair(21, { style: 'bob', texture: 'straight', seed: 4, lengthVariance, fringe: 'none' }))?.locks.filter((l) => l.layer === 'front' && l.rank === 'main' && !l.fill) ?? []).map((l) => Math.max(...l.poly.map((q) => q.y)));
       const m = ys.reduce((a, b) => a + b, 0) / ys.length;
       return Math.sqrt(ys.reduce((a, b) => a + (b - m) ** 2, 0) / ys.length);
     };

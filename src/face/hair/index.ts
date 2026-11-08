@@ -17,6 +17,8 @@ import { occluders } from './occlusion';
 import { bareScalp, capBase } from './scalp';
 import { cranialLimit, fitReach, windReach } from './reach';
 import { backMassShape } from './back-mass';
+import { fillShell } from './crown-fill';
+import { inPoly } from '../poly';
 import { isBodyLock } from './body-lock';
 import { coneLocks, flowLocks, wispLocks } from './shapes';
 import { applySides } from './sides';
@@ -106,10 +108,12 @@ function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null 
   const occ = occluders(ctx, p);
   const masses = tierMasses(ctx, sides.front);
   const simOver = sim ? sim.locks.filter((l) => l.layer === 'over') : [];
-  const all = [...sides.back, ...sides.front, ...occ.locks, ...simOver];
+  // Remplissage de la coque : EN DERNIER (graine propre) — le reste de la chevelure est identique avec ou sans lui. Jamais sur une oreille dégagée.
+  const fill = fillShell(ctx, base, sides.front).filter((l) => ['left', 'right'].every((s) => sides.info[s as 'left' | 'right'].ear === 'covered' || !l.poly.some((q) => inPoly(sides.info[s as 'left' | 'right'].earZone, q.x, q.y))));
+  const all = [...sides.back, ...sides.front, ...fill, ...occ.locks, ...simOver];
   const geo: HairGeometry = {
     texture: tex, hairline: hl.pts, boundary, scalp, base: [base], bare: bareScalp(ctx), locks: all, backBase,
-    front: [base, ...(classic ? [classic.base] : []), ...sides.front.map((l) => l.poly)], back: [...(backBase ? [backBase] : []), ...sides.back.map((l) => l.poly)],
+    front: [base, ...(classic ? [classic.base] : []), ...sides.front.map((l) => l.poly), ...fill.map((l) => l.poly)], back: [...(backBase ? [backBase] : []), ...sides.back.map((l) => l.poly)],
     fringeBottom, ties, over: [...occ.locks, ...simOver].map((l) => l.poly), skinShadows: sim?.skinShadows ?? [], simMass: sim?.mass ?? null, shaved: sim?.shaved ?? [], tierMasses: masses, occlusions: occ.info, sides: sides.info,
   };
   // Vent (aucun par défaut : la même géométrie, sans copie) : mèches déplacées en levier autour de leur racine, sans jamais recouvrir la peau du visage.

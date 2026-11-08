@@ -45,6 +45,8 @@ export interface HairLock {
   readonly sim?: boolean;
   /** Masse de RÉGION (tempe+patte, mèche de joue, nuque) : sert aux limites par zone de la vérification. */
   readonly zone?: 'side' | 'cheek' | 'nape' | 'top';
+  /** Mèche de REMPLISSAGE de la coque (`crown-fill.ts`) : indice (≥ 1) de la mèche dont cette forme est une pièce (une mèche tressée en donne plusieurs). Texture le dôme, n'est pas une mèche pendante : les mesures de longueur / dispersion l'excluent. */
+  readonly fill?: number;
 }
 
 /** Masse de sous-couche visible d'un étage : silhouette, ton relatif et décalage de teinte (degrés). */

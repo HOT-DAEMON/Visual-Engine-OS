@@ -1,10 +1,10 @@
 # Cohérence cheveux ↔ tête — reste à faire et limites (par composant)
 
-Fait : `HAIR-COHERENCE.md`. Chaque ligne est une limite mesurée ou constatée ; rien n'est caché.
+Fait : `HAIR-COHERENCE.md`. Suite (remplissage de la coque, couche `hair-form`) : `HAIR-FORM.md`, ses limites : `HAIR-FORM-REMAINING.md`. Chaque ligne est une limite mesurée ou constatée ; rien n'est caché.
 
 ## Portée (`reach.ts`)
 1. **Mèches de corps des coiffures attachées** (queue, chignon, tresses) : non bornées par conception (elles convergent vers l'attache, qui peut être haute). Contrôlées seulement par les contrôles d'attache. La longueur et le volume de la queue ne sont pas contrôlés en largeur.
-2. **Mèches de joue** et frange : bornées en axe quand elles passent par `fitReach` ; leur éloignement du contour n'est pas contrôlé au polygone (`HAIR-SKULL-REMAINING.md` 6).
+2. MAJ : la **frange** est désormais contrôlée au polygone (`fringe-reach-bound`, ≤ `REACH.side` + 0,05 W ; max mesuré 0,161 W). Les **mèches de joue** restent bornées en axe seulement (`HAIR-SKULL-REMAINING.md` 6).
 3. **Cheveux simulés (Verlet)** : hors `bounded` (leur drapé est résolu par le collisionneur).
 4. Tolérance du polygone 0,02 W : posée sur la mesure (`guard.fit` ré-écarte ≤ 0,015 W après la borne), pas sur une règle anatomique.
 5. `REACH` posé à la main (afro 0,3 W / 0,32 H). Les avertissements restent des avertissements.
@@ -33,7 +33,7 @@ Fait : `HAIR-COHERENCE.md`. Chaque ligne est une limite mesurée ou constatée ;
 18. `conformReach` coûte (bissection par sommet) : géométrie `short` 55,6 → ≈ 76 ms, `afro` 72,9 → ≈ 95–104 ms par visage (bruit ±15 %), atténué par le cache du contour. Pistes non faites : pas de bissection quand le sommet est déjà dedans (déjà le cas) ; vectoriser `distOut` ; cache par mèche.
 
 ## Régression visuelle
-19. `npm run regress` : non relancé après cette série ; ses 34 images ne montraient pas les cheveux modifiés avant. Aucune référence n'a été actualisée (décision d'équipe).
+19. MAJ : `npm run regress` relancé après la série `hair-form` : exit 0, 34 images `exact` ; elles ne contiennent aucune coiffure touchée. Aucune référence actualisée (décision d'équipe).
 
 ## Sécurité
-20. Un jeton GitHub a été collé en clair dans la conversation : **à révoquer** (GitHub → Settings → Developer settings → Tokens). Il n'est écrit nulle part dans le dépôt.
+20. Un jeton GitHub a été collé en clair dans la conversation (de nouveau lors de la série `hair-form`) : **à révoquer** (GitHub → Settings → Developer settings → Tokens). Il n'est écrit nulle part dans le dépôt.
