@@ -32,6 +32,14 @@ export const backMassColor = (ra: ResolvedAppearance): string => ra.tone(BACK_MA
 export const ROOT_MIN_RATIO = 0.42;
 
 /**
+ * Décalage de teinte MAXIMAL (degrés) d'une sous-couche d'étage par rapport aux cheveux (`docs/HAIR-FORM.md`). Avant : `underHue × étage`, cumulé sans borne
+ * (16,5° × 4 étages = 66° : des cheveux rouges montraient une sous-couche vert olive, lue comme une plaque étrangère sur le dessus du crâne). Un ombré d'étage
+ * reste dans la famille de teinte des cheveux. Source unique : rendu ET vérification.
+ */
+export const UNDER_HUE_MAX = 24;
+export const tierHueShift = (h: FaceParams['hair'], tier: number): number => Math.max(-UNDER_HUE_MAX, Math.min(UNDER_HUE_MAX, h.tiers.underHue * tier));
+
+/**
  * Teinte de la sous-couche racine (coque). `rootColor` explicite (repousse brune sur cheveux teints, 15 % des visages) ou ombre à 55 %. Mesuré avant :
  * rapport de luminance racine / cheveux jusqu'à 0,02 (#2b2320 sous #c58614) : un dôme noir sous des mèches clairsemées, où le reflet satin de la coque
  * se lit comme un trou gris. La teinte est ramenée vers la couleur des cheveux juste assez pour atteindre `ROOT_MIN_RATIO` (dichotomie, direction de teinte conservée).

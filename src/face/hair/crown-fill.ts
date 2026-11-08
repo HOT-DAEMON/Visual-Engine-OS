@@ -39,8 +39,8 @@ export const FILL: Partial<Record<Style, FillSpec>> = {
   spiky: { rim: 0.4, all: 0.45, len: 0.09, max: 80 },
   curly: { rim: 0.25, all: 0.3, len: 0.12, max: 110 },
   afro: { rim: 0.2, all: 0.25, len: 0.16, max: 140 },
-  bob: { rim: 0.45, all: 0.5, len: 0.12, max: 60 },
-  long: { rim: 0.45, all: 0.5, len: 0.12, max: 60 },
+  bob: { rim: 0.3, all: 0.35, len: 0.12, max: 60 },
+  long: { rim: 0.3, all: 0.35, len: 0.12, max: 60 },
 };
 
 /**
@@ -131,20 +131,28 @@ export function fillShell(ctx: HairCtx, base: Poly, existing: readonly HairLock[
     }
     if (best < 0) break;
     const c = centerOf(g, best);
-    // Racine EN RETRAIT sur la normale (la mèche traverse la cellule en allant vers l'extérieur), toujours au-dessus de l'implantation.
+    // Essais de racine : en retrait sur la normale (la mèche traverse la cellule en allant vers l'extérieur), puis à la cellule, puis en retrait double.
+    // Une mèche qui ne couvre aucune cellule nouvelle (le champ la ramène sur du déjà couvert) est refaite d'un autre point avant de condamner la cellule.
     const len = spec.len * H, nrm = { x: c.x - ctx.C.x, y: c.y - ctx.C.y }, nl = Math.hypot(nrm.x, nrm.y) || 1;
-    let R: Vec = { x: c.x - (nrm.x / nl) * 0.5 * len, y: c.y - (nrm.y / nl) * 0.5 * len };
-    if (R.y > hl.yAt(R.x) - 0.012 * H || indexAt(g, R.x, R.y) < 0 || !inside[indexAt(g, R.x, R.y)]) R = c;
-    const pts = growLock(ctx, R, len);
-    // Rognée au bord de la coque : la mèche texture le contour, elle ne le dépasse pas.
-    let keep = pts.length;
-    for (let k = 2; k < pts.length; k++) { const q = pts[k] as Vec, ix = indexAt(g, q.x, q.y); if (ix < 0 || !inside[ix]) { keep = k; break; } }
-    if (keep < 5) { dead[best] = 1; continue; }
     const wd = (def.mainW[0] + def.mainW[1] * h.volume) * W * (0.9 + 0.3 * rnd());
-    const made = lockFrom(ctx, pts.slice(0, keep), { width: wd, rank: 'main', tone: -(0.04 + 0.26 * rnd()), layer: 'front', sharp: def.sharp, edgeFade: h.tips.edgeFade, flick: h.tips.flick, ragged: h.tips.irregular, reach: 'cranial' });
-    let gain = 0;
-    for (const l of made) gain += paint(g, l.poly, cover);
-    if (gain < 2) { dead[best] = 1; continue; }
+    const tone = -(0.04 + 0.26 * rnd());
+    let made: HairLock[] = [];
+    for (const back of [0.5, 0, 1]) {
+      let R: Vec = { x: c.x - (nrm.x / nl) * back * len, y: c.y - (nrm.y / nl) * back * len };
+      if (R.y > hl.yAt(R.x) - 0.012 * H || indexAt(g, R.x, R.y) < 0 || !inside[indexAt(g, R.x, R.y)]) R = c;
+      const pts = growLock(ctx, R, len);
+      // Rognée au bord de la coque : la mèche texture le contour, elle ne le dépasse pas.
+      let keep = pts.length;
+      for (let k = 2; k < pts.length; k++) { const q = pts[k] as Vec, ix = indexAt(g, q.x, q.y); if (ix < 0 || !inside[ix]) { keep = k; break; } }
+      if (keep < 5) continue;
+      const trial = lockFrom(ctx, pts.slice(0, keep), { width: wd, rank: 'main', tone, layer: 'front', sharp: def.sharp, edgeFade: h.tips.edgeFade, flick: h.tips.flick, ragged: h.tips.irregular, reach: 'cranial' });
+      // Gain mesuré sur une copie : on ne retient que l'essai qui couvre la cellule visée.
+      const probe = cover.slice(); let gain = 0;
+      for (const l of trial) gain += paint(g, l.poly, probe);
+      if (gain >= 2 && probe[best]) { made = trial; break; }
+    }
+    if (!made.length) { dead[best] = 1; continue; }
+    for (const l of made) paint(g, l.poly, cover);
     strands++;
     out.push(...made.map((l): HairLock => ({ ...l, fill: strands })));
   }

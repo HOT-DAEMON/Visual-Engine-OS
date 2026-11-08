@@ -5,6 +5,7 @@ import { gridOver, paint } from '../src/face/hair/coverage';
 import { FILL, shellCoverage } from '../src/face/hair/crown-fill';
 import { inPoly } from '../src/face/poly';
 import { checkHairForm } from '../src/verify/hair-form';
+import type { tierHueShift } from '../src/render/face/hair-look';
 import { HAIR_STYLES } from '../src/schema';
 import { hairFaceSpec, type CleanStyle } from '../scripts/lib/hair-faces';
 
@@ -136,5 +137,17 @@ describe('contrôles négatifs : chaque contrôle sait échouer', () => {
     expect(b, 'population contrôlée non vide').toBeDefined();
     const far = { ...b!, poly: b!.poly.map((q) => ({ x: q.x + Math.sign(q.x || 1) * 0.6 * lmOf(f).W, y: q.y })) };
     expect(failing(f, { ...g, locks: [...g.locks, far] } as HairGeometry).map((c) => c.id)).toContain('fill-within-reach');
+  });
+
+  it('tier-hue-near-hair : la teinte d\'étage cumulée sans plafond (ancien rendu) est refusée, le rendu actuel est accepté', () => {
+    const uncapped = ((h: { tiers: { underHue: number } }, t: number) => h.tiers.underHue * t) as typeof tierHueShift;
+    for (let k = 0; k < 40; k++) {
+      const f = face('long', k), p = f.params.hair;
+      if (p.tiers.count < 3 || Math.abs(p.tiers.underHue) * p.tiers.count < 60) continue;
+      expect(checkHairForm(f, undefined, uncapped).filter((c) => !c.ok).map((c) => c.id)).toContain('tier-hue-near-hair');
+      expect(checkHairForm(f).filter((c) => !c.ok).map((c) => c.id)).not.toContain('tier-hue-near-hair');
+      return;
+    }
+    throw new Error('aucun visage à étages très décalés dans l\'échantillon');
   });
 });

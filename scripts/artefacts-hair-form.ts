@@ -122,7 +122,7 @@ async function compose(): Promise<void> {
   pair('tetes-courtes', 1200, 800, '01a-tetes-short-spiky', 'Têtes entières — coupes courtes', 'short · spiky, 4 visages chacun, mêmes graines avant/après', false);
   pair('tetes-volume', 1200, 800, '01b-tetes-curly-afro', 'Têtes entières — coupes volumineuses', 'curly · afro : le dôme est dessiné par des mèches, plus un casque lisse', false);
   pair('tetes-pendantes', 1200, 800, '01c-tetes-bob-long', 'Têtes entières — cheveux pendants', 'bob · long : le dessus du crâne reçoit des mèches ; la retombée est inchangée', false);
-  pair('tetes-inchangees', 1200, 1600, '01d-tetes-non-modifiees', 'Contrôle négatif — coiffures qui ne doivent PAS changer', 'buzz · bun · ponytail · braids : aplats par anatomie, identiques avant/après', false);
+  pair('tetes-inchangees', 1200, 1600, '01d-tetes-non-modifiees', 'Contrôle négatif — coiffures qui ne doivent PAS changer', 'buzz · bun · ponytail · braids : aucune mèche ajoutée (aplats par anatomie) ; seule la teinte des sous-couches d\'étage, plafonnée à 24°, change sur 6 visages', false);
   pair('details', 2300, 520, '03-details-dessus-du-crane', 'Détails : dessus du crâne', 'afro · curly · short · spiky · long en gros plan', true);
   await overlay();
   const { rows, faces, cov, same } = await report();

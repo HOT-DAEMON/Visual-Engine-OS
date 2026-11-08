@@ -11,7 +11,7 @@ import type { FaceParams } from '../../schema';
 import { hairGloss, hairlineTransition, smoothPath } from './hair-detail';
 import { lockMarkup, type LockStyle } from './hair-lock';
 import { backMassFill } from './hair-back-fade';
-import { backMassColor, hairAppearance, rootColorOf } from './hair-look';
+import { backMassColor, hairAppearance, rootColorOf, tierHueShift } from './hair-look';
 import { polyPath } from './path';
 import { profileOf } from '../../face/hair/sim/profiles';
 import { sheenBands } from '../../face/hair/sim/sheen';
@@ -91,7 +91,7 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
   // Sous-couches visibles par étage : silhouette plus sombre / décalée de teinte, sous les mèches de l'étage.
   // Une silhouette d'étage englobe la tête : DEVANT la tête elle est rognée par la sous-couche (jamais sur le visage),
   // et une copie est dessinée DERRIÈRE la tête pour la part qui dépasse du crâne.
-  const massEl = (m: (typeof geo.tierMasses)[number]): string => el('path', { d: smoothPath(m.poly), fill: hueShift(ra.tone(h.tiers.underTone * Math.min(1, 0.6 + 0.2 * m.tier)), h.tiers.underHue * m.tier), opacity: h.tiers.underVisible });
+  const massEl = (m: (typeof geo.tierMasses)[number]): string => el('path', { d: smoothPath(m.poly), fill: hueShift(ra.tone(h.tiers.underTone * Math.min(1, 0.6 + 0.2 * m.tier)), tierHueShift(h, m.tier)), opacity: h.tiers.underVisible });
   if (geo.tierMasses.length) body.push(el('g', { 'clip-path': urlRef(clipId) }, geo.tierMasses.map(massEl)));
   back.unshift(...geo.tierMasses.map(massEl));
   if (geo.simMass) body.push(el('path', { d: smoothPath(geo.simMass), fill: ink ?? ra.tone(-0.42), stroke: ink, 'stroke-width': ink ? lm.W * 0.0042 : undefined, 'stroke-linejoin': 'round' }));

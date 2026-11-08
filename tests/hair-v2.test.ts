@@ -162,8 +162,9 @@ describe('racines, côtés, occlusions, étages, pointes', () => {
   it('pointes : retroussées (direction change) et irrégulières (plus de sommets)', () => {
     const a = geoOf(36, { ...BASE, flow: { mode: 'classic' } }).geo;
     const b = geoOf(36, { ...BASE, tips: { irregular: 1, flick: 1 } }).geo;
-    const vA = a?.locks.reduce((s, l) => s + l.poly.length, 0) ?? 0;
-    const vB = b?.locks.reduce((s, l) => s + l.poly.length, 0) ?? 0;
+    // Hors remplissage de coque : son nombre de mèches dépend de la géométrie (boucle jusqu'au seuil), pas des pointes.
+    const vA = a?.locks.filter((l) => !l.fill).reduce((s, l) => s + l.poly.length, 0) ?? 0;
+    const vB = b?.locks.filter((l) => !l.fill).reduce((s, l) => s + l.poly.length, 0) ?? 0;
     expect(vB).toBeGreaterThan(vA);
   });
 

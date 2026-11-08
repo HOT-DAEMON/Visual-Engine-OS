@@ -1,3 +1,4 @@
+import { toHsl } from '../appearance';
 import { faceLandmarks } from '../face';
 import { hairGeometry, type HairGeometry } from '../face/hair';
 import { FILL, fillKeep, relaxedBare, shellCoverage } from '../face/hair/crown-fill';
@@ -5,6 +6,7 @@ import { distanceOutsideSkull } from '../face/hair/thickness';
 import { REACH } from '../face/hair/reach';
 import { inPoly } from '../face/poly';
 import type { RandomFace } from '../generation/random-face';
+import { UNDER_HUE_MAX, hairAppearance, tierHueShift } from '../render/face/hair-look';
 import { check, type Check } from './types';
 
 /**
@@ -23,12 +25,17 @@ import { check, type Check } from './types';
  *    `fill-clears-free-ear-{left,right}`  aucune mèche de corps dans la zone d'une oreille qui doit rester dégagée
  *                           (une mèche sous l'implantation n'est PAS une erreur : frange et cheveux pendants y descendent ; yeux et sourcils : `guard.ts`) ;
  *  STYLE      — la forme reste du cheveu de la coiffure :
+ *    `tier-hue-near-hair`   la sous-couche d'étage reste dans la famille de teinte des cheveux : écart de teinte (rendu) ≤ `UNDER_HUE_MAX` + 24° (`tone()` seul en
+ *                           décale jusqu'à 21° : mesuré sur 720 étages) ; avant le plafond, 66° : sous-couche vert olive sous des cheveux rouges. Cheveux gris (saturation < 0,15) exclus ;
  *    `fill-style-scope`     seules les coiffures de `FILL` reçoivent un remplissage, dans son plafond : chignon, queue, tresses, coupe rase et cheveux simulés restent des aplats / leur propre moteur.
  */
 type Style = Exclude<RandomFace['params']['hair']['style'], 'bald'>;
 const HANG: readonly string[] = ['bob', 'long'];
 
-export function checkHairForm(face: RandomFace, override?: HairGeometry): Check[] {
+const hueGap = (a: number, b: number): number => { const d = Math.abs(a - b) % 360; return Math.min(d, 360 - d); };
+
+/** `shift` : décalage de teinte appliqué à un étage (le rendu) ; remplaçable pour les contrôles négatifs. */
+export function checkHairForm(face: RandomFace, override?: HairGeometry, shift: typeof tierHueShift = tierHueShift): Check[] {
   const p = face.params;
   if (p.hair.style === 'bald') return [];
   const lm = faceLandmarks(p, face.width, face.height);
@@ -60,6 +67,12 @@ export function checkHairForm(face: RandomFace, override?: HairGeometry): Check[
   }
 
   // --- style ---
+  const ra = hairAppearance(p.hair), base = toHsl(ra.base);
+  if (base.s >= 0.15 && geo.tierMasses.length) {
+    let gap = 0;
+    for (const m of geo.tierMasses) gap = Math.max(gap, hueGap(toHsl(ra.tone(p.hair.tiers.underTone * Math.min(1, 0.6 + 0.2 * m.tier))).h + shift(p.hair, m.tier), base.h));
+    out.push(check('style', 'tier-hue-near-hair', '<=', gap, UNDER_HUE_MAX + 24, 'la sous-couche d\'étage change de famille de teinte : plaque étrangère sous les mèches'));
+  }
   const nFill = new Set(geo.locks.filter((l) => l.fill).map((l) => l.fill)).size;
   out.push(check('style', 'fill-style-scope', '<=', nFill, spec && !p.hair.sim.enabled ? spec.max : 0, spec && !p.hair.sim.enabled ? 'plus de mèches de remplissage (indices distincts) que le plafond de la coiffure' : 'cette coiffure est un aplat (rase, attachée, simulée) : elle ne reçoit aucune mèche de remplissage'));
   return out;
