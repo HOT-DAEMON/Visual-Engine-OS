@@ -1,25 +1,13 @@
 import { clamp } from '../../core/math';
-import { mulberry32 } from '../../core/prng';
 import type { Vec } from '../../geometry/eye/primitives';
+import { layoutBlades, type BladeSpec } from './fringe-blades';
 import { lockFrom, type HairCtx } from './flow';
-import type { HairLock, LockRank } from './types';
+import type { HairLock } from './types';
 
 /** Résultat du moteur de frange : mèches, bord inférieur (de droite à gauche). Jamais de masse pleine : le front reste visible entre les mèches. */
 export interface FringeEngineResult {
   readonly locks: HairLock[];
   readonly bottom: Vec[];
-}
-
-interface BladeSpec {
-  readonly xRoot: number;
-  readonly xTip: number;
-  readonly yTip: number;
-  readonly w0: number;
-  readonly rank: LockRank;
-  readonly profile: 'ribbon' | 'cone';
-  readonly power: number;
-  readonly fade: number;
-  readonly ragged: number;
 }
 
 /**
@@ -43,7 +31,6 @@ export function engineFringe(ctx: HairCtx): FringeEngineResult | null {
   // Jour central : le front reste visible entre les mèches de part et d'autre (demi-largeur ∝ `gap`).
   const gc = (rnd() - 0.5) * 0.35 * xF;
   const gw = fe.gap * 0.34 * xF;
-  const away = (x: number): number => (x < gc ? -1 : 1);
 
   if (fe.mode === 'sheer') {
     // Fils individuels : beaucoup de mèches fines, 2–4 fenêtres sans fils (la peau du front se voit).
@@ -53,45 +40,25 @@ export function engineFringe(ctx: HairCtx): FringeEngineResult | null {
       const x = -xF + (2 * xF * (i + rnd())) / n;
       if (holes.some((q) => Math.abs(x - q.c) < q.w) && rnd() < 0.88) continue;
       const w0 = W * (0.0038 + 0.0042 * rnd());
-      blades.push({ xRoot: x, xTip: x + (rnd() - 0.5) * 0.02 * W + side * 0.012 * W, yTip: yAt(x, 0.5 + 0.5 * rnd() ** 0.7), w0, rank: w0 < 0.0045 * W ? 'hairline' : 'fine', profile: 'ribbon', power: 1, fade: 0.55, ragged: 0 });
+      blades.push({ xRoot: x, xTip: x + (rnd() - 0.5) * 0.02 * W + side * 0.012 * W, yTip: yAt(x, 0.5 + 0.5 * rnd() ** 0.7), w0, rank: w0 < 0.0045 * W ? 'hairline' : 'fine', profile: 'ribbon', power: 1, fade: 0.55, ragged: 0, sharp: 0.85, rootW: 0.8 });
     }
   } else if (fe.mode === 'blades') {
-    // Quelques grandes mèches triangulaires pointues ; le côté `side` descend jusqu'au sourcil, l'autre reste plus court.
+    // Touffes continues (`docs/HAIR-BLADES.md`, `fringe-blades.ts`). Les valeurs `pre` de `rnd` sont tirées UNE fois, dans l'ordre d'avant ; ATTENTION : plus de touffes = plus de tirages dans `lockFrom`, le reste de la chevelure change à graine égale (`docs/HAIR-BLADES.md`).
     const n = fe.count || 5 + Math.floor(rnd() * 3);
-    // Touffes inégales (`docs/HAIR-FORM-FRINGE.md`) : avant, des cônes de même largeur à pas régulier (largeur CV 0,06, pas CV 0,28 mesurés) = une scie. Les valeurs de `rnd` sont
-    // tirées UNE fois, dans l'ordre d'avant (le reste de la chevelure est inchangé) ; la disposition (pas, largeurs) vient d'un tirage PROPRE, retenté (≤ 8 fois) tant que la
-    // frange fait peigne (`fringeRhythm` : CV des pas et des largeurs ; avec 5 à 7 lames le hasard seul redonne un peigne une fois sur cent : graines 898, 87930, 21091).
     const pre = Array.from({ length: n }, () => ({ a: rnd(), b: rnd(), c: rnd() }));
-    const cv = (v: number[]): number => { const m = v.reduce((a, b) => a + b, 0) / v.length; return m > 0 ? Math.sqrt(v.reduce((a, b) => a + (b - m) ** 2, 0) / v.length) / m : 0; };
-    const layout = (attempt: number): BladeSpec[] => {
-      const fr = mulberry32(((h.seed ^ 0xb1ade) * 2654435761 + attempt * 40503) >>> 0);
-      const gaps = Array.from({ length: n - 1 }, () => 0.5 + 2.2 * fr() * fr());
-      const gsum = gaps.reduce((a, b) => a + b, 0);
-      let acc = 0;
-      const roots = [-0.88 * xF, ...gaps.map((g) => (acc += g, -0.88 * xF + (1.76 * xF * acc) / gsum))];
-      return roots.map((x0, i) => {
-        const gold = (i * 0.618034 + fr() * 0.2) % 1, r = pre[i] as { a: number; b: number; c: number };
-        let x = x0;
-        if (Math.abs(x - gc) < gw) x = gc + away(x) * gw; // une racine ne reste pas dans le jour : elle se range au bord
-        const long = Math.sign(x) === side, thin = fr() < 0.25 ? 0.5 : 1;
-        return { xRoot: x, xTip: x + away(x) * (0.04 + 0.12 * r.a) * xF, yTip: yAt(x, long ? 0.9 + 0.1 * r.b : 0.5 + 0.3 * r.b), w0: ((2 * xF) / n) * (1.3 + 0.4 * r.c) * (0.55 + 0.8 * ((gold * 1.7 + 0.35) % 1)) * thin, rank: 'main', profile: 'cone', power: 1.05, fade: 0, ragged: 0 } satisfies BladeSpec;
-      });
-    };
-    const rhythm = (bs: BladeSpec[]): number => {
-      const xs = bs.map((b) => b.xRoot).sort((a, b) => a - b);
-      return Math.min(cv(xs.slice(1).map((x, k) => x - (xs[k] as number)).filter((g) => g > 1e-6)), cv(bs.map((b) => b.w0)));
-    };
-    let best = layout(0), bestR = rhythm(best);
-    for (let t = 1; t < 8 && bestR < 0.4; t++) { const c = layout(t), r = rhythm(c); if (r > bestR) { best = c; bestR = r; } }
-    blades.push(...best);
+    blades.push(...layoutBlades({ n, pre, xF, gc, gw, side, seed: h.seed, yAt }));
   } else if (fe.mode === 'wispy') {
     // Mèches fines étagées, pointes très irrégulières.
     const n = fe.count || 26 + Math.floor(rnd() * 10);
     for (let i = 0; i < n; i++) {
       const x = -xF + (2 * xF * (i + rnd())) / n;
       if (Math.abs(x - gc) < gw * 0.6 && rnd() < 0.7) continue;
-      blades.push({ xRoot: x, xTip: x + (rnd() - 0.5) * 0.05 * W, yTip: yAt(x, 0.3 + 0.7 * rnd()), w0: ((2 * xF) / n) * (1.8 + rnd()), rank: 'fine', profile: 'cone', power: 1.3, fade: 0.5, ragged: 0.8 });
+      blades.push({ xRoot: x, xTip: x + (rnd() - 0.5) * 0.05 * W, yTip: yAt(x, 0.3 + 0.7 * rnd()), w0: ((2 * xF) / n) * (1.8 + rnd()), rank: 'fine', profile: 'ribbon', power: 1, fade: 0.5, ragged: 0.1, sharp: 0.45, rootW: 1 });
     }
+    // Les hauteurs de pointe étaient tirées une à une : un bord en scie (profondeur moyenne entre deux voisines ≠ la leur). Lissage [¼ ½ ¼] ×2 le long de x : les tirages ne changent pas.
+    const ys = blades.map((b) => b.yTip);
+    for (let pass = 0; pass < 2; pass++) { const c = ys.slice(); for (let i = 1; i < ys.length - 1; i++) ys[i] = 0.25 * (c[i - 1] as number) + 0.5 * (c[i] as number) + 0.25 * (c[i + 1] as number); }
+    blades.forEach((b, i) => { blades[i] = { ...b, yTip: ys[i] as number }; });
   } else {
     // Frange asymétrique : de grandes mèches balayées jusqu'au sourcil du côté `side`, courtes de l'autre (front ouvert).
     const n = fe.count || 7;
@@ -99,7 +66,7 @@ export function engineFringe(ctx: HairCtx): FringeEngineResult | null {
       const long = i < Math.ceil(n / 2);
       const x = long ? -side * xF * (0.15 + 0.7 * rnd()) : side * xF * (0.1 + 0.8 * rnd());
       const xTip = long ? side * xF * (0.15 + 0.6 * rnd()) : x + side * 0.03 * W;
-      blades.push({ xRoot: x, xTip, yTip: yAt(xTip, long ? 0.88 + 0.12 * rnd() : 0.25 + 0.3 * rnd()), w0: ((2 * xF) / n) * (1.5 + 0.5 * rnd()), rank: 'main', profile: 'cone', power: 1.1, fade: 0, ragged: 0.3 });
+      blades.push({ xRoot: x, xTip, yTip: yAt(xTip, long ? 0.88 + 0.12 * rnd() : 0.25 + 0.3 * rnd()), w0: ((2 * xF) / n) * (1.5 + 0.5 * rnd()), rank: 'main', profile: 'cone', power: 1.1, fade: 0, ragged: 0.3, sharp: 0.85 });
     }
   }
 
@@ -113,7 +80,7 @@ export function engineFringe(ctx: HairCtx): FringeEngineResult | null {
       const t = j / 9;
       return { x: (1 - t) ** 2 * R.x + 2 * (1 - t) * t * C.x + t * t * E.x, y: (1 - t) ** 2 * R.y + 2 * (1 - t) * t * C.y + t * t * E.y };
     });
-    locks.push(...lockFrom(ctx, c, { width: b.w0, rank: b.rank, tone: tone(), layer: 'front', mode: 'fringe', raw: true, kind: 'fringe', profile: b.profile, power: b.power, sharp: 0.85, fade: Math.max(b.fade, h.tips.fade), edgeFade: h.tips.edgeFade, ragged: Math.max(b.ragged, h.tips.irregular), flick: h.tips.flick * 0.5, reach: 'cranial' }).map((l): HairLock => ({ ...l, bang: true })));
+    locks.push(...lockFrom(ctx, c, { width: b.w0, rank: b.rank, tone: tone(), layer: 'front', mode: 'fringe', raw: true, kind: 'fringe', profile: b.profile, power: b.power, sharp: b.sharp, root: b.rootW, fade: Math.max(b.fade, h.tips.fade), edgeFade: h.tips.edgeFade, ragged: Math.max(b.ragged, h.tips.irregular), flick: h.tips.flick * 0.5, reach: 'cranial' }).map((l): HairLock => ({ ...l, bang: true })));
   }
   // Bord inférieur de droite à gauche : le point le plus bas des pointes proches de chaque abscisse (jamais sous yF).
   const bottom = Array.from({ length: 49 }, (_, i) => {

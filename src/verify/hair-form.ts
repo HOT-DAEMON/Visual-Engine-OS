@@ -10,6 +10,7 @@ import { inPoly } from '../face/poly';
 import type { RandomFace } from '../generation/random-face';
 import { ANALOGOUS_MAX, hairAppearance, tierHueShift } from '../render/face/hair-look';
 import { fringeRhythm } from './hair-fringe-edge';
+import { checkFringeTufts } from './hair-fringe-tufts';
 import { check, type Check } from './types';
 
 /**
@@ -86,6 +87,8 @@ export function checkHairForm(face: RandomFace, override?: HairGeometry, shift: 
   // Rythme de la frange (`hair-fringe-edge.ts`) : pas de peigne (touffes de même largeur à pas régulier).
   const rh = fringeRhythm(geo);
   if (rh) out.push(check('style', 'fringe-rhythm-natural', '>=', Math.min(rh.regularity, 9), 0.25, 'la frange est un peigne : touffes de même largeur à intervalles réguliers (dents de scie)'));
+  // Forme des touffes (`hair-fringe-tufts.ts`) : continuité, largeur, aspect, rugosité du bord.
+  out.push(...checkFringeTufts(geo, p.hair.fringeEngine.mode, W, lm.H));
   // Dôme des coiffures tirées / rase (`comb.ts`) : stries ou chaume, jamais un aplat ; aucun trait ailleurs.
   const ck = combKind(style), nComb = geo.locks.filter((l) => l.comb).length;
   if (ck && !p.hair.sim.enabled) {
