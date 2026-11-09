@@ -26,7 +26,7 @@ function renderSceneUntimed(scene: SceneSpec): string {
   const placed = placedEyesOf(expanded, hosts);
   const orbits = new Map<string, PublishedOrbits>();
   for (const h of hosts.values()) if (h.shape === 'face') orbits.set(h.id, publishedOrbits(hostFace(h).lm, placed.get(h.id) ?? []));
-  const ctx = { light, lightSpec: scene.light, hosts, orbits };
+  const ctx = { light, lightSpec: scene.light, hosts, orbits, eyes: placed };
   const defs: string[] = [];
   const underlays: string[] = [];
   const body: string[] = [];

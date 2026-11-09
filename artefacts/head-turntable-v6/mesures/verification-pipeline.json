@@ -1,0 +1,59 @@
+{
+  "seed3": {
+    "ok": true,
+    "head3d": {
+      "controles": 79,
+      "parCouche": {
+        "geometry": 36,
+        "anatomy": 21,
+        "style": 22
+      },
+      "echecsBloquants": [],
+      "avertissements": [
+        {
+          "id": "head3d.t0.head.anat.skull.cephalic3d",
+          "valeur": 1.1186,
+          "limite": 0.98
+        }
+      ]
+    }
+  },
+  "seed7": {
+    "ok": true,
+    "head3d": {
+      "controles": 79,
+      "parCouche": {
+        "geometry": 36,
+        "anatomy": 21,
+        "style": 22
+      },
+      "echecsBloquants": [],
+      "avertissements": [
+        {
+          "id": "head3d.t0.head.anat.skull.cephalic3d",
+          "valeur": 1.112,
+          "limite": 0.98
+        }
+      ]
+    }
+  },
+  "seed42": {
+    "ok": true,
+    "head3d": {
+      "controles": 79,
+      "parCouche": {
+        "geometry": 36,
+        "anatomy": 21,
+        "style": 22
+      },
+      "echecsBloquants": [],
+      "avertissements": [
+        {
+          "id": "head3d.t0.head.anat.skull.cephalic3d",
+          "valeur": 1.0477,
+          "limite": 0.98
+        }
+      ]
+    }
+  }
+}

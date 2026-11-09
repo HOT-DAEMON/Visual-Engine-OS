@@ -48,7 +48,7 @@ export function headMesh(spec: HeadTurnSpec, K = 96, dy = 0.0125): Mesh {
 
 /** Cou : cylindre elliptique ; le bas est refermé par un disque (id neckCut), comme le socle de la planche. */
 export function neckMeshes(spec: HeadTurnSpec, K = 64): Mesh[] {
-  const n = spec.neck, e = spec.engine, ys = Array.from({ length: 12 }, (_, i) => n.y0 + ((n.y1 - n.y0) * i) / 11);
+  const n = spec.neck, e = spec.engine, bell = !!(e?.fit as { mandLandmarks?: boolean } | undefined)?.mandLandmarks, nr = bell ? 30 : 12, ys = Array.from({ length: nr }, (_, i) => n.y0 + ((n.y1 - n.y0) * i) / (nr - 1));   // la cloche des trapèzes demande plus de rangées que le cylindre de la planche (inchangée : 12)
   const flare = (y: number): number => 1 + 0.1 * Math.max(0, (y - (n.y1 - 0.2)) / 0.2);   // évasement de 10 % sur les 0,2 U du bas (le socle de la planche)
   // Section : moteur de crâne / visage (lignes du cou) si la spec en porte, sinon cylindre mesuré.
   const sec = (y: number): { a: number; zc: number; b: number } => (e ? neckSection(e, y, n.y1) : { a: n.a * flare(y), zc: n.zc, b: n.b * flare(y) });

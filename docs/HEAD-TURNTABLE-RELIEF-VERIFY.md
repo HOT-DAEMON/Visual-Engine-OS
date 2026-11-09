@@ -35,8 +35,10 @@ S'y ajoutent les contrôles existants, qui restent verts : `head.geo.front2d` (f
 | `head.style.ear.far20` | pixels d'oreille du côté lointain à 20° | = 0 (la planche l'omet) |
 | `head.style.ear.near20` | pixels d'oreille du côté proche à 20° | ≥ 150 (elle reste dessinée) |
 | `head.style.ear.both0` | la plus petite moitié d'image en oreille à 0° | ≥ 150 (deux oreilles de face) |
-| `head.style.neck.flare` | largeur du cou au bas / à mi-cou | 1,08 – 1,9 |
+| `head.style.neck.flare` | largeur du cou au bas / à mi-cou | 1,08 – 2,2 (était 1,9 avant la cloche) |
 | `head.style.neck.step` | plus grande marche de largeur entre sections (0,02 U) | ≤ 0,03 |
+| `head.style.neck.bell` | largeur à la coupe / sous le crâne (têtes issues d'un visage seulement ; la planche garde ses 10 %) | 1,55 – 2,5 |
+| `head.style.neck.monotone` | plus forte diminution de largeur vers le bas (U) ; toutes les têtes, planche comprise | ≤ 1e-6 |
 
 ## Ce que les tests prouvent (et ne prouvent pas)
 

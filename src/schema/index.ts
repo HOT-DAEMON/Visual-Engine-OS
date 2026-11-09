@@ -9,6 +9,7 @@ export { LightSpec, LightInfluence, Transform } from './light-transform';
 export { HostSpec } from './host';
 export { BodySpec } from './body';
 export { HeadProfileSpec } from './head-profile';
+export { Head3dSpec } from './head-3d';
 export { HeadLitSpec } from './head-lit';
 export { FaceParams, FaceMouth, FaceEars, type FaceParamsInput } from './face';
 export { FaceNose, NoseRoot, NoseDorsum, NoseTip, NoseAlae, NoseNostrils, NoseJunction, DORSUM_SHAPES, type FaceNoseInput } from './face-nose';

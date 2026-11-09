@@ -1,0 +1,61 @@
+{
+  "source": "references/rotation-3d/07.jpg",
+  "cellule": "dos, bas-droite, recadrage (285,791)-(500,991) px de l'image 564×1002",
+  "methode": "extrémités gauche/droite des pixels non blancs (somme RGB < 600) par ligne, pas de 8 px ; lignes 120–176 seulement (au-dessus : pollution par les cellules voisines et l'oreille)",
+  "lignes_largeur_px": [
+    {
+      "y": 120,
+      "largeur": 61
+    },
+    {
+      "y": 128,
+      "largeur": 66
+    },
+    {
+      "y": 136,
+      "largeur": 81
+    },
+    {
+      "y": 144,
+      "largeur": 105
+    },
+    {
+      "y": 152,
+      "largeur": 129
+    },
+    {
+      "y": 160,
+      "largeur": 150
+    },
+    {
+      "y": 168,
+      "largeur": 166
+    },
+    {
+      "y": 176,
+      "largeur": 169
+    }
+  ],
+  "rapport_coupe_sur_cou": 2.77,
+  "normalise": [
+    0.0,
+    0.05,
+    0.19,
+    0.41,
+    0.63,
+    0.82,
+    0.97,
+    1.0
+  ],
+  "smooth_aux_memes_t": [
+    0.0,
+    0.06,
+    0.2,
+    0.39,
+    0.61,
+    0.8,
+    0.94,
+    1.0
+  ],
+  "limite": "un seul dessin stylisé (buste masculin musclé), une seule cellule : une CONVENTION de forme, pas une mesure anatomique générale"
+}

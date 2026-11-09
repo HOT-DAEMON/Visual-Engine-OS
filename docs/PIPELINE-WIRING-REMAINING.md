@@ -2,7 +2,9 @@
 
 > Complète `TODO-HEAD-BODY-PIPELINE.md`. Ce fichier ne liste que ce qui n'est **pas fait** et pourquoi.
 
-## Pose 3/4 — non branchée
+## Pose 3/4 — non branchée (mais la tête entière tourne : `head_3d`)
+
+> Depuis `PIPELINE-HEAD-3D.md`, un objet `head_3d` rend la tête et le cou d'un hôte à un lacet / tangage quelconques par la 3D du moteur `head-turntable`. `face/pose` (reprojection des composants 2D du visage) reste NON branchée ; la pose 3/4 du visage 2D, elle, n'est pas remplacée : `head_3d` est un rendu séparé en aplats, pas le visage ombré de l'hôte.
 
 `face/pose` est de la **géométrie pure** (projection de repères) : elle ne produit aucun SVG. La brancher exige de reprojeter **chaque composant** du visage
 (yeux, nez, bouche, mâchoire, oreilles, cheveux, ombres de contact) : ce n'est pas un champ de plus, c'est une deuxième chaîne de rendu.

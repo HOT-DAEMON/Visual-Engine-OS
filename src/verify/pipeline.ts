@@ -17,6 +17,7 @@ import { SceneSpec, type HostSpec } from '../schema';
 import { verifyBody } from './body';
 import { verifyLegs } from './lower';
 import { verifyProfile } from './skull';
+import { checkHead3d } from './head-3d';
 import { deriveSkull } from '../skull/derive';
 import { figureMarkup, legGeometry } from '../body/lower';
 import { LegParams } from '../body/lower/types';
@@ -87,6 +88,11 @@ export function verifyPipeline(input: unknown): Report {
     const d = deriveSkull(params, lm.W / lm.H, { hair: 'auto', ...o.skull }, o.variation);
     const rep = verifyProfile(params, d.skull, { skin: dominantColor(host.material.base), hair: o.hair ?? params.hair.color ?? '#4a3222', faceSize: { width: lm.W, height: lm.H }, derivation: d });
     checks.push(...rep.checks.map((c) => ({ ...c, id: `profile.${o.id}.${c.id}` })));
+  }
+  // Tête 3D (tête + cou tournants) : les 3 couches de la tête en rotation sur la personne de l'hôte, ids préfixés `head3d.<id>.`.
+  for (const o of scene.objects) {
+    if (o.kind !== 'head_3d') continue;
+    checks.push(...checkHead3d(o, hosts.get(o.host) as HostSpec));
   }
   return report(checks);
 }

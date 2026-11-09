@@ -1,8 +1,9 @@
 import type { SceneObject } from '../composition/expand';
 import type { LightVector } from '../lighting/light';
 import type { PublishedOrbits } from '../anatomy/orbit';
+import type { PlacedEye } from '../anatomy/relations';
 import type { HostSpec, LightSpec } from '../schema';
-import { compileBody, compileHeadProfile, compileHeadLit, compileCompoundEye, compileEye, compileGemEye, compileHost, compilePanel, compileRobotEye, type CompiledObject } from './index';
+import { compileBody, compileHead3d, compileHeadProfile, compileHeadLit, compileCompoundEye, compileEye, compileGemEye, compileHost, compilePanel, compileRobotEye, type CompiledObject } from './index';
 
 /** Ce que tout compilateur d'objet peut lire de la scène : la lumière MONDE et les hôtes (pour les enfants qui en dépendent, ex. le corps). */
 export interface CompileCtx {
@@ -12,6 +13,8 @@ export interface CompileCtx {
   readonly hosts: ReadonlyMap<string, HostSpec>;
   /** Orbites publiées par les yeux posés, par hôte `face` (consommées par les ombres de contact). */
   readonly orbits: ReadonlyMap<string, PublishedOrbits>;
+  /** Yeux posés par hôte `face` (la tête 3D en lit la couleur d'iris : la même personne que le visage de face). */
+  readonly eyes: ReadonlyMap<string, readonly PlacedEye[]>;
 }
 
 export type ObjectKind = SceneObject['kind'];
@@ -38,6 +41,11 @@ export const COMPILERS: { readonly [K in ObjectKind]: ObjectCompiler<K> } = {
     const host = c.hosts.get(o.host);
     if (!host) throw new Error(`Hôte introuvable : ${o.host}`); // jamais atteint après validation du schéma
     return compileHeadProfile(o, host);
+  },
+  head_3d: (o, c) => {
+    const host = c.hosts.get(o.host);
+    if (!host) throw new Error(`Hôte introuvable : ${o.host}`); // jamais atteint après validation du schéma
+    return compileHead3d(o, host, c.eyes.get(o.host) ?? []);
   },
   body: (o, c) => {
     const host = c.hosts.get(o.host);

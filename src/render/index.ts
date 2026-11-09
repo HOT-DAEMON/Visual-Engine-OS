@@ -8,4 +8,5 @@ export { compileGemEye } from './gem';
 export { objectTransform, type CompiledObject } from './object';
 export { compileBody } from './body';
 export { compileHeadProfile } from './head-profile';
+export { compileHead3d } from './head-3d';
 export { compileHeadLit } from './head-lit';

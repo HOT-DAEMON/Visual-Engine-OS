@@ -80,7 +80,12 @@ export function reliefStyleChecks(spec: HeadTurnSpec, R: Rend): Check[] {
   const r0 = R.at(0);
   c.push(check(S, 'head.style.ear.both0', 'Oreilles à 0° : la plus petite des deux moitiés d\'image (les deux oreilles se lisent de face)', Math.min(earPixels(r0, 1), earPixels(r0, -1)), 150, 1e9));
   const y1 = spec.neck.y1, w = (y: number): number => neckSection(spec.engine!, y, y1).a;
-  c.push(check(S, 'head.style.neck.flare', 'Cou : largeur au bas / largeur à mi-cou [évasement vers les trapèzes : ≥ 1,08 ; la planche garde ses 10 %]', w(y1) / w(0.5 * (spec.neck.y0 + y1)), 1.08, 1.9));
+  c.push(check(S, 'head.style.neck.flare', 'Cou : largeur au bas / largeur à mi-cou [évasement vers les trapèzes : ≥ 1,08 ; ≤ 2,2 = R max 2,4 du modèle `SHOULDER` ; la planche garde ses 10 %]', w(y1) / w(0.5 * (spec.neck.y0 + y1)), 1.08, 2.2));
+  // Cloche des trapèzes (réf. `rotation-3d/07.jpg`, vue de dos : ×2,77 mesuré sur des épaules entières ; le modèle borne R à [1,6 ; 2,4], convention) et monotonie : pas de goulot ni de bosse dans la jonction.
+  const wTop = w(spec.neck.y0), fromFace = !!(spec.engine.fit as { mandLandmarks?: boolean }).mandLandmarks;   // la planche (ellipses mesurées, évasement 10 %) n'a pas de cloche
+  if (fromFace) c.push(check(S, 'head.style.neck.bell', 'Cou : largeur à la coupe / largeur sous le crâne [cloche des trapèzes : réf. 07 ×2,77 sur des épaules entières ; modèle 1,6 – 2,4 ; planche exclue]', w(y1) / wTop, 1.55, 2.5));
+  let worst = 0; for (let y = spec.neck.y0 + 0.01; y <= y1; y += 0.01) worst = Math.min(worst, w(y) - w(y - 0.01));
+  c.push(check(S, 'head.style.neck.monotone', 'Cou : plus forte DIMINUTION de largeur vers le bas entre deux sections (U) : un goulot ou une bosse dans la jonction cou → épaules', -worst, 0, 1e-6));
   let step = 0; for (let y = spec.neck.y0 + 0.02; y <= y1; y += 0.02) step = Math.max(step, Math.abs(w(y) - w(y - 0.02)));
   c.push(check(S, 'head.style.neck.step', 'Cou : plus grande marche de largeur entre deux sections voisines (U) : pas de cassure à la jonction', step, 0, 0.03));
   return c;

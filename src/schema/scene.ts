@@ -9,6 +9,7 @@ import { PanelSpec } from './panel';
 import { HostSpec } from './host';
 import { BodySpec } from './body';
 import { HeadProfileSpec } from './head-profile';
+import { Head3dSpec } from './head-3d';
 import { HeadLitSpec } from './head-lit';
 import { LightSpec } from './light-transform';
 
@@ -24,7 +25,7 @@ export const SceneSpec = z
       .regex(/^[^\u0000-\u001f]*$/, 'caractères de contrôle interdits')
       .optional(),
     light: LightSpec.default({}),
-    objects: z.array(z.discriminatedUnion('kind', [EyeSpec, RobotEyeSpec, PanelSpec, HostSpec, CompoundEyeSpec, GemEyeSpec, BodySpec, HeadProfileSpec, HeadLitSpec])).min(1).max(256),
+    objects: z.array(z.discriminatedUnion('kind', [EyeSpec, RobotEyeSpec, PanelSpec, HostSpec, CompoundEyeSpec, GemEyeSpec, BodySpec, HeadProfileSpec, Head3dSpec, HeadLitSpec])).min(1).max(256),
   })
   .strict()
   .superRefine((scene, ctx) => {
@@ -68,6 +69,14 @@ export const SceneSpec = z
         else if (host.shape !== 'face') issue(['objects', i, 'host'], `le profil est la vue latérale d'un hôte shape: 'face' (${o.host} est ${host.shape})`);
         else if (scene.objects.some((q, j) => j < i && q.kind === 'head_profile' && q.host === o.host)) issue(['objects', i, 'host'], `un seul profil par hôte : ${o.host}`);
         claim(o.id, i);
+        return;
+      }
+
+      if (o.kind === 'head_3d') {
+        const host = hosts.get(o.host);
+        if (!host) issue(['objects', i, 'host'], `hôte introuvable : ${o.host}`);
+        else if (host.shape !== 'face') issue(['objects', i, 'host'], `la tête 3D est la vue tournée d'un hôte shape: 'face' (${o.host} est ${host.shape})`);
+        claim(o.id, i);   // plusieurs angles d'un même hôte sont permis (une planche de rotation), contrairement au profil unique
         return;
       }
 

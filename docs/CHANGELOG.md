@@ -149,3 +149,4 @@ cassé, ancrage inter-yeux cassé) : les 5 détectées. Détail dans
 - 11 : `CHANGELOG-11.md` (moteur de crâne en profil, feat/skull-profile).
 - 20 : `CHANGELOG-20.md` (reliefs de la tête en rotation, feat/hair-grammar).
 - 21 : `CHANGELOG-21.md` (raccord cou ↔ corps : ancre unique, SCM du torse, fondu borné, vérification du rendu final, feat/hair-grammar).
+- 22 : `CHANGELOG-22.md` (tête 3D dans le pipeline, cou en cloche, feat/hair-grammar).

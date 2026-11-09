@@ -11,6 +11,8 @@ import { DERIVED_AXES } from '../skull/derive';
  * `variation` la petite variation libre BORNÉE des axes dérivés. `transform` PLACE le profil dans la scène (son repère natif a une hauteur de 420).
  */
 const Free = z.number().min(-1).max(1);
+/** Variation libre bornée de la dérivation du crâne (partagée avec `head_3d` : même contrat, une seule définition). */
+export const SkullVariation = z.object({ ci: Free.default(0), axes: z.object(Object.fromEntries(DERIVED_AXES.map((k) => [k, Free.optional()])) as Record<(typeof DERIVED_AXES)[number], z.ZodOptional<z.ZodNumber>>).strict().default({}) }).strict().default({});
 export const HeadProfileSpec = z
   .object({
     kind: z.literal('head_profile'),
@@ -20,7 +22,7 @@ export const HeadProfileSpec = z
     /** Axes que le visage ne détermine pas ; les axes dérivés (length, vaultHeight, frontalBulge, foreheadSlope, zygoma, neckDepth) sont ÉCRASÉS par la dérivation. */
     skull: SkullParams.partial().default({}),
     /** Variation libre bornée de la dérivation : `ci` (indice céphalique, ±2,5 points) et les 5 axes dérivés (±0,08). 0 = aucune variation. */
-    variation: z.object({ ci: Free.default(0), axes: z.object(Object.fromEntries(DERIVED_AXES.map((k) => [k, Free.optional()])) as Record<(typeof DERIVED_AXES)[number], z.ZodOptional<z.ZodNumber>>).strict().default({}) }).strict().default({}),
+    variation: SkullVariation,
     /** Couleur des cheveux ; par défaut celle du visage de l'hôte. */
     hair: Hex.optional(),
     /** `skin` = rendu final ; `anatomy` = muscles/ligaments ; `bone` = os seul. */
