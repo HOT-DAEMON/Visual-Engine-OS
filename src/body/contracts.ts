@@ -10,7 +10,7 @@ const arm = (s: 'left' | 'right'): readonly string[] => [...CORE, 'limbs.', `pos
 export const BODY_CONTRACTS: Readonly<Record<string, BodyContract>> = {
   neck: { needs: [], reads: [], provides: ['neck'] },
   'torso-shell': { needs: ['neck'], reads: CORE, provides: ['torso.shell'] },
-  'shoulder-girdle': { needs: ['torso-shell'], reads: CORE, provides: ['shoulder.', 'neck.scm'] },
+  'shoulder-girdle': { needs: ['torso-shell'], reads: CORE, provides: ['shoulder.'] },
   pectorals: { needs: ['torso-shell'], reads: CORE, provides: ['pec'] },
   breasts: { needs: ['pectorals'], reads: [...CORE, 'breast.'], provides: ['breast', 'torso.nipple'] },
   abdominals: { needs: ['torso-shell'], reads: CORE, provides: ['torso.rectus', 'abs.', 'torso.inguinal'] },

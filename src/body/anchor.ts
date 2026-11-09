@@ -1,4 +1,4 @@
-import { faceLandmarks } from '../face';
+import { faceLandmarks, type FaceLandmarks } from '../face';
 import { neckModelFor } from '../neck';
 import type { FaceParams } from '../schema';
 import type { NeckAnchor } from './types';
@@ -9,8 +9,11 @@ import type { NeckAnchor } from './types';
  * formule laissait une marche visible entre la base du cou et le haut du torse (critère « transition cou-torse : aucune séparation de l'enveloppe »).
  * Par défaut, l'écart avec l'ancienne valeur est inférieur à 1 % (testé).
  */
-export function anchorFromFace(face: FaceParams, W: number, H: number): NeckAnchor {
-  const lm = faceLandmarks(face, W, H);
+export function anchorFromLandmarks(face: FaceParams, lm: FaceLandmarks): NeckAnchor {
   const last = neckModelFor(face, lm).stations.at(-1)!;
   return { h: lm.H, chinY: lm.chinY, baseY: lm.neck.bottomY, baseHalf: (last.aL + last.aR) / 2 };
+}
+/** Même ancre depuis les paramètres bruts d'un visage ; la scène, elle, passe ses repères STYLISÉS à `anchorFromLandmarks` (une seule formule). */
+export function anchorFromFace(face: FaceParams, W: number, H: number): NeckAnchor {
+  return anchorFromLandmarks(face, faceLandmarks(face, W, H));
 }

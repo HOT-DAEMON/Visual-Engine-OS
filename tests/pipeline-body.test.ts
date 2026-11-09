@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { compileScene, generateRandomFace, renderScene, SceneSpec } from '../src';
-import { bodyMarkup, composeFigure } from '../src/body';
+import { anchorFromLandmarks, bodyMarkup, composeFigure } from '../src/body';
+import { neckPath } from '../src/render/neck';
 import { figureMarkup } from '../src/body/lower';
 import { verifyPipeline } from '../src/verify';
 import { dominantColor } from '../src/materials';
@@ -25,8 +26,8 @@ describe('corps dans le pipeline principal', () => {
     for (const seed of [3, 11, 42]) {
       const { scene, host } = sceneOf(seed);
       const { params, lm } = hostFace(host);
-      const a = { h: lm.H, chinY: lm.chinY, baseY: lm.neck.bottomY, baseHalf: lm.neck.half * (1 + params.neck.flare) };
-      const m = bodyMarkup({ age: 28, sex: 1, muscularity: 0.6 }, a, { skin: dominantColor(host.material.base), level: 3, mode: 'skin', uid: 'b0' });
+      const a = anchorFromLandmarks(params, lm); // source unique : dernière section du moteur de cou (plus de formule recopiée)
+      const m = bodyMarkup({ age: 28, sex: 1, muscularity: 0.6 }, a, { skin: dominantColor(host.material.base), level: 3, mode: 'skin', uid: 'b0', neckContour: neckPath(params, lm) });
       const legacy = composeFigure(renderScene(SceneSpec.parse(scene)), m);
       const r = compileScene(withBody(scene));
       expect(r.ok).toBe(true);
@@ -66,11 +67,11 @@ describe('corps dans le pipeline principal', () => {
   it('legs: false (défaut) = buste identique ; legs: {} = figure : même SVG que composeFigure(visage, figureMarkup) et bassin + jambes présents', () => {
     const { scene, host } = sceneOf(11);
     const { params, lm } = hostFace(host);
-    const a = { h: lm.H, chinY: lm.chinY, baseY: lm.neck.bottomY, baseHalf: lm.neck.half * (1 + params.neck.flare) };
+    const a = anchorFromLandmarks(params, lm); // source unique : dernière section du moteur de cou (plus de formule recopiée)
     const body = { age: 28, sex: 1, muscularity: 0.6 };
     const bust = compileScene(withBody(scene)), explicitBust = compileScene(withBody(scene, { legs: false }));
     expect(bust.ok && explicitBust.ok && bust.svg === explicitBust.svg).toBe(true);
-    const m = figureMarkup(body, {}, a, { skin: dominantColor(host.material.base), level: 3, mode: 'skin', uid: 'b0' });
+    const m = figureMarkup(body, {}, a, { skin: dominantColor(host.material.base), level: 3, mode: 'skin', uid: 'b0', neckContour: neckPath(params, lm) });
     const legacy = composeFigure(renderScene(SceneSpec.parse(scene)), m);
     const fig = compileScene(withBody(scene, { legs: {} }));
     expect(fig.ok).toBe(true);

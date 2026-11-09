@@ -19,7 +19,7 @@ Règle verrouillée (`body.level-monotonic`) : un enfant n'est jamais d'un nivea
 |---|---|---|
 | `neck` (1) | `neck` | racine, rendue par le moteur de visage (cachée ici) |
 | `torso-shell` (1) | `torso.shell` | enveloppe du tronc, coupe nette à la ligne des hanches |
-| `shoulder-girdle` (9) | `shoulder.notch`, `shoulder.clavicle`, `shoulder.acromion`, `shoulder.trapezius`, `neck.scm` | trapèze supérieur suit le bord réel de l'enveloppe ; SCM : 2 chefs |
+| `shoulder-girdle` (7) | `shoulder.notch`, `shoulder.clavicle`, `shoulder.acromion`, `shoulder.trapezius` | trapèze supérieur suit le bord réel de l'enveloppe ; les muscles du cou (SCM) appartiennent au moteur de cou, plus au torse |
 | `pectorals` (8) | `pec`, `pec.clavicular`, `pec.sternal`, `pec.minor` (caché) | |
 | `breasts` (8 / 2) | `breast`, `breast.fold`, `breast.areola`, `breast.nipple` — ou `torso.nipple` seul | adultes à masse non nulle ; sinon repère neutre ; **aucun avant 18 ans** |
 | `abdominals` (17) | `torso.rectus`, `abs.r1`…`abs.r4`, `abs.intersection.1-3`, `abs.linea-alba`, `abs.umbilicus`, `torso.inguinal` | 4 rangées × 2 blocs |

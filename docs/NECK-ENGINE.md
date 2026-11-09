@@ -65,3 +65,7 @@ Géométrie (finitude, axe monotone, ancrages haut/base, plancher de section, co
 
 `artefacts/neck/` : 01 morphologies · 02 anatomie · 03 opérateurs · 04 mouvements · 05 espèces · 06 styles · 07 lumière · 08 têtes entières · 09 silhouettes sous lacet · 10 vérification · 11 tableau de preuves · 12a/12b apparence **avant** (ombrage propre) / **après** (moteur de peau partagé), 8 conditions : lumière gauche/droite, cel, torsion, dragon, autre identité, massif.
 Régénérer : `npx tsx scripts/artefacts-neck.ts [préfixe …]`.
+
+## 10. Raccord au corps (session 21)
+
+Le corps ne lit le cou que par `NeckAnchor` (hauteur, menton, base, demi-largeur de base). La demi-largeur est la **dernière section du moteur de cou** (`anchorFromLandmarks`, `src/body/anchor.ts`), pour la scène comme pour `anchorFromFace` ; avant cette session la scène recalculait une largeur avec l'ancienne formule (écart jusqu'à −28,8 % sur un cou en cône : le point 4 ci-dessus n'était vrai que pour la position de la base). Le torse ne dessine plus de SCM. Le fondu de la base est borné par `neckPath` (`BodyRenderOpts.neckContour`). Preuves : `tests/neck-body-junction.test.ts` ; défauts restants : `docs/NECK-REMAINING.md` §F.

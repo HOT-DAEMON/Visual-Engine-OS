@@ -1,0 +1,988 @@
+{
+  "ecartsAncre": [
+    {
+      "seed": 3,
+      "cou": "défaut",
+      "baseHalfAncienne": 102.81,
+      "baseHalfMoteur": 102.81,
+      "ecartPct": 0
+    },
+    {
+      "seed": 3,
+      "cou": "cône (taper 0,9)",
+      "baseHalfAncienne": 102.81,
+      "baseHalfMoteur": 144.45,
+      "ecartPct": -28.8
+    },
+    {
+      "seed": 3,
+      "cou": "massif + trapèzes",
+      "baseHalfAncienne": 117.11,
+      "baseHalfMoteur": 128.6,
+      "ecartPct": -8.9
+    },
+    {
+      "seed": 42,
+      "cou": "défaut",
+      "baseHalfAncienne": 102.35,
+      "baseHalfMoteur": 102.35,
+      "ecartPct": 0
+    },
+    {
+      "seed": 42,
+      "cou": "cône (taper 0,9)",
+      "baseHalfAncienne": 102.35,
+      "baseHalfMoteur": 143.8,
+      "ecartPct": -28.8
+    },
+    {
+      "seed": 42,
+      "cou": "massif + trapèzes",
+      "baseHalfAncienne": 112.05,
+      "baseHalfMoteur": 123.05,
+      "ecartPct": -8.9
+    }
+  ],
+  "rendu": [
+    {
+      "seed": 3,
+      "cou": "défaut",
+      "derniereSectionDemiLargeur": 102.81,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0.7,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 1.84,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 3,
+      "cou": "évasé (flare 0,6)",
+      "derniereSectionDemiLargeur": 135.76,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": false,
+          "valeur": 2,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0.76,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 2.05,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 3,
+      "cou": "cône (taper 0,9)",
+      "derniereSectionDemiLargeur": 144.45,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0.78,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 1.32,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 3,
+      "cou": "massif + trapèzes",
+      "derniereSectionDemiLargeur": 128.6,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0.67,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 1.53,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 3,
+      "cou": "compression",
+      "derniereSectionDemiLargeur": 112.68,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 1.18,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 4.06,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 11,
+      "cou": "défaut",
+      "derniereSectionDemiLargeur": 103.11,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0.83,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0.05,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 11,
+      "cou": "évasé (flare 0,6)",
+      "derniereSectionDemiLargeur": 148.94,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0.77,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0.01,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 11,
+      "cou": "cône (taper 0,9)",
+      "derniereSectionDemiLargeur": 144.86,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0.88,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0.28,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 11,
+      "cou": "massif + trapèzes",
+      "derniereSectionDemiLargeur": 112.07,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0.87,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0.14,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 11,
+      "cou": "compression",
+      "derniereSectionDemiLargeur": 113,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 1.39,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 2.09,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "cou": "défaut",
+      "derniereSectionDemiLargeur": 102.35,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 4.02,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 5.8,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "cou": "évasé (flare 0,6)",
+      "derniereSectionDemiLargeur": 137.48,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": false,
+          "valeur": 1,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 4,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 5.89,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "cou": "cône (taper 0,9)",
+      "derniereSectionDemiLargeur": 143.8,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 3.51,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 5.24,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "cou": "massif + trapèzes",
+      "derniereSectionDemiLargeur": 123.05,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 3.8,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 5.46,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "cou": "compression",
+      "derniereSectionDemiLargeur": 112.17,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 4.55,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 7.94,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 77,
+      "cou": "défaut",
+      "derniereSectionDemiLargeur": 107.91,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 3.56,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 5.79,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 77,
+      "cou": "évasé (flare 0,6)",
+      "derniereSectionDemiLargeur": 125.18,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 3.57,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 5.86,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 77,
+      "cou": "cône (taper 0,9)",
+      "derniereSectionDemiLargeur": 151.61,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 2.91,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 3.72,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 77,
+      "cou": "massif + trapèzes",
+      "derniereSectionDemiLargeur": 136.73,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 3.23,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 5.07,
+          "limite": 12
+        }
+      ]
+    },
+    {
+      "seed": 77,
+      "cou": "compression",
+      "derniereSectionDemiLargeur": 118.27,
+      "controles": [
+        {
+          "id": "neck.render.painted-inside-silhouette",
+          "couche": "geometry",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.nothing-outside-silhouette",
+          "couche": "geometry",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.midline-continuous",
+          "couche": "anatomy",
+          "severite": "error",
+          "ok": true,
+          "valeur": 0,
+          "limite": 0
+        },
+        {
+          "id": "neck.render.skin-hue-continuity",
+          "couche": "style",
+          "severite": "error",
+          "ok": true,
+          "valeur": 4.26,
+          "limite": 14
+        },
+        {
+          "id": "neck.render.seam-luminance-step",
+          "couche": "style",
+          "severite": "warn",
+          "ok": true,
+          "valeur": 8.09,
+          "limite": 12
+        }
+      ]
+    }
+  ]
+}

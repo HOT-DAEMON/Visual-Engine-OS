@@ -28,7 +28,7 @@ export function halfAt(f: BodyFrame, y: number): number {
 /** Point du tronc : u ∈ [-1,1] = fraction de la demi-largeur à la hauteur y. Les muscles sont dessinés dans CE repère (ils suivent donc l'adiposité, l'âge, le sexe). */
 export const at = (f: BodyFrame, u: number, y: number): V => v(u * halfAt(f, y), y);
 
-/** Enveloppe, repères osseux, ceinture scapulaire (clavicule, trapèze, acromion), muscles du cou en vue de face. Racine = le cou (parent : atome `neck`). */
+/** Enveloppe, repères osseux, ceinture scapulaire (clavicule, trapèze, acromion), Racine = le cou (parent : atome `neck`). */
 export function torsoShell(f: BodyFrame): Atom[] {
   const { y: Y, x: X, a, h } = f;
   const ys = [Y.base - 0.05 * h, lerp(Y.base, Y.acr, 0.55), Y.acr, lerp(Y.acr, Y.axilla, 0.55), Y.axilla, Y.nipple, Y.waist, Y.navel, Y.crop, Y.crop + 0.15 * h];
@@ -47,8 +47,7 @@ export function torsoShell(f: BodyFrame): Atom[] {
   const outer = ty.map((y) => v(halfAt(f, y) * 0.96, y));
   const inner = ty.map((y, i) => v(lerp(a.baseHalf * 1.05, X.acr - 0.06 * h, i / 3), y + 0.07 * h)).reverse();
   out.push(...pair('shoulder.trapezius', 'muscle', 'shoulder-girdle', 'torso.shell', 1, () => [...outer, ...inner], { tone: -0.2 }));
-  // Muscles du cou de face : sterno-cléido-mastoïdiens (deux chefs : sternal, claviculaire) ; naissent derrière l'oreille, convergent sur l'incisure.
-  const nh = a.baseHalf * 0.82, top = a.chinY + 0.22 * (a.baseY - a.chinY);
-  out.push(...pair('neck.scm', 'muscle', 'shoulder-girdle', 'neck', 2, () => [v(nh * 1.0, top), v(nh * 0.8, lerp(top, notch.y, 0.5)), v(0.1 * h, notch.y - 0.01 * h), v(0.03 * h, notch.y + 0.01 * h), v(0.065 * h, notch.y - 0.03 * h), v(nh * 0.55, lerp(top, notch.y, 0.55)), v(nh * 0.6, top + 0.02 * h)], { tone: -0.15, sidedParent: false }));
+  // Les muscles du cou (sterno-cléido-mastoïdiens, platysma) appartiennent au MOTEUR DE COU (`render/neck/muscles.ts`) : ils suivent torsion, inclinaison et
+  // asymétrie du cou. Le torse n'en dessine plus (un second tracé, rigide, doublait le premier à l'incisure jugulaire).
   return out;
 }

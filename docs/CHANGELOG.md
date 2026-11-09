@@ -5,7 +5,7 @@ dans quel fichier, et avec quels tests à l'appui. Voir `docs/ERRORS.md`
 pour le détail des erreurs rencontrées pendant le développement.
 
 > Journal découpé en fichiers de ≤ 200 lignes (discipline de lisibilité) :
-> `CHANGELOG-19.md` (le plus récent : moteur de cou) → `CHANGELOG-18.md` (cohérence crâne-cheveux) → `CHANGELOG-17.md` (lisière des cheveux) → `CHANGELOG-16.md` ( : tête + corps dans le pipeline, contrat central) → `CHANGELOG-15.md` (corps) → … → `CHANGELOG-12.md` (systèmes d'yeux) → `CHANGELOG-11.md` (crâne de profil) → … → `CHANGELOG-4.md` (session 13, cheveux complets) → `CHANGELOG-3.md` → `CHANGELOG.md` / `CHANGELOG-2.md`.
+> `CHANGELOG-21.md` (le plus récent : raccord cou ↔ corps) → `CHANGELOG-20.md` (reliefs de la tête en rotation) → `CHANGELOG-19.md` (moteur de cou) → `CHANGELOG-18.md` (cohérence crâne-cheveux) → `CHANGELOG-17.md` (lisière des cheveux) → `CHANGELOG-16.md` ( : tête + corps dans le pipeline, contrat central) → `CHANGELOG-15.md` (corps) → … → `CHANGELOG-12.md` (systèmes d'yeux) → `CHANGELOG-11.md` (crâne de profil) → … → `CHANGELOG-4.md` (session 13, cheveux complets) → `CHANGELOG-3.md` → `CHANGELOG.md` / `CHANGELOG-2.md`.
 
 ## Session 7 — Visage complet aléatoire (au-delà d'une paire d'yeux)
 
@@ -148,3 +148,4 @@ cassé, ancrage inter-yeux cassé) : les 5 détectées. Détail dans
 - 10 : `CHANGELOG-10.md` (vitesse de génération, feat/render-speed).
 - 11 : `CHANGELOG-11.md` (moteur de crâne en profil, feat/skull-profile).
 - 20 : `CHANGELOG-20.md` (reliefs de la tête en rotation, feat/hair-grammar).
+- 21 : `CHANGELOG-21.md` (raccord cou ↔ corps : ancre unique, SCM du torse, fondu borné, vérification du rendu final, feat/hair-grammar).

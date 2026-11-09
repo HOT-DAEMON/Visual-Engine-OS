@@ -13,9 +13,9 @@ Le corps n'était composé qu'après coup : `composeFigure` retouchait la chaîn
 ## 2. Ce qui est branché maintenant
 
 - **`kind: 'body'`** (`src/schema/body.ts`) : `{ id, host, body: BodyParams, level, mode }`. Aucune coordonnée absolue : le corps lit le cou de son hôte
-  (`neckAnchor` → `hostFace`, repères **stylisés**, source unique avec le visage), la transformation monde de l'hôte et la peau de l'hôte.
+  (`neckAnchor` → `hostFace`, repères **stylisés**, source unique avec le visage ; largeur de base = dernière section du moteur de cou via `anchorFromLandmarks`, formule unique), la transformation monde de l'hôte et la peau de l'hôte.
 - **Validation de scène** (`schema/scene.ts`) : hôte introuvable, hôte non `shape: 'face'`, deux corps sur le même hôte → rejet avec message.
-- **Calque `underlay`** (`CompiledObject`) : le torse et les bras passent derrière le visage, le fondu de la base du cou devant (ordre de `composeFigure`).
+- **Calque `underlay`** (`CompiledObject`) : le torse et les bras passent derrière le visage, le fondu de la base du cou devant (ordre de `composeFigure`), borné par le contour réel du cou (`neckContour`).
 - **Équivalence prouvée** : `tests/pipeline-body.test.ts` compare, sur 3 graines, la nouvelle sortie à `composeFigure(...)` : chaînes SVG **identiques**.
 - **Registre des compilateurs** (`render/registry.ts`) : table typée `{ [kind]: compilateur }`, exhaustive à la compilation (un `kind` non inscrit ne compile pas).
   `compile.ts` ne contient plus de `switch`. Ajouter un objet = 1 schéma + 1 entrée du registre + 1 ligne de l'union `schema/scene.ts`.

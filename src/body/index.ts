@@ -1,5 +1,5 @@
 export { BodyParams, ArmPose, type BodyInput, type NeckAnchor, type Atom, type Level } from './types';
-export { anchorFromFace } from './anchor';
+export { anchorFromFace, anchorFromLandmarks } from './anchor';
 export { bodyGeometry, type BodyGeo } from './geometry';
 export { renderBody, type BodyRenderOpts, type BodyMarkup } from './render';
 export { composeFigure } from './compose';

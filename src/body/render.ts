@@ -14,6 +14,11 @@ export interface BodyRenderOpts {
   readonly mode?: 'skin' | 'atoms';
   /** Préfixe d'identifiants (plusieurs corps dans un même SVG). */
   readonly uid?: string;
+  /**
+   * Contour du cou (chemin SVG, repère de l'hôte) fourni par le MOTEUR DE COU : il borne le fondu de la base du cou au-dessus de la base (le fondu ne dépasse
+   * jamais du cou sur le fond) ; en dessous, il est limité à la largeur de la base. Absent : fondu non borné (comportement historique).
+   */
+  readonly neckContour?: string;
 }
 export interface BodyMarkup { readonly back: string; readonly front: string }
 
@@ -110,6 +115,12 @@ export function renderBody(geo: BodyGeo, o: BodyRenderOpts): BodyMarkup {
   for (let layer = 1; layer < 4; layer++) g.push(...layerAtoms(layer));
   const { a: an } = f, bx = an.baseHalf * 1.04, y0 = an.baseY - 0.09 * h, y1 = an.baseY + 0.012 * h;
   defs.push(el('linearGradient', { id: `${uid}-nk`, x1: 0, y1: 0, x2: 0, y2: 1 }, [el('stop', { offset: 0, 'stop-color': mix(skin, shade, 0.1), 'stop-opacity': 0 }), el('stop', { offset: 1, 'stop-color': mix(skin, shade, 0.1), 'stop-opacity': 1 })]));
-  const front = el('path', { d: `M${-bx} ${y0}L${bx} ${y0}L${bx} ${y1}L${-bx} ${y1}Z`, fill: urlRef(`${uid}-nk`) });
+  const fade = el('path', { d: `M${-bx} ${y0}L${bx} ${y0}L${bx} ${y1}L${-bx} ${y1}Z`, fill: urlRef(`${uid}-nk`) });
+  let front = fade;
+  if (o.neckContour) {
+    const cid = `${uid}-nk-clip`;
+    defs.push(el('clipPath', { id: cid }, [el('path', { d: o.neckContour }), el('rect', { x: -an.baseHalf, y: an.baseY - 0.004 * h, width: 2 * an.baseHalf, height: 9999 })]));
+    front = el('g', { 'clip-path': urlRef(cid) }, [fade]);
+  }
   return { back: el('g', {}, [el('defs', {}, defs), ...g]), front };
 }

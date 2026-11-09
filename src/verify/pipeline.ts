@@ -10,7 +10,7 @@ import { bodyMarkup } from '../body/markup';
 import { BodyParams } from '../body/types';
 import { dominantColor } from '../materials';
 import { faceComponents } from '../render/face/components';
-import { neckAnchor } from '../render/body';
+import { bodyRenderOpts, neckAnchor } from '../render/body';
 import { hostFace } from '../render/face';
 import { noseGeometry } from '../face';
 import { SceneSpec, type HostSpec } from '../schema';
@@ -72,10 +72,10 @@ export function verifyPipeline(input: unknown): Report {
     const a = neckAnchor(host);
     checks.push(check('anatomy', `junction.neck-below-chin.${o.id}`, '>=', a.baseY - a.chinY, 0, 'la base du cou doit être sous le menton'));
     const geo = bodyGeometry(BodyParams.parse(o.body), a);
-    const m = bodyMarkup(o.body, a, { skin: dominantColor(host.material.base), level: o.level, mode: o.mode, uid: o.id });
+    const m = bodyMarkup(o.body, a, bodyRenderOpts(o, host));
     checks.push(...verifyBody(geo, m, dominantColor(host.material.base)).checks);
     if (o.legs !== false) {
-      const fig = figureMarkup(o.body, o.legs, a, { skin: dominantColor(host.material.base), level: o.level, mode: o.mode, uid: o.id });
+      const fig = figureMarkup(o.body, o.legs, a, bodyRenderOpts(o, host));
       checks.push(...verifyLegs(legGeometry(BodyParams.parse(o.body), LegParams.parse(o.legs), a), fig).checks);
     }
   }
