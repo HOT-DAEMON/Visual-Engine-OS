@@ -5,7 +5,7 @@ import { REACH, conformReach, reachBudget, windReach } from '../src/face/hair/re
 import { TIE, tieSpots } from '../src/face/hair/tie';
 import { VOCAB } from '../src/face/hair/vocab';
 import { distanceOutsideSkull } from '../src/face/hair/thickness';
-import { ROOT_MIN_RATIO, hairAppearance, rootColorOf } from '../src/render/face/hair-look';
+import { ROOT_BAND_MIN_RATIO, ROOT_MIN_RATIO, hairAppearance, rootColorOf, shellColorOf } from '../src/render/face/hair-look';
 import { luminance } from '../src/core/color';
 import { checkHairCoherence } from '../src/verify/hair-coherence';
 import { HAIR_STYLES } from '../src/schema';
@@ -99,13 +99,14 @@ describe('attaches posées sur la tête (tie)', () => {
 });
 
 describe('teinte racine et vocabulaire de formes', () => {
-  it('rootColorOf : jamais sous ROOT_MIN_RATIO × la luminance des cheveux, même avec une racine quasi noire', () => {
+  it('shellColorOf ≥ ROOT_MIN_RATIO et rootColorOf (repousse) ≥ ROOT_BAND_MIN_RATIO × la luminance des cheveux, même avec une racine quasi noire', () => {
     for (let k = 0; k < 60; k++) {
       const f = face(STYLES[k % STYLES.length]!, k, { rootColor: '#0a0806' });
       expect(f.params.hair.rootColor, 'la racine presque noire est appliquée').toBe('#0a0806');
       const ra = hairAppearance(f.params.hair), lum = luminance(ra.base);
       if (lum < 0.02) continue;
-      expect(luminance(rootColorOf(ra, f.params.hair)) / lum, `k${k}`).toBeGreaterThanOrEqual(ROOT_MIN_RATIO - 0.01);
+      expect(luminance(shellColorOf(ra)) / lum, `coque k${k}`).toBeGreaterThanOrEqual(ROOT_MIN_RATIO - 0.01);
+      expect(luminance(rootColorOf(ra, f.params.hair)) / lum, `repousse k${k}`).toBeGreaterThanOrEqual(ROOT_BAND_MIN_RATIO - 0.01);
     }
   });
 
@@ -162,5 +163,17 @@ describe('contrôles négatifs : un défaut injecté est vu', () => {
     const f = face('short', 7, { thinning: 0 }), g = geoOf(f);
     expect(errors(f)).toEqual([]);
     expect(errors(f, clone(g, { base: [], locks: g.locks.filter((l) => l.layer === 'back') }))).toContain('crown-covered');
+  });
+  it('tresse qui pend sous le cou', () => {
+    const f = face('braids', 3), g = geoOf(f), lm = lmOf(f);
+    expect(errors(f)).toEqual([]);
+    const locks = g.locks.map((l) => (l.part === 'braid' && l.rank === 'plait' ? { ...l, poly: l.poly.map((q) => ({ x: q.x, y: q.y + 0.8 * lm.H })) } : l));
+    expect(errors(f, clone(g, { locks }))).toContain('braid-length-bound');
+  });
+
+  it('tempes nues', () => {
+    const f = face('short', 5, { thinning: 0 }), g = geoOf(f);
+    expect(errors(f)).toEqual([]);
+    expect(errors(f, clone(g, { base: [], locks: g.locks.filter((l) => l.layer === 'back') }))).toContain('temples-covered');
   });
 });

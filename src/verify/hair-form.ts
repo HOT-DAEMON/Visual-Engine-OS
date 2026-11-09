@@ -1,12 +1,15 @@
 import { toHsl } from '../appearance';
 import { faceLandmarks } from '../face';
 import { hairGeometry, type HairGeometry } from '../face/hair';
-import { FILL, fillKeep, relaxedBare, shellCoverage } from '../face/hair/crown-fill';
+import { FILL, RIM_FROM, fillKeep, relaxedBare, ringThickness, shellCoverage } from '../face/hair/crown-fill';
+import { COMB, combKind } from '../face/hair/comb';
+import { rootBand } from '../face/hair/root-band';
 import { distanceOutsideSkull } from '../face/hair/thickness';
 import { REACH } from '../face/hair/reach';
 import { inPoly } from '../face/poly';
 import type { RandomFace } from '../generation/random-face';
-import { UNDER_HUE_MAX, hairAppearance, tierHueShift } from '../render/face/hair-look';
+import { ANALOGOUS_MAX, hairAppearance, tierHueShift } from '../render/face/hair-look';
+import { fringeRhythm } from './hair-fringe-edge';
 import { check, type Check } from './types';
 
 /**
@@ -70,10 +73,28 @@ export function checkHairForm(face: RandomFace, override?: HairGeometry, shift: 
   const ra = hairAppearance(p.hair), base = toHsl(ra.base);
   if (base.s >= 0.15 && geo.tierMasses.length) {
     let gap = 0;
-    for (const m of geo.tierMasses) gap = Math.max(gap, hueGap(toHsl(ra.tone(p.hair.tiers.underTone * Math.min(1, 0.6 + 0.2 * m.tier))).h + shift(p.hair, m.tier), base.h));
-    out.push(check('style', 'tier-hue-near-hair', '<=', gap, UNDER_HUE_MAX + 24, 'la sous-couche d\'étage change de famille de teinte : plaque étrangère sous les mèches'));
+    for (const m of geo.tierMasses) gap = Math.max(gap, hueGap(toHsl(ra.tone(p.hair.tiers.underTone * Math.min(1, 0.6 + 0.2 * m.tier))).h + shift(p.hair, m.tier, ra), base.h));
+    out.push(check('style', 'tier-hue-near-hair', '<=', gap, ANALOGOUS_MAX + 0.5, 'la sous-couche d\'étage sort de l\'harmonie analogue (±30°) des cheveux : plaque étrangère sous les mèches'));
   }
   const nFill = new Set(geo.locks.filter((l) => l.fill).map((l) => l.fill)).size;
   out.push(check('style', 'fill-style-scope', '<=', nFill, spec && !p.hair.sim.enabled ? spec.max : 0, spec && !p.hair.sim.enabled ? 'plus de mèches de remplissage (indices distincts) que le plafond de la coiffure' : 'cette coiffure est un aplat (rase, attachée, simulée) : elle ne reçoit aucune mèche de remplissage'));
+  // Repousse (`root-band.ts`) : la bande de racine reste dans la moitié INTÉRIEURE de la coque, la silhouette n'est jamais de la couleur de racine.
+  if (p.hair.rootColor && !p.hair.sim.enabled) {
+    const thick = ringThickness(S, geo.base[0] as never), rb = rootBand(geo.hairline, geo.bare.part, thick, W);
+    if (rb) out.push(check('geometry', 'root-band-inside', '<=', rb.depth / thick, RIM_FROM, 'la repousse (racine sombre) atteint le bord de la coque : la silhouette du dôme serait de la couleur de racine'));
+  }
+  // Rythme de la frange (`hair-fringe-edge.ts`) : pas de peigne (touffes de même largeur à pas régulier).
+  const rh = fringeRhythm(geo);
+  if (rh) out.push(check('style', 'fringe-rhythm-natural', '>=', Math.min(rh.regularity, 9), 0.25, 'la frange est un peigne : touffes de même largeur à intervalles réguliers (dents de scie)'));
+  // Dôme des coiffures tirées / rase (`comb.ts`) : stries ou chaume, jamais un aplat ; aucun trait ailleurs.
+  const ck = combKind(style), nComb = geo.locks.filter((l) => l.comb).length;
+  if (ck && !p.hair.sim.enabled) {
+    const quota = Math.round(COMB[ck].n * (1 - 0.5 * p.hair.thinning));
+    // Les traits ne sont pas bornés par `reach` (rang `hairline`, hors du contrôle de portée) : ils doivent tenir DANS la coque.
+    let outside = 0, tot = 0;
+    for (const l of geo.locks) if (l.comb) for (const q of l.poly) { tot++; if (!inPoly(geo.base[0] as never, q.x, q.y)) outside++; }
+    out.push(check('geometry', 'comb-inside-shell', '<=', tot ? outside / tot : 0, 0.05, 'des traits de peignage / chaume sortent de la coque de la chevelure'));
+    out.push(check('geometry', 'dome-combed', '>=', nComb / quota, 0.4, 'le dessus du crâne (cheveux tirés ou rasés) est un aplat lisse : ni stries ni chaume'));
+  } else out.push(check('style', 'comb-style-scope', '<=', nComb, 0, 'des traits de peignage / chaume sur une coiffure qui n\'est ni tirée ni rase'));
   return out;
 }

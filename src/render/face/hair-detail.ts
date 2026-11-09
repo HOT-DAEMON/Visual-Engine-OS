@@ -29,6 +29,22 @@ export function smoothPath(poly: Poly): string {
   return `${d}Z`;
 }
 
+/** Racine et direction (rad) d'une mèche du devant, pour aligner les cheveux fous sur le flux local. */
+interface FlowRoot { readonly x: number; readonly y: number; readonly a: number }
+const flowRoots = (geo: HairGeometry): FlowRoot[] =>
+  geo.locks.flatMap((l) => {
+    const sp = l.spine;
+    if (l.layer !== 'front' || l.sim || !sp || sp.length < 3) return [];
+    const a = sp[0] as { x: number; y: number }, b = sp[2] as { x: number; y: number };
+    return Math.hypot(b.x - a.x, b.y - a.y) < 1e-6 ? [] : [{ x: a.x, y: a.y, a: Math.atan2(b.y - a.y, b.x - a.x) }];
+  });
+/** Direction de la racine de mèche la plus proche de `p` à moins de `r`, `null` sinon. */
+const nearestFlow = (roots: readonly FlowRoot[], p: { x: number; y: number }, r: number): number | null => {
+  let best: FlowRoot | null = null, bd = r;
+  for (const q of roots) { const d = Math.hypot(q.x - p.x, q.y - p.y); if (d < bd) { bd = d; best = q; } }
+  return best ? best.a : null;
+};
+
 /**
  * Transition peau / cheveux le long de TOUTE la lisière visible de face (implantation du front + bord avant des pattes) : ombre portée
  * douce posée sur la peau, côté du visage, et petits poils qui franchissent le bord. Netteté, opacité et densité viennent de
@@ -54,11 +70,15 @@ export function hairlineTransition(geo: HairGeometry, p: FaceParams, lm: FaceLan
   ];
   // Petits poils : sur l'implantation (vers le haut/bas, éventail de ±0,8 rad) ; sur les pattes (vers l'intérieur).
   const keep = es.strayShare;
+  const roots = flowRoots(geo);
   for (let i = 2; i < chain.length - 2; i++) {
     if (rnd() >= keep) continue;
     const q = chain[i] as (typeof chain)[number];
     const side = q.kind === 'sideburn';
-    const ang = (side ? (q.p.x < 0 ? 0 : Math.PI) : Math.PI / 2) + (rnd() - 0.5) * 1.6;
+    // Cheveux fous alignés sur le FLUX LOCAL (`docs/HAIR-FORM-REMAINING.md`, ex-lisière 17) : un baby hair suit la direction de la mèche voisine (éventail resserré à ±0,35 rad) ;
+    // sans mèche à moins de 0,05 W, éventail d'avant (vers le bas sur l'implantation, vers l'intérieur sur les pattes).
+    const flow = side ? null : nearestFlow(roots, q.p, 0.05 * lm.W);
+    const ang = flow !== null ? flow + (rnd() - 0.5) * 0.7 : (side ? (q.p.x < 0 ? 0 : Math.PI) : Math.PI / 2) + (rnd() - 0.5) * 1.6;
     const len = (0.006 + 0.01 * rnd()) * lm.H;
     out.push(el('path', { d: `M${num(q.p.x)} ${num(q.p.y - (side ? 0 : 0.002 * lm.H))}l${num(Math.cos(ang) * len)} ${num(Math.sin(ang) * len)}`, fill: 'none', stroke: darken(h.color, 0.1), 'stroke-width': lm.W * 0.0011, 'stroke-linecap': 'round', opacity: (0.22 + 0.3 * rnd()) * (es.strayAlpha / 0.4) }));
   }
@@ -68,9 +88,10 @@ export function hairlineTransition(geo: HairGeometry, p: FaceParams, lm: FaceLan
 const GLOSS = { straight: 0.9, wavy: 0.7, curly: 0.35, coily: 0.12, braided: 0.5 } as const;
 
 /** Reflet côté lumière, limité à la chevelure avant (clip = union des polygones) : faible sur les textures crépues. */
-export function hairGloss(id: string, geo: HairGeometry, _p: FaceParams, lm: FaceLandmarks, L: LightVector, rot: number, ra: ResolvedAppearance): { defs: string[]; markup: string[] } {
+export function hairGloss(id: string, geo: HairGeometry, p: FaceParams, lm: FaceLandmarks, L: LightVector, rot: number, ra: ResolvedAppearance): { defs: string[]; markup: string[] } {
   // En ombrage cel, le reflet est porté par les bandes de chaque mèche : pas de tache douce par-dessus.
-  const k = ra.spec.shading.mode === 'cel' ? 0 : GLOSS[geo.texture] * (0.4 + 1.2 * ra.spec.reflection.intensity);
+  // Coupe rase : le chaume est MAT (poils de 1 à 3 mm) ; la tache de reflet d'un cheveu long en faisait un casque de plastique (`docs/HAIR-FORM-DOMES.md`).
+  const k = ra.spec.shading.mode === 'cel' ? 0 : GLOSS[geo.texture] * (0.4 + 1.2 * ra.spec.reflection.intensity) * (p.hair.style === 'buzz' ? 0.2 : 1);
   if (k === 0) return { defs: [], markup: [] };
   const loc = toLocal(L, rot);
   const box = polyBox(geo.front.flat());

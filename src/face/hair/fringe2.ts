@@ -1,4 +1,5 @@
 import { clamp } from '../../core/math';
+import { mulberry32 } from '../../core/prng';
 import type { Vec } from '../../geometry/eye/primitives';
 import { lockFrom, type HairCtx } from './flow';
 import type { HairLock, LockRank } from './types';
@@ -57,12 +58,32 @@ export function engineFringe(ctx: HairCtx): FringeEngineResult | null {
   } else if (fe.mode === 'blades') {
     // Quelques grandes mèches triangulaires pointues ; le côté `side` descend jusqu'au sourcil, l'autre reste plus court.
     const n = fe.count || 5 + Math.floor(rnd() * 3);
-    for (let i = 0; i < n; i++) {
-      let x = -xF + (2 * xF * (i + 0.5)) / n;
-      if (Math.abs(x - gc) < gw) x = gc + away(x) * gw; // une racine ne reste pas dans le jour : elle se range au bord
-      const long = Math.sign(x) === side;
-      blades.push({ xRoot: x, xTip: x + away(x) * (0.04 + 0.12 * rnd()) * xF, yTip: yAt(x, long ? 0.9 + 0.1 * rnd() : 0.5 + 0.3 * rnd()), w0: ((2 * xF) / n) * (1.3 + 0.4 * rnd()), rank: 'main', profile: 'cone', power: 1.05, fade: 0, ragged: 0 });
-    }
+    // Touffes inégales (`docs/HAIR-FORM-FRINGE.md`) : avant, des cônes de même largeur à pas régulier (largeur CV 0,06, pas CV 0,28 mesurés) = une scie. Les valeurs de `rnd` sont
+    // tirées UNE fois, dans l'ordre d'avant (le reste de la chevelure est inchangé) ; la disposition (pas, largeurs) vient d'un tirage PROPRE, retenté (≤ 8 fois) tant que la
+    // frange fait peigne (`fringeRhythm` : CV des pas et des largeurs ; avec 5 à 7 lames le hasard seul redonne un peigne une fois sur cent : graines 898, 87930, 21091).
+    const pre = Array.from({ length: n }, () => ({ a: rnd(), b: rnd(), c: rnd() }));
+    const cv = (v: number[]): number => { const m = v.reduce((a, b) => a + b, 0) / v.length; return m > 0 ? Math.sqrt(v.reduce((a, b) => a + (b - m) ** 2, 0) / v.length) / m : 0; };
+    const layout = (attempt: number): BladeSpec[] => {
+      const fr = mulberry32(((h.seed ^ 0xb1ade) * 2654435761 + attempt * 40503) >>> 0);
+      const gaps = Array.from({ length: n - 1 }, () => 0.5 + 2.2 * fr() * fr());
+      const gsum = gaps.reduce((a, b) => a + b, 0);
+      let acc = 0;
+      const roots = [-0.88 * xF, ...gaps.map((g) => (acc += g, -0.88 * xF + (1.76 * xF * acc) / gsum))];
+      return roots.map((x0, i) => {
+        const gold = (i * 0.618034 + fr() * 0.2) % 1, r = pre[i] as { a: number; b: number; c: number };
+        let x = x0;
+        if (Math.abs(x - gc) < gw) x = gc + away(x) * gw; // une racine ne reste pas dans le jour : elle se range au bord
+        const long = Math.sign(x) === side, thin = fr() < 0.25 ? 0.5 : 1;
+        return { xRoot: x, xTip: x + away(x) * (0.04 + 0.12 * r.a) * xF, yTip: yAt(x, long ? 0.9 + 0.1 * r.b : 0.5 + 0.3 * r.b), w0: ((2 * xF) / n) * (1.3 + 0.4 * r.c) * (0.55 + 0.8 * ((gold * 1.7 + 0.35) % 1)) * thin, rank: 'main', profile: 'cone', power: 1.05, fade: 0, ragged: 0 } satisfies BladeSpec;
+      });
+    };
+    const rhythm = (bs: BladeSpec[]): number => {
+      const xs = bs.map((b) => b.xRoot).sort((a, b) => a - b);
+      return Math.min(cv(xs.slice(1).map((x, k) => x - (xs[k] as number)).filter((g) => g > 1e-6)), cv(bs.map((b) => b.w0)));
+    };
+    let best = layout(0), bestR = rhythm(best);
+    for (let t = 1; t < 8 && bestR < 0.4; t++) { const c = layout(t), r = rhythm(c); if (r > bestR) { best = c; bestR = r; } }
+    blades.push(...best);
   } else if (fe.mode === 'wispy') {
     // Mèches fines étagées, pointes très irrégulières.
     const n = fe.count || 26 + Math.floor(rnd() * 10);
@@ -92,7 +113,7 @@ export function engineFringe(ctx: HairCtx): FringeEngineResult | null {
       const t = j / 9;
       return { x: (1 - t) ** 2 * R.x + 2 * (1 - t) * t * C.x + t * t * E.x, y: (1 - t) ** 2 * R.y + 2 * (1 - t) * t * C.y + t * t * E.y };
     });
-    locks.push(...lockFrom(ctx, c, { width: b.w0, rank: b.rank, tone: tone(), layer: 'front', mode: 'fringe', raw: true, kind: 'fringe', profile: b.profile, power: b.power, sharp: 0.85, fade: Math.max(b.fade, h.tips.fade), edgeFade: h.tips.edgeFade, ragged: Math.max(b.ragged, h.tips.irregular), flick: h.tips.flick * 0.5, reach: 'cranial' }));
+    locks.push(...lockFrom(ctx, c, { width: b.w0, rank: b.rank, tone: tone(), layer: 'front', mode: 'fringe', raw: true, kind: 'fringe', profile: b.profile, power: b.power, sharp: 0.85, fade: Math.max(b.fade, h.tips.fade), edgeFade: h.tips.edgeFade, ragged: Math.max(b.ragged, h.tips.irregular), flick: h.tips.flick * 0.5, reach: 'cranial' }).map((l): HairLock => ({ ...l, bang: true })));
   }
   // Bord inférieur de droite à gauche : le point le plus bas des pointes proches de chaque abscisse (jamais sous yF).
   const bottom = Array.from({ length: 49 }, (_, i) => {

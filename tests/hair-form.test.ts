@@ -151,3 +151,58 @@ describe('contrôles négatifs : chaque contrôle sait échouer', () => {
     throw new Error('aucun visage à étages très décalés dans l\'échantillon');
   });
 });
+
+describe('contrôles négatifs de la série 3 (repousse, frange, dômes)', () => {
+  const ids = (f: ReturnType<typeof face>, g: HairGeometry) => failing(f, g).map((c) => c.id);
+
+  it('comb-inside-shell : des stries envoyées hors de la coque sont refusées', () => {
+    const f = face('ponytail', 1), g = geoOf(f), W = lmOf(f).W;
+    expect(g.locks.some((l) => l.comb)).toBe(true);
+    expect(ids(f, g)).not.toContain('comb-inside-shell');
+    const locks = g.locks.map((l) => (l.comb ? { ...l, poly: l.poly.map((q) => ({ x: q.x + 2 * W, y: q.y })) } : l));
+    expect(ids(f, { ...g, locks } as HairGeometry)).toContain('comb-inside-shell');
+  });
+
+  it('dome-combed : un dôme sans stries (aplat) est refusé', () => {
+    const f = face('bun', 2), g = geoOf(f);
+    expect(ids(f, g)).not.toContain('dome-combed');
+    expect(ids(f, { ...g, locks: g.locks.filter((l) => !l.comb) } as HairGeometry)).toContain('dome-combed');
+  });
+
+  it('comb-style-scope : des stries sur une coiffure pendante sont refusées', () => {
+    const f = face('long', 1), g = geoOf(f), src = geoOf(face('ponytail', 1)).locks.find((l) => l.comb);
+    expect(src).toBeDefined();
+    expect(ids(f, g)).not.toContain('comb-style-scope');
+    expect(ids(f, { ...g, locks: [...g.locks, src!] } as HairGeometry)).toContain('comb-style-scope');
+  });
+
+  it('fringe-rhythm-natural : une frange en peigne (largeurs et pas égaux) est refusée', () => {
+    for (let k = 0; k < 40; k++) {
+      const f = face('short', k), g = geoOf(f);
+      const fr = g.locks.filter((l) => l.bang && l.spine && l.w0 !== undefined && l.layer === 'front' && (l.rank === 'main' || l.rank === 'mass'));
+      if (fr.length < 6) continue;
+      const xs = fr.map((l) => (l.spine as { x: number }[])[0]!.x), x0 = Math.min(...xs), step = 0.03 * lmOf(f).W;
+      const order = fr.map((_, i) => i).sort((a, b) => xs[a]! - xs[b]!);
+      const comb = g.locks.map((l) => {
+        const i = fr.indexOf(l);
+        if (i < 0) return l;
+        const dx = x0 + order.indexOf(i) * step - xs[i]!;
+        return { ...l, w0: 0.02 * lmOf(f).W, spine: (l.spine as { x: number; y: number }[]).map((q) => ({ x: q.x + dx, y: q.y })) };
+      });
+      expect(ids(f, g)).not.toContain('fringe-rhythm-natural');
+      expect(ids(f, { ...g, locks: comb } as HairGeometry)).toContain('fringe-rhythm-natural');
+      return;
+    }
+    throw new Error('aucune frange de 6 mèches ou plus dans l\'échantillon');
+  });
+
+  it('root-band-inside : test positif — la repousse reste sous RIM_FROM de l\'épaisseur de coque', () => {
+    for (let k = 0; k < 60; k++) {
+      const f = face('long', k);
+      if (!f.params.hair.rootColor || f.params.hair.sim.enabled) continue;
+      expect(ids(f, geoOf(f))).not.toContain('root-band-inside');
+      return;
+    }
+    throw new Error('aucun visage à racine sombre dans l\'échantillon');
+  });
+});

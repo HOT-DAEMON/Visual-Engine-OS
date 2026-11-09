@@ -18,6 +18,7 @@ import { bareScalp, capBase } from './scalp';
 import { cranialLimit, fitReach, windReach } from './reach';
 import { backMassShape } from './back-mass';
 import { fillShell } from './crown-fill';
+import { combLocks } from './comb';
 import { inPoly } from '../poly';
 import { isBodyLock } from './body-lock';
 import { coneLocks, flowLocks, wispLocks } from './shapes';
@@ -110,7 +111,9 @@ function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null 
   const simOver = sim ? sim.locks.filter((l) => l.layer === 'over') : [];
   // Remplissage de la coque : EN DERNIER (graine propre) — le reste de la chevelure est identique avec ou sans lui. Jamais sur une oreille dégagée.
   const fill = fillShell(ctx, base, sides.front).filter((l) => ['left', 'right'].every((s) => sides.info[s as 'left' | 'right'].ear === 'covered' || !l.poly.some((q) => inPoly(sides.info[s as 'left' | 'right'].earZone, q.x, q.y))));
-  const all = [...sides.back, ...sides.front, ...fill, ...occ.locks, ...simOver];
+  // Dôme des coiffures tirées / rase : stries et chaume (`comb.ts`), en dernier, graine propre.
+  const comb = combLocks(ctx, base, spots);
+  const all = [...sides.back, ...sides.front, ...fill, ...comb, ...occ.locks, ...simOver];
   const geo: HairGeometry = {
     texture: tex, hairline: hl.pts, boundary, scalp, base: [base], bare: bareScalp(ctx), locks: all, backBase,
     front: [base, ...(classic ? [classic.base] : []), ...sides.front.map((l) => l.poly), ...fill.map((l) => l.poly)], back: [...(backBase ? [backBase] : []), ...sides.back.map((l) => l.poly)],

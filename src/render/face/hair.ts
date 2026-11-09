@@ -11,7 +11,10 @@ import type { FaceParams } from '../../schema';
 import { hairGloss, hairlineTransition, smoothPath } from './hair-detail';
 import { lockMarkup, type LockStyle } from './hair-lock';
 import { backMassFill } from './hair-back-fade';
-import { backMassColor, hairAppearance, rootColorOf, tierHueShift } from './hair-look';
+import { backMassColor, hairAppearance, rootColorOf, shellColorOf, tierHueShift } from './hair-look';
+import { rootBand } from '../../face/hair/root-band';
+import { ringThickness } from '../../face/hair/crown-fill';
+import { FADE } from '../../face/hair/comb';
 import { polyPath } from './path';
 import { profileOf } from '../../face/hair/sim/profiles';
 import { sheenBands } from '../../face/hair/sim/sheen';
@@ -26,11 +29,11 @@ export interface HairParts {
   readonly over: string[];
 }
 
-/** Sous-couche : matériau « satin » du système partagé (même lumière que la peau). */
-function underlayer(id: string, poly: Poly, color: string, L: LightVector, rot: number): { defs: string[]; markup: string; d: string } {
+/** Sous-couche : matériau « satin » du système partagé (même lumière que la peau) ; « mat » pour la coupe rase (chaume : pas de reflet de plastique, `docs/HAIR-FORM-DOMES.md`). */
+function underlayer(id: string, poly: Poly, color: string, L: LightVector, rot: number, preset: 'satin' | 'matte' = 'satin'): { defs: string[]; markup: string; d: string } {
   const d = polyPath(poly);
   const surface: Surface = { bbox: polyBox(poly), curvature: 'sphere', draw: (a) => el('path', { d, ...a }) };
-  const out = compileSurface(id, surface, resolvePreset({ preset: 'satin', color }), L, rot);
+  const out = compileSurface(id, surface, resolvePreset({ preset, color }), L, rot);
   return { defs: out.defs, markup: out.markup, d };
 }
 
@@ -49,7 +52,7 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
   const ra: ResolvedAppearance = hairAppearance(h);
   const ink = h.sim.enabled && h.sim.ink ? '#08080c' : undefined;
   const st: LockStyle = { id: `${id}-hl`, ra, ld: direction2D(L), W: lm.W, ink };
-  const rootColor = rootColorOf(ra, h);
+  const shellColor = shellColorOf(ra), rootColor = rootColorOf(ra, h);
   const defs: string[] = [];
   let k = 0;
   const draw = (l: HairLock, depth: number, cast: boolean): string[] => {
@@ -70,7 +73,7 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
   for (const l of geo.locks.filter((q) => q.layer === 'back')) back.push(...draw(l, 0.12, false));
   for (const t of geo.ties) back.push(el('ellipse', { cx: t.at.x, cy: t.at.y, rx: t.rx, ry: t.rx * 0.55, fill: mix(ra.base, '#000000', 0.55), stroke: ra.light, 'stroke-width': lm.W * 0.003 }));
 
-  const base = underlayer(`${id}-hair-base`, geo.base[0] as Poly, rootColor, L, rot);
+  const base = underlayer(`${id}-hair-base`, geo.base[0] as Poly, shellColor, L, rot, h.style === 'buzz' ? 'matte' : 'satin');
   const clipId = `${id}-hair-base-clip`;
   defs.push(...base.defs, el('clipPath', { id: clipId }, [el('path', { d: base.d })]));
   const scalpColor = mix(skin, skinShadow, 0.55);
@@ -83,15 +86,34 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
     bare.push(el('ellipse', { cx: b.x + b.w / 2, cy: b.y + b.h / 2, rx: b.w / 2, ry: b.h / 2, fill: urlRef(gid) }));
   });
   const frontLocks = geo.locks.filter((q) => q.layer === 'front');
-  const body: string[] = [ink ? el('path', { d: base.d, fill: ink }) : base.markup, el('g', { 'clip-path': urlRef(clipId) }, bare)];
+  // Repousse : bande de la couleur de racine au ras du crâne, estompée vers la longueur teinte ; jamais jusqu'au bord de la coque (`root-band.ts`).
+  const band = !ink && rootColor !== shellColor && h.rootColor ? rootBand(geo.hairline, geo.bare.part, ringThickness(geo.boundary.skull, geo.base[0] as Poly), lm.W) : null;
+  const roots: string[] = [];
+  if (band) {
+    const fid = `${id}-hair-root-blur`;
+    defs.push(el('filter', { id: fid, x: '-20%', y: '-40%', width: '140%', height: '180%' }, [el('feGaussianBlur', { stdDeviation: band.depth * 0.4 })]));
+    const line = `M${band.hairline.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join('L')}`;
+    const strokes = [el('path', { d: line, fill: 'none', stroke: rootColor, 'stroke-width': band.depth * 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' })];
+    if (band.part) strokes.push(el('path', { d: smoothPath(band.part), fill: rootColor, stroke: rootColor, 'stroke-width': band.depth * 1.1, 'stroke-linejoin': 'round' }));
+    roots.push(el('g', { 'clip-path': urlRef(clipId) }, [el('g', { filter: urlRef(fid), opacity: 0.92 }, strokes)]));
+  }
+  // Dégradé de la coupe rase : voile de peau sur les flancs de la coque, en plus du chaume qui s'y raréfie (`comb.ts`).
+  if (h.style === 'buzz' && !ink) {
+    const gid = `${id}-hair-fade`, hw = lm.W * 0.5, bb = polyBox(geo.base[0] as Poly), veil = mix(skin, ra.base, 0.35);
+    // Abscisse normalisée (x + hw) / 2hw : plein voile de |x|/hw ≥ FADE.to jusqu'au bord, nul sous FADE.from (même rampe que `fadeAt`).
+    const stops = [[0, FADE.skin], [(1 - FADE.to) / 2, FADE.skin], [(1 - FADE.from) / 2, 0], [1 - (1 - FADE.from) / 2, 0], [1 - (1 - FADE.to) / 2, FADE.skin], [1, FADE.skin]] as const;
+    defs.push(el('linearGradient', { id: gid, gradientUnits: 'userSpaceOnUse', x1: -hw, y1: 0, x2: hw, y2: 0 }, stops.map(([o, a]) => el('stop', { offset: o, 'stop-color': veil, 'stop-opacity': a }))));
+    roots.push(el('g', { 'clip-path': urlRef(clipId) }, [el('rect', { x: -hw, y: bb.y, width: 2 * hw, height: bb.h, fill: urlRef(gid) })]));
+  }
+  const body: string[] = [ink ? el('path', { d: base.d, fill: ink }) : base.markup, ...roots, el('g', { 'clip-path': urlRef(clipId) }, bare)];
   // Zones rasées : repousse sombre sur la peau (côtés / nuque), sous les mèches.
   for (const q of geo.shaved ?? []) body.unshift(el('path', { d: smoothPath(q), fill: mix(skin, ink ?? ra.base, ink ? 0.42 : 0.55), opacity: 0.9 }));
   const fringeBase = geo.front.slice(1, geo.front.length - frontLocks.length);
-  if (fringeBase.length) body.push(el('path', { d: polyPath(...fringeBase), fill: rootColor }));
+  if (fringeBase.length) body.push(el('path', { d: polyPath(...fringeBase), fill: shellColor }));
   // Sous-couches visibles par étage : silhouette plus sombre / décalée de teinte, sous les mèches de l'étage.
   // Une silhouette d'étage englobe la tête : DEVANT la tête elle est rognée par la sous-couche (jamais sur le visage),
   // et une copie est dessinée DERRIÈRE la tête pour la part qui dépasse du crâne.
-  const massEl = (m: (typeof geo.tierMasses)[number]): string => el('path', { d: smoothPath(m.poly), fill: hueShift(ra.tone(h.tiers.underTone * Math.min(1, 0.6 + 0.2 * m.tier)), tierHueShift(h, m.tier)), opacity: h.tiers.underVisible });
+  const massEl = (m: (typeof geo.tierMasses)[number]): string => el('path', { d: smoothPath(m.poly), fill: hueShift(ra.tone(h.tiers.underTone * Math.min(1, 0.6 + 0.2 * m.tier)), tierHueShift(h, m.tier, ra)), opacity: h.tiers.underVisible });
   if (geo.tierMasses.length) body.push(el('g', { 'clip-path': urlRef(clipId) }, geo.tierMasses.map(massEl)));
   back.unshift(...geo.tierMasses.map(massEl));
   if (geo.simMass) body.push(el('path', { d: smoothPath(geo.simMass), fill: ink ?? ra.tone(-0.42), stroke: ink, 'stroke-width': ink ? lm.W * 0.0042 : undefined, 'stroke-linejoin': 'round' }));

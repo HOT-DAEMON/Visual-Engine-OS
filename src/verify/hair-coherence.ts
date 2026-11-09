@@ -5,7 +5,7 @@ import { REACH } from '../face/hair/reach';
 import { TIE } from '../face/hair/tie';
 import { VOCAB } from '../face/hair/vocab';
 import { inPoly } from '../face/poly';
-import { ROOT_MIN_RATIO, hairAppearance, rootColorOf } from '../render/face/hair-look';
+import { ROOT_BAND_MIN_RATIO, ROOT_MIN_RATIO, hairAppearance, rootColorOf, shellColorOf } from '../render/face/hair-look';
 import { luminance } from '../core/color';
 import type { RandomFace } from '../generation/random-face';
 import { check, type Check } from './types';
@@ -25,6 +25,8 @@ import { check, type Check } from './types';
  *    `bun-visible`          ≥ 25 % du disque d'un chignon dépasse de la silhouette du crâne (sinon : pas de chignon de face) ;
  *    `bun-radius-bound`     rayon ≤ 0,14 W (latéral) / 0,18 W (dessus) ;
  *    `tail-spread-bound`    éventail latéral de la queue ≤ borne de `tie.ts` ; `tail-length-bound` : pas sous le bas du cou rendu ;
+ *    `braid-length-bound`   tresses ≤ bas du cou + 0,15 H (la largeur de queue reste couverte par `tail-spread-bound` : voir HAIR-COHERENCE-REMAINING) ;
+ *    `temples-covered`      les deux extrémités de l'implantation sont couvertes (≥ 0,5 ; mesuré 1,00 hors coupe rase) ;
  *  STYLE      — la forme est lisible et homogène :
  *    `crown-tone-not-black` la sous-couche racine ≥ 0,42 × la luminance des cheveux ;
  *    `style-vocabulary`     aucune forme hors vocabulaire de la coiffure (épis rigides sur cheveux pendants ou attachés).
@@ -56,7 +58,7 @@ export function checkHairCoherence(face: RandomFace, override?: HairGeometry): C
   out.push(check('geometry', 'lock-envelope-bound', '<=', away, REACH[style].side + 0.1 * power + tol, 'l\'enveloppe d\'une mèche s\'éloigne du crâne plus que la portée de la coiffure (axe borné, polygone non)'));
   out.push(check('geometry', 'lock-envelope-rise', '<=', rise, REACH[style].up + 0.08 * power + tol, 'l\'enveloppe d\'une mèche monte plus haut que la portée de la coiffure'));
   const tied = style === 'ponytail' || style === 'bun' || style === 'braids';
-  const free = geo.locks.filter((l) => !l.sim && l.layer !== 'over' && !l.part && !l.bounded && (l.kind === undefined || ['lock', 'fringe', 'cone', 'wisp', 'flow'].includes(l.kind)));
+  const free = geo.locks.filter((l) => !l.sim && l.layer !== 'over' && !l.part && !l.bounded && !l.comb && (l.kind === undefined || ['lock', 'fringe', 'cone', 'wisp', 'flow'].includes(l.kind)));
   // Coiffures attachées : leurs mèches de corps convergent vers l'attache, hors portée par construction (contrôlées par les contrôles d'attache).
   out.push(check('geometry', 'envelope-coverage', '<=', tied || p.hair.sim.enabled ? 0 : free.length, 0, 'une mèche libre n\'est pas bornée par la portée de la coiffure (constructeur sans `reach`)'));
 
@@ -108,11 +110,24 @@ export function checkHairCoherence(face: RandomFace, override?: HairGeometry): C
     out.push(check('anatomy', 'tail-spread-bound', '<=', spread, 0.05 + sway, 'l\'éventail latéral de la queue dépasse la borne (la gravité doit l\'emporter)'));
     out.push(check('anatomy', 'tail-length-bound', '<=', (low - lm.neck.bottomY) / H, 0.02, 'la queue passe sous le bas du cou rendu'));
   }
+  const braids = geo.locks.filter((l) => l.part === 'braid' && l.rank === 'plait');
+  if (style === 'braids' && braids.length) {
+    // Mesuré (tie-measure) : le point le plus bas des tresses dépasse le bas du cou de ≤ 0,092 H (p95 −0,059 H) ; borne 0,15 H.
+    out.push(check('anatomy', 'braid-length-bound', '<=', (mx(braids.flatMap((l) => l.poly.map((q) => q.y))) - lm.neck.bottomY) / H, 0.15, 'une tresse pend bien plus bas que le cou (longueur sans rapport avec la tête)'));
+  }
+  // Tempes : les extrémités de l'implantation sont couvertes (sinon : tempe nue, coque percée) ; mesuré 1,00 sur toutes les coiffures sauf la coupe rase (≥ 0,5).
+  if (!p.hair.sim.enabled && p.hair.thinning <= 0.03 && style !== 'buzz' && geo.hairline.length >= 2) {
+    const polys = [...geo.base, ...geo.locks.filter((l) => l.layer !== 'back').map((l) => l.poly)];
+    const ends = [geo.hairline[0]!, geo.hairline[geo.hairline.length - 1]!];
+    const cov = ends.filter((e) => polys.some((q) => inPoly(q, e.x * 0.97, e.y - 0.02 * H))).length / 2;
+    out.push(check('anatomy', 'temples-covered', '>=', cov, 0.5, 'une tempe est nue (l\'implantation n\'est pas couverte)'));
+  }
 
   // --- style ---
   const ra = hairAppearance(p.hair);
   const lum = luminance(ra.base);
-  out.push(check('style', 'crown-tone-not-black', '>=', lum < 0.02 ? 1 : luminance(rootColorOf(ra, p.hair)) / lum, ROOT_MIN_RATIO - 0.01, 'la sous-couche racine est un casque sombre sous des mèches claires'));
+  out.push(check('style', 'crown-tone-not-black', '>=', lum < 0.02 ? 1 : luminance(shellColorOf(ra)) / lum, ROOT_MIN_RATIO - 0.01, 'la sous-couche racine est un casque sombre sous des mèches claires'));
+  out.push(check('style', 'root-band-not-black', '>=', lum < 0.02 ? 1 : luminance(rootColorOf(ra, p.hair)) / lum, ROOT_BAND_MIN_RATIO - 0.01, 'la repousse (bande au ras du crâne) est un trou noir sous des mèches claires'));
   out.push(check('style', 'style-vocabulary', '<=', VOCAB[style].cones ? 0 : geo.locks.filter((l) => l.kind === 'cone').length, 0, 'une forme hors du vocabulaire de la coiffure (épi rigide sur cheveux pendants ou attachés)'));
   return out;
 }

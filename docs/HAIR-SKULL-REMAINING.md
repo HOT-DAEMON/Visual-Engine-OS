@@ -16,14 +16,14 @@ Ce qui est fait : `HAIR-SKULL.md`, `HAIR-BACK-MASS.md`, `HAIR-SKULL-VERIFY.md`. 
 9. MAJ : cônes proscrits hors `short/spiky/curly/afro` (`HAIR-VOCAB.md`) ; portée au polygone (`HAIR-REACH-POLY.md`). L'élégance reste une revue humaine. Avant : les formes libres de la **v2 `mixed`** (cônes + rubans) n'ont pas été revues une à une pour leur élégance : seulement leur extension.
 
 ## Masse arrière (`back-mass.ts`, `hair-back-fade.ts`)
-10. Le bas (0,76–0,81) et l'aire/boîte (0,85–0,88) gagnent peu (voir `HAIR-BACK-MASS.md`) : la masse reste proche d'un rectangle arrondi pour une chevelure qui tombe droit. Une vraie forme de tombé (poids, ondulation) n'est pas modélisée.
+10. **Non traité dans la série 3** (tombé de la masse arrière : forme à modéliser, voir ci-dessous). Le bas (0,76–0,81) et l'aire/boîte (0,85–0,88) gagnent peu (voir `HAIR-BACK-MASS.md`) : la masse reste proche d'un rectangle arrondi pour une chevelure qui tombe droit. Une vraie forme de tombé (poids, ondulation) n'est pas modélisée.
 11. Le **fondu** est une bande fixe autour de la mâchoire (0,04 H avant, 0,1 H après) : pas d'adaptation à une couleur très claire ou à un fond clair. Mode encre : aplat sans dégradé (choix).
 12. Archétypes simulés (Verlet) : utilisent la masse arrière mais leurs mèches ne passent pas par `fitReach` (leur drapé est déjà résolu par le collisionneur) ; non revus mèche par mèche.
 13. MAJ : masses d'étage (`tierMasses`) plafonnées au 85ᵉ centile des pointes ; les étages de 1–2 mèches le sont désormais à la pointe la plus basse relevée de `TIP_INSET`. Le cas de forme en coin d'une enveloppe radiale est traité par le bas seulement, pas par les flancs.
 
 ## Génération (`random-hair-v2.ts`)
 14. Seule la coupe rase est rendue cohérente (oreille, favori). `short` et `spiky` peuvent encore tirer une oreille couverte ou un favori long : plausible, non jugé.
-15. `SHELL.buzz.reach = 'none'` : la coupe rase s'arrête au coin de la tempe ; pas de dégradé (fade) ni de raie rasée.
+15. MAJ : dégradé (fade) de la coupe rase fait (`FADE`, voile de peau côté tempes, chaume court ; `HAIR-FORM-DOMES.md`). **Reste** : pas de raie rasée ; `SHELL.buzz.reach = 'none'` (arrêt au coin de la tempe) ; le chaume mat garde une tache diffuse.
 16. Les visages dont les paramètres de cheveux sont donnés à la main (surcharges) ne passent pas par cette cohérence : un buzz avec rideau d'oreille reste possible et reste signalé par les contrôles.
 
 ## Vérification (`hair-skull.ts`)

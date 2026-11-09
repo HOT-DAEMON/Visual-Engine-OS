@@ -47,6 +47,10 @@ export interface HairLock {
   readonly zone?: 'side' | 'cheek' | 'nape' | 'top';
   /** Mèche de REMPLISSAGE de la coque (`crown-fill.ts`) : indice (≥ 1) de la mèche dont cette forme est une pièce (une mèche tressée en donne plusieurs). Texture le dôme, n'est pas une mèche pendante : les mesures de longueur / dispersion l'excluent. */
   readonly fill?: number;
+  /** Mèche de FRANGE (classique ou moteur v2) : lue par la mesure de régularité du bord (`verify/hair-fringe-edge.ts`). `kind` reste inchangé pour la frange classique (d'autres contrôles s'y réfèrent). */
+  readonly bang?: boolean;
+  /** Trait de PEIGNAGE ou de chaume (`comb.ts`) : cheveux tirés ou rasés, texture du dôme sans volume. Rang `hairline`, hors mesures de longueur. */
+  readonly comb?: boolean;
 }
 
 /** Masse de sous-couche visible d'un étage : silhouette, ton relatif et décalage de teinte (degrés). */

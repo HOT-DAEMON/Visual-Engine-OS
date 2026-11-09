@@ -5,12 +5,12 @@ Ce qui est fait : `HAIR-BOUNDARY.md`. Suite traitée (coque, portée, masse arri
 ## Lisière (`boundary/`)
 1. **Seuils à la main** : 0,12 H (trou), 0,05 H (dents de scie), 0,25 (oreille libre), 0,1 (bord lisible) sont posés sur le corpus de 600 visages, pas appris d'une référence. À recaler sur des visages dessinés par un illustrateur.
 2. **Profil de profondeur `b(y)`** : modèle simple (demi-ellipsoïde, plancher 0,3 rz). Il n'est pas aligné sur le crâne de profil (`src/skull/`) ; l'occiput et la nuque ne sont pas contrôlés contre la vue de profil.
-3. **Nuque** : hauteur déduite de la mâchoire et des oreilles ; pas de forme de nuque propre (rasée, dégradé, queue de cheval haute).
-4. **Visage non symétrique** : le miroir gauche utilise les oreilles gauches, mais pas de patte asymétrique indépendante (la patte vient d'un seul profil).
+3. **Nuque** (non traité dans la série 3) : hauteur déduite de la mâchoire et des oreilles ; pas de forme de nuque propre (rasée, dégradé, queue de cheval haute).
+4. **Visage non symétrique** (non traité dans la série 3) : le miroir gauche utilise les oreilles gauches, mais pas de patte asymétrique indépendante (la patte vient d'un seul profil).
 
 ## Formes de cheveux et coque
 5. **Moteur v2 — traité pour l'extension** (`HAIR-SKULL.md`) : toutes les formes libres et les mèches de corps sont bornées par une portée par coiffure ; la masse arrière du bob/long est reconstruite (`HAIR-BACK-MASS.md`). `afro` (0,256 H) et `curly` (0,164 H) restent volumineux par conception ; élégance = revue humaine (`HAIR-SKULL-REMAINING.md` 2, 9).
-6. **Moteur classic** : frange `short` refaite en festons arrondis (voir `HAIR-SHAPES.md`) ; jugement d'élégance = revue humaine. MAJ : constaté sur `artefacts/hair-form/05` (visage 1) : le bord inférieur de la frange `short` reste en dents de scie à pointes ; non traité (`HAIR-FORM-REMAINING.md` 8).
+6. **Moteur classic** : frange `short` refaite en festons arrondis (voir `HAIR-SHAPES.md`) ; jugement d'élégance = revue humaine. MAJ série 3 : la frange `short` n'est plus un peigne (écarts/largeurs inégaux, `HAIR-FORM-FRINGE.md`) ; la frange `wispy` garde un fin zigzag.
 7. **Archétypes simulés (Verlet)** : leurs mèches restent non bornées (drapé déjà résolu) ; ils reçoivent la nouvelle masse arrière ; régions `own` → portée de coque `none`. Leur lisière propre n'est pas reliée à `boundary`.
 8. **Vue de profil des cheveux** (`src/skull/hair-shape.ts`) : n'utilise pas la nouvelle lisière.
 9. **Coque** : épaisseur plafonnée par coiffure (`THICKNESS`, `HAIR-SKULL.md`) en plus de la table `SHELL` ; toujours pas dérivée du volume réel de la masse, pas de coupe en dégradé ni de raie rasée. `SHELL.buzz.reach` passe à `none` (plateau de tempe supprimé).
@@ -27,7 +27,7 @@ Ce qui est fait : `HAIR-BOUNDARY.md`. Suite traitée (coque, portée, masse arri
 ## Rendu du bord
 15. **Effet discret** : l'ombre de transition varie de 0,03 à 0,2 d'opacité ; sur la planche 06 la différence nette / floue se lit surtout sur la coupe, peu sur l'ombre.
 16. Contraste mesuré en luminance seule (pas de teinte, pas de sous-tons de peau).
-17. Cheveux fous (`strayShare`) : tirage seedé, pas de lien avec le flux local.
+17. MAJ : l'angle des cheveux fous suit le flux de la mèche voisine (`HAIR-FORM-DOMES.md`) ; leur nombre reste tiré, non relié à la densité.
 
 ## Vérification
 18. « Rapport OK » ≠ beauté : la couche style vérifie lissé, équilibre, lisibilité du bord. Elle ne juge ni l'élégance de la coupe ni la cohérence de silhouette. **Revue humaine nécessaire** sur `artefacts/hair-boundary/07` et `artefacts/hair-skull/`. Cohérence crâne ↔ cheveux : 12 contrôles de plus (`HAIR-SKULL-VERIFY.md`).
