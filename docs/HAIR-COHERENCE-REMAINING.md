@@ -20,7 +20,7 @@ Fait : `HAIR-COHERENCE.md`. Suite (remplissage de la coque, couche `hair-form`) 
 
 ## Vocabulaire et style (`vocab.ts`)
 11. Vocabulaire binaire (cônes oui/non). `flow` et `wisp` sont bornés mais pas filtrés par coiffure.
-12. Le tombé de la masse arrière (poids, ondulation) reste un rectangle arrondi (`HAIR-SKULL-REMAINING.md` 10). Le fondu ne s'adapte pas à un fond clair (11).
+12. MAJ série 5 : le tombé n'est plus un rectangle arrondi (`HAIR-EDGE.md` 2) ; limites `HAIR-EDGE-REMAINING.md` 5–8. Avant : le tombé de la masse arrière (poids, ondulation) restait un rectangle arrondi. Le fondu ne s'adapte pas à un fond clair (11).
 13. Le plancher de ton de racine 0,42 est posé sur le corpus ; pas de jugement sur la teinte (reflets, sous-couche teintée).
 
 ## Vérification (`hair-coherence.ts`)

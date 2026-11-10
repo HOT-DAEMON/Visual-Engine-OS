@@ -6,8 +6,8 @@ import type { Poly } from '../poly';
 import type { HairBoundary } from './boundary/types';
 import type { Guard } from './guard';
 import type { Hairline } from './hairline';
-import { rot, sub, unit } from './noise';
-import { conformReach, type ReachMode } from './reach';
+import { rot, smoothstep, sub, unit } from './noise';
+import { conformReach, cutSpine, reachOk, type ReachMode } from './reach';
 import { cone, plait, ribbon } from './ribbon';
 import { flickTip, raggedTip } from './tips';
 import { displace, resample, samplesFor, textureSpec, type TexSpec } from './texture';
@@ -90,11 +90,46 @@ export function lockLen(ctx: HairCtx, fine: boolean): number {
   return base * (1 + (ctx.rnd() - 0.5) * h.lengthVariance * 1.4) * (fine ? 0.85 : 1) * ctx.spec.shrink;
 }
 
+/**
+ * RETOMBÉE des coiffures pendantes (`docs/HAIR-EDGE.md`) : sans elle, les mèches tombaient en parallèles verticales de longueur quasi égale, d'où une
+ * silhouette en RECTANGLE arrondi. Trois effets mesurés sur des références de cheveux longs :
+ *  - `rise`  : l'ourlet REMONTE vers l'extérieur (les mèches de côté sont plus courtes que celles du centre : bas en U, pas en bande) ;
+ *  - `conv`  : la chevelure CONVERGE vers le cou sous la mâchoire (part de |x| rentrée à la pointe, progressive) ;
+ *  - `amp`   : ONDULATION lente et COHÉRENTE (même phase pour toutes les mèches : la nappe ondule d'un bloc), nulle à la mâchoire, pleine plus bas.
+ */
+export const FALL = {
+  long: { rise: 0.3, conv: 0.16, amp: 0.03, lambda: 0.62 },
+  bob: { rise: 0.12, conv: 0.09, amp: 0.008, lambda: 0.5 },
+} as const;
+
+/** Ordonnée d'arrêt d'une mèche pendante après remontée de l'ourlet vers l'extérieur (identité hors coiffure pendante). */
+export function fallEnd(ctx: HairCtx, rootX: number, yEnd: number): number {
+  const F = FALL[ctx.h.style as keyof typeof FALL];
+  if (!F || !ctx.def.hang || yEnd <= ctx.lm.jawY) return yEnd;
+  const out = smoothstep(clamp((Math.abs(rootX) / (ctx.lm.W / 2) - 0.45) / 0.7, 0, 1));
+  return ctx.lm.jawY + (yEnd - ctx.lm.jawY) * (1 - F.rise * out);
+}
+
+/** Convergence vers le cou et ondulation cohérente de la ligne médiane, sous la mâchoire (identité hors coiffure pendante). */
+export function fallWarp(ctx: HairCtx, pts: Vec[], yEnd: number): Vec[] {
+  const F = FALL[ctx.h.style as keyof typeof FALL];
+  const { jawY, W, H } = ctx.lm;
+  if (!F || !ctx.def.hang || yEnd <= jawY) return pts;
+  const phase = ((ctx.h.seed * 2654435761) >>> 0) / 4294967296 * 6.2832;
+  return pts.map((q) => {
+    if (q.y <= jawY) return q;
+    const u = clamp((q.y - jawY) / (yEnd - jawY), 0, 1);
+    const wave = F.amp * W * smoothstep(clamp((q.y - jawY) / (0.12 * H), 0, 1)) * Math.sin((2 * Math.PI * (q.y - jawY)) / (F.lambda * H) + phase);
+    return { x: q.x - Math.sign(q.x) * Math.abs(q.x) * F.conv * u ** 1.4 + wave, y: q.y };
+  });
+}
+
 /** Ligne médiane : intégration pas à pas de la direction avec courbure de gravité ; arrêt à `yEnd` pour les mèches pendantes. */
 export function growLock(ctx: HairCtx, R: Vec, len: number, opts: { dir?: Vec; yEnd?: number; gravity?: number } = {}): Vec[] {
   const { H } = ctx.lm;
   let dir = opts.dir ?? initialDir(ctx, R);
   const g = (opts.gravity ?? ctx.def.gravity) + ctx.lift(R, dir).gravity;
+  const yEnd = opts.yEnd === undefined ? undefined : fallEnd(ctx, R.x, opts.yEnd);
   const n = opts.yEnd === undefined ? 16 : clamp(Math.ceil(len / (0.02 * H)), 16, 90);
   const ds = len / n;
   const pts: Vec[] = [R];
@@ -103,9 +138,9 @@ export function growLock(ctx: HairCtx, R: Vec, len: number, opts: { dir?: Vec; y
     dir = unit({ x: dir.x, y: dir.y + (g * ds) / (0.08 * H) });
     pos = { x: pos.x + dir.x * ds, y: pos.y + dir.y * ds };
     pts.push(pos);
-    if (opts.yEnd !== undefined && pos.y >= opts.yEnd && dir.y > 0.2) break;
+    if (yEnd !== undefined && pos.y >= yEnd && dir.y > 0.2) break;
   }
-  return pts;
+  return yEnd === undefined ? pts : fallWarp(ctx, pts, yEnd);
 }
 
 /** Courbe de R vers E (mèches ramenées vers une attache) : tangente de départ = direction locale. */
@@ -156,6 +191,20 @@ export interface LockOpts {
   readonly part?: 'tail' | 'bun' | 'braid';
 }
 
+const lineLength = (c: Vec[]): number => c.reduce((a, p, i) => (i ? a + Math.hypot(p.x - (c[i - 1] as Vec).x, p.y - (c[i - 1] as Vec).y) : 0), 0);
+/** Ligne raccourcie rééchantillonnée en Catmull-Rom (au moins `n` points) : quelques points ne font pas un coude à angle droit. */
+const smoothSpine = (c: Vec[], n: number): Vec[] => {
+  if (c.length >= n || c.length < 3) return c;
+  const m = c.length - 1, out: Vec[] = [];
+  const at = (i: number): Vec => c[Math.max(0, Math.min(m, i))] as Vec;
+  for (let k = 0; k < n; k++) {
+    const t = (k / (n - 1)) * m, i = Math.min(m - 1, Math.floor(t)), u = t - i;
+    const p0 = at(i - 1), p1 = at(i), p2 = at(i + 1), p3 = at(i + 2);
+    const f = (a: number, b: number, c2: number, d: number): number => 0.5 * (2 * b + (-a + c2) * u + (2 * a - 5 * b + 4 * c2 - d) * u * u + (-a + 3 * b - 3 * c2 + d) * u ** 3);
+    out.push({ x: f(p0.x, p1.x, p2.x, p3.x), y: f(p0.y, p1.y, p2.y, p3.y) });
+  }
+  return out;
+};
 const samplesOf = (c: Vec[], sp: TexSpec): number => samplesFor(Math.hypot((c[c.length - 1] as Vec).x - (c[0] as Vec).x, (c[c.length - 1] as Vec).y - (c[0] as Vec).y) * 1.25, sp);
 
 /**
@@ -170,17 +219,65 @@ export function lockFrom(ctx: HairCtx, centre: Vec[], o: LockOpts): HairLock[] {
   const guardPoly = (poly: Poly): Poly => (o.layer === 'front' && !o.noGuard ? ctx.guard.fit(poly, o.mode ?? 'cap') : poly);
   const meta = { kind: o.kind ?? ('lock' as LockKind), tier: o.tier ?? 0, fade: o.fade ?? 0, edgeFade: o.edgeFade ?? 0, ...(o.reach ? { bounded: true } : {}), ...(o.part ? { part: o.part } : {}) };
   if (tex === 'braided' && o.rank === 'main' && !o.raw) {
-    const c = resample(centre, 36);
+    let c = resample(centre, 36);
+    // Tresse devant le visage : la ligne s'arrête à l'entrée de la zone interdite (sinon un segment à cheval sur la ligne médiane était écrasé de part et d'autre en bande qui traverse les yeux).
+    if (o.layer === 'front' && !o.noGuard) {
+      const clipped = ctx.guard.clip(c, o.mode ?? 'cap');
+      if (clipped === null) return [];
+      if (clipped !== c) c = resample(clipped, 36);
+    }
     return plait(c, o.width * 0.9).segs.map((poly, i) => ({ poly: guardPoly(o.reach ? conformReach(ctx, c, poly, o.reach).poly : poly), rank: 'plait', tone: i % 2 === 0 ? o.tone : o.tone - 0.18, layer: o.layer, edge: true, ...meta }));
   }
   let c = o.raw ? centre : displace(resample(centre, samplesOf(centre, spec)), spec, ctx.rnd() * 6.283, ctx.nz);
   if (o.flick) c = flickTip(c, (c[0] as Vec).x < 0 ? -1 : 1, o.flick);
+  // La ligne s'arrête à l'entrée de la zone interdite du visage : sinon le garde-fou écrase le ruban (large) en coin collé sur l'implantation (`docs/HAIR-EDGE.md`).
+  let shortened = false;
+  // Coiffure pendante : les mèches de corps (`main`/`fine`) qui tombent à travers la zone du visage sont DÉVIÉES sur le côté par le garde-fou (elles longent le visage), pas coupées.
+  const drapes = ctx.def.hang && (o.rank === 'main' || o.rank === 'fine') && (o.kind ?? 'lock') === 'lock';
+  if (o.layer === 'front' && !o.noGuard && !o.raw && o.kind !== 'cheek' && !drapes) {
+    const before = c.length;
+    const clipped = ctx.guard.clip(c, o.mode ?? 'cap');
+    if (clipped === null) return [];
+    shortened = clipped !== c && clipped.length !== before;
+    c = shortened ? smoothSpine(clipped, 12) : clipped;
+  }
   const w0 = o.width * wide;
-  const sharp = o.sharp ?? ctx.def.sharp;
-  // Axe borné APRÈS ondulation et retroussé de la pointe (ils le déplacent), puis enveloppe bornée APRÈS pointe irrégulière : c'est le polygone qui est dessiné.
-  if (o.reach) c = conformReach(ctx, c, [], o.reach).spine;
-  let poly = o.profile === 'cone' ? cone(c, w0, o.power ?? 1) : ribbon(c, w0, sharp, o.root);
-  if (o.ragged) poly = raggedTip(poly, o.ragged, ctx.rnd() * 2 - 1, w0 * 1.1);
-  if (o.reach) poly = conformReach(ctx, c, poly, o.reach).poly;
-  return [{ poly: guardPoly(poly), rank: o.rank, tone: o.tone, layer: o.layer, edge: o.rank === 'main' || o.rank === 'mass', spine: c, w0, sharp, profile: o.profile ?? 'ribbon', power: o.power ?? 1, rootW: o.root, ...meta }];
+  let sharp = o.sharp ?? ctx.def.sharp;
+  // Axe borné APRÈS ondulation et retroussé de la pointe (ils le déplacent) : COUPÉ à la frontière de portée (pas de points empilés), la pointe se referme.
+  let cut = false;
+  if (o.reach) {
+    const r = cutSpine(ctx, c, o.reach);
+    if (r === null) return [];
+    c = r.spine;
+    cut = r.cut;
+    if (cut && lineLength(c) < 0.012 * ctx.lm.H) return [];
+    if (cut) sharp = Math.max(sharp, 0.7);
+  }
+  // Un ruban plus LARGE que long n'est pas une mèche mais un bloc : une ligne raccourcie (zone du visage, portée) ne porte que la largeur qu'elle peut tenir (longueur / 3) ;
+  // sous 12 % de la largeur voulue, la mèche est abandonnée (`docs/HAIR-EDGE.md`).
+  let wMax = Infinity;
+  if (shortened || cut) {
+    sharp = Math.max(sharp, 0.7);
+    wMax = lineLength(c) / 3;
+    if (wMax < 0.12 * w0) return [];
+  }
+  const ragSeed = o.ragged ? ctx.rnd() * 2 - 1 : 0;
+  const build = (w: number, sh: number): Poly => {
+    const q = o.profile === 'cone' ? cone(c, w, o.power ?? 1) : ribbon(c, w, sh, o.root);
+    return o.ragged ? raggedTip(q, o.ragged, ragSeed, w * 1.1) : q;
+  };
+  let w = Math.min(w0, wMax);
+  let poly = build(w, sharp);
+  // Enveloppe trop large pour la portée : le MÊME ruban est reconstruit plus mince (pointe refermée) avant tout écrasement de sommets (`conformReach` ne sert plus que de filet).
+  if (o.reach) {
+    const ok = reachOk(ctx, o.reach);
+    for (const k of [0.8, 0.64, 0.5, 0.4]) {
+      if (poly.every(ok)) break;
+      w = Math.min(w0, wMax) * k;
+      sharp = Math.max(sharp, 0.75);
+      poly = build(w, sharp);
+    }
+    poly = conformReach(ctx, c, poly, o.reach).poly;
+  }
+  return [{ poly: guardPoly(poly), rank: o.rank, tone: o.tone, layer: o.layer, edge: o.rank === 'main' || o.rank === 'mass', spine: c, w0: w, sharp, profile: o.profile ?? 'ribbon', power: o.power ?? 1, rootW: o.root, ...meta }];
 }

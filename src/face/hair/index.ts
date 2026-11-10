@@ -31,6 +31,7 @@ import { canonical, ContentCache } from '../../perf/content-cache';
 import { clock } from '../../perf/clock';
 import { makeGain, makeLift, puffWidth } from './volume';
 import { THICKNESS } from './thickness';
+import { RIM, trimToRim } from './rim';
 import { applyWind } from './wind';
 
 export { buildBoundary, rootFrames, windDir, projectBoundary } from './boundary';
@@ -100,6 +101,10 @@ function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null 
   // Locks 'flow'/'wisp' tirées derrière (layer back) par les formes v2 sont rangées avec les mèches arrière.
   back = [...back, ...front.filter((l) => l.layer === 'back')];
   front = front.filter((l) => l.layer === 'front');
+
+  // Lisière des volumes (afro, bouclé) : les sommets qui dépassent la coque sont ramenés sur son contour (bord en masse, pas en dents de scie) — `rim.ts`.
+  const rim = RIM[h.style as keyof typeof RIM];
+  if (rim && !sim) front = trimToRim(base, boundary.skull, front, rim.margin * W, lm.browLimitY);
 
   const sides = applySides(ctx, p, front, back);
   // Masse arrière : posée sur le crâne, doublée par les mèches définitives (voir `back-mass.ts`). Coiffures pendantes classiques et archétypes simulés à masse.

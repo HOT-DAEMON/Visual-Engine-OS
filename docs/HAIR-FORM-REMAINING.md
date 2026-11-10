@@ -14,7 +14,7 @@ Fait : `HAIR-FORM.md` et la série 3 (`HAIR-FORM-ROOTS.md`, `-FRINGE.md`, `-DOME
 ## Défauts visibles NON traités
 8. MAJ série 3 : frange irrégularisée (écarts et largeurs inégaux, tirage rejeté ; `HAIR-FORM-FRINGE.md`), mesurée par `fringe-rhythm-natural` (≥ 0,25 ; min corpus 0,37). MAJ série 4 : zigzag `wispy` lissé et lames en touffes continues (`HAIR-BLADES.md`). **Reste** : seuils de corpus, pas de référence dessinée (`HAIR-BLADES-REMAINING.md`).
 9. **Plaque sur le dessus du `long`** : cause trouvée et corrigée en grande partie (couverture du dôme + teinte d'étage vert olive plafonnée à 24°, `HAIR-FORM.md`). MAJ série 3 : la racine sombre n'est plus la sous-couche mais une bande de repousse à l'implantation et à la raie (`HAIR-FORM-ROOTS.md`) ; le plafond de teinte devient l'harmonie analogue ± 30° (`HAIR-FORM-HUE.md`). **Reste** : planchers de luminance 0,42 / 0,16 calibrés sur corpus ; pas de repousse sur les mèches ni la nuque ; la convention des 12 teintes n'est pas une mesure perceptuelle.
-10. **`bob` / `long`** : avant/après quasi indiscernables à l'échelle des planches ; le gain est mesuré (bord nu 0,76 → 0,35 et 0,22) et visible sur le dessus du crâne (`01c`), peu à l'échelle de la retombée. La retombée n'a pas été retravaillée (`HAIR-SKULL-REMAINING.md` 10 : masse arrière = rectangle arrondi).
+10. **`bob` / `long`** : avant/après quasi indiscernables à l'échelle des planches ; le gain est mesuré (bord nu 0,76 → 0,35 et 0,22) et visible sur le dessus du crâne (`01c`), peu à l'échelle de la retombée. MAJ série 5 : la retombée a été retravaillée (ourlet en U, convergence, ondulation ; `HAIR-EDGE.md` 2) ; limites : `HAIR-EDGE-REMAINING.md` 5–8.
 11. **Dôme lisse résiduel** sur certains afros (rangée du bas de `01b`, visage rouge) : le bord reste nu à 0,43 au pire.
 
 ## Vérification (`hair-form.ts`)
@@ -30,7 +30,7 @@ Fait : `HAIR-FORM.md` et la série 3 (`HAIR-FORM-ROOTS.md`, `-FRINGE.md`, `-DOME
 19. Queues sans vent de 0,42–0,59 W (`HAIR-FORM-REVIEW.md` 1) : non contrôlées en largeur.
 20. Les cheveux fous suivent le flux ; leur nombre (`strayShare`) reste tiré, non relié à la densité.
 
-21. **Bord en dents de scie de l'afro/curly** (masse rose, `artefacts/hair-finish/01`) : non traité (série 4 : seule la frange en lames a changé) ; `fringe-rhythm-natural` ne le mesure pas.
+21. **Bord en dents de scie de l'afro/curly** (masse rose, `artefacts/hair-finish/01`) : MAJ série 5 : traité en grande partie (`HAIR-EDGE.md` 3 ; dents afro 14 → 4, curly 12 → 5 en médiane) ; il reste des dents sur une minorité de visages (`HAIR-EDGE-REMAINING.md` 10). `edge-rim-teeth` le mesure désormais.
 
 ## Hors périmètre (inchangé)
 17. 3D, profil (`src/skull/`), tête tournante, vent couplé à la simulation Verlet, cheveux simulés (`sim`) : voir `HAIR-COHERENCE-REMAINING.md` 8–10 et `HAIR-BOUNDARY-REMAINING.md` 7–14.

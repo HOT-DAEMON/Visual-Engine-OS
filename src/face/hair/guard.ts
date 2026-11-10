@@ -20,6 +20,12 @@ export interface Guard {
   project(v: Vec, mode?: GuardMode): Vec;
   /** Polygone entier : sommets projetés, puis arêtes subdivisées tant qu'elles traversent la zone interdite. */
   fit(poly: Vec[], mode?: GuardMode): Vec[];
+  /**
+   * Ligne médiane COUPÉE à l'entrée de la zone interdite (`docs/HAIR-EDGE.md`) : la mèche s'arrête au bord de la zone au lieu d'y être écrasée sommet par sommet
+   * (`fit` aplatit un ruban large en coin à bords droits collé sur l'implantation : les « grands triangles sombres » du dessus des cheveux longs). Le dernier point
+   * est trouvé par bissection entre le dernier point libre et le premier point interdit. Identité si la ligne ne traverse pas la zone ; `null` si moins de 3 points restent.
+   */
+  clip(spine: Vec[], mode?: GuardMode): Vec[] | null;
   /** Limite basse (ordonnée) de la frange et de toute mèche au-dessus des yeux. */
   readonly yF: number;
   /** Largeur de la bande des pattes (px) à l'ordonnée y : 0 sous la fin des pattes. */
@@ -73,5 +79,20 @@ export function makeGuard(p: FaceParams, lm: FaceLandmarks, hl: Hairline): Guard
     });
     return out;
   };
-  return { project, fit, yF, sideMargin, hw };
+  const clip = (c: Vec[], mode: GuardMode = 'cap'): Vec[] | null => {
+    if (mode === 'fringe') return c;
+    let k = -1;
+    for (let i = 1; i < c.length; i++) if (inZone(c[i] as Vec, mode)) { k = i; break; }
+    if (k < 0) return c;
+    const a = c[k - 1] as Vec, b = c[k] as Vec;
+    let lo = 0, hi = 1;
+    for (let i = 0; i < 8; i++) {
+      const mid = (lo + hi) / 2;
+      if (inZone({ x: a.x + (b.x - a.x) * mid, y: a.y + (b.y - a.y) * mid }, mode)) hi = mid;
+      else lo = mid;
+    }
+    const out = [...c.slice(0, k), { x: a.x + (b.x - a.x) * lo, y: a.y + (b.y - a.y) * lo }];
+    return out.length >= 3 ? out : null;
+  };
+  return { project, fit, clip, yF, sideMargin, hw };
 }

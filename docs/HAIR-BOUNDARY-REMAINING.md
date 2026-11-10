@@ -1,6 +1,6 @@
 # Lisière des cheveux — reste à faire et limites (par composant)
 
-Ce qui est fait : `HAIR-BOUNDARY.md`. Suite traitée (coque, portée, masse arrière, vérification crâne ↔ cheveux) : `HAIR-SKULL.md`, ses limites : `HAIR-SKULL-REMAINING.md`. Suite 2 (portée au polygone, attaches, vent, vocabulaire, 13 contrôles) : `HAIR-COHERENCE.md`, limites `HAIR-COHERENCE-REMAINING.md`. Suite 3 (remplissage de la coque, couche `hair-form`) : `HAIR-FORM.md`, limites `HAIR-FORM-REMAINING.md`. Rien ci-dessous n'est caché : chaque ligne est une limite mesurée ou constatée sur les planches.
+Ce qui est fait : `HAIR-BOUNDARY.md`. Suite traitée (coque, portée, masse arrière, vérification crâne ↔ cheveux) : `HAIR-SKULL.md`, ses limites : `HAIR-SKULL-REMAINING.md`. Suite 2 (portée au polygone, attaches, vent, vocabulaire, 13 contrôles) : `HAIR-COHERENCE.md`, limites `HAIR-COHERENCE-REMAINING.md`. Suite 3 (remplissage de la coque, couche `hair-form`) : `HAIR-FORM.md`, limites `HAIR-FORM-REMAINING.md`. Suite 4 (lisière extérieure afro / curly, retombée des longs, triangles sombres, couche `hair-edge`) : `HAIR-EDGE.md`, limites `HAIR-EDGE-REMAINING.md`. Rien ci-dessous n'est caché : chaque ligne est une limite mesurée ou constatée sur les planches.
 
 ## Lisière (`boundary/`)
 1. **Seuils à la main** : 0,12 H (trou), 0,05 H (dents de scie), 0,25 (oreille libre), 0,1 (bord lisible) sont posés sur le corpus de 600 visages, pas appris d'une référence. À recaler sur des visages dessinés par un illustrateur.

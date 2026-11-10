@@ -4,6 +4,7 @@ import type { SkullSurface } from './boundary/skull-surface';
 import type { Poly } from '../poly';
 import type { HairCtx } from './flow';
 import { distanceOutsideSkull } from './thickness';
+import { resample } from './texture';
 
 type Style = Exclude<HairStyle, 'bald'>;
 
@@ -168,6 +169,36 @@ export function conformReach(ctx: HairCtx, spine: Vec[], poly: Poly, mode: Reach
     out[k] = ok(a) ? pullIn(S, v, a, side, yTop, cy, mode) : a;
   }
   return { spine: sp, poly: out };
+}
+
+/** Prédicat de portée d'un sommet (même borne que `conformReach`) : sert à reconstruire une mèche trop large plus mince au lieu d'écraser ses sommets un à un. */
+export function reachOk(ctx: HairCtx, mode: ReachMode): (q: Vec) => boolean {
+  const { side, yTop } = reachBudget(ctx.h.style as Style, ctx.boundary.skull, ctx.lm.W, ctx.lm.H);
+  const S = ctx.boundary.skull, cy = cranialLimit(ctx);
+  return (q) => inReach(S, q, side, yTop, cy, mode);
+}
+
+/**
+ * Ligne médiane COUPÉE à la frontière de portée (`docs/HAIR-EDGE.md`) : la mèche s'arrête où la portée finit (dernier point trouvé par bissection) au lieu
+ * de voir ses points suivants collés sur la frontière par `conformReach` — ces points empilés donnaient des rubans à bout plat et coudes à angle droit
+ * (« rectangles » et « triangles » sombres au sommet des cheveux longs). `cut` : la ligne a été raccourcie (la pointe doit alors se refermer).
+ * Ré-échantillonnée au même nombre de points (au moins 8) ; `null` si la racine seule est déjà hors portée.
+ */
+export function cutSpine(ctx: HairCtx, spine: Vec[], mode: ReachMode): { spine: Vec[]; cut: boolean } | null {
+  const ok = reachOk(ctx, mode);
+  let k = -1;
+  for (let i = 1; i < spine.length; i++) if (!ok(spine[i] as Vec)) { k = i; break; }
+  if (k < 0) return { spine, cut: false };
+  const a = spine[k - 1] as Vec, b = spine[k] as Vec;
+  let lo = 0, hi = 1;
+  for (let i = 0; i < 8; i++) {
+    const mid = (lo + hi) / 2;
+    if (ok({ x: a.x + (b.x - a.x) * mid, y: a.y + (b.y - a.y) * mid })) lo = mid;
+    else hi = mid;
+  }
+  const kept = [...spine.slice(0, k), { x: a.x + (b.x - a.x) * lo, y: a.y + (b.y - a.y) * lo }];
+  if (kept.length < 3) return null;
+  return { spine: resample(kept, Math.max(8, kept.length)), cut: true };
 }
 
 /**
