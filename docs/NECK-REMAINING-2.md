@@ -51,5 +51,5 @@ Vérifications faites avant d'écrire : il n'existe qu'un seul moteur de cou (`s
 ## F. Suite de tests
 
 Suite complète (120 fichiers, 2 907 tests) sur l'état final avant régénération des références : **2 906 réussis, 1 échec** (`regression-visual` : 27 cas sur 34 écartés, rms ≤ 6,4, au plus 4,3 % de pixels écartés de plus de 8 niveaux, changements confinés à la moitié basse de l'image ; les 7 cas sans cou visible sont identiques).
-Les 34 références de `references/visual/` ont été **régénérées volontairement** (`npm run regress:update`) ; après régénération, `regression-visual`, `neck-remaining` et `neck-presets` passent (16 tests) et `tsc` est propre. La suite complète n'a pas été relancée après la régénération.
+Les 34 références de `references/visual/` ont été **régénérées volontairement** (`npm run regress:update`) ; après régénération, `regression-visual`, `neck-remaining` et `neck-presets` passent (16 tests) et `tsc` est propre. Suite complète relancée sur l'état poussé (commit `66c57df`, après rebase sur le commit cheveux `6dd8c1c`) : **121 fichiers, 2 914 tests, tous verts**.
 Durée de la suite complète : environ 15 minutes sur une machine à un cœur (lancer détachée).
