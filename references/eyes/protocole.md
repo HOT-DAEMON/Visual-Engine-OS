@@ -1,1 +1,2 @@
-
+# TRES IMPORTANT
+Les references de ce dossier eyes concernent essentielement les yeux et la peau et doivent servire a recolter tous les informations trouvable pixel par pixel de chaque images présente pour renforcer le moteur de yeux déja présente et sa cohérance..Chaque detail observer doit être organiser de facon a nourir chaque composant du moteur de yeux deja présente (formes geometriques, position, eclairage, ombrage, etc..)
