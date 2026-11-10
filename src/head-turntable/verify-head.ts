@@ -11,6 +11,9 @@ import { sectionAt } from './sections';
 import { headEdges, jawContourStats } from './verify-contour';
 import { topRow } from './silhouette';
 import { inkSpecks, inkWidth, outlineClosure } from './verify-style';
+import { hostChecks } from './verify-host';
+import { neckReliefChecks } from './verify-neck-relief';
+import { ROLL_PROBE, rollChecks } from './verify-roll';
 import { skullAnatomyChecks, skullGeometryChecks, skullStyleChecks } from './verify-skull';
 import { check, layerOf, reportOf, type Check, type LayerReport, type TurnReport } from './verify-types';
 import type { HeadTurnSpec, TurnRender } from './types';
@@ -32,6 +35,12 @@ export interface HeadSubject {
 export class HeadRenders {
   private readonly cache = new Map<string, TurnRender>();
   constructor(readonly spec: HeadTurnSpec, private readonly heightPx = 520) {}
+  /** Vue à tangage 0 avec roulis (contrôles du roulis). */
+  rolled(yaw: number, roll: number): TurnRender {
+    const key = `${yaw}/roll${roll}`; let r = this.cache.get(key);
+    if (!r) { r = renderHead({ yaw, pitch: 0, roll }, this.spec, { frame: defaultFrame(this.heightPx), ss: 2 }); this.cache.set(key, r); }
+    return r;
+  }
   at(yaw: number, flat = false): TurnRender {
     const key = `${yaw}/${flat}`; let r = this.cache.get(key);
     if (!r) { const v = refView(yaw); r = renderHead(flat ? { yaw, pitch: 0 } : v, this.spec, { frame: defaultFrame(this.heightPx), ss: 2 }); this.cache.set(key, r); }
@@ -53,6 +62,8 @@ export function headGeometry(h: HeadSubject, R: HeadRenders): LayerReport {
     const e = s.engine, ts = [...Array.from({ length: 8 }, (_, i) => 0.15 + i * 0.05), 0.85, 0.9, 0.95, 1.0], f0 = headEdges(R.at(0, true), ts);
     const want = (y: number): number => halfWidthAt(e.lm.outline, Math.min(py(toEngineY(y)), e.lm.outline.bottomY - 1)) / 1000;
     const dev = f0.map((p) => Math.abs((p.right - p.left) / 2 - want(p.t))), mean = dev.reduce((a, b) => a + b, 0) / Math.max(1, dev.length);
+    c.push(...hostChecks(s, R.at(0, true)).geometry);
+    c.push(...rollChecks(s, R.at(0, true), R.rolled(0, ROLL_PROBE), R.rolled(60, -ROLL_PROBE)).geometry);
     c.push(check(G, 'head.geo.front2d', 'Face 3D (tangage 0) vs contour 2D du moteur de visage : écart moyen de demi-largeur (U) [rendu : trait ≈ 0,011]', mean, 0, 0.03));
     // Profil : bord avant du crâne (front) du rendu à 90° vs z avant de la section ; le pivot est l'axe du cou.
     const f90 = headEdges(R.at(90, true), [0.2, 0.3, 0.4, 0.5]), pz = 0;   // le pivot de rotation est l'origine z = 0 de la tête
@@ -78,6 +89,9 @@ export function headAnatomy(h: HeadSubject, R: HeadRenders): LayerReport {
   c.push(check(A, 'head.anat.eyeline', 'Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]', s.eye.y / yMen, 0.4, 0.66));
   const aMax = Math.max(...s.rows.map((r) => r.a)), top = sectionAt(s, 0.45);
   c.push(check(A, 'head.anat.depth', 'Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]', (sectionAt(s, 0.45).zf - top.zb) / yMen, 0.66, 1.0));
+  if (s.eyeHost) c.push(...hostChecks(s, R.at(0, true)).anatomy);
+  c.push(...neckReliefChecks(s, R.at(0, true)));
+  c.push(...rollChecks(s, R.at(0, true), R.rolled(0, ROLL_PROBE), R.rolled(60, -ROLL_PROBE)).anatomy);
   if (s.engine) {
     const j = jawCtx(s.engine), plane = Math.atan((j.yMen - j.yG) / (j.zMen - j.zG)) * deg;
     c.push(check(A, 'head.anat.jaw.plane', 'Plan mandibulaire (gonion → menton) par rapport à l\'horizontale (°) [canon : 15–35° ; extrêmes admis 10–42°]', plane, 10, 42));

@@ -19,6 +19,7 @@ export interface EarField {
 /** Structures dont l'ARÊTE est tracée à l'encre dans le style de la planche (hélix intérieur, anthélix, tragus, antitragus, conque, crus). */
 const INKED = new Set(['helix', 'antihelix:body', 'antihelix:upper', 'antihelix:lower', 'tragus', 'antitragus', 'cavum', 'crus']);
 const EDGE_SOFT = 0.03;
+const INK_REACH = 0.15;
 
 const dEdge = (p: Poly, x: number, y: number): number => {
   let m = Infinity;
@@ -35,6 +36,8 @@ function bakeRaw(m: EarModel, res: number): EarField {
   const names = order.map((s) => String(s.id));
   const inked: Poly[] = order.filter((s) => INKED.has(String(s.id))).map((s) => s.poly);
   const boxes = order.map((s) => { const xs = s.poly.map((q) => q.x), ys = s.poly.map((q) => q.y); return { x0: Math.min(...xs) - EDGE_SOFT, x1: Math.max(...xs) + EDGE_SOFT, y0: Math.min(...ys) - EDGE_SOFT, y1: Math.max(...ys) + EDGE_SOFT }; });
+  // Distance d'encre : seule compte la bande proche des arêtes (les lecteurs la comparent à une épaisseur de trait ≤ 0,05 plan) ; au-delà de INK_REACH la valeur reste 9 (« loin »), sans parcourir les arêtes.
+  const inkBoxes = inked.map((p) => { const xs = p.map((q) => q.x), ys = p.map((q) => q.y); return { x0: Math.min(...xs) - INK_REACH, x1: Math.max(...xs) + INK_REACH, y0: Math.min(...ys) - INK_REACH, y1: Math.max(...ys) + INK_REACH }; });
   for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
     const x = i / res, y = j / res, k = j * nx + i;
     if (!inPoly(m.outline, x, y)) { rel[k] = NaN; lab[k] = 255; continue; }
@@ -45,7 +48,7 @@ function bakeRaw(m: EarModel, res: number): EarField {
       h = h + (s.relief - h) * smooth(dEdge(s.poly, x, y) / EDGE_SOFT); l = si + 1;
     });
     rel[k] = h; lab[k] = l;
-    let d = 9; for (const p of inked) d = Math.min(d, dEdge(p, x, y)); ink[k] = d;
+    let d = 9; inked.forEach((p, pi) => { const b = inkBoxes[pi]!; if (x >= b.x0 && x <= b.x1 && y >= b.y0 && y <= b.y1) d = Math.min(d, dEdge(p, x, y)); }); ink[k] = d;
   }
   return { nx, ny, res, wr, rel, lab, ink, names };
 }

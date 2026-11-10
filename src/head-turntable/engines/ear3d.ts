@@ -12,7 +12,14 @@ import { fy } from './units';
 /** Oreille posée sur la tête : modèle du moteur d'oreille, placement en U (hauteur, attache) et z de l'arête antérieure. */
 export interface EarRig { readonly side: 1 | -1; readonly model: EarModel; readonly field: EarField; readonly pl: EarPlacement; readonly zA: number; readonly T: number; readonly pivot: { x: number; y: number } }
 
+/** Le gréement d'une oreille est PUR et lu à chaque pixel d'oreille peint (`paint.ts`) : une fois par (spec, côté), pas une fois par pixel (avant : modèle + placement recalculés, clé de cache canonique incluse, des dizaines de milliers de fois par rendu). */
+const RIGS = new WeakMap<HeadTurnSpec, { 1?: EarRig; [-1]?: EarRig }>();
 export function earRig(spec: HeadTurnSpec, side: 1 | -1): EarRig {
+  let m = RIGS.get(spec); if (!m) RIGS.set(spec, (m = {}));
+  return (m[side] ??= buildEarRig(spec, side));
+}
+
+function buildEarRig(spec: HeadTurnSpec, side: 1 | -1): EarRig {
   const e = spec.engine;
   if (!e) throw new Error('earRig : la spec ne porte pas de tête issue des moteurs');
   const model = earModel(e.p.ears, side), { pl: px } = earPlacement(e.p, e.lm, model);

@@ -1,8 +1,9 @@
 import { hex, mix, type RGB } from './color';
 import { blushAlpha, browTex, eyeTex, mouthTex, nostrilTex, paletteOf, type Pal, type Tex } from './face-tex';
-import { norm, rad, smooth, toCam, v3 } from './math';
+import { dirToCam, norm, rad, smooth, toCam, v3 } from './math';
 import { earRig } from './engines/ear3d';
 import { earColor } from './engines/ear-paint';
+import { markColor, neckMark } from './engines/neck-relief';
 import { PART } from './mesh';
 import type { GBuf } from './raster';
 import { regionField, signedDistance } from './hair-region';
@@ -19,7 +20,7 @@ const group = (id: number): number => (id === PART.head || id === PART.bump ? 1 
 /** Tolérance verticale (repère tête) du trait de lisière pour qu'il garde 0,0055 U d'épaisseur À L'ÉCRAN : elle croît avec la pente de la lisière projetée. */
 function hairTol(spec: HeadTurnSpec, view: View, az: number, hl: number, kw: number): number {
   const a0 = ((az - 1) * Math.PI) / 180, a1 = ((az + 1) * Math.PI) / 180, side = az < 0 ? -1 : 1;
-  const q = (th: number) => { const pt = headPoint(spec, hairlineY(spec, Math.abs((th * 180) / Math.PI)), Math.abs(th) * side); return toCam(pt, view); };
+  const q = (th: number) => { const pt = headPoint(spec, hairlineY(spec, Math.abs((th * 180) / Math.PI)), Math.abs(th) * side); return toCam(pt, view, 'head'); };
   const c0 = q(a0), c1 = q(a1), tx = Math.abs(c1.x - c0.x), tl = Math.hypot(c1.x - c0.x, c1.y - c0.y);
   void hl;
   return Math.min(0.03, (0.0055 * kw * tl) / Math.max(tx, 1e-4) / Math.max(0.5, Math.cos((view.pitch * Math.PI) / 180)));
@@ -36,11 +37,14 @@ export function paint(spec: HeadTurnSpec, g: GBuf, view: View, o: PaintOpts): Pa
     const id = g.id[k]!;
     if (!id) continue;
     const p = { x: g.P[3 * k]!, y: g.P[3 * k + 1]!, z: g.P[3 * k + 2]! }, nh = norm({ x: g.N[3 * k]!, y: g.N[3 * k + 1]!, z: g.N[3 * k + 2]! });
-    const nc = toCam(nh, view), lam = nc.x * LIGHT.x + nc.y * LIGHT.y + nc.z * LIGHT.z, t = smooth((lam - 0.02) / 0.22);
+    const nc = dirToCam(nh, view, id === PART.neck || id === PART.neckCut ? 'neck' : 'head', p.y), lam = nc.x * LIGHT.x + nc.y * LIGHT.y + nc.z * LIGHT.z, t = smooth((lam - 0.02) / 0.22);
     const kw = Math.min(1.4, 1 / Math.max(0.7, nc.z));                         // compensation du raccourcissement des traits sur les faces obliques
     let col = mix(pal.shade, pal.skin, t), reg: number = REGION.skin;
     if (id === PART.neckCut) { col = [pal.shade[0] * NECK_CUT_K[0], pal.shade[1] * NECK_CUT_K[1], pal.shade[2] * NECK_CUT_K[2]]; reg = REGION.neck; }
-    else if (id === PART.neck) { col = mix(pal.shade, pal.skin, Math.min(t, smooth((p.y - 0.98) / 0.2))); reg = REGION.neck; }
+    else if (id === PART.neck) {
+      col = mix(pal.shade, pal.skin, Math.min(t, smooth((p.y - 0.98) / 0.2))); reg = REGION.neck;
+      if (neckMark(spec, p)) col = markColor(pal);   // creux des reliefs du cou (SCM, platysma, clavicule) lus du moteur de cou
+    }
     else if (id === PART.ear) {
       const rig = earRig(spec, p.x >= 0 ? 1 : -1), front = nh.x * (p.x >= 0 ? 1 : -1) * Math.cos(rad(rig.pl.openingDeg)) + nh.z * Math.sin(rad(rig.pl.openingDeg)) > -0.05;
       const tx = earColor(rig.field, g.uv[2 * k]!, g.uv[2 * k + 1]!, front, kw, pal, 0.0055 * 2, rig.pl.hPx);

@@ -1,4 +1,4 @@
-import type { V3, View } from './types';
+import type { RollRig, V3, View } from './types';
 
 /** Mathématiques de vue. Lacet a (autour de la verticale de la tête), puis tangage b de caméra :
  *    x₁ = x cos a − z sin a ;  z₁ = x sin a + z cos a ;  y₂ = y cos b − z₁ sin b ;  z₂ = y sin b + z₁ cos b   (z₂ grand = proche).
@@ -10,15 +10,34 @@ export const smooth = (t: number): number => { const u = clamp(t, 0, 1); return 
 
 export interface Cam { readonly x: number; readonly y: number; readonly z: number }
 
-/** Point de la tête → repère caméra (x₁, y₂, z₂). */
-export function toCam(p: V3, v: View): Cam {
-  const a = rad(v.yaw), b = rad(v.pitch), ca = Math.cos(a), sa = Math.sin(a), cb = Math.cos(b), sb = Math.sin(b);
+/** Pièce de la chaîne du roulis : la tête (crâne, oreilles, bosses) suit le roulis total ; le cou se plie, de 0 à sa base à `bend` à son sommet. */
+export type Limb = 'head' | 'neck';
+const rot = (p: V3, a: number, c: V3): V3 => { const ca = Math.cos(a), sa = Math.sin(a), dx = p.x - c.x, dy = p.y - c.y; return { x: c.x + dx * ca - dy * sa, y: c.y + dx * sa + dy * ca, z: p.z }; };
+/** Poids de la flexion du cou à la hauteur y : 1 au sommet (T), 0 à la base (B), C¹ entre les deux. */
+const bendW = (y: number, g: RollRig): number => smooth((g.B.y - y) / (g.B.y - g.T.y || 1));
+/** Pose (roulis) d'un POINT de la tête (repère tête) : la chaîne base du cou → haut du cou → crâne, avant le lacet. Sans `rig` : identité. */
+export function poseHead(p: V3, v: View, limb: Limb): V3 {
+  const g = v.rig;
+  if (!g || !g.roll) return p;
+  return limb === 'neck' ? rot(p, g.bend * bendW(p.y, g), g.B) : rot(rot(p, g.roll - g.bend, g.T), g.bend, g.B);
+}
+/** Pose d'une DIRECTION (normale) : même rotation, sans translation. `y` = hauteur du point (pour le poids de flexion du cou). */
+export function poseDir(n: V3, v: View, limb: Limb, y: number): V3 {
+  const g = v.rig;
+  if (!g || !g.roll) return n;
+  const a = limb === 'neck' ? g.bend * bendW(y, g) : g.roll, ca = Math.cos(a), sa = Math.sin(a);
+  return { x: n.x * ca - n.y * sa, y: n.x * sa + n.y * ca, z: n.z };
+}
+
+/** Point de la tête → repère caméra (x₁, y₂, z₂), roulis compris si `limb` est donné. */
+export function toCam(p0: V3, v: View, limb?: Limb): Cam {
+  const p = limb ? poseHead(p0, v, limb) : p0, a = rad(v.yaw), b = rad(v.pitch), ca = Math.cos(a), sa = Math.sin(a), cb = Math.cos(b), sb = Math.sin(b);
   const x1 = p.x * ca - p.z * sa, z1 = p.x * sa + p.z * ca;
   return { x: x1, y: p.y * cb - z1 * sb, z: p.y * sb + z1 * cb };
 }
 
-/** Direction (vecteur, sans translation) tête → caméra. */
-export const dirToCam = toCam;
+/** Direction (vecteur, sans translation) tête → caméra : roulis (`limb`, hauteur `y`) puis lacet et tangage. */
+export const dirToCam = (n: V3, v: View, limb?: Limb, y = 0): Cam => toCam(limb ? poseDir(n, v, limb, y) : n, { yaw: v.yaw, pitch: v.pitch });
 
 /** Direction caméra → tête (rotation inverse) : sert à exprimer la lumière de la caméra dans le repère de la tête. */
 export function camToHead(c: Cam, v: View): V3 {

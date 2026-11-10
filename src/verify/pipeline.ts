@@ -92,7 +92,7 @@ export function verifyPipeline(input: unknown): Report {
   // Tête 3D (tête + cou tournants) : les 3 couches de la tête en rotation sur la personne de l'hôte, ids préfixés `head3d.<id>.`.
   for (const o of scene.objects) {
     if (o.kind !== 'head_3d') continue;
-    checks.push(...checkHead3d(o, hosts.get(o.host) as HostSpec));
+    checks.push(...checkHead3d(o, hosts.get(o.host) as HostSpec, placed.get(o.host) ?? []));
   }
   return report(checks);
 }

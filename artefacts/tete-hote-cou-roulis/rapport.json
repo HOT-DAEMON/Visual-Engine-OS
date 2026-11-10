@@ -1,0 +1,423 @@
+[
+ {
+  "seed": 11,
+  "controles": 97,
+  "echecs": [
+   {
+    "id": "head.anat.skull.cephalic3d",
+    "valeur": 1.046,
+    "severite": "info"
+   }
+  ],
+  "hote_cou_roulis": [
+   {
+    "id": "head.host.front.iou",
+    "valeur": 0.9964,
+    "ok": true
+   },
+   {
+    "id": "head.host.front.skin",
+    "valeur": 0.9996,
+    "ok": true
+   },
+   {
+    "id": "head.host.front.coverage",
+    "valeur": 0.9965,
+    "ok": true
+   },
+   {
+    "id": "head.roll.eyeline",
+    "valeur": 20.0303,
+    "ok": true
+   },
+   {
+    "id": "head.roll.rigid",
+    "valeur": 1.0002,
+    "ok": true
+   },
+   {
+    "id": "head.roll.joined",
+    "valeur": 1,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.right.outline",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.right.outline-max",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.right.gaze",
+    "valeur": 0.0086,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.left.outline",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.left.outline-max",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.left.gaze",
+    "valeur": 0.007,
+    "ok": true
+   },
+   {
+    "id": "head.neck.scm.insertion",
+    "valeur": 0.1467,
+    "ok": true
+   },
+   {
+    "id": "head.neck.scm.mastoid",
+    "valeur": 0.6333,
+    "ok": true
+   },
+   {
+    "id": "head.neck.scm.below-ear",
+    "valeur": 0.0903,
+    "ok": true
+   },
+   {
+    "id": "head.neck.relief.coverage",
+    "valeur": 0.0366,
+    "ok": true
+   },
+   {
+    "id": "head.neck.relief.pixels",
+    "valeur": 1241,
+    "ok": true
+   },
+   {
+    "id": "head.roll.neck-base",
+    "valeur": 0,
+    "ok": true
+   }
+  ],
+  "roulis_sonde_deg": 20
+ },
+ {
+  "seed": 42,
+  "controles": 97,
+  "echecs": [
+   {
+    "id": "head.anat.skull.cephalic3d",
+    "valeur": 0.9811,
+    "severite": "info"
+   }
+  ],
+  "hote_cou_roulis": [
+   {
+    "id": "head.host.front.iou",
+    "valeur": 0.9975,
+    "ok": true
+   },
+   {
+    "id": "head.host.front.skin",
+    "valeur": 0.9974,
+    "ok": true
+   },
+   {
+    "id": "head.host.front.coverage",
+    "valeur": 0.9984,
+    "ok": true
+   },
+   {
+    "id": "head.roll.eyeline",
+    "valeur": 19.9876,
+    "ok": true
+   },
+   {
+    "id": "head.roll.rigid",
+    "valeur": 0.9996,
+    "ok": true
+   },
+   {
+    "id": "head.roll.joined",
+    "valeur": 1,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.right.outline",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.right.outline-max",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.right.gaze",
+    "valeur": 0.0018,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.left.outline",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.left.outline-max",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.left.gaze",
+    "valeur": 0.0026,
+    "ok": true
+   },
+   {
+    "id": "head.neck.scm.insertion",
+    "valeur": 0.14,
+    "ok": true
+   },
+   {
+    "id": "head.neck.scm.mastoid",
+    "valeur": 0.6267,
+    "ok": true
+   },
+   {
+    "id": "head.neck.scm.below-ear",
+    "valeur": 0.1776,
+    "ok": true
+   },
+   {
+    "id": "head.neck.relief.coverage",
+    "valeur": 0.0346,
+    "ok": true
+   },
+   {
+    "id": "head.neck.relief.pixels",
+    "valeur": 1124,
+    "ok": true
+   },
+   {
+    "id": "head.roll.neck-base",
+    "valeur": 0,
+    "ok": true
+   }
+  ],
+  "roulis_sonde_deg": 20
+ },
+ {
+  "seed": 77,
+  "controles": 97,
+  "echecs": [
+   {
+    "id": "head.anat.skull.cephalic3d",
+    "valeur": 1.0802,
+    "severite": "info"
+   },
+   {
+    "id": "head.style.specks.0",
+    "valeur": 13,
+    "severite": "info"
+   }
+  ],
+  "hote_cou_roulis": [
+   {
+    "id": "head.host.front.iou",
+    "valeur": 0.9975,
+    "ok": true
+   },
+   {
+    "id": "head.host.front.skin",
+    "valeur": 0.9901,
+    "ok": true
+   },
+   {
+    "id": "head.host.front.coverage",
+    "valeur": 0.9976,
+    "ok": true
+   },
+   {
+    "id": "head.roll.eyeline",
+    "valeur": 19.9921,
+    "ok": true
+   },
+   {
+    "id": "head.roll.rigid",
+    "valeur": 1,
+    "ok": true
+   },
+   {
+    "id": "head.roll.joined",
+    "valeur": 1,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.right.outline",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.right.outline-max",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.right.gaze",
+    "valeur": 0.002,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.left.outline",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.left.outline-max",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.left.gaze",
+    "valeur": 0.0025,
+    "ok": true
+   },
+   {
+    "id": "head.neck.scm.insertion",
+    "valeur": 0.1067,
+    "ok": true
+   },
+   {
+    "id": "head.neck.scm.mastoid",
+    "valeur": 0.6333,
+    "ok": true
+   },
+   {
+    "id": "head.neck.scm.below-ear",
+    "valeur": 0.1021,
+    "ok": true
+   },
+   {
+    "id": "head.neck.relief.coverage",
+    "valeur": 0.0351,
+    "ok": true
+   },
+   {
+    "id": "head.neck.relief.pixels",
+    "valeur": 1186,
+    "ok": true
+   },
+   {
+    "id": "head.roll.neck-base",
+    "valeur": 0,
+    "ok": true
+   }
+  ],
+  "roulis_sonde_deg": 20
+ },
+ {
+  "seed": 3,
+  "controles": 97,
+  "echecs": [
+   {
+    "id": "head.anat.skull.cephalic3d",
+    "valeur": 1.1186,
+    "severite": "info"
+   }
+  ],
+  "hote_cou_roulis": [
+   {
+    "id": "head.host.front.iou",
+    "valeur": 0.9969,
+    "ok": true
+   },
+   {
+    "id": "head.host.front.skin",
+    "valeur": 0.9989,
+    "ok": true
+   },
+   {
+    "id": "head.host.front.coverage",
+    "valeur": 0.9972,
+    "ok": true
+   },
+   {
+    "id": "head.roll.eyeline",
+    "valeur": 19.9772,
+    "ok": true
+   },
+   {
+    "id": "head.roll.rigid",
+    "valeur": 1.0001,
+    "ok": true
+   },
+   {
+    "id": "head.roll.joined",
+    "valeur": 1,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.right.outline",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.right.outline-max",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.right.gaze",
+    "valeur": 0.0081,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.left.outline",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.left.outline-max",
+    "valeur": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.eye.left.gaze",
+    "valeur": 0.0148,
+    "ok": true
+   },
+   {
+    "id": "head.neck.scm.insertion",
+    "valeur": 0.12,
+    "ok": true
+   },
+   {
+    "id": "head.neck.scm.mastoid",
+    "valeur": 0.6333,
+    "ok": true
+   },
+   {
+    "id": "head.neck.scm.below-ear",
+    "valeur": 0.1609,
+    "ok": true
+   },
+   {
+    "id": "head.neck.relief.coverage",
+    "valeur": 0.0346,
+    "ok": true
+   },
+   {
+    "id": "head.neck.relief.pixels",
+    "valeur": 1246,
+    "ok": true
+   },
+   {
+    "id": "head.roll.neck-base",
+    "valeur": 0,
+    "ok": true
+   }
+  ],
+  "roulis_sonde_deg": 20
+ }
+]

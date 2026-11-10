@@ -11,7 +11,7 @@
 | cheveux v2 (`face/hair`) | branchés | — |
 | cheveux `hair-grammar` | **non branchés** — et pas branchables avant la pose 3/4 (rubans définis en vue 3/4) | `PIPELINE-WIRING-REMAINING.md` |
 | crâne de profil (`src/skull`) | **branché** (`kind: 'head_profile'`, crâne dérivé du visage) | trous listés dans `PIPELINE-PROFILE.md` |
-| tête + cou tournants (`head-turntable`) | **branchée** (`head_3d`, lacet / tangage libres) ; reste : volume des cheveux, yeux, sourcils (`PIPELINE-HEAD-3D-REMAINING.md`) | `PIPELINE-HEAD-3D.md` |
+| tête + cou tournants (`head-turntable`) | **branchée** (`head_3d`, lacet / tangage libres) ; yeux de l'hôte, cou (SCM / platysma / clavicule) et roulis faits ; reste : volume des cheveux, sourcils (`PIPELINE-HEAD-3D-REMAINING.md`) | `PIPELINE-HEAD-3D.md` |
 | pose 3/4 (`face/pose`) | **non branchée** (géométrie pure ; exige de reprojeter chaque composant) | `PIPELINE-WIRING-REMAINING.md` |
 | corps : torse + bras | branché (`kind: 'body'`) | — |
 | corps : bassin + jambes (`src/body/lower`) | **branchés** (`legs` de `kind: 'body'`, défaut `false` = buste) | `PIPELINE-LOWER.md` |

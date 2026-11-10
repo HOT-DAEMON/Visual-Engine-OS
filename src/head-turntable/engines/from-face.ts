@@ -68,7 +68,8 @@ function hairlineFrom(e: ReturnType<typeof engineHead>, base: HairlineSpec): Hai
 
 /** Spec de rotation d'un profil : mêmes moteurs que la planche, autres paramètres. `hairline` (facultatif) remplace la lisière d'une coupe courte dérivée du front (ex. : lisière réelle de la coiffure de l'hôte). */
 export function headSpecFromProfile(p: HeadSource, base: HeadTurnSpec = MEASURED_SPEC, hairline?: HairlineSpec): HeadTurnSpec {
-  const fit = fitFromProfile(p), e = engineHead(fit);
+  // Une tête sans cheveux (lisière entièrement sous le sommet) n'a pas l'épaisseur de coiffure de la planche sur le crâne : le contour 3D recouvre celui du visage (mesuré : +0,05 U sans cela).
+  const bald = hairline !== undefined && hairline.knots.every(([, y]) => y < 0), fit0 = fitFromProfile(p), fit = bald ? { ...fit0, hairTh: 0 } : fit0, e = engineHead(fit);
   const r = e.lm.orbit.right.rx / REF.rx, rl = e.lm.lips.half / REF.lipHalf, dEye = fy(e.lm.eyeY) - REF.eyeY, cx = fx(e.lm.innerCanthus.right.x);
   const eye = { ...base.eye, w: base.eye.w * r, hUp: base.eye.hUp * r, hLo: base.eye.hLo * r, irisR: base.eye.irisR * r };
   const brow = { ...base.brow, xIn: cx - (REF.cx - base.brow.xIn) * r, xOut: cx + eye.w + (base.brow.xOut - REF.cx - base.eye.w) * r, yIn: base.brow.yIn + dEye, yMid: base.brow.yMid + dEye, yOut: base.brow.yOut + dEye };

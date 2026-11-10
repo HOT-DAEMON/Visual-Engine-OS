@@ -20,6 +20,8 @@ export const Head3dSpec = z
     yaw: z.number().min(-180).max(180).default(45),
     /** Tangage de la caméra en degrés : > 0 = contre-plongée (la caméra est sous la tête, comme la planche : 17,7°), < 0 = plongée, 0 = à hauteur des yeux. */
     pitch: z.number().min(-60).max(60).default(0),
+    /** Roulis en degrés : inclinaison latérale de la tête autour de l'axe du nez, > 0 = vers la droite de l'image (sens horaire vu de face) ; le cou se plie avec elle (base immobile). ±40° (flexion latérale cervicale ≈ 45°). */
+    roll: z.number().min(-40).max(40).default(0),
     /** Axes du crâne que le visage ne détermine pas ; les axes dérivés sont ÉCRASÉS par la dérivation (même contrat que `head_profile`). */
     skull: SkullParams.partial().default({}),
     variation: SkullVariation,

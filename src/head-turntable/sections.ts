@@ -7,17 +7,27 @@ import { clamp } from './math';
  */
 export interface Section { readonly y: number; readonly a: number; readonly zc: number; readonly b: number; readonly zf: number; readonly zb: number; readonly zw: number; readonly pf: number; readonly qf: number; readonly pb?: number; readonly qb?: number }
 
-/** Hermite cubique C¹ à pas NON uniforme (tangentes par différences centrées en y) : identique à Catmull-Rom quand le pas est régulier, sans le défaut de tangente aux changements de pas. */
-function hermite(ys: readonly number[], v: readonly number[], i: number, yy: number): number {
-  const n = ys.length, tan = (k: number): number => { const k0 = Math.max(0, k - 1), k1 = Math.min(n - 1, k + 1); return (v[k1]! - v[k0]!) / (ys[k1]! - ys[k0]! || 1); };
-  const d = ys[i + 1]! - ys[i]!, t = (yy - ys[i]!) / (d || 1), t2 = t * t, t3 = t2 * t;
-  return (2 * t3 - 3 * t2 + 1) * v[i]! + (t3 - 2 * t2 + t) * d * tan(i) + (-2 * t3 + 3 * t2) * v[i + 1]! + (t3 - t2) * d * tan(i + 1);
+/** Tangentes par différences centrées en y, à pas NON uniforme : calculées UNE fois par table (avant : une fermeture et deux divisions par évaluation, soit des millions par rendu). */
+function tangents(ys: readonly number[], v: readonly number[]): number[] {
+  const n = ys.length;
+  return v.map((_, k) => { const k0 = Math.max(0, k - 1), k1 = Math.min(n - 1, k + 1); return (v[k1]! - v[k0]!) / (ys[k1]! - ys[k0]! || 1); });
 }
 
-const CACHE = new WeakMap<readonly Row[], { ys: number[]; a: number[]; zf: number[]; zb: number[]; zw: number[]; pf: number[]; qf: number[]; pb: number[]; qb: number[] }>();
-function table(r: readonly Row[]): { ys: number[]; a: number[]; zf: number[]; zb: number[]; zw: number[]; pf: number[]; qf: number[]; pb: number[]; qb: number[] } {
+/** Hermite cubique C¹ à pas NON uniforme (tangentes `tn` par différences centrées en y) : identique à Catmull-Rom quand le pas est régulier, sans le défaut de tangente aux changements de pas. */
+function hermite(ys: readonly number[], v: readonly number[], tn: readonly number[], i: number, yy: number): number {
+  const d = ys[i + 1]! - ys[i]!, t = (yy - ys[i]!) / (d || 1), t2 = t * t, t3 = t2 * t;
+  return (2 * t3 - 3 * t2 + 1) * v[i]! + (t3 - 2 * t2 + t) * d * tn[i]! + (-2 * t3 + 3 * t2) * v[i + 1]! + (t3 - t2) * d * tn[i + 1]!;
+}
+
+type Col = { readonly v: number[]; readonly t: number[] };
+interface Table { readonly ys: number[]; readonly a: Col; readonly zf: Col; readonly zb: Col; readonly zw: Col; readonly pf: Col; readonly qf: Col; readonly pb: Col; readonly qb: Col }
+const CACHE = new WeakMap<readonly Row[], Table>();
+function table(r: readonly Row[]): Table {
   let t = CACHE.get(r);
-  if (!t) CACHE.set(r, (t = { ys: r.map((q) => q.y), a: r.map((q) => q.a), zf: r.map((q) => q.zf), zb: r.map((q) => q.zb), zw: r.map((q) => q.zw ?? (q.zf + q.zb) / 2), pf: r.map((q) => q.pf ?? 2), qf: r.map((q) => q.qf ?? 2), pb: r.map((q) => q.pb ?? 2), qb: r.map((q) => q.qb ?? 2) }));
+  if (!t) {
+    const ys = r.map((q) => q.y), col = (f: (q: Row) => number): Col => { const v = r.map(f); return { v, t: tangents(ys, v) }; };
+    CACHE.set(r, (t = { ys, a: col((q) => q.a), zf: col((q) => q.zf), zb: col((q) => q.zb), zw: col((q) => q.zw ?? (q.zf + q.zb) / 2), pf: col((q) => q.pf ?? 2), qf: col((q) => q.qf ?? 2), pb: col((q) => q.pb ?? 2), qb: col((q) => q.qb ?? 2) }));
+  }
   return t;
 }
 
@@ -26,10 +36,11 @@ export function sectionAt(spec: HeadTurnSpec, y: number): Section {
   const yy = clamp(y, r[0]!.y, r[n - 1]!.y);
   let i = 0;
   while (i < n - 2 && yy > r[i + 1]!.y) i++;
-  const a = Math.max(0, hermite(T.ys, T.a, i, yy));
-  const zf = hermite(T.ys, T.zf, i, yy), zb = Math.min(hermite(T.ys, T.zb, i, yy), zf - 2e-4);
-  const zw = clamp(hermite(T.ys, T.zw, i, yy), zb + 1e-4, zf - 1e-4);
-  return { y: yy, a, zc: (zf + zb) / 2, b: Math.max(1e-4, (zf - zb) / 2), zf, zb, zw, pf: clamp(hermite(T.ys, T.pf, i, yy), 0.7, 4), qf: clamp(hermite(T.ys, T.qf, i, yy), 0.7, 4), pb: clamp(hermite(T.ys, T.pb, i, yy), 0.7, 4), qb: clamp(hermite(T.ys, T.qb, i, yy), 0.7, 4) };
+  const h = (c: Col): number => hermite(T.ys, c.v, c.t, i, yy);
+  const a = Math.max(0, h(T.a));
+  const zf = h(T.zf), zb = Math.min(h(T.zb), zf - 2e-4);
+  const zw = clamp(h(T.zw), zb + 1e-4, zf - 1e-4);
+  return { y: yy, a, zc: (zf + zb) / 2, b: Math.max(1e-4, (zf - zb) / 2), zf, zb, zw, pf: clamp(h(T.pf), 0.7, 4), qf: clamp(h(T.qf), 0.7, 4), pb: clamp(h(T.pb), 0.7, 4), qb: clamp(h(T.qb), 0.7, 4) };
 }
 
 /** Point (x, z) du contour de la section à l'angle θ (0 = face, +π/2 = côté +x, π = arrière). Moitié avant : superellipse (pf, qf) ; moitié arrière : superellipse (pb, qb), demi-ellipse par défaut. */
@@ -52,11 +63,20 @@ export function halfWidthAtZ(s: Section, z: number): number {
   return s.a * Math.max(0, 1 - ((s.zw - z) / Math.max(1e-6, s.zw - s.zb)) ** (s.pb ?? 2)) ** (1 / (s.qb ?? 2));
 }
 
+/** Pentes de la cubique MONOTONE (Fritsch-Carlson) d'une lisière : une fois par liste de nœuds (avant : recalculées, avec deux tableaux, à CHAQUE pixel peint). */
+const SLOPES = new WeakMap<readonly (readonly [number, number])[], number[]>();
+function slopes(k: readonly (readonly [number, number])[]): number[] {
+  let m = SLOPES.get(k);
+  if (!m) {
+    const n = k.length, d = k.slice(0, -1).map((p, i) => (k[i + 1]![1] - p[1]) / (k[i + 1]![0] - p[0] || 1));
+    SLOPES.set(k, (m = k.map((_, i) => (i === 0 ? d[0]! : i === n - 1 ? d[n - 2]! : d[i - 1]! * d[i]! <= 0 ? 0 : (2 * d[i - 1]! * d[i]!) / (d[i - 1]! + d[i]!)))));
+  }
+  return m;
+}
+
 /** Hauteur de la lisière des cheveux à l'azimut `azDeg` (0 = face), cubique de Hermite MONOTONE (Fritsch-Carlson) entre les nœuds : pas de paliers ni de rebonds ; symétrique gauche/droite. */
 export function hairlineY(spec: HeadTurnSpec, azDeg: number): number {
-  const k = spec.hairline.knots, n = k.length, az = clamp(Math.abs(azDeg), k[0]![0], k[n - 1]![0]);
-  const d = k.slice(0, -1).map((p, i) => (k[i + 1]![1] - p[1]) / (k[i + 1]![0] - p[0] || 1));
-  const m = k.map((_, i) => (i === 0 ? d[0]! : i === n - 1 ? d[n - 2]! : d[i - 1]! * d[i]! <= 0 ? 0 : (2 * d[i - 1]! * d[i]!) / (d[i - 1]! + d[i]!)));
+  const k = spec.hairline.knots, n = k.length, az = clamp(Math.abs(azDeg), k[0]![0], k[n - 1]![0]), m = slopes(k);
   let i = 0; while (i < n - 2 && az > k[i + 1]![0]) i++;
   const [x0, y0] = k[i]!, [x1, y1] = k[i + 1]!, h = x1 - x0, t = (az - x0) / (h || 1), t2 = t * t, t3 = t2 * t;
   return (2 * t3 - 3 * t2 + 1) * y0 + (t3 - 2 * t2 + t) * h * m[i]! + (-2 * t3 + 3 * t2) * y1 + (t3 - t2) * h * m[i + 1]!;

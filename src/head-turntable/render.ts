@@ -2,6 +2,7 @@ import { encodePngRgba } from '../core/png';
 import { buildParts } from './parts';
 import { cullFarEar } from './engines/ear-cull';
 import { paint } from './paint';
+import { withRig } from './roll';
 import { rasterize, type Frame } from './raster';
 import { REF_SPEC } from './spec';
 import { REF_PITCH } from './ref-fit';
@@ -17,8 +18,8 @@ export function defaultFrame(heightPx = 700): Frame {
 export interface RenderOpts { readonly frame?: Frame; readonly ss?: number; readonly background?: string | null; readonly lineU?: number }
 
 /** Rendu d'une vue de la tête : G-buffer sur-échantillonné → peinture → réduction → SVG autonome (PNG incrusté). Pur et déterministe. */
-export function renderHead(view: View, spec: HeadTurnSpec = REF_SPEC, o: RenderOpts = {}): TurnRender {
-  const f = o.frame ?? defaultFrame(), ss = o.ss ?? 2;
+export function renderHead(view0: View, spec: HeadTurnSpec = REF_SPEC, o: RenderOpts = {}): TurnRender {
+  const view = withRig(view0, spec), f = o.frame ?? defaultFrame(), ss = o.ss ?? 2;
   const hi: Frame = { w: f.w * ss, h: f.h * ss, ppu: f.ppu * ss, ox: f.ox * ss, oy: f.oy * ss };
   const g = rasterize(cullFarEar(buildParts(spec), view), view, hi);   // l'oreille lointaine à 8° – 35° est omise (convention de la planche)
   const pa = paint(spec, g, view, { lineU: o.lineU ?? 0.022, ppuHi: hi.ppu });

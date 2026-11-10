@@ -10,7 +10,13 @@
 export interface V3 { readonly x: number; readonly y: number; readonly z: number }
 
 /** Vue : lacet de la tête et tangage de caméra, en degrés. */
-export interface View { readonly yaw: number; readonly pitch: number }
+/**
+ * Vue : lacet, tangage de caméra et ROULIS de la tête (° ; > 0 = la tête s'incline vers la DROITE de l'image, sens horaire vu de face). Le roulis est une inclinaison latérale autour de l'axe
+ * du nez (z de la tête), appliquée AVANT le lacet : de profil, la tête s'incline donc vers ou loin de la caméra. `rig` (pivots, calculé par `rollRig`) accompagne tout roulis non nul.
+ */
+export interface View { readonly yaw: number; readonly pitch: number; readonly roll?: number; readonly rig?: RollRig }
+/** Chaîne cou-tête du roulis : `T` = haut du cou (pivot de l'articulation occipitale), `B` = base du cou (pivot du pli du cou), `bend` = part du roulis prise par la flexion du cou (rad), `roll` total (rad). */
+export interface RollRig { readonly T: V3; readonly B: V3; readonly bend: number; readonly roll: number }
 
 /** Une section horizontale du crâne/mâchoire à la hauteur y : demi-largeur a, face avant zf, face arrière zb (ellipse de centre (zf+zb)/2). */
 /**
@@ -45,7 +51,21 @@ export interface HeadTurnSpec {
   readonly ear: EarSpec; readonly neck: NeckSpec; readonly hairline: HairlineSpec; readonly palette: PaletteSpec;
   /** Tête issue des moteurs existants (crâne, mâchoire, nez, bouche, oreille) : absente pour une spec purement mesurée. */
   readonly engine?: EngineHead;
+  /** Yeux RÉELS de l'hôte (forme de l'ouverture, taille, iris, pupille, regard), en U dans le repère de la tête : quand ils sont fournis, ils remplacent les yeux de la planche. */
+  readonly eyeHost?: HostEyes;
 }
+
+/** Un œil de l'hôte en U, repère de la tête à plat, `x` = |x| (le côté gauche est miroité : x croît vers l'extérieur du visage). */
+export interface HostEye {
+  /** Paupière supérieure puis inférieure, du canthus interne au canthus externe (polylignes). */
+  readonly upper: readonly { x: number; y: number }[]; readonly lower: readonly { x: number; y: number }[];
+  /** Centre de l'iris (regard compris) et demi-axes. */
+  readonly iris: { cx: number; cy: number; rx: number; ry: number };
+  /** Pupille : un contour par pupille (forme réelle : ronde, fente, étoile…), RELATIF au centre de l'iris, et sa teinte. Aucun contour = pupille masquée. */
+  readonly pupil: { readonly contours: readonly (readonly { x: number; y: number }[])[]; readonly color: string };
+}
+/** `right` : côté x > 0 de la vue de face (œil droit du dessin) ; `left` : côté x < 0. */
+export interface HostEyes { readonly right: HostEye; readonly left: HostEye }
 
 /** Résultat d'un rendu : pixels RGBA, SVG autonome (PNG incrusté) et tampon d'identifiants pour la vérification. */
 export interface TurnRender {

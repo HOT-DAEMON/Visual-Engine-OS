@@ -1,6 +1,6 @@
 # Tête 3D dans le pipeline principal (`kind: 'head_3d'`)
 
-La rotation 3D de la tête et du cou (`src/head-turntable`) est branchée au pipeline : un objet `head_3d` rend **la même personne que le visage de face d'un hôte**, à un lacet et un tangage quelconques. Suite : `PIPELINE-HEAD-3D-REMAINING.md` (ce qui n'est pas fait, par composant).
+La rotation 3D de la tête et du cou (`src/head-turntable`) est branchée au pipeline : un objet `head_3d` rend **la même personne que le visage de face d'un hôte**, à un lacet et un tangage quelconques. Suite : `PIPELINE-HEAD-3D-REMAINING.md` (ce qui n'est pas fait, par composant). Yeux de l'hôte et recouvrement à 0° : `HEAD-TURNTABLE-HOST-OVERLAP.md` ; cou : `HEAD-TURNTABLE-NECK-RELIEF.md` ; roulis : `HEAD-TURNTABLE-ROLL.md` ; vitesse : `HEAD-TURNTABLE-SPEED.md`.
 
 ## Contrat
 
@@ -8,6 +8,7 @@ La rotation 3D de la tête et du cou (`src/head-turntable`) est branchée au pip
 { "kind": "head_3d", "id": "t0", "host": "f0",      // hôte shape: 'face' obligatoire
   "yaw": 45,        // −180…180 ; 0 = face, 90 = profil, 180 = dos ; yaw > 0 ⇒ le visage se tourne vers la GAUCHE de l'image
   "pitch": 0,       // −60…60 ; > 0 = contre-plongée (caméra sous la tête ; la planche : 17,7°)
+  "roll": 0,        // −40…40 ; > 0 = tête inclinée vers la DROITE de l'image (HEAD-TURNTABLE-ROLL.md)
   "skull": {}, "variation": {},   // mêmes règles que head_profile (axes dérivés écrasés, variation bornée)
   "hair": "#…",     // couleur ; défaut = celle du visage de l'hôte
   "hairline": "host",   // 'host' = lisière réelle de la coiffure de l'hôte ; 'short' = calotte courte ; un hôte chauve reste chauve

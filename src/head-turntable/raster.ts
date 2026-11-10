@@ -1,5 +1,5 @@
 import { toCam } from './math';
-import type { Mesh } from './mesh';
+import { PART, type Mesh } from './mesh';
 import type { View } from './types';
 
 /** Cadre image : taille (px), échelle (px par U) et position image du pivot (x = 0, y = 0 du repère tête). */
@@ -13,7 +13,7 @@ export function rasterize(meshes: readonly Mesh[], view: View, f: Frame): GBuf {
   const { w, h } = f, n = w * h;
   const g: GBuf = { w, h, depth: new Float32Array(n).fill(-Infinity), id: new Uint8Array(n), P: new Float32Array(n * 3), N: new Float32Array(n * 3), uv: new Float32Array(n * 2) };
   for (const m of meshes) {
-    const C = m.P.map((p) => { const c = toCam(p, view); return { x: f.ox + c.x * f.ppu, y: f.oy + c.y * f.ppu, z: c.z }; });
+    const limb = m.id === PART.neck || m.id === PART.neckCut ? 'neck' : 'head', C = m.P.map((p) => { const c = toCam(p, view, limb); return { x: f.ox + c.x * f.ppu, y: f.oy + c.y * f.ppu, z: c.z }; });
     for (const [i0, i1, i2] of m.T) {
       const a = C[i0]!, b = C[i1]!, c = C[i2]!;
       const den = (b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y);

@@ -3,13 +3,14 @@ import { clamp, smooth } from './math';
 import { hex, mix, type RGB } from './color';
 import { REGION, type HeadTurnSpec, type V3 } from './types';
 import { distPolyline, eyeGeo, facePartsU, inPoly } from './engines/face-parts';
+import { LID_SHADOW, LIGHT_IRIS, PUPIL, WHITE } from './eye-colors';
+import { eyeTexHost } from './eye-host-tex';
 
 /** Texel peint : couleur, région et indicateur d'encre. */
 export interface Tex { readonly c: RGB; readonly region: number; readonly ink?: boolean }
 export interface Pal { readonly ink: RGB; readonly skin: RGB; readonly shade: RGB; readonly hair: RGB; readonly iris: RGB; readonly deep: RGB; readonly lip: RGB; readonly mouthIn: RGB; readonly blush: RGB }
 export const paletteOf = (s: HeadTurnSpec): Pal => { const p = s.palette; return { ink: hex(p.ink), skin: hex(p.skin), shade: hex(p.skinShade), hair: hex(p.hair), iris: hex(p.iris), deep: hex(p.irisDeep), lip: hex(p.lip), mouthIn: hex(p.mouthIn), blush: hex(p.blush) }; };
 
-const WHITE: RGB = [255, 255, 255], LIGHT_IRIS: RGB = [139, 171, 240], PUPIL: RGB = [22, 27, 58], LID_SHADOW: RGB = [222, 229, 243];
 const dseg = (px: number, py: number, ax: number, ay: number, bx: number, by: number): number => {
   const vx = bx - ax, vy = by - ay, t = clamp(((px - ax) * vx + (py - ay) * vy) / (vx * vx + vy * vy || 1), 0, 1);
   return Math.hypot(px - ax - t * vx, py - ay - t * vy);
@@ -17,6 +18,7 @@ const dseg = (px: number, py: number, ax: number, ay: number, bx: number, by: nu
 
 /** Œil (texture sur la surface du visage, en coordonnées tête : x vers l'extérieur, y vers le bas). k = compensation de largeur de trait. */
 export function eyeTex(spec: HeadTurnSpec, p: V3, k: number, pal: Pal): Tex | null {
+  if (spec.eyeHost) return eyeTexHost(spec.eyeHost, p, k, pal);
   if (spec.engine) return eyeTexEngine(spec, p, k, pal);
   const e = spec.eye, hw = e.w / 2, u = Math.abs(p.x) - e.x, v = p.y - e.y, au = u / hw;
   if (Math.abs(au) > 1.45 || Math.abs(v) > 0.2) return null;
@@ -112,12 +114,12 @@ function mouthTexEngine(spec: HeadTurnSpec, p: V3, k: number, pal: Pal): Tex | n
   if (Math.abs(x) > spec.mouth.halfW * 1.05 || Math.abs(y - spec.mouth.y) > 0.12) return null;
   const th = 0.0055 * k, open = f.cavity.length > 0;
   if (open && inPoly(f.cavity, x, y)) {
-    if (inPoly(f.teethU, x, y) || inPoly(f.teethL, x, y)) { const edge = distPolyline([...f.teethU, f.teethU[0]!], x, y); return edge < th * 0.6 ? { c: pal.ink, region: REGION.mouth, ink: true } : { c: WHITE, region: REGION.mouth }; }
-    const edge = Math.min(distPolyline([...f.cavity, f.cavity[0]!], x, y));
+    if (inPoly(f.teethU, x, y) || inPoly(f.teethL, x, y)) { const edge = distPolyline(f.teethUC, x, y); return edge < th * 0.6 ? { c: pal.ink, region: REGION.mouth, ink: true } : { c: WHITE, region: REGION.mouth }; }
+    const edge = distPolyline(f.cavityC, x, y);
     if (edge < th) return { c: pal.ink, region: REGION.mouth, ink: true };
     return { c: inPoly(f.tongue, x, y) ? [226, 120, 128] : mix(pal.mouthIn, [226, 120, 128], smooth((y - spec.mouth.y) / 0.06 - 0.3)), region: REGION.mouth };
   }
-  if (open ? distPolyline([...f.cavity, f.cavity[0]!], x, y) < th : distPolyline(f.closure, x, y) < th) return { c: pal.ink, region: REGION.mouth, ink: true };
+  if (open ? distPolyline(f.cavityC, x, y) < th : distPolyline(f.closure, x, y) < th) return { c: pal.ink, region: REGION.mouth, ink: true };
   if (inPoly(f.lowerLip, x, y) && y < spec.mouth.y + (open ? 0.085 : 0.04)) return { c: pal.lip, region: REGION.mouth };
   if (inPoly(f.upperLip, x, y)) return { c: mix(pal.lip, pal.ink, 0.08), region: REGION.mouth };
   return null;
