@@ -7,17 +7,18 @@ import { expandPlacements } from './composition/expand';
 import { placedEyesOf } from './anatomy/placed';
 import { publishedOrbits, type PublishedOrbits } from './anatomy/orbit';
 import { hostFace } from './render/face';
+import { BodyParams, expressedSex } from './body';
 import { lightVector } from './lighting/light';
 import { SceneSpec, type HostSpec } from './schema';
 import { el } from './core/svg';
 
 /** Compile une scène DÉJÀ validée en SVG. Pure et déterministe : même scène => même chaîne. */
-export function renderScene(scene: SceneSpec): string {
+export function renderScene(scene: SceneSpec, opts: { readonly bodySex?: ReadonlyMap<string, number> } = {}): string {
   // Étape `svg` (durée EXCLUSIVE : le calcul géométrique imbriqué est compté dans `geometry`).
-  return clock.time('svg', () => renderSceneUntimed(scene));
+  return clock.time('svg', () => renderSceneUntimed(scene, opts.bodySex));
 }
 
-function renderSceneUntimed(scene: SceneSpec): string {
+function renderSceneUntimed(scene: SceneSpec, sexOverride?: ReadonlyMap<string, number>): string {
   const light = lightVector(scene.light);
   const hosts = new Map<string, HostSpec>();
   for (const o of scene.objects) if (o.kind === 'host') hosts.set(o.id, o);
@@ -26,7 +27,10 @@ function renderSceneUntimed(scene: SceneSpec): string {
   const placed = placedEyesOf(expanded, hosts);
   const orbits = new Map<string, PublishedOrbits>();
   for (const h of hosts.values()) if (h.shape === 'face') orbits.set(h.id, publishedOrbits(hostFace(h).lm, placed.get(h.id) ?? []));
-  const ctx = { light, lightSpec: scene.light, hosts, orbits, eyes: placed };
+  // Sexe EXPRIMÉ du corps accroché à chaque hôte (axe `body.sex` × puberté) : lu par le cou pour le dimorphisme du larynx ; le cou n'a pas de paramètre de sexe propre.
+  const bodySex = new Map<string, number>();
+  for (const o of scene.objects) if (o.kind === 'body') { const bp = BodyParams.parse(o.body); bodySex.set(o.host, expressedSex(bp)); }
+  const ctx = { light, lightSpec: scene.light, hosts, orbits, eyes: placed, bodySex: sexOverride ?? bodySex };
   const defs: string[] = [];
   const underlays: string[] = [];
   const body: string[] = [];

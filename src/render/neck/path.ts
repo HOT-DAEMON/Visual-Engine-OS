@@ -31,3 +31,16 @@ export function silhouettePath(model: NeckModel): string {
   const ring = silhouetteRing(model);
   return `M${ring.map((p) => `${num(p.x)} ${num(p.y)}`).join('L')}Z`;
 }
+
+/**
+ * Arêtes RÉELLES du cou (repère du visage) lues par les autres composants du visage : anneau du contour (sections déformées) et les deux bords entre le menton et
+ * la base. Ils remplaçaient un rectangle de largeur constante (`±lm.neck.half`) : la lumière de contour du cou, tracée sur ce rectangle, restait droite
+ * (strie verticale) alors que le cou s'évase, se tord ou s'incline. Source unique : `frontSilhouette`.
+ */
+export function neckEdges(model: NeckModel): { ring: P2[]; left: P2[]; right: P2[] } {
+  const { left, right } = frontSilhouette(model), top = model.ctx.chinY;
+  // Entre le menton et la BASE du cou : plus bas, la silhouette s'évase sur l'épaule et c'est le contour du corps qui prend le relais (une lumière de contour du cou y dessinait une courbe fantôme hors des épaules).
+  const bottom = model.ctx.chinY + (model.composition.morphology.topY + model.composition.morphology.lengthPx - model.ctx.chinY);
+  const from = (a: readonly P2[]): P2[] => { const k = a.findIndex((p) => p.y >= top); return a.slice(Math.max(0, k)).filter((p) => p.y <= bottom); };
+  return { ring: silhouetteRing(model), left: from(left), right: from(right) };
+}

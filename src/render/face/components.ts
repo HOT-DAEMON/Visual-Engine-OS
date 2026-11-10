@@ -5,7 +5,8 @@ import type { Poly } from '../../face/poly';
 import type { FaceComponent, Receivers } from '../../contact';
 import type { FaceParams } from '../../schema';
 import type { PublishedOrbits } from '../../anatomy/orbit';
-import { neckPath } from '../neck';
+import { neckEdges, neckPath } from '../neck';
+import { neckModelFor } from '../../neck';
 
 /** Arête ouverte du menton : le contour réel du sillon mentolabial au bas, puis symétriquement (sans la corde du sillon). */
 const chinEdge = (lm: FaceLandmarks): { x: number; y: number }[] => {
@@ -44,7 +45,11 @@ export function faceComponents(p: FaceParams, lm: FaceLandmarks, nose?: NoseGeom
   ];
   const hair = hairGeometry(p, lm);
   if (hair) comps.push({ id: 'hair', parent: 'head', kind: 'caster', opaque: true, polys: hair.locks.filter((l) => l.layer === 'front' && (l.rank === 'mass' || l.rank === 'main')).map((l) => l.poly), depth: 0.012 * H, receivers: ['head'], contact: 'hair' });
-  if (p.neck.visible) comps.push({ id: 'neck', parent: 'head', kind: 'caster', polys: [[{ x: -lm.neck.half, y: lm.neck.topY }, { x: lm.neck.half, y: lm.neck.topY }, { x: lm.neck.half, y: lm.neck.bottomY }, { x: -lm.neck.half, y: lm.neck.bottomY }]], rimEdge: [[{ x: -lm.neck.half, y: lm.chinY }, { x: -lm.neck.half, y: lm.neck.bottomY }], [{ x: lm.neck.half, y: lm.chinY }, { x: lm.neck.half, y: lm.neck.bottomY }]], depth: 0, receivers: [], rim: 'neck' });
+  if (p.neck.visible) {
+    // Contour et bords du cou : ceux du MOTEUR DE COU (sections déformées), plus un rectangle ±lm.neck.half (lumière de contour droite, hors du vrai bord).
+    const e = neckEdges(neckModelFor(p, lm));
+    comps.push({ id: 'neck', parent: 'head', kind: 'caster', polys: [e.ring], rimEdge: [e.left, e.right], depth: 0, receivers: [], rim: 'neck' });
+  }
   const receivers: Receivers = { head: outlinePath(lm.outline), ...(p.neck.visible ? { neck: neckPath(p, lm) } : {}) };
   return { components: comps, receivers };
 }

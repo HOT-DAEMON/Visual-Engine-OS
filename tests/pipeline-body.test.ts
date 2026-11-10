@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { compileScene, generateRandomFace, renderScene, SceneSpec } from '../src';
-import { anchorFromLandmarks, bodyMarkup, composeFigure } from '../src/body';
-import { neckPath } from '../src/render/neck';
+import { anchorFromLandmarks, bodyMarkup, composeFigure, expressedSex } from '../src/body';
+import { bodyRenderOpts } from '../src/render/body';
 import { figureMarkup } from '../src/body/lower';
 import { verifyPipeline } from '../src/verify';
-import { dominantColor } from '../src/materials';
 import { hostFace } from '../src/render/face';
 import type { HostSpec } from '../src/schema';
 
@@ -27,8 +26,10 @@ describe('corps dans le pipeline principal', () => {
       const { scene, host } = sceneOf(seed);
       const { params, lm } = hostFace(host);
       const a = anchorFromLandmarks(params, lm); // source unique : dernière section du moteur de cou (plus de formule recopiée)
-      const m = bodyMarkup({ age: 28, sex: 1, muscularity: 0.6 }, a, { skin: dominantColor(host.material.base), level: 3, mode: 'skin', uid: 'b0', neckContour: neckPath(params, lm) });
-      const legacy = composeFigure(renderScene(SceneSpec.parse(scene)), m);
+      // Teintes et fondu du corps = ceux de `bodyRenderOpts` (apparence de la peau du visage, source unique) ; le visage est rendu avec le sexe exprimé du corps (larynx).
+      const bp = { age: 28, sex: 1, muscularity: 0.6 };
+      const m = bodyMarkup(bp, a, bodyRenderOpts({ id: 'b0', level: 3, mode: 'skin' }, host));
+      const legacy = composeFigure(renderScene(SceneSpec.parse(scene), { bodySex: new Map([[host.id, expressedSex(bp)]]) }), m);
       const r = compileScene(withBody(scene));
       expect(r.ok).toBe(true);
       if (r.ok) expect(r.svg).toBe(legacy);
@@ -71,8 +72,8 @@ describe('corps dans le pipeline principal', () => {
     const body = { age: 28, sex: 1, muscularity: 0.6 };
     const bust = compileScene(withBody(scene)), explicitBust = compileScene(withBody(scene, { legs: false }));
     expect(bust.ok && explicitBust.ok && bust.svg === explicitBust.svg).toBe(true);
-    const m = figureMarkup(body, {}, a, { skin: dominantColor(host.material.base), level: 3, mode: 'skin', uid: 'b0', neckContour: neckPath(params, lm) });
-    const legacy = composeFigure(renderScene(SceneSpec.parse(scene)), m);
+    const m = figureMarkup(body, {}, a, bodyRenderOpts({ id: 'b0', level: 3, mode: 'skin' }, host));
+    const legacy = composeFigure(renderScene(SceneSpec.parse(scene), { bodySex: new Map([[host.id, expressedSex(body)]]) }), m);
     const fig = compileScene(withBody(scene, { legs: {} }));
     expect(fig.ok).toBe(true);
     if (fig.ok && bust.ok) { expect(fig.svg).toBe(legacy); expect(fig.svg.length - bust.svg.length).toBeGreaterThan(20000); } // le bas du corps ajoute des dizaines de Ko de chemins

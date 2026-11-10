@@ -34,7 +34,8 @@ export function buildStructures(n: FaceNeckParams, sys: NeckSystem, pose: HeadPo
     scm: clamp01(n.muscles * (1 - 0.55 * ms) + 0.45 * ten + 0.3 * mean(fields.muscle)) * g,
     trapezius: clamp01(sys.musculature.trapezius * (1 - 0.3 * ms)) * g,
     'platysma-infrahyoid': clamp01(platysmaTension(n.platysma, ctx.headPitchDeg, ctx.jawOpen, ctx.clench) + n.platysma * (0.5 * ten + 0.3 * flex)) * g,
-    larynx: clamp01(0.25 + 0.5 * (1 - ms) + 0.3 * ten + 0.3 * ext + 0.1 * age) * g,
+    // Dimorphisme du larynx (NECK-06A) : la pomme d'Adam masculine (angle thyroïdien ≈ 90°) est plus saillante que la féminine (≈ 120°) : ±0,22 de visibilité selon le sexe exprimé du corps.
+    larynx: clamp01(0.25 + 0.5 * (1 - ms) + 0.3 * ten + 0.3 * ext + 0.1 * age + 0.22 * ctx.sex) * g,
     hyoid: clamp01(0.1 + 0.6 * ext + 0.2 * (1 - ms)) * g,
     trachea: clamp01(0.5 * (1 - ms) * (0.4 + ext) + 0.2 * age) * g,
     vessels: clamp01(0.7 * ten + 0.4 * (1 - ms) + 0.3 * age - 0.2 + 0.4 * sys.surface.skinTension - 0.12) * g,

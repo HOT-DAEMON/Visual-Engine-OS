@@ -5,10 +5,11 @@ import type { BodyRenderOpts } from '../body/render';
 import { figureMarkup } from '../body/lower';
 import type { NeckAnchor } from '../body/types';
 import { objectTransform, type CompiledObject } from './object';
-import { hostFace } from './face';
+import { hostFace, skinAppearance } from './face';
 import type { BodySpec, HostSpec } from '../schema';
 import { el } from '../core/svg';
 import { neckPath } from './neck';
+import { neckBase } from './neck/skin';
 
 /**
  * Compile un corps suspendu au cou de son hôte. Le corps ne sait du visage que `NeckAnchor` (dérivé des repères STYLISÉS de l'hôte).
@@ -26,8 +27,10 @@ export function neckAnchor(host: HostSpec): NeckAnchor {
  * Le fondu de la base du cou est borné par le CONTOUR RÉEL du cou (moteur de cou) : un rectangle de largeur constante dépassait du cou sur le fond.
  */
 export function bodyRenderOpts(b: Pick<BodySpec, 'id' | 'level' | 'mode'>, host: HostSpec): BodyRenderOpts {
-  const { params, lm } = hostFace(host);
-  return { skin: dominantColor(host.material.base), level: b.level, mode: b.mode, uid: b.id, ...(params.neck.visible ? { neckContour: neckPath(params, lm) } : {}) };
+  const { params, lm } = hostFace(host), skin = dominantColor(host.material.base), ra = skinAppearance(skin, params);
+  // Teintes du corps = apparence de la peau du visage (celle que lit le cou) ; le fondu de la base du cou converge vers la couleur de base du COU (même ton que le cou).
+  const sf = params.neck.system?.surface, elementColor = sf && sf.pattern !== 'smooth' ? sf.elementColor : null;
+  return { skin, level: b.level, mode: b.mode, uid: b.id, appearance: { base: ra.base, shadow: ra.shadow }, ...(params.neck.visible ? { neckContour: neckPath(params, lm), neckTone: neckBase(ra, params.neck.shade, elementColor) } : {}) };
 }
 
 export function compileBody(b: BodySpec, host: HostSpec): CompiledObject {

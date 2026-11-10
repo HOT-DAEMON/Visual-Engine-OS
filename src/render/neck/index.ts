@@ -7,7 +7,7 @@ import type { FaceParams } from '../../schema';
 import { makeCtx } from './ctx';
 import { renderAttachments } from './attach';
 import { renderMuscles } from './muscles';
-import { silhouettePath } from './path';
+import { neckEdges, silhouettePath } from './path';
 import { renderDewlap, renderReliefs } from './reliefs';
 import { skinShading } from '../../skin';
 import { compileNeckSkin, neckBase } from './skin';
@@ -21,11 +21,12 @@ import { renderSurface } from './surface';
  * L'ombre PORTÉE du menton/de la mâchoire sur le cou reste produite par les sous-moteurs de contact et de structure (la tête en est propriétaire) ;
  * ils reçoivent le contour du cou depuis ce module.
  */
+export { neckEdges };
 export const neckPath = (p: FaceParams, lm: FaceLandmarks): string => silhouettePath(neckModelFor(p, lm));
 
-export function renderNeck(id: string, p: FaceParams, lm: FaceLandmarks, skin: string, ra: ResolvedAppearance, L: LightVector, regions: SkinRegions): { defs: string[]; markup: string[] } {
+export function renderNeck(id: string, p: FaceParams, lm: FaceLandmarks, skin: string, ra: ResolvedAppearance, L: LightVector, regions: SkinRegions, sex = 0): { defs: string[]; markup: string[] } {
   if (!p.neck.visible) return { defs: [], markup: [] };
-  const model = neckModelFor(p, lm);
+  const model = neckModelFor(p, lm, 0, sex);
   const path = silhouettePath(model);
   const sh = skinShading(p.skinMaterial, L, regions, ra, ra.base);
   const c = makeCtx(`${id}-neck`, model, p.neck.system, skin, ra, L, direction2D(L), sh);

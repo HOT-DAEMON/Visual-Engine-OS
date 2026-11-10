@@ -8,13 +8,13 @@ import { el } from '../core/svg';
 import { faceParts, faceSurface } from './face';
 
 /** Hôte : surface (ellipse bombée ou rectangle plat) habillée par le système de matériaux partagé. */
-export function compileHost(h: HostSpec, worldLight: LightVector, orbits?: PublishedOrbits): CompiledObject {
+export function compileHost(h: HostSpec, worldLight: LightVector, orbits?: PublishedOrbits, sex = 0): CompiledObject {
   const rot = h.transform.rotationDeg;
   const L = toLocal(worldLight, rot);
   const rx = h.width / 2;
   const ry = h.height / 2;
   const bbox = { x: -rx, y: -ry, w: h.width, h: h.height };
-  const parts = h.shape === 'face' ? faceParts(h, L, rot, orbits) : null;
+  const parts = h.shape === 'face' ? faceParts(h, L, rot, orbits, sex) : null;
   const surface: Surface = parts
     ? faceSurface(h, parts.lm)
     : h.shape !== 'rounded_rect'

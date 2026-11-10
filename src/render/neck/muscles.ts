@@ -1,4 +1,6 @@
 import { clamp, clamp01 } from '../../core/math';
+import { el, num, urlRef } from '../../core/svg';
+import { gradientStop as stop } from '../../materials';
 import { lineD } from '../face/soft';
 import type { P2 } from '../../neck/types';
 import type { NeckCtx } from './ctx';
@@ -49,14 +51,26 @@ export function renderMuscles(c: NeckCtx): string[] {
       if (run.length > 2) out.push(kit.stroke(lineD(run), c.dark, 2.2 * U, clamp(0.55 * tv, 0, 0.8), 1 * U));
     }
   }
-  // Trapèzes : creux le long de la pente nuque → épaule (u de 0,6 à la base), reflet côté éclairé.
+  // Trapèzes : VOLUMES (pas des traits). Cale élargie vers la base le long du bord postéro-latéral du cou, de la nuque vers l'épaule : l'aire est remplie par un
+  // dégradé dont les arrêts viennent de la loi d'éclairage PARTAGÉE appliquée à deux normales (bord externe : vers le côté ; bord interne : vers le haut), donc
+  // le volume est plus clair côté lumière, plus sombre côté ombre, et son épaisseur suit la visibilité calculée (masse, trapèzes, style). Les traits verticaux
+  // droits (une strie pâle près du bord) sont supprimés.
   const tz = c.vis('trapezius');
   if (tz > 0.03) for (const s of [-1, 1] as const) {
-    const run = visibleRun(c, ramp(0.6, 0.99, 12), (t) => s * lerp(0.44, 0.4, t) * Math.PI);
-    if (run.length > 3) {
-      out.push(kit.stroke(lineD(run), c.dark, 3 * U, (0.07 + 0.2 * tz) * c.detail, 3 * U));
-      if (s * dir.x >= 0) out.push(kit.stroke(lineD(run.map((p) => ({ x: p.x - s * 3 * U, y: p.y }))), ra.light, 2.2 * U, 0.12 * tz * c.I * c.detail, 2.2 * U));
+    const us = ramp(0.55, 0.995, 12), outer: P2[] = [], inner: P2[] = [];
+    for (const u of us) {
+      const e = c.at(u, s * 0.5 * Math.PI), t = smooth((u - 0.55) / 0.45), half = Math.abs(c.at(u, Math.PI / 2).x - c.at(u, -Math.PI / 2).x) / 2;
+      outer.push({ x: e.x, y: e.y }); inner.push({ x: e.x - s * half * (0.05 + (0.1 + 0.3 * tz) * t), y: e.y });
     }
+    const ring = [...outer, ...inner.slice().reverse()], x0 = Math.min(...ring.map((p) => p.x)), x1 = Math.max(...ring.map((p) => p.x));
+    const gid = `${c.id}-trap${s > 0 ? 'R' : 'L'}`, o = s > 0 ? 0 : 1, base = ra.base;
+    const grad = el('linearGradient', { id: gid, gradientUnits: 'userSpaceOnUse', x1: x0, y1: 0, x2: x1, y2: 0 }, [
+      stop(o, c.tone(base, { x: s * 0.9, y: -0.35 }), 1), stop(1 - o, c.tone(base, { x: s * 0.25, y: -0.95 }), 1),
+    ]);
+    out.push(el('defs', {}, [grad]));
+    out.push(c.kit.fill(`M${ring.map((p) => `${num(p.x)} ${num(p.y)}`).join('L')}Z`, urlRef(gid), clamp(0.25 + 0.55 * tz, 0, 0.8) * c.detail, 2.4 * U));
+    // Ligne de crête du volume (bord interne) : creux ombré fin côté ombre, reflet fin côté éclairé : donne la limite du muscle sans trait droit.
+    out.push(kit.stroke(lineD(inner), s * dir.x >= 0 ? ra.light : c.dark, 1.8 * U, (s * dir.x >= 0 ? 0.14 * c.I : 0.12) * tz * c.detail, 2.6 * U));
   }
   // Platysma : deux bandes minces du menton vers le haut du thorax, visibles sous tension.
   const pl = c.vis('platysma-infrahyoid');

@@ -28,6 +28,8 @@ export interface HeadContext {
   /** Ouverture de la mandibule 0–1 et serrage 0–1 (lus par le platysma). */
   readonly jawOpen: number;
   readonly clench: number;
+  /** Sexe exprimé du corps attaché (−1 féminin … +1 masculin ; 0 = indéterminé) : lu SEULEMENT par les reliefs du larynx. Ne modifie ni les stations ni le rig. */
+  readonly sex: number;
 }
 
 /** Paramètres plats existants de `FaceNeck` (source unique de largeur, longueur, évasement…). */

@@ -7,3 +7,4 @@ export { SPECIES } from './species';
 export { BODY_LANGUAGE, expressionDelta } from './expressions';
 export type * from './types';
 export { secondaryStep, secondaryTrack, SECONDARY_DEFAULT } from './secondary';
+export { neckPresetPatch, NECK_PRESETS, neckPresetIds, applyNeckPreset, type NeckPreset, type NeckPresetFamily } from './presets';

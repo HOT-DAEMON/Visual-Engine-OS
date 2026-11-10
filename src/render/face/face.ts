@@ -1,6 +1,6 @@
 import { mix } from '../../core/color';
 import { el, urlRef } from '../../core/svg';
-import { resolveAppearance } from '../../appearance';
+import { resolveAppearance, type ResolvedAppearance } from '../../appearance';
 import { compileContact, renderRim, resolveRims, type ContactMetric } from '../../contact';
 import { faceLandmarks, noseGeometry, outlinePath, skinRegions, type FaceLandmarks, type NoseGeometry } from '../../face';
 import { applyStylization } from '../../face/stylize';
@@ -64,12 +64,17 @@ export function hostFace(h: HostSpec): { readonly params: FaceParams; readonly l
   return { params, lm: faceLandmarks(params, h.width, h.height) };
 }
 
-export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: PublishedOrbits): FaceParts {
+/** Apparence RÉSOLUE de la peau d'un hôte : source unique lue par la tête, le cou, le corps et les jambes (mode `anime` : aplats à bords nets). */
+export function skinAppearance(skin: string, params: FaceParams): ResolvedAppearance {
+  return resolveAppearance(skin, params.renderMode === 'anime' ? { ...params.skin, shading: { ...params.skin.shading, mode: 'cel' } } : params.skin);
+}
+
+export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: PublishedOrbits, sex = 0): FaceParts {
   const { params, lm } = hostFace(h);
   const skin = dominantColor(h.material.base);
   // Apparence de la peau : teinte d'ombre (proche de la peau, légèrement bleutée), lumière et contour lues par TOUS les enfants.
   // Mode de rendu `anime` : aplats à bords nets (ombrage `cel`) ; la géométrie n'est pas touchée.
-  const skinRa = resolveAppearance(skin, params.renderMode === 'anime' ? { ...params.skin, shading: { ...params.skin.shading, mode: 'cel' } } : params.skin);
+  const skinRa = skinAppearance(skin, params);
   const g = noseGeometry(params, lm);
   const regions = skinRegions(lm, g);
   const u = lm.W / 300;
@@ -103,7 +108,7 @@ export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: Pub
     for (const sg of [-1, 1] as const) front.push(el('ellipse', { cx: sg * lm.W * 0.2, cy: lm.eyeY + 0.12 * lm.H, rx: lm.W * 0.1, ry: lm.H * 0.05, fill: urlRef(gid) }));
   }
   const hair = renderHair(h.id, params, lm, L, rot, mix(skin, skinRa.shadow, 0.9), skin);
-  const neck = renderNeck(h.id, params, lm, skin, skinRa, L, regions);
+  const neck = renderNeck(h.id, params, lm, skin, skinRa, L, regions, sex);
   const chin = renderChin(h.id, params, lm, skinRa, L);
   const fh = renderFacialHair(h.id, params, lm, L, rot);
   defs.push(...hair.defs, ...neck.defs, ...chin.defs, ...fh.defs);

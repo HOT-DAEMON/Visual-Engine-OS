@@ -7,11 +7,16 @@ import { generateRandomEye } from './random-eye';
 import { drawFaceParams, drawSkin, FACE_EXPRESSIONS, mouthFor, type ExpressionKind } from './random-face-helpers';
 import { drawFaceExtras, type ExtrasOverride } from './random-face-extras';
 import { deepMerge, drawAnatomy, type AnatomyOverride } from './random-face-anatomy';
+import { randomNeck } from './random-face-neck';
 import { drawStructure, type StructureOverride } from './random-face-structure';
 import { applyStylization } from '../face/stylize';
 import { pick, range, type EyeInput } from './random-eye-helpers';
 
 export interface RandomFaceOptions extends ExtrasOverride {
+  /** Amplitude du tirage du SYSTÈME de cou (masse, âge, trapèzes, tension, plis…), 0–1 ; défaut 0 = cou neutre d'avant (OPT-IN : le système change le cadre `lm.neck`, donc des visages existants bougeraient). Flux dérivé : le reste du visage ne bouge pas. */
+  readonly neckVariety?: number;
+  /** Preset de cou (`NECK_PRESETS`) appliqué sur les tirages et sous `neck` imposé. */
+  readonly neckPreset?: string;
   /** Surcharges du nez, du menton, de la mâchoire, du matériau de peau, de l'éclairage et de l'apparence de la peau (fusion profonde sur les tirages). */
   readonly anatomy?: AnatomyOverride;
   /** Moteur de structure (T1–T13) : `true` ou un objet de surcharge active `anatomyEngine: 'structured'` et tire les axes de structure (flux dérivé : les autres tirages ne bougent pas). */
@@ -66,7 +71,7 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
   const extras = drawFaceExtras(rnd, options, { hairEngine: options.hairEngine, occlusions: options.occlusions });
   // Nouveaux axes (nez, menton, mâchoire, matériau, éclairage, apparence) : flux de tirage DÉRIVÉ, les tirages existants ne bougent pas.
   const anatomy = drawAnatomy(seed, skin, options.anatomy);
-  const merged = { ...base, ...anatomy, nose: { ...(base.nose ?? {}), ...(anatomy.nose ?? {}) }, neck: extras.neck, hair: extras.hair, facialHair: extras.facialHair, asymmetry: extras.asymmetry };
+  const merged = { ...base, ...anatomy, nose: { ...(base.nose ?? {}), ...(anatomy.nose ?? {}) }, neck: randomNeck(seed, extras.neck as Record<string, unknown>, options.neck as Record<string, unknown> | undefined, { variety: options.neckVariety ?? 0, preset: options.neckPreset }), hair: extras.hair, facialHair: extras.facialHair, asymmetry: extras.asymmetry };
   // Structure (optionnelle) : axes tirés dans un flux dérivé, fusionnés en profondeur. Puis profil de stylisation appliqué UNE fois (idempotent) : les repères qui suivent
   // (ajustement des yeux) lisent déjà la géométrie stylisée.
   const withStructure = options.structure ? deepMerge(merged, drawStructure(seed, options.structure === true ? {} : options.structure)) : merged;

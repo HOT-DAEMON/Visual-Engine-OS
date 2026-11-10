@@ -5,172 +5,172 @@
  },
  "cases": {
   "std-01": {
-   "svgSha1": "8db4361ca5c8aa478836032c30d98d883c5635d8",
+   "svgSha1": "43bc328b2991e0d689aaf91aa8ae55a338da689c",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "std-02": {
-   "svgSha1": "af9ae71a47ff8c5fc2174a5f3a770f3c514b2860",
+   "svgSha1": "1562bb93c5f83265d14ac4fe16d023f37203c9a7",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "std-03": {
-   "svgSha1": "f582c4e3470935d0579b96d6770b963cde9f4453",
+   "svgSha1": "5cccf71c2f92ea9dd813a9007d138eacefee6a95",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "std-04": {
-   "svgSha1": "f7b489ae26d4c3c8a1aaf0e73b74111d32166ad6",
+   "svgSha1": "51ef6943880ad24948eb60c197850dac6ffd9e09",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "std-05": {
-   "svgSha1": "5da1aa5014bd0447541480470f6919205ee3dcfe",
+   "svgSha1": "1a249366aebb039fb43f52bb5265de6fb171d253",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "std-06": {
-   "svgSha1": "405be70d45f065a2f7af6befae69cfff66250033",
+   "svgSha1": "0be206fa519745c4488a602d0fcf74753eb4f5a1",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "std-07": {
-   "svgSha1": "fc4245a65d9b370b11f67d68461746368d9bbc1f",
+   "svgSha1": "e2dd2816179cebb44c108c217a70210c83a01933",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "std-08": {
-   "svgSha1": "944088e39c03bab2679552eb347f76b444366cd4",
+   "svgSha1": "67507fb874089a93d7884c49174c0dec2267e795",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "std-09": {
-   "svgSha1": "c6d205e7b0ecaede45d4b3581688d66b9161e98c",
+   "svgSha1": "fd6447503a38c54ec2853c7ed9aec9dc68acfee8",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "std-10": {
-   "svgSha1": "5680e0fb3c38c38110f9c4797db167fb88f92d5b",
+   "svgSha1": "e87c5afadc68530ccabf46460f487ee9f8d1ca62",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "std-11": {
-   "svgSha1": "f55443d545afdadd52fbec768eb06ac78d6e6149",
+   "svgSha1": "affad418db477bde6b89825ef3bdeb92044ff4f0",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "std-12": {
-   "svgSha1": "33db095454cbfecc4d76cd8dcd0b66920c303aa6",
+   "svgSha1": "60b6a94b6f2a5375ee7bdf200b41edac570ff65b",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "std-13": {
-   "svgSha1": "1e2a98fe21cae3e632e3c7e6ff3a3b67920440b5",
+   "svgSha1": "98429ce14770414a9bfa369789ea5420d652a0da",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "std-14": {
-   "svgSha1": "f71777c3d54b7b1187d55ae2cd84efc268c04e6e",
+   "svgSha1": "925b9704ae58d957cb23edd34e3874c171c9ca0b",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "std-15": {
-   "svgSha1": "4f005a733956f8c2e6ba9c30cd6e7d344af606ed",
+   "svgSha1": "c3b8df4880b88344dfb84cdfa6c577b7ea538cdc",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "std-16": {
-   "svgSha1": "2df93d3a3ee7cb6a4a13ed1d61b2a2dd3e832a19",
+   "svgSha1": "b3b9ddc52865253b37c338cd1b6b5611bd9b8dfe",
    "kind": "standard",
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "hard-01-machoire-etroite-menton-pointu": {
-   "svgSha1": "1e525a83fef3e15cbaae86e469dfd8a22ece4a25",
+   "svgSha1": "fccb5b965246050ce1ca79e848dd4e0b2dacd1d3",
    "kind": "hard",
    "why": "mâchoire minimale + convergence maximale : risque de bas de visage « en entonnoir » (déjà observé)"
   },
   "hard-02-machoire-carree-massive": {
-   "svgSha1": "fe72d89694cfa314e2d27b689da917aa831ce449",
+   "svgSha1": "c2d115b1b089c2dae4f55fedeeae52d04b40fa04",
    "kind": "hard",
    "why": "os maximal + masséter + graisse : les quatre contributions de largeur s'additionnent, le contour doit rester lisible"
   },
   "hard-03-bouche-ouverte-articulee": {
-   "svgSha1": "1cc8518aa21308a4d9fbc2870e84e13d5655fa17",
+   "svgSha1": "85e59595286547c8d14a4f61d1298895b860ecc5",
    "kind": "hard",
    "why": "ouverture maximale + translation et avancée de la mandibule : lèvre inférieure, dents et menton doivent suivre ensemble"
   },
   "hard-04-anime-stylisation-maximale": {
-   "svgSha1": "0fd2ecf7cab9e08d1464a79e41f8e26ffc8312f0",
+   "svgSha1": "67185d210cf9ac52de679ec1b0c95f5f998e9e42",
    "kind": "hard",
    "why": "neuf contrôles de stylisation à 1 en mode anime : géométrie exagérée ET aplats à bords nets"
   },
   "hard-05-encre-contours-maximaux": {
-   "svgSha1": "aa4ca182ff2c3f002f6c36af0c9a561413e9b515",
+   "svgSha1": "f579ff5dc820e9dcc43d2d93952a0ec21314e6a7",
    "kind": "hard",
    "why": "seuil global N&B : un détail fin peut disparaître ou se boucher"
   },
   "hard-06-expression-caricaturale": {
-   "svgSha1": "94a943d9b8ec9935a91fd45c82c6c3f8783d16ef",
+   "svgSha1": "a15219ae5338bb73e0a5d2faf9e089f5786e3126",
    "kind": "hard",
    "why": "colère + grimace + caricature maximales : trois déplacements qui se combinent sans s'écraser"
   },
   "hard-07-lumiere-rasante": {
-   "svgSha1": "b283e7f223050f656f2fa2b7c7310f90f9ab8571",
+   "svgSha1": "31c7a32780a3de5fea568e79c416bc365d9c9b6e",
    "kind": "hard",
    "why": "élévation 10° (minimum du schéma) : ombres longues, le nez et les orbites portent de grandes ombres"
   },
   "hard-08-contre-jour-faible": {
-   "svgSha1": "cf27c47fb8c21be0db9ac7e11a05fe793efcf297",
+   "svgSha1": "a09b91c4e1f0a3331c4bb5f7580c9c1e664e0858",
    "kind": "hard",
    "why": "intensité 0,25 depuis l'arrière : rien ne doit disparaître ni virer au noir plat"
   },
   "hard-09-nez-projection-maximale": {
-   "svgSha1": "67989aa7d105caa5bd7aadf2c8d77b752a4a6837",
+   "svgSha1": "613c7444d07f2558b5ade0a659c80a7d66d49fe2",
    "kind": "hard",
    "why": "nez long, large, pointe projetée au maximum : régions et ombres de la pointe"
   },
   "hard-10-nez-minimal": {
-   "svgSha1": "5f7f1f58a57502fcee63390822744409efec13ee",
+   "svgSha1": "04d80efadcf45db26e91c224445710ccdba7e49a",
    "kind": "hard",
    "why": "nez court et étroit, narines nulles : les régions deviennent minuscules (précision numérique)"
   },
   "hard-11-bouche-minuscule": {
-   "svgSha1": "bf3f3fc66d7eb1fd9729aae8ddb06a111bc45a79",
+   "svgSha1": "855c0a151d56538951a83ae6216fd34e39252398",
    "kind": "hard",
    "why": "bouche à sa largeur minimale et réduite par la stylisation : commissures, plis et philtrum se rapprochent"
   },
   "hard-12-bouche-immense": {
-   "svgSha1": "d66cd7ffb96b32aaa52bac8d51b1431135f30a61",
+   "svgSha1": "1ac19b56a75450a123556e9fb2e9cb7c8a4fa42f",
    "kind": "hard",
    "why": "bouche à sa largeur maximale et agrandie par la stylisation : doit rester bornée par le contour"
   },
   "hard-13-menton-extreme": {
-   "svgSha1": "38886c4f7ada114a5ceac268eefdb537c94a0179",
+   "svgSha1": "258ccbe688f39fa25d8692f3429598276cb15a03",
    "kind": "hard",
    "why": "menton haut et projeté au maximum sous une lèvre mince"
   },
   "hard-14-cou-tendu-incline": {
-   "svgSha1": "44e12e5e8d89be9b85e7892d236439da1d4b80ff",
+   "svgSha1": "e8e21c7b1f28f2409e9ca456956a0c1ad1e9f8c1",
    "kind": "hard",
    "why": "angle cervico-mentonnier minimal, platysma et muscles maximaux, tête inclinée à 30°"
   },
   "hard-15-ouverture-plus-colere-plus-serrage": {
-   "svgSha1": "aa7b507373d21341ac291ef7a94a35a925112912",
+   "svgSha1": "15b5d2196b25d46acc94071740d17b68af2e1749",
    "kind": "hard",
    "why": "bouche ouverte + colère + mâchoires serrées : tout agit sur le masséter et la lèvre"
   },
   "hard-16-tete-etroite-yeux-ecartes": {
-   "svgSha1": "59ba6e98c967747906f7e69b7b18f8814ad2496f",
+   "svgSha1": "0a20a754a0a5c3b66800526c5f8077538e37fe59",
    "kind": "hard",
    "why": "yeux écartés au maximum sur une tête étroite : orbites et nez se rapprochent des bords du contour"
   },
   "hard-17-cheveux-sur-la-bouche-graine-46": {
-   "svgSha1": "3e96986aac174c759a30e99cfe324301bff52db0",
+   "svgSha1": "081dde0ab0cc4a2d8ac436fe10c938120b36550f",
    "kind": "hard",
    "why": "campagne : une mèche avant frôle la bouche (front-clear-mouth 0,02 / 0,02) ; défaut du moteur de cheveux, à corriger sans retirer ce cas"
   },
   "hard-18-oreille-couverte-graine-81": {
-   "svgSha1": "f2f802417ade6459dbfc057809becdf9ea5b5836",
+   "svgSha1": "40d0c2a93e3059ace7712fa20b040bbe25acb76f",
    "kind": "hard",
    "why": "campagne : l'oreille droite est trop couverte (ear-free-right 0,13 / 0,12) ; défaut du moteur de cheveux, à corriger sans retirer ce cas"
   }

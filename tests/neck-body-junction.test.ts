@@ -74,7 +74,8 @@ describe('raccord cou ↔ corps', () => {
           const xs: number[] = [];
           for (let i = 0; i < px.length; i++) { const p = px[i]!, q = px[(i + 1) % px.length]!; if ((p.y <= y) !== (q.y <= y)) xs.push(p.x + ((y - p.y) / (q.y - p.y)) * (q.x - p.x)); }
           if (xs.length < 2) continue;
-          const lo = Math.min(...xs) - 2, hi = Math.max(...xs) + 2;
+          // Marge de 3 px (2 auparavant) : la frange anti-aliasée d'un bord évasé (flare 0,6 ≈ 1,1 px par ligne) avec le roulis aléatoire de l'hôte atteint 2 px ; un vrai débordement du fondu fait des dizaines de pixels (contrôle négatif plus bas).
+          const lo = Math.min(...xs) - 3, hi = Math.max(...xs) + 3;
           for (let x = 0; x < img.width; x++) {
             if (x >= lo && x <= hi) continue;
             const k = (y * img.width + x) * 4;

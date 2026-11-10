@@ -19,12 +19,15 @@ const halfAt = (c: NeckCtx, u: number): number => Math.abs(c.at(u, Math.PI / 2).
 export function renderReliefs(c: NeckCtx): string[] {
   const out: string[] = [], { u: U, ra, kit, dir } = c, litSide = dir.x >= 0 ? 1 : -1;
   const uBase = 1, span = uBase - c.chinU;
-  // Larynx : prominence thyroïdienne à 38 % de la distance menton → base, deux lames en V (encoche supérieure), reflet côté éclairé.
+  // Larynx : prominence thyroïdienne entre menton et base. DIMORPHISME par le sexe exprimé du corps (`HeadContext.sex`, k = 0 féminin … 1 masculin ; 0,5 = indéterminé) :
+  // masculin = saillie plus grande, plus basse, en V aigu avec encoche nette ; féminin = petite, plus haute, arrondie (angle thyroïdien ouvert), sans encoche lisible.
   const lv = c.vis('larynx');
   if (lv > 0.05) {
-    const u = c.chinU + 0.38 * span, a = halfAt(c, u), cx = c.at(u, 0).x, cy = Y(c, u), rx = 0.17 * a, ry = 0.32 * a;
-    out.push(kit.fill(`M${num(cx)} ${num(cy - ry)}L${num(cx + rx)} ${num(cy)}L${num(cx)} ${num(cy + ry)}L${num(cx - rx)} ${num(cy)}Z`, ra.light, 0.34 * lv * c.I * c.detail, 2.4 * U));
-    out.push(kit.stroke(lineD([{ x: cx - rx * 0.9, y: cy - ry * 0.5 }, { x: cx, y: cy - ry }, { x: cx + rx * 0.9, y: cy - ry * 0.5 }]), c.dark, 1.8 * U, 0.5 * lv * c.detail, 1 * U));
+    const k = (c.model.ctx.sex + 1) / 2, u = c.chinU + (0.34 + 0.08 * k) * span, a = halfAt(c, u), cx = c.at(u, 0).x, cy = Y(c, u), rx = (0.11 + 0.12 * k) * a, ry = (0.25 + 0.14 * k) * a;
+    // Contour superelliptique : exposant 1 = losange (aigu), 2 = ellipse (arrondi) ; 8 sommets.
+    const pw = 2 / lerp(2, 1, k * 0.9 + 0.05), ring: P2[] = Array.from({ length: 8 }, (_, i) => { const t = (i / 8) * 2 * Math.PI, cs = Math.cos(t), sn = Math.sin(t); return { x: cx + rx * Math.sign(cs) * Math.abs(cs) ** pw, y: cy + ry * Math.sign(sn) * Math.abs(sn) ** pw }; });
+    out.push(kit.fill(`M${ring.map((q) => `${num(q.x)} ${num(q.y)}`).join('L')}Z`, ra.light, 0.34 * lv * c.I * c.detail, 2.4 * U));
+    out.push(kit.stroke(lineD([{ x: cx - rx * 0.9, y: cy - ry * 0.5 }, { x: cx, y: cy - ry }, { x: cx + rx * 0.9, y: cy - ry * 0.5 }]), c.dark, 1.8 * U, 0.5 * lv * c.detail * (0.15 + 1.7 * k * k), 1 * U));
     out.push(kit.stroke(lineD([{ x: cx - litSide * rx * 1.1, y: cy - ry * 0.7 }, { x: cx - litSide * rx * 1.5, y: cy + ry * 0.9 }]), c.dark, 3 * U, 0.34 * lv * c.detail, 2.2 * U));
   }
   // Hyoïde : barre horizontale sous la mandibule (reflet), ombre sous elle.
@@ -59,16 +62,24 @@ export function renderReliefs(c: NeckCtx): string[] {
     const age = c.sys.modifiers.age;
     out.push(el('ellipse', { cx: 0, cy: yb - 0.026 * H, rx: 0.1 * xb, ry: 0.02 * H, fill: c.dark, 'fill-opacity': clamp(0.12 + 0.3 * cv * (0.5 + age), 0, 0.6) * c.detail }));
   }
-  // Plis du tissu mou : arcs en sourire en travers de la face antérieure ; plus nombreux et plus marqués avec la masse, l'âge, la compression (champ lu).
+  // Plis du tissu mou : CROISSANTS effilés (épais au milieu, nuls aux extrémités) en travers de la face antérieure, jamais un trait de largeur constante qui
+  // irait d'un bord à l'autre (une ligne sombre droite se lit comme une couture, pas comme un pli de peau). Les pointes s'arrêtent avant le contour du cou ;
+  // la lèvre inférieure du pli reçoit un reflet. Plus nombreux et plus marqués avec la masse, l'âge, la compression (champ lu).
   const fv = c.vis('fat-folds');
   if (fv > 0.04) {
     const n = Math.round(1 + 4 * c.sys.softTissue.foldDistribution + 2 * fv);
     for (let k = 0; k < n; k++) {
       const u = lerp(c.chinU + 0.05, Math.min(0.88, c.chinU + 0.05 + (0.18 + 0.7 * c.sys.softTissue.foldDistribution) * span), n === 1 ? 0 : k / (n - 1));
-      const amp = clamp01(fv * c.field('fold', u) * (0.6 + c.field('compression', u)) * (0.4 + 1.2 * c.sys.softTissue.foldDepth) * (1 + 0.8 * c.sys.modifiers.age)), pts: P2[] = [];
-      for (const q of ramp(-0.42, 0.42, 9)) { const p = c.at(u, q * Math.PI); pts.push({ x: p.x, y: p.y + (1 - (q / 0.42) ** 2) * (0.006 + 0.014 * amp) * c.model.ctx.H }); }
-      out.push(kit.stroke(lineD(pts), c.dark, (1.5 + 2.4 * amp) * U, clamp(0.1 + 0.45 * amp, 0, 0.55) * c.detail, 2 * U));
-      out.push(kit.stroke(lineD(pts.map((p) => ({ x: p.x, y: p.y + (2.4 + 2 * amp) * U }))), ra.light, 1.4 * U, 0.1 * amp * c.I * c.detail, 1.6 * U));
+      const amp = clamp01(fv * c.field('fold', u) * (0.6 + c.field('compression', u)) * (0.4 + 1.2 * c.sys.softTissue.foldDepth) * (1 + 0.8 * c.sys.modifiers.age));
+      const sag = (0.006 + 0.014 * amp) * c.model.ctx.H, thick = (1.6 + 3.4 * amp) * U, Q = 0.34;
+      const upper: P2[] = [], lower: P2[] = [];
+      for (const q of ramp(-Q, Q, 13)) {
+        const p = c.at(u, q * Math.PI), e = Math.max(0, 1 - (q / Q) ** 2), y = p.y + e * sag;
+        upper.push({ x: p.x, y }); lower.push({ x: p.x, y: y + thick * e ** 0.8 });
+      }
+      const ring = [...upper, ...lower.slice().reverse()];
+      out.push(c.kit.fill(`M${ring.map((p) => `${num(p.x)} ${num(p.y)}`).join('L')}Z`, c.dark, clamp(0.12 + 0.34 * amp, 0, 0.5) * c.detail, 1.6 * U));
+      out.push(kit.stroke(lineD(lower.map((p) => ({ x: p.x, y: p.y + 1.6 * U }))), ra.light, 1.4 * U, 0.12 * amp * c.I * c.detail, 1.6 * U));
     }
   }
   return out.filter((x) => x !== '');

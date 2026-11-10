@@ -168,10 +168,11 @@ describe('moteur de cou — pose, rig et langage corporel (TODO §4-5)', () => {
     expect(JSON.stringify(mix)).not.toBe(JSON.stringify(c));
   });
   it('contact : un collier serre le cou à son ancrage et le tissu déborde de part et d\'autre', () => {
-    const a = model().m, b = model(sys({ attachments: [{ kind: 'collar', at: 0.7, size: 0.6, count: 1, color: '#884422' }] })).m;
-    const i = Math.round(0.7 * (a.stations.length - 1));
+    const a = model().m, b = model(sys({ attachments: [{ kind: 'collar', at: 0.85, size: 0.6, count: 1, color: '#884422' }] })).m;
+    // Collier à 0,85 (sous le menton, u ≈ 0,66) : à 0,7 il touchait la mâchoire et est désormais ramené plus bas (tests/neck-remaining.test.ts).
+    const i = Math.round(0.85 * (a.stations.length - 1));
     expect(b.stations[i]!.aL).toBeLessThan(a.stations[i]!.aL * 0.97);
-    expect(b.stations[Math.round(0.78 * (a.stations.length - 1))]!.aL).toBeGreaterThanOrEqual(a.stations[Math.round(0.78 * (a.stations.length - 1))]!.aL * 0.99);
+    expect(b.stations[Math.round(0.95 * (a.stations.length - 1))]!.aL).toBeGreaterThanOrEqual(a.stations[Math.round(0.95 * (a.stations.length - 1))]!.aL * 0.99);
   });
 });
 

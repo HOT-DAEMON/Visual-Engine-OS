@@ -15,6 +15,8 @@ export interface CompileCtx {
   readonly orbits: ReadonlyMap<string, PublishedOrbits>;
   /** Yeux posés par hôte `face` (la tête 3D en lit la couleur d'iris : la même personne que le visage de face). */
   readonly eyes: ReadonlyMap<string, readonly PlacedEye[]>;
+  /** Sexe exprimé (−1 féminin … +1 masculin, 0 = indéterminé) du corps accroché à chaque hôte : seul le cou le lit (larynx). Absent = pas de corps = 0. */
+  readonly bodySex: ReadonlyMap<string, number>;
 }
 
 export type ObjectKind = SceneObject['kind'];
@@ -29,7 +31,7 @@ export const COMPILERS: { readonly [K in ObjectKind]: ObjectCompiler<K> } = {
   eye: (o, c) => compileEye(o, c.light),
   robot_eye: (o, c) => compileRobotEye(o, c.light),
   panel: (o, c) => compilePanel(o, c.light),
-  host: (o, c) => compileHost(o, c.light, c.orbits.get(o.id)),
+  host: (o, c) => compileHost(o, c.light, c.orbits.get(o.id), c.bodySex.get(o.id) ?? 0),
   compound_eye: (o, c) => compileCompoundEye(o, c.light),
   gem_eye: (o, c) => compileGemEye(o, c.light),
   head_lit: (o, c) => {

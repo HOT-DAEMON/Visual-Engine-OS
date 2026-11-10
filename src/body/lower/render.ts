@@ -1,4 +1,5 @@
 import { darken, lighten } from '../../core/color';
+import { bodyTones } from '../tones';
 import { el, urlRef } from '../../core/svg';
 import { reveal, tierOf } from '../muscle-tiers';
 import type { BodyMarkup, BodyRenderOpts } from '../render';
@@ -19,7 +20,7 @@ const isEnv = (a: Atom): boolean => (a.kind === 'skin' && a.level === 0) || a.id
  */
 export function renderLegs(geo: LegGeo, o: BodyRenderOpts): BodyMarkup {
   const f = geo.frame.body, h = f.h, level = o.level ?? 3, uid = `${o.uid ?? 'bd'}L`;
-  const skin = o.skin, ink = darken(skin, 0.62), shade = darken(skin, 0.2), sw = 0.0085 * h, vis = clamp01(1.4 * f.vis), T = tierOf(f.vis);
+  const { skin, shade } = bodyTones(o), ink = darken(skin, 0.62), sw = 0.0085 * h, vis = clamp01(1.4 * f.vis), T = tierOf(f.vis);
   const own = geo.atoms, g: string[] = [], defs: string[] = [];
   if (o.mode === 'atoms') {
     for (const a of [...own].sort((p, q) => p.z - q.z)) {

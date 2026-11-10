@@ -3,6 +3,7 @@ import { el, urlRef } from '../core/svg';
 import type { BodyGeo } from './geometry';
 import { reveal, tierOf } from './muscle-tiers';
 import { box, pathOf } from './shape';
+import { bodyTones } from './tones';
 import type { Atom, Level } from './types';
 
 export interface BodyRenderOpts {
@@ -19,6 +20,10 @@ export interface BodyRenderOpts {
    * jamais du cou sur le fond) ; en dessous, il est limité à la largeur de la base. Absent : fondu non borné (comportement historique).
    */
   readonly neckContour?: string;
+  /** Apparence résolue de la peau de l'hôte (base, ombre) : source unique des teintes, lue aussi par le cou. Absente : `darken(peau)` historique (voir `tones.ts`). */
+  readonly appearance?: { readonly base: string; readonly shadow: string };
+  /** Couleur de BASE du cou (`neckBase`) : le fondu de la base du cou y converge, il n'y a donc pas de bande d'un autre ton. Absente : mélange historique peau/ombre. */
+  readonly neckTone?: string;
 }
 export interface BodyMarkup { readonly back: string; readonly front: string }
 
@@ -51,7 +56,7 @@ const hash = (s: string): number => { let x = 2166136261; for (let i = 0; i < s.
  */
 export function renderBody(geo: BodyGeo, o: BodyRenderOpts): BodyMarkup {
   const { frame: f } = geo, h = f.h, level = o.level ?? 3, uid = o.uid ?? 'bd';
-  const skin = o.skin, ink = inkOf(skin), shade = darken(skin, 0.2), sw = 0.0085 * h;
+  const { skin, shade } = bodyTones(o), ink = inkOf(skin), sw = 0.0085 * h;
   /** Visibilité du relief musculaire : STRICTEMENT nulle quand la définition est nulle (un nourrisson n'a ni abdominaux ni pectoraux visibles). */
   const vis = clamp01(1.4 * f.vis);
   const shown = geo.atoms.filter((a) => a.view === 'front' && a.level <= level).sort((a, b) => a.z - b.z);
@@ -114,7 +119,7 @@ export function renderBody(geo: BodyGeo, o: BodyRenderOpts): BodyMarkup {
   g.push(el('g', { 'clip-path': urlRef(clipId) }, [...env.filter(isTorso).map(outline), ...layerAtoms(0)]));
   for (let layer = 1; layer < 4; layer++) g.push(...layerAtoms(layer));
   const { a: an } = f, bx = an.baseHalf * 1.04, y0 = an.baseY - 0.09 * h, y1 = an.baseY + 0.012 * h;
-  defs.push(el('linearGradient', { id: `${uid}-nk`, x1: 0, y1: 0, x2: 0, y2: 1 }, [el('stop', { offset: 0, 'stop-color': mix(skin, shade, 0.1), 'stop-opacity': 0 }), el('stop', { offset: 1, 'stop-color': mix(skin, shade, 0.1), 'stop-opacity': 1 })]));
+  defs.push(el('linearGradient', { id: `${uid}-nk`, x1: 0, y1: 0, x2: 0, y2: 1 }, [el('stop', { offset: 0, 'stop-color': o.neckTone ?? mix(skin, shade, 0.1), 'stop-opacity': 0 }), el('stop', { offset: 1, 'stop-color': o.neckTone ?? mix(skin, shade, 0.1), 'stop-opacity': 1 })]));
   const fade = el('path', { d: `M${-bx} ${y0}L${bx} ${y0}L${bx} ${y1}L${-bx} ${y1}Z`, fill: urlRef(`${uid}-nk`) });
   let front = fade;
   if (o.neckContour) {
