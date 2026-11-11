@@ -37,8 +37,8 @@ export interface FillSpec {
 export const FILL: Partial<Record<Style, FillSpec>> = {
   short: { rim: 0.4, all: 0.45, len: 0.07, max: 80 },
   spiky: { rim: 0.4, all: 0.45, len: 0.09, max: 80 },
-  curly: { rim: 0.25, all: 0.3, len: 0.12, max: 110 },
-  afro: { rim: 0.2, all: 0.25, len: 0.16, max: 140 },
+  curly: { rim: 0.14, all: 0.2, len: 0.12, max: 170 },
+  afro: { rim: 0.1, all: 0.15, len: 0.16, max: 230 },
   bob: { rim: 0.3, all: 0.35, len: 0.12, max: 60 },
   long: { rim: 0.3, all: 0.35, len: 0.12, max: 60 },
 };

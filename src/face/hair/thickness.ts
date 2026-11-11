@@ -41,6 +41,20 @@ export function shellThickness(style: Exclude<HairStyle, 'bald'>, raw: number): 
  */
 export const GAIN_LIMIT = 1.35;
 
+/**
+ * ÉCART MAXIMAL du gain d'asymétrie à 1 (`docs/HAIR-ROUND.md`), par coiffure. Afro et bouclé sont des MASSES RONDES centrées sur le crâne : un gain de 0,35 à 2,1
+ * (balayage de silhouette) faisait un dôme penché, épais d'un côté et mince de l'autre (mesuré : écart de demi-largeur de la coque 11 % en médiane, 22,5 % au p90 sur
+ * 40 afros ; part nue des deux moitiés différente jusqu'à 0,30). Ces deux coiffures ne gardent qu'un souffle d'asymétrie ; les autres coiffures sont inchangées.
+ */
+export const GAIN_SPAN: Partial<Record<Exclude<HairStyle, 'bald'>, number>> = { afro: 0.06, curly: 0.1 };
+
+/** Gain d'asymétrie borné par la coiffure (identité pour les coiffures sans entrée dans `GAIN_SPAN`). */
+export function boundGain(gain: (s: number) => number, style: Exclude<HairStyle, 'bald'>): (s: number) => number {
+  const span = GAIN_SPAN[style];
+  if (span === undefined) return gain;
+  return (s) => Math.min(1 + span, Math.max(1 - span, gain(s)));
+}
+
 /** Épaisseur maximale absolue de la coque (px) d'une coiffure, gain compris. */
 export const maxShell = (style: Exclude<HairStyle, 'bald'>, W: number): number => THICKNESS[style].cap * GAIN_LIMIT * W;
 

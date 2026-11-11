@@ -30,7 +30,7 @@ import { simLocks } from './sim';
 import { canonical, ContentCache } from '../../perf/content-cache';
 import { clock } from '../../perf/clock';
 import { makeGain, makeLift, puffWidth } from './volume';
-import { THICKNESS } from './thickness';
+import { boundGain, THICKNESS } from './thickness';
 import { RIM, trimToRim } from './rim';
 import { applyWind } from './wind';
 
@@ -58,7 +58,7 @@ function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null 
   const ctx: HairCtx = {
     h, lm, hl, arc, guard: makeGuard(p, lm, hl), boundary, rnd: mulberry32(h.seed), nz, tex, spec: textureSpec(tex, h.curl, W, H), def: STYLES[h.style],
     C: { x: 0, y: h.style === 'spiky' ? lm.eyeY : lm.hair.sideY }, partX,
-    gain: makeGain(h.silhouette, nz), puffW: puffWidth(h.silhouette.puff) * THICKNESS[h.style].puff, lift: makeLift(h, partX, W),
+    gain: boundGain(makeGain(h.silhouette, nz), h.style), puffW: puffWidth(h.silhouette.puff) * THICKNESS[h.style].puff, lift: makeLift(h, partX, W),
   };
   const { rnd, def } = ctx;
   const { base, scalp, wings, crown } = capBase(ctx);

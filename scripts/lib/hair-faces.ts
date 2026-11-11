@@ -14,7 +14,8 @@ import type { HairStyle } from '../../src/schema';
  */
 export type HairEngine = 'classic' | 'v2';
 export type CleanStyle = Exclude<HairStyle, 'bald'>;
-export const NO_FACIAL_HAIR = { mustache: 'none', beard: 'none' } as const;
+/** Aucune pilosité faciale, pattes comprises : les planches jugent les CHEVEUX. Oublier `sideburns` laissait des pattes « mutton » tirées au hasard, lues à tort comme des plaques anguleuses de cheveux aux joues. */
+export const NO_FACIAL_HAIR = { mustache: 'none', beard: 'none', sideburns: 'none' } as const;
 
 export interface HairFaceOptions {
   readonly engine?: HairEngine;

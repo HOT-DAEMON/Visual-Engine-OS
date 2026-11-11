@@ -3,6 +3,7 @@ import { mulberry32 } from '../../core/prng';
 import type { Vec } from '../../geometry/eye/primitives';
 import { orient, type Poly } from '../poly';
 import { lockFrom, type HairCtx } from './flow';
+import { pieceCtx, splitByAspect } from './fringe-split';
 import type { HairLock } from './types';
 
 /** Feston arrondi (0 aux jonctions, 1 au milieu de la mèche) : un bord de frange est une suite de mèches à bout rond, pas une scie à dents triangulaires. */
@@ -73,7 +74,10 @@ export function buildFringe(ctx: HairCtx): Fringe | null {
     });
     const space = (((roots[i + 1] ?? xF + (xF - (roots[i - 1] ?? -xF)) / 2) - (roots[i - 1] ?? -xF - 0)) / 2) || (2 * xF) / K;
     const wmul = (1.5 + 1.1 * fr()) * (fr() < 0.25 ? 0.5 : fr() < 0.2 ? 1.5 : 1) * (stray > 1 ? 0.55 : 1);
-    locks.push(...lockFrom(ctx, centre, { width: Math.max(0.006 * W, Math.abs(space) * wmul), rank: 'main', tone: -(0.05 + 0.3 * rnd()) * h.highlight, layer: 'front', sharp: 0.15 + 0.35 * fr(), mode: 'fringe', reach: 'cranial' }).map((l): HairLock => ({ ...l, bang: true })));
+    const width = Math.max(0.006 * W, Math.abs(space) * wmul);
+    const tone = -(0.05 + 0.3 * rnd()) * h.highlight;
+    const sharp = 0.15 + 0.35 * fr();
+    splitByAspect(centre, width).forEach((pc, k) => locks.push(...lockFrom(pieceCtx(ctx, i, k), pc.centre, { width: pc.width, rank: 'main', tone, layer: 'front', sharp, mode: 'fringe', reach: 'cranial' }).map((l): HairLock => ({ ...l, bang: true }))));
   }
   return { locks, base, bottom };
 }

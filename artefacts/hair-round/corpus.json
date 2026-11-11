@@ -1,0 +1,4352 @@
+{
+  "n": 40,
+  "seeds": "9000 + 71 k",
+  "styles": {
+    "buzz": {
+      "boundary-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "boundary-inside-contour": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1.000001
+      },
+      "boundary-matches-face-projection": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.000001
+      },
+      "boundary-no-self-crossing": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-closed-no-hole": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.12
+      },
+      "boundary-above-brows": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": -76.74004289562261
+      },
+      "boundary-sideburn-above-eyes": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.24611331996707433
+      },
+      "boundary-clears-ear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-nape-below-ears": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 7.698615620558969
+      },
+      "shell-off-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "shell-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "shell-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "hairline-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "hairline-balance": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.08140557813830673
+      },
+      "hairline-edge-readable": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "hair-shape-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "hair-reach-beyond-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.42
+      },
+      "hair-height-above-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.38
+      },
+      "hair-not-below-neck": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-covers-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-forehead-height": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.18
+      },
+      "hair-forehead-height-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.62
+      },
+      "hair-fringe-no-comb": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 4
+      },
+      "hair-hairline-no-corner": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "skull-shell-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 4.566570841018111
+      },
+      "skull-dome-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 4.566570841018111
+      },
+      "free-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.055
+      },
+      "body-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.055
+      },
+      "free-dist-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 20.58474752348981
+      },
+      "fill-within-reach": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.04
+      },
+      "fringe-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.07
+      },
+      "fill-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "comb-inside-shell": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "dome-combed": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.4
+      },
+      "edge-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "lock-envelope-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.04
+      },
+      "lock-envelope-rise": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "envelope-coverage": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "crown-tone-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.41
+      },
+      "root-band-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.15
+      },
+      "style-vocabulary": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "head-hair-region-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "head-hair-edge-fidelity": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.012
+      },
+      "head-hair-features-clear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "head-hair-edge-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 2
+      },
+      "tier-hue-near-hair": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 30.5
+      },
+      "root-band-inside": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.5
+      }
+    },
+    "short": {
+      "boundary-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "boundary-inside-contour": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1.000001
+      },
+      "boundary-matches-face-projection": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.000001
+      },
+      "boundary-no-self-crossing": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-closed-no-hole": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.12
+      },
+      "boundary-above-brows": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": -76.74004289562261
+      },
+      "boundary-sideburn-above-eyes": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.24611331996707433
+      },
+      "boundary-clears-ear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-nape-below-ears": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 7.698615620558969
+      },
+      "shell-off-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "shell-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "shell-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "hairline-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "hairline-balance": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.08140557813830673
+      },
+      "hairline-edge-readable": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "hair-shape-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "hair-reach-beyond-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.42
+      },
+      "hair-height-above-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.38
+      },
+      "hair-not-below-neck": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-covers-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-forehead-height": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.18
+      },
+      "hair-forehead-height-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.62
+      },
+      "hair-fringe-no-comb": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 4
+      },
+      "hair-hairline-no-corner": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "skull-shell-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 18.799568784581496
+      },
+      "skull-dome-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 18.799568784581496
+      },
+      "free-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.125
+      },
+      "body-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.125
+      },
+      "free-dist-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 47.5299021989462
+      },
+      "shell-rim-bare": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.55
+      },
+      "shell-rim-bare-hard": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.75
+      },
+      "fill-within-reach": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.09000000000000001
+      },
+      "fringe-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.12000000000000001
+      },
+      "fill-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 80
+      },
+      "fringe-tip-jag": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.03000681139103847,
+        "limit": 0.03
+      },
+      "comb-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "edge-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "lock-envelope-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.09000000000000001
+      },
+      "lock-envelope-rise": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.12000000000000001
+      },
+      "envelope-coverage": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "crown-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.78
+      },
+      "temples-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "crown-tone-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.41
+      },
+      "root-band-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.15
+      },
+      "style-vocabulary": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "fringe-wide-share": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.375,
+        "limit": 0.35
+      },
+      "fringe-aspect-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 3
+      },
+      "head-hair-region-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "head-hair-edge-fidelity": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.012
+      },
+      "head-hair-features-clear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "head-hair-edge-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 2
+      },
+      "tier-hue-near-hair": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 30.5
+      },
+      "root-band-inside": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "fringe-rhythm-natural": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-continuous": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.03
+      },
+      "fringe-tuft-width": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-slender": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.7
+      }
+    },
+    "spiky": {
+      "boundary-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "boundary-inside-contour": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1.000001
+      },
+      "boundary-matches-face-projection": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.000001
+      },
+      "boundary-no-self-crossing": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-closed-no-hole": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.12
+      },
+      "boundary-above-brows": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": -76.74004289562261
+      },
+      "boundary-sideburn-above-eyes": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.24611331996707433
+      },
+      "boundary-clears-ear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-nape-below-ears": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 7.698615620558969
+      },
+      "shell-off-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "shell-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "shell-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "hairline-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "hairline-balance": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.08140557813830673
+      },
+      "hairline-edge-readable": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "hair-shape-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "hair-reach-beyond-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.42
+      },
+      "hair-height-above-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.6
+      },
+      "hair-not-below-neck": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-covers-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-forehead-height": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.18
+      },
+      "hair-forehead-height-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.62
+      },
+      "hair-fringe-no-comb": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 4
+      },
+      "hair-hairline-no-corner": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "skull-shell-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 20.832854205090555
+      },
+      "skull-dome-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 20.832854205090555
+      },
+      "free-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.225
+      },
+      "body-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.225
+      },
+      "free-dist-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 86.02298030674105
+      },
+      "shell-rim-bare": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "geometry",
+        "worst": 0.5555555555555556,
+        "limit": 0.55
+      },
+      "shell-rim-bare-hard": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.75
+      },
+      "fill-within-reach": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.13999999999999999
+      },
+      "fringe-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.16999999999999998
+      },
+      "fill-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 80
+      },
+      "fringe-tip-jag": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.03000681139103847,
+        "limit": 0.03
+      },
+      "comb-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "edge-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "lock-envelope-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.13999999999999999
+      },
+      "lock-envelope-rise": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.22
+      },
+      "envelope-coverage": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "crown-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.78
+      },
+      "temples-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "crown-tone-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.41
+      },
+      "root-band-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.15
+      },
+      "style-vocabulary": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "fringe-wide-share": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.375,
+        "limit": 0.35
+      },
+      "fringe-aspect-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 3
+      },
+      "head-hair-region-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "head-hair-edge-fidelity": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.012
+      },
+      "head-hair-features-clear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "head-hair-edge-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 2
+      },
+      "tier-hue-near-hair": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 30.5
+      },
+      "root-band-inside": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "fringe-rhythm-natural": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-continuous": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.03
+      },
+      "fringe-tuft-width": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-slender": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.7
+      }
+    },
+    "curly": {
+      "boundary-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "boundary-inside-contour": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1.000001
+      },
+      "boundary-matches-face-projection": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.000001
+      },
+      "boundary-no-self-crossing": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-closed-no-hole": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.12
+      },
+      "boundary-above-brows": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": -76.74004289562261
+      },
+      "boundary-sideburn-above-eyes": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.24611331996707433
+      },
+      "boundary-clears-ear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-nape-below-ears": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 7.698615620558969
+      },
+      "shell-off-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "shell-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "hairline-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "hairline-balance": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.08140557813830673
+      },
+      "hairline-edge-readable": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "hair-shape-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "hair-reach-beyond-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.6
+      },
+      "hair-height-above-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.6
+      },
+      "hair-not-below-neck": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-covers-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-forehead-height": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.18
+      },
+      "hair-forehead-height-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.62
+      },
+      "hair-fringe-no-comb": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 4
+      },
+      "hair-hairline-no-corner": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "skull-shell-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 65.56513345628977
+      },
+      "skull-dome-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 65.56513345628977
+      },
+      "free-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.185
+      },
+      "body-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.185
+      },
+      "free-dist-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 70.6257490636231
+      },
+      "shell-rim-bare": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.29000000000000004
+      },
+      "shell-rim-bare-hard": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.75
+      },
+      "fill-within-reach": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.22
+      },
+      "fringe-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fill-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 170
+      },
+      "fringe-tip-jag": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.03000681139103847,
+        "limit": 0.03
+      },
+      "comb-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "edge-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "edge-rim-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.057999999999999996
+      },
+      "edge-rim-teeth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 16
+      },
+      "lock-envelope-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.22
+      },
+      "lock-envelope-rise": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.18
+      },
+      "envelope-coverage": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "crown-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.78
+      },
+      "temples-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "crown-tone-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.41
+      },
+      "root-band-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.15
+      },
+      "style-vocabulary": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "round-dome-centered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "round-top-centered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "round-width-ratio": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 1
+      },
+      "round-width-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 1.8
+      },
+      "round-rise": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.4
+      },
+      "round-bare-balance": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-wide-share": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.375,
+        "limit": 0.35
+      },
+      "fringe-aspect-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 3
+      },
+      "head-hair-region-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "head-hair-edge-fidelity": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.012
+      },
+      "head-hair-features-clear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "head-hair-edge-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 2
+      },
+      "shell-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fill-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "tier-hue-near-hair": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 30.5
+      },
+      "root-band-inside": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "fringe-rhythm-natural": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-continuous": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.03
+      },
+      "fringe-tuft-width": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-slender": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.7
+      }
+    },
+    "afro": {
+      "boundary-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "boundary-inside-contour": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1.000001
+      },
+      "boundary-matches-face-projection": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.000001
+      },
+      "boundary-no-self-crossing": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-closed-no-hole": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.12
+      },
+      "boundary-above-brows": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": -76.74004289562261
+      },
+      "boundary-sideburn-above-eyes": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.24611331996707433
+      },
+      "boundary-clears-ear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-nape-below-ears": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 7.698615620558969
+      },
+      "shell-off-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "shell-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "hairline-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "hairline-balance": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.08140557813830673
+      },
+      "hairline-edge-readable": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "hair-shape-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "hair-reach-beyond-skull": {
+        "fail": 0,
+        "warn": 11,
+        "layer": "geometry",
+        "worst": 0.6512152382171286,
+        "limit": 0.6
+      },
+      "hair-height-above-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.6
+      },
+      "hair-not-below-neck": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-covers-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-forehead-height": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.18
+      },
+      "hair-forehead-height-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.62
+      },
+      "hair-fringe-no-comb": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 4
+      },
+      "hair-hairline-no-corner": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "skull-shell-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 130.63026691257954
+      },
+      "skull-dome-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 130.63026691257954
+      },
+      "free-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.34500000000000003
+      },
+      "body-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.34500000000000003
+      },
+      "free-dist-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 132.21467403609486
+      },
+      "shell-rim-bare": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.24999999999999997
+      },
+      "shell-rim-bare-hard": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.75
+      },
+      "fill-within-reach": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.32
+      },
+      "fringe-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.35
+      },
+      "fill-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 230
+      },
+      "fringe-tip-jag": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.03000681139103847,
+        "limit": 0.03
+      },
+      "comb-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "edge-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "edge-rim-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.062
+      },
+      "edge-rim-teeth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 16
+      },
+      "lock-envelope-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.32
+      },
+      "lock-envelope-rise": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.34
+      },
+      "envelope-coverage": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "crown-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.78
+      },
+      "temples-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "crown-tone-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.41
+      },
+      "root-band-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.15
+      },
+      "style-vocabulary": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "round-dome-centered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "round-top-centered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "round-width-ratio": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 1
+      },
+      "round-width-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 1.8
+      },
+      "round-rise": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.4
+      },
+      "round-bare-balance": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-wide-share": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.375,
+        "limit": 0.35
+      },
+      "fringe-aspect-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 3
+      },
+      "head-hair-region-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "head-hair-edge-fidelity": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.012
+      },
+      "head-hair-features-clear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "head-hair-edge-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 2
+      },
+      "shell-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fill-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "tier-hue-near-hair": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 30.5
+      },
+      "root-band-inside": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "fringe-rhythm-natural": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-continuous": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.03
+      },
+      "fringe-tuft-width": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-slender": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.7
+      }
+    },
+    "bob": {
+      "boundary-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "boundary-inside-contour": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1.000001
+      },
+      "boundary-matches-face-projection": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.000001
+      },
+      "boundary-no-self-crossing": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-closed-no-hole": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.12
+      },
+      "boundary-above-brows": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": -76.74004289562261
+      },
+      "boundary-sideburn-above-eyes": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.24611331996707433
+      },
+      "boundary-clears-ear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-nape-below-ears": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 7.698615620558969
+      },
+      "shell-off-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "shell-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "hairline-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "hairline-balance": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.08140557813830673
+      },
+      "hairline-edge-readable": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "hair-shape-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "hair-reach-beyond-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "hair-height-above-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.38
+      },
+      "hair-not-below-neck": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.7
+      },
+      "hair-covers-face-skin": {
+        "fail": 1,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0.03496503496503497,
+        "limit": 0.02
+      },
+      "hair-forehead-height": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.18
+      },
+      "hair-forehead-height-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.62
+      },
+      "hair-fringe-no-comb": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 4
+      },
+      "hair-hairline-no-corner": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "skull-shell-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 24.899425046108664
+      },
+      "skull-dome-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 24.899425046108664
+      },
+      "back-mass-no-lid": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.75
+      },
+      "back-mass-no-bar": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.92
+      },
+      "back-mass-closed-bottom": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.9
+      },
+      "back-mass-inside-hair": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "back-mass-above-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.01
+      },
+      "back-mass-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "back-mass-tip-visible": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "free-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.10500000000000001
+      },
+      "body-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.10500000000000001
+      },
+      "free-dist-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 39.83128657738723
+      },
+      "shell-rim-bare": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.45000000000000007
+      },
+      "fill-within-reach": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.09000000000000001
+      },
+      "fringe-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.12000000000000001
+      },
+      "fill-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 60
+      },
+      "fringe-tip-jag": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.03000681139103847,
+        "limit": 0.03
+      },
+      "comb-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "edge-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "edge-hem-converges": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 1
+      },
+      "lock-envelope-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.09000000000000001
+      },
+      "lock-envelope-rise": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "envelope-coverage": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "crown-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.78
+      },
+      "temples-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "crown-tone-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.41
+      },
+      "root-band-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.15
+      },
+      "style-vocabulary": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "fringe-wide-share": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.375,
+        "limit": 0.35
+      },
+      "fringe-aspect-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 3
+      },
+      "head-hair-region-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "head-hair-edge-fidelity": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.012
+      },
+      "head-hair-features-clear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "head-hair-edge-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 2
+      },
+      "shell-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fill-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "tier-hue-near-hair": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 30.5
+      },
+      "root-band-inside": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "fringe-rhythm-natural": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-continuous": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.03
+      },
+      "fringe-tuft-width": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-slender": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.7
+      }
+    },
+    "long": {
+      "boundary-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "boundary-inside-contour": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1.000001
+      },
+      "boundary-matches-face-projection": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.000001
+      },
+      "boundary-no-self-crossing": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-closed-no-hole": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.12
+      },
+      "boundary-above-brows": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": -76.74004289562261
+      },
+      "boundary-sideburn-above-eyes": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.24611331996707433
+      },
+      "boundary-clears-ear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-nape-below-ears": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 7.698615620558969
+      },
+      "shell-off-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "shell-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "hairline-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "hairline-balance": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.08140557813830673
+      },
+      "hairline-edge-readable": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "hair-shape-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "hair-reach-beyond-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "hair-height-above-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.38
+      },
+      "hair-not-below-neck": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.7
+      },
+      "hair-covers-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-forehead-height": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.18
+      },
+      "hair-forehead-height-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.62
+      },
+      "hair-fringe-no-comb": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 4
+      },
+      "hair-hairline-no-corner": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "skull-shell-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 24.899425046108664
+      },
+      "skull-dome-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 24.899425046108664
+      },
+      "back-mass-no-lid": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.75
+      },
+      "back-mass-no-bar": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.92
+      },
+      "back-mass-closed-bottom": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.9
+      },
+      "back-mass-inside-hair": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "back-mass-above-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.01
+      },
+      "back-mass-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "back-mass-tip-visible": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "free-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.10500000000000001
+      },
+      "body-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.10500000000000001
+      },
+      "free-dist-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 39.83128657738723
+      },
+      "shell-rim-bare": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.45000000000000007
+      },
+      "fill-within-reach": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.09000000000000001
+      },
+      "fringe-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.12000000000000001
+      },
+      "fill-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 60
+      },
+      "fringe-tip-jag": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.03000681139103847,
+        "limit": 0.03
+      },
+      "comb-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "edge-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "edge-hem-converges": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 1
+      },
+      "lock-envelope-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.09000000000000001
+      },
+      "lock-envelope-rise": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "envelope-coverage": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "crown-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.78
+      },
+      "temples-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "crown-tone-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.41
+      },
+      "root-band-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.15
+      },
+      "style-vocabulary": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "fringe-wide-share": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.375,
+        "limit": 0.35
+      },
+      "fringe-aspect-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 3
+      },
+      "head-hair-region-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "head-hair-edge-fidelity": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.012
+      },
+      "head-hair-features-clear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "head-hair-edge-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 2
+      },
+      "shell-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fill-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "tier-hue-near-hair": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 30.5
+      },
+      "root-band-inside": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "fringe-rhythm-natural": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-continuous": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.03
+      },
+      "fringe-tuft-width": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-slender": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.7
+      }
+    },
+    "ponytail": {
+      "boundary-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "boundary-inside-contour": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1.000001
+      },
+      "boundary-matches-face-projection": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.000001
+      },
+      "boundary-no-self-crossing": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-closed-no-hole": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.12
+      },
+      "boundary-above-brows": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": -76.74004289562261
+      },
+      "boundary-sideburn-above-eyes": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.24611331996707433
+      },
+      "boundary-clears-ear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-nape-below-ears": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 7.698615620558969
+      },
+      "shell-off-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "shell-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "shell-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "hairline-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "hairline-balance": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.08140557813830673
+      },
+      "hairline-edge-readable": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "hair-shape-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "hair-reach-beyond-skull": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "geometry",
+        "worst": 0.42329788558665515,
+        "limit": 0.42
+      },
+      "hair-height-above-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.38
+      },
+      "hair-not-below-neck": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-covers-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-forehead-height": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.18
+      },
+      "hair-forehead-height-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.62
+      },
+      "hair-fringe-no-comb": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 4
+      },
+      "hair-hairline-no-corner": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "skull-shell-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 14.732997943563388
+      },
+      "skull-dome-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 14.732997943563388
+      },
+      "free-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.10500000000000001
+      },
+      "body-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.10500000000000001
+      },
+      "free-dist-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 39.83128657738723
+      },
+      "fill-within-reach": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.08
+      },
+      "fringe-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.11
+      },
+      "fill-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "fringe-tip-jag": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.03000681139103847,
+        "limit": 0.03
+      },
+      "comb-inside-shell": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "dome-combed": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.4
+      },
+      "edge-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "lock-envelope-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.08
+      },
+      "lock-envelope-rise": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "envelope-coverage": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "crown-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.78
+      },
+      "tie-on-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.04
+      },
+      "tie-above-ear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": -0.009
+      },
+      "tie-above-skull-top": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": -0.06
+      },
+      "tail-spread-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "tail-length-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "temples-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "crown-tone-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.41
+      },
+      "root-band-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.15
+      },
+      "style-vocabulary": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "fringe-wide-share": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.375,
+        "limit": 0.35
+      },
+      "fringe-aspect-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 3
+      },
+      "head-hair-region-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "head-hair-edge-fidelity": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.012
+      },
+      "head-hair-features-clear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "head-hair-edge-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 2
+      },
+      "tier-hue-near-hair": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 30.5
+      },
+      "root-band-inside": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "fringe-rhythm-natural": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-continuous": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.03
+      },
+      "fringe-tuft-width": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-slender": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.7
+      }
+    },
+    "bun": {
+      "boundary-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "boundary-inside-contour": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1.000001
+      },
+      "boundary-matches-face-projection": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.000001
+      },
+      "boundary-no-self-crossing": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-closed-no-hole": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.12
+      },
+      "boundary-above-brows": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": -76.74004289562261
+      },
+      "boundary-sideburn-above-eyes": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.24611331996707433
+      },
+      "boundary-clears-ear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-nape-below-ears": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 7.698615620558969
+      },
+      "shell-off-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "shell-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "shell-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "hairline-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "hairline-balance": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.08140557813830673
+      },
+      "hairline-edge-readable": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "hair-shape-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "hair-reach-beyond-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.42
+      },
+      "hair-height-above-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.38
+      },
+      "hair-not-below-neck": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-covers-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-forehead-height": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.18
+      },
+      "hair-forehead-height-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.62
+      },
+      "hair-fringe-no-comb": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 4
+      },
+      "hair-hairline-no-corner": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "skull-shell-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 14.732997943563388
+      },
+      "skull-dome-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 14.732997943563388
+      },
+      "free-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.10500000000000001
+      },
+      "body-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.10500000000000001
+      },
+      "free-dist-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 39.83128657738723
+      },
+      "fill-within-reach": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.08
+      },
+      "fringe-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.11
+      },
+      "fill-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "fringe-tip-jag": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.03000681139103847,
+        "limit": 0.03
+      },
+      "comb-inside-shell": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "dome-combed": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.4
+      },
+      "edge-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "lock-envelope-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.08
+      },
+      "lock-envelope-rise": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "envelope-coverage": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "crown-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.78
+      },
+      "tie-on-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.04
+      },
+      "tie-above-ear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": -0.009
+      },
+      "tie-above-skull-top": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": -0.06
+      },
+      "bun-visible": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "bun-radius-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "temples-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "crown-tone-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.41
+      },
+      "root-band-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.15
+      },
+      "style-vocabulary": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "fringe-wide-share": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.375,
+        "limit": 0.35
+      },
+      "fringe-aspect-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 3
+      },
+      "head-hair-region-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "head-hair-edge-fidelity": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.012
+      },
+      "head-hair-features-clear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "head-hair-edge-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 2
+      },
+      "tier-hue-near-hair": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 30.5
+      },
+      "root-band-inside": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "fringe-rhythm-natural": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-continuous": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.03
+      },
+      "fringe-tuft-width": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-slender": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.7
+      }
+    },
+    "braids": {
+      "boundary-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "boundary-inside-contour": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1.000001
+      },
+      "boundary-matches-face-projection": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.000001
+      },
+      "boundary-no-self-crossing": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-closed-no-hole": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.12
+      },
+      "boundary-above-brows": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": -76.74004289562261
+      },
+      "boundary-sideburn-above-eyes": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.24611331996707433
+      },
+      "boundary-clears-ear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "boundary-nape-below-ears": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 7.698615620558969
+      },
+      "shell-off-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "shell-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "shell-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "hairline-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "hairline-balance": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.08140557813830673
+      },
+      "hairline-edge-readable": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "hair-shape-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "hair-reach-beyond-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.42
+      },
+      "hair-height-above-skull": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.38
+      },
+      "hair-not-below-neck": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.7
+      },
+      "hair-covers-face-skin": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.02
+      },
+      "hair-forehead-height": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.18
+      },
+      "hair-forehead-height-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.62
+      },
+      "hair-fringe-no-comb": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 4
+      },
+      "hair-hairline-no-corner": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "skull-shell-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 14.732997943563388
+      },
+      "skull-dome-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 14.732997943563388
+      },
+      "free-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.10500000000000001
+      },
+      "body-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.10500000000000001
+      },
+      "free-dist-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 39.83128657738723
+      },
+      "fill-within-reach": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.08
+      },
+      "fringe-reach-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.11
+      },
+      "fill-clears-free-ear-left": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-clears-free-ear-right": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 3
+      },
+      "fill-style-scope": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "fringe-tip-jag": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.03000681139103847,
+        "limit": 0.03
+      },
+      "comb-inside-shell": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.05
+      },
+      "dome-combed": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.4
+      },
+      "edge-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "lock-envelope-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.08
+      },
+      "lock-envelope-rise": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.1
+      },
+      "envelope-coverage": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0
+      },
+      "crown-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.78
+      },
+      "braid-length-bound": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.15
+      },
+      "temples-covered": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "crown-tone-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.41
+      },
+      "root-band-not-black": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.15
+      },
+      "style-vocabulary": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0
+      },
+      "fringe-wide-share": {
+        "fail": 0,
+        "warn": 1,
+        "layer": "style",
+        "worst": 0.375,
+        "limit": 0.35
+      },
+      "fringe-aspect-max": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 3
+      },
+      "head-hair-region-finite": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 1
+      },
+      "head-hair-edge-fidelity": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.012
+      },
+      "head-hair-features-clear": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "anatomy",
+        "worst": 0,
+        "limit": 0
+      },
+      "head-hair-edge-smooth": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 2
+      },
+      "tier-hue-near-hair": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 30.5
+      },
+      "root-band-inside": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.5
+      },
+      "fringe-rhythm-natural": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-continuous": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.03
+      },
+      "fringe-tuft-width": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "geometry",
+        "worst": 0,
+        "limit": 0.25
+      },
+      "fringe-tuft-slender": {
+        "fail": 0,
+        "warn": 0,
+        "layer": "style",
+        "worst": 0,
+        "limit": 0.7
+      }
+    }
+  }
+}

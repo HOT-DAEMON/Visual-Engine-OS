@@ -2,6 +2,7 @@ import { clamp } from '../../core/math';
 import type { Vec } from '../../geometry/eye/primitives';
 import { layoutBlades, type BladeSpec } from './fringe-blades';
 import { lockFrom, type HairCtx } from './flow';
+import { pieceCtx, splitByAspect } from './fringe-split';
 import type { HairLock } from './types';
 
 /** Résultat du moteur de frange : mèches, bord inférieur (de droite à gauche). Jamais de masse pleine : le front reste visible entre les mèches. */
@@ -71,7 +72,7 @@ export function engineFringe(ctx: HairCtx): FringeEngineResult | null {
   }
 
   const locks: HairLock[] = [];
-  for (const b of blades) {
+  for (const [bi, b] of blades.entries()) {
     // Courbe quadratique racine → pointe : tangente de départ quasi verticale, la mèche « tombe » puis se rabat.
     const R = { x: b.xRoot, y: hl.yAt(b.xRoot) - 0.012 * H };
     const E = { x: b.xTip, y: b.yTip };
@@ -80,7 +81,8 @@ export function engineFringe(ctx: HairCtx): FringeEngineResult | null {
       const t = j / 9;
       return { x: (1 - t) ** 2 * R.x + 2 * (1 - t) * t * C.x + t * t * E.x, y: (1 - t) ** 2 * R.y + 2 * (1 - t) * t * C.y + t * t * E.y };
     });
-    locks.push(...lockFrom(ctx, c, { width: b.w0, rank: b.rank, tone: tone(), layer: 'front', mode: 'fringe', raw: true, kind: 'fringe', profile: b.profile, power: b.power, sharp: b.sharp, root: b.rootW, fade: Math.max(b.fade, h.tips.fade), edgeFade: h.tips.edgeFade, ragged: Math.max(b.ragged, h.tips.irregular), flick: h.tips.flick * 0.5, reach: 'cranial' }).map((l): HairLock => ({ ...l, bang: true })));
+    const tn = tone();
+    splitByAspect(c, b.w0).forEach((pc, k) => locks.push(...lockFrom(pieceCtx(ctx, bi, k), pc.centre, { width: pc.width, rank: b.rank, tone: tn, layer: 'front', mode: 'fringe', raw: true, kind: 'fringe', profile: b.profile, power: b.power, sharp: b.sharp, root: b.rootW, fade: Math.max(b.fade, h.tips.fade), edgeFade: h.tips.edgeFade, ragged: Math.max(b.ragged, h.tips.irregular), flick: h.tips.flick * 0.5, reach: 'cranial' }).map((l): HairLock => ({ ...l, bang: true }))));
   }
   // Bord inférieur de droite à gauche : le point le plus bas des pointes proches de chaque abscisse (jamais sous yF).
   const bottom = Array.from({ length: 49 }, (_, i) => {

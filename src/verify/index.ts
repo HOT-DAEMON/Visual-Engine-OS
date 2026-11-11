@@ -17,6 +17,7 @@ import { checkHairSkull } from './hair-skull';
 import { checkHairForm } from './hair-form';
 import { checkHairEdge } from './hair-edge';
 import { checkHairCoherence } from './hair-coherence';
+import { checkHairRound } from './hair-round';
 import { checkHeadHair } from './head-hair';
 import { report, type Check, type Report } from './types';
 
@@ -27,6 +28,7 @@ export { checkHairSkull } from './hair-skull';
 export { checkHairForm } from './hair-form';
 export { checkHairEdge, silhouetteProfile, toothCount, maxBeyondRim, lowerFlare } from './hair-edge';
 export { checkHairCoherence } from './hair-coherence';
+export { checkHairRound, roundMetrics, fringeAspect, ROUND_LIMITS, VOLUME_STYLES, type RoundMetrics, type FringeAspect } from './hair-round';
 export { checkHeadHair } from './head-hair';
 export { checkHairSim, hairSimStats, toleranceOf, type HairSimStats } from './hair-sim';
 
@@ -68,6 +70,7 @@ export function verifyFace(face: RandomFace): Report {
   checks.push(...checkHairForm(face));
   checks.push(...checkHairEdge(face));
   checks.push(...checkHairCoherence(face));
+  checks.push(...checkHairRound(face));
   checks.push(...checkHeadHair(face));
   return report(checks);
 }
