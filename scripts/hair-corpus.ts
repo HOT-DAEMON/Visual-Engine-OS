@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { generateRandomFace } from '../src';
-import { checkHairBoundary, checkHairCoherence, checkHairEdge, checkHairForm, checkHairRound, checkHairShape, checkHairSkull, checkHairZones, checkHeadHair } from '../src/verify';
+import { checkHairBoundary, checkHairCoherence, checkHairDome, checkHairEdge, checkHairForm, checkHairRound, checkHairShape, checkHairSkull, checkHairZones, checkHeadHair } from '../src/verify';
 import type { Check } from '../src/verify/types';
 import { HAIR_STYLES } from '../src/schema';
 
@@ -12,7 +12,7 @@ import { HAIR_STYLES } from '../src/schema';
 const N = Number(process.argv[2] ?? 40);
 const dir = process.argv[3] ?? 'artefacts/hair-round';
 mkdirSync(dir, { recursive: true });
-const checks = [checkHairBoundary, checkHairShape, checkHairSkull, checkHairForm, checkHairEdge, checkHairCoherence, checkHairRound, checkHairZones, checkHeadHair] as const;
+const checks = [checkHairBoundary, checkHairShape, checkHairSkull, checkHairForm, checkHairEdge, checkHairCoherence, checkHairRound, checkHairDome, checkHairZones, checkHeadHair] as const;
 type Row = { fail: number; warn: number; layer: string; worst: number; limit: number };
 const out: Record<string, Record<string, Row>> = {};
 for (const style of HAIR_STYLES.filter((s) => s !== 'bald')) {

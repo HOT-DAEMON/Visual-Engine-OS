@@ -58,19 +58,34 @@ export function buildFringe(ctx: HairCtx): Fringe | null {
   const gsum = gaps.reduce((a, b) => a + b, 0);
   let acc = 0;
   const roots = [-xF, ...gaps.map((g) => (acc += g, -xF + (2 * xF * acc) / gsum))];
+  // TOUFFES (`docs/HAIR-FRINGE-CLUMPS.md`) : les mèches voisines se regroupent par 2 à 4 ; chaque touffe converge vers une pointe commune (abscisse et longueur de sa première mèche, tirage propre)
+  // et ondule en S d'une amplitude qui lui est propre. Avant : 14 à 22 rubans verticaux parallèles, de longueurs indépendantes : un PEIGNE (`HAIR-ROUND-REMAINING.md` 6).
+  const clump: number[] = [];
+  for (let n = 0, c = 0; n < K; c++) for (let j = 2 + Math.floor(fr() * 3); j > 0 && n < K; j--, n++) clump.push(c);
+  const nC = (clump[K - 1] as number) + 1;
+  const wave = Array.from({ length: nC }, () => ({ amp: (fr() < 0.5 ? -1 : 1) * (0.008 + 0.022 * fr()) * W, ph: fr() * 6.283 }));
+  const tipX: number[] = [], tipY: number[] = [];
   for (let i = 0; i < K; i++) {
     rnd(); // (tirage historique de la jigue de la racine, conservé : même consommation de `rnd`)
     const x = roots[i] as number;
     const a = x / xF;
     const drift = h.fringe === 'sweep' ? sp * 0.05 * W * (0.5 + rnd()) : h.fringe === 'curtain' ? Math.sign(a || 1) * 0.06 * W * Math.abs(a) : (rnd() - 0.5) * 0.02 * W;
-    const xe = clamp(x + drift, -xF, xF);
+    let xe = clamp(x + drift, -xF, xF);
     const R = { x, y: hl.yAt(x) - 0.012 * H };
     const stray = fr() < 0.12 ? 1 + 1.6 * fr() : 1;
-    const E = { x: xe, y: Math.min(yF, bottomAt(xe, (depth[Math.floor(rnd() * teeth)] as number) * rnd()) + (stray - 1) * 0.5 * d) };
+    let ye = Math.min(yF, bottomAt(xe, (depth[Math.floor(rnd() * teeth)] as number) * rnd()) + (stray - 1) * 0.5 * d);
+    // Pointe commune de la touffe : la première mèche la fixe, les suivantes s'en rapprochent (pas les mèches isolées).
+    const cid = clump[i] as number;
+    if (tipX[cid] === undefined) { tipX[cid] = xe; tipY[cid] = ye; }
+    else if (stray === 1) { xe = clamp(xe + 0.6 * ((tipX[cid] as number) - xe), -xF, xF); ye = Math.min(yF, Math.max(hl.yAt(xe) + 0.004 * H, ye + 0.5 * ((tipY[cid] as number) - ye))); }
+    const E = { x: xe, y: ye };
     const C = { x: x + drift * 0.2, y: R.y + 0.6 * (E.y - R.y) };
+    const wv = wave[cid] as { amp: number; ph: number }, reach = clamp((E.y - R.y) / (0.1 * H), 0.3, 1);
     const centre = Array.from({ length: 9 }, (_, j) => {
       const t = j / 8;
-      return { x: (1 - t) ** 2 * R.x + 2 * (1 - t) * t * C.x + t * t * E.x, y: (1 - t) ** 2 * R.y + 2 * (1 - t) * t * C.y + t * t * E.y };
+      // Ondulation en S (nulle à la racine et à la pointe) : la touffe n'est plus une droite.
+      const s = Math.sin(Math.PI * t) * Math.sin(2 * Math.PI * t * 0.9 + wv.ph) * wv.amp * reach;
+      return { x: (1 - t) ** 2 * R.x + 2 * (1 - t) * t * C.x + t * t * E.x + s, y: (1 - t) ** 2 * R.y + 2 * (1 - t) * t * C.y + t * t * E.y };
     });
     const space = (((roots[i + 1] ?? xF + (xF - (roots[i - 1] ?? -xF)) / 2) - (roots[i - 1] ?? -xF - 0)) / 2) || (2 * xF) / K;
     const wmul = (1.5 + 1.1 * fr()) * (fr() < 0.25 ? 0.5 : fr() < 0.2 ? 1.5 : 1) * (stray > 1 ? 0.55 : 1);

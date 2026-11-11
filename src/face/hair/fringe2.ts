@@ -61,13 +61,14 @@ export function engineFringe(ctx: HairCtx): FringeEngineResult | null {
     for (let pass = 0; pass < 2; pass++) { const c = ys.slice(); for (let i = 1; i < ys.length - 1; i++) ys[i] = 0.25 * (c[i - 1] as number) + 0.5 * (c[i] as number) + 0.25 * (c[i + 1] as number); }
     blades.forEach((b, i) => { blades[i] = { ...b, yTip: ys[i] as number }; });
   } else {
-    // Frange asymétrique : de grandes mèches balayées jusqu'au sourcil du côté `side`, courtes de l'autre (front ouvert).
-    const n = fe.count || 7;
+    // Frange asymétrique : de grandes mèches balayées jusqu'au sourcil du côté `side`, courtes de l'autre (front ouvert). MAJ (`docs/HAIR-FRINGE-CLUMPS.md`) : mèches en RUBAN effilé
+    // (et non en cône large : un grand coin plat posé en diagonale sur le front), plus nombreuses et plus étroites, balayage moins transversal (la pointe ne traverse plus tout le front).
+    const n = fe.count || 11;
     for (let i = 0; i < n; i++) {
       const long = i < Math.ceil(n / 2);
       const x = long ? -side * xF * (0.15 + 0.7 * rnd()) : side * xF * (0.1 + 0.8 * rnd());
-      const xTip = long ? side * xF * (0.15 + 0.6 * rnd()) : x + side * 0.03 * W;
-      blades.push({ xRoot: x, xTip, yTip: yAt(xTip, long ? 0.88 + 0.12 * rnd() : 0.25 + 0.3 * rnd()), w0: ((2 * xF) / n) * (1.5 + 0.5 * rnd()), rank: 'main', profile: 'cone', power: 1.1, fade: 0, ragged: 0.3, sharp: 0.85 });
+      const xTip = long ? x + side * xF * (0.12 + 0.34 * rnd()) : x + side * 0.03 * W;
+      blades.push({ xRoot: x, xTip, yTip: yAt(xTip, long ? 0.88 + 0.12 * rnd() : 0.25 + 0.3 * rnd()), w0: ((2 * xF) / n) * (1.1 + 0.5 * rnd()), rank: 'main', profile: 'ribbon', power: 1, fade: 0, ragged: 0.3, sharp: 0.7, rootW: 0.9 });
     }
   }
 

@@ -17,9 +17,12 @@ export type GuardMode = 'cap' | 'fringe' | 'cheek';
  * Conséquence : aucune mèche ne peut recouvrir un œil, quelle que soit la coiffure ou la texture.
  */
 export interface Guard {
-  project(v: Vec, mode?: GuardMode): Vec;
-  /** Polygone entier : sommets projetés, puis arêtes subdivisées tant qu'elles traversent la zone interdite. */
-  fit(poly: Vec[], mode?: GuardMode): Vec[];
+  project(v: Vec, mode?: GuardMode, side?: -1 | 1): Vec;
+  /**
+   * Polygone entier : sommets projetés, puis arêtes subdivisées tant qu'elles traversent la zone interdite. `side` : côté de la RACINE de la mèche (`docs/HAIR-FIT-SIDE.md`) :
+   * un sommet repoussé sur le côté l'est de ce côté-là et non du signe de sa propre abscisse (un sommet près de la ligne médiane partait de l'autre côté du visage et traçait une bande d'une joue à l'autre).
+   */
+  fit(poly: Vec[], mode?: GuardMode, side?: -1 | 1): Vec[];
   /**
    * Ligne médiane COUPÉE à l'entrée de la zone interdite (`docs/HAIR-EDGE.md`) : la mèche s'arrête au bord de la zone au lieu d'y être écrasée sommet par sommet
    * (`fit` aplatit un ruban large en coin à bords droits collé sur l'implantation : les « grands triangles sombres » du dessus des cheveux longs). Le dernier point
@@ -49,11 +52,11 @@ export function makeGuard(p: FaceParams, lm: FaceLandmarks, hl: Hairline): Guard
     return 0.03 * W + 0.055 * W * clamp((dEye - 0.1 * H) / (0.14 * H), 0, 1) * clamp((lm.jawY + 0.04 * H - y) / (0.1 * H), 0, 1);
   };
   const margin = (y: number, mode: GuardMode): number => (mode === 'cheek' ? Math.max(sideMargin(y), cheekMargin(y)) : sideMargin(y));
-  const project = (v: Vec, mode: GuardMode = 'cap'): Vec => {
+  const project = (v: Vec, mode: GuardMode = 'cap', side?: -1 | 1): Vec => {
     const inner = hw(v.y) - margin(v.y, mode);
     if (Math.abs(v.x) >= inner) return v;
     // Frange : une pointe qui dépasse la limite des sourcils y est RAMENÉE (jamais poussée de côté : cela traçait une arête qui traversait le front).
-    if (v.y > yF) return mode === 'fringe' ? { x: v.x, y: yF } : { x: (v.x < 0 ? -1 : 1) * inner, y: v.y };
+    if (v.y > yF) return mode === 'fringe' ? { x: v.x, y: yF } : { x: (side ?? (v.x < 0 ? -1 : 1)) * inner, y: v.y };
     const ymax = mode === 'fringe' ? yF : Math.min(yF, hl.yAt(v.x) + 0.01 * H);
     return v.y > ymax ? { x: v.x, y: ymax } : v;
   };
@@ -62,13 +65,13 @@ export function makeGuard(p: FaceParams, lm: FaceLandmarks, hl: Hairline): Guard
     if (Math.abs(v.x) >= inner) return false;
     return v.y > (mode === 'fringe' ? yF : Math.min(yF, hl.yAt(v.x) + 0.01 * H));
   };
-  const fit = (poly: Vec[], mode: GuardMode = 'cap'): Vec[] => {
-    const P = poly.map((v) => project(v, mode));
+  const fit = (poly: Vec[], mode: GuardMode = 'cap', side?: -1 | 1): Vec[] => {
+    const P = poly.map((v) => project(v, mode, side));
     const out: Vec[] = [];
     const split = (a: Vec, b: Vec, depth: number): void => {
       const m = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
       if (depth >= 5 || !inZone(m, mode)) return;
-      const pm = project(m, mode);
+      const pm = project(m, mode, side);
       split(a, pm, depth + 1);
       out.push(pm);
       split(pm, b, depth + 1);

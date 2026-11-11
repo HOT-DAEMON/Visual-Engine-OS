@@ -29,3 +29,12 @@ Fait : `HAIR-ROUND.md`, `HAIR-FRINGE-ASPECT.md`, `HAIR-ROUND-VERIFY.md`. Chaque 
 
 ## Sécurité
 16. Un jeton GitHub a été collé en clair dans la conversation : à révoquer (GitHub → Settings → Developer settings → Tokens). Il n'est écrit nulle part dans le dépôt.
+
+## Mise à jour — série dôme (`HAIR-DOME-ROUND.md`, `HAIR-FIT-SIDE.md`, `HAIR-FRINGE-CLUMPS.md`, `HAIR-DOME-VERIFY.md`)
+- 1 : TRAITÉ pour afro / curly (0 / 40 hors limite) ; reste `ponytail` 0,423 pour 0,42 (une graine, préexistant).
+- 3 : croissant largement résorbé (rentrage, `tuck.ts`) ; reste une petite pointe sombre en haut à droite de l'afro violet, une cuvette et une marche sur l'afro 10491, et le croissant de `curly` non traité.
+- 6 : frange `short` / `spiky` en touffes, grand coin du `spiky` blond remplacé par des rubans ; le « peigne » n'a aucune mesure et se lit encore comme des mèches séparées.
+- 8 : plus d'avertissement `fringe-wide-share` / `fringe-tip-jag` sur le corpus.
+- 9 : TRAITÉ (0 / 572 cellules de peau sur bob 9568, `HAIR-FIT-SIDE.md`) ; confirmation visuelle sur `details-apres.png`.
+- Reste ouvert : `spiky` `shell-rim-bare` 0,556 pour 0,55 ; `bun`, lisière / implantation non revues ; suite de tests complète non rejouée d'un bloc (plus de 10 min sur 2 CPU : lots ciblés, 20 fichiers / 675 tests du moteur de cheveux passent).
+- 12 : les contrôles dôme ne couvrent que afro (+ balayage du visage pour toutes les coiffures).

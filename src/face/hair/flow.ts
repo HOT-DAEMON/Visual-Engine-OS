@@ -216,7 +216,12 @@ export function lockFrom(ctx: HairCtx, centre: Vec[], o: LockOpts): HairLock[] {
   const tex = o.tex ?? ctx.tex;
   const spec = o.tex ? textureSpec(tex, ctx.h.curl, ctx.lm.W, ctx.lm.H) : ctx.spec;
   const wide = o.rank === 'main' || o.rank === 'mass' ? spec.wide : 1;
-  const guardPoly = (poly: Poly): Poly => (o.layer === 'front' && !o.noGuard ? ctx.guard.fit(poly, o.mode ?? 'cap') : poly);
+  // Côté de la mèche : un sommet repoussé hors de la zone du visage l'est de CE côté (pas du signe de sa propre abscisse). C'est le côté où la ligne médiane s'éloigne le plus de l'axe
+  // (une mèche enracinée au sommet du crâne tombe d'un côté) ; ligne qui reste sur l'axe (|x| < 0,05 W) : pas d'indication.
+  let sideX = 0;
+  for (const q of centre) if (Math.abs(q.x) > Math.abs(sideX)) sideX = q.x;
+  const rootSide: -1 | 1 | undefined = Math.abs(sideX) > 0.05 * ctx.lm.W ? (sideX < 0 ? -1 : 1) : undefined;
+  const guardPoly = (poly: Poly): Poly => (o.layer === 'front' && !o.noGuard ? ctx.guard.fit(poly, o.mode ?? 'cap', rootSide) : poly);
   const meta = { kind: o.kind ?? ('lock' as LockKind), tier: o.tier ?? 0, fade: o.fade ?? 0, edgeFade: o.edgeFade ?? 0, ...(o.reach ? { bounded: true } : {}), ...(o.part ? { part: o.part } : {}) };
   if (tex === 'braided' && o.rank === 'main' && !o.raw) {
     let c = resample(centre, 36);

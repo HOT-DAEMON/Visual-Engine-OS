@@ -32,6 +32,7 @@ import { clock } from '../../perf/clock';
 import { makeGain, makeLift, puffWidth } from './volume';
 import { boundGain, THICKNESS } from './thickness';
 import { RIM, trimToRim } from './rim';
+import { TUCK, tuckBase } from './tuck';
 import { applyWind } from './wind';
 
 export { buildBoundary, rootFrames, windDir, projectBoundary } from './boundary';
@@ -104,7 +105,7 @@ function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null 
 
   // Lisière des volumes (afro, bouclé) : les sommets qui dépassent la coque sont ramenés sur son contour (bord en masse, pas en dents de scie) — `rim.ts`.
   const rim = RIM[h.style as keyof typeof RIM];
-  if (rim && !sim) front = trimToRim(base, boundary.skull, front, rim.margin * W, lm.browLimitY);
+  if (rim && !sim) { front = trimToRim(base, boundary.skull, front, rim.margin * W, lm.browLimitY); back = trimToRim(base, boundary.skull, back, rim.margin * W, lm.browLimitY); }
 
   const sides = applySides(ctx, p, front, back);
   // Masse arrière : posée sur le crâne, doublée par les mèches définitives (voir `back-mass.ts`). Coiffures pendantes classiques et archétypes simulés à masse.
@@ -118,10 +119,16 @@ function hairGeometryRaw(p: FaceParams, lm: FaceLandmarks): HairGeometry | null 
   const fill = fillShell(ctx, base, sides.front).filter((l) => ['left', 'right'].every((s) => sides.info[s as 'left' | 'right'].ear === 'covered' || !l.poly.some((q) => inPoly(sides.info[s as 'left' | 'right'].earZone, q.x, q.y))));
   // Dôme des coiffures tirées / rase : stries et chaume (`comb.ts`), en dernier, graine propre.
   const comb = combLocks(ctx, base, spots);
-  const all = [...sides.back, ...sides.front, ...fill, ...comb, ...occ.locks, ...simOver];
+  // Rentrage de la sous-couche des volumes (afro, bouclé) sur les mèches qui la couvrent : plus de croissant de teinte de racine hors des mèches (`tuck.ts`).
+  const tuck = TUCK[h.style as keyof typeof TUCK];
+  const baseOut = tuck && !sim ? tuckBase(base, boundary.skull, W, ctx.C, [...sides.front, ...fill], tuck.maxInset) : base;
+  // Les mèches sont rognées de nouveau sur la coque rentrée (le contrôle `edge-rim-bound` compare les mèches à la coque dessinée).
+  const retrim = (ls: HairLock[]): HairLock[] => (baseOut !== base && rim ? trimToRim(baseOut, boundary.skull, ls, rim.margin * W, lm.browLimitY) : ls);
+  const sFront = retrim(sides.front), sBack = retrim(sides.back), fillT = retrim(fill);
+  const all = [...sBack, ...sFront, ...fillT, ...comb, ...occ.locks, ...simOver];
   const geo: HairGeometry = {
-    texture: tex, hairline: hl.pts, boundary, scalp, base: [base], bare: bareScalp(ctx), locks: all, backBase,
-    front: [base, ...(classic ? [classic.base] : []), ...sides.front.map((l) => l.poly), ...fill.map((l) => l.poly)], back: [...(backBase ? [backBase] : []), ...sides.back.map((l) => l.poly)],
+    texture: tex, hairline: hl.pts, boundary, scalp, base: [baseOut], bare: bareScalp(ctx), locks: all, backBase,
+    front: [baseOut, ...(classic ? [classic.base] : []), ...sFront.map((l) => l.poly), ...fillT.map((l) => l.poly)], back: [...(backBase ? [backBase] : []), ...sBack.map((l) => l.poly)],
     fringeBottom, ties, over: [...occ.locks, ...simOver].map((l) => l.poly), skinShadows: sim?.skinShadows ?? [], simMass: sim?.mass ?? null, shaved: sim?.shaved ?? [], tierMasses: masses, occlusions: occ.info, sides: sides.info,
   };
   // Vent (aucun par défaut : la même géométrie, sans copie) : mèches déplacées en levier autour de leur racine, sans jamais recouvrir la peau du visage.

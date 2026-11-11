@@ -34,6 +34,23 @@ export const SHELL: Record<Exclude<HairStyle, 'bald'>, ShellSpec> = {
 
 export type Reach = ShellSpec['reach'];
 
+/**
+ * ÉPAULE DU DÔME (`docs/HAIR-DOME-ROUND.md`), par coiffure : demi-largeur maximale de la coque (fraction de W) à hauteur du sommet du crâne, puis élargie en pente douce vers le bas
+ * (`slope`, abscisse par ordonnée) jusqu'aux ailes. Mesuré : le dôme d'un afro faisait jusqu'à 0,62 W de demi-largeur au sommet du crâne (écart horizontal au contour mesuré par
+ * `hair-reach-beyond-skull`, limite 0,6 ; les mèches rognées sur la coque y ajoutent leur marge) : un dôme CARRÉ aux épaules, aplati (« champignon »). Un plafond d'écart constant
+ * au contour faisait une MARCHE à l'épaule (le contour du crâne s'élargit très vite sous le sommet) ; la droite `halfWidth + slope · (y − sommet)` donne une épaule en pente douce.
+ * Le minimum est LISSE (pas de coin). Coiffures sans entrée : coque inchangée.
+ */
+export const SHOULDER: Partial<Record<Exclude<HairStyle, 'bald'>, { readonly halfWidth: number; readonly slope: number }>> = { afro: { halfWidth: 0.52, slope: 0.6 } };
+/** Largeur du raccord lisse du minimum (fraction de W). */
+const SHOULDER_BLEND = 0.05;
+
+/** Minimum lisse de a et b (largeur de raccord `s`) : égal à min(a, b) loin du croisement, jamais au-dessus, au plus `s·ln 2` en dessous. */
+export function smoothMin(a: number, b: number, s: number): number {
+  const m = Math.min(a, b);
+  return m - s * Math.log(Math.exp(-(a - m) / s) + Math.exp(-(b - m) / s));
+}
+
 export interface ShellInput {
   readonly lm: FaceLandmarks;
   readonly boundary: HairBoundary;
@@ -48,6 +65,8 @@ export interface ShellInput {
   readonly bump: (x: number) => number;
   /** Centre des directions radiales du dôme. */
   readonly C: Vec;
+  /** Épaule du dôme (`SHOULDER`) : demi-largeur au sommet du crâne (px) et pente ; absent : aucun plafond. */
+  readonly shoulder?: { readonly halfWidth: number; readonly slope: number };
 }
 
 export interface Shell {
@@ -101,7 +120,11 @@ function sidePath(inp: ShellInput, sg: -1 | 1): { inner: Vec[]; outer: Vec[]; yE
     const nrm = unit({ x: q.x - C.x, y: q.y - C.y });
     // Le soulèvement des racines (bosse de la raie) fait partie de l'épaisseur des cheveux : T + soulèvement ≤ épaisseur maximale de la coiffure.
     const lift = Math.min(inp.bump(sg * q.x), Math.max(0, inp.maxT - T));
-    return { x: sg * (q.x + nrm.x * T), y: q.y + nrm.y * T - lift };
+    let x = q.x + nrm.x * T;
+    const y = q.y + nrm.y * T - lift;
+    // Épaule du dôme : demi-largeur plafonnée au sommet du crâne, élargie en pente douce vers le bas (minimum lisse).
+    if (inp.shoulder) x = smoothMin(x, inp.shoulder.halfWidth + inp.shoulder.slope * Math.max(0, y - S.topY), SHOULDER_BLEND * lm.W);
+    return { x: sg * x, y };
   });
   return { inner, outer: outerUp.reverse(), yEnd };
 }

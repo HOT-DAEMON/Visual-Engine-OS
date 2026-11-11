@@ -19,6 +19,9 @@ export const RIM: Partial<Record<Style, { readonly margin: number }>> = {
   curly: { margin: 0.018 },
 };
 
+/** Le duvet dépasse la coque de `WISP_MARGIN` × la marge des mèches (un peu de flou, pas des brins à 0,1 W du dôme). */
+export const WISP_MARGIN = 1;
+
 /** Point de la polyligne fermée `poly` le plus proche de `p`, avec la distance. */
 function nearestOnBoundary(poly: Poly, p: Vec): { q: Vec; d: number } {
   let best = Infinity;
@@ -36,21 +39,23 @@ function nearestOnBoundary(poly: Poly, p: Vec): { q: Vec; d: number } {
 
 /**
  * Mèches avec les sommets qui dépassent la coque de plus de `margin` (px) ramenés au contour décalé de `margin` (au-dessus de `yMax`, hors crâne).
- * Retourne les MÊMES objets quand rien ne dépasse (aucune copie inutile). Les `wisp`, `cheek`, `occluder` et mèches non frontales restent intactes (duvet).
+ * Retourne les MÊMES objets quand rien ne dépasse (aucune copie inutile). Les `cheek`, `occluder` et les mèches de la couche `over` restent intactes ; les mèches de l'ARRIÈRE sont rognées comme celles de dessus (une masse arrière à 0,63 W dépassait la limite, graine 9923) ; les `wisp` (duvet) sont bornés à `WISP_MARGIN` × la marge.
  */
 export function trimToRim(base: Poly, skull: SkullSurface, locks: readonly HairLock[], margin: number, yMax: number): HairLock[] {
   return locks.map((l) => {
-    if (l.kind === 'wisp' || l.kind === 'cheek' || l.kind === 'occluder' || l.layer !== 'front') return l;
+    if (l.kind === 'cheek' || l.kind === 'occluder' || l.layer === 'over') return l;
+    // Duvet (`wisp`) : gardé hors de la coque (c'est lui qui fait le flou voulu du bord) mais borné à `WISP_MARGIN` × la marge ; avant, aucune borne (jusqu'à 0,13 W de plus que la coque).
+    const m = l.kind === 'wisp' ? margin * WISP_MARGIN : margin;
     let out: Poly | null = null;
     for (let k = 0; k < l.poly.length; k++) {
       const v = l.poly[k] as Vec;
       // Dans la coque OU dans le crâne (frange, mèches du front) : intact — seul ce qui dépasse le VOLUME est ramené.
       if (v.y > yMax || inPoly(base, v.x, v.y) || distanceOutsideSkull(skull, v) === 0) continue;
       const { q, d } = nearestOnBoundary(base, v);
-      if (d <= margin) continue;
+      if (d <= m) continue;
       if (!out) out = [...l.poly];
-      // Sur le contour, puis `margin` vers l'extérieur le long de la direction d'origine.
-      out[k] = { x: q.x + ((v.x - q.x) / d) * margin, y: q.y + ((v.y - q.y) / d) * margin };
+      // Sur le contour, puis `m` vers l'extérieur le long de la direction d'origine.
+      out[k] = { x: q.x + ((v.x - q.x) / d) * m, y: q.y + ((v.y - q.y) / d) * m };
     }
     return out ? { ...l, poly: out } : l;
   });
