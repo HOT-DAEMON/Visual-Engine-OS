@@ -33,7 +33,7 @@ Coût : ≈ 1,6 s par scène à résolution 1 (moyenne mesurée dans les tests, 
 ## 4. Ce que montre la planche (`01-rotation-eclairage.png`) — lecture honnête
 - Mêmes motifs que la tête de face (`LIGHT_PATTERNS` : latérale gauche, Rembrandt, par en dessous), 4 lacets (0°, 45°, 90°, 135°) : le terminateur suit le crâne, le nez projette sur la joue, le cou reçoit l'ombre.
 - Ombres **brun chaud** : cette graine impose `#a08974` ; la teinte imposée prime (contrat `APPEARANCE.md`). Sans teinte imposée, elles sont dérivées (gris-froid en cel).
-- Défauts visibles, non corrigés : narines qui se lisent comme des taches claires dans l'ombre (texture de narine éclairée comme le reste) ; œil dans l'ombre grisé (iris multiplié par l'ombre et le cœur) ; cheveux presque noirs sous « par en dessous ».
+- Défauts visibles, non corrigés : narines qui se lisent comme des taches claires dans l'ombre (texture de narine éclairée comme le reste) ; cheveux presque noirs sous « par en dessous ». Planche régénérée APRÈS fusion avec `6d1411e` (yeux de l'hôte, roulis, reliefs du cou) : les creux du cou sont éclairés par le même modèle ; l'œil grisé vu avant la fusion n'apparaît plus à cette échelle (non mesuré).
 
 ## 5. Reste à faire (par composant)
 - **Asymétrie non expliquée** : lumière à 270° bascule fortement g/d, lumière à 90° reste proche de la parité (0,97–1,14), alors que la tête de face donne 0,49 (`LIGHT-VISIBLE-06.md`). Cause non isolée (cheveux, géométrie, fenêtre de mesure ?).
