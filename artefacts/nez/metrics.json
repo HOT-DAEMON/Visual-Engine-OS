@@ -1,0 +1,36 @@
+{
+ "axes": {
+  "pente des parois": {
+   "pixelsChangesPct": 8.82,
+   "deltaLuminanceMoyen": 2.174
+  },
+  "gouttière des parois": {
+   "pixelsChangesPct": 4,
+   "deltaLuminanceMoyen": 0.985
+  },
+  "relief des dômes": {
+   "pixelsChangesPct": 3.4,
+   "deltaLuminanceMoyen": 0.69
+  },
+  "séparation des dômes": {
+   "pixelsChangesPct": 1.88,
+   "deltaLuminanceMoyen": 0.413
+  },
+  "volume des ailes": {
+   "pixelsChangesPct": 5.28,
+   "deltaLuminanceMoyen": 1.096
+  },
+  "ouverture des narines": {
+   "pixelsChangesPct": 0.99,
+   "deltaLuminanceMoyen": 0.21
+  },
+  "sillon alaire": {
+   "pixelsChangesPct": 1.34,
+   "deltaLuminanceMoyen": 0.252
+  },
+  "projection de la pointe": {
+   "pixelsChangesPct": 20.61,
+   "deltaLuminanceMoyen": 4.961
+  }
+ }
+}

@@ -1,0 +1,87 @@
+{
+ "pyramide": {
+  "params": {
+   "nose.width": 0.25,
+   "nose.length": 0.139,
+   "nose.tip.width": 0.629,
+   "nose.alae.flare": 0,
+   "nose.alae.volume": 0.162,
+   "nose.base.width": -0.896,
+   "nose.root.width": 0.708,
+   "nose.dorsum.width": 0.589,
+   "nose.sidewall.slope": 0,
+   "nose.tip.roundness": 0.14
+  },
+  "residual": 0.0733,
+  "aspect": 0.737,
+  "refAspect": 0.73
+ },
+ "ellipse-large": {
+  "params": {
+   "nose.width": 0.28,
+   "nose.length": 0.15,
+   "nose.tip.width": 0.967,
+   "nose.alae.flare": 0,
+   "nose.alae.volume": 0.11,
+   "nose.base.width": 0.116,
+   "nose.root.width": 1,
+   "nose.dorsum.width": 0.391,
+   "nose.sidewall.slope": 0,
+   "nose.tip.roundness": 0.996
+  },
+  "residual": 0.5178,
+  "aspect": 0.825,
+  "refAspect": 1.597
+ },
+ "cloche-ailes": {
+  "params": {
+   "nose.width": 0.28,
+   "nose.length": 0.115,
+   "nose.tip.width": 0.833,
+   "nose.alae.flare": 0,
+   "nose.alae.volume": 0.172,
+   "nose.base.width": -0.925,
+   "nose.root.width": 0.304,
+   "nose.dorsum.width": 0.429,
+   "nose.sidewall.slope": 0,
+   "nose.tip.roundness": 0.806
+  },
+  "residual": 0.1393,
+  "aspect": 0.825,
+  "refAspect": 0.9767
+ },
+ "plat-trapeze": {
+  "params": {
+   "nose.width": 0.28,
+   "nose.length": 0.161,
+   "nose.tip.width": 0.374,
+   "nose.alae.flare": 0,
+   "nose.alae.volume": 0.517,
+   "nose.base.width": 0.104,
+   "nose.root.width": 1,
+   "nose.dorsum.width": 0.795,
+   "nose.sidewall.slope": 0,
+   "nose.tip.roundness": 0
+  },
+  "residual": 0.214,
+  "aspect": 0.825,
+  "refAspect": 1.2282
+ },
+ "losange-petit": {
+  "params": {
+   "nose.width": 0.28,
+   "nose.length": 0.126,
+   "nose.tip.width": 0.616,
+   "nose.alae.flare": 0,
+   "nose.alae.volume": 0.185,
+   "nose.base.width": -0.847,
+   "nose.root.width": 1,
+   "nose.dorsum.width": 0.757,
+   "nose.sidewall.slope": 0,
+   "nose.tip.roundness": 0.474
+  },
+  "residual": 0.3914,
+  "aspect": 0.825,
+  "refAspect": 1.5205
+ }
+}

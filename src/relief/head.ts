@@ -1,6 +1,7 @@
 import { earGeometry, halfWidthAt, rightSamples, type FaceLandmarks, type NoseGeometry } from '../face';
 import type { FaceParams } from '../schema';
 import { gridOf, normalsOf, REGION, type Grid, type ReliefField } from './field';
+import { noseRelief, noseTipHeight } from './nose';
 
 /**
  * RELIEF DE LA TÊTE ET DU COU, déduit des REPÈRES du visage (aucune coordonnée nouvelle : contour, nez, orbites, bouche, menton, oreilles, cou).
@@ -16,7 +17,8 @@ export function headRelief(p: FaceParams, lm: FaceLandmarks, nose: NoseGeometry,
   const { grid: g, zc } = o, { W, H } = lm, D = 0.55 * W, samples = rightSamples(lm.outline), top = -H / 2, bot = lm.outline.bottomY, cyH = (top + bot) / 2, hh = (bot - top) / 2;
   const depth = new Float32Array(g.w * g.h).fill(-Infinity), region = new Uint8Array(g.w * g.h);
   const ears = earGeometry(p, lm), neck = lm.neck, flare = neck.half * p.neck.flare, y1 = lm.chinY + 0.35 * (neck.bottomY - lm.chinY), nz0 = o.neckAxisZ ?? zc - 0.05 * W;
-  const nr = nose.tip.c, tipH = Math.max(0.05 * W, nose.tip.projectionPx), rootY = nose.root.y, eyeX = Math.abs(lm.innerCanthus.right.x), browY = lm.eyeY - 0.075 * H;
+  const tipH = noseTipHeight(lm, nose), rootY = nose.root.y, eyeX = Math.abs(lm.innerCanthus.right.x), browY = lm.eyeY - 0.075 * H;
+  const noseAt = noseRelief(p, lm, nose, tipH);
   for (let j = 0; j < g.h; j++) {
     const y = g.y0 + (j + 0.5) / g.ppu, hw = y >= top && y <= bot ? halfWidthAt(lm.outline, y, samples) : 0, ry = (y - cyH) / hh;
     const nh = y > neck.topY && y <= neck.bottomY ? neck.half + flare * sm(y1, neck.bottomY, y) : 0;
@@ -30,10 +32,7 @@ export function headRelief(p: FaceParams, lm: FaceLandmarks, nose: NoseGeometry,
         bump += 0.045 * W * g2(x, y, 0, browY, 0.62 * hw, 0.02 * H) * sm(0.15, 0.4, ax / hw + 0.3);          // arcade
         for (const s of [-1, 1]) bump -= 0.065 * W * g2(x, y, s * (eyeX + 0.22 * W), lm.eyeY + 0.005 * H, 0.1 * W, 0.045 * H); // orbites
         bump += 0.02 * W * g2(x, y, 0, rootY, 0.05 * W, 0.04 * H) * -1;                                       // nasion creux
-        const ty = (y - rootY) / Math.max(1, nr.y - rootY), tw = nose.widthPx * (0.1 + 0.2 * Math.min(1, Math.max(0, ty)));
-        if (ty > 0) bump += tipH * 0.95 * sm(0, 0.9, ty) ** 1.3 * (1 - sm(0.9, 1.15, ty)) * Math.exp(-0.5 * ((x - nr.x * ty) / tw) ** 2);   // dos du nez
-        bump += tipH * 0.55 * g2(x, y, nr.x, nr.y, nose.tip.rx * 0.9, nose.tip.ry * 0.9);                      // pointe
-        for (const s of [-1, 1]) bump += tipH * 0.32 * g2(x, y, s * nose.widthPx * 0.42, lm.noseBaseY - 0.012 * H, nose.widthPx * 0.13, 0.016 * H); // ailes
+        bump += noseAt(x, y);                                                                                   // nez : volume construit sur SES régions (relief/nose.ts)
         for (const s of [-1, 1]) bump += 0.022 * W * g2(x, y, s * (eyeX + 0.3 * W), (lm.eyeY + lm.mouthY) / 2 - 0.02 * H, 0.1 * W, 0.06 * H); // pommettes
         bump += 0.026 * W * g2(x, y, 0, (lm.lips.topY + lm.lips.bottomY) / 2, lm.lips.half * 0.75, (lm.lips.bottomY - lm.lips.topY) * 0.55); // lèvres
         bump -= 0.016 * W * g2(x, y, 0, lm.noseBaseY + 0.4 * (lm.lips.topY - lm.noseBaseY), 0.05 * W, 0.012 * H);   // philtrum

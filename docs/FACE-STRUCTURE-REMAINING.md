@@ -36,6 +36,9 @@ POURQUOI ce n'est pas fait. Les tâches faites sont dans `docs/FACE-STRUCTURE-ST
 - ⬜ Direction de chaque effet vérifiée seulement pour 7 paires (`MONOTONE`).
 - ⬜ Propagation automatique générique.
 
+## Nez — suite : références et éclairage
+- 🟡 Relief du nez branché sur les régions dans le moteur d'éclairage, vérifié par axe et par une couche de contrôle : `docs/NOSE-REFS.md`. Reste (références 01–05, angles de caméra, matériau propre) : `docs/NOSE-REFS-REMAINING.md`.
+
 ## Performance
 - ⬜ Pas de cache entre visages différents ; ⬜ pores et grain de peau couvrent toute la boîte de la tête (~180 ms chacun).
 - 🟡 Mesures sur un seul type de machine.
