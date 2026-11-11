@@ -12,7 +12,8 @@ import type { HeadTurnSpec, HostEyes } from '../head-turntable';
 import { hostFace } from './face';
 import { objectTransform, type CompiledObject } from './object';
 import type { PlacedEye } from '../anatomy/relations';
-import type { Head3dSpec, HostSpec } from '../schema';
+import { lightModelOfSpec, type LightModel } from '../relief';
+import type { Head3dSpec, HostSpec, LightSpec } from '../schema';
 
 /** Repère natif : 240 px par U (hauteur 420 = 1,75 U) ; l'origine est le pivot du cou à la hauteur du sommet, le cadre de la tête en rotation commence à (−0,75 U, −0,2 U). */
 export const HEAD3D_PPU = 240;
@@ -35,9 +36,9 @@ export const head3dSubject = memoPure('head-3d-subject', 'geometry', buildSubjec
 /** Couleur d'iris de l'hôte : la teinte dominante du matériau de l'œil posé sur lui (le premier ; les deux yeux d'un visage partagent le même iris). */
 export const irisOf = (eyes: readonly PlacedEye[]): string | undefined => { const m = eyes[0] && resolveEye(eyes[0].eye).iris.material.base; return m ? dominantColor(m) : undefined; };
 
-const build = (host: HostSpec, o: Head3dSpec, iris?: string, eyes?: HostEyes): { svg: string; box: { x: number; y: number; w: number; h: number } } => {
+const build = (host: HostSpec, o: Head3dSpec, iris: string | undefined, eyes: HostEyes | undefined, light: LightModel | null, shadowTint: string | null): { svg: string; box: { x: number; y: number; w: number; h: number } } => {
   const { spec } = head3dSubject(host, o, iris, eyes), frame = defaultFrame(420 * o.resolution);
-  const r = renderHead({ yaw: o.yaw, pitch: o.pitch, roll: o.roll }, spec, { frame, ss: 2, background: null });
+  const r = renderHead({ yaw: o.yaw, pitch: o.pitch, roll: o.roll }, spec, { frame, ss: 2, background: null, ...(light ? { light, shadowTint } : {}) });
   return { svg: r.svg, box: { x: -r.originX / o.resolution, y: -r.originY / o.resolution, w: r.w / o.resolution, h: r.h / o.resolution } };
 };
 const memo = memoPure('head-3d-svg', 'svg', build, 32);
@@ -45,8 +46,8 @@ const memo = memoPure('head-3d-svg', 'svg', build, 32);
 /** Les yeux posés sur l'hôte (forme, taille, regard) en yeux de la tête 3D ; `undefined` s'il manque un côté. */
 export const hostEyesOf = (host: HostSpec, eyes: readonly PlacedEye[]): HostEyes | undefined => (eyes.length ? hostEyesU(eyes, hostFace(host).lm.H) : undefined);
 
-export function compileHead3d(o: Head3dSpec, host: HostSpec, eyes: readonly PlacedEye[] = []): CompiledObject {
-  const { svg, box } = memo(host, o, irisOf(eyes), hostEyesOf(host, eyes));
+export function compileHead3d(o: Head3dSpec, host: HostSpec, eyes: readonly PlacedEye[] = [], scene?: LightSpec): CompiledObject {
+  const { svg, box } = memo(host, o, irisOf(eyes), hostEyesOf(host, eyes), o.lit ? lightModelOfSpec(scene ?? {}, o.lit) : null, o.lit ? hostFace(host).params.skin.light.shadow : null);
   const vb = /viewBox="([^"]+)"/.exec(svg)?.[1] ?? `0 0 ${box.w} ${box.h}`;
   // Le <svg> du rendu (image PNG incrustée, pixels) devient un <svg> imbriqué à l'échelle native : l'objet se place par `transform`, comme `head_profile`.
   const inner = svg.replace(/^<svg[^>]*>/, `<svg x="${num(box.x)}" y="${num(box.y)}" width="${num(box.w)}" height="${num(box.h)}" viewBox="${vb}" overflow="visible">`);

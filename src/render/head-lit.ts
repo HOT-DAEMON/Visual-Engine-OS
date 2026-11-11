@@ -1,6 +1,6 @@
 import { dominantColor } from '../materials';
 import { memoPure } from '../perf';
-import { headLit, hostFace as reliefFace, lightModelOf } from '../relief';
+import { headLit, hostFace as reliefFace, lightModelOfSpec } from '../relief';
 import type { HeadLitSpec, HostSpec, LightSpec } from '../schema';
 import { objectTransform, type CompiledObject } from './object';
 import { el } from '../core/svg';
@@ -11,7 +11,7 @@ import { el } from '../core/svg';
  */
 const build = (host: HostSpec, o: HeadLitSpec, scene: LightSpec): string => {
   const face = reliefFace(host);
-  const model = lightModelOf({ ...scene, ...(o.light ?? {}) }, { style: o.style, contrast: o.contrast, bias: o.bias, rim: o.rim, ...(o.shadowHue ? { shadowHue: o.shadowHue } : {}) });
+  const model = lightModelOfSpec(scene, o);
   return headLit(face.p, face.lm, face.nose, dominantColor(host.material.base), model, { ppu: o.ppu, ao: o.ao }).svg;
 };
 const memo = memoPure('head-lit-svg', 'svg', build, 32);

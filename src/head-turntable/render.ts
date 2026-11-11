@@ -3,6 +3,7 @@ import { buildParts } from './parts';
 import { cullFarEar } from './engines/ear-cull';
 import { paint } from './paint';
 import { withRig } from './roll';
+import type { LightModel } from '../relief/model';
 import { rasterize, type Frame } from './raster';
 import { REF_SPEC } from './spec';
 import { REF_PITCH } from './ref-fit';
@@ -15,14 +16,15 @@ export function defaultFrame(heightPx = 700): Frame {
 }
 
 /** `lineU` : largeur nominale du trait en U ; les silhouettes grandissent vers l'intérieur, la largeur visible vaut donc lineU / 2 (≈ 0,011 U ; la planche ≈ 0,013). */
-export interface RenderOpts { readonly frame?: Frame; readonly ss?: number; readonly background?: string | null; readonly lineU?: number }
+/** `light` : modèle d'éclairage de `src/relief` (même lumière que la tête de face et le corps) ; absent = ombrage de la planche de référence. */
+export interface RenderOpts { readonly frame?: Frame; readonly ss?: number; readonly background?: string | null; readonly lineU?: number; readonly light?: LightModel; readonly shadowTint?: string | null }
 
 /** Rendu d'une vue de la tête : G-buffer sur-échantillonné → peinture → réduction → SVG autonome (PNG incrusté). Pur et déterministe. */
 export function renderHead(view0: View, spec: HeadTurnSpec = REF_SPEC, o: RenderOpts = {}): TurnRender {
   const view = withRig(view0, spec), f = o.frame ?? defaultFrame(), ss = o.ss ?? 2;
   const hi: Frame = { w: f.w * ss, h: f.h * ss, ppu: f.ppu * ss, ox: f.ox * ss, oy: f.oy * ss };
   const g = rasterize(cullFarEar(buildParts(spec), view), view, hi);   // l'oreille lointaine à 8° – 35° est omise (convention de la planche)
-  const pa = paint(spec, g, view, { lineU: o.lineU ?? 0.022, ppuHi: hi.ppu });
+  const pa = paint(spec, g, view, { lineU: o.lineU ?? 0.022, ppuHi: hi.ppu, ...(o.light ? { light: o.light, shadowTint: o.shadowTint ?? null } : {}) });
   const rgba = new Uint8ClampedArray(f.w * f.h * 4), ids = new Uint8Array(f.w * f.h), regions = new Uint8Array(f.w * f.h);
   const bg = o.background === undefined ? [255, 255, 255] : o.background === null ? null : [parseInt(o.background.slice(1, 3), 16), parseInt(o.background.slice(3, 5), 16), parseInt(o.background.slice(5, 7), 16)];
   for (let y = 0; y < f.h; y++) for (let x = 0; x < f.w; x++) {

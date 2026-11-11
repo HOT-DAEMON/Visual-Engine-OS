@@ -47,7 +47,7 @@ export const COMPILERS: { readonly [K in ObjectKind]: ObjectCompiler<K> } = {
   head_3d: (o, c) => {
     const host = c.hosts.get(o.host);
     if (!host) throw new Error(`Hôte introuvable : ${o.host}`); // jamais atteint après validation du schéma
-    return compileHead3d(o, host, c.eyes.get(o.host) ?? []);
+    return compileHead3d(o, host, c.eyes.get(o.host) ?? [], c.lightSpec);
   },
   body: (o, c) => {
     const host = c.hosts.get(o.host);

@@ -32,6 +32,9 @@ export function lightModelOf(spec: Partial<LightInput> = {}, o: ModelOpts = {}):
     bias: o.bias ?? 0,
     rim: o.rim ?? 0.35, rimDir: norm3(p3(-L.x, -L.y * 0.4 - 0.2, -0.6)), rimColor: o.rimColor ?? applyTemperature('#ffffff', 8500), bounce: o.bounce ?? 0.18, gobo: o.gobo ?? null };
 }
+/** Réglages d'éclairage d'un objet de scène (`head_lit`, `head_3d.lit`) → modèle : la lumière de la scène, surchargée par `o.light`. UNE seule traduction pour tous les objets. */
+export interface LitSpecLike { readonly light?: Partial<LightInput> | undefined; readonly style: LitStyle; readonly contrast: number; readonly bias: number; readonly rim: number; readonly shadowHue?: ShadowHue | undefined }
+export const lightModelOfSpec = (scene: Partial<LightInput>, o: LitSpecLike): LightModel => lightModelOf({ ...scene, ...(o.light ?? {}) }, { style: o.style, contrast: o.contrast, bias: o.bias, rim: o.rim, ...(o.shadowHue ? { shadowHue: o.shadowHue } : {}) });
 const sstep = (a: number, b: number, x: number): number => { const t = clamp01((x - a) / Math.max(1e-6, b - a)); return t * t * (3 - 2 * t); };
 export interface Shade { readonly lit: number; readonly core: number; readonly rim: number; readonly spec: number }
 /**

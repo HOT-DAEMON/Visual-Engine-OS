@@ -9,8 +9,11 @@ import type { GBuf } from './raster';
 import { regionField, signedDistance } from './hair-region';
 import { hairlineY, headPoint, sectionAt } from './sections';
 import { REGION, type HeadTurnSpec, type View } from './types';
+import { ambientOcclusion, castShadowScaled } from '../relief/cast';
+import { shadeAt, tonesOf, type LightModel, type Shade, type Tones } from '../relief/model';
+import { parseHex } from '../core/color';
 
-/** Lumière en repère CAMÉRA (haut-gauche, de face) : la lumière ne tourne pas avec la tête, comme sur la planche. */
+/** Lumière de la PLANCHE DE RÉFÉRENCE (mode sans `light`), en repère CAMÉRA (haut-gauche, de face) : elle ne tourne pas avec la tête. Avec `PaintOpts.light`, c'est le `LightModel` de `src/relief` qui la remplace. */
 const LIGHT = norm(v3(-0.25, -0.55, 0.8));
 /** Coupe du cou : ombre de la peau × rapport de la planche (230,188,164 → 217,169,143), donc identique sur la planche et teintée par la peau des autres têtes. */
 const NECK_CUT_K: RGB = [217 / 230, 169 / 188, 143 / 164];
@@ -27,43 +30,66 @@ function hairTol(spec: HeadTurnSpec, view: View, az: number, hl: number, kw: num
 }
 
 export interface Painted { readonly rgba: Float32Array; readonly region: Uint8Array }
-export interface PaintOpts { readonly lineU: number; readonly ppuHi: number }
+/** `light` : modèle d'éclairage UNIQUE du projet (`src/relief/model.ts`, celui de la tête de face et du corps). Absent = ombrage à deux tons de la planche de référence. */
+export interface PaintOpts { readonly lineU: number; readonly ppuHi: number; readonly light?: LightModel; /** Teinte d'ombre IMPOSÉE par l'apparence de la peau de l'hôte (`skin.light.shadow`), lue comme sur la tête de face ; `null` = dérivée du modèle. */ readonly shadowTint?: string | null }
+
+/** Éclairage par relief du tampon : ombres portées + occlusion par marche de rayon sur la PROFONDEUR du G-buffer (nez sur la joue, menton sur le cou, oreille), mêmes fonctions que la tête de face. */
+export function reliefLight(spec: HeadTurnSpec, g: GBuf, o: PaintOpts, model: LightModel): { cast: Float32Array; ao: Float32Array; tones: Tones } {
+  const W = 2 * Math.max(...spec.rows.map((r) => r.a)), grid = { x0: 0, y0: 0, ppu: o.ppuHi, w: g.w, h: g.h };
+  const cast = castShadowScaled(grid, g.depth, model.dir, { reach: 0.42 * W, penumbra: 0.08 + 0.5 * model.soft }, 4);
+  return { cast, ao: ambientOcclusion(grid, g.depth, 0.035 * W, 0.05 * W), tones: tonesOf(spec.palette.skin, model, { shadow: o.shadowTint ?? null }) };
+}
+/** Couleur `c` (déjà « pleine lumière ») éclairée : multiplicateurs par canal ombre → lumière (`lit`) puis → cœur (`core`), comme la couche `multiply` de la tête de face. */
+function lightMul(c: RGB, tones: Tones, s: Shade, litOverride?: number): RGB {
+  const l = litOverride ?? s.lit, out: RGB = [0, 0, 0];
+  for (let i = 0; i < 3; i++) { const m0 = tones.shadowMul[i]! + (tones.lightMul[i]! - tones.shadowMul[i]!) * l; out[i] = c[i]! * (m0 + (tones.coreMul[i]! - m0) * s.core); }
+  return out;
+}
+/** Contour de lumière et reflet : fusion `screen` de la couleur du contour / de la source, pondérée comme `relief/overlay.ts`. */
+function rimScreen(c: RGB, s: Shade, model: LightModel): RGB {
+  const a = Math.min(1, s.rim * 0.9 + s.spec * 0.5); if (a <= 0) return c;
+  const rc = parseHex(model.rimColor), lc = parseHex(model.color), w = s.rim * 0.9 + s.spec * 0.5, out: RGB = [0, 0, 0];
+  for (let i = 0; i < 3; i++) { const sc = (rc[i]! * s.rim * 0.9 + lc[i]! * s.spec * 0.5) / Math.max(1e-3, w); out[i] = c[i]! + (255 - c[i]!) * (sc / 255) * a; }
+  return out;
+}
 
 /** Peint le tampon géométrique : ombrage à deux tons (cel), lisière des cheveux, texture du visage, oreilles, ombre sous le menton, puis contours. */
 export function paint(spec: HeadTurnSpec, g: GBuf, view: View, o: PaintOpts): Painted {
   const { w, h } = g, n = w * h, pal: Pal = paletteOf(spec);
-  const rgba = new Float32Array(n * 4), region = new Uint8Array(n), hairShade = hex(spec.palette.hairShade);
+  const rgba = new Float32Array(n * 4), region = new Uint8Array(n), hairShade = hex(spec.palette.hairShade), L = o.light, rl = L ? reliefLight(spec, g, o, L) : null;
   for (let k = 0; k < n; k++) {
     const id = g.id[k]!;
     if (!id) continue;
     const p = { x: g.P[3 * k]!, y: g.P[3 * k + 1]!, z: g.P[3 * k + 2]! }, nh = norm({ x: g.N[3 * k]!, y: g.N[3 * k + 1]!, z: g.N[3 * k + 2]! });
     const nc = dirToCam(nh, view, id === PART.neck || id === PART.neckCut ? 'neck' : 'head', p.y), lam = nc.x * LIGHT.x + nc.y * LIGHT.y + nc.z * LIGHT.z, t = smooth((lam - 0.02) / 0.22);
     const kw = Math.min(1.4, 1 / Math.max(0.7, nc.z));                         // compensation du raccourcissement des traits sur les faces obliques
-    let col = mix(pal.shade, pal.skin, t), reg: number = REGION.skin;
-    if (id === PART.neckCut) { col = [pal.shade[0] * NECK_CUT_K[0], pal.shade[1] * NECK_CUT_K[1], pal.shade[2] * NECK_CUT_K[2]]; reg = REGION.neck; }
+    const sh = L && rl ? shadeAt(L, nc, rl.cast[k]!, rl.ao[k]!) : null, lightOf = (c: RGB, legacyShade: RGB): RGB => (sh && rl ? lightMul(c, rl.tones, sh) : mix(legacyShade, c, t));
+    let ink = false, col = lightOf(pal.skin, pal.shade), reg: number = REGION.skin;
+    if (id === PART.neckCut) { const sd = rl ? hex(rl.tones.shadow) : pal.shade; col = [sd[0] * NECK_CUT_K[0], sd[1] * NECK_CUT_K[1], sd[2] * NECK_CUT_K[2]]; reg = REGION.neck; ink = true; }
     else if (id === PART.neck) {
-      col = mix(pal.shade, pal.skin, Math.min(t, smooth((p.y - 0.98) / 0.2))); reg = REGION.neck;
-      if (neckMark(spec, p)) col = markColor(pal);   // creux des reliefs du cou (SCM, platysma, clavicule) lus du moteur de cou
+      const fade = smooth((p.y - 0.98) / 0.2); col = sh && rl ? lightMul(pal.skin, rl.tones, sh, Math.min(sh.lit, fade)) : mix(pal.shade, pal.skin, Math.min(t, fade)); reg = REGION.neck; ink = true;
+      if (neckMark(spec, p)) col = sh && rl ? lightMul(markColor(pal), rl.tones, sh, Math.min(sh.lit, fade)) : markColor(pal);   // creux des reliefs du cou (SCM, platysma, clavicule) lus du moteur de cou ; éclairés par le même modèle
     }
     else if (id === PART.ear) {
       const rig = earRig(spec, p.x >= 0 ? 1 : -1), front = nh.x * (p.x >= 0 ? 1 : -1) * Math.cos(rad(rig.pl.openingDeg)) + nh.z * Math.sin(rad(rig.pl.openingDeg)) > -0.05;
       const tx = earColor(rig.field, g.uv[2 * k]!, g.uv[2 * k + 1]!, front, kw, pal, 0.0055 * 2, rig.pl.hPx);
-      col = tx.ink ? tx.c : mix(tx.c, mix(pal.shade, tx.c, 0.55), 1 - t); reg = tx.region;
+      col = tx.ink ? tx.c : lightOf(tx.c, mix(pal.shade, tx.c, 0.55)); ink = tx.ink; reg = tx.region;
     }
     else {
       const s = sectionAt(spec, p.y), az = (Math.atan2(p.x, p.z - s.zc) * 180) / Math.PI;
       const R = spec.hairline.region, hl = hairlineY(spec, az), sd = R ? signedDistance(regionField(R), az, p.y) : 0, half = 0.0055 * kw * 0.5;
       if (id === PART.head && (R ? sd > 0 : p.y < hl)) {
-        col = mix(hairShade, pal.hair, t); reg = REGION.hair;
-        if (R ? sd < half : Math.abs(p.y - hl) < 0.03 && Math.abs(p.y - hl) < hairTol(spec, view, az, hl, kw)) col = pal.ink;
+        col = lightOf(pal.hair, hairShade); reg = REGION.hair;
+        if (R ? sd < half : Math.abs(p.y - hl) < 0.03 && Math.abs(p.y - hl) < hairTol(spec, view, az, hl, kw)) { col = pal.ink; ink = true; }
       } else if (id === PART.head && R && -sd < half && p.y < 0.98) {
-        col = pal.ink;
+        col = pal.ink; ink = true;
       } else if (p.z > 0.2 && nh.z > 0.05) {   // le visage ne se peint que sur une surface tournée vers l'avant : sans cette condition la bouche et la rougeur débordaient sur le DESSOUS du menton (rectangle rose à 90° – 135°)
         const tx = eyeTex(spec, p, kw, pal) ?? browTex(spec, p, kw, pal) ?? mouthTex(spec, p, kw, pal) ?? nostrilTex(spec, p, pal);
-        if (tx) { col = tx.ink ? tx.c : mix(mix(tx.c, pal.shade, 0.35), tx.c, t); reg = tx.region; }
+        if (tx) { col = tx.ink ? tx.c : lightOf(tx.c, mix(tx.c, pal.shade, 0.35)); ink = tx.ink === true; reg = tx.region; }
         else { const a = blushAlpha(p, spec); if (a > 0) col = mix(col, pal.blush, a); }
       }
     }
+    if (sh && L && !ink) col = rimScreen(col, sh, L);   // contour de lumière et reflet : jamais sur un trait d'encre, ni sur le cou (coupe)
     rgba[4 * k] = col[0]; rgba[4 * k + 1] = col[1]; rgba[4 * k + 2] = col[2]; rgba[4 * k + 3] = 1; region[k] = reg;
   }
   outline(g, rgba, pal.ink, o);

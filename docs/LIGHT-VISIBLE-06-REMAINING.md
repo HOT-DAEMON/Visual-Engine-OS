@@ -10,6 +10,7 @@
 - **Relief approximatif** : amplitudes (arcade 0,045 W, orbites 0,065 W, pommettes 0,022 W…) tirées d'ordres de grandeur anatomiques, pas mesurées sur une photo ; les oreilles sont des plaques (pas d'hélix creusé) ; pas de relief de la bouche ouverte, de la barbe, des sourcils.
 - **Terminateur anguleux** à certains endroits (pommette, arcade) en cel : la pente du relief y change brusquement ; un lissage du champ de profondeur est à essayer.
 - Une tête tournée (`headTurn`) n'a pas de relief tourné : la couche n'est posée que de face (`yaw = 0`).
+  → **Partiellement traité (10 nov. 2026)** : la tête en rotation `head_3d` lit maintenant ce même moteur (option `lit`, `LIGHT-HEAD3D-07.md`) ; la couche `head_lit` reste de face seulement.
 
 ## Corps
 - **La tête ne projette son ombre que sur le haut du cou 3D**, recouvert par le cou du visage ; elle n'atteint pas la poitrine ni l'épaule avec les lumières testées (profondeur de la tête insuffisante au-delà du menton). Mesuré : 253–378 pixels assombris, tous entre le menton et la base du cou.

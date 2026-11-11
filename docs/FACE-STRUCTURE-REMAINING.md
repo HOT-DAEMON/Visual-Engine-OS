@@ -16,8 +16,7 @@ POURQUOI ce n'est pas fait. Les tâches faites sont dans `docs/FACE-STRUCTURE-ST
 - 🟡 Hauteur du menton bornée par la place sous la lèvre (`chin-height-room`, enregistrée mais ne peut que diminuer).
 
 ## Bouche (T7, T12)
-- ⬜ **Bouche écrasée dans une mâchoire étroite (cas 01, 45 → 12,6 px)** : mesurée et signalée (`contract-no-crushed-request`), pas corrigée ;
-  la correction demande de choisir entre élargir le contour à la hauteur de la bouche et réduire la convergence de la mâchoire.
+- ✅ **Bouche écrasée dans une mâchoire étroite (cas 01) : NON reproductible le 10 nov. 2026.** Mesure sur le code actuel : largeur demandée 25,5 px = appliquée 25,5 px, aucune correction ; graines 1–100 (`structure: true`) : pire ratio appliqué/demandé 0,63, `mouth-inside-contour` se déclenche 2 fois (53 annoncé avant : périmé ou autres graines). Rien n'a été corrigé.
 - 🟡 Plage de `mouth.width` : la moitié supérieure est inerte sur le visage par défaut ; sur 100 tirages, `mouth-inside-contour` corrige 53 visages. Resserrer la plage du schéma ou assouplir l'80 % est une décision de conception, non prise.
 - ⬜ Incisives individuelles (dents = bandes), langue (ellipse), lèvres roulées, dents de travers, piercing, lèvre fendue.
 - 🟡 Dédain symétrique et discret ; ⬜ liaison avec `mouthFor` (anciennes expressions, deux systèmes coexistent).

@@ -3,6 +3,7 @@ import { Hex, Slug } from './primitives';
 import { Transform } from './light-transform';
 import { SkullParams } from '../skull/types';
 import { SkullVariation } from './head-profile';
+import { HeadLitSpec } from './head-lit';
 
 /**
  * TÊTE 3D (tête + cou) d'un hôte `shape: 'face'` à un LACET et un TANGAGE quelconques (docs/PIPELINE-HEAD-3D.md) : la MÊME personne que le visage de face, vue sous n'importe quel angle.
@@ -31,6 +32,11 @@ export const Head3dSpec = z
     hairline: z.enum(['host', 'short']).default('host'),
     /** Pixels de l'image par unité du repère natif (1 = 420 px de haut, 2 = 840, 3 = 1260) : le coût de rendu croît comme son carré. */
     resolution: z.number().int().min(1).max(3).default(2),
+    /**
+     * ÉCLAIRAGE par le moteur unique `src/relief` (le même que `head_lit` et le corps) : lumière de la scène (surchargeable par `lit.light`), terminateur, ombres portées
+     * (nez, menton, oreille) et occlusion lus sur la profondeur de la tête tournée. Absent = ombrage à deux tons de la planche de rotation de référence.
+     */
+    lit: HeadLitSpec.pick({ light: true, style: true, shadowHue: true, contrast: true, bias: true, rim: true }).optional(),
     /** Placement dans la scène (repère natif : H = 420). */
     transform: Transform.default({}),
   })
