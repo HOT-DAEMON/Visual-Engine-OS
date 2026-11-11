@@ -1,6 +1,6 @@
 # Tête 3D dans le pipeline principal (`kind: 'head_3d'`)
 
-La rotation 3D de la tête et du cou (`src/head-turntable`) est branchée au pipeline : un objet `head_3d` rend **la même personne que le visage de face d'un hôte**, à un lacet et un tangage quelconques. Suite : `PIPELINE-HEAD-3D-REMAINING.md` (ce qui n'est pas fait, par composant). Yeux de l'hôte et recouvrement à 0° : `HEAD-TURNTABLE-HOST-OVERLAP.md` ; cou : `HEAD-TURNTABLE-NECK-RELIEF.md` ; roulis : `HEAD-TURNTABLE-ROLL.md` ; vitesse : `HEAD-TURNTABLE-SPEED.md`.
+La rotation 3D de la tête et du cou (`src/head-turntable`) est branchée au pipeline : un objet `head_3d` rend **la même personne que le visage de face d'un hôte**, à un lacet et un tangage quelconques. Suite : `PIPELINE-HEAD-3D-REMAINING.md` (ce qui n'est pas fait, par composant). Yeux de l'hôte et recouvrement à 0° : `HEAD-TURNTABLE-HOST-OVERLAP.md` ; sourcils : `HEAD-TURNTABLE-HOST-BROWS.md` ; cou : `HEAD-TURNTABLE-NECK-RELIEF.md`, coupe : `HEAD-TURNTABLE-NECK-CUT.md` ; roulis : `HEAD-TURNTABLE-ROLL.md` ; vitesse : `HEAD-TURNTABLE-SPEED.md`.
 
 ## Contrat
 

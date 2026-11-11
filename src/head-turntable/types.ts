@@ -63,7 +63,14 @@ export interface HostEye {
   readonly iris: { cx: number; cy: number; rx: number; ry: number };
   /** Pupille : un contour par pupille (forme réelle : ronde, fente, étoile…), RELATIF au centre de l'iris, et sa teinte. Aucun contour = pupille masquée. */
   readonly pupil: { readonly contours: readonly (readonly { x: number; y: number }[])[]; readonly color: string };
+  /** Sourcil de l'hôte au-dessus de cet œil (absent = l'hôte n'a pas de sourcil de ce côté) : voir `HostBrow`. */
+  readonly brow?: HostBrow;
 }
+/**
+ * Sourcil de l'hôte en U, même repère que `HostEye` (x = |x|, y vers le bas) : contour FERMÉ de `geometry/eye/browGeometry` (bord supérieur tête → queue, puis bord inférieur queue → tête),
+ * `line` = ligne médiane (tête → queue) et `widths` = épaisseur locale (U) en chaque point de `line`, `color` = teinte dominante du matériau du sourcil.
+ */
+export interface HostBrow { readonly outline: readonly { x: number; y: number }[]; readonly line: readonly { x: number; y: number }[]; readonly widths: readonly number[]; readonly color: string }
 /** `right` : côté x > 0 de la vue de face (œil droit du dessin) ; `left` : côté x < 0. */
 export interface HostEyes { readonly right: HostEye; readonly left: HostEye }
 
@@ -71,9 +78,9 @@ export interface HostEyes { readonly right: HostEye; readonly left: HostEye }
 export interface TurnRender {
   readonly w: number; readonly h: number; readonly rgba: Uint8ClampedArray;
   readonly svg: string;
-  /** Identifiant de partie par pixel (0 = fond) et région peinte (0 fond, 1 peau, 2 cheveux, 3 œil, 4 bouche, 5 oreille, 6 cou). */
+  /** Identifiant de partie par pixel (0 = fond) et région peinte (0 fond, 1 peau, 2 cheveux, 3 œil, 4 bouche, 5 oreille, 6 cou, 7 sourcil). */
   readonly ids: Uint8Array; readonly regions: Uint8Array;
   /** px par unité U, et position image du pivot (x = 0, y = 0 du repère tête). */
   readonly ppu: number; readonly originX: number; readonly originY: number;
 }
-export const REGION = { bg: 0, skin: 1, hair: 2, eye: 3, mouth: 4, ear: 5, neck: 6 } as const;
+export const REGION = { bg: 0, skin: 1, hair: 2, eye: 3, mouth: 4, ear: 5, neck: 6, brow: 7 } as const;

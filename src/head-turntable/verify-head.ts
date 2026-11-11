@@ -12,6 +12,8 @@ import { headEdges, jawContourStats } from './verify-contour';
 import { topRow } from './silhouette';
 import { inkSpecks, inkWidth, outlineClosure } from './verify-style';
 import { hostChecks } from './verify-host';
+import { browChecks } from './verify-brow';
+import { neckCutChecks } from './verify-neck-cut';
 import { neckReliefChecks } from './verify-neck-relief';
 import { ROLL_PROBE, rollChecks } from './verify-roll';
 import { skullAnatomyChecks, skullGeometryChecks, skullStyleChecks } from './verify-skull';
@@ -81,6 +83,7 @@ export function headGeometry(h: HeadSubject, R: HeadRenders): LayerReport {
   for (const yaw of [135, 180]) c.push(check(G, `head.geo.jaw.${yaw}.concavity`, `Mâchoire à ${yaw}° : creux maximal du contour (U)`, jawContourStats(R.at(yaw), { yMinU: 0.8, yMaxU: 1.25 }).concavityU, 0, 0.02));
   c.push(...skullGeometryChecks(s, R));
   c.push(...reliefGeometryChecks(s));
+  c.push(...neckCutChecks(s).geometry);
   return layerOf(G, c);
 }
 
@@ -89,7 +92,7 @@ export function headAnatomy(h: HeadSubject, R: HeadRenders): LayerReport {
   c.push(check(A, 'head.anat.eyeline', 'Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]', s.eye.y / yMen, 0.4, 0.66));
   const aMax = Math.max(...s.rows.map((r) => r.a)), top = sectionAt(s, 0.45);
   c.push(check(A, 'head.anat.depth', 'Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]', (sectionAt(s, 0.45).zf - top.zb) / yMen, 0.66, 1.0));
-  if (s.eyeHost) c.push(...hostChecks(s, R.at(0, true)).anatomy);
+  if (s.eyeHost) { c.push(...hostChecks(s, R.at(0, true)).anatomy); c.push(...browChecks(s, R.at(0, true), R.at(35, true), 35)); }
   c.push(...neckReliefChecks(s, R.at(0, true)));
   c.push(...rollChecks(s, R.at(0, true), R.rolled(0, ROLL_PROBE), R.rolled(60, -ROLL_PROBE)).anatomy);
   if (s.engine) {
@@ -115,6 +118,7 @@ export function headAnatomy(h: HeadSubject, R: HeadRenders): LayerReport {
   c.push(check(A, 'head.anat.chin.lowest', 'Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)', st.lowest.x, -0.7, -0.1));
   c.push(...skullAnatomyChecks(s));
   c.push(...reliefAnatomyChecks(s, R));
+  c.push(...neckCutChecks(s).anatomy);
   return layerOf(A, c);
 }
 
@@ -131,6 +135,7 @@ export function headStyle(h: HeadSubject, R: HeadRenders): LayerReport {
   c.push(check(S, 'head.style.specks.180', 'Îlots d\'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)', inkSpecks(R.at(180), ink, tolS), 0, 60, 'info'));
   c.push(...skullStyleChecks(h.spec, R));
   c.push(...reliefStyleChecks(h.spec, R));
+  c.push(...neckCutChecks(h.spec).style);
   return layerOf(S, c);
 }
 

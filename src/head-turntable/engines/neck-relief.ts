@@ -6,7 +6,7 @@ import { mix, type RGB } from '../color';
 import { smooth } from '../math';
 import type { HeadTurnSpec, V3 } from '../types';
 import type { EngineHead } from './face-model';
-import { neckSection } from './neck3d';
+import { neckCutY, neckSection, type NeckSection } from './neck3d';
 import { py } from './units';
 
 /**
@@ -44,7 +44,7 @@ const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
 /** Un trait posé sur une rangée : ψ de son centre à cette hauteur, pente dψ/dy (pour la distance perpendiculaire) et demi-largeur monde. */
 interface Curve { readonly psi: number; readonly slope: number; readonly w: number }
 /** Tout ce qui ne dépend que de la hauteur y : section, traits, et si la rangée porte une clavicule. Calculé UNE fois par rangée quantifiée (Q), pas par pixel. */
-interface Row { readonly a: number; readonly b: number; readonly zc: number; readonly curves: readonly Curve[]; readonly claviY: number; readonly claviW: number; readonly notch: boolean; readonly base: { a: number } }
+interface Row { readonly a: number; readonly b: number; readonly zc: number; readonly curves: readonly Curve[]; readonly claviY: number; readonly claviW: number; readonly notch: boolean; readonly base: NeckSection }
 const Q = 0.0005, ROWS = new WeakMap<EngineHead, Map<number, Row>>();
 
 const BASE_PTS: readonly (readonly [number, number])[] = [[0.06, 0.03], [0.35, 0.048], [0.7, 0.04], [0.98, 0.015]];   // clavicule : (x / demi-largeur de la base, hauteur au-dessus de la base en H) — `render/neck/reliefs.ts`
@@ -104,9 +104,10 @@ export function neckMark(spec: HeadTurnSpec, p: V3): boolean {
   for (const c of r.curves) if ((Math.abs(psi - c.psi) * ds) / Math.hypot(1, ds * c.slope) < c.w) return true;
   // Clavicules (deux arcs sous la peau de la base du cou, face antérieure) et fosse sus-sternale (ellipse au centre).
   if (p.z > r.zc && (Number.isFinite(r.claviY) || r.notch)) {
-    const n = spec.neck, xi = Math.abs(p.x) / r.base.a, yc = claviY(xi);
-    if (Number.isFinite(r.claviY) && Number.isFinite(yc) && Math.abs(p.y - (n.y1 - yc + 0.006)) < r.claviW) return true;
-    if (r.notch && (p.x / (0.1 * r.base.a)) ** 2 + ((p.y - (n.y1 - 0.026)) / 0.02) ** 2 <= 1) return true;
+    // Base locale : la clavicule et la fosse sus-sternale suivent le plan de coupe (oblique pour une tête issue d'un visage : le devant, côté manubrium, est plus bas que y1).
+    const n = spec.neck, xi = Math.abs(p.x) / r.base.a, yc = claviY(xi), yb = neckCutY(e, p.z, n.y1);
+    if (Number.isFinite(r.claviY) && Number.isFinite(yc) && Math.abs(p.y - (yb - yc + 0.006)) < r.claviW) return true;
+    if (r.notch && (p.x / (0.1 * r.base.a)) ** 2 + ((p.y - (yb - 0.026)) / 0.02) ** 2 <= 1) return true;
   }
   return false;
 }

@@ -1,0 +1,377 @@
+{
+ "hote-42": {
+  "pass": true,
+  "checks": 112,
+  "hardFailures": [],
+  "brows": [
+   {
+    "id": "head.host.brow.right.line",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.right.area",
+    "value": 0.9711,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.right.above-eye",
+    "value": 0.071,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.right.midline",
+    "value": 0.0672,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.left.line",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.left.area",
+    "value": 1.0221,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.left.above-eye",
+    "value": 0.067,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.left.midline",
+    "value": 0.0567,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.rotates",
+    "value": 312,
+    "ok": true
+   }
+  ],
+  "neckCut": [
+   {
+    "id": "head.neck.cut.planar",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.neck.cut.frame",
+    "value": 1.3343,
+    "ok": true
+   },
+   {
+    "id": "head.neck.cut.drop",
+    "value": 0.2459,
+    "ok": true
+   },
+   {
+    "id": "head.anat.neck.cut.tilt",
+    "value": 25,
+    "ok": true
+   },
+   {
+    "id": "head.style.neck.cut.socle",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.style.neck.cut.seen",
+    "value": 0.7435,
+    "ok": true
+   }
+  ]
+ },
+ "hote-77": {
+  "pass": true,
+  "checks": 112,
+  "hardFailures": [],
+  "brows": [
+   {
+    "id": "head.host.brow.right.line",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.right.area",
+    "value": 0.9939,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.right.above-eye",
+    "value": 0.0555,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.right.midline",
+    "value": 0.1132,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.left.line",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.left.area",
+    "value": 1.0134,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.left.above-eye",
+    "value": 0.0519,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.left.midline",
+    "value": 0.1157,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.rotates",
+    "value": 574,
+    "ok": true
+   }
+  ],
+  "neckCut": [
+   {
+    "id": "head.neck.cut.planar",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.neck.cut.frame",
+    "value": 1.3359,
+    "ok": true
+   },
+   {
+    "id": "head.neck.cut.drop",
+    "value": 0.2493,
+    "ok": true
+   },
+   {
+    "id": "head.anat.neck.cut.tilt",
+    "value": 25,
+    "ok": true
+   },
+   {
+    "id": "head.style.neck.cut.socle",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.style.neck.cut.seen",
+    "value": 0.7439,
+    "ok": true
+   }
+  ]
+ },
+ "hote-3": {
+  "pass": true,
+  "checks": 112,
+  "hardFailures": [],
+  "brows": [
+   {
+    "id": "head.host.brow.right.line",
+    "value": 0.0002,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.right.area",
+    "value": 1.0176,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.right.above-eye",
+    "value": 0.0911,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.right.midline",
+    "value": 0.1199,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.left.line",
+    "value": 0.0003,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.left.area",
+    "value": 0.9985,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.left.above-eye",
+    "value": 0.0925,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.left.midline",
+    "value": 0.1273,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.rotates",
+    "value": 405,
+    "ok": true
+   }
+  ],
+  "neckCut": [
+   {
+    "id": "head.neck.cut.planar",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.neck.cut.frame",
+    "value": 1.3368,
+    "ok": true
+   },
+   {
+    "id": "head.neck.cut.drop",
+    "value": 0.2506,
+    "ok": true
+   },
+   {
+    "id": "head.anat.neck.cut.tilt",
+    "value": 25,
+    "ok": true
+   },
+   {
+    "id": "head.style.neck.cut.socle",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.style.neck.cut.seen",
+    "value": 0.7471,
+    "ok": true
+   }
+  ]
+ },
+ "hote-11": {
+  "pass": true,
+  "checks": 105,
+  "hardFailures": [],
+  "brows": [
+   {
+    "id": "head.host.brow.right.none",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.host.brow.left.none",
+    "value": 0,
+    "ok": true
+   }
+  ],
+  "neckCut": [
+   {
+    "id": "head.neck.cut.planar",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.neck.cut.frame",
+    "value": 1.3373,
+    "ok": true
+   },
+   {
+    "id": "head.neck.cut.drop",
+    "value": 0.2517,
+    "ok": true
+   },
+   {
+    "id": "head.anat.neck.cut.tilt",
+    "value": 25,
+    "ok": true
+   },
+   {
+    "id": "head.style.neck.cut.socle",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.style.neck.cut.seen",
+    "value": 0.7429,
+    "ok": true
+   }
+  ]
+ },
+ "tete-3": {
+  "pass": true,
+  "checks": 97,
+  "hardFailures": [],
+  "neckCut": [
+   {
+    "id": "head.neck.cut.planar",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.neck.cut.frame",
+    "value": 1.3375,
+    "ok": true
+   },
+   {
+    "id": "head.neck.cut.drop",
+    "value": 0.2514,
+    "ok": true
+   },
+   {
+    "id": "head.anat.neck.cut.tilt",
+    "value": 25,
+    "ok": true
+   },
+   {
+    "id": "head.style.neck.cut.socle",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.style.neck.cut.seen",
+    "value": 0.7414,
+    "ok": true
+   }
+  ]
+ },
+ "tete-5": {
+  "pass": true,
+  "checks": 97,
+  "hardFailures": [],
+  "neckCut": [
+   {
+    "id": "head.neck.cut.planar",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.neck.cut.frame",
+    "value": 1.3377,
+    "ok": true
+   },
+   {
+    "id": "head.neck.cut.drop",
+    "value": 0.2597,
+    "ok": true
+   },
+   {
+    "id": "head.anat.neck.cut.tilt",
+    "value": 25,
+    "ok": true
+   },
+   {
+    "id": "head.style.neck.cut.socle",
+    "value": 0,
+    "ok": true
+   },
+   {
+    "id": "head.style.neck.cut.seen",
+    "value": 0.7717,
+    "ok": true
+   }
+  ]
+ }
+}

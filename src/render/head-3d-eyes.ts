@@ -1,11 +1,11 @@
-import { effectivePupilSize, isLegacyPupil, openingGeometry, openingPolygon, pupilContours } from '../geometry/eye';
+import { browGeometry, effectivePupilSize, isLegacyPupil, openingGeometry, openingPolygon, pupilContours } from '../geometry/eye';
 import { toHostFrame, type PlacedEye } from '../anatomy/relations';
 import { irisCenter, irisRadii, pupilRadii } from './eye/helpers';
 import { resolveEye } from './eye/eye';
 import { dominantColor } from '../materials';
 import { sideOf } from '../anatomy/orbit';
 import { fx, fy } from '../head-turntable/engines/units';
-import type { HostEye, HostEyes } from '../head-turntable';
+import type { HostBrow, HostEye, HostEyes } from '../head-turntable';
 
 const N = 24;
 const ellipse = (r: { rx: number; ry: number }): { x: number; y: number }[] => Array.from({ length: 32 }, (_, i) => ({ x: r.rx * Math.cos((i / 32) * 2 * Math.PI), y: r.ry * Math.sin((i / 32) * 2 * Math.PI) }));
@@ -30,7 +30,10 @@ export function hostEyesU(eyes: readonly PlacedEye[], faceH: number): HostEyes |
     const rot = ((pe.world.rotationDeg - pe.host.rotationDeg) * Math.PI) / 180, mx = c.x < 0 ? -1 : 1, size = pu.response.model === 'fixed' ? pu.size : effectivePupilSize(pu);
     const raw = !pu.visible ? [] : isLegacyPupil(pu) ? [ellipse(pupilRadii(pe.eye, ir.rx, ir.ry))] : [...pupilContours(pu, size, ir.rx, ir.ry, pe.eye.seed).contours];
     const contours = raw.map((ct) => ct.map((q) => ({ x: mx * s * (q.x * Math.cos(rot) - q.y * Math.sin(rot)), y: s * (q.x * Math.sin(rot) + q.y * Math.cos(rot)) })));
-    by[side] = { upper, lower, iris: { cx: X(c.x), cy: Y(c.y), rx: ir.rx * s, ry: ir.ry * s }, pupil: { contours, color: dominantColor(pu.fill) } };
+    // Sourcil : MÊME géométrie que le dessin de face (`browGeometry`, pli de paupière compris), contour et ligne médiane ramenés dans le repère de l'hôte puis en U ; absent si l'œil n'a pas de sourcil.
+    const eb = pe.eye.eyebrow, bg = eb ? browGeometry(g, eb, pe.eye.lids.crease.height) : null;
+    const brow: HostBrow | undefined = eb && bg ? { outline: bg.outline.map((q) => pt(toHostFrame(q, pe))), line: bg.center.map((q) => pt(toHostFrame(q, pe))), widths: bg.widths.map((wd) => wd * s), color: dominantColor(eb.material.base) } : undefined;
+    by[side] = { upper, lower, iris: { cx: X(c.x), cy: Y(c.y), rx: ir.rx * s, ry: ir.ry * s }, pupil: { contours, color: dominantColor(pu.fill) }, ...(brow ? { brow } : {}) };
   }
   return by.left && by.right ? { left: by.left, right: by.right } : undefined;
 }

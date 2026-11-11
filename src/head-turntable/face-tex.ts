@@ -5,6 +5,7 @@ import { REGION, type HeadTurnSpec, type V3 } from './types';
 import { distPolyline, eyeGeo, facePartsU, inPoly } from './engines/face-parts';
 import { LID_SHADOW, LIGHT_IRIS, PUPIL, WHITE } from './eye-colors';
 import { eyeTexHost } from './eye-host-tex';
+import { browTexHost } from './brow-host-tex';
 
 /** Texel peint : couleur, région et indicateur d'encre. */
 export interface Tex { readonly c: RGB; readonly region: number; readonly ink?: boolean }
@@ -43,6 +44,7 @@ export function eyeTex(spec: HeadTurnSpec, p: V3, k: number, pal: Pal): Tex | nu
 
 /** Sourcil : arc quadratique de xIn à xOut, trait effilé aux extrémités. */
 export function browTex(spec: HeadTurnSpec, p: V3, k: number, pal: Pal): Tex | null {
+  if (spec.eyeHost) return browTexHost(spec.eyeHost, p, k, pal);   // hôte : son sourcil (ou aucun) ; l'arc de la planche ne sert que sans hôte
   const b = spec.brow, xa = Math.abs(p.x);
   if (xa < b.xIn || xa > b.xOut) return null;
   const s = (xa - b.xIn) / (b.xOut - b.xIn), yc = 2 * b.yMid - 0.5 * (b.yIn + b.yOut);

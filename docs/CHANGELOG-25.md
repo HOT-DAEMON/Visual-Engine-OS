@@ -1,0 +1,7 @@
+# Changelog 25 — sourcils de l'hôte, coupe oblique du cou (branche `feat/hair-grammar`)
+
+- **Sourcils de l'hôte** : `render/head-3d-eyes.ts` (`browGeometry` → `HostBrow`), `head-turntable/brow-host-tex.ts`, `face-tex.ts` (`browTex`), `types.ts` (`HostBrow`, `REGION.brow`), `engines/host-eyes.ts` (`spec.brow` lu du vrai sourcil). Un hôte sans sourcil n'en reçoit pas. Défaut corrigé : filet d'encre centré sur le bord (aire ×1,3 – ×2,3) → à l'intérieur (×0,96 – ×1,03).
+- **Coupe oblique du cou** : `engines/neck3d.ts` (`CUT_TILT_DEG` 25°, `neckCutY`, `isBellHead`), `mesh.ts` (`neckMeshes`, bord coplanaire par point fixe, 30 rangées pour la cloche), `engines/neck-relief.ts` (clavicule et fosse ancrées sur la coupe). Planche inchangée. Part du plan de coupe à 17,7° : 42 – 48 % → 0 %.
+- **Vérification** : `verify-brow.ts` (9 contrôles par hôte avec sourcils, 2 sans), `verify-neck-cut.ts` (6 contrôles par tête issue d'un visage) ; 97 → 112 / 105 contrôles par hôte, 91 → 97 par tête variée ; aucun échec dur sur 6 sujets.
+- **Tests** : `head-turntable-brow` (6), `head-turntable-neck-cut` (8). **Artefacts** : `artefacts/head-turntable-v7/` (scripts `scripts/head-turntable/artefacts-v7.ts`, `compose-v7.py`). **Docs** : `HEAD-TURNTABLE-HOST-BROWS.md`, `HEAD-TURNTABLE-NECK-CUT.md`.
+- Reste à faire : `docs/PIPELINE-HEAD-3D-REMAINING.md` (volume des cheveux, paupières, teinte d'iris, ligne d'épaules, oreille et yeux à fort tangage).

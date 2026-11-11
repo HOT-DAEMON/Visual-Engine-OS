@@ -1,7 +1,7 @@
 import { cross, norm, sub, v3 } from './math';
 import { sectionAt, sectionPoint, surfaceZ } from './sections';
 import type { HeadTurnSpec, V3 } from './types';
-import { neckSection } from './engines/neck3d';
+import { CUT_SLOPE, isBellHead, neckSection } from './engines/neck3d';
 import { headRelief } from './engines/head-relief';
 
 /** Identifiants de parties (groupes de contour : 1 et 4 = peau de la tête, sans trait entre eux ; 2 et 5 = cou ; 3 = oreilles). */
@@ -46,16 +46,23 @@ export function headMesh(spec: HeadTurnSpec, K = 96, dy = 0.0125): Mesh {
   return gridMesh(PART.head, rows, true, (i) => { const s = sectionAt(spec, ys[i]!); return v3(0, ys[i]!, s.zw); });
 }
 
-/** Cou : cylindre elliptique ; le bas est refermé par un disque (id neckCut), comme le socle de la planche. */
+/**
+ * Cou : cylindre elliptique ; le bas est refermé par un plan (id neckCut). Planche : disque horizontal (le socle mesuré). Tête issue d'un visage : le plan de coupe est OBLIQUE (`engines/neck3d.ts`
+ * `CUT_SLOPE`, plan de l'orifice supérieur du thorax : devant plus bas, nuque plus haute) ; chaque colonne j du maillage descend de y0 jusqu'à la hauteur du plan à son azimut.
+ */
 export function neckMeshes(spec: HeadTurnSpec, K = 64): Mesh[] {
-  const n = spec.neck, e = spec.engine, bell = !!(e?.fit as { mandLandmarks?: boolean } | undefined)?.mandLandmarks, nr = bell ? 30 : 12, ys = Array.from({ length: nr }, (_, i) => n.y0 + ((n.y1 - n.y0) * i) / (nr - 1));   // la cloche des trapèzes demande plus de rangées que le cylindre de la planche (inchangée : 12)
+  const n = spec.neck, e = spec.engine, bell = isBellHead(e), nr = bell ? 30 : 12;   // la cloche des trapèzes demande plus de rangées que le cylindre de la planche (inchangée : 12)
   const flare = (y: number): number => 1 + 0.1 * Math.max(0, (y - (n.y1 - 0.2)) / 0.2);   // évasement de 10 % sur les 0,2 U du bas (le socle de la planche)
   // Section : moteur de crâne / visage (lignes du cou) si la spec en porte, sinon cylindre mesuré.
   const sec = (y: number): { a: number; zc: number; b: number } => (e ? neckSection(e, y, n.y1) : { a: n.a * flare(y), zc: n.zc, b: n.b * flare(y) });
-  const rows = ys.map((y) => { const s = sec(y); return Array.from({ length: K }, (_, j) => { const th = (j / K) * 2 * Math.PI; return v3(s.a * Math.sin(th), y, s.zc + s.b * Math.cos(th)); }); });
-  const body = gridMesh(PART.neck, rows, true, (i) => v3(0, ys[i]!, sec(ys[i]!).zc));
-  const last = rows[rows.length - 1]!, c = v3(0, n.y1, sec(n.y1).zc);
-  const P = [...last, c], N = P.map(() => v3(0, 1, 0)), T: [number, number, number][] = [];
+  const base = sec(n.y1), slope = bell ? CUT_SLOPE : 0, ths = Array.from({ length: K }, (_, j) => (j / K) * 2 * Math.PI);
+  // Hauteur du bord de la coupe à l'azimut th : point FIXE de y = y1 + pente × (z(y, th) − zc1) (la section dépend de y : la nuque, plus haute, est plus étroite) ; 8 itérations (contraction : pente × dz/dy ≪ 1) → les points du bord sont coplanaires.
+  const endY = (th: number): number => { let y = n.y1; for (let k = 0; slope && k < 8; k++) { const s = sec(y); y = n.y1 + slope * (s.zc + s.b * Math.cos(th) - base.zc); } return y; };
+  const ends = ths.map(endY), yAt = (i: number, j: number): number => n.y0 + (ends[j]! - n.y0) * (i / (nr - 1));   // slope = 0 : y = y0 + (y1 − y0)·i/(nr − 1), exactement l'ancien pas régulier
+  const rows = Array.from({ length: nr }, (_, i) => ths.map((th, j) => { const y = yAt(i, j), s = sec(y); return v3(s.a * Math.sin(th), y, s.zc + s.b * Math.cos(th)); }));
+  const body = gridMesh(PART.neck, rows, true, (i, j) => { const y = yAt(i, j); return v3(0, y, sec(y).zc); });
+  const last = rows[nr - 1]!, c = v3(0, n.y1, base.zc);
+  const P = [...last, c], nn = norm(v3(0, 1, -slope)), N = P.map(() => nn), T: [number, number, number][] = [];
   for (let j = 0; j < K; j++) T.push([j, (j + 1) % K, K]);
   return [body, { id: PART.neckCut, P, N, T }];
 }

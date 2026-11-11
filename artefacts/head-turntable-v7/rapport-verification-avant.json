@@ -1,0 +1,42 @@
+{
+ "hote-42": {
+  "pass": true,
+  "checks": 97,
+  "hardFailures": [],
+  "brows": [],
+  "neckCut": []
+ },
+ "hote-77": {
+  "pass": true,
+  "checks": 97,
+  "hardFailures": [],
+  "brows": [],
+  "neckCut": []
+ },
+ "hote-3": {
+  "pass": true,
+  "checks": 97,
+  "hardFailures": [],
+  "brows": [],
+  "neckCut": []
+ },
+ "hote-11": {
+  "pass": true,
+  "checks": 97,
+  "hardFailures": [],
+  "brows": [],
+  "neckCut": []
+ },
+ "tete-3": {
+  "pass": true,
+  "checks": 91,
+  "hardFailures": [],
+  "neckCut": []
+ },
+ "tete-5": {
+  "pass": true,
+  "checks": 91,
+  "hardFailures": [],
+  "neckCut": []
+ }
+}
