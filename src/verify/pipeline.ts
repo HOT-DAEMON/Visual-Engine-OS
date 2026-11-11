@@ -17,7 +17,7 @@ import { SceneSpec, type HostSpec } from '../schema';
 import { verifyBody } from './body';
 import { verifyLegs } from './lower';
 import { verifyProfile } from './skull';
-import { checkHead3d } from './head-3d';
+import { checkHead3d, checkHead3dLit } from './head-3d';
 import { deriveSkull } from '../skull/derive';
 import { figureMarkup, legGeometry } from '../body/lower';
 import { LegParams } from '../body/lower/types';
@@ -93,6 +93,7 @@ export function verifyPipeline(input: unknown): Report {
   for (const o of scene.objects) {
     if (o.kind !== 'head_3d') continue;
     checks.push(...checkHead3d(o, hosts.get(o.host) as HostSpec, placed.get(o.host) ?? []));
+    checks.push(...checkHead3dLit(o, hosts.get(o.host) as HostSpec, placed.get(o.host) ?? [], scene.light));   // couche éclairée (si `lit`)
   }
   return report(checks);
 }

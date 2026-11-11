@@ -53,6 +53,14 @@ export function shadeAt(m: LightModel, n: P3, cast: number, ao: number, gobo = 1
   const h = norm3(p3(m.dir.x, m.dir.y, m.dir.z + 1)), spec = Math.max(0, dot3(n, h)) ** (6 + 40 * (1 - m.soft)) * lit * 0.5 * m.intensity;
   return { lit: clamp01(lit), core: clamp01(core), rim: clamp01(rim), spec: clamp01(spec) };
 }
+/**
+ * LUMIÈRE DE REBOND (seconde lumière, `m.bounce`) : le sol / l'environnement renvoie une lumière faible PAR EN DESSOUS et du côté opposé à la clé (planches 02, 03, 10 : bas du menton, dessous du nez, creux du cou éclaircis dans l'ombre).
+ * Renvoie la part (0 … `m.bounce`) dont une surface de normale `n` (espace vue) est ramenée vers sa couleur éclairée ; 0 sur une surface occultée (`ao` élevé : le rebond n'y entre pas). En cel, la part est un palier franc (pas de dégradé dans un aplat).
+ */
+export function bounceAt(m: LightModel, n: P3, ao: number): number {
+  const b = norm3(p3(-0.5 * m.dir.x, 0.8, 0.35)), f = sstep(0.05, 0.85, dot3(n, b)) * (1 - sstep(0.35, 0.65, ao)) * m.bounce;
+  return m.style === 'soft' ? f : sstep(0.45, 0.6, f / Math.max(1e-6, m.bounce)) * m.bounce * 0.8;
+}
 /** Teinte imposée : on garde sa teinte et sa saturation, mais sa clarté ne dépasse jamais `base − ΔL` (les teintes d'ombre « proches de la couleur principale » étaient la cause du contraste de 5 %). */
 function imposeShadow(base: string, imposed: string, dL: number): string { const b = toLab(base), c = toLab(imposed); return c.L <= b.L - dL ? imposed : hexOf(labRgb({ L: b.L - dL, a: c.a, b: c.b })); }
 const mulOf = (from: string, to: string): [number, number, number] => { const a = parseHex(from), b = parseHex(to); return [Math.min(1, b[0] / Math.max(1, a[0])), Math.min(1, b[1] / Math.max(1, a[1])), Math.min(1, b[2] / Math.max(1, a[2]))]; };

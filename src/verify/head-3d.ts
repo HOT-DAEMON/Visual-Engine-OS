@@ -2,7 +2,11 @@ import { memoPure } from '../perf';
 import { head3dSubject, hostEyesOf, irisOf } from '../render/head-3d';
 import type { PlacedEye } from '../anatomy/relations';
 import type { HostEyes } from '../head-turntable';
+import { litChecks } from '../head-turntable/verify-light';
 import { verifyHeadSubject } from '../head-turntable/verify-head';
+import { lightModelOfSpec } from '../relief';
+import { hostFace } from '../render/face';
+import type { LightSpec } from '../schema';
 import type { Head3dSpec, HostSpec } from '../schema';
 import type { Check } from './types';
 
@@ -24,3 +28,16 @@ const memo = memoPure('head-3d-verify', 'geometry', run, 16);
 
 /** `eyes` : les yeux POSÉS de l'hôte (comme `compileHead3d`) : la tête vérifiée est celle qui est rendue, avec ses yeux. */
 export const checkHead3d = (o: Head3dSpec, host: HostSpec, eyes: readonly PlacedEye[] = []): Check[] => memo(host, { skull: o.skull, variation: o.variation, hair: o.hair, hairline: o.hairline }, irisOf(eyes), hostEyesOf(host, eyes)).map((c) => ({ ...c, id: `head3d.${o.id}.${c.id}` }));
+
+/**
+ * Couche ÉCLAIRÉE (`head-turntable/verify-light.ts`, uniquement si la tête porte `lit`) : mêmes sujet, mêmes yeux, même modèle de lumière que le rendu ; ids `head3d.<id>.lit.*`.
+ * Non mémoïsée par sujet seul (dépend de la lumière) : un objet `head_3d` éclairé paie 4 rendus de vérification supplémentaires (≈ 6 s) à chaque vérification.
+ */
+export const checkHead3dLit = (o: Head3dSpec, host: HostSpec, eyes: readonly PlacedEye[] = [], scene?: LightSpec): Check[] => {
+  if (!o.lit) return [];
+  const { spec } = head3dSubject(host, { skull: o.skull, variation: o.variation, hair: o.hair, hairline: o.hairline }, irisOf(eyes), hostEyesOf(host, eyes));
+  return litChecks(spec, lightModelOfSpec(scene ?? {}, o.lit), hostFace(host).params.skin.light.shadow).map((c) => ({
+    layer: c.layer, id: `head3d.${o.id}.${c.id}`, severity: c.kind === 'hard' ? 'error' : 'warn', ok: c.ok, value: c.value,
+    limit: c.ok ? c.value : c.value < c.min ? c.min : c.max, message: `${c.label} [${c.min} ; ${c.max}]`,
+  } as Check));
+};

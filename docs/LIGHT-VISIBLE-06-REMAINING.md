@@ -5,8 +5,8 @@
 ## Tête
 - **Les yeux ne sont pas des surfaces du relief.** L'iris, les cils, les paupières sont ombrés par le multiplicateur, mais l'orbite n'a pas de globe : pas de reflet d'environnement, pas d'ombre de paupière portée sur l'œil (planche 03, 10).
 - **Les cheveux ne projettent pas d'ombre.** La frange sur le front, la mèche sur l'œil (planches 03, 04, 07, 10) sont l'effet le plus reconnaissable des références : non modélisé. Piste : champ de profondeur des cheveux depuis `hair-grammar` ajouté au relief.
-- **Les cheveux reçoivent l'ombre de la peau** (le multiplicateur couvre le dôme du crâne) mais pas sa propre direction de brillance : la mèche éclairée n'est pas plus claire.
-- **Seconde lumière** (rebond par en dessous, remplissage) non modélisée : le motif « zénithale » des planches (bas du visage blanc, cou sombre) en dépend ; le moteur donne le bas du visage à l'ombre.
+- **Les cheveux reçoivent l'ombre de la peau** (le multiplicateur couvre le dôme du crâne) mais pas sa propre direction de brillance : la mèche éclairée n'est pas plus claire. → **Traité pour la tête 3D** (`hair-light.ts`, `LIGHT-HEAD3D-08.md`) ; reste à faire pour `head_lit` de face.
+- **Seconde lumière** (rebond par en dessous, remplissage) non modélisée : le motif « zénithale » des planches (bas du visage blanc, cou sombre) en dépend ; le moteur donne le bas du visage à l'ombre. → **Rebond (`bounceAt`) lu par la tête 3D** (`LIGHT-HEAD3D-08.md`) ; `head_lit` et le corps ne le lisent pas encore.
 - **Relief approximatif** : amplitudes (arcade 0,045 W, orbites 0,065 W, pommettes 0,022 W…) tirées d'ordres de grandeur anatomiques, pas mesurées sur une photo ; les oreilles sont des plaques (pas d'hélix creusé) ; pas de relief de la bouche ouverte, de la barbe, des sourcils.
 - **Terminateur anguleux** à certains endroits (pommette, arcade) en cel : la pente du relief y change brusquement ; un lissage du champ de profondeur est à essayer.
 - Une tête tournée (`headTurn`) n'a pas de relief tourné : la couche n'est posée que de face (`yaw = 0`).

@@ -33,13 +33,13 @@ Coût : ≈ 1,6 s par scène à résolution 1 (moyenne mesurée dans les tests, 
 ## 4. Ce que montre la planche (`01-rotation-eclairage.png`) — lecture honnête
 - Mêmes motifs que la tête de face (`LIGHT_PATTERNS` : latérale gauche, Rembrandt, par en dessous), 4 lacets (0°, 45°, 90°, 135°) : le terminateur suit le crâne, le nez projette sur la joue, le cou reçoit l'ombre.
 - Ombres **brun chaud** : cette graine impose `#a08974` ; la teinte imposée prime (contrat `APPEARANCE.md`). Sans teinte imposée, elles sont dérivées (gris-froid en cel).
-- Défauts visibles, non corrigés : narines qui se lisent comme des taches claires dans l'ombre (texture de narine éclairée comme le reste) ; cheveux presque noirs sous « par en dessous ». Planche régénérée APRÈS fusion avec `6d1411e` (yeux de l'hôte, roulis, reliefs du cou) : les creux du cou sont éclairés par le même modèle ; l'œil grisé vu avant la fusion n'apparaît plus à cette échelle (non mesuré).
+- Défauts vus sur cette planche : disques clairs aux ailes du nez ; cheveux presque noirs sous « par en dessous ». **Corrigés dans `LIGHT-HEAD3D-08.md`** (la narine éclairée comme le reste reste à vérifier). Planche régénérée APRÈS fusion avec `6d1411e` (yeux de l'hôte, roulis, reliefs du cou) : les creux du cou sont éclairés par le même modèle ; l'œil grisé vu avant la fusion n'apparaît plus à cette échelle (non mesuré).
 
 ## 5. Reste à faire (par composant)
 - **Asymétrie non expliquée** : lumière à 270° bascule fortement g/d, lumière à 90° reste proche de la parité (0,97–1,14), alors que la tête de face donne 0,49 (`LIGHT-VISIBLE-06.md`). Cause non isolée (cheveux, géométrie, fenêtre de mesure ?).
-- **Visage / yeux** : l'œil n'est pas une surface (pas de reflet, pas d'ombre de paupière) ; narines à corriger ; cheveux sans ombre portée ni brillance propre.
+- **Visage / yeux** : l'œil n'est pas une surface (pas de reflet, pas d'ombre de paupière) ; cheveux sans ombre portée (la brillance propre est faite : `LIGHT-HEAD3D-08.md`).
 - **Cou** : coupe du cou exclue du contour de lumière ; pas de contrôle de raccord de lumière tête 3D ↔ cou ↔ corps.
 - **Corps** : `head_3d` n'est pas relié au corps par `litFigure` (le corps ne reçoit pas l'ombre de la tête tournée) ; vues autres que de face du corps inchangées.
 - **Doublon** : mode « planche » de `paint.ts` (lumière fixe) à retirer quand ses contrôles de style liront le moteur.
-- **Vérification de rendu** : pas de couche dédiée géométrie / anatomie / style pour la tête tournée éclairée (seuls les 5 tests ci-dessus) ; résultat mesuré sur une seule graine.
+- **Vérification de rendu** : couche dédiée faite (`HEAD-TURNTABLE-LIGHT-VERIFY.md`), mesurée sur 3 graines seulement.
 - Relief de la tête de face (champ issu des repères) et relief de la tête tournée (maillage) restent deux sources de normales.
