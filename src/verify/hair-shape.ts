@@ -49,7 +49,10 @@ export function checkHairShape(face: RandomFace, override?: HairGeometry): Check
 
   // --- géométrie ---
   out.push(check('geometry', 'hair-shape-finite', '==', pts.every((q) => Number.isFinite(q.x) && Number.isFinite(q.y)) ? 1 : 0, 1, 'un sommet de cheveux n\'est pas fini'));
-  const reach = maxOf(pts.filter((q) => q.y < lm.jawY).map((q) => (Math.abs(q.x) - S.a(q.y)) / W));
+  // Le chignon est une pièce ATTACHÉE qui dépasse du crâne par nature (rayon 0,10–0,20 W, centre sur le flanc haut où le contour est presque vertical) : ses bornes sont `bun-radius-bound`,
+  // `bun-visible` et `tie-on-skull` (`hair-coherence.ts`). Ici il ne compte pas, sinon ce contrôle jugerait le chignon et non la coque / les mèches (`docs/HAIR-NATURAL.md`).
+  const ptsBody = [...geo.front.flat(), ...(geo.backBase ? geo.backBase : []), ...own.filter((l) => l.part !== 'bun').flatMap((l) => l.poly)];
+  const reach = maxOf(ptsBody.filter((q) => q.y < lm.jawY).map((q) => (Math.abs(q.x) - S.a(q.y)) / W));
   out.push(check('geometry', 'hair-reach-beyond-skull', '<=', reach, wide ? 0.6 : p.hair.style === 'long' || p.hair.style === 'bob' ? 1.0 : 0.42, 'les cheveux dépassent trop le contour du crâne (aile / cône hors de proportion)', 'warn'));
   const top = (S.topY + maxOf(pts.map((q) => -q.y))) / H;
   out.push(check('geometry', 'hair-height-above-skull', '<=', top, p.hair.style === 'spiky' || wide ? 0.6 : 0.38, 'les cheveux montent trop haut au-dessus du sommet du crâne', 'warn'));

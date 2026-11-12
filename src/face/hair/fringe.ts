@@ -9,6 +9,12 @@ import type { HairLock } from './types';
 /** Feston arrondi (0 aux jonctions, 1 au milieu de la mèche) : un bord de frange est une suite de mèches à bout rond, pas une scie à dents triangulaires. */
 const tri = (u: number): number => 0.5 - 0.5 * Math.cos(2 * Math.PI * (u - Math.floor(u)));
 
+/**
+ * Part de l'écart à la pointe commune de la touffe que chaque mèche suivante comble (`docs/HAIR-NATURAL-FRINGE.md`). Avant : x 0,6 / y 0,5 et touffes de 2 à 4 : 15 pointes distinctes
+ * en médiane (max 29, mesure : pointes à moins de 0,05 W / 0,012 H fusionnées) = un peigne. Maintenant : touffes de 3 à 5 et presque entièrement resserrées sur la pointe.
+ */
+export const CLUMP_PULL = { x: 1, y: 1 } as const;
+
 export interface Fringe {
   readonly locks: HairLock[];
   /** Zone pleine entre la naissance des cheveux et le bord de la frange. */
@@ -61,7 +67,7 @@ export function buildFringe(ctx: HairCtx): Fringe | null {
   // TOUFFES (`docs/HAIR-FRINGE-CLUMPS.md`) : les mèches voisines se regroupent par 2 à 4 ; chaque touffe converge vers une pointe commune (abscisse et longueur de sa première mèche, tirage propre)
   // et ondule en S d'une amplitude qui lui est propre. Avant : 14 à 22 rubans verticaux parallèles, de longueurs indépendantes : un PEIGNE (`HAIR-ROUND-REMAINING.md` 6).
   const clump: number[] = [];
-  for (let n = 0, c = 0; n < K; c++) for (let j = 2 + Math.floor(fr() * 3); j > 0 && n < K; j--, n++) clump.push(c);
+  for (let n = 0, c = 0; n < K; c++) for (let j = 3 + Math.floor(fr() * 3); j > 0 && n < K; j--, n++) clump.push(c);
   const nC = (clump[K - 1] as number) + 1;
   const wave = Array.from({ length: nC }, () => ({ amp: (fr() < 0.5 ? -1 : 1) * (0.008 + 0.022 * fr()) * W, ph: fr() * 6.283 }));
   const tipX: number[] = [], tipY: number[] = [];
@@ -77,7 +83,7 @@ export function buildFringe(ctx: HairCtx): Fringe | null {
     // Pointe commune de la touffe : la première mèche la fixe, les suivantes s'en rapprochent (pas les mèches isolées).
     const cid = clump[i] as number;
     if (tipX[cid] === undefined) { tipX[cid] = xe; tipY[cid] = ye; }
-    else if (stray === 1) { xe = clamp(xe + 0.6 * ((tipX[cid] as number) - xe), -xF, xF); ye = Math.min(yF, Math.max(hl.yAt(xe) + 0.004 * H, ye + 0.5 * ((tipY[cid] as number) - ye))); }
+    else if (stray === 1) { xe = clamp(xe + CLUMP_PULL.x * ((tipX[cid] as number) - xe), -xF, xF); ye = Math.min(yF, Math.max(hl.yAt(xe) + 0.004 * H, ye + CLUMP_PULL.y * ((tipY[cid] as number) - ye))); }
     const E = { x: xe, y: ye };
     const C = { x: x + drift * 0.2, y: R.y + 0.6 * (E.y - R.y) };
     const wv = wave[cid] as { amp: number; ph: number }, reach = clamp((E.y - R.y) / (0.1 * H), 0.3, 1);

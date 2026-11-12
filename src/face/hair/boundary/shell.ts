@@ -90,6 +90,8 @@ export interface ShellInput {
   readonly shoulder?: { readonly halfWidth: number; readonly slope: number };
   /** Coque elliptique (`ROUND_SHELL`) : remplace le décalage normal + épaule pour les côtés qui ont une aile. */
   readonly round?: RoundShell;
+  /** Gonflement demandé (px, `puffW` × W) : élargit les plafonds de la coque elliptique, dans la limite de `maxT`. */
+  readonly puff?: number;
 }
 
 export interface Shell {
@@ -117,8 +119,9 @@ function ellipseOuter(inp: ShellInput, sg: -1 | 1, yEnd: number): Vec[] {
   const mk = b.marks;
   const yC = (mk.cornerY.left + mk.cornerY.right) / 2;
   const yEq = Math.min(yC + cfg.equator * (yEnd - yC), yEnd - 0.05 * H);
-  const tSide = Math.min(inp.maxT, cfg.maxSide * W, crown * inp.gain(sg) * side);
-  const tTop = Math.min(inp.maxT, cfg.maxTop * W, crown * inp.gain(0));
+  const pf = inp.puff ?? 0;
+  const tSide = Math.min(inp.maxT, cfg.maxSide * W + pf, crown * inp.gain(sg) * side);
+  const tTop = Math.min(inp.maxT, cfg.maxTop * W + pf, crown * inp.gain(0));
   const A = S.a(yEq) + tSide;
   const top = S.topY - tTop;
   const Bt = Math.max(0.05 * H, yEq - top);

@@ -32,7 +32,7 @@ export function capBase(ctx: HairCtx): { base: Poly; scalp: Poly; wings: { left:
   const own = h.sim.enabled && h.sim.regions;
   // Oreille couverte : l'aile passe devant l'oreille ; sinon elle s'arrête au-dessus (jamais de couverture involontaire d'une oreille « libre »).
   const reachOf = (name: 'left' | 'right'): Reach => (own || !spec || spec.reach === 'none' ? 'none' : resolveEar(ctx, sideWant(ctx, name).ear) === 'covered' ? 'cover' : 'ear');
-  const shell = capShell({ lm, boundary: ctx.boundary, crown, maxT: maxShell(h.style as Exclude<typeof h.style, 'bald'>, lm.W), side: spec?.side ?? 1, reach: { left: reachOf('left'), right: reachOf('right') }, gain: ctx.gain, bump: (x) => liftBump(h, ctx.partX, lm.W, lm.H, x) * (0.3 + 0.7 * THICKNESS[h.style as Exclude<typeof h.style, 'bald'>].puff), C: ctx.C, ...shoulder(h.style as Exclude<typeof h.style, 'bald'>, lm.W), round: ROUND_SHELL[h.style as Exclude<typeof h.style, 'bald'>] });
+  const shell = capShell({ lm, boundary: ctx.boundary, crown, maxT: maxShell(h.style as Exclude<typeof h.style, 'bald'>, lm.W), side: spec?.side ?? 1, reach: { left: reachOf('left'), right: reachOf('right') }, gain: ctx.gain, bump: (x) => liftBump(h, ctx.partX, lm.W, lm.H, x) * (0.3 + 0.7 * THICKNESS[h.style as Exclude<typeof h.style, 'bald'>].puff), C: ctx.C, ...shoulder(h.style as Exclude<typeof h.style, 'bald'>, lm.W), round: ROUND_SHELL[h.style as Exclude<typeof h.style, 'bald'>], puff: ctx.puffW * lm.W });
   const scalp = orient([...hl.pts, ...[...arc].reverse()]);
   const base = guard.fit(orient(shell.ring));
   const wings = { left: { reach: reachOf('left'), yEnd: shell.yEnd.left }, right: { reach: reachOf('right'), yEnd: shell.yEnd.right } };

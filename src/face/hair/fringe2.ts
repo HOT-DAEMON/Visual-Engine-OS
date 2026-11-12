@@ -1,6 +1,6 @@
 import { clamp } from '../../core/math';
 import type { Vec } from '../../geometry/eye/primitives';
-import { layoutBlades, type BladeSpec } from './fringe-blades';
+import { groupTips, layoutBlades, type BladeSpec } from './fringe-blades';
 import { lockFrom, type HairCtx } from './flow';
 import { pieceCtx, splitByAspect } from './fringe-split';
 import type { HairLock } from './types';
@@ -47,7 +47,7 @@ export function engineFringe(ctx: HairCtx): FringeEngineResult | null {
     // Touffes continues (`docs/HAIR-BLADES.md`, `fringe-blades.ts`). Les valeurs `pre` de `rnd` sont tirées UNE fois, dans l'ordre d'avant ; ATTENTION : plus de touffes = plus de tirages dans `lockFrom`, le reste de la chevelure change à graine égale (`docs/HAIR-BLADES.md`).
     const n = fe.count || 5 + Math.floor(rnd() * 3);
     const pre = Array.from({ length: n }, () => ({ a: rnd(), b: rnd(), c: rnd() }));
-    blades.push(...layoutBlades({ n, pre, xF, gc, gw, side, seed: h.seed, yAt }));
+    blades.push(...layoutBlades({ n, pre, xF, xW: W, gc, gw, side, seed: h.seed, yAt }));
   } else if (fe.mode === 'wispy') {
     // Mèches fines étagées, pointes très irrégulières.
     const n = fe.count || 26 + Math.floor(rnd() * 10);
@@ -70,6 +70,8 @@ export function engineFringe(ctx: HairCtx): FringeEngineResult | null {
       const xTip = long ? x + side * xF * (0.12 + 0.34 * rnd()) : x + side * 0.03 * W;
       blades.push({ xRoot: x, xTip, yTip: yAt(xTip, long ? 0.88 + 0.12 * rnd() : 0.25 + 0.3 * rnd()), w0: ((2 * xF) / n) * (1.1 + 0.5 * rnd()), rank: 'main', profile: 'ribbon', power: 1, fade: 0, ragged: 0.3, sharp: 0.7, rootW: 0.9 });
     }
+    // Rubans voisins resserrés en touffes de 3 à 4 (pointe commune à 85 %) : 11 rubans indépendants faisaient 10 à 14 pointes distinctes (`docs/HAIR-NATURAL-FRINGE.md`).
+    blades.splice(0, blades.length, ...groupTips(blades, gc, 3, 0.85));
   }
 
   const locks: HairLock[] = [];

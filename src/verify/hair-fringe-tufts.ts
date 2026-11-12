@@ -51,8 +51,23 @@ export function tuftStats(geo: HairGeometry, W: number): TuftStats | null {
   return { n: ls.length, gap: ls.length >= 3 ? (gaps[1] ?? 0) / W : 0, maxW: Math.max(...ls.map((l) => l.w0 as number)) / W, squat: squat / ls.length };
 }
 
+/**
+ * NOMBRE DE TOUFFES DISTINCTES de la frange (`docs/HAIR-NATURAL-FRINGE.md`) : le « peigne » est une rangée de pointes séparées. On compte les pointes (dernier point de la ligne médiane)
+ * des mèches de frange de rang `main` / `mass`, triées par abscisse ; deux pointes voisines à moins de `TIP_X` × W en x ET `TIP_Y` × H en y ne font qu'une touffe. `null` : moins de 4 pointes
+ * (rien à juger : frange absente, ou en fils fins `sheer` / `wispy` par conception).
+ */
+export const TIP_X = 0.05;
+export const TIP_Y = 0.012;
+export function tuftCount(geo: HairGeometry, W: number, H: number): number | null {
+  const tips = geo.locks.filter((l) => !l.sim && l.layer === 'front' && l.bang === true && (l.rank === 'main' || l.rank === 'mass') && !!l.spine).map((l) => (l.spine as { x: number; y: number }[]).at(-1) as { x: number; y: number }).sort((a, b) => a.x - b.x);
+  if (tips.length < 4) return null;
+  let n = 0, last: { x: number; y: number } | null = null;
+  for (const t of tips) { if (!last || Math.abs(t.x - last.x) >= TIP_X * W || Math.abs(t.y - last.y) >= TIP_Y * H) n++; last = t; }
+  return n;
+}
+
 /** Seuils posés sur le corpus (126 visages × mode, `docs/HAIR-BLADES.md`) : avant → après (max). Pas de référence dessinée par un illustrateur. */
-export const TUFT_LIMITS = { gap: 0.03, maxW: 0.25, squat: 0.7, jag: 0.03 } as const;
+export const TUFT_LIMITS = { gap: 0.03, maxW: 0.25, squat: 0.7, jag: 0.03, tufts: 20 } as const;
 
 /** Contrôles de forme de la frange. `mode` = `hair.fringeEngine.mode` : continuité, largeur et aspect ne jugent que les lames (les autres modes ouvrent le front par conception). */
 export function checkFringeTufts(geo: HairGeometry, mode: string, W: number, H: number): Check[] {
@@ -63,6 +78,8 @@ export function checkFringeTufts(geo: HairGeometry, mode: string, W: number, H: 
     out.push(check('geometry', 'fringe-tuft-width', '<=', st.maxW, TUFT_LIMITS.maxW, 'une touffe de frange couvre une trop grande part du front : une lame géante, pas une mèche'));
     out.push(check('style', 'fringe-tuft-slender', '<=', st.squat, TUFT_LIMITS.squat, 'la plupart des touffes de frange sont plus larges que longues : des triangles trapus (dents de requin)'));
   }
+  const tc = tuftCount(geo, W, H);
+  if (tc !== null) out.push(check('style', 'fringe-tuft-count', '<=', tc, TUFT_LIMITS.tufts, 'la frange est une rangée de pointes séparées (peigne) : plus de touffes distinctes qu\'une frange naturelle', 'warn'));
   const jag = tipJag(geo, H);
   if (jag !== null) out.push(check('style', 'fringe-tip-jag', '<=', jag, TUFT_LIMITS.jag, 'le bord inférieur de la frange alterne pointes longues et courtes : une scie', 'warn'));
   return out;

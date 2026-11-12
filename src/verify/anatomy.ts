@@ -56,7 +56,9 @@ export function checkAnatomy(face: RandomFace, lm: FaceLandmarks, geo: HairGeome
   for (const side of ['left', 'right'] as const) {
     const s = geo.sides[side];
     const cov = coverageOf(front, s.earZone);
-    if (s.ear === 'covered') out.push(check('anatomy', `ear-covered-${side}`, '>=', cov, 0.45, `oreille ${side} annoncée cachée, couverte à ${cov.toFixed(2)}`));
+    // Une oreille « cachée » l'est aussi par la MASSE de la coque (afro, bouclé : plus de rideau de mèches, la coque couvre l'oreille).
+    const covMass = coverageOf(geo.front, s.earZone);
+    if (s.ear === 'covered') out.push(check('anatomy', `ear-covered-${side}`, '>=', Math.max(cov, covMass), 0.45, `oreille ${side} annoncée cachée, couverte à ${Math.max(cov, covMass).toFixed(2)}`));
     else if (s.ear === 'free') out.push(check('anatomy', `ear-free-${side}`, '<=', cov, 0.12, `oreille ${side} annoncée dégagée, couverte à ${cov.toFixed(2)}`));
     else out.push(check('anatomy', `ear-tucked-${side}`, '<=', cov, 0.5, `oreille ${side} rangée : seul le haut peut être couvert (${cov.toFixed(2)})`));
     // L'oreille est sur le contour, entre la ligne des yeux et la base du nez.

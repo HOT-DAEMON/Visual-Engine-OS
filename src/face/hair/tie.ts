@@ -16,10 +16,11 @@ const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
  *  - un chignon latéral se pose sur la partie HAUTE du crâne (entre le sommet + 0,09 H et la tempe) : plus bas, à hauteur d'oreille, il se lit comme un casque audio ;
  *  - un chignon centré est un chignon de dessus : plus bas il est entièrement caché par le crâne (de face, le style `bun` n'aurait aucun chignon) ;
  *  - une queue latérale ne descend pas sous le haut de l'oreille ;
- *  - rayon de chignon ≤ 0,14 W (latéral) / 0,18 W (dessus) : un disque de 0,42 W de large n'est pas un chignon ;
+ *  - rayon de chignon ≤ 0,20 W (latéral) / 0,22 W (dessus) : un chignon réel mesure un tiers à deux cinquièmes de la largeur de tête (rayon 0,10–0,20 W) ; au-delà ce n'est plus un chignon.
+ *    Les bornes précédentes (0,14 / 0,18 W, rayons construits 0,07–0,14 W) donnaient des « oreilles de souris » (`docs/HAIR-NATURAL.md`) ;
  *  - éventail latéral de la queue ≤ 0,2 W (latérale, basse) / 0,28 W (dessus) autour de l'attache : la gravité l'emporte sur l'éventail.
  */
-export const TIE = { bunRadiusSide: 0.14, bunRadiusTop: 0.18, spreadSide: 0.2, spreadTop: 0.28, bunTopBand: 0.09 } as const;
+export const TIE = { bunRadiusSide: 0.2, bunRadiusTop: 0.22, spreadSide: 0.2, spreadTop: 0.28, bunTopBand: 0.09 } as const;
 
 /** Attaches (queue / chignon) : relatives au crâne. Centre : derrière la tête (chignon : sur le dessus) ; côté : posée sur le contour du crâne. */
 export function tieSpots(ctx: HairCtx): Vec[] {
@@ -52,7 +53,8 @@ export function tailLocks(ctx: HairCtx, T: Vec): HairLock[] {
   const avail = Math.max(0.08 * H, lm.neck.bottomY - 0.012 * H - T.y);
   const len = Math.min((0.15 + 0.55 * h.tie.tail) * H, kind === 'top' ? Infinity : 0.97 * avail);
   const bw = (0.045 + 0.06 * h.tie.thickness) * W;
-  const spread = (kind === 'top' ? TIE.spreadTop : TIE.spreadSide) * W;
+  // La borne latérale vaut pour le BORD du ruban, pas seulement pour sa ligne médiane : on retranche la demi-largeur du cœur (`docs/HAIR-NATURAL.md`, `ponytail` 11556 : portée 0,423 W pour 0,42).
+  const spread = Math.max(0.02 * W, (kind === 'top' ? TIE.spreadTop : TIE.spreadSide) * W - 0.4 * bw);
   const dirOf = (): Vec => {
     const a = (rnd() - 0.5) * 1.5;
     return kind === 'top' ? unit({ x: Math.sin(a) * 1.3, y: -Math.cos(a) }) : kind === 'side' ? unit({ x: sg, y: -0.15 + (rnd() - 0.5) * 0.6 }) : unit({ x: (rnd() - 0.5) * 0.6, y: 1 });
@@ -77,8 +79,10 @@ export function bunLocks(ctx: HairCtx, T: Vec): HairLock[] {
   const { h, lm } = ctx;
   const { W, H } = lm;
   const topBun = T.y < lm.hair.sideY - 0.1 * H && Math.abs(T.x) < 0.2 * W;
-  const rb = (topBun ? 0.09 + 0.09 * h.tie.thickness : 0.07 + 0.07 * h.tie.thickness) * W;
-  const B = T.y < -H / 2 + 0.06 * H ? { x: T.x + Math.sign(T.x) * rb * 0.25, y: T.y - rb * 0.35 } : T;
+  const rb = (topBun ? 0.11 + 0.09 * h.tie.thickness : 0.1 + 0.09 * h.tie.thickness) * W;
+  // Le chignon est une boule posée SUR le crâne, pas sur son contour : son centre est décalé vers l'extérieur et le haut (la moitié du disque derrière la tête ne se voit pas, d'où
+  // l'ancienne « oreille de souris »). Dessus : il dépasse du crâne de 0,6 rayon ; côté : décalé de 0,35 rayon vers l'extérieur et de 0,25 vers le haut.
+  const B = T.y < -H / 2 + 0.06 * H ? { x: T.x + Math.sign(T.x) * rb * 0.25, y: T.y - rb * 0.6 } : Math.abs(T.x) >= 0.2 * W ? { x: T.x + Math.sign(T.x) * rb * 0.35, y: T.y - rb * 0.25 } : T;
   const scallop = ctx.tex === 'curly' || ctx.tex === 'coily' ? 1 : ctx.tex === 'wavy' ? 0.5 : 0;
   const k = 9 + Math.floor(ctx.rnd() * 5);
   const disc: Poly = Array.from({ length: 48 }, (_, i) => {

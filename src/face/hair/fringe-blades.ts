@@ -24,6 +24,8 @@ export interface BladeArgs {
   /** Tirages déjà consommés dans le flux principal, une valeur par touffe (l'ordre d'appel de `rnd` ne change pas). */
   readonly pre: readonly { a: number; b: number; c: number }[];
   readonly xF: number;
+  /** Largeur du visage W (échelle de l'écart individuel de pointe). */
+  readonly xW: number;
   /** Centre et demi-largeur du jour (le front reste visible entre les deux groupes de touffes). */
   readonly gc: number;
   readonly gw: number;
@@ -71,6 +73,21 @@ export function layoutBlades(a: BladeArgs, minRhythm = 0.4): BladeSpec[] {
       return p < left ? lo + p : gc + gw + (p - left);
     });
     const mean = (left + right) / n, phase = fr() * 6.283;
+    // TOUFFES GROUPÉES (`docs/HAIR-NATURAL-FRINGE.md`) : les lames voisines d'un même côté du jour forment des groupes de 3 à 4 qui partagent LONGUEUR et pointe (au tirage d'un seul groupe
+    // près : tirage propre `gr`). Avant : 15 à 20 pointes de longueurs tirées une à une = une rangée de dents séparées (peigne) ; maintenant 4 à 6 touffes, dont la pointe se divise
+    // seulement de ±0,05 de longueur. Les lames gardent leur largeur et leur recouvrement : la couverture à la racine ne change pas.
+    const gr = mulberry32(((a.seed ^ 0x7f4a7c15) * 2654435761 + attempt * 40503) >>> 0);
+    const grp: number[] = [], gl: { f: number; dx: number; x: number; n: number }[] = [];
+    let size = 0, want = 0, curSide = -1;
+    xs.forEach((x, i) => {
+      const sd = x < gc ? 0 : 1;
+      if (i === 0 || sd !== curSide || size >= want) { gl.push({ f: gr(), dx: gr(), x: 0, n: 0 }); size = 0; want = 3 + Math.floor(gr() * 2); curSide = sd; }
+      grp[i] = gl.length - 1;
+      (gl[grp[i] as number] as { x: number; n: number }).x += x;
+      (gl[grp[i] as number] as { x: number; n: number }).n++;
+      size++;
+    });
+    for (const g of gl) g.x /= Math.max(1, g.n);
     return xs.map((x, i) => {
       const q = pre[i % pre.length] as { a: number; b: number; c: number };
       // Les touffes ajoutées reprennent le tirage de leur modèle, décalé par le flux propre : voisines semblables, jamais identiques.
@@ -78,10 +95,14 @@ export function layoutBlades(a: BladeArgs, minRhythm = 0.4): BladeSpec[] {
       const pitch = clamp(((xs[i + 1] ?? x + mean) - (xs[i - 1] ?? x - mean)) / 2, 0.6 * mean, 1.5 * mean);
       const long = Math.sign(x - gc) === side, spec = long ? LEN.long : LEN.short;
       const bias = 0.1 * Math.sin(2 * Math.PI * us[i]! * 1.4 + phase);
-      const f = clamp(spec[0] + spec[1] * r.b + bias, 0.2, 0.92);
+      const G = gl[grp[i] as number] as { f: number; dx: number; x: number };
+      // Pointe COMMUNE du groupe : abscisse (centre du groupe + dérive vers l'extérieur du jour) et longueur partagées ; chaque lame ne s'en écarte que de ±0,01 W / ±0,02 de longueur.
+      // Les lames d'une touffe se resserrent vers un même point, comme des cheveux réels qui se rejoignent, au lieu de 15 à 20 pointes indépendantes.
+      const f = clamp(spec[0] + spec[1] * G.f + bias + (r.b - 0.5) * 0.04, 0.2, 0.92);
       const reach = Math.min(1, Math.abs(x - gc) / (0.5 * xF));
+      const tipX = G.x + away(x) * (0.05 + 0.2 * G.dx) * xF * (0.5 + 0.5 * reach) + (r.a - 0.5) * 0.02 * a.xW;
       const thin = fr() < 0.2 ? 0.6 : 1;
-      return { xRoot: x, xTip: x + away(x) * (0.05 + 0.2 * r.a) * xF * (0.5 + 0.5 * reach), yTip: a.yAt(x, f), w0: pitch * (OVERLAP[0] + (OVERLAP[1] - OVERLAP[0]) * r.c) * thin, rank: 'main', profile: 'ribbon', power: 1, fade: 0, ragged: 0, sharp: 0.5 + 0.3 * fr(), rootW: 1 } satisfies BladeSpec;
+      return { xRoot: x, xTip: tipX, yTip: a.yAt(tipX, f), w0: pitch * (OVERLAP[0] + (OVERLAP[1] - OVERLAP[0]) * r.c) * thin, rank: 'main', profile: 'ribbon', power: 1, fade: 0, ragged: 0, sharp: 0.5 + 0.3 * fr(), rootW: 1 } satisfies BladeSpec;
     });
   };
   const rhythm = (bs: BladeSpec[]): number => {
@@ -91,4 +112,26 @@ export function layoutBlades(a: BladeArgs, minRhythm = 0.4): BladeSpec[] {
   let best = layout(0), bestR = rhythm(best);
   for (let t = 1; t < 8 && bestR < minRhythm; t++) { const c = layout(t), r = rhythm(c); if (r > bestR) { best = c; bestR = r; } }
   return best;
+}
+
+/**
+ * Regroupe les pointes de mèches triées par abscisse de racine en touffes de `size` à `size + 1` voisines (au plus 1 groupe par côté du jour `gc`) : chaque mèche rejoint la pointe moyenne
+ * du groupe à `blend` près (abscisse et ordonnée). Fonction pure sans tirage. Sert la frange asymétrique, dont 11 rubans indépendants faisaient 10 à 14 pointes distinctes.
+ */
+export function groupTips(bs: readonly BladeSpec[], gc: number, size: number, blend: number): BladeSpec[] {
+  const order = bs.map((_, i) => i).sort((p, q) => (bs[p] as BladeSpec).xRoot - (bs[q] as BladeSpec).xRoot);
+  const out = bs.slice();
+  let start = 0;
+  const flush = (end: number): void => {
+    const ids = order.slice(start, end);
+    if (!ids.length) return;
+    const mx = ids.reduce((a, i) => a + (bs[i] as BladeSpec).xTip, 0) / ids.length, my = ids.reduce((a, i) => a + (bs[i] as BladeSpec).yTip, 0) / ids.length;
+    for (const i of ids) { const b = bs[i] as BladeSpec; out[i] = { ...b, xTip: b.xTip + blend * (mx - b.xTip), yTip: b.yTip + blend * (my - b.yTip) }; }
+    start = end;
+  };
+  for (let k = 1; k <= order.length; k++) {
+    const prevSide = (bs[order[k - 1] as number] as BladeSpec).xRoot < gc ? 0 : 1, nextSide = k < order.length ? ((bs[order[k] as number] as BladeSpec).xRoot < gc ? 0 : 1) : -1;
+    if (k === order.length || nextSide !== prevSide || k - start >= size + (k % 2)) flush(k);
+  }
+  return out;
 }
