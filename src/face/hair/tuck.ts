@@ -17,6 +17,7 @@ type Style = Exclude<HairStyle, 'bald'>;
  */
 export const TUCK: Partial<Record<Style, { readonly maxInset: number }>> = {
   afro: { maxInset: 0.05 },
+  curly: { maxInset: 0.04 },
 };
 
 /** Pas de la grille (fraction de W) : plus fin que la grille de couverture du remplissage (0,012). */

@@ -59,6 +59,22 @@ export function resolveEar(ctx: HairCtx, want: FaceParams['hair']['sides']['left
   return s === 'bob' || s === 'long' || s === 'afro' || s === 'curly' ? 'covered' : s === 'braids' ? 'tucked' : 'free';
 }
 
+/**
+ * Coiffures en MASSE RONDE (afro, bouclé) : les deux côtés se comportent pareillement (`docs/HAIR-NATURAL.md`). Une oreille recouverte d'un côté et dégagée de l'autre,
+ * ou une lanière de joue d'un seul côté, faisait pencher la masse (aile longue à gauche, courte à droite) : un volume rond entoure le crâne de façon régulière.
+ * Les deux côtés prennent le comportement qu'ils ont en commun, sinon « recouverte » (la masse enveloppe) ; la joue est écartée (une masse n'a pas de lanière).
+ */
+export const SYMMETRIC_SIDES: readonly string[] = ['afro', 'curly'];
+
+/** Comportement voulu d'un côté, après la règle de symétrie des masses rondes. */
+export function sideWant(ctx: HairCtx, name: 'left' | 'right'): FaceParams['hair']['sides']['left'] {
+  const own = ctx.h.sides[name];
+  if (!SYMMETRIC_SIDES.includes(ctx.h.style)) return own;
+  const a = resolveEar(ctx, ctx.h.sides.left.ear), b = resolveEar(ctx, ctx.h.sides.right.ear);
+  const ear = a === b ? a : 'covered';
+  return { ear: ear === 'tucked' ? 'free' : ear, cheek: 'none' };
+}
+
 const hitsZone = (poly: Poly, zone: Poly): boolean => zone.some((q) => inPoly(poly, q.x, q.y)) || poly.some((q) => inPoly(zone, q.x, q.y));
 
 /** Courbe quadratique A → B de contrôle C (12 points). */
@@ -90,7 +106,7 @@ export function applySides(ctx: HairCtx, p: FaceParams, frontIn: HairLock[], bac
   const info = {} as { left: SideInfo; right: SideInfo };
   for (const { name, sg } of SIDES) {
     const zone = earZone(p, ctx, sg);
-    const want = h.sides[name];
+    const want = sideWant(ctx, name);
     const ear = resolveEar(ctx, want.ear);
     const ys = zone.map((q) => q.y);
     const [yTop, yBot] = [Math.min(...ys), Math.max(...ys)];
@@ -106,7 +122,8 @@ export function applySides(ctx: HairCtx, p: FaceParams, frontIn: HairLock[], bac
       // Rideau devant l'oreille ; on ajoute des mèches (plus larges à chaque essai) jusqu'à couvrir ≥ 60 % de la zone.
       const cx = zone.reduce((a, q) => a + q.x, 0) / zone.length;
       const earW = Math.max(...zone.map((q) => q.x)) - Math.min(...zone.map((q) => q.x));
-      for (let k = 0; k < 6; k++) {
+      // Masse ronde (afro, bouclé) : pas de rideau de mèches lisses à bout carré (lanières plaquées devant l'oreille) ; les mèches de l'aile de la masse la recouvrent.
+      for (let k = 0; k < (SYMMETRIC_SIDES.includes(h.style) ? 0 : 6); k++) {
         const polys = front.map((l) => l.poly);
         if (k >= 2 && coverageOf(polys, zone) >= 0.6) break;
         // Mèches centrées sur l'oreille, à bout presque carré (sharp bas) et plus larges à chaque essai : elles recouvrent toute sa hauteur.

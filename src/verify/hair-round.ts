@@ -44,11 +44,15 @@ export interface RoundMetrics {
 /** Mesures de la masse (`geo.base[0]`) : asymétrie, décalage du sommet, écart de part nue entre moitiés, proportions par rapport à la tête. */
 export function roundMetrics(geo: HairGeometry, lm: FaceLandmarks): RoundMetrics {
   const base = geo.base[0] as Poly;
-  let mxR = 0, mxL = 0, topY = Infinity, topX = 0;
+  let mxR = 0, mxL = 0, topY = Infinity;
   for (const v of base) {
     if (v.x > 0) mxR = Math.max(mxR, v.x); else mxL = Math.max(mxL, -v.x);
-    if (v.y < topY) { topY = v.y; topX = v.x; }
+    if (v.y < topY) topY = v.y;
   }
+  // Le dessus d'une boule est un PLATEAU (sommet d'ellipse presque plat : plusieurs sommets à 1–2 px d'écart) : le « sommet » est le centre de ce plateau (sommets à moins de 0,03 H du plus haut),
+  // pas le plus haut d'entre eux (bruit de mesure : 0,12 W de décalage pour 3 px d'écart de hauteur, graine 11059). `docs/HAIR-NATURAL.md`.
+  const plateau = base.filter((v) => v.y <= topY + 0.03 * lm.H);
+  const topX = plateau.reduce((a, v) => a + v.x, 0) / Math.max(1, plateau.length);
   const polys = geo.locks.filter((l) => l.layer === 'front' && l.rank !== 'hairline').map((l) => l.poly);
   const half = (sg: 1 | -1): number => {
     const clip = (p: Poly): Poly => p.map((v) => ({ x: sg * Math.max(0, sg * v.x), y: v.y }));
