@@ -107,7 +107,7 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
     anchors,
   };
   const withAxes = (e: EyeInput): EyeInput => (e.kind === 'eye' ? applyEyeAxes(e, extras.fold, extras.browLash) : e);
-  const fits = { left: fitEyeToFace(withAxes(pair.left), 'left', lm, { size: options.eyeSize }), right: fitEyeToFace(withAxes(pair.right), 'right', lm, { size: options.eyeSize }) };
+  const fits = { left: fitEyeToFace(withAxes(pair.left), 'left', lm, { size: options.eyeSize, perimeters: !!options.structure }), right: fitEyeToFace(withAxes(pair.right), 'right', lm, { size: options.eyeSize, perimeters: !!options.structure }) };
   const eyes = sides.map((side): SceneInput['objects'][number] => {
     const fit = fits[side];
     return { ...fit.eye, id: `${id}-eye-${side}`, place: { host: id, anchors: [`canthus-${side}`] }, transform: fit.transform };

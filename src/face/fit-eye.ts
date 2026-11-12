@@ -1,5 +1,7 @@
 import { clamp, rad } from '../core/math';
 import { browGeometry, openingGeometry, type Vec } from '../geometry/eye';
+import { eyeBands } from './perimeters';
+import { BROW_GAP } from './perimeters-limits';
 import { minHalfWidth } from './outline';
 import type { FaceLandmarks } from './landmarks';
 import { EyeSpec, type SceneInput } from '../schema';
@@ -94,6 +96,11 @@ export interface FitOptions {
   readonly size?: number;
   /** Part de l'espace temporal occupée par la fente palpébrale (0,4–1). */
   readonly fill?: number;
+  /**
+   * Périmètre du sourcil (`perimeters-limits.ts` `BROW_GAP`) : la distance entre le haut du pli palpébral et le bas du sourcil, ramenée en pixels du visage, est bornée à [0,008 H ; 0,06 H].
+   * Un sourcil ne chevauche plus la paupière et ne flotte plus loin au-dessus ; la distance reste FLEXIBLE à l'intérieur de la plage (expression comprise). Absent = comportement historique.
+   */
+  readonly perimeters?: boolean;
 }
 
 /**
@@ -103,6 +110,24 @@ export interface FitOptions {
  * front nu et au-dessus du nez, ligne médiane. Un œil trop grand rétrécit ; il ne déborde jamais.
  */
 export function fitEyeToFace(input: EyeInput, side: EyeSide, lm: FaceLandmarks, options: FitOptions = {}): EyeFit {
+  let cur = input, fit = fitCore(cur, side, lm, options);
+  if (!options.perimeters || !fit.eye.eyebrow || !cur.eyebrow) return fit;
+  // Distance MESURÉE entre le haut du pli palpébral et le point le plus bas du contour réel du sourcil (`eyeBands` : sourcil incliné, arqué, pincé compris), en px du visage.
+  // Elle varie linéairement avec le `gap` (pente = hauteur de fente locale × échelle) ; le sourcil bouge avec l'échelle de l'œil (il fait partie de son empreinte) : quelques passes de point fixe.
+  for (let it = 0; it < 5; it++) {
+    const b = eyeBands(side, fit, lm);
+    if (b.browBottomY === null) break;
+    const px = b.creaseTopY - b.browBottomY, want = clamp(px, BROW_GAP.min * lm.H, BROW_GAP.max * lm.H);
+    if (Math.abs(want - px) < 5e-4 * lm.H) break;
+    const spec = EyeSpec.parse({ ...fit.eye, place: undefined, shape: { ...fit.eye.shape, outerSide: side } }), g = openingGeometry(spec.shape, spec.canthi);
+    // L'œil d'ORIGINE est repris (`fitCore` réapplique l'asymétrie d'ouverture) : seul le `gap` du sourcil change.
+    cur = { ...cur, eyebrow: { ...cur.eyebrow, gap: clamp((cur.eyebrow?.gap ?? 0.35) + (want - px) / (g.h * fit.scale), 0, 1) } } as EyeInput;
+    fit = fitCore(cur, side, lm, options);
+  }
+  return fit;
+}
+
+function fitCore(input: EyeInput, side: EyeSide, lm: FaceLandmarks, options: FitOptions): EyeFit {
   const A = lm.asymmetry;
   const s = side === 'left' ? -1 : 1;
   // Asymétrie : l'ouverture se règle sur l'œil AVANT la mesure, pour que l'empreinte reste exacte.

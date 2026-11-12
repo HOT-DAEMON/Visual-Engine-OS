@@ -1,5 +1,7 @@
 # Coupe oblique du cou (orifice thoracique)
 
+> **Mise à jour :** le plan de coupe décrit ci-dessous n'est plus généré pour les têtes issues d'un visage (il se lisait comme un « seau » à tangage > 0) ; l'anneau oblique reste le repère. Voir `HEAD-TURNTABLE-NECK-CUT-2.md`. Les contrôles `.socle` et `.seen` sont remplacés par `.bucket` et `.flat`.
+
 Suite de `HEAD-TURNTABLE-NECK-BELL.md` et `-NECK-RELIEF.md`. Problème de départ : le cou finissait sur un **disque plat horizontal**, vu en grande ellipse dès que la caméra passe sous le menton (effet « buste sur socle »). Sur la vue de la planche (tangage 17,73°) il représentait **42 – 48 %** des pixels du cou ; les références `rotation-3d/03`, `05` et `07` montrent au contraire un cou qui se prolonge vers les trapèzes et les clavicules.
 
 ## Principe

@@ -53,3 +53,20 @@ export const dot = (a: V3, b: V3): number => a.x * b.x + a.y * b.y + a.z * b.z;
 export const cross = (a: V3, b: V3): V3 => ({ x: a.y * b.z - a.z * b.y, y: a.z * b.x - a.x * b.z, z: a.x * b.y - a.y * b.x });
 export const norm = (a: V3): V3 => { const l = Math.hypot(a.x, a.y, a.z) || 1; return { x: a.x / l, y: a.y / l, z: a.z / l }; };
 export const v3 = (x: number, y: number, z: number): V3 => ({ x, y, z });
+
+/** Ordonnée (repère tête, U) du point visé par la caméra en perspective : le centre de la tête (milieu sommet → menton). */
+export const PERSP_FOCUS_Y = 0.5;
+/** Distance minimale caméra → point, en fraction de la distance caméra → centre : un point ne passe jamais derrière la caméra (garde numérique). */
+const PERSP_MIN_W = 0.08;
+
+/**
+ * Projection en perspective d'un point en repère CAMÉRA (`toCam`) : même image que l'orthographique au centre de la tête, mais chaque point est grossi de D / (D − Δz), Δz = avance sur le centre
+ * (z grand = proche). Retourne les coordonnées image (U), la profondeur z (inchangée : sert au tampon de profondeur) et `iw` = 1 / w, poids de l'interpolation perspective-correcte.
+ * Sans `view.persp` : projection orthographique (x, y, z, iw = 1).
+ */
+export function project(c: Cam, view: View): { x: number; y: number; z: number; iw: number } {
+  const D = view.persp;
+  if (!D) return { x: c.x, y: c.y, z: c.z, iw: 1 };
+  const f = toCam(v3(0, PERSP_FOCUS_Y, 0), { yaw: view.yaw, pitch: view.pitch }), w = Math.max(PERSP_MIN_W * D, D - (c.z - f.z)), k = D / w;
+  return { x: f.x + (c.x - f.x) * k, y: f.y + (c.y - f.y) * k, z: c.z, iw: 1 / w };
+}

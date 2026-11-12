@@ -3,14 +3,15 @@ import { defaultFrame, REF_SPEC, refView, renderHead } from '../src/head-turntab
 import { variedHead } from '../src/head-turntable/engines/from-face';
 import { CUT_SLOPE, CUT_TILT_DEG, neckCutY, neckSection } from '../src/head-turntable/engines/neck3d';
 import { neckMark, neckReliefOf } from '../src/head-turntable/engines/neck-relief';
-import { neckMeshes } from '../src/head-turntable/mesh';
-import { cutOf, neckCutChecks, share } from '../src/head-turntable/verify-neck-cut';
+import { neckCutRing, neckMeshes, NECK_EXT, PART } from '../src/head-turntable/mesh';
+import { neckClipPx } from '../src/head-turntable/neck-clip';
+import { BUCKET_VIEWS, bottomRatio, cutOf, neckCutChecks, share } from '../src/head-turntable/verify-neck-cut';
 
 const fr = defaultFrame(520);
 
-describe('coupe oblique du cou (plan de l\'orifice thoracique)', () => {
+describe('bas du cou : anneau oblique de l\'orifice thoracique, prolongation, coupe par le cadre', () => {
   for (const seed of [3, 5, 11, 21]) {
-    it(`graine ${seed} : plan coplanaire, devant plus bas de la pente réglée, pas de socle à 17,7°, contrôles des 3 couches satisfaits`, () => {
+    it(`graine ${seed} : anneau coplanaire, devant plus bas de la pente réglée, pas de seau, contrôles des 3 couches satisfaits`, () => {
       const h = variedHead(seed), m = cutOf(h.spec);
       expect(m.planarity).toBeLessThan(1e-6);
       expect(m.slopeDeg).toBeCloseTo(CUT_TILT_DEG, 3);
@@ -29,10 +30,26 @@ describe('coupe oblique du cou (plan de l\'orifice thoracique)', () => {
     expect(share(renderHead(refView(0), REF_SPEC, { frame: fr, ss: 2 }))).toBeGreaterThan(0.15);   // la mesure détecte l'ancien comportement : le contrôle « socle » n'est pas aveugle
   });
 
-  it('le plan de coupe est vu quand la caméra le voit (tangage 60°) et caché sous 25° : même seuil que la pente', () => {
-    const s = variedHead(3).spec, below = share(renderHead({ yaw: 0, pitch: CUT_TILT_DEG - 8 }, s, { frame: fr, ss: 2 })), above = share(renderHead({ yaw: 0, pitch: CUT_TILT_DEG + 25 }, s, { frame: fr, ss: 2 }));
-    expect(below).toBeLessThan(0.02);   // plan tourné vers le bas et l'arrière : de face et sous la pente, on ne le voit pas
-    expect(above).toBeGreaterThan(0.3);
+  it('pas de seau : aucun pixel de plan de coupe aux vues de contre-plongée, bas du cou droit ; la planche, elle, garde son disque', () => {
+    const s = variedHead(3).spec;
+    for (const v of BUCKET_VIEWS) {
+      const r = renderHead(v, s, { frame: fr, ss: 2 });
+      expect(share(r)).toBe(0);
+      expect(bottomRatio(r)).toBeGreaterThan(0.9);
+    }
+    expect(neckMeshes(s).every((m) => m.id !== PART.neckCut)).toBe(true);
+    expect(neckMeshes(REF_SPEC).some((m) => m.id === PART.neckCut)).toBe(true);
+    expect(bottomRatio(renderHead({ yaw: 90, pitch: 30 }, REF_SPEC, { frame: fr, ss: 2 }))).toBeLessThan(0.7);   // le contrôle n'est pas aveugle : le disque de la planche se resserre (ellipse)
+  });
+
+  it('le cou se prolonge de NECK_EXT sous sa base ; la ligne de coupe du cadre passe par le point le plus bas de l\'anneau, perspective comprise', () => {
+    const s = variedHead(5).spec, ring = neckCutRing(s), mesh = neckMeshes(s)[0]!;
+    expect(Math.max(...mesh.P.map((p) => p.y))).toBeCloseTo(s.neck.y1 + NECK_EXT, 9);
+    expect(Math.max(...ring.map((p) => p.y))).toBeLessThan(s.neck.y1 + NECK_EXT);
+    expect(neckClipPx(REF_SPEC, { yaw: 0, pitch: 0 }, fr)).toBeUndefined();
+    const o = neckClipPx(s, { yaw: 0, pitch: 40 }, fr)!, p = neckClipPx(s, { yaw: 0, pitch: 40, persp: 3.5 }, fr)!;
+    expect(Number.isFinite(o)).toBe(true);
+    expect(p).toBeGreaterThan(o);   // en perspective le bas du cou, plus proche de la caméra sous le menton, est plus bas dans l'image
   });
 
   it('la clavicule et la fosse sus-sternale suivent le plan de coupe : aucune marque sous le plan, et des marques à moins de 0,08 U au-dessus', () => {

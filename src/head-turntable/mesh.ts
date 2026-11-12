@@ -46,23 +46,51 @@ export function headMesh(spec: HeadTurnSpec, K = 96, dy = 0.0125): Mesh {
   return gridMesh(PART.head, rows, true, (i) => { const s = sectionAt(spec, ys[i]!); return v3(0, ys[i]!, s.zw); });
 }
 
+/** Prolongation du cou sous sa base (U) et nombre de rangées de cette prolongation (têtes issues d'un visage) : voir `neckMeshes`. 1 U couvre un tangage de ±60° (la prolongation doit dépasser la ligne de coupe du cadre à toutes les vues). */
+export const NECK_EXT = 1.0, NECK_EXT_ROWS = 10, NECK_BODY_ROWS = 30;
+
+/** Section du cou à la hauteur y : moteur de crâne / visage (cloche des trapèzes) si la spec en porte, sinon cylindre mesuré de la planche (évasement de 10 % sur les 0,2 U du bas, le socle de la planche). */
+const neckSec = (spec: HeadTurnSpec): ((y: number) => { a: number; zc: number; b: number }) => {
+  const n = spec.neck, e = spec.engine, flare = (y: number): number => 1 + 0.1 * Math.max(0, (y - (n.y1 - 0.2)) / 0.2);
+  return (y) => (e ? neckSection(e, y, n.y1) : { a: n.a * flare(y), zc: n.zc, b: n.b * flare(y) });
+};
+
+/** Hauteur y du bord du plan de l'orifice thoracique à l'azimut th : point FIXE de y = y1 + pente × (z(y, th) − zc1) (la section dépend de y) ; 8 itérations (contraction : pente × dz/dy ≪ 1) → points coplanaires. */
+const cutEndY = (spec: HeadTurnSpec, sec: ReturnType<typeof neckSec>, th: number): number => {
+  const n = spec.neck, base = sec(n.y1); let y = n.y1;
+  for (let k = 0; k < 8; k++) { const s = sec(y); y = n.y1 + CUT_SLOPE * (s.zc + s.b * Math.cos(th) - base.zc); }
+  return y;
+};
+
 /**
- * Cou : cylindre elliptique ; le bas est refermé par un plan (id neckCut). Planche : disque horizontal (le socle mesuré). Tête issue d'un visage : le plan de coupe est OBLIQUE (`engines/neck3d.ts`
- * `CUT_SLOPE`, plan de l'orifice supérieur du thorax : devant plus bas, nuque plus haute) ; chaque colonne j du maillage descend de y0 jusqu'à la hauteur du plan à son azimut.
+ * ANNEAU DE L'ORIFICE THORACIQUE (têtes issues d'un visage ; `[]` pour la planche) : le bord, coplanaire et OBLIQUE (devant plus bas), où le cou rejoint le thorax. Ce n'est plus un bord de maillage
+ * (le cou se prolonge, voir `neckMeshes`) mais le REPÈRE du bas du cou : le rendu coupe le cou à la hauteur image du point le plus bas de cet anneau (`neck-clip.ts`), les clavicules s'y ancrent (`neck-relief.ts`).
+ */
+export function neckCutRing(spec: HeadTurnSpec, K = 64): V3[] {
+  if (!isBellHead(spec.engine)) return [];
+  const sec = neckSec(spec);
+  return Array.from({ length: K }, (_, j) => { const th = (j / K) * 2 * Math.PI, y = cutEndY(spec, sec, th), s = sec(y); return v3(s.a * Math.sin(th), y, s.zc + s.b * Math.cos(th)); });
+}
+
+/**
+ * Cou. Planche : cylindre elliptique refermé par un disque horizontal (le socle mesuré, id neckCut).
+ * Tête issue d'un visage : PAS de plan de coupe. Un plan, même oblique, se lit comme un « seau » elliptique dès que la caméra passe sous le menton (tangage > 0 : grande ellipse pleine au bord net),
+ * alors que les références `rotation-3d/01` montrent un cou qui continue vers le bas et que le CADRE coupe en ligne droite. Le cou est donc prolongé de `NECK_EXT` U sous sa base à section constante
+ * (la cloche des trapèzes est déjà atteinte à `y1`), et le rendu le coupe par une ligne horizontale de l'image (`neck-clip.ts`) ; aucun pixel de plan de coupe n'est jamais dessiné.
  */
 export function neckMeshes(spec: HeadTurnSpec, K = 64): Mesh[] {
-  const n = spec.neck, e = spec.engine, bell = isBellHead(e), nr = bell ? 30 : 12;   // la cloche des trapèzes demande plus de rangées que le cylindre de la planche (inchangée : 12)
-  const flare = (y: number): number => 1 + 0.1 * Math.max(0, (y - (n.y1 - 0.2)) / 0.2);   // évasement de 10 % sur les 0,2 U du bas (le socle de la planche)
-  // Section : moteur de crâne / visage (lignes du cou) si la spec en porte, sinon cylindre mesuré.
-  const sec = (y: number): { a: number; zc: number; b: number } => (e ? neckSection(e, y, n.y1) : { a: n.a * flare(y), zc: n.zc, b: n.b * flare(y) });
-  const base = sec(n.y1), slope = bell ? CUT_SLOPE : 0, ths = Array.from({ length: K }, (_, j) => (j / K) * 2 * Math.PI);
-  // Hauteur du bord de la coupe à l'azimut th : point FIXE de y = y1 + pente × (z(y, th) − zc1) (la section dépend de y : la nuque, plus haute, est plus étroite) ; 8 itérations (contraction : pente × dz/dy ≪ 1) → les points du bord sont coplanaires.
-  const endY = (th: number): number => { let y = n.y1; for (let k = 0; slope && k < 8; k++) { const s = sec(y); y = n.y1 + slope * (s.zc + s.b * Math.cos(th) - base.zc); } return y; };
-  const ends = ths.map(endY), yAt = (i: number, j: number): number => n.y0 + (ends[j]! - n.y0) * (i / (nr - 1));   // slope = 0 : y = y0 + (y1 − y0)·i/(nr − 1), exactement l'ancien pas régulier
-  const rows = Array.from({ length: nr }, (_, i) => ths.map((th, j) => { const y = yAt(i, j), s = sec(y); return v3(s.a * Math.sin(th), y, s.zc + s.b * Math.cos(th)); }));
-  const body = gridMesh(PART.neck, rows, true, (i, j) => { const y = yAt(i, j); return v3(0, y, sec(y).zc); });
+  const n = spec.neck, e = spec.engine, bell = isBellHead(e), sec = neckSec(spec), ths = Array.from({ length: K }, (_, j) => (j / K) * 2 * Math.PI);
+  if (bell) {
+    const ys = [...Array.from({ length: NECK_BODY_ROWS }, (_, i) => n.y0 + ((n.y1 - n.y0) * i) / (NECK_BODY_ROWS - 1)), ...Array.from({ length: NECK_EXT_ROWS }, (_, i) => n.y1 + (NECK_EXT * (i + 1)) / NECK_EXT_ROWS)];
+    const rows = ys.map((y) => { const s = sec(y); return ths.map((th) => v3(s.a * Math.sin(th), y, s.zc + s.b * Math.cos(th))); });
+    return [gridMesh(PART.neck, rows, true, (i) => v3(0, ys[i]!, sec(ys[i]!).zc))];
+  }
+  const nr = 12, base = sec(n.y1);
+  const yAt = (i: number): number => n.y0 + (n.y1 - n.y0) * (i / (nr - 1));   // planche : y = y0 + (y1 − y0)·i/(nr − 1), exactement l'ancien pas régulier
+  const rows = Array.from({ length: nr }, (_, i) => ths.map((th) => { const y = yAt(i), s = sec(y); return v3(s.a * Math.sin(th), y, s.zc + s.b * Math.cos(th)); }));
+  const body = gridMesh(PART.neck, rows, true, (i) => { const y = yAt(i); return v3(0, y, sec(y).zc); });
   const last = rows[nr - 1]!, c = v3(0, n.y1, base.zc);
-  const P = [...last, c], nn = norm(v3(0, 1, -slope)), N = P.map(() => nn), T: [number, number, number][] = [];
+  const P = [...last, c], nn = norm(v3(0, 1, 0)), N = P.map(() => nn), T: [number, number, number][] = [];
   for (let j = 0; j < K; j++) T.push([j, (j + 1) % K, K]);
   return [body, { id: PART.neckCut, P, N, T }];
 }

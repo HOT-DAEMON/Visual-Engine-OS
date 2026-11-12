@@ -38,7 +38,7 @@ export const irisOf = (eyes: readonly PlacedEye[]): string | undefined => { cons
 
 const build = (host: HostSpec, o: Head3dSpec, iris: string | undefined, eyes: HostEyes | undefined, light: LightModel | null, shadowTint: string | null): { svg: string; box: { x: number; y: number; w: number; h: number } } => {
   const { spec } = head3dSubject(host, o, iris, eyes), frame = defaultFrame(420 * o.resolution);
-  const r = renderHead({ yaw: o.yaw, pitch: o.pitch, roll: o.roll }, spec, { frame, ss: 2, background: null, ...(light ? { light, shadowTint } : {}) });
+  const r = renderHead({ yaw: o.yaw, pitch: o.pitch, roll: o.roll, ...(o.perspective ? { persp: o.perspective } : {}) }, spec, { frame, ss: 2, background: null, ...(light ? { light, shadowTint } : {}) });
   return { svg: r.svg, box: { x: -r.originX / o.resolution, y: -r.originY / o.resolution, w: r.w / o.resolution, h: r.h / o.resolution } };
 };
 const memo = memoPure('head-3d-svg', 'svg', build, 32);

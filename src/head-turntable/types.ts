@@ -14,7 +14,15 @@ export interface V3 { readonly x: number; readonly y: number; readonly z: number
  * Vue : lacet, tangage de caméra et ROULIS de la tête (° ; > 0 = la tête s'incline vers la DROITE de l'image, sens horaire vu de face). Le roulis est une inclinaison latérale autour de l'axe
  * du nez (z de la tête), appliquée AVANT le lacet : de profil, la tête s'incline donc vers ou loin de la caméra. `rig` (pivots, calculé par `rollRig`) accompagne tout roulis non nul.
  */
-export interface View { readonly yaw: number; readonly pitch: number; readonly roll?: number; readonly rig?: RollRig }
+export interface View {
+  readonly yaw: number; readonly pitch: number; readonly roll?: number; readonly rig?: RollRig;
+  /**
+   * CAMÉRA EN PERSPECTIVE : distance de la caméra au centre de la tête, en U (hauteurs de tête). Absent = caméra orthographique (comportement d'origine, strictement inchangé).
+   * Les références `rotation-3d/01`, `02` et `06` montrent un raccourci net : en contre-plongée le menton, plus proche de la caméra, grossit par rapport au front (et inversement en plongée).
+   * Repères : 3 U ≈ objectif très rapproché (anime, effet marqué), 5 U ≈ portrait à 1,2 m, ≥ 12 U ≈ quasi orthographique.
+   */
+  readonly persp?: number;
+}
 /** Chaîne cou-tête du roulis : `T` = haut du cou (pivot de l'articulation occipitale), `B` = base du cou (pivot du pli du cou), `bend` = part du roulis prise par la flexion du cou (rad), `roll` total (rad). */
 export interface RollRig { readonly T: V3; readonly B: V3; readonly bend: number; readonly roll: number }
 

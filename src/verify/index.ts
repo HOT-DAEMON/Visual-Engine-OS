@@ -22,6 +22,7 @@ import { checkHairRound } from './hair-round';
 import { checkHeadHair } from './head-hair';
 import { checkNoseRelief } from './nose-relief';
 import { checkNoseView } from './nose-underview';
+import { checkPerimeters } from './perimeters';
 import { report, type Check, type Report } from './types';
 
 export { checkHairZones } from './hair-zones';
@@ -39,6 +40,7 @@ export { checkHairSim, hairSimStats, toleranceOf, type HairSimStats } from './ha
 export { paletteStats, isVivid } from './style';
 export type { Check, Report, VerifyLayer } from './types';
 export { engineContext, REFERENCE_LIGHT, type EngineContext } from './face-engine';
+export { checkPerimeters } from './perimeters';
 export { checkNoseRelief, noseReliefChecks, NOSE_RELIEF_LIMITS } from './nose-relief';
 export { checkNoseView, noseViewChecks, NOSE_VIEW_LIMITS } from './nose-underview';
 export { checkStructure, structureContext, geometryDigest, type StructureContext } from './structure';
@@ -64,6 +66,8 @@ export function verifyFace(face: RandomFace): Report {
   checks.push(...checkFaceEngine(face));
   // Moteur de structure (`anatomyEngine: 'structured'` seulement) : géométrie, anatomie, style de la structure.
   checks.push(...checkStructure(face));
+  // Périmètres d'occupation des composants enfants (structured) : chaîne verticale, nez sous la zone entre les yeux, écart sourcil / paupière, rapports canoniques.
+  checks.push(...checkPerimeters(face));
   // Relief du nez lu par le moteur d'éclairage : continuité, bornes, anatomie, style.
   checks.push(...checkNoseRelief(face));
   checks.push(...checkNoseView(face));
