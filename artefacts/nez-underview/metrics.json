@@ -1,0 +1,68 @@
+{
+ "overlay04": {
+  "apexErrorPctOfEllipseH": [
+   {
+    "nose": 3,
+    "pct": 17.5
+   },
+   {
+    "nose": 6,
+    "pct": 13.8
+   },
+   {
+    "nose": 10,
+    "pct": 21.8
+   },
+   {
+    "nose": 13,
+    "pct": 22.7
+   },
+   {
+    "nose": 1,
+    "pct": 36
+   },
+   {
+    "nose": 9,
+    "pct": 67.6
+   }
+  ],
+  "medianPct": 22.7
+ },
+ "sweep": {
+  "-30deg": {
+   "axisRatio": 0.395,
+   "triangleHeight": -0.375
+  },
+  "0deg": {
+   "axisRatio": 0.562,
+   "triangleHeight": 0.187
+  },
+  "20deg": {
+   "axisRatio": 0.603,
+   "triangleHeight": 0.415
+  },
+  "40deg": {
+   "axisRatio": 0.583,
+   "triangleHeight": 0.621
+  },
+  "60deg": {
+   "axisRatio": 0.495,
+   "triangleHeight": 0.861
+  },
+  "80deg": {
+   "axisRatio": 0.351,
+   "triangleHeight": 1.238
+  }
+ },
+ "verification": {
+  "checks": 324,
+  "errors": 0,
+  "warns": 0
+ },
+ "fit": {
+  "residualRms": 0.2202,
+  "baselineMedianRms": 0.3414,
+  "leaveOneOutRms": 0.2457,
+  "noses": 13
+ }
+}

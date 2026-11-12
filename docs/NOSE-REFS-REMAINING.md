@@ -1,27 +1,29 @@
-# Nez : ce qui n'est PAS fait (suite de `docs/NOSE-REFS.md`)
+# Nez : ce qui n'est PAS fait (suite de `docs/NOSE-REFS.md` et `docs/NOSE-UNDERVIEW.md`)
 
-Légende : ⬜ non fait · 🟡 partiel. Rien ici n'est prétendu fait ailleurs.
+Légende : ✅ fait et prouvé · 🟡 partiel · ⬜ non fait. Rien ici n'est prétendu fait ailleurs.
 
 ## Références
-- ⬜ `01`–`05` ne sont pas quantifiées : seule `06.png` l'est. À extraire : ellipse + triangle de `04.jpg` (rapport lobule/base, hauteur du triangle
-  de narines selon l'inclinaison), formes de narines de `03.jpg`, détails de peau de `05.jpg`.
-- ⬜ Trois formes de la planche 06 (ellipse large, trapèze plat, losange) non reproduites : ce sont des vues par dessous ou à base fermée par le lobule.
-- ⬜ Le L/H du moteur plafonne à 0,825 sur trois ajustements (cause non établie) ; « cloche-ailes » a un profil correct mais un L/H de 0,83 pour 0,98.
-- ⬜ Contour du bas du nez : les références ferment la silhouette par le lobule, le moteur par une base plate (écart sur les 28 % du bas).
-- ⬜ Les archétypes ne sont pas branchés dans le générateur aléatoire : ils sont disponibles (`noseArchetype`) et utilisés par tests et artefacts seulement.
+- ✅ `04.jpg` quantifiée : ellipse + triangle, 13 nez exploitables (`measures-04.json`, `NOSE-UNDERVIEW.md` §2).
+- ⬜ `01`, `02`, `03`, `05` toujours NON quantifiées : formes de narines de `03.jpg`, détails de peau (pores, rougeurs) de `05.jpg`, hachures de `01.jpg`/`02.jpg`.
+- ⬜ Rapport lobule/base de `04.jpg` : seul le rapport triangle/ellipse est mesuré, pas la taille du lobule seul.
+- 🟡 Trois formes de la planche 06 (ellipse large, trapèze plat, losange) : la vue de dessous donne l'enveloppe lobule + ailes, mais ces trois silhouettes n'ont PAS été re-comparées au profil de largeur de 06. Non prétendues reproduites.
+- ⬜ Le L/H de la silhouette de face plafonne à 0,825 sur trois ajustements (cause non établie).
+- ⬜ Les archétypes ne sont pas branchés dans le générateur aléatoire (`noseArchetype` : tests et artefacts seulement).
 
 ## Angle de caméra
-- ⬜ Vue de dessous / de dessus, trois quarts et profil du nez (réf. 01, 03, 04, 05) : la silhouette du moteur est de FACE uniquement. C'est la
-  cause probable des trois formes non reproduites. Non commencé : il faudrait une élévation 3D des régions puis une projection selon tangage et lacet.
-- ⬜ Narines vues de dessous (déjà listé dans `FACE-STRUCTURE-REMAINING.md`, T1).
+- 🟡 Vue de dessous / dessus et trois quarts : géométrie projetée faite (`underview.ts`, tangage + lacet), vérifiée, 4 constantes z dont 3 calibrées sur la réf. 04. NON fait : profil pur (90° de lacet) comparé aux références, roulis, rendu éclairé.
+- ⬜ Narines vues de dessous comme volumes (creux, bord) : seules leurs silhouettes projetées existent.
+- ⬜ Columelle / sous-nez comme masse dans la vue de dessous (le sommet du triangle flotte hors de la silhouette).
+- ⬜ Enveloppe lisse : l'enveloppe est facettée (enveloppe convexe de polygones peu denses).
 
 ## Apparence
-- ⬜ Matériau et texture propres au nez (brillance de la pointe, pores plus marqués, rougeurs de `05.jpg`) : le nez ne fait que fournir une hauteur au moteur
-  d'éclairage, la peau est celle de l'hôte.
-- ⬜ Cohérence de teinte mesurée entre nez, joues et membres supérieurs (valable par construction, non mesurée).
-- 🟡 Lisibilité : séparation des dômes, sillon alaire et ouverture des narines changent ≈ 1–2 % des pixels ; à rendre plus convaincants.
+- ⬜ Matériau et texture propres au nez (brillance de la pointe, pores, rougeurs de `05.jpg`) : la peau est celle de l'hôte.
+- 🟡 Teinte partagée : la vue de dessous reçoit la peau de l'hôte (planche 03) ; cohérence nez/joues/membres supérieurs toujours NON mesurée.
+- ⬜ La vue de dessous n'est pas éclairée par `src/relief` (aplats diagnostiques).
+- 🟡 Lisibilité : séparation des dômes, sillon alaire, ouverture des narines ne changent que ≈ 1–2 % des pixels (`NOSE-REFS.md` §7) ; inchangé.
 
 ## Moteur
-- ⬜ Asymétrie des ailes comme région, bosse osseuse volumétrique, cartilage supra-alaire (déjà listés en T1).
-- ⬜ Le relief du nez n'est évalué que pour la tête vue de face ; `head_3d` garde sa propre silhouette de nez.
-- ⬜ Non lancé : `npm run regress` complet (les tests de relief et de nez passent ; voir le message de commit pour l'état de la suite complète).
+- ⬜ Asymétrie des ailes comme région, bosse osseuse volumétrique, cartilage supra-alaire.
+- ⬜ `head_3d` garde sa propre silhouette de nez : la vue projetée n'y est pas branchée.
+- 🟡 Calibration : `alarBase` faiblement identifié, `lobuleRim` fixé non calibré, estimateur d'ellipse différent de celui de la mesure.
+- ⬜ `npm run regress` : voir le message de commit pour l'état réel de la suite.
