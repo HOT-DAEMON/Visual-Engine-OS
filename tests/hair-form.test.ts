@@ -86,7 +86,8 @@ describe('couche de vérification de la forme (corpus)', () => {
   });
 
   it('les trois couches sont présentes', () => {
-    const layers = new Set(checkHairForm(face('afro', 1)).map((c) => c.layer));
+    // L'afro (masse ronde, oreilles couvertes des deux côtés) n'a plus de contrôle d'oreille dégagée : l'anatomie vient d'une coiffure à oreille libre.
+    const layers = new Set(['afro', 'short', 'bob'].flatMap((st) => checkHairForm(face(st as CleanStyle, 1)).map((c) => c.layer)));
     expect([...layers].sort()).toEqual(['anatomy', 'geometry', 'style']);
   });
 });
