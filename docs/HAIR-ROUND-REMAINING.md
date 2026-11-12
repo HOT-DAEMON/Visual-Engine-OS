@@ -38,3 +38,6 @@ Fait : `HAIR-ROUND.md`, `HAIR-FRINGE-ASPECT.md`, `HAIR-ROUND-VERIFY.md`. Chaque 
 - 9 : TRAITÉ (0 / 572 cellules de peau sur bob 9568, `HAIR-FIT-SIDE.md`) ; confirmation visuelle sur `details-apres.png`.
 - Reste ouvert : `spiky` `shell-rim-bare` 0,556 pour 0,55 ; `bun`, lisière / implantation non revues ; suite de tests complète non rejouée d'un bloc (plus de 10 min sur 2 CPU : lots ciblés, 20 fichiers / 675 tests du moteur de cheveux passent).
 - 12 : les contrôles dôme ne couvrent que afro (+ balayage du visage pour toutes les coiffures).
+
+## Suite — série 7 (`HAIR-NATURAL.md`)
+Traités : `spiky` `shell-rim-bare`, `ponytail` reach, `bun` (taille, position, bornes), croissant de `curly`, afro penché / rideaux / cônes. Restent : lisière (blocs sombres au bas des ailes), frange classique « rideau », aspect hachuré du remplissage — voir `HAIR-NATURAL-REMAINING.md`.
