@@ -1,6 +1,6 @@
 {
  "source": "references/nez/04.jpg",
- "method": "seuils couleur -> amas -> fitEllipse (cyan) / minAreaEnclosingTriangle (rouge)",
+ "method": "seuils couleur -> amas -> fitEllipse (cyan) / minAreaEnclosingTriangle (rouge) ; + rep\u00e8re propre de l'ellipse (roulis compens\u00e9)",
  "summary": {
   "noses": 14,
   "withTriangle": 14,
@@ -29,6 +29,36 @@
    "max": 0.7293
   },
   "pearson_axisRatio_vs_triangleHeight": -0.334,
+  "frameValid": 11,
+  "frameExcludedIndices": [
+   7,
+   8
+  ],
+  "frame_baseWidthOverMajor": {
+   "median": 0.508,
+   "min": 0.3835,
+   "max": 0.793
+  },
+  "frame_heightOverMinor": {
+   "median": 0.633,
+   "min": 0.3342,
+   "max": 1.1028
+  },
+  "frame_baseVRelCentre": {
+   "median": 0.2734,
+   "min": -0.1576,
+   "max": 0.405
+  },
+  "frame_apexBelowBottom": {
+   "median": 0.4311,
+   "min": 0.0484,
+   "max": 0.9787
+  },
+  "frame_apexUOverMajor": {
+   "median": -0.0762,
+   "min": -0.1841,
+   "max": 0.1652
+  },
   "ellipseResidualMedian": 0.044
  },
  "noses": [
@@ -57,7 +87,16 @@
     "baseYRelEllipseCentre": 0.2263,
     "apexXRelEllipseCentre": -0.1372,
     "apexBelowEllipseBottom": 0.3395,
-    "degenerate": false
+    "degenerate": false,
+    "frame": {
+     "valid": true,
+     "rollDeg": -6.4,
+     "baseWidthOverMajor": 0.528,
+     "heightOverMinor": 0.633,
+     "baseVRelCentre": 0.1873,
+     "apexBelowBottom": 0.3203,
+     "apexUOverMajor": -0.1797
+    }
    }
   },
   {
@@ -85,7 +124,16 @@
     "baseYRelEllipseCentre": 0.272,
     "apexXRelEllipseCentre": 0.0019,
     "apexBelowEllipseBottom": 0.5738,
-    "degenerate": false
+    "degenerate": false,
+    "frame": {
+     "valid": true,
+     "rollDeg": -1.4,
+     "baseWidthOverMajor": 0.4542,
+     "heightOverMinor": 0.8007,
+     "baseVRelCentre": 0.2734,
+     "apexBelowBottom": 0.5741,
+     "apexUOverMajor": -0.0148
+    }
    }
   },
   {
@@ -113,7 +161,16 @@
     "baseYRelEllipseCentre": 0.2369,
     "apexXRelEllipseCentre": 0.0521,
     "apexBelowEllipseBottom": 0.1917,
-    "degenerate": false
+    "degenerate": false,
+    "frame": {
+     "valid": true,
+     "rollDeg": -13.6,
+     "baseWidthOverMajor": 0.5581,
+     "heightOverMinor": 0.4376,
+     "baseVRelCentre": 0.2638,
+     "apexBelowBottom": 0.2014,
+     "apexUOverMajor": -0.0762
+    }
    }
   },
   {
@@ -141,7 +198,16 @@
     "baseYRelEllipseCentre": -0.2438,
     "apexXRelEllipseCentre": 0.3272,
     "apexBelowEllipseBottom": 0.2095,
-    "degenerate": false
+    "degenerate": false,
+    "frame": {
+     "valid": true,
+     "rollDeg": -24.0,
+     "baseWidthOverMajor": 0.5144,
+     "heightOverMinor": 1.1028,
+     "baseVRelCentre": -0.1576,
+     "apexBelowBottom": 0.4452,
+     "apexUOverMajor": 0.085
+    }
    }
   },
   {
@@ -169,7 +235,16 @@
     "baseYRelEllipseCentre": 0.3255,
     "apexXRelEllipseCentre": 0.1419,
     "apexBelowEllipseBottom": 0.2102,
-    "degenerate": false
+    "degenerate": false,
+    "frame": {
+     "valid": true,
+     "rollDeg": -31.1,
+     "baseWidthOverMajor": 0.4396,
+     "heightOverMinor": 0.6096,
+     "baseVRelCentre": 0.3436,
+     "apexBelowBottom": 0.4532,
+     "apexUOverMajor": -0.1369
+    }
    }
   },
   {
@@ -197,7 +272,16 @@
     "baseYRelEllipseCentre": 0.2143,
     "apexXRelEllipseCentre": -0.0823,
     "apexBelowEllipseBottom": 0.0444,
-    "degenerate": false
+    "degenerate": false,
+    "frame": {
+     "valid": true,
+     "rollDeg": 1.7,
+     "baseWidthOverMajor": 0.3835,
+     "heightOverMinor": 0.3342,
+     "baseVRelCentre": 0.2142,
+     "apexBelowBottom": 0.0484,
+     "apexUOverMajor": -0.0721
+    }
    }
   },
   {
@@ -225,7 +309,16 @@
     "baseYRelEllipseCentre": 0.3485,
     "apexXRelEllipseCentre": -0.1022,
     "apexBelowEllipseBottom": 0.1045,
-    "degenerate": false
+    "degenerate": false,
+    "frame": {
+     "valid": false,
+     "rollDeg": -79.1,
+     "baseWidthOverMajor": 0.0222,
+     "heightOverMinor": 0.091,
+     "baseVRelCentre": -0.0179,
+     "apexBelowBottom": -0.4269,
+     "apexUOverMajor": -0.6
+    }
    }
   },
   {
@@ -253,7 +346,16 @@
     "baseYRelEllipseCentre": 0.2828,
     "apexXRelEllipseCentre": 0.0579,
     "apexBelowEllipseBottom": 0.2133,
-    "degenerate": false
+    "degenerate": false,
+    "frame": {
+     "valid": false,
+     "rollDeg": -56.1,
+     "baseWidthOverMajor": 0.3084,
+     "heightOverMinor": 0.3631,
+     "baseVRelCentre": 0.1047,
+     "apexBelowBottom": -0.0322,
+     "apexUOverMajor": -0.5489
+    }
    }
   },
   {
@@ -281,7 +383,16 @@
     "baseYRelEllipseCentre": 0.392,
     "apexXRelEllipseCentre": -0.3083,
     "apexBelowEllipseBottom": 0.7293,
-    "degenerate": false
+    "degenerate": false,
+    "frame": {
+     "valid": true,
+     "rollDeg": 11.8,
+     "baseWidthOverMajor": 0.6207,
+     "heightOverMinor": 1.0738,
+     "baseVRelCentre": 0.405,
+     "apexBelowBottom": 0.9787,
+     "apexUOverMajor": -0.1841
+    }
    }
   },
   {
@@ -309,7 +420,16 @@
     "baseYRelEllipseCentre": 0.3216,
     "apexXRelEllipseCentre": 0.0578,
     "apexBelowEllipseBottom": 0.3084,
-    "degenerate": false
+    "degenerate": false,
+    "frame": {
+     "valid": true,
+     "rollDeg": -14.0,
+     "baseWidthOverMajor": 0.4996,
+     "heightOverMinor": 0.482,
+     "baseVRelCentre": 0.3432,
+     "apexBelowBottom": 0.3252,
+     "apexUOverMajor": -0.0888
+    }
    }
   },
   {
@@ -337,7 +457,16 @@
     "baseYRelEllipseCentre": 0.2762,
     "apexXRelEllipseCentre": 0.1313,
     "apexBelowEllipseBottom": 0.3282,
-    "degenerate": false
+    "degenerate": false,
+    "frame": {
+     "valid": true,
+     "rollDeg": 6.8,
+     "baseWidthOverMajor": 0.793,
+     "heightOverMinor": 0.4815,
+     "baseVRelCentre": 0.3381,
+     "apexBelowBottom": 0.3195,
+     "apexUOverMajor": 0.1652
+    }
    }
   },
   {
@@ -365,7 +494,16 @@
     "baseYRelEllipseCentre": 0.2676,
     "apexXRelEllipseCentre": -0.1262,
     "apexBelowEllipseBottom": 0.3877,
-    "degenerate": false
+    "degenerate": false,
+    "frame": {
+     "valid": true,
+     "rollDeg": 7.8,
+     "baseWidthOverMajor": 0.508,
+     "heightOverMinor": 0.6414,
+     "baseVRelCentre": 0.2897,
+     "apexBelowBottom": 0.4311,
+     "apexUOverMajor": -0.0584
+    }
    }
   },
   {
@@ -393,7 +531,16 @@
     "baseYRelEllipseCentre": 0.0707,
     "apexXRelEllipseCentre": 0.1589,
     "apexBelowEllipseBottom": 0.182,
-    "degenerate": false
+    "degenerate": false,
+    "frame": {
+     "valid": true,
+     "rollDeg": -32.0,
+     "baseWidthOverMajor": 0.5066,
+     "heightOverMinor": 0.8001,
+     "baseVRelCentre": 0.2241,
+     "apexBelowBottom": 0.5242,
+     "apexUOverMajor": -0.1153
+    }
    }
   },
   {
@@ -421,7 +568,16 @@
     "baseYRelEllipseCentre": 0.341,
     "apexXRelEllipseCentre": -0.1479,
     "apexBelowEllipseBottom": -0.1232,
-    "degenerate": true
+    "degenerate": true,
+    "frame": {
+     "valid": true,
+     "rollDeg": -15.5,
+     "baseWidthOverMajor": 0.5469,
+     "heightOverMinor": -0.0475,
+     "baseVRelCentre": 0.3693,
+     "apexBelowBottom": -0.1782,
+     "apexUOverMajor": -0.2248
+    }
    }
   }
  ]

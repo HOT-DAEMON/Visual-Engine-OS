@@ -1,0 +1,549 @@
+{
+ "source": "references/nez/05.jpg",
+ "method": "grille par vall\u00e9es de projection -> amas principal par cellule -> narines sombres / moucheture",
+ "summary": {
+  "cells": 24,
+  "measured": 24,
+  "withNostrilPair": 16,
+  "gridColumns": [
+   26,
+   124,
+   255,
+   371,
+   524
+  ],
+  "gridRows": [
+   7,
+   103,
+   220,
+   322,
+   454,
+   583,
+   702
+  ],
+  "aspectWH": {
+   "median": 0.8216,
+   "min": 0.5841,
+   "max": 1.275
+  },
+  "speckDensityPer1000px2": {
+   "median": 0.338,
+   "min": 0.0,
+   "max": 0.988
+  },
+  "speckledCells(>=1.0)": [],
+  "separationOverNoseW": {
+   "median": 0.401,
+   "min": 0.2561,
+   "max": 0.5526
+  },
+  "meanCyRel": {
+   "median": 0.7565,
+   "min": 0.5561,
+   "max": 0.8681
+  },
+  "meanSizeOverNoseW": {
+   "median": 0.096,
+   "min": 0.066,
+   "max": 0.1371
+  }
+ },
+ "cells": [
+  {
+   "row": 1,
+   "col": 1,
+   "measured": true,
+   "bbox": [
+    37,
+    21,
+    100,
+    92
+   ],
+   "w": 64,
+   "h": 72,
+   "aspectWH": 0.8889,
+   "inkFraction": 0.1927,
+   "specks": 0,
+   "speckDensityPer1000px2": 0.0,
+   "nostrilPair": {
+    "separationOverNoseW": 0.3556,
+    "meanCyRel": 0.7668,
+    "meanSizeOverNoseW": 0.092
+   }
+  },
+  {
+   "row": 1,
+   "col": 2,
+   "measured": true,
+   "bbox": [
+    145,
+    12,
+    215,
+    98
+   ],
+   "w": 71,
+   "h": 87,
+   "aspectWH": 0.8161,
+   "inkFraction": 0.343,
+   "specks": 3,
+   "speckDensityPer1000px2": 0.486,
+   "nostrilPair": {
+    "separationOverNoseW": 0.3739,
+    "meanCyRel": 0.6382,
+    "meanSizeOverNoseW": 0.1314
+   }
+  },
+  {
+   "row": 1,
+   "col": 3,
+   "measured": true,
+   "bbox": [
+    259,
+    21,
+    333,
+    96
+   ],
+   "w": 75,
+   "h": 76,
+   "aspectWH": 0.9868,
+   "inkFraction": 0.2342,
+   "specks": 2,
+   "speckDensityPer1000px2": 0.351,
+   "nostrilPair": null
+  },
+  {
+   "row": 1,
+   "col": 4,
+   "measured": true,
+   "bbox": [
+    379,
+    7,
+    447,
+    90
+   ],
+   "w": 69,
+   "h": 84,
+   "aspectWH": 0.8214,
+   "inkFraction": 0.2267,
+   "specks": 3,
+   "speckDensityPer1000px2": 0.518,
+   "nostrilPair": {
+    "separationOverNoseW": 0.4568,
+    "meanCyRel": 0.7878,
+    "meanSizeOverNoseW": 0.096
+   }
+  },
+  {
+   "row": 2,
+   "col": 1,
+   "measured": true,
+   "bbox": [
+    27,
+    111,
+    112,
+    200
+   ],
+   "w": 86,
+   "h": 90,
+   "aspectWH": 0.9556,
+   "inkFraction": 0.3227,
+   "specks": 7,
+   "speckDensityPer1000px2": 0.904,
+   "nostrilPair": {
+    "separationOverNoseW": 0.4395,
+    "meanCyRel": 0.8425,
+    "meanSizeOverNoseW": 0.0961
+   }
+  },
+  {
+   "row": 2,
+   "col": 2,
+   "measured": true,
+   "bbox": [
+    152,
+    129,
+    230,
+    215
+   ],
+   "w": 79,
+   "h": 87,
+   "aspectWH": 0.908,
+   "inkFraction": 0.2772,
+   "specks": 5,
+   "speckDensityPer1000px2": 0.727,
+   "nostrilPair": {
+    "separationOverNoseW": 0.3675,
+    "meanCyRel": 0.7462,
+    "meanSizeOverNoseW": 0.0886
+   }
+  },
+  {
+   "row": 2,
+   "col": 3,
+   "measured": true,
+   "bbox": [
+    273,
+    110,
+    337,
+    196
+   ],
+   "w": 65,
+   "h": 87,
+   "aspectWH": 0.7471,
+   "inkFraction": 0.2255,
+   "specks": 2,
+   "speckDensityPer1000px2": 0.354,
+   "nostrilPair": null
+  },
+  {
+   "row": 2,
+   "col": 4,
+   "measured": true,
+   "bbox": [
+    375,
+    118,
+    435,
+    194
+   ],
+   "w": 61,
+   "h": 77,
+   "aspectWH": 0.7922,
+   "inkFraction": 0.1969,
+   "specks": 0,
+   "speckDensityPer1000px2": 0.0,
+   "nostrilPair": null
+  },
+  {
+   "row": 3,
+   "col": 1,
+   "measured": true,
+   "bbox": [
+    33,
+    238,
+    108,
+    319
+   ],
+   "w": 76,
+   "h": 82,
+   "aspectWH": 0.9268,
+   "inkFraction": 0.1877,
+   "specks": 1,
+   "speckDensityPer1000px2": 0.16,
+   "nostrilPair": null
+  },
+  {
+   "row": 3,
+   "col": 2,
+   "measured": true,
+   "bbox": [
+    151,
+    235,
+    252,
+    314
+   ],
+   "w": 102,
+   "h": 80,
+   "aspectWH": 1.275,
+   "inkFraction": 0.4031,
+   "specks": 7,
+   "speckDensityPer1000px2": 0.858,
+   "nostrilPair": {
+    "separationOverNoseW": 0.3697,
+    "meanCyRel": 0.6732,
+    "meanSizeOverNoseW": 0.1129
+   }
+  },
+  {
+   "row": 3,
+   "col": 3,
+   "measured": true,
+   "bbox": [
+    282,
+    220,
+    367,
+    310
+   ],
+   "w": 86,
+   "h": 91,
+   "aspectWH": 0.9451,
+   "inkFraction": 0.3525,
+   "specks": 4,
+   "speckDensityPer1000px2": 0.511,
+   "nostrilPair": {
+    "separationOverNoseW": 0.4722,
+    "meanCyRel": 0.5561,
+    "meanSizeOverNoseW": 0.1074
+   }
+  },
+  {
+   "row": 3,
+   "col": 4,
+   "measured": true,
+   "bbox": [
+    398,
+    222,
+    469,
+    297
+   ],
+   "w": 72,
+   "h": 76,
+   "aspectWH": 0.9474,
+   "inkFraction": 0.3034,
+   "specks": 0,
+   "speckDensityPer1000px2": 0.0,
+   "nostrilPair": {
+    "separationOverNoseW": 0.3947,
+    "meanCyRel": 0.8475,
+    "meanSizeOverNoseW": 0.0875
+   }
+  },
+  {
+   "row": 4,
+   "col": 1,
+   "measured": true,
+   "bbox": [
+    37,
+    339,
+    113,
+    450
+   ],
+   "w": 77,
+   "h": 112,
+   "aspectWH": 0.6875,
+   "inkFraction": 0.1545,
+   "specks": 0,
+   "speckDensityPer1000px2": 0.0,
+   "nostrilPair": {
+    "separationOverNoseW": 0.2561,
+    "meanCyRel": 0.6923,
+    "meanSizeOverNoseW": 0.087
+   }
+  },
+  {
+   "row": 4,
+   "col": 2,
+   "measured": true,
+   "bbox": [
+    163,
+    331,
+    237,
+    450
+   ],
+   "w": 75,
+   "h": 120,
+   "aspectWH": 0.625,
+   "inkFraction": 0.2328,
+   "specks": 2,
+   "speckDensityPer1000px2": 0.222,
+   "nostrilPair": {
+    "separationOverNoseW": 0.3598,
+    "meanCyRel": 0.7878,
+    "meanSizeOverNoseW": 0.0932
+   }
+  },
+  {
+   "row": 4,
+   "col": 3,
+   "measured": true,
+   "bbox": [
+    282,
+    341,
+    347,
+    453
+   ],
+   "w": 66,
+   "h": 113,
+   "aspectWH": 0.5841,
+   "inkFraction": 0.1258,
+   "specks": 3,
+   "speckDensityPer1000px2": 0.402,
+   "nostrilPair": null
+  },
+  {
+   "row": 4,
+   "col": 4,
+   "measured": true,
+   "bbox": [
+    381,
+    322,
+    463,
+    422
+   ],
+   "w": 83,
+   "h": 101,
+   "aspectWH": 0.8218,
+   "inkFraction": 0.1792,
+   "specks": 2,
+   "speckDensityPer1000px2": 0.239,
+   "nostrilPair": null
+  },
+  {
+   "row": 5,
+   "col": 1,
+   "measured": true,
+   "bbox": [
+    33,
+    473,
+    119,
+    578
+   ],
+   "w": 87,
+   "h": 106,
+   "aspectWH": 0.8208,
+   "inkFraction": 0.3634,
+   "specks": 3,
+   "speckDensityPer1000px2": 0.325,
+   "nostrilPair": {
+    "separationOverNoseW": 0.4767,
+    "meanCyRel": 0.7419,
+    "meanSizeOverNoseW": 0.1207
+   }
+  },
+  {
+   "row": 5,
+   "col": 2,
+   "measured": true,
+   "bbox": [
+    160,
+    468,
+    247,
+    559
+   ],
+   "w": 88,
+   "h": 92,
+   "aspectWH": 0.9565,
+   "inkFraction": 0.4402,
+   "specks": 8,
+   "speckDensityPer1000px2": 0.988,
+   "nostrilPair": {
+    "separationOverNoseW": 0.4616,
+    "meanCyRel": 0.798,
+    "meanSizeOverNoseW": 0.1371
+   }
+  },
+  {
+   "row": 5,
+   "col": 3,
+   "measured": true,
+   "bbox": [
+    286,
+    475,
+    360,
+    578
+   ],
+   "w": 75,
+   "h": 104,
+   "aspectWH": 0.7212,
+   "inkFraction": 0.3433,
+   "specks": 3,
+   "speckDensityPer1000px2": 0.385,
+   "nostrilPair": {
+    "separationOverNoseW": 0.4213,
+    "meanCyRel": 0.6214,
+    "meanSizeOverNoseW": 0.1071
+   }
+  },
+  {
+   "row": 5,
+   "col": 4,
+   "measured": true,
+   "bbox": [
+    396,
+    454,
+    468,
+    572
+   ],
+   "w": 73,
+   "h": 119,
+   "aspectWH": 0.6134,
+   "inkFraction": 0.1921,
+   "specks": 1,
+   "speckDensityPer1000px2": 0.115,
+   "nostrilPair": {
+    "separationOverNoseW": 0.4072,
+    "meanCyRel": 0.7019,
+    "meanSizeOverNoseW": 0.0953
+   }
+  },
+  {
+   "row": 6,
+   "col": 1,
+   "measured": true,
+   "bbox": [
+    34,
+    599,
+    110,
+    699
+   ],
+   "w": 77,
+   "h": 101,
+   "aspectWH": 0.7624,
+   "inkFraction": 0.1341,
+   "specks": 0,
+   "speckDensityPer1000px2": 0.0,
+   "nostrilPair": null
+  },
+  {
+   "row": 6,
+   "col": 2,
+   "measured": true,
+   "bbox": [
+    161,
+    594,
+    231,
+    700
+   ],
+   "w": 71,
+   "h": 107,
+   "aspectWH": 0.6636,
+   "inkFraction": 0.1682,
+   "specks": 0,
+   "speckDensityPer1000px2": 0.0,
+   "nostrilPair": null
+  },
+  {
+   "row": 6,
+   "col": 3,
+   "measured": true,
+   "bbox": [
+    277,
+    591,
+    357,
+    687
+   ],
+   "w": 81,
+   "h": 97,
+   "aspectWH": 0.8351,
+   "inkFraction": 0.2141,
+   "specks": 1,
+   "speckDensityPer1000px2": 0.127,
+   "nostrilPair": {
+    "separationOverNoseW": 0.5526,
+    "meanCyRel": 0.7957,
+    "meanSizeOverNoseW": 0.066
+   }
+  },
+  {
+   "row": 6,
+   "col": 4,
+   "measured": true,
+   "bbox": [
+    395,
+    583,
+    485,
+    687
+   ],
+   "w": 91,
+   "h": 105,
+   "aspectWH": 0.8667,
+   "inkFraction": 0.2597,
+   "specks": 6,
+   "speckDensityPer1000px2": 0.628,
+   "nostrilPair": {
+    "separationOverNoseW": 0.2846,
+    "meanCyRel": 0.8681,
+    "meanSizeOverNoseW": 0.1029
+   }
+  }
+ ]
+}

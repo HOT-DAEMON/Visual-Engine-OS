@@ -3,7 +3,11 @@ et un triangle rouge (base des narines, sommet = columelle).
 Sorties : references/nez/measures-04.json + artefacts/nez-refs/04-overlay.png (preuve de l'ajustement).
 Aucune valeur n'est saisie à la main : seuils de couleur -> amas -> cv2.fitEllipse / minAreaEnclosingTriangle.
 Le texte cyan du bas (y >= 632) est exclu. Limite : l'ellipse est dessinée en traits partiellement masqués par l'encre noire ;
-on rapporte donc un résidu radial par nez, pas seulement l'ellipse."""
+on rapporte donc un résidu radial par nez, pas seulement l'ellipse.
+AJOUT (12 nov. 2026) : le triangle est AUSSI mesuré dans le repère propre de l'ellipse (champ `frame`), c'est-à-dire avec le roulis dans le plan
+compensé. Les rapports « image » historiques (normalisés par l'étendue verticale de l'image) sont conservés tels quels. Le repère de l'ellipse n'est
+retenu (`frame.valid`) que si |angle du grand axe| <= 45 deg ET rapport d'axes <= 0,85 : au-delà, l'orientation du nez est AMBIGUË (grand axe quasi
+vertical, ou ellipse quasi ronde dont l'angle n'a pas de sens) et le nez est exclu de ces statistiques au lieu d'être deviné."""
 import json, os
 import numpy as np, cv2
 from PIL import Image
@@ -94,6 +98,21 @@ for k, c in enumerate(clusters):
             'apexBelowEllipseBottom': round(float(apex[1] - (cy + ey)) / EH, 4)}
         # dégénéré = triangle quasi plat (hauteur < 10 % de l'ellipse) ou trop peu de pixels rouges : exclu des statistiques
         rec['triangle']['degenerate'] = bool(rec['triangle']['heightOverEllipseH'] < 0.10 or len(rp) < 40)
+        # --- repère propre de l'ellipse (roulis compensé) ---------------------------------------------------------------------------------
+        phi = np.deg2rad(maj_ang)                           # angle du grand axe / horizontale, repère image (y vers le bas)
+        def to_frame(q):                                    # u le long du grand axe, v le long du petit axe (v > 0 = « vers le bas » du nez)
+            dx, dy = q[0] - cx, q[1] - cy
+            return dx * np.cos(phi) + dy * np.sin(phi), -dx * np.sin(phi) + dy * np.cos(phi)
+        (u0, v0), (u1, v1), (ua, va) = to_frame(b0), to_frame(b1), to_frame(apex)
+        bvm = (v0 + v1) / 2
+        valid = bool(abs(maj_ang) <= 45 and minor / major <= 0.85)
+        rec['triangle']['frame'] = {
+            'valid': valid, 'rollDeg': round(float(maj_ang), 1),
+            'baseWidthOverMajor': round(float(abs(u1 - u0)) / major, 4),
+            'heightOverMinor': round(float(va - bvm) / minor, 4),
+            'baseVRelCentre': round(float(bvm) / minor, 4),
+            'apexBelowBottom': round(float(va - minor / 2) / minor, 4),
+            'apexUOverMajor': round(float(ua) / major, 4)}
         cv2.polylines(vis, [tri.astype(np.int32)], True, (0, 120, 255), 1)
     else:
         rec['triangle'] = None                              # trop peu de pixels rouges : non mesuré, non inventé
@@ -112,7 +131,13 @@ if len(tris) >= 3:
     ratios = np.array([r['ellipse']['axisRatio'] for r in out if r['triangle'] and not r['triangle']['degenerate']])
     heights = np.array([t['heightOverEllipseH'] for t in tris])
     summary['pearson_axisRatio_vs_triangleHeight'] = round(float(np.corrcoef(ratios, heights)[0, 1]), 3)
+fr = [r['triangle']['frame'] for r in out if r['triangle'] and not r['triangle']['degenerate'] and r['triangle']['frame']['valid']]
+summary['frameValid'] = len(fr)
+summary['frameExcludedIndices'] = [r['index'] for r in out if r['triangle'] and not r['triangle']['degenerate'] and not r['triangle']['frame']['valid']]
+for key in ('baseWidthOverMajor', 'heightOverMinor', 'baseVRelCentre', 'apexBelowBottom', 'apexUOverMajor'):
+    if len(fr) >= 3:
+        vals = np.array([f[key] for f in fr]); summary['frame_' + key] = {'median': round(float(np.median(vals)), 4), 'min': round(float(vals.min()), 4), 'max': round(float(vals.max()), 4)}
 summary['ellipseResidualMedian'] = round(float(np.median([r['ellipse']['radialResidual'] for r in out])), 4)
-json.dump({'source': SRC, 'method': 'seuils couleur -> amas -> fitEllipse (cyan) / minAreaEnclosingTriangle (rouge)',
+json.dump({'source': SRC, 'method': 'seuils couleur -> amas -> fitEllipse (cyan) / minAreaEnclosingTriangle (rouge) ; + repère propre de l\'ellipse (roulis compensé)',
            'summary': summary, 'noses': out}, open('references/nez/measures-04.json', 'w'), indent=1)
 print(json.dumps(summary, indent=1))

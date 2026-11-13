@@ -1,32 +1,102 @@
 {
  "overlay04": {
-  "apexErrorPctOfEllipseH": [
+  "protocol": "v2 : angles lus sur les observables, sommet NON utilisé pour le placement",
+  "noses": 11,
+  "apexErrorPctOfMinorAxis": [
+   {
+    "nose": 1,
+    "pitch": 0,
+    "yaw": 16,
+    "roll": -1,
+    "pct": 37.7,
+    "baselinePct": 26
+   },
+   {
+    "nose": 2,
+    "pitch": 26,
+    "yaw": 2,
+    "roll": -2,
+    "pct": 40.9,
+    "baselinePct": 18
+   },
    {
     "nose": 3,
-    "pct": 17.5
+    "pitch": 35,
+    "yaw": 52,
+    "roll": -58,
+    "pct": 21.3,
+    "baselinePct": 23
+   },
+   {
+    "nose": 4,
+    "pitch": 20,
+    "yaw": -10,
+    "roll": -22,
+    "pct": 31.4,
+    "baselinePct": 26.9
+   },
+   {
+    "nose": 5,
+    "pitch": 0,
+    "yaw": 12,
+    "roll": -27,
+    "pct": 53.6,
+    "baselinePct": 13.7
    },
    {
     "nose": 6,
-    "pct": 13.8
-   },
-   {
-    "nose": 10,
-    "pct": 21.8
-   },
-   {
-    "nose": 13,
-    "pct": 22.7
-   },
-   {
-    "nose": 1,
-    "pct": 36
+    "pitch": 25,
+    "yaw": 10,
+    "roll": -2,
+    "pct": 10.9,
+    "baselinePct": 38.4
    },
    {
     "nose": 9,
-    "pct": 67.6
+    "pitch": 0,
+    "yaw": 16,
+    "roll": 17,
+    "pct": 97.7,
+    "baselinePct": 63.3
+   },
+   {
+    "nose": 10,
+    "pitch": 35,
+    "yaw": 52,
+    "roll": -58,
+    "pct": 14.8,
+    "baselinePct": 9.1
+   },
+   {
+    "nose": 11,
+    "pitch": 0,
+    "yaw": -14,
+    "roll": 2,
+    "pct": 22.4,
+    "baselinePct": 70.8
+   },
+   {
+    "nose": 12,
+    "pitch": 46,
+    "yaw": 26,
+    "roll": -13,
+    "pct": 10.2,
+    "baselinePct": 4.3
+   },
+   {
+    "nose": 13,
+    "pitch": 0,
+    "yaw": 10,
+    "roll": -29,
+    "pct": 54.8,
+    "baselinePct": 14.1
    }
   ],
-  "medianPct": 22.7
+  "modelMedianPct": 31.4,
+  "baselineMedianPct": 23,
+  "modelMedianPctOfEllipseExtentH_comparableToV1": 27.6,
+  "v1MedianPctReportedBefore": 22.7,
+  "nosesWhereModelBeatsBaseline": 3
  },
  "sweep": {
   "-30deg": {
@@ -60,9 +130,132 @@
   "warns": 0
  },
  "fit": {
-  "residualRms": 0.2202,
-  "baselineMedianRms": 0.3414,
-  "leaveOneOutRms": 0.2457,
-  "noses": 13
- }
+  "protocol": "v2 : tangage et lacet identifiés par (rapport d'axes, |décalage du sommet|) ; jugement sur (hauteur, base, dépassement)",
+  "residualRms": 0.9469,
+  "baselineMedianRms": 1.0192,
+  "leaveOneOutRms": 1.0904,
+  "baselineMedianLooRms": 1.1244,
+  "predicted3": {
+   "modelLooRms": 1.3488,
+   "regressionLooRms": 1.228,
+   "medianLooRms": 1.0382
+  },
+  "noses": 11,
+  "plateau": {
+   "lobuleRim": [
+    0.14,
+    0.32
+   ],
+   "alarBase": [
+    0.95,
+    0.95
+   ],
+   "alarTop": [
+    0.05,
+    0.95
+   ],
+   "nostril": [
+    0.68,
+    0.86
+   ]
+  },
+  "fitted": {
+   "lobuleRim": 0.1954,
+   "alarTop": 0.95,
+   "alarBase": 0.95,
+   "nostril": 0.7681
+  }
+ },
+ "litUnderview": [
+  {
+   "nose": "nez par défaut",
+   "pitch": 20,
+   "flatLuminanceStd": 0,
+   "litLuminanceStd": 35.86,
+   "nosePixels": 35109,
+   "castShadowShareOfNose": 0.227,
+   "cavityPixels": 250,
+   "envelopePolys": 39
+  },
+  {
+   "nose": "nez par défaut",
+   "pitch": 40,
+   "flatLuminanceStd": 0,
+   "litLuminanceStd": 33.93,
+   "nosePixels": 37100,
+   "castShadowShareOfNose": 0.196,
+   "cavityPixels": 619,
+   "envelopePolys": 38
+  },
+  {
+   "nose": "nez par défaut",
+   "pitch": 60,
+   "flatLuminanceStd": 0,
+   "litLuminanceStd": 30.04,
+   "nosePixels": 34247,
+   "castShadowShareOfNose": 0.149,
+   "cavityPixels": 43,
+   "envelopePolys": 38
+  },
+  {
+   "nose": "archétype « pyramide »",
+   "pitch": 20,
+   "flatLuminanceStd": 0,
+   "litLuminanceStd": 35.81,
+   "nosePixels": 35030,
+   "castShadowShareOfNose": 0.26,
+   "cavityPixels": 290,
+   "envelopePolys": 33
+  },
+  {
+   "nose": "archétype « pyramide »",
+   "pitch": 40,
+   "flatLuminanceStd": 0,
+   "litLuminanceStd": 34.06,
+   "nosePixels": 36404,
+   "castShadowShareOfNose": 0.223,
+   "cavityPixels": 862,
+   "envelopePolys": 34
+  },
+  {
+   "nose": "archétype « pyramide »",
+   "pitch": 60,
+   "flatLuminanceStd": 0,
+   "litLuminanceStd": 31.76,
+   "nosePixels": 33190,
+   "castShadowShareOfNose": 0.183,
+   "cavityPixels": 132,
+   "envelopePolys": 34
+  },
+  {
+   "nose": "archétype « cloche-ailes »",
+   "pitch": 20,
+   "flatLuminanceStd": 0,
+   "litLuminanceStd": 34.92,
+   "nosePixels": 39640,
+   "castShadowShareOfNose": 0.223,
+   "cavityPixels": 437,
+   "envelopePolys": 33
+  },
+  {
+   "nose": "archétype « cloche-ailes »",
+   "pitch": 40,
+   "flatLuminanceStd": 0,
+   "litLuminanceStd": 33.18,
+   "nosePixels": 41041,
+   "castShadowShareOfNose": 0.206,
+   "cavityPixels": 1178,
+   "envelopePolys": 32
+  },
+  {
+   "nose": "archétype « cloche-ailes »",
+   "pitch": 60,
+   "flatLuminanceStd": 0,
+   "litLuminanceStd": 32.36,
+   "nosePixels": 38332,
+   "castShadowShareOfNose": 0.188,
+   "cavityPixels": 261,
+   "envelopePolys": 34
+  }
+ ]
 }

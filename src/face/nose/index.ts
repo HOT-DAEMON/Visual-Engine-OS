@@ -20,7 +20,8 @@ export type { NoseRegionsGeo, NoseSidewallGeo, NoseDomeGeo, NoseGrooveGeo, Nostr
 export { noseProfile, type NoseProfile } from './profile';
 export { noseArchetype, noseArchetypeResidual, NOSE_ARCHETYPE_NAMES, REPRODUCIBLE_MAX, type NoseArchetypeName } from './archetypes';
 export { widthProfile25, type WidthProfile } from './measure';
-export { noseView, equivalentEllipse, convexHull, type NoseView, type NoseEllipse, type NoseTriangle, type NoseTriangleMetrics } from './underview';
+export { noseView, equivalentEllipse, convexHull, type NoseView, type NoseEllipse, type NoseTriangle, type NoseTriangleMetrics, type NoseFrameMetrics, frameMetrics } from './underview';
+export { identifyAngles, normaliseModel, type IdentifiedAngles, type ObservedView, type ObservedScale } from './underview-identify';
 
 /**
  * Moteur de nez : assemble les sous-composants dans l'ordre anatomique racine → dorsum → pointe → ailes → narines → raccords.

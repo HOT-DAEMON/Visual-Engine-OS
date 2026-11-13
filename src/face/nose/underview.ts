@@ -20,6 +20,12 @@ export interface Vec3 { readonly x: number; readonly y: number; readonly z: numb
 
 export interface NoseEllipse { readonly c: Vec; readonly major: number; readonly minor: number; readonly angleDeg: number; readonly extentW: number; readonly extentH: number; readonly axisRatio: number }
 export interface NoseTriangle { readonly baseL: Vec; readonly baseR: Vec; readonly apex: Vec }
+/**
+ * Mêmes grandeurs que `frame` de `scripts/nose-refs/extract_04.py` : le triangle exprimé dans le repère PROPRE de l'ellipse (u = grand axe, v = petit axe),
+ * donc INVARIANT au roulis dans le plan. `valid` est faux quand le grand axe est à plus de 45° de l'horizontale ou quand l'ellipse est quasi ronde
+ * (rapport d'axes > 0,85) : même règle que la mesure, pour ne comparer que ce qui est comparable.
+ */
+export interface NoseFrameMetrics { readonly valid: boolean; readonly rollDeg: number; readonly baseWidthOverMajor: number; readonly heightOverMinor: number; readonly baseVRelCentre: number; readonly apexBelowBottom: number; readonly apexUOverMajor: number }
 export interface NoseTriangleMetrics { readonly baseWidthOverEllipseW: number; readonly heightOverEllipseH: number; readonly baseYRelEllipseCentre: number; readonly apexBelowEllipseBottom: number }
 
 export interface NoseView {
@@ -36,6 +42,10 @@ export interface NoseView {
   /** Triangle de la base des narines : extrémités externes des deux narines et sous-nez (columelle). */
   readonly triangle: NoseTriangle;
   readonly triangleMetrics: NoseTriangleMetrics;
+  /** Triangle dans le repère propre de l'ellipse (roulis compensé) : ce que la calibration compare à la référence. */
+  readonly frame: NoseFrameMetrics;
+  /** Roulis dans le plan appliqué à la vue (degrés, > 0 = sens horaire à l'écran), pivot (0, baseY). */
+  readonly rollDeg: number;
   /** Point de la pointe projeté (centre du lobule). */
   readonly tip: Vec;
 }
@@ -43,33 +53,35 @@ export interface NoseView {
 const rad = (d: number): number => (d * Math.PI) / 180;
 const smooth01 = (t: number): number => { const u = Math.min(1, Math.max(0, t)); return u * u * (3 - 2 * u); };
 
-/** Élévation z de chaque point d'un polygone du nez, selon la région (voir l'en-tête du fichier). */
-function liftLobule(nose: NoseGeometry, m: UnderviewModel): Vec3[] {
-  const { c, rx, ry, poly, projectionPx } = nose.tip;
-  return poly.map((q) => {
-    // Dôme : z = projection au centre, `lobuleRim` × projection au bord (rayon elliptique normalisé r ∈ [0, 1]).
-    const r = Math.min(1, Math.hypot((q.x - c.x) / rx, (q.y - c.y) / ry));
-    return { x: q.x, y: q.y, z: projectionPx * (m.lobuleRim + (1 - m.lobuleRim) * (1 - r * r)) };
-  });
+/** z (px) du dôme du lobule en (x, y) : `projectionPx` au centre, `lobuleRim` × projection au bord (rayon elliptique normalisé r ∈ [0, 1]). */
+export function lobuleZ(nose: NoseGeometry, m: UnderviewModel, x: number, y: number): number {
+  const { c, rx, ry, projectionPx } = nose.tip;
+  const r = Math.min(1, Math.hypot((x - c.x) / rx, (y - c.y) / ry));
+  return projectionPx * (m.lobuleRim + (1 - m.lobuleRim) * (1 - r * r));
 }
-
+/** z (px) de l'aile en hauteur y : de `alarTop` (jonction avec le lobule) à `alarBase` (attache sur la joue). */
+export function alaZ(nose: NoseGeometry, side: -1 | 1, m: UnderviewModel, y: number): number {
+  const a = side === 1 ? nose.alae.right : nose.alae.left, yTop = nose.tip.c.y, yFoot = a.base.y, P = nose.tip.projectionPx;
+  const t = smooth01((y - yTop) / Math.max(1e-6, yFoot - yTop));
+  return P * (m.alarTop + (m.alarBase - m.alarTop) * t);
+}
+/** Élévation z de chaque point d'un polygone du nez, selon la région (voir l'en-tête du fichier). */
+function liftLobule(nose: NoseGeometry, m: UnderviewModel): Vec3[] { return nose.tip.poly.map((q) => ({ x: q.x, y: q.y, z: lobuleZ(nose, m, q.x, q.y) })); }
 function liftAla(nose: NoseGeometry, side: -1 | 1, m: UnderviewModel): Vec3[] {
   const a = side === 1 ? nose.alae.right : nose.alae.left;
-  const yTop = nose.tip.c.y, yFoot = a.base.y, P = nose.tip.projectionPx;
-  return a.poly.map((q) => {
-    // De la jonction avec le lobule (haut) à l'attache sur la joue (bas) : z va de `alarTop` à `alarBase`, avec la crête au milieu.
-    const t = smooth01((q.y - yTop) / Math.max(1e-6, yFoot - yTop));
-    return { x: q.x, y: q.y, z: P * (m.alarTop + (m.alarBase - m.alarTop) * t) };
-  });
+  return a.poly.map((q) => ({ x: q.x, y: q.y, z: alaZ(nose, side, m, q.y) }));
 }
 
-function rotateProject(p: Vec3, pivotY: number, pitchDeg: number, yawDeg: number): Vec {
+/** Rotation tangage + lacet autour du pivot (0, baseY) : x, y image ET z' = profondeur vers l'observateur après rotation (pour la carte de profondeur). */
+export function rotateProject3(p: Vec3, pivotY: number, pitchDeg: number, yawDeg: number, rollDeg = 0): Vec3 {
   const cy = Math.cos(rad(yawDeg)), sy = Math.sin(rad(yawDeg)), cp = Math.cos(rad(pitchDeg)), sp = Math.sin(rad(pitchDeg));
-  const x1 = p.x * cy + p.z * sy;
-  const z1 = -p.x * sy + p.z * cy;
-  const dy = p.y - pivotY;
-  return { x: x1, y: pivotY + dy * cp - z1 * sp };
+  const x1 = p.x * cy + p.z * sy, z1 = -p.x * sy + p.z * cy, dy = p.y - pivotY;
+  const px = x1, py = dy * cp - z1 * sp, pz = dy * sp + z1 * cp;
+  if (rollDeg === 0) return { x: px, y: pivotY + py, z: pz };
+  const cr = Math.cos(rad(rollDeg)), sr = Math.sin(rad(rollDeg));
+  return { x: px * cr - py * sr, y: pivotY + px * sr + py * cr, z: pz };
 }
+function rotateProject(p: Vec3, pivotY: number, pitchDeg: number, yawDeg: number, rollDeg = 0): Vec { const q = rotateProject3(p, pivotY, pitchDeg, yawDeg, rollDeg); return { x: q.x, y: q.y }; }
 
 /** Enveloppe convexe (chaîne monotone d'Andrew), sens horaire en repère image. */
 export function convexHull(pts: readonly Vec[]): Poly {
@@ -119,13 +131,25 @@ export function triangleMetrics(tri: NoseTriangle, e: NoseEllipse): NoseTriangle
   };
 }
 
+/** Triangle dans le repère propre de l'ellipse (voir `NoseFrameMetrics`). Même formules que `extract_04.py`. */
+export function frameMetrics(tri: NoseTriangle, e: NoseEllipse): NoseFrameMetrics {
+  const phi = rad(e.angleDeg), c = Math.cos(phi), sn = Math.sin(phi);
+  const toFrame = (q: Vec): { u: number; v: number } => { const dx = q.x - e.c.x, dy = q.y - e.c.y; return { u: dx * c + dy * sn, v: -dx * sn + dy * c }; };
+  const b0 = toFrame(tri.baseL), b1 = toFrame(tri.baseR), a = toFrame(tri.apex), bv = (b0.v + b1.v) / 2;
+  return {
+    valid: Math.abs(e.angleDeg) <= 45 && e.minor / e.major <= 0.85, rollDeg: e.angleDeg,
+    baseWidthOverMajor: Math.abs(b1.u - b0.u) / e.major, heightOverMinor: (a.v - bv) / e.minor, baseVRelCentre: bv / e.minor,
+    apexBelowBottom: (a.v - e.minor / 2) / e.minor, apexUOverMajor: a.u / e.major,
+  };
+}
+
 /** Vue projetée du nez. Pure et déterministe : mêmes entrées → mêmes sommets. `model` n'est surchargé que par l'ajustement. */
-export function noseView(nose: NoseGeometry, pitchDeg: number, yawDeg = 0, model: UnderviewModel = UNDERVIEW_MODEL): NoseView {
+export function noseView(nose: NoseGeometry, pitchDeg: number, yawDeg = 0, model: UnderviewModel = UNDERVIEW_MODEL, rollDeg = 0): NoseView {
   const pv = nose.baseY, P = nose.tip.projectionPx;
-  const proj = (pts: readonly Vec3[]): Poly => pts.map((q) => rotateProject(q, pv, pitchDeg, yawDeg));
+  const proj = (pts: readonly Vec3[]): Poly => pts.map((q) => rotateProject(q, pv, pitchDeg, yawDeg, rollDeg));
   const lobule = proj(liftLobule(nose, model));
   const left = proj(liftAla(nose, -1, model)), right = proj(liftAla(nose, 1, model));
-  const lift2 = (poly: readonly Vec[], z: number): Poly => poly.map((q) => rotateProject({ x: q.x, y: q.y, z }, pv, pitchDeg, yawDeg));
+  const lift2 = (poly: readonly Vec[], z: number): Poly => poly.map((q) => rotateProject({ x: q.x, y: q.y, z }, pv, pitchDeg, yawDeg, rollDeg));
   const nostrils = { left: lift2(nose.nostrils.left.poly, P * model.nostril), right: lift2(nose.nostrils.right.poly, P * model.nostril) };
   const envelope = convexHull([...lobule, ...left, ...right]);
   const ellipse = equivalentEllipse(envelope);
@@ -134,12 +158,12 @@ export function noseView(nose: NoseGeometry, pitchDeg: number, yawDeg = 0, model
   const outer = (poly: readonly Vec[], side: -1 | 1): Vec => poly.reduce((b, q) => (side * q.x > side * b.x ? q : b), poly[0]!);
   const oL = outer(nose.nostrils.left.poly, -1), oR = outer(nose.nostrils.right.poly, 1);
   const tri: NoseTriangle = {
-    baseL: rotateProject({ x: oL.x, y: oL.y, z: P * model.nostril }, pv, pitchDeg, yawDeg),
-    baseR: rotateProject({ x: oR.x, y: oR.y, z: P * model.nostril }, pv, pitchDeg, yawDeg),
-    apex: rotateProject({ x: 0, y: nose.columella.bottomY, z: 0 }, pv, pitchDeg, yawDeg),
+    baseL: rotateProject({ x: oL.x, y: oL.y, z: P * model.nostril }, pv, pitchDeg, yawDeg, rollDeg),
+    baseR: rotateProject({ x: oR.x, y: oR.y, z: P * model.nostril }, pv, pitchDeg, yawDeg, rollDeg),
+    apex: rotateProject({ x: 0, y: nose.columella.bottomY, z: 0 }, pv, pitchDeg, yawDeg, rollDeg),
   };
   return {
-    pitchDeg, yawDeg, envelope, ellipse, lobule, alae: { left, right }, nostrils, nostrilVisibility: smooth01((pitchDeg + 10) / 30), triangle: tri, triangleMetrics: triangleMetrics(tri, ellipse),
-    tip: rotateProject({ x: nose.tip.c.x, y: nose.tip.c.y, z: P }, pv, pitchDeg, yawDeg),
+    pitchDeg, yawDeg, rollDeg, envelope, ellipse, lobule, alae: { left, right }, nostrils, nostrilVisibility: smooth01((pitchDeg + 10) / 30), triangle: tri, triangleMetrics: triangleMetrics(tri, ellipse), frame: frameMetrics(tri, ellipse),
+    tip: rotateProject({ x: nose.tip.c.x, y: nose.tip.c.y, z: P }, pv, pitchDeg, yawDeg, rollDeg),
   };
 }

@@ -3,7 +3,8 @@ import { readFileSync } from 'node:fs';
 import { generateRandomFace } from '../src';
 import { faceLandmarks, noseGeometry } from '../src/face';
 import { noseView, convexHull } from '../src/face/nose';
-import { UNDERVIEW_MODEL } from '../src/face/nose/underview-model';
+import { UNDERVIEW_MODEL, UNDERVIEW_FITTED } from '../src/face/nose/underview-model';
+import { identifyAngles, normaliseModel } from '../src/face/nose/underview-identify';
 import { UNDERVIEW_FIT } from '../src/face/nose/underview.generated';
 import { FaceParams } from '../src/schema';
 import { checkNoseView, noseViewChecks, verifyFace } from '../src/verify';
@@ -29,18 +30,92 @@ describe('mesure de references/nez/04.jpg', () => {
 
 describe('modèle z de la vue de dessous', () => {
   it('contrainte anatomique : le haut de l\'aile n\'est pas derrière son pied', () => { expect(UNDERVIEW_MODEL.alarTop).toBeGreaterThanOrEqual(UNDERVIEW_MODEL.alarBase); });
-  it('le résidu stocké est celui que le moteur actuel produit sur les 13 nez (recalculé, tangage libre par pas de 2°)', () => {
+  // Protocole v2 (docs/NOSE-UNDERVIEW-CALIB.md) : tangage et lacet identifiés sur (rapport d'axes, |décalage du sommet|), erreurs normalisées par l'écart-type.
+  const frames = m04.noses.filter((n) => n.triangle && !n.triangle.degenerate && (n.triangle as any).frame.valid);
+  const sd = (a: number[]): number => { const mu = a.reduce((s2, x) => s2 + x, 0) / a.length; return Math.sqrt(a.reduce((s2, x) => s2 + (x - mu) ** 2, 0) / a.length); };
+  const obs = frames.map((n) => { const f = (n.triangle as any).frame; return { r: n.ellipse.axisRatio, u: Math.abs(f.apexUOverMajor), h: f.heightOverMinor, by: f.baseVRelCentre, ab: f.apexBelowBottom }; });
+  const SD = { h: sd(obs.map((o) => o.h)), by: sd(obs.map((o) => o.by)), ab: sd(obs.map((o) => o.ab)), r: sd(obs.map((o) => o.r)), u: sd(obs.map((o) => o.u)) };
+  const protocolCost = (model: typeof UNDERVIEW_MODEL): number => {
     const g = geo(); let sum = 0;
-    for (const n of usable) {
-      let best = Infinity;
-      for (let ph = 0; ph <= 90; ph += 2) { const v = noseView(g, ph), t = n.triangle!, q = v.triangleMetrics; best = Math.min(best, 0.5 * (v.ellipse.axisRatio - n.ellipse.axisRatio) ** 2 + (q.heightOverEllipseH - t.heightOverEllipseH) ** 2 + (q.baseYRelEllipseCentre - t.baseYRelEllipseCentre) ** 2 + (q.apexBelowEllipseBottom - t.apexBelowEllipseBottom) ** 2); }
-      sum += best;
+    for (const o of obs) {
+      const id = identifyAngles(g, model, o, { sr: SD.r, su: SD.u });
+      if (!id) { sum += 4; continue; }
+      const v = noseView(g, id.pitchDeg, id.yawDeg, normaliseModel(model)), f = v.frame;
+      const sq3 = (((f.heightOverMinor - o.h) / SD.h) ** 2 + ((f.baseVRelCentre - o.by) / SD.by) ** 2 + ((f.apexBelowBottom - o.ab) / SD.ab) ** 2) / 3;
+      const sqId = (((v.ellipse.axisRatio - o.r) / SD.r) ** 2 + ((Math.abs(f.apexUOverMajor) - o.u) / SD.u) ** 2) / 2;
+      sum += (3 * sq3 + 2 * sqId) / 5;
     }
-    expect(Math.abs(Math.sqrt(sum / usable.length) - UNDERVIEW_FIT.residualRms)).toBeLessThan(0.005);
+    return Math.sqrt(sum / obs.length);
+  };
+  it('le résidu stocké de l\'optimum ajusté est celui que le moteur actuel produit (recalculé avec le protocole v2, pas relu)', () => {
+    expect(obs).toHaveLength(UNDERVIEW_FIT.noses);
+    expect(Math.abs(protocolCost(UNDERVIEW_FITTED) - UNDERVIEW_FIT.residualRms)).toBeLessThan(0.01);
   });
-  it('le modèle fait mieux que la simple médiane, y compris en leave-one-out (limite : le tangage reste libre par nez)', () => {
-    expect(UNDERVIEW_FIT.residualRms).toBeLessThan(UNDERVIEW_FIT.baselineMedianRms);
-    expect(UNDERVIEW_FIT.leaveOneOutRms).toBeLessThan(UNDERVIEW_FIT.baselineMedianRms);
+  it('RÉSULTAT NÉGATIF VERROUILLÉ : sous le protocole équitable, le modèle ne bat pas nettement la médiane en leave-one-out, et fait PIRE qu\'elle sur les 3 grandeurs prédites', () => {
+    // Si ce test échoue parce que le modèle est devenu MEILLEUR : bonne nouvelle, mettre à jour docs/NOSE-UNDERVIEW-CALIB.md et ce seuil.
+    expect(UNDERVIEW_FIT.leaveOneOutRms).toBeGreaterThan(0.9 * UNDERVIEW_FIT.baselineMedianLooRms);
+    expect(UNDERVIEW_FIT.predicted3.modelLooRms).toBeGreaterThan(UNDERVIEW_FIT.predicted3.medianLooRms);
+  });
+  it('les constantes ADOPTÉES par le rendu ne sont pas celles de l\'optimum ajusté (celui-ci est dégénéré : constantes des ailes sur la borne)', () => {
+    expect(UNDERVIEW_FITTED.alarBase).toBeGreaterThanOrEqual(0.95 - 1e-9);
+    expect(UNDERVIEW_MODEL.alarBase).toBeLessThan(UNDERVIEW_FITTED.alarBase);
+    // l'optimum dégénéré ne sait pas aplatir l'enveloppe : à 80° son rapport d'axes reste très au-dessus de la plus plate des références valides
+    const g = geo(); const rMinRef = Math.min(...obs.map((o) => o.r));
+    expect(noseView(g, 80, 0, normaliseModel(UNDERVIEW_FITTED)).ellipse.axisRatio).toBeGreaterThan(1.5 * rMinRef);
+  });
+  it('identifiabilité mesurée : alarBase n\'est PAS identifié (optimum sur la borne, profil monotone) ; lobuleRim a un plateau intérieur', () => {
+    expect(UNDERVIEW_FIT.plateau.alarBase[0]).toBeGreaterThanOrEqual(0.95 - 1e-9);
+    expect(UNDERVIEW_FIT.plateau.lobuleRim[0]).toBeGreaterThan(0.05); expect(UNDERVIEW_FIT.plateau.lobuleRim[1]).toBeLessThan(0.6);
+    const pc = UNDERVIEW_FIT.profileCost.alarBase as readonly number[];
+    for (let i = 1; i < pc.length; i++) expect(pc[i]!).toBeLessThanOrEqual(pc[i - 1]! + 1e-9);
+  });
+  it('l\'identification des angles est déterministe, reste dans ses bornes, et ne lit que (r, |u|) : changer h, by, ab ne la modifie pas', () => {
+    const g = geo(), o = obs[0]!, a1 = identifyAngles(g, UNDERVIEW_MODEL, { r: o.r, u: o.u }, { sr: SD.r, su: SD.u }), a2 = identifyAngles(g, UNDERVIEW_MODEL, { r: o.r, u: o.u }, { sr: SD.r, su: SD.u });
+    expect(a1).toEqual(a2); expect(a1!.pitchDeg).toBeGreaterThanOrEqual(0); expect(a1!.pitchDeg).toBeLessThanOrEqual(90); expect(a1!.yawDeg).toBeLessThanOrEqual(60);
+  });
+});
+
+describe('repère propre de l\'ellipse (roulis compensé)', () => {
+  const g = geo();
+  it('les grandeurs du triangle dans le repère propre sont INVARIANTES au roulis dans le plan ; les grandeurs « image » ne le sont pas', () => {
+    for (const [ph, ya] of [[25, 0], [25, 20], [40, 30]] as const) {
+      const ref = noseView(g, ph, ya, UNDERVIEW_MODEL, 0); let maxImageDrift = 0;
+      for (const roll of [-30, -15, 25]) {
+        const v = noseView(g, ph, ya, UNDERVIEW_MODEL, roll);
+        for (const k of ['heightOverMinor', 'baseVRelCentre', 'apexBelowBottom', 'apexUOverMajor'] as const) expect(Math.abs(v.frame[k] - ref.frame[k]), `${ph}/${ya} roll ${roll} ${k}`).toBeLessThan(1e-9);
+        maxImageDrift = Math.max(maxImageDrift, Math.abs(v.triangleMetrics.apexBelowEllipseBottom - ref.triangleMetrics.apexBelowEllipseBottom));
+      }
+      // la grandeur « image » dérive nettement pour au moins un des roulis (elle peut repasser par hasard près de sa valeur pour l'un d'eux)
+      expect(maxImageDrift, `${ph}/${ya}`).toBeGreaterThan(0.1);
+    }
+  });
+  it('le roulis tourne la vue de l\'angle demandé (l\'ellipse suit) et ne change pas son rapport d\'axes', () => {
+    const a = noseView(g, 30, 0, UNDERVIEW_MODEL, 0), b = noseView(g, 30, 0, UNDERVIEW_MODEL, -20);
+    expect(Math.abs(b.ellipse.angleDeg - (a.ellipse.angleDeg - 20))).toBeLessThan(1e-6); expect(Math.abs(b.ellipse.axisRatio - a.ellipse.axisRatio)).toBeLessThan(1e-9);
+  });
+  it('la mesure de la réf. 04 : 11 nez à repère valide, les n°7 et 8 (orientation ambiguë) exclus, au lieu d\'être devinés', () => {
+    const valid = m04.noses.filter((n) => n.triangle && !n.triangle.degenerate && (n.triangle as any).frame.valid);
+    expect(valid).toHaveLength(11); expect(m04.summary.frameExcludedIndices).toEqual([7, 8]);
+  });
+  it('un lacet décale la pointe et pas le sous-nez : |décalage du sommet| croît avec le lacet', () => {
+    let prev = -1; for (const ya of [0, 10, 20, 30, 40]) { const u = Math.abs(noseView(g, 30, ya).frame.apexUOverMajor); expect(u).toBeGreaterThan(prev); prev = u; }
+  });
+});
+
+describe('mesures des réf. 03 et 05 (nouvelles)', () => {
+  const m03 = JSON.parse(readFileSync('references/nez/measures-03.json', 'utf8')) as { summary: any; noses: any[] };
+  const m05 = JSON.parse(readFileSync('references/nez/measures-05.json', 'utf8')) as { summary: any; cells: any[] };
+  it('03 : 16 nez trouvés, l\'amas qui en contient deux est détecté et exclu, 11 paires de narines mesurées', () => {
+    expect(m03.noses).toHaveLength(16); expect(m03.summary.mergedExcluded).toEqual([7]); expect(m03.summary.withPair).toBe(11);
+  });
+  it('03 : la séparation des narines (rapport à la largeur du nez) tombe dans une plage anatomiquement plausible et resserrée', () => {
+    const s = m03.summary.separationOverNoseW; expect(s.min).toBeGreaterThan(0.3); expect(s.max).toBeLessThan(0.6); expect(s.median).toBeGreaterThan(0.38); expect(s.median).toBeLessThan(0.5);
+  });
+  it('05 : la grille 6 × 4 est retrouvée (24 cellules mesurées), seules les paires détectées sont rapportées', () => {
+    expect(m05.cells).toHaveLength(24); expect(m05.summary.measured).toBe(24); expect(m05.summary.withNostrilPair).toBeLessThanOrEqual(24); expect(m05.summary.gridColumns).toHaveLength(5); expect(m05.summary.gridRows).toHaveLength(7);
+  });
+  it('05 : le crayon est gris — aucune grandeur de teinte (rougeur) n\'est rapportée, seulement la moucheture', () => {
+    for (const c of m05.cells) { expect(Object.keys(c)).not.toContain('redness'); expect(typeof c.speckDensityPer1000px2).toBe('number'); }
   });
 });
 

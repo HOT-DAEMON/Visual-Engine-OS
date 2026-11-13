@@ -23,7 +23,9 @@ Sorties : enveloppe convexe lobule + ailes (**le lobule ferme la silhouette**), 
 narines projetées, `nostrilVisibility` (cachées d'en haut, visibles d'en bas : défaut trouvé sur une planche puis corrigé).
 Le triangle utilise les extrémités EXTERNES des narines : ma première version prenait les pieds d'aile (trop écartés : largeur 0,70–0,97 hors de la plage mesurée) ; corrigé car la référence mesure la « base des narines ».
 
-## 4 · Calibration (`scripts/nose-refs/fit-underview.ts` → `underview.generated.ts`)
+## 4 · Calibration — **SUPERSEDÉE le 12 nov. 2026 : voir `docs/NOSE-UNDERVIEW-CALIB.md`**
+> **CORRECTION** : le tableau et la « lecture honnête » ci-dessous décrivent le protocole v1 (tangage libre par nez, mesures non compensées du roulis). Sous le protocole v2 équitable, l'affirmation « le modèle réduit l'erreur d'environ 28 % » est **fausse** (le modèle est à égalité avec la médiane en leave-one-out et moins bon sur les grandeurs prédites). Conservé pour l'historique.
+
 Trois fractions z ajustées (`alarTop`, `alarBase`, `nostril`) sur 4 grandeurs de la réf. 04 (rapport d'axes, hauteur du triangle, position de sa base, dépassement du sommet), **tangage libre par nez** (inconnu). `lobuleRim` = 0,5 FIXE : non calibré.
 Contrainte anatomique : `alarTop ≥ alarBase` (un premier ajustement sans elle plaçait le haut de l'aile derrière son pied).
 
@@ -37,6 +39,7 @@ Contrainte anatomique : `alarTop ≥ alarBase` (un premier ajustement sans elle 
 Un essai avec 4 constantes libres a donné des valeurs très différentes pour un résidu voisin (non-identifiabilité) : c'est pourquoi `lobuleRim` est fixé. Les tangages ajustés par nez (`pitchDegPerNose`) sont des paramètres de nuisance : ne pas les lire comme les angles de dessin réels.
 
 ## 5 · Preuves visuelles et mesurées
+> **CORRECTION** : les chiffres « 22,7 % / 68 % » de `01-superposition-ref04.png` venaient d'un tangage ajusté sur le sommet et de mesures non compensées du roulis ; recalculés sans cela dans `NOSE-UNDERVIEW-CALIB.md` §5 (31,4 % du petit axe, contre 23 % sans modèle).
 - `01-superposition-ref04.png` : moteur recalé (centre + largeur d'ellipse seulement) sur 6 nez de la réf. 04. Écart du sommet du triangle prédit / mesuré : **médiane 22,7 %** de la hauteur d'ellipse ; 14–22 % sur les vues quasi frontales (3, 6, 10), jusqu'à 68 % sur les vues obliques (1, 9, 13 : lacet et roulis non modélisés dans cette comparaison).
 - `02-balayage-tangage-lacet.png` : même nez de −30° à +80° de tangage et de −45° à +45° de lacet.
 - `03-tete-et-dessous.png` : tête entière éclairée (moteurs existants, inchangés) et vue de dessous du MÊME nez, même teinte de peau, pour le nez par défaut et les deux archétypes.
@@ -44,7 +47,7 @@ Un essai avec 4 constantes libres a donné des valeurs très différentes pour u
 - Vérification (3 couches, `src/verify/nose-underview.ts`) : 324 contrôles (12 visages × 3 tangages) → 0 erreur, 0 avertissement (`metrics.json`). À 80° un avertissement de style est attendu (ellipse 0,27 < 0,34, la plus plate des références) : **non masqué**, voir le test.
 
 ## 6 · Limites constatées (non cachées)
-- La vue de dessous est **diagnostique** : aplats de la peau de l'hôte, pas éclairée par `src/relief`. Elle ne remplace pas le rendu de face.
+- ~~La vue de dessous est diagnostique (aplats)~~ : depuis le 12 nov. elle est éclairée par `src/relief` (`NOSE-UNDERVIEW-LIT.md`), avec les défauts de géométrie qui y sont listés. Elle ne remplace pas le rendu de face.
 - Silhouette anguleuse : enveloppe convexe de polygones peu denses (visible sur les planches) ; les ailes ressemblent à des plaques. Le sous-nez / columelle n'est pas une masse : le sommet du triangle flotte hors de la silhouette.
 - `alarBase` n'est identifié que faiblement par la réf. 04 (le coût est plat au-delà de ~0,5).
 - L'estimateur d'ellipse du moteur (moments d'aire) n'est pas celui de la mesure (moindres carrés sur traits) : écart non quantifié.

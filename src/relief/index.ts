@@ -6,3 +6,4 @@ export { headLit, type HeadLit, type HeadLitOpts } from './overlay';
 export { litHead, litFigure, hostFace, neckAxisZ, type LitFigure, type HostFace } from './figure';
 export { LIGHT_PATTERNS, patternById, goboAt, type LightPattern } from './patterns';
 export { toLab, labRgb, lch, labToward, deltaL, type Lab } from './oklab';
+export { underviewRelief, litUnderview, type UnderviewViewParams, type UnderviewRelief, type UnderviewLit } from './underview';
