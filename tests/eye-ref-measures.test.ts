@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { ALMOND_REF_SOURCES, REF_PROFILE, REF_RANGES, openingGeometry, openingProfile } from '../src/geometry/eye';
-import { HIGHLIGHT_OVER_IRIS, PUPIL_OVER_IRIS } from '../src/generation/eye-iris-families';
+import { HIGHLIGHT_OVER_IRIS, PUPIL_OVER_IRIS, ROUND_IRIS_ASPECT } from '../src/generation/eye-iris-families';
 import { Canthi } from '../src/schema/eye-canthi-fold';
 import { Shape } from '../src/schema/eye-shape';
 
@@ -50,5 +50,15 @@ describe('références mesurées (references/eyes/measures.json) -> moteur', () 
     expect(PUPIL_OVER_IRIS[0]).toBeLessThanOrEqual(Math.max(...pup)); expect(PUPIL_OVER_IRIS[1]).toBeGreaterThanOrEqual(Math.min(...pup));
     const prim = Object.values(M).flatMap((m) => m.highlights.slice(0, 1).map((h) => h.rOverIris));
     expect(HIGHLIGHT_OVER_IRIS.primary[0]).toBeLessThanOrEqual(Math.max(...prim)); expect(HIGHLIGHT_OVER_IRIS.primary[1]).toBeGreaterThanOrEqual(Math.min(...prim));
+  });
+
+  it('planches 12 et 16 (mesure automatique) : aspect d’iris rond et reflets cohérents avec les constantes du moteur', () => {
+    const S = JSON.parse(readFileSync('references/eyes/measures-sheets.json', 'utf8')).sheets as Record<string, { irisAspectHeightOverWidth: { median: number; n: number }; primaryHighlightRadiusOverIris: { median: number }; primaryHighlightDy: { median: number } }>;
+    for (const k of ['12', '16']) {
+      expect(S[k]!.irisAspectHeightOverWidth.n).toBeGreaterThanOrEqual(10);
+      expect(S[k]!.irisAspectHeightOverWidth.median).toBeGreaterThanOrEqual(ROUND_IRIS_ASPECT[0] - 0.01); expect(S[k]!.irisAspectHeightOverWidth.median).toBeLessThanOrEqual(ROUND_IRIS_ASPECT[1] + 0.01);
+      expect(S[k]!.primaryHighlightRadiusOverIris.median).toBeGreaterThanOrEqual(0.15); expect(S[k]!.primaryHighlightRadiusOverIris.median).toBeLessThanOrEqual(0.3);
+      expect(S[k]!.primaryHighlightDy.median).toBeLessThan(-0.3); // reflet principal dans la moitié haute de l’iris
+    }
   });
 });

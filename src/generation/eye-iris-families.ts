@@ -11,6 +11,11 @@ import type { EyeInput } from './random-eye-helpers';
  */
 export const IRIS_FAMILIES = ['golden', 'teal-gem', 'prism', 'frost', 'ember', 'amber-radial'] as const;
 export type IrisFamily = (typeof IRIS_FAMILIES)[number];
+/**
+ * Iris des yeux ronds / chibi : rapport hauteur / largeur MESURÉ automatiquement sur les planches de formes (references/eyes/measures-sheets.json :
+ * réf. 12 médiane 1,007 sur 12 iris ; réf. 16 médiane 1,078 sur 28 iris). Appliqué aux styles round, chibi, circle de la galerie étendue.
+ */
+export const ROUND_IRIS_ASPECT = [1.0, 1.08] as const;
 export const PUPIL_OVER_IRIS = [0.2, 0.34] as const;
 export const HIGHLIGHT_OVER_IRIS = { primary: [0.2, 0.3], secondary: [0.08, 0.15] } as const;
 

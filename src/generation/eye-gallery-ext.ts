@@ -8,7 +8,7 @@ import { Shape } from '../schema/eye-shape';
 import { checkEyeEnvelope } from '../verify/eye-envelope';
 import { verifyEye } from '../verify/eye';
 import { generateRandomEye } from './random-eye';
-import { IRIS_FAMILIES, PUPIL_OVER_IRIS, irisFamily } from './eye-iris-families';
+import { IRIS_FAMILIES, PUPIL_OVER_IRIS, ROUND_IRIS_ASPECT, irisFamily } from './eye-iris-families';
 import type { EyeInput } from './random-eye-helpers';
 
 /**
@@ -140,7 +140,7 @@ function buildExtraEye(rc: EyeRecipe, attempt: number): EyeInput {
     shape: { width: WIDTH, height: WIDTH * rc.aspect, tiltDeg: rc.tiltDeg, upperFraction: rc.upperFraction, openness: rc.openness, outerSide: 'right', style: rc.style },
     canthi: { inner: { roundness: rc.innerRoundness, caruncle: rc.caruncle }, outer: { roundness: rc.outerRoundness } },
     epicanthicFold: { amount: rc.foldAmount, reach: e.epicanthicFold?.reach ?? 0.6 },
-    iris: { ...e.iris, radius: 0.4, limbalRing: 0.6 + rnd() * 0.3, ...(fam ? { layers: fam.layers } : {}) },
+    iris: { ...e.iris, radius: 0.4, aspect: ['round', 'chibi', 'circle'].includes(rc.style) ? Math.max(ROUND_IRIS_ASPECT[0], Math.min(ROUND_IRIS_ASPECT[1], e.iris?.aspect ?? 1)) : e.iris?.aspect, limbalRing: 0.6 + rnd() * 0.3, ...(fam ? { layers: fam.layers } : {}) },
     pupil: { ...e.pupil, shape: pupilShape, size: (PUPIL_OVER_IRIS[0] + rnd() * (PUPIL_OVER_IRIS[1] - PUPIL_OVER_IRIS[0])) },
     ...(fam ? { highlights: { list: simple ? fam.highlights.slice(0, 2) : fam.highlights } } : simple ? { highlights: { list: [{ kind: 'reflection', size: 0.22 }] } } : {}),
   } as EyeInput;

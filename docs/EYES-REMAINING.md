@@ -50,6 +50,7 @@ Légende : ✅ fait et testé · 🟡 partiel (précisé) · ⬜ non fait · ❔
 
 ## Passe « références mesurées » (2026-11-13) — voir `EYES-REFS.md`
 - ✅ Extraction de 5 yeux (04, 07, 11 de face ; 10a, 10b en 3/4) → `references/eyes/measures.json` ; almond recalé ; 100 formes ; vérification enveloppe + pixels ; 31 paramètres prouvés.
+- ⬜ **Références 13, 14, 15, 17 non mesurées** (planches de formes : au trait, flèches d'inclinaison, sprites pixelisés) — 13 et 17 fourniraient des dizaines de silhouettes à tracer pour de nouvelles recettes d'enveloppe ; 12 et 16 sont mesurées automatiquement (aspect d'iris, reflets) mais seul l'aspect d'iris est consommé : la position des reflets (dy ≈ −0,44) ne l'est pas encore.
 - ⬜ **Références non tracées** : 06, 09 (canthi coupés), 03, 05 (yeux trop petits), 01, 02 (cel), 08 (chibi, tracé raté). Les ancres restent posées à la main ; une segmentation
   automatique fiable (sclère ombrée, peau claire) n'existe pas.
 - ⬜ **Mesures non reversées au moteur** : palette de sclère (3 bandes) et de peau périoculaire, épaisseur du trait de paupière haute (`upperLidLineThicknessOverWidth`),

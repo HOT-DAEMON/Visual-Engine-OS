@@ -24,6 +24,13 @@ Sclère : moyenne 150–180 de luminance mais ombrée par la paupière (5ᵉ cen
 Enseignements : diamètre de l'iris ≈ hauteur d'ouverture (0,98–1,08) ; centre de l'iris à 0,47–0,51 le long de l'axe ; reflet principal r/iris 0,22–0,29 ;
 canthus interne plus aigu (≈ 75–104°) que l'externe.
 
+**Références 12 à 17 (ajoutées en cours de session)** — ce sont des planches de formes sur fond uni, mesurées différemment :
+- 12 et 16 (iris noirs pleins, reflets blancs) : **mesure automatique** sans ancre (`scripts/eye-refs/extract_sheets.py` → `references/eyes/measures-sheets.json`) :
+  aspect d'iris hauteur/largeur médiane 1,007 (12 iris) et 1,078 (28 iris) ; reflet principal r/iris 0,18–0,25, placé en haut (dy ≈ −0,44) ; secondaire 0,10–0,12.
+  Consommé : `ROUND_IRIS_ASPECT` (aspect d'iris des styles round / chibi / circle de la galerie étendue), testé.
+- 13 et 17 (yeux manga au trait), 14 (yeux colorés avec flèches d'inclinaison), 15 (sprites pixelisés) : **pas encore mesurés** (contours au trait sans sclère remplie :
+  il faut tracer les marges ; 15 est en très basse résolution). Voir `EYES-REMAINING.md`.
+
 **Non tracées (documenté, pas contourné)** : 06 et 09 (canthi hors cadre), 03 et 05 (yeux trop petits dans un visage), 01 et 02 (styles cel : cheveux/ombres
 mêlés au contour), 08 (yeux chibi : tracé raté, l'iris ne coïncidait pas). Limite générale : ancres posées à la main ; la segmentation automatique de la
 sclère par couleur a été essayée et **échoue** (sclère ombrée, peau claire confondue).

@@ -1,0 +1,95 @@
+{
+ "method": "automatique (seuil + ouverture + composantes connexes), sans ancre manuelle",
+ "sheets": {
+  "12": {
+   "file": "12.jpg",
+   "irisAspectHeightOverWidth": {
+    "n": 12,
+    "p10": 0.226,
+    "median": 1.007,
+    "p90": 1.12
+   },
+   "primaryHighlightRadiusOverIris": {
+    "n": 10,
+    "p10": 0.164,
+    "median": 0.184,
+    "p90": 0.287
+   },
+   "primaryHighlightDx": {
+    "n": 10,
+    "p10": 0.154,
+    "median": 0.286,
+    "p90": 0.366
+   },
+   "primaryHighlightDy": {
+    "n": 10,
+    "p10": -0.529,
+    "median": -0.439,
+    "p90": -0.273
+   },
+   "secondaryHighlightRadiusOverIris": {
+    "n": 10,
+    "p10": 0.109,
+    "median": 0.118,
+    "p90": 0.194
+   },
+   "secondaryHighlightDx": {
+    "n": 10,
+    "p10": -0.017,
+    "median": 0.253,
+    "p90": 0.426
+   },
+   "secondaryHighlightDy": {
+    "n": 10,
+    "p10": -0.211,
+    "median": 0.217,
+    "p90": 0.334
+   }
+  },
+  "16": {
+   "file": "16.webp",
+   "irisAspectHeightOverWidth": {
+    "n": 28,
+    "p10": 0.558,
+    "median": 1.078,
+    "p90": 1.394
+   },
+   "primaryHighlightRadiusOverIris": {
+    "n": 22,
+    "p10": 0.209,
+    "median": 0.245,
+    "p90": 0.329
+   },
+   "primaryHighlightDx": {
+    "n": 22,
+    "p10": -0.372,
+    "median": -0.002,
+    "p90": 0.364
+   },
+   "primaryHighlightDy": {
+    "n": 22,
+    "p10": -0.63,
+    "median": -0.45,
+    "p90": 0.06
+   },
+   "secondaryHighlightRadiusOverIris": {
+    "n": 14,
+    "p10": 0.076,
+    "median": 0.1,
+    "p90": 0.227
+   },
+   "secondaryHighlightDx": {
+    "n": 14,
+    "p10": -0.578,
+    "median": -0.102,
+    "p90": 0.573
+   },
+   "secondaryHighlightDy": {
+    "n": 14,
+    "p10": -0.403,
+    "median": -0.277,
+    "p90": 0.611
+   }
+  }
+ }
+}
