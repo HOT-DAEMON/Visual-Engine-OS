@@ -16,8 +16,13 @@ Il faut que le moteur soit capable de distinguer tres clairement plusieurs famil
  8: Glabelle	Relief entre les arcades sourcilières
 # IMPORTANT 
 Il faut que tous les valeurs des element de cette voutes cranienne soit visuelement présent et testé dans leur extremes en incrementant ou en decrementant leur valeur pour prouver leur efficité..Par defaut tous les elements sont visible...Les artefacts produient doivent être visuellement suivre la sophistication du code..On ne veut pas d'element orphelin ou non testé..Tous doit être testé a l'extreme sans compromis...
-Chaque element doit connaitre son parent direct, son parent lointain, son voisin supérieur, son voisin inférieur, son voisin medial, son voisin latéral, son voisin posterieur, ses tissus, sa profondeur, sa position exacte dans le repère de la tête(Des coordonnées locales et globales), sa visibilité par rapport a la camera, son occlusion par les composants voisins. Chaque element doit avoir son propre registre, ses propres contrats, sa propre texture, son orientation dans le rotation 3d sous tous les angles, son propre materiaux, sa propre geometrie, sa propre anatomie, sa propre apparence connecté qu'en même au moteur d'apparence deja en place (lighting, ombrage, couleur, etc.)..
+Chaque element doit connaitre son parent direct, son parent lointain, son voisin supérieur, son voisin inférieur, son voisin medial, son voisin latéral, son voisin posterieur, ses tissus, sa profondeur, sa position exacte dans le repère de la tête(Des coordonnées locales et globales), sa visibilité par rapport a la camera, son occlusion par les composants voisins.- chaque structure possède un identifiant anatomique, un registre, des paramètres et des relations ;
+- chaque structure déclare son influence sur la géométrie externe ;
+- les structures visibles partagent une surface continue lorsque l'anatomie l'exige ;
+- les matériaux et textures sont hérités ou spécialisés selon les besoins du rendu ;
+- les sutures et couches internes sont des données anatomiques, pas obligatoirement des objets visibles.
 Ce système doit également distinguer les contraintes strictes des préférences morphologiques. Une relation anatomique ne doit pas empêcher une caricature volontaire.
+
 le moteur doit pouvoir produire les mêmes structures sous plusieurs angles sans reconstruire artificiellement..
 
 Un manque important : les familles de crânes.
@@ -64,3 +69,32 @@ Avec des contraintes qui empêchent les combinaisons incohérentes sans supprime
 Certaines caractéristiques doivent pouvoir être liées.
 Par exemple, un visage avec une mandibule très développée peut avoir un masséter plus prononcé, sans que ce soit obligatoire.
 Il faut donc des corrélations probabilistes facultatives, et non des règles absolues.
+#1. La largeur de la boîte crânienne doit être indépendante de la largeur du visage.
+
+C'est directement lié au problème identifié en V4. La largeur des joues, des pommettes et des cheveux ne doit pas être confondue avec la largeur osseuse du crâne.
+
+2. La hauteur doit être une vraie dimension géométrique.
+
+Le paramètre vaultHeight ne doit pas simplement modifier la position horizontale de quelques points du profil. Il doit réellement contrôler la hauteur de la voûte et ses transitions, avec une incidence mesurable dans les vues concernées.
+
+3. L'asymétrie crânienne doit avoir ses propres paramètres.
+
+L'asymétrie des yeux, de la bouche et de la mandibule peut être corrélée à celle du crâne, mais ne doit pas la déterminer automatiquement. Le moteur doit pouvoir produire un crâne asymétrique avec un visage symétrique, et inversement.
+
+4. Les plans latéraux doivent être explicitement modélisés.
+
+Il manque notamment une maîtrise indépendante de :
+- l'aplatissement temporal ;
+- la convexité pariétale latérale ;
+- la largeur au niveau des régions temporales ;
+- la transition entre les plans frontal, temporal et pariétal ;
+- la forme de la région mastoïdienne.
+5. Les tissus doivent être distingués de l'os.
+
+Le contour visible du crâne sous la peau, le relief osseux, le périoste, les tissus sous-cutanés et le cuir chevelu ne sont pas la même chose. Cette séparation sera importante pour que ton moteur d'apparence puisse produire des résultats différents selon le style, le degré de réalisme et la lumière.
+
+6. Il faut une validation visuelle automatique des paramètres.
+
+Pour chaque paramètre, Claude doit générer une planche comparative avec valeur minimale, nominale et maximale, en conservant exactement la même graine, la même caméra, le même éclairage et le même rendu. Ensuite, une deuxième planche doit tester les interactions entre paramètres.
+
+La preuve doit montrer une différence perceptible, et non simplement une valeur différente dans le JSON.
