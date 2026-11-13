@@ -6,6 +6,7 @@ import { irisCenter, irisRadii } from '../render/eye/helpers';
 import { dominantColor } from '../materials';
 import { EyeSpec } from '../schema';
 import { REFERENCE_LIGHT } from './face-engine';
+import { checkEyeEnvelope } from './eye-envelope';
 import { check, report, type Check, type Report } from './types';
 
 /**
@@ -88,6 +89,8 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
     out.push(check('geometry', 'vessels-outside-iris', '==', inIris, 0, 'des vaisseaux traversent l’iris'));
   }
   if (turned) out.push(check('geometry', 'eye-facing-camera', '>=', turned.facing, 0.05, 'l’œil est passé derrière le crâne (rotation trop forte pour sa position)'));
+
+  out.push(...checkEyeEnvelope(g0, eye.shape.style, irisRy)); // enveloppe vs références mesurées (geometry / anatomy / style)
 
   // ---- anatomy -----------------------------------------------------------------------------------------------
   const irisToOpening = (2 * irisRx) / (g.bbox.w || 1);

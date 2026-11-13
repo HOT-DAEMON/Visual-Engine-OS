@@ -2,6 +2,7 @@ import { rad } from '../../core/math';
 import type { EyeSpec } from '../../schema';
 import type { BBox } from '../../materials';
 import { extendedStyle } from './opening-styles';
+import { ALMOND_REF, NEUTRAL_REF } from './opening-ref';
 import { cubicAt, cubicDeriv, norm, type Vec } from './primitives';
 
 
@@ -60,19 +61,21 @@ export function openingGeometry(shape: EyeSpec['shape'], canthi: EyeSpec['canthi
   // d'une silhouette anime à l'autre (voir schema.ts, champ `shape.style`) — SAUF 'round', qui
   // arrondit aussi l'intérieur (un œil kawaii n'a pas de coin interne pointu).
   const innerRoundBoost = style === 'round' ? 0.45 : 0;
+  // Amande MESURÉE sur les références (opening-ref.ts) : 'round' (kawaii dessiné à la main) reste neutre.
+  const ref = style === 'round' ? NEUTRAL_REF : ALMOND_REF;
   const upIn = w * (0.24 - 0.16 * rIn) * (1 - innerRoundBoost);
   const loIn = w * (0.26 - 0.16 * rIn) * (1 - innerRoundBoost);
   let pi: Vec = { x: (-s * w) / 2, y: t };
   let po: Vec = { x: (s * w) / 2, y: -t };
   let u1: Vec = { x: pi.x + s * upIn, y: pi.y - k * hUp * (1 + innerRoundBoost * 0.5) };
-  let l2: Vec = { x: pi.x + s * loIn, y: pi.y + k * hLo * (1 + innerRoundBoost * 0.5) };
+  let l2: Vec = { x: pi.x + s * loIn * ref.l2dx, y: pi.y + k * hLo * (1 + innerRoundBoost * 0.5) * ref.l2dy };
 
   // Canthus externe : chaque style ne touche que u2 (contrôle haut-externe), l1 (contrôle bas-externe)
   // et éventuellement po lui-même (position du coin externe). `upOut`/`loOut` restent la base commune.
   const upOut = w * (0.24 - 0.16 * rOut);
   const loOut = w * (0.26 - 0.16 * rOut);
-  let u2: Vec = { x: po.x - s * upOut, y: po.y - k * hUp };
-  let l1: Vec = { x: po.x - s * loOut, y: po.y + k * hLo };
+  let u2: Vec = { x: po.x - s * upOut * ref.u2dx, y: po.y - k * hUp * ref.u2dy };
+  let l1: Vec = { x: po.x - s * loOut * ref.l1dx, y: po.y + k * hLo * ref.l1dy };
 
   if (style === 'round') {
     // Kawaii : silhouette proche d'un cercle — contrôles externes nettement ramenés vers le centre

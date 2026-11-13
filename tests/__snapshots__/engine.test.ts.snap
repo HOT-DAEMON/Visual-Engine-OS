@@ -1,3 +1,3 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`déterminisme > empreinte de référence de first-eye (change si le rendu change : à relire, pas à ignorer) 1`] = `"e96931696577994d7afe23a4dc146bd4362a8681908f9ba041446d860fa451ff"`;
+exports[`déterminisme > empreinte de référence de first-eye (change si le rendu change : à relire, pas à ignorer) 1`] = `"3a2578e4aacbcb923d1d92740a89f7426e4200a53604bfe73de145ecd52c93a9"`;

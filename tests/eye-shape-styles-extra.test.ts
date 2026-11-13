@@ -1,3 +1,4 @@
+import { ALMOND_REF } from '../src/geometry/eye/opening-ref';
 import { describe, expect, it } from 'vitest';
 import { openingGeometry } from '../src/geometry/eye';
 import { compileScene, EyeSpec } from '../src';
@@ -13,9 +14,9 @@ describe('shape.style : nouveaux styles (chibi, angular, compressed, rounded_rec
     expect(EyeSpec.safeParse({ id: 'e', kind: 'eye', shape: { style: 'carré' } }).success).toBe(false);
   });
 
-  it("'almond' reste inchangé (non-régression du défaut)", () => {
+  it("'almond' : contrôle haut-externe = formule d'origine × facteur MESURÉ (opening-ref.ts)", () => {
     const g = geom('almond');
-    expect(g.u2.y).toBeCloseTo(g.po.y - (4 / 3) * (120 * 0.62), 6);
+    expect(g.u2.y).toBeCloseTo(g.po.y - (4 / 3) * (120 * 0.62) * ALMOND_REF.u2dy, 6);
   });
 
   it('chaque nouveau style : géométrie finie, non dégénérée et distincte des 4 styles existants', () => {

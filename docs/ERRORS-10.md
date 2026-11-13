@@ -13,3 +13,10 @@ Format : symptôme → cause → correction → garde-fou.
 9. **3 avertissements `male-taper` sur des hommes obèses** (hanches/épaules 0,78–0,786 > 0,78). Cause : le « V » masculin ne vaut pas à forte adiposité. Correction : contrôle borné à adiposité < 0,6 (comme la bande féminine) — correction de la RÈGLE, documentée, pas du seuil.
 10. **Script de refactor Python lancé avec une chaîne introuvable** : plusieurs fichiers modifiés, `render.ts` resté ancien. Garde-fou : préparer toutes les chaînes avant la première écriture, retaper les fichiers entiers si l'état est incertain.
 11. **Grand dorsal sorti de l'enveloppe du bébé** (graines 2, 3). Correction : bornes `u ≤ 0,93`.
+12. **Segmentation automatique de la sclère par couleur (réf. 10)** : contour absurde (peau claire et reflets inclus, sclère ombrée exclue). Correction : ancres de paupières posées à la main + accrochage sur le gradient ; la segmentation couleur est abandonnée.
+13. **Iris ajusté par ellipse (`fitEllipse`) débordant des paupières** (réf. 04). Cause : points du limbe pris dans les cils. Correction : cercle moindres carrés robuste, rayon borné à ±12 % de l'estimation, rejet itératif.
+14. **Tracé de la réf. 08 (chibi) faux** (iris et marges décalés) : écarté des mesures plutôt que forcé ; consigné dans `EYES-REMAINING.md`.
+15. **Sourcil « non consommé » dans le banc de paramètres** : il est dessiné ≈ 220 px au-dessus du centre de l'œil, donc hors cadre. Correction : image plus haute (le moteur était correct).
+16. **Calibrage du rayon d'iris annulé par l'archétype `alien`** (preset à rayon 0,62 absolu) → iris deux fois plus haut que l'ouverture sur l'œil 16 (`iris-meets-opening`). Correction : archétype écarté pour la galerie étendue, rayon calculé sur l'ouverture résolue.
+17. **Contrôles pixel trop stricts** : sclère exigée ≥ 110 alors que les références ont un 5ᵉ centile de 60–73 ; fond gris confondu avec la sclère grise (faux « trous »). Corrections : seuil 60 (mesuré), fond magenta.
+18. **`hair-boundary` : délai de 30 s dépassé** pendant que des rendus d'yeux tournaient en parallèle ; la tranche relancée sans autre charge est la référence.

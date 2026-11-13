@@ -1,7 +1,7 @@
 # Yeux — systèmes ajoutés (branche `feat/eyes-systems`)
 
 Réponse à `TODO-EYES-SYSTEMS.md` / `TODO-EYES-SYSTEMS-2.md`. Règle suivie : **chaque ajout est opt-in et neutre par défaut** — un œil qui ne les
-mentionne pas est rendu comme avant (sauf le gain de vitesse, voir `EYES-PERF.md`, et ses références mesurées). Ce qui reste à faire : `EYES-REMAINING.md`.
+mentionne pas est rendu comme avant (sauf le gain de vitesse, voir `EYES-PERF.md`, et ses références mesurées). Ce qui reste à faire : `EYES-REMAINING.md`. Références mesurées, almond recalé, galerie de 100 formes : `EYES-REFS.md`.
 Preuves visuelles et chiffrées : `artefacts/eyes/` (régénérables : `npx tsx scripts/artefacts-eyes.ts`).
 
 ## Carte des étapes (une étape = un commit = ses tests)

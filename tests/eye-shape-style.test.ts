@@ -1,3 +1,4 @@
+import { ALMOND_REF } from '../src/geometry/eye/opening-ref';
 import { describe, expect, it } from 'vitest';
 import { openingGeometry } from '../src/geometry/eye';
 import { compileScene, EyeSpec } from '../src';
@@ -12,13 +13,13 @@ function svgOf(input: unknown): string {
 }
 
 describe('shape.style : non-régression et couverture', () => {
-  it("'almond' (défaut) produit EXACTEMENT la même géométrie qu'avant l'introduction des styles", () => {
+  it("'almond' (défaut) : canthi inchangés ; contrôle haut-externe = formule d'origine × facteur MESURÉ (opening-ref.ts, recalage sur references/eyes)", () => {
     const g = openingGeometry(eye().shape, eye().canthi);
     // Référence figée : dérivée de la formule d'origine pour les valeurs par défaut
     // (width=200, height=120, upperFraction=0.62, openness=1, tiltDeg=6, roundness=0.4 par défaut).
     expect(g.pi.x).toBeCloseTo(-100, 6);
     expect(g.po.x).toBeCloseTo(100, 6);
-    expect(g.u2.y).toBeCloseTo(g.po.y - (4 / 3) * (120 * 0.62), 6);
+    expect(g.u2.y).toBeCloseTo(g.po.y - (4 / 3) * (120 * 0.62) * ALMOND_REF.u2dy, 6);
   });
 
   it('chaque style produit une géométrie VALIDE (bbox finie, non dégénérée) à tous les réglages par défaut', () => {

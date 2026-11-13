@@ -17,3 +17,5 @@ export { polar, wobble, angularRange, radialRange, zoneOutline, angularCells, bl
 export { microLod, scleraVessels, scleraMarks, type Lod, type Vessel } from './micro-detail';
 export { turnOpening, turnPoint, jacobianAtCenter, facingOf, type TurnParams, type TurnedOpening, type Jacobian } from './turn3d';
 export { openingPolygon } from './opening-polygon';
+export { openingProfile, PROFILE_SAMPLES, type OpeningProfile } from './profile';
+export { ALMOND_REF, ALMOND_REF_SOURCES, NEUTRAL_REF, REF_PROFILE, REF_RANGES, type EnvelopeRefFactors } from './opening-ref';
