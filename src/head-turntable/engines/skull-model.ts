@@ -1,7 +1,7 @@
 import { clamp, smooth } from '../math';
 import { LENGTH_REF } from '../../skull/derive';
-import { SkullParams } from '../../skull/types';
 import type { EngineHead } from './face-model';
+import { skullOf } from './skull-of';
 
 /**
  * MODÈLE DE SECTION DU CRÂNE (vue de dessus). Jusqu'ici toute coupe horizontale au-dessus de la mâchoire était une ELLIPSE centrée : toutes les têtes, quel que soit leur
@@ -42,7 +42,7 @@ export const skullWeight = (y: number, sp: SkullShapeParams = SKULL_SHAPE): numb
 export function skullFields(e: EngineHead, y: number, a: number, zf: number, zb: number, sp: SkullShapeParams = SKULL_SHAPE): SkullFields | null {
   const w = skullWeight(y, sp);
   if (w <= 0) return null;
-  const k = SkullParams.parse(e.fit.skull), d = zf - zb, zc = (zf + zb) / 2, zPor = (e.fit as { zPorion: number }).zPorion;
+  const k = skullOf(e), d = zf - zb, zc = (zf + zb) / 2, zPor = (e.fit as { zPorion: number }).zPorion;
   const faceW = smooth((y - sp.face0) / (sp.face1 - sp.face0));
   const flat = clamp((2 * a / Math.max(0.05, d + cranialBackShift(e, y)) - sp.ci0) / sp.ciSpan, -1, 1);   // indice local du moteur (profondeur AVANT amplification) : l'aplatissement de l'occiput suit le visage, pas l'amplification
   const wfSkull = clamp(sp.wf0 + sp.wfPeak * (k.vaultPeak - 0.45) - sp.wfOcc * (k.occiput - 0.5), sp.wfMin, sp.wfMax);

@@ -31,11 +31,13 @@ export interface VariedHead {
 export interface HeadSource {
   readonly face: Pick<RandomProfile['face'], 'params' | 'width' | 'height'>;
   readonly skull: RandomProfile['skull'];
-  readonly derivation: Pick<RandomProfile['derivation'], 'lengthH'>;
+  readonly derivation: Pick<RandomProfile['derivation'], 'lengthH'> & Partial<Pick<RandomProfile['derivation'], 'axes'>>;
   readonly skin: string;
   readonly hair: string;
   /** Couleur d'iris de la personne (hôte : l'œil posé sur le visage) ; absente = l'iris de la planche. */
   readonly iris?: string;
+  /** Caricature volontaire : lève les contraintes strictes de plausibilité de la voûte (`skull/vault-constraints.ts`). */
+  readonly caricature?: boolean;
 }
 
 /** Contraste minimal encre / peau (WCAG) : la planche en a ≈ 9 ; une peau foncée assombrit l'encre jusque-là, une peau claire n'est pas touchée. */
@@ -45,7 +47,7 @@ const REF = (() => { const e = engineHead(); return { rx: e.lm.orbit.right.rx, l
 
 /** Réglage des moteurs pour un profil aléatoire : visage, crâne dérivé, largeur d'hôte ; les constantes de repère viennent de la planche. */
 export function fitFromProfile(p: HeadSource, base: EngineFit = ENGINE_FIT): EngineFit {
-  return { ...base, mandLandmarks: true, cranialL: p.derivation.lengthH, face: p.face.params as unknown as Readonly<Record<string, unknown>>, skull: p.skull as unknown as Readonly<Record<string, unknown>>, W: (H_PX * p.face.width) / p.face.height } as unknown as EngineFit;
+  return { ...base, mandLandmarks: true, cranialL: p.derivation.lengthH, ...(p.caricature ? { caricature: true } : {}), ...(p.derivation.axes ? { vaultHeightRef: p.derivation.axes.vaultHeight.derived } : {}), face: p.face.params as unknown as Readonly<Record<string, unknown>>, skull: p.skull as unknown as Readonly<Record<string, unknown>>, W: (H_PX * p.face.width) / p.face.height } as unknown as EngineFit;
 }
 
 /** Palette de la graine : peau et cheveux du profil, ombres déduites (même rapport que la planche), reste de la planche. */

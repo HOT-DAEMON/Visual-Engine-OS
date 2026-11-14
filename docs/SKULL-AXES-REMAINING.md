@@ -31,3 +31,5 @@ Voulue « seulement ensuite » : la dérivation et le branchement des moteurs so
 - Rastérisation à froid ≈ 59 ms/tête (resvg) : non traitée ici. Piste : rasteriser uniquement les calques modifiés, mutualiser les filtres.
 - Le rendu SVG du profil (26 ms) n'est pas mis en cache par graine.
 - Limite resvg constatée : un filtre entièrement hors d'une zone recadrée fait planter le rastériseur (contournement : rasteriser en grand puis recadrer, cf. `scripts/artefacts-skull-axes.ts`).
+
+**Mise à jour** : les mesures de voûte indépendantes (largeur de la boîte crânienne, plans latéraux, occiput, asymétries propres, hauteur réelle) sont décrites dans `SKULL-VAULT.md` ; leurs manques dans `SKULL-VAULT-REMAINING.md`.

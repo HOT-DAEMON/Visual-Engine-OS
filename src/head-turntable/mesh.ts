@@ -2,7 +2,7 @@ import { cross, norm, sub, v3 } from './math';
 import { sectionAt, sectionPoint, surfaceZ } from './sections';
 import type { HeadTurnSpec, V3 } from './types';
 import { CUT_SLOPE, isBellHead, neckSection } from './engines/neck3d';
-import { headRelief } from './engines/head-relief';
+import { headRelief, headReliefOver } from './engines/head-relief';
 
 /** Identifiants de parties (groupes de contour : 1 et 4 = peau de la tête, sans trait entre eux ; 2 et 5 = cou ; 3 = oreilles). */
 export const PART = { head: 1, neck: 2, ear: 3, bump: 4, neckCut: 5, earBack: 6, hair: 7, hairPart: 8, hairBun: 9 } as const;
@@ -38,8 +38,8 @@ export function skullSurfacePoint(spec: HeadTurnSpec, relief: SkullRelief, y: nu
   const s = sectionAt(spec, y), q = sectionPoint(s, th), d = relief ? relief(y, th) : 0;
   if (d === 0) return v3(q.x, y, q.z);
   const rx = q.x, rz = q.z - s.zc, rl = Math.hypot(rx, rz) || 1;   // direction radiale depuis l'axe vertical du centre de la section
-  const xr = q.x + (d * rx) / rl;
-  return v3(Math.max(-s.a, Math.min(s.a, xr)), y, q.z + (d * rz) / rl);   // jamais plus large que la demi-largeur de la section : le contour de FACE reste celui du moteur de visage (`head.geo.front2d`), les bosses se lisent de profil et de trois quarts
+  const xr = q.x + (d * rx) / rl, ov = headReliefOver(spec.engine, y);   // ov : tolérance de l'asymétrie de largeur de la voûte (0 sinon)
+  return v3(Math.max(-s.a - ov, Math.min(s.a + ov, xr)), y, q.z + (d * rz) / rl);   // jamais plus large que la demi-largeur de la section : le contour de FACE reste celui du moteur de visage (`head.geo.front2d`), les bosses se lisent de profil et de trois quarts
 }
 
 /** Crâne + mâchoire : pile de sections elliptiques (pas dy), fermée au sommet et au bas du menton. */

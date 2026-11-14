@@ -6,6 +6,7 @@ import { backChain, frontChain, skinPoints, smax, zAt, type PV } from './profile
 import { Y0, fy, py } from './units';
 import { JAW_SHAPE, borderZ, jawCtx, jawFields, type JawShapeParams } from './jaw-model';
 import { cranialBackShift, hasSkullModel, skullFields } from './skull-model';
+import { vaultRow, vaultWarpRows } from './vault-model';
 
 /** Hauteurs de la table de sections (celles de la planche : comparables ligne à ligne). */
 export const ROW_YS: readonly number[] = [0, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1, 1.025, 1.04, 1.05];
@@ -15,6 +16,9 @@ const Y_STRETCH = 0.4;     // sous cette hauteur (U) la coupe de cheveux étire 
 
 /** Ordonnée du moteur (U) correspondant à la hauteur y de la tête : la coupe de cheveux ajoute Y0 au-dessus du vertex. */
 export const toEngineY = (y: number): number => (y >= Y_STRETCH ? y : Y0 + (y / Y_STRETCH) * (Y_STRETCH - Y0));
+
+/** Inverse de `toEngineY` : hauteur de la tête (U) d'une ordonnée du moteur (U). */
+export const fromEngineY = (ye: number): number => (ye >= Y_STRETCH ? ye : ((ye - Y0) / (Y_STRETCH - Y0)) * Y_STRETCH);
 
 /** Plan du visage SANS nez ni lèvres (sur lequel reposent leurs bosses) : forme continue front → racine → sous-nez → menton. */
 export function facePlane(e: EngineHead): (y: number) => number {
@@ -85,7 +89,8 @@ export function engineRows(e: EngineHead, ys: readonly number[] = ROW_YS, hairTh
   const rows = closeChin(base).map((r) => { const j = jawFields(e, r.y, r.zf, r.zb, shape, ctx) ?? (sk ? skullFields(e, r.y, r.a, r.zf, r.zb) : null); return j ? { ...r, ...j } : r; });
   // Le point le plus large ne recule jamais quand on descend (sinon le contour oscille en vue inclinée) : maximum courant sur la zone de mâchoire.
   let zw = -Infinity;
-  return rows.map((r) => { if (r.zw === undefined || r.y < shape.y0) return r; zw = Math.max(zw, r.zw); return { ...r, zw: Math.min(zw, r.zf - 0.04) }; });
+  const settled = rows.map((r) => { if (r.zw === undefined || r.y < shape.y0) return r; zw = Math.max(zw, r.zw); return { ...r, zw: Math.min(zw, r.zf - 0.04) }; });
+  return vaultWarpRows(e, settled.map((r) => vaultRow(e, r)));   // voûte crânienne : mesures indépendantes (largeur, plans latéraux, occiput, hauteur réelle) ; identité si tout est nul
 }
 const zBackTop = (_b: readonly PV[], _y: number, z: number): number => z;
 function mandibularFront(e: EngineHead, y: number): number { const f = frontChain(e); return zAt(f, y) ?? skinPoints(e).get('menton')!.z; }

@@ -1,6 +1,6 @@
 import { rad, smooth } from '../math';
-import { SkullParams } from '../../skull/types';
 import type { EngineHead } from './face-model';
+import { skullOf } from './skull-of';
 import { PX, spy, sy } from './units';
 
 /** Section du cou à la hauteur y (U) : demi-largeur a (moteur de visage : `lm.neck.half`, évasement vers les trapèzes), centre zc et demi-profondeur b (moteur de crâne : faces antérieure `xFront` et postérieure `xBack`). */
@@ -35,7 +35,7 @@ export function neckSection(e: EngineHead, y0: number, y1: number): NeckSection 
   const y = isBellHead(e) ? Math.min(y0, y1) : y0;   // sous le plan de coupe (devant de la coupe oblique) la section ne change plus : le cou ne prolonge pas les lignes du crâne au-delà de y1
   const n = e.sk.neck, yp = spy(y), zf = e.fit.zPorion + n.xFront(yp) * PX, zb = e.fit.zPorion + n.xBack(yp) * PX;
   if ((e.fit as { mandLandmarks?: boolean }).mandLandmarks) {
-    const k = SkullParams.parse(e.fit.skull), g = smooth((y - (y1 - SHOULDER.len)) / SHOULDER.len), K = SHOULDER.k0 + SHOULDER.kTrap * k.trapezius;
+    const k = skullOf(e), g = smooth((y - (y1 - SHOULDER.len)) / SHOULDER.len), K = SHOULDER.k0 + SHOULDER.kTrap * k.trapezius;
     const zbS = zb - SHOULDER.back * k.c7 * g;
     return { a: e.lm.neck.half * PX * (1 + K * g), zc: (zf + zbS) / 2, b: Math.max(0.02, ((zf - zbS) / 2) * e.fit.neckScale * (1 + SHOULDER.depth * K * g)) };
   }

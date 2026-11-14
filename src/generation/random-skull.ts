@@ -1,3 +1,4 @@
+import { drawVault, type VaultDraw } from '../skull/vault-correlations';
 import { mulberry32 } from '../core/prng';
 import { deriveSkull, type Derivation, type DerivedAxis } from '../skull/derive';
 import { profileEyeData, type ProfileEyeData } from '../skull/eye-data';
@@ -23,8 +24,8 @@ export interface RandomProfile {
   readonly eye: ProfileEyeData;
 }
 
-export function generateRandomProfile(seed: number, options: RandomFaceOptions & { hair?: SkullParams['hair'] } = {}): RandomProfile {
-  const { hair: hairStyle, ...faceOpts } = options;
+export function generateRandomProfile(seed: number, options: RandomFaceOptions & { hair?: SkullParams['hair']; /** Tire AUSSI la voûte crânienne (mesures indépendantes, `skull/vault-correlations.ts`) : absent = voûte nominale, têtes identiques à l'ancien tirage. */ vault?: VaultDraw } = {}): RandomProfile {
+  const { hair: hairStyle, vault, ...faceOpts } = options;
   const face = generateRandomFace(seed, { structure: true, ...faceOpts });
   const rnd = mulberry32((seed ^ 0x5c011) >>> 0);
   const u = (lo: number, hi: number): number => lo + (hi - lo) * ((rnd() + rnd()) / 2);
@@ -40,7 +41,7 @@ export function generateRandomProfile(seed: number, options: RandomFaceOptions &
   const axes: Partial<Record<DerivedAxis, number>> = { vaultHeight: r01(raw.vaultHeight, 0.1, 0.9), frontalBulge: r01(raw.frontalBulge, 0.1, 0.9), foreheadSlope: r01(raw.foreheadSlope, 0.05, 0.8), zygoma: r01(raw.zygoma, 0.1, 0.9), neckDepth: r01(raw.neckDepth, 0.1, 0.9) };
   const { length: _l, vaultHeight: _v, foreheadSlope: _f, frontalBulge: _b, zygoma: _z, neckDepth: _n, ...free } = raw;
   void [_l, _v, _f, _b, _z, _n];
-  const derivation = deriveSkull(face.params, face.width / face.height, SkullParams.parse(free), { ci: drawCI, axes });
+  const derivation = deriveSkull(face.params, face.width / face.height, SkullParams.parse(vault ? { ...free, ...drawVault(seed, vault) } : free), { ci: drawCI, axes });
   const skin = (face.objects[0] as { material: { color: string } }).material.color;
   const hair = face.params.hair.color ?? '#4a3222';
   return { seed, face, skull: derivation.skull, skin, hair, derivation, eye: profileEyeData(face.fits.right, face.height) };

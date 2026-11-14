@@ -1,6 +1,6 @@
-import { SkullParams } from '../../skull/types';
 import { clamp, smooth } from '../math';
 import type { EngineHead } from './face-model';
+import { skullOf } from './skull-of';
 import { skullWeight } from './skull-model';
 
 /**
@@ -21,20 +21,32 @@ export interface SkullReliefParams {
   /** Asymétrie : amplitude max (U) de l'aplatissement occipital, du bombement frontal, et écart relatif des deux bosses. */ readonly flatOcc: number; readonly bossFront: number; readonly bossSplit: number;
 }
 export const SKULL_RELIEF: SkullReliefParams = { yP: 0.24, azP: 112, sy: 0.085, saz: 24, a0: 0.02, kPeak: 0.022, kHeight: 0.01, aMin: 0.006, aMax: 0.026, flatOcc: 0.012, bossFront: 0.008, bossSplit: 0.25 };
+/** Asymétrie PROPRE du crâne (plagiocéphalie, bosses inégales) : plus ample que celle reportée du visage (quelques mm de tête) pour qu'un crâne asymétrique se lise sous un visage symétrique. */
+export const SKULL_OWN_ASYM = { flatOcc: 0.03, bossFront: 0.022, bossSplit: 0.6 } as const;
 
 /** Seules les têtes issues d'un visage (`mandLandmarks`) ont ce relief : le crâne de la planche est ajusté sur une silhouette MESURÉE qui contient déjà ses bosses. */
 export const hasSkullRelief = (e: EngineHead): boolean => (e.fit as { mandLandmarks?: boolean }).mandLandmarks === true;
 
-/** Asymétrie crânienne signée dans [−1, 1] (+ = côté +x plus volumineux à l'arrière, plus plat en avant) : moyenne des trois mesures d'asymétrie du visage, ramenées à leur borne. */
-export function skullAsymmetry(e: EngineHead): number {
+/** Asymétrie du VISAGE (yeux, bouche) signée dans [−1, 1] (+ = côté +x) : moyenne des trois mesures d'asymétrie, ramenées à leur borne. */
+export function faceAsymmetry(e: EngineHead): number {
   const a = e.p.asymmetry;
   return clamp((a.eyeDy / 0.012 + a.eyeRollDeg / 4 + a.mouthTiltDeg / 4) / 3, -1, 1);
+}
+/** Asymétrie crânienne d'une région : part `asymFaceCoupling` de celle du visage + mesure PROPRE de la région (le crâne n'est plus déterminé par le visage). Signée dans [−1, 1]. */
+export function skullAsymmetry(e: EngineHead, region: 'parietal' | 'occipital' | 'frontal' = 'parietal'): number {
+  const k = skullOf(e);
+  return clamp(k.asymFaceCoupling * faceAsymmetry(e) + ownAsymmetry(e, region), -1, 1);
+}
+/** Part PROPRE de l'asymétrie d'une région (signée, [−1, 1]) : `asymParietal`, `asymOccipital`, −`asymFrontal`. */
+export function ownAsymmetry(e: EngineHead, region: 'parietal' | 'occipital' | 'frontal'): number {
+  const k = skullOf(e);
+  return region === 'parietal' ? k.asymParietal : region === 'occipital' ? k.asymOccipital : -k.asymFrontal;
 }
 
 /** Amplitude (U) des bosses pariétales d'une tête : le sommet de la voûte porté en arrière et une voûte haute les accentuent. */
 export function parietalAmplitude(e: EngineHead, sp: SkullReliefParams = SKULL_RELIEF): number {
-  const k = SkullParams.parse(e.fit.skull);
-  return clamp(sp.a0 + sp.kPeak * (0.45 - k.vaultPeak) + sp.kHeight * (k.vaultHeight - 0.5), sp.aMin, sp.aMax);
+  const k = skullOf(e);
+  return clamp(sp.a0 + sp.kPeak * (0.45 - k.vaultPeak) + sp.kHeight * (k.vaultHeight - 0.5), sp.aMin, sp.aMax) * (1 + 0.9 * k.parietalBulge);   // parietalBulge : gain indépendant (−1 : bosses presque effacées … +1 : presque doublées)
 }
 
 const g = (d: number, s: number): number => Math.exp(-0.5 * (d / s) ** 2);
@@ -44,11 +56,11 @@ export function skullRelief(e: EngineHead, y: number, th: number, sp: SkullRelie
   const w = skullWeight(y);
   if (w <= 0) return 0;
   const side = clamp(Math.sin(th) / 0.5, -1, 1), az = (Math.atan2(Math.abs(Math.sin(th)), Math.cos(th)) * 180) / Math.PI;   // côté CONTINU (0 sur le plan médian : pas de saut à la nuque) ; azimut replié dans [0°, 180°]
-  const asym = skullAsymmetry(e), A = parietalAmplitude(e, sp);
+  const fa = skullOf(e).asymFaceCoupling * faceAsymmetry(e), A = parietalAmplitude(e, sp), O = SKULL_OWN_ASYM, oP = ownAsymmetry(e, 'parietal'), oO = ownAsymmetry(e, 'occipital'), oF = ownAsymmetry(e, 'frontal');
   // Éminences pariétales : gaussienne en y et en azimut ; le côté « fort » de l'asymétrie est plus gros, l'autre plus petit (somme conservée).
-  const boss = A * (1 + sp.bossSplit * asym * side) * g(y - sp.yP, sp.sy) * g(az - sp.azP, sp.saz);
+  const boss = A * (1 + sp.bossSplit * fa * side + O.bossSplit * oP * side) * g(y - sp.yP, sp.sy) * g(az - sp.azP, sp.saz);
   // Aplatissement occipital du côté +x (asym > 0) et bombement frontal du côté opposé : plagiocéphalie légère, bornée à quelques millimètres de tête.
-  const occ = -sp.flatOcc * Math.max(0, asym * side) * g(y - 0.3, 0.12) * g(az - 150, 20);
-  const front = sp.bossFront * Math.max(0, -asym * side) * g(y - 0.18, 0.09) * g(az - 40, 18);
+  const occ = -(sp.flatOcc * Math.max(0, fa * side) + O.flatOcc * Math.max(0, oO * side)) * g(y - 0.3, 0.12) * g(az - 150, 20);
+  const front = (sp.bossFront * Math.max(0, -fa * side) + O.bossFront * Math.max(0, -oF * side)) * g(y - 0.18, 0.09) * g(az - 40, 18);
   return w * (boss + occ + front) * smooth(az / 20);   // rien sur le plan médian de face : le profil à 90° et la face à 0° restent ceux des moteurs
 }

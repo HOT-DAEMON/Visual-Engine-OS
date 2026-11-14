@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { Unit } from '../schema/primitives';
+import { VaultParams } from './vault-params';
 
 /**
  * CONTRAT DU MOTEUR DE CRÂNE EN VUE DE PROFIL (`src/skull/`).
@@ -56,6 +57,7 @@ export const SkullParams = z
     /** Hauteur de l'implantation des cheveux à la nuque : 0 = basse (nuque couverte), 1 = haute (nuque dégagée). */
     napeHairline: Unit.default(0.5),
   })
+  .merge(VaultParams)
   .strict();
 export type SkullParams = z.infer<typeof SkullParams>;
 
