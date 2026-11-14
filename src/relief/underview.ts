@@ -25,6 +25,9 @@ export interface UnderviewViewParams { readonly pitchDeg: number; readonly yawDe
 export interface UnderviewRelief { readonly field: ReliefField; readonly grid: Grid; /** 1 sur les pixels de cavité de narine. */ readonly cavity: Uint8Array }
 export interface UnderviewLit extends UnderviewRelief { readonly rgba: Uint8ClampedArray; readonly lit: Float32Array; readonly cast: Float32Array; readonly png: Buffer }
 
+/** Poids d'occlusion ambiante dans les cavités de narine : l'intérieur d'une fente profonde reçoit très peu de lumière (réf. 04 : ouvertures les plus sombres du dessin). CHOIX, NON MESURÉ. */
+const CAVITY_AO = 4;
+
 /** Pas d'échantillonnage (en pixels de grille) : < 1 pour qu'aucun trou ne subsiste après projection (une rotation ne dilate jamais). */
 const STEP = 0.4;
 
@@ -106,7 +109,7 @@ export function litUnderview(nose: NoseGeometry, view: UnderviewViewParams, skin
   const N = g.w * g.h, rgba = new Uint8ClampedArray(N * 4), lit = new Float32Array(N), aoK = o.ao ?? 0.55, base = parseHex(skin), rc = parseHex(model.rimColor), lc = parseHex(model.color);
   for (let k = 0; k < N; k++) {
     if (f.depth[k] === -Infinity) continue;
-    const s = shadeAt(model, { x: f.nx[k]!, y: f.ny[k]!, z: f.nz[k]! }, cast[k]!, Math.min(1, ao[k]! * aoK * (cavity[k] ? 1.8 : 1)));
+    const s = shadeAt(model, { x: f.nx[k]!, y: f.ny[k]!, z: f.nz[k]! }, cast[k]!, Math.min(1, ao[k]! * aoK * (cavity[k] ? CAVITY_AO : 1)));
     lit[k] = s.lit;
     for (let c = 0; c < 3; c++) {
       const m0 = tones.shadowMul[c]! + (tones.lightMul[c]! - tones.shadowMul[c]!) * s.lit, m1 = m0 + (tones.coreMul[c]! - m0) * s.core;

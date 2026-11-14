@@ -67,7 +67,7 @@ export function nostrilGeometry(p: FaceParams, F: NoseFrame): { left: NostrilGeo
     // Marge libre une fois la narine posée contre la columelle ; la narine s'en éloigne de NOSTRIL_PLACEMENT (toujours dans le couloir : jamais au-delà de `hi`).
     const slack = Math.max(0, hi - lo - 2 * extX(a2, b2));
     const c: Vec = { x: side * (lo + extX(a2, b2) + NOSTRIL_PLACEMENT * slack), y: F.baseY - 0.001 * F.H - extY(a2, b2) };
-    return { side, c, a: a2, b: b2, tiltDeg: tilt, poly: dropPoly(c, a2, b2, tilt, side) };
+    return { side, c, a: a2, b: b2, tiltDeg: tilt, shape: o.shape, poly: dropPoly(c, a2, b2, tilt, side) };
   };
   return { left: make(-1), right: make(1) };
 }

@@ -1,0 +1,137 @@
+{
+ "source": "references/nez/04.jpg",
+ "method": "sombres -> ouverture 5x5 -> composantes -> axe ACP dans le repère de l'ellipse ; majorant (T = épaisseur du trait)",
+ "summary": {
+  "strokes": 9,
+  "elongation": {
+   "median": 3.31,
+   "min": 2.12,
+   "max": 5.0
+  },
+  "outerEndRiseDeg": {
+   "median": 23.0
+  },
+  "lengthOverEllipseMajor": {
+   "median": 0.199
+  }
+ },
+ "strokes": [
+  {
+   "nose": 4,
+   "side": -1,
+   "cx": 505.0,
+   "cy": 127.1,
+   "lengthPx": 20.9,
+   "thicknessPx": 7.3,
+   "elongation": 2.87,
+   "angleInEllipseFrameDeg": 38.1,
+   "outerEndRiseDeg": 38.1,
+   "lengthOverEllipseMajor": 0.226,
+   "distCentreOverMajor": 0.078
+  },
+  {
+   "nose": 2,
+   "side": -1,
+   "cx": 242.4,
+   "cy": 136.7,
+   "lengthPx": 28.6,
+   "thicknessPx": 7.5,
+   "elongation": 3.81,
+   "angleInEllipseFrameDeg": 26.8,
+   "outerEndRiseDeg": 26.8,
+   "lengthOverEllipseMajor": 0.277,
+   "distCentreOverMajor": 0.33
+  },
+  {
+   "nose": 2,
+   "side": 1,
+   "cx": 294.3,
+   "cy": 135.2,
+   "lengthPx": 17.6,
+   "thicknessPx": 8.3,
+   "elongation": 2.12,
+   "angleInEllipseFrameDeg": -5.2,
+   "outerEndRiseDeg": 5.2,
+   "lengthOverEllipseMajor": 0.17,
+   "distCentreOverMajor": 0.348
+  },
+  {
+   "nose": 1,
+   "side": 1,
+   "cx": 127.8,
+   "cy": 173.2,
+   "lengthPx": 29.1,
+   "thicknessPx": 6.1,
+   "elongation": 4.8,
+   "angleInEllipseFrameDeg": -7.0,
+   "outerEndRiseDeg": 7.0,
+   "lengthOverEllipseMajor": 0.266,
+   "distCentreOverMajor": 0.146
+  },
+  {
+   "nose": 3,
+   "side": -1,
+   "cx": 370.5,
+   "cy": 187.3,
+   "lengthPx": 15.2,
+   "thicknessPx": 5.9,
+   "elongation": 2.56,
+   "angleInEllipseFrameDeg": 32.6,
+   "outerEndRiseDeg": 32.6,
+   "lengthOverEllipseMajor": 0.146,
+   "distCentreOverMajor": 0.265
+  },
+  {
+   "nose": 10,
+   "side": 1,
+   "cx": 480.3,
+   "cy": 424.8,
+   "lengthPx": 12.5,
+   "thicknessPx": 4.5,
+   "elongation": 2.8,
+   "angleInEllipseFrameDeg": -14.0,
+   "outerEndRiseDeg": 14.0,
+   "lengthOverEllipseMajor": 0.109,
+   "distCentreOverMajor": 0.364
+  },
+  {
+   "nose": 8,
+   "side": -1,
+   "cx": 222.3,
+   "cy": 444.4,
+   "lengthPx": 32.2,
+   "thicknessPx": 6.4,
+   "elongation": 5.0,
+   "angleInEllipseFrameDeg": -26.0,
+   "outerEndRiseDeg": -26.0,
+   "lengthOverEllipseMajor": 0.357,
+   "distCentreOverMajor": 0.484
+  },
+  {
+   "nose": 10,
+   "side": -1,
+   "cx": 428.8,
+   "cy": 436.3,
+   "lengthPx": 21.5,
+   "thicknessPx": 6.3,
+   "elongation": 3.43,
+   "angleInEllipseFrameDeg": 42.4,
+   "outerEndRiseDeg": 42.4,
+   "lengthOverEllipseMajor": 0.187,
+   "distCentreOverMajor": 0.367
+  },
+  {
+   "nose": 12,
+   "side": 1,
+   "cx": 193.3,
+   "cy": 589.9,
+   "lengthPx": 20.9,
+   "thicknessPx": 6.3,
+   "elongation": 3.31,
+   "angleInEllipseFrameDeg": -23.0,
+   "outerEndRiseDeg": 23.0,
+   "lengthOverEllipseMajor": 0.199,
+   "distCentreOverMajor": 0.3
+  }
+ ]
+}

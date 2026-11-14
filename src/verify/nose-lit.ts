@@ -18,7 +18,7 @@ import type { RandomFace } from '../generation/random-face';
  * Pure : `noseLitReliefChecks` / `noseLitStyleChecks` prennent le rendu en entrée pour que les tests y injectent un défaut (fixture v1) et constatent qu'il est détecté.
  * Bornes MESURÉES (scripts, 4 nez × 4 tangages, ppu 2) : 4 nez × 4 tangages : solidité ≥ 0,889 et col ≥ 0,70 à 40–60° ; défaut v1 solidité ≤ 0,799 et col ≤ 0,208. Puis 120 visages tirés à 40° (seeds s × 977) : solidité ≥ 0,793, col ≥ 0,784 ; le COL est le discriminant fort (v1 ≈ 0,2), la solidité reste large (0,75).
  */
-export const NOSE_LIT_LIMITS = { solidityMin: 0.75, neckMin: 0.45, holesMax: 3, mushroomFromPitch: 40, lumStdMin: 12, darkShareMax: 0.35, darkFrac: 0.3 } as const;
+export const NOSE_LIT_LIMITS = { solidityMin: 0.75, neckMin: 0.45, holesMax: 3, mushroomFromPitch: 40, lumStdMin: 12, darkShareMax: 0.35, darkFrac: 0.3, elongPerShape: 1.5 } as const;
 
 export interface Silhouette { readonly solidity: number; readonly neck: number; readonly holes: number; readonly area: number }
 
@@ -40,7 +40,29 @@ export function silhouetteOf(r: Pick<UnderviewRelief, 'field' | 'grid'>, ppu = 2
   return { solidity, neck: narrow === Infinity ? 0 : narrow / widest, holes, area };
 }
 
-export function noseLitReliefChecks(r: UnderviewRelief, pitchDeg: number, ppu = 2): Check[] {
+/**
+ * Allongement (rapport des écarts-types principaux, ACP) de chaque ouverture de narine dans le rendu : composantes 4-connexes du masque de cavité, les deux plus grandes (≥ `minPx`).
+ * Mesuré SUR L'IMAGE : il inclut le raccourcissement dû au tangage. Renvoie [] si aucune ouverture n'est assez grande.
+ */
+export function nostrilElongations(r: Pick<UnderviewRelief, 'grid' | 'cavity'>, minPx = 12): number[] {
+  const { w, h } = r.grid, seen = new Uint8Array(w * h), out: { n: number; e: number }[] = [];
+  for (let s0 = 0; s0 < w * h; s0++) {
+    if (!r.cavity[s0] || seen[s0]) continue;
+    const st = [s0], pts: number[] = []; seen[s0] = 1;
+    while (st.length) {
+      const k = st.pop()!; pts.push(k); const x = k % w, y = (k - x) / w;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) { const nx = x + dx, ny = y + dy; if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue; const q = ny * w + nx; if (r.cavity[q] && !seen[q]) { seen[q] = 1; st.push(q); } }
+    }
+    if (pts.length < minPx) continue;
+    let mx = 0, my = 0; for (const k of pts) { mx += k % w; my += Math.floor(k / w); } mx /= pts.length; my /= pts.length;
+    let sxx = 0, syy = 0, sxy = 0; for (const k of pts) { const dx = (k % w) - mx, dy = Math.floor(k / w) - my; sxx += dx * dx; syy += dy * dy; sxy += dx * dy; }
+    const tr = sxx + syy, det = sxx * syy - sxy * sxy, d = Math.sqrt(Math.max(0, tr * tr / 4 - det)), l1 = tr / 2 + d, l2 = Math.max(1e-9, tr / 2 - d);
+    out.push({ n: pts.length, e: Math.sqrt(l1 / l2) });
+  }
+  return out.sort((a, b) => b.n - a.n).slice(0, 2).map((o) => o.e);
+}
+
+export function noseLitReliefChecks(r: UnderviewRelief, pitchDeg: number, ppu = 2, nostrilShape?: number): Check[] {
   const L = NOSE_LIT_LIMITS, area2 = (ppu / 2) ** 2, s = silhouetteOf(r, ppu), finite = r.field.depth.every((v) => v === -Infinity || Number.isFinite(v)), out: Check[] = [];
   out.push(check('geometry', 'nose-lit-finite', '==', Number(finite), 1, 'la carte de profondeur du nez contient une valeur non finie'));
   out.push(check('geometry', 'nose-lit-no-holes', '<=', s.holes, L.holesMax, 'la silhouette éclairée du nez contient des trous (pixels vides entourés de nez)'));
@@ -52,6 +74,11 @@ export function noseLitReliefChecks(r: UnderviewRelief, pitchDeg: number, ppu = 
     let cn = 0, cs = 0, ns = 0, nn = 0;
     for (let k = 0; k < r.grid.w * r.grid.h; k++) { const d = r.field.depth[k]!; if (d === -Infinity) continue; if (r.cavity[k]) { cs += d; cn++; } else if (r.field.region[k] === REGION.nose) { ns += d; nn++; } }
     out.push(check('anatomy', 'nose-lit-nostril-cavities', '>=', cn, pitchDeg >= L.mushroomFromPitch ? 16 * area2 : 1, 'les narines ne forment pas de cavités visibles dans le rendu éclairé'));
+    // Narines en FENTES (docs/NOSE-NOSTRIL-SLIT.md) : sur l'image à ≥ 40°, l'allongement de chaque ouverture ≥ 1 + 1,5 × `shape` (mesuré : 4 formes × 3 tangages, ppu 2, toujours au-dessus ; l'ancien creux rond donne ≈ 1,2). `warn` : écart de style, pas de géométrie.
+    if (nostrilShape !== undefined && pitchDeg >= L.mushroomFromPitch) {
+      const el = nostrilElongations(r, 8 * area2);
+      out.push(check('anatomy', 'nose-lit-nostril-elongated', '>=', el.length ? Math.min(...el) : 0, 1 + L.elongPerShape * nostrilShape, 'les ouvertures de narine ne sont pas allongées comme demandé (creux ronds au lieu de fentes)', 'warn'));
+    }
     out.push(check('anatomy', 'nose-lit-cavity-deeper', '<=', cn && nn ? cs / cn - ns / nn : -1, -1e-6, 'les cavités de narine ne sont pas plus profondes que la peau voisine'));
   }
   return out;
@@ -93,7 +120,7 @@ export function checkNoseLit(face: RandomFace, pitchDeg = 40): Check[] {
   const nose = noseGeometry(face.params, faceLandmarks(face.params, face.width, face.height));
   const skin = (face.objects[0] as unknown as { material: { color: string } }).material.color, [r, g, b] = parseHex(skin);
   const lit = litUnderview(nose, { pitchDeg }, skin, LIGHT, { ppu: VERIFY_PPU, shadow: face.params.skin.light.shadow });
-  return [...noseLitReliefChecks(lit, pitchDeg, VERIFY_PPU), ...noseLitStyleChecks(lit, 0.2126 * r + 0.7152 * g + 0.0722 * b), noseSeparationCheck(lit, nose.nostrils.right.c.x - nose.nostrils.left.c.x, VERIFY_PPU)];
+  return [...noseLitReliefChecks(lit, pitchDeg, VERIFY_PPU, nose.nostrils.right.shape), ...noseLitStyleChecks(lit, 0.2126 * r + 0.7152 * g + 0.0722 * b), noseSeparationCheck(lit, nose.nostrils.right.c.x - nose.nostrils.left.c.x, VERIFY_PPU)];
 }
 
 export { underviewRelief };

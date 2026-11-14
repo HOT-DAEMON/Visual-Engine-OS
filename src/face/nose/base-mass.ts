@@ -21,6 +21,29 @@ export const smin = (a: number, b: number, k: number): number => { const h = cla
 /** Distance signée approchée à une ellipse (négative dedans) : (|p/ab| − 1) × min(a, b). */
 const sdEllipse = (x: number, w: number, cx: number, cw: number, a: number, b: number): number => (Math.hypot((x - cx) / a, (w - cw) / b) - 1) * Math.min(a, b);
 
+/**
+ * OUVERTURE DE NARINE vue de dessous : une FENTE allongée, pas un creux rond (docs/NOSE-NOSTRIL-SLIT.md). Valeurs MESURÉES sur les références, pas choisies à l'œil :
+ *  · allongement = 1 + 3,27 × `nostrils.shape` : au réglage par défaut (0,55) 2,8, entre la médiane de la réf. 03 (2,23 ; 34 traits) et celle de la réf. 04 (3,31 ; 9 traits, majorant :
+ *    l'épaisseur mesurée est celle du trait dessiné) ; `shape = 0` redonne un creux rond ;
+ *  · longueur totale = 0,20 × la largeur du nez (réf. 04 : médiane 0,199 de l'ellipse ; réf. 03 : 0,217) ;
+ *  · extrémité externe relevée de 23° (réf. 04 : médiane de 9 traits, dans le repère de l'ellipse ; 8 sur 9 positifs) — en montant à l'écran (w croissant dans la vue de dessous).
+ * `sizeExponent` (la taille choisie agit en racine carrée) et `minThicknessOverWidth` (épaisseur plancher 0,04 × la largeur : sans lui les petites narines à forte `shape` n'ont que ≈ 7 pixels de cavité visibles à 40°, sous la règle `nose-lit-nostril-cavities`) sont des CHOIX posés après un échec constaté sur les seeds 105516 et 52169. La COURBURE du trait (extrémités plus hautes que le milieu) et le rapport profondeur / épaisseur de la cavité sont des CHOIX de construction, NON MESURÉS.
+ */
+export const SLIT = { elongPerShape: 2.2, lengthOverWidth: 0.2, outerRiseDeg: 23, bend: 0.9, depthOverThickness: 1.2, sizeExponent: 0.5, minThicknessOverWidth: 0.04 } as const;
+
+/**
+ * Distance signée approchée (négative dedans, px) à une fente : ellipse de demi-axes (A, B) dont l'axe, tourné de `riseDeg`, s'éloigne de la ligne médiane en MONTANT À L'ÉCRAN
+ * (dans la vue de dessous, w croissant monte à l'écran : constaté sur le rendu), à ligne médiane courbée en sourire (extrémités plus hautes que le milieu, flèche `bend` × B).
+ * Les deux narines sont des images miroir (x → side × x).
+ */
+export function sdSlit(x: number, w: number, cx: number, cw: number, side: -1 | 1, A: number, B: number, riseDeg: number, bend: number): number {
+  const r = (riseDeg * Math.PI) / 180, mx = side * (x - cx), dw = w - cw;
+  const s = mx * Math.cos(r) + dw * Math.sin(r);           // le long de l'axe (interne → externe), l'extrémité externe est à w plus grand
+  const v = -mx * Math.sin(r) + dw * Math.cos(r);          // perpendiculaire à l'axe, vers w croissant
+  const mid = -bend * B * (1 - Math.min(1, (s / A) ** 2)); // flèche : le milieu est à w plus petit que les bouts (sourire)
+  return (Math.hypot(s / A, (v - mid) / B) - 1) * Math.min(A, B);
+}
+
 export function baseMass(nose: NoseGeometry, m: UnderviewModel): BaseMass {
   const P = nose.tip.projectionPx, hw = nose.widthPx, yB = nose.baseY, yT = nose.tip.c.y, rise = Math.max(1e-6, yB - yT), col = nose.columella;
   /** Profondeur d'un point de face de hauteur y : la sous-face monte du sous-nez (w = 0) à la pointe (w = P). */
@@ -45,7 +68,11 @@ export function baseMass(nose: NoseGeometry, m: UnderviewModel): BaseMass {
     const dx = Math.abs(x) - bar.half, dw = Math.max(-w, w - bar.w1);   // bande de la columelle : de w = 0 à 0,22 P (le V qui dépasse sous l'ovoïde)
     return smin(d, Math.max(dx, dw), 0.5 * kJoin);
   };
-  const pits = [nose.nostrils.left, nose.nostrils.right].map((n) => ({ cx: n.c.x, cw: clamp(depthOf(n.c.y), 0.2 * P, 0.7 * P), a: 1.25 * n.b, b: 1.05 * n.a }));
+  // narines : fentes mesurées (SLIT). Longueur totale = 0,20 × largeur du nez, mise à l'échelle de la taille choisie (`nostril`) par le rapport de la demi-longueur de face à sa valeur par défaut.
+  const pits = ([nose.nostrils.left, nose.nostrils.right] as const).map((n) => {
+    const E = 1 + SLIT.elongPerShape * n.shape, A = 0.5 * SLIT.lengthOverWidth * hw * (n.a / (0.079 * hw)) ** SLIT.sizeExponent, B = Math.max(A / E, SLIT.minThicknessOverWidth * hw);
+    return { side: n.side, cx: n.c.x, cw: clamp(depthOf(n.c.y), 0.2 * P, 0.7 * P), A, B };
+  });
   const xMax = Math.max(...alas.map((a) => Math.abs(a.cx) + a.a)) + 0.1 * hw;
   return {
     xMin: -xMax, xMax, wMax: 1.12 * P, P,
@@ -53,9 +80,9 @@ export function baseMass(nose: NoseGeometry, m: UnderviewModel): BaseMass {
       const d = footprint(x, w); if (d >= 0) return null;
       let h = H * para(-d, R);
       if (Math.abs(x) <= bar.half * 1.6 && w <= bar.w1) h = Math.max(h, H * 0.9 * (m.lobuleRim / 0.5) * (1 - w / bar.w1) ** 0.6 * para(bar.half * 1.6 - Math.abs(x), 0.9 * bar.half));
-      // profondeur d'une narine ≤ 0,9 × son demi-axe : un puits plus profond que large est caché par son bord dès 20–40° de tangage (constaté sur 6 visages tirés : 0 pixel de cavité visible)
+      // profondeur d'une narine ≤ 1,6 × sa demi-épaisseur (fente) : un puits trop profond pour sa largeur est caché par son bord dès 20–40° de tangage (constaté sur 6 visages tirés : 0 pixel de cavité visible)
       let cut = 0, cav = false;
-      for (const p of pits) { const e = sdEllipse(x, w, p.cx, p.cw, p.a, p.b); if (e < 0) { const D = Math.min(0.95 * H, 0.9 * p.a), c = D * para(-e, 0.7 * p.a); cut = Math.max(cut, c); if (c > 0.4 * D) cav = true; } }
+      for (const p of pits) { const e = sdSlit(x, w, p.cx, p.cw, p.side, p.A, p.B, SLIT.outerRiseDeg, SLIT.bend); if (e < 0) { const D = Math.min(0.95 * H, SLIT.depthOverThickness * p.B), c = D * para(-e, 0.35 * p.B); cut = Math.max(cut, c); if (c > 0.4 * D) cav = true; } }
       h -= cut;
       return { x, y: yB - (w / P) * rise + h, z: w, cavity: cav };   // sous-face : plan incliné du sous-nez à la pointe, relevé de h vers l'observateur
     },

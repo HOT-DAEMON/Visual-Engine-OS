@@ -1,9 +1,9 @@
 # Nez : ce qui n'est PAS fait (suite de `docs/NOSE-REFS.md`, `NOSE-UNDERVIEW.md`, `NOSE-UNDERVIEW-CALIB.md`, `NOSE-REFS-03-05.md`, `NOSE-UNDERVIEW-LIT.md`)
 
-Légende : ✅ fait et prouvé · 🟡 partiel · ⬜ non fait. Rien ici n'est prétendu fait ailleurs. Mise à jour du 14 nov. 2026 (voir `NOSE-BASE-MASS.md`).
+Légende : ✅ fait et prouvé · 🟡 partiel · ⬜ non fait. Rien ici n'est prétendu fait ailleurs. Mise à jour du 14 nov. 2026 (voir `NOSE-BASE-MASS.md` et `NOSE-NOSTRIL-SLIT.md`).
 
 ## Références
-- ✅ `04.jpg` quantifiée (ellipse + triangle) et désormais aussi **dans le repère propre de l'ellipse** (roulis compensé, nez à orientation ambiguë 7 et 8 exclus).
+- ✅ `04.jpg` : traits de narines quantifiés (9 traits, majorant, `measures-04-nostrils.json`) ; quantifiée (ellipse + triangle) et désormais aussi **dans le repère propre de l'ellipse** (roulis compensé, nez à orientation ambiguë 7 et 8 exclus).
 - ✅ `03.jpg` quantifiée (11 paires de narines sur 15 nez, un amas de deux nez fusionnés détecté et exclu) ; `05.jpg` quantifiée (grille 6 × 4, 16 paires de narines). Limites : `NOSE-REFS-03-05.md`.
 - ⬜ `01.jpg` et `02.jpg` toujours NON quantifiées (photo de croquis bruitée, trait fin : la segmentation utilisée pour 03/05 n'y est pas fiable).
 - ⬜ **Rougeurs de `05.jpg` : impossibles** (dessin au graphite en gris, aucune teinte). La moucheture mesurée est un proxy bruité (5.2 et 3.2 faux positifs probables).
@@ -21,7 +21,7 @@ Légende : ✅ fait et prouvé · 🟡 partiel · ⬜ non fait. Rien ici n'est p
 
 ## Angle de caméra
 - 🟡 Vue de dessous / dessus / trois quarts : géométrie projetée avec tangage + lacet + roulis, éclairée ; profil pur (90° de lacet) comparé aux références : NON fait.
-- 🟡 Narines vues de dessous en cavités : paroi lisse dans `base-mass.ts`, mais petites (≤ 0,9 × leur demi-axe de profondeur) donc loin des ouvertures de la réf. 04 ; épaisseur de paroi NON faite.
+- 🟡 Narines vues de dessous : **fentes allongées** mesurées (allongement 2,2 par défaut, extrémité externe relevée de 23°, longueur 0,20 × la largeur du nez : `NOSE-NOSTRIL-SLIT.md`), prouvées sur l'image et par une règle ; restent plus claires que les traits noirs de la réf. 04, courbure et profondeur = choix NON mesurés ; épaisseur de paroi NON faite.
 - 🟡 Columelle comme **masse** : fusionnée à l'ovoïde de la base (`base-mass.ts`), plus de tige (col ≥ 0,78 mesuré) ; construction toujours NON mesurée, et son V est à peine lisible.
 - ⬜ Enveloppe lisse : l'enveloppe de `noseView` reste facettée (le rendu éclairé la lisse par moyenne de profondeur, pas la géométrie).
 
@@ -30,7 +30,7 @@ Légende : ✅ fait et prouvé · 🟡 partiel · ⬜ non fait. Rien ici n'est p
 - 🟡 Teinte partagée : la vue de dessous éclairée reçoit la couleur de peau de l'hôte ; cohérence nez/joues/membres supérieurs NON mesurée.
 - ✅ La vue de dessous est éclairée par `src/relief` (même `LightModel`, aucune lumière propre) ; ⬜ ✅ la silhouette « champignon » est corrigée (`NOSE-BASE-MASS.md`) ; ⬜ l'ombre reste très sombre, lobule allongé du nez par défaut à 60°, encoche de « cloche-ailes », bandes fines à 40°.
 - 🟡 Lisibilité : séparation des dômes, sillon alaire, ouverture des narines ne changent que ≈ 1–2 % des pixels dans la vue de face ; inchangé.
-- ✅ **Séparation des narines** : corrigée (défaut 0,300 → 0,432 sur la silhouette, médiane de la réf. 03 : 0,431 ; 12 réglages dans 0,381–0,496) par la loi de placement de `nostrils.ts`, `docs/NOSE-NOSTRIL-PLACEMENT.md`. Les narines restent de petits creux ronds (aspect, longueur et profondeur NON traités : voir ci-dessous).
+- ✅ **Séparation des narines** : corrigée (défaut 0,300 → 0,432 sur la silhouette, médiane de la réf. 03 : 0,431 ; 12 réglages dans 0,381–0,496) par la loi de placement de `nostrils.ts`, `docs/NOSE-NOSTRIL-PLACEMENT.md`. L'aspect et la longueur des ouvertures vues de dessous sont traités (`NOSE-NOSTRIL-SLIT.md`) ; la profondeur reste un choix non mesuré.
 
 ## Moteur
 - ⬜ **La vue de dessous n'est toujours pas branchée dans `head_3d`** : tentative faite puis retirée (1,6–2,5 % de pixels changés, échec de `head.roll.joined` si peu enfoui) : `NOSE-BASE-MASS.md` §5.

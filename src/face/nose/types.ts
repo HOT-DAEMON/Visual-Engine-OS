@@ -53,6 +53,8 @@ export interface NostrilGeo {
   readonly a: number;
   readonly b: number;
   readonly tiltDeg: number;
+  /** Forme demandée (`nose.nostrils.shape`, 0 = ronde → 1 = fente) : la vue de dessous en tire l'allongement de la fente (`base-mass.ts · SLIT`). */
+  readonly shape: number;
   readonly poly: Poly;
 }
 
