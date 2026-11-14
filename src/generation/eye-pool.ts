@@ -1,3 +1,4 @@
+import { EXTRA_EYE_COUNT, generateExtraEye } from './eye-gallery-ext';
 import { generateRandomEye } from './random-eye';
 import type { EyeInput } from './random-eye-helpers';
 
@@ -23,5 +24,16 @@ export function galleryEye(i: number, expression: EyeInput['expression'] = { kin
 /** Paire œil gauche / œil droit de l'identité `i` : même œil, `outerSide` imposé (vrai miroir). */
 export function galleryPair(i: number, expression?: EyeInput['expression']): { left: EyeInput; right: EyeInput } {
   const eye = galleryEye(i, expression);
+  return { left: { ...eye, shape: { ...eye.shape, outerSide: 'left' } }, right: { ...eye, shape: { ...eye.shape, outerSide: 'right' } } };
+}
+
+/** Identités de la galerie ÉTENDUE : les 48 d'origine (0–47) puis les 100 formes de `eye-gallery-ext` (48–147). */
+export const EXTENDED_IDENTITIES = GALLERY_IDENTITIES + EXTRA_EYE_COUNT;
+
+/** Paire gauche / droite de l'identité étendue `i` (0–147) ; mêmes règles de miroir que `galleryPair`. */
+export function extendedPair(i: number, expression?: EyeInput['expression']): { left: EyeInput; right: EyeInput } {
+  if (!Number.isInteger(i) || i < 0 || i >= EXTENDED_IDENTITIES) throw new RangeError(`identité étendue hors [0, ${EXTENDED_IDENTITIES - 1}] : ${i}`);
+  if (i < GALLERY_IDENTITIES) return galleryPair(i, expression);
+  const eye = generateExtraEye(i - GALLERY_IDENTITIES, expression);
   return { left: { ...eye, shape: { ...eye.shape, outerSide: 'left' } }, right: { ...eye, shape: { ...eye.shape, outerSide: 'right' } } };
 }

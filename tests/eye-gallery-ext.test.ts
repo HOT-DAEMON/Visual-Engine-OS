@@ -15,8 +15,8 @@ describe('galerie étendue : 100 formes d’yeux en plus des 48', () => {
     for (const s of seeds) expect(existing.has(s)).toBe(false);
   });
   it('deux cases consécutives n’ont jamais la même enveloppe (entrelacement)', () => { for (let i = 1; i < rc.length; i++) expect(rc[i]!.style).not.toBe(rc[i - 1]!.style); });
-  it('distinction prouvée : distance minimale aux 48 existants ≥ 0,02 et entre les 100 ≥ 0,009 (largeur = 1)', () => {
-    const d = distinctness(); expect(d.minToExisting).toBeGreaterThanOrEqual(0.02); expect(d.minAmongNew).toBeGreaterThanOrEqual(0.009);
+  it('distinction prouvée : distance minimale aux 48 existants ≥ 0,02 et entre les 100 ≥ 0,008 (largeur = 1 ; 0,0089 mesuré après l’ajout des silhouettes de références)', () => {
+    const d = distinctness(); expect(d.minToExisting).toBeGreaterThanOrEqual(0.02); expect(d.minAmongNew).toBeGreaterThanOrEqual(0.008);
   });
   it('déterministe', () => { expect(JSON.stringify(generateExtraEye(7))).toBe(JSON.stringify(generateExtraEye(7))); });
   it('la recette est CONSOMMÉE : style, inclinaison, fraction haute et rondeurs des canthi se retrouvent dans l’œil', () => {

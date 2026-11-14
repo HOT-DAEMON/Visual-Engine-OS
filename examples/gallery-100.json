@@ -10,31 +10,33 @@
       "seed": 1636584946,
       "shape": {
         "width": 150,
-        "height": 100.83547531999648,
-        "tiltDeg": -4.827967664692551,
-        "upperFraction": 0.7136411160510033,
-        "openness": 1.0868906316813083,
+        "height": 120.54,
+        "tiltDeg": 15.73,
+        "upperFraction": 0.7037,
+        "openness": 0.5154,
         "outerSide": "right",
-        "style": "almond"
+        "style": "diamond_v2"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.6613525574677624,
-          "caruncle": 0.6875886178109796
+          "roundness": 0.4633,
+          "caruncle": 0.5
         },
         "outer": {
-          "roundness": 0.8089095972711221
+          "roundness": 0.0775
         }
       },
       "epicanthicFold": {
-        "amount": 0.31046912358142437,
+        "amount": 0,
         "reach": 0.44598835753276944
       },
       "lids": {
         "crease": {
           "height": 0.10066162561997771,
           "depth": 0.36510558365844187
-        }
+        },
+        "thickness": 0.13,
+        "wing": 0.9
       },
       "iris": {
         "material": {
@@ -61,7 +63,7 @@
           "roughness": 0.3632453706581146,
           "clearcoat": 0.3379674247466028
         },
-        "radius": 0.5265334381512723,
+        "radius": 0.30638410563895857,
         "aspect": 1.0342501261271535,
         "fibers": 51,
         "limbalRing": 0.7271028236718848,
@@ -71,71 +73,53 @@
         },
         "layers": [
           {
-            "color": "#0f9d92",
-            "color2": "#d9c63a",
+            "color": "#1c1c1c",
+            "color2": "#a6a6a6",
             "gradient": "radial",
             "opacity": 1
-          },
-          {
-            "color": "#d94fd0",
-            "mask": "ring",
-            "inner": 0.5,
-            "outer": 0.85,
-            "irregularity": 0.9,
-            "feather": 0.7,
-            "opacity": 0.42,
-            "glow": 0.3
-          },
-          {
-            "color": "#7af0e0",
-            "mask": "ring",
-            "inner": 0.25,
-            "outer": 0.55,
-            "irregularity": 0.8,
-            "feather": 0.6,
-            "opacity": 0.4
-          },
-          {
-            "color": "#ffb23a",
-            "mask": "ring",
-            "inner": 0.14,
-            "outer": 0.34,
-            "glow": 0.5,
-            "irregularity": 0.5,
-            "opacity": 0.8
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 18,
+            "rings": 3,
+            "contrast": 0.75
+          }
+        }
       },
       "pupil": {
         "shape": "round",
-        "size": 0.21946282527875155,
+        "size": 0.42,
         "visible": true,
         "fill": {
           "type": "solid",
-          "color": "#07090f"
+          "color": "#050505"
         },
         "outlines": []
       },
       "highlights": {
         "list": [
           {
-            "kind": "reflection",
-            "size": 0.29158091882709414
-          },
-          {
-            "kind": "reflection",
-            "role": "secondary",
-            "size": 0.08338588040787727,
-            "opacity": 0.7
-          },
-          {
-            "shape": "sparkle",
+            "kind": "graphic",
+            "shape": "ellipse",
             "anchor": "iris",
-            "x": -0.22957791096996516,
-            "y": -0.30513678505551073,
-            "size": 0.20267013222910465,
-            "intensity": 0.8,
-            "confine": "iris"
+            "x": -0.3,
+            "y": -0.38,
+            "size": 0.36,
+            "confine": "iris",
+            "aspect": 0.45,
+            "rotationDeg": -20
+          },
+          {
+            "kind": "graphic",
+            "shape": "ellipse",
+            "anchor": "iris",
+            "x": 0.38,
+            "y": 0.34,
+            "size": 0.22,
+            "confine": "iris",
+            "aspect": 0.4,
+            "rotationDeg": -15
           }
         ]
       },
@@ -169,6 +153,12 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "solid",
+          "color": "#ffffff"
+        }
+      },
       "transform": {
         "x": 120,
         "y": 114
@@ -180,20 +170,20 @@
       "seed": 3070215254,
       "shape": {
         "width": 150,
-        "height": 97.35243873274884,
-        "tiltDeg": -0.06161718862131238,
-        "upperFraction": 0.5342084630206227,
-        "openness": 1.0780880797468126,
+        "height": 60.330000000000005,
+        "tiltDeg": 6.01,
+        "upperFraction": 0.6978,
+        "openness": 1.0058,
         "outerSide": "right",
-        "style": "round"
+        "style": "drooping"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.30003074029227716,
-          "caruncle": 0.4688994861207903
+          "roundness": 0.8456,
+          "caruncle": 0.5
         },
         "outer": {
-          "roundness": 0.19580774706555532
+          "roundness": 0.6779
         }
       },
       "epicanthicFold": {
@@ -204,7 +194,9 @@
         "crease": {
           "height": 0.11484896708279849,
           "depth": 0.6401120265480131
-        }
+        },
+        "thickness": 0.13,
+        "wing": 0.9
       },
       "iris": {
         "material": {
@@ -231,49 +223,53 @@
           "roughness": 0.16128520909696817,
           "clearcoat": 0.1250226644333452
         },
-        "radius": 0.55,
-        "aspect": 1.08,
+        "radius": 0.35860020882421284,
+        "aspect": 1.1234009493142367,
         "fibers": 77,
         "limbalRing": 0.8194981913315131,
         "glow": null,
         "layers": [
           {
-            "color": "#f0a01c",
-            "color2": "#0f8f78",
+            "color": "#1c1c1c",
+            "color2": "#a6a6a6",
             "gradient": "radial",
             "opacity": 1
-          },
-          {
-            "color": "#ff6a1a",
-            "mask": "ring",
-            "inner": 0.14,
-            "outer": 0.42,
-            "irregularity": 0.7,
-            "opacity": 0.8
           }
         ]
       },
       "pupil": {
-        "shape": "slit_vertical",
-        "size": 0.20400974735617639,
+        "shape": "round",
+        "size": 0.42,
         "visible": false,
         "fill": {
           "type": "solid",
-          "color": "#07090f"
+          "color": "#050505"
         },
         "outlines": []
       },
       "highlights": {
         "list": [
           {
-            "kind": "reflection",
-            "size": 0.2560843049548566
+            "kind": "graphic",
+            "shape": "ellipse",
+            "anchor": "iris",
+            "x": -0.3,
+            "y": -0.38,
+            "size": 0.36,
+            "confine": "iris",
+            "aspect": 0.45,
+            "rotationDeg": -20
           },
           {
-            "kind": "reflection",
-            "role": "secondary",
-            "size": 0.10920803915476426,
-            "opacity": 0.7
+            "kind": "graphic",
+            "shape": "ellipse",
+            "anchor": "iris",
+            "x": 0.38,
+            "y": 0.34,
+            "size": 0.22,
+            "confine": "iris",
+            "aspect": 0.4,
+            "rotationDeg": -15
           }
         ]
       },
@@ -307,6 +303,12 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "solid",
+          "color": "#ffffff"
+        }
+      },
       "transform": {
         "x": 360,
         "y": 114
@@ -318,20 +320,20 @@
       "seed": 1355283947,
       "shape": {
         "width": 150,
-        "height": 104.7530065064784,
-        "tiltDeg": 8.800155458971858,
-        "upperFraction": 0.5249694195855409,
-        "openness": 1.0986472760606558,
+        "height": 136.58999999999997,
+        "tiltDeg": -1.435,
+        "upperFraction": 0.4543,
+        "openness": 0.9711,
         "outerSide": "right",
-        "style": "sharp"
+        "style": "chibi"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.17694081757217645,
-          "caruncle": 0.5503694576211274
+          "roundness": 0.5288,
+          "caruncle": 0.5
         },
         "outer": {
-          "roundness": 0.2853706185007468
+          "roundness": 0.3114
         }
       },
       "epicanthicFold": {
@@ -369,18 +371,34 @@
           "roughness": 0.34194065249757843,
           "clearcoat": 0.11878517465665937
         },
-        "radius": 0.4278760064077591,
-        "aspect": 0.9513579888036474,
+        "radius": 0.3747215863277698,
+        "aspect": 1.49,
         "fibers": 73,
         "limbalRing": 0.779850183147937,
         "glow": {
           "color": "#ffffff",
           "strength": 0.3362830962752923
+        },
+        "layers": [
+          {
+            "color": "#29374e",
+            "color2": "#49636e",
+            "gradient": "angular",
+            "angleDeg": 0,
+            "opacity": 1
+          }
+        ],
+        "detail": {
+          "bubbles": {
+            "count": 6,
+            "size": 0.06,
+            "opacity": 0.7
+          }
         }
       },
       "pupil": {
         "shape": "round",
-        "size": 0.27867812961339955,
+        "size": 0.67,
         "visible": true,
         "fill": {
           "type": "solid",
@@ -389,14 +407,36 @@
         "outlines": []
       },
       "highlights": {
-        "primary": {
-          "size": 0.21641006496734916,
-          "opacity": 0.9533835548558273
-        },
-        "secondary": {
-          "size": 0.10620032365433871,
-          "opacity": 0.8262082648812793
-        }
+        "list": [
+          {
+            "kind": "graphic",
+            "shape": "circle",
+            "anchor": "iris",
+            "x": 0.1,
+            "y": -0.26,
+            "size": 0.27,
+            "confine": "iris"
+          },
+          {
+            "kind": "graphic",
+            "shape": "circle",
+            "anchor": "iris",
+            "x": -0.43,
+            "y": 0.35,
+            "size": 0.15,
+            "confine": "iris"
+          },
+          {
+            "kind": "graphic",
+            "shape": "circle",
+            "anchor": "iris",
+            "x": 0.27,
+            "y": -0.62,
+            "size": 0.11,
+            "confine": "iris",
+            "opacity": 0.8
+          }
+        ]
       },
       "lashes": {
         "upper": {
@@ -428,6 +468,12 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "solid",
+          "color": "#ffffff"
+        }
+      },
       "transform": {
         "x": 600,
         "y": 114
@@ -439,20 +485,20 @@
       "seed": 2215759070,
       "shape": {
         "width": 150,
-        "height": 66.9303931184113,
-        "tiltDeg": -4.051518135005608,
-        "upperFraction": 0.5243807185254992,
-        "openness": 0.8829907918348908,
+        "height": 175.95,
+        "tiltDeg": 8.495,
+        "upperFraction": 0.4,
+        "openness": 1.108,
         "outerSide": "right",
-        "style": "drooping"
+        "style": "sharp"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.3664532567840069,
-          "caruncle": 0.5464073526673019
+          "roundness": 0.2079,
+          "caruncle": 0.5
         },
         "outer": {
-          "roundness": 0.19423782093217595
+          "roundness": 0.4669
         }
       },
       "epicanthicFold": {
@@ -490,8 +536,8 @@
           "roughness": 0.16039662648690864,
           "clearcoat": 0.25656379943247887
         },
-        "radius": 0.32234021249318734,
-        "aspect": 1.0226307025877759,
+        "radius": 0.23780245684500825,
+        "aspect": 1.49,
         "fibers": 29,
         "limbalRing": 0.8868332286598161,
         "glow": {
@@ -500,44 +546,24 @@
         },
         "layers": [
           {
-            "color": "#0f9d92",
-            "color2": "#d9c63a",
-            "gradient": "radial",
+            "color": "#407986",
+            "color2": "#4b8282",
+            "gradient": "angular",
+            "angleDeg": 0,
             "opacity": 1
-          },
-          {
-            "color": "#d94fd0",
-            "mask": "ring",
-            "inner": 0.5,
-            "outer": 0.85,
-            "irregularity": 0.9,
-            "feather": 0.7,
-            "opacity": 0.42,
-            "glow": 0.3
-          },
-          {
-            "color": "#7af0e0",
-            "mask": "ring",
-            "inner": 0.25,
-            "outer": 0.55,
-            "irregularity": 0.8,
-            "feather": 0.6,
-            "opacity": 0.4
-          },
-          {
-            "color": "#ffb23a",
-            "mask": "ring",
-            "inner": 0.14,
-            "outer": 0.34,
-            "glow": 0.5,
-            "irregularity": 0.5,
-            "opacity": 0.8
           }
-        ]
+        ],
+        "detail": {
+          "bubbles": {
+            "count": 6,
+            "size": 0.06,
+            "opacity": 0.7
+          }
+        }
       },
       "pupil": {
         "shape": "round",
-        "size": 0.31550593124702575,
+        "size": 0.47,
         "visible": true,
         "fill": {
           "type": "solid",
@@ -548,23 +574,32 @@
       "highlights": {
         "list": [
           {
-            "kind": "reflection",
-            "size": 0.27132205232046547
-          },
-          {
-            "kind": "reflection",
-            "role": "secondary",
-            "size": 0.11849485710728913,
-            "opacity": 0.7
-          },
-          {
-            "shape": "sparkle",
+            "kind": "graphic",
+            "shape": "circle",
             "anchor": "iris",
-            "x": -0.2134411389240995,
-            "y": -0.23138374265283346,
-            "size": 0.24382710612844677,
-            "intensity": 0.8,
+            "x": 0.1,
+            "y": -0.26,
+            "size": 0.27,
             "confine": "iris"
+          },
+          {
+            "kind": "graphic",
+            "shape": "circle",
+            "anchor": "iris",
+            "x": -0.43,
+            "y": 0.35,
+            "size": 0.15,
+            "confine": "iris"
+          },
+          {
+            "kind": "graphic",
+            "shape": "circle",
+            "anchor": "iris",
+            "x": 0.27,
+            "y": -0.62,
+            "size": 0.11,
+            "confine": "iris",
+            "opacity": 0.8
           }
         ]
       },
@@ -598,6 +633,12 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "solid",
+          "color": "#ffffff"
+        }
+      },
       "transform": {
         "x": 840,
         "y": 114
@@ -609,24 +650,24 @@
       "seed": 1905897879,
       "shape": {
         "width": 150,
-        "height": 95.90307905059306,
-        "tiltDeg": -3.5575424290727824,
-        "upperFraction": 0.5732551328651607,
-        "openness": 0.9228204699233175,
+        "height": 78.58500000000001,
+        "tiltDeg": 7.43,
+        "upperFraction": 0.7507,
+        "openness": 1.1081,
         "outerSide": "right",
-        "style": "chibi"
+        "style": "triangle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.14057175727793947,
-          "caruncle": 0.3628614727407694
+          "roundness": 0.8643,
+          "caruncle": 0.5
         },
         "outer": {
-          "roundness": 0.5028707909747027
+          "roundness": 0.6298
         }
       },
       "epicanthicFold": {
-        "amount": 0.9277964620385319,
+        "amount": 0,
         "reach": 0.8401020490098745
       },
       "lids": {
@@ -660,8 +701,8 @@
           "roughness": 0.31115875163814055,
           "clearcoat": 0.16898414737079293
         },
-        "radius": 0.55,
-        "aspect": 1.08,
+        "radius": 0.4283049085148049,
+        "aspect": 1.100054210657254,
         "fibers": 56,
         "limbalRing": 0.653973795636557,
         "glow": {
@@ -727,20 +768,20 @@
       "seed": 825659516,
       "shape": {
         "width": 150,
-        "height": 103.06137203983963,
-        "tiltDeg": 11.4772885045968,
-        "upperFraction": 0.5920132327172906,
-        "openness": 1.070844113882631,
+        "height": 150.375,
+        "tiltDeg": 9.435,
+        "upperFraction": 0.8,
+        "openness": 1.1974,
         "outerSide": "right",
-        "style": "angular"
+        "style": "sharp"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.3388172577833757,
-          "caruncle": 0.3842286200262607
+          "roundness": 0.4027,
+          "caruncle": 0.5
         },
         "outer": {
-          "roundness": 0.5821512752212584
+          "roundness": 0.95
         }
       },
       "epicanthicFold": {
@@ -778,7 +819,7 @@
           "roughness": 0.3101014467305504,
           "clearcoat": 0.3138081267243251
         },
-        "radius": 0.39471019417324127,
+        "radius": 0.39830182074530956,
         "aspect": 0.9558885994134471,
         "fibers": 41,
         "limbalRing": 0.7868560370290651,
@@ -848,20 +889,20 @@
       "seed": 3505185265,
       "shape": {
         "width": 150,
-        "height": 77.91955814394169,
-        "tiltDeg": 12.289372188504785,
-        "upperFraction": 0.5639175695180894,
-        "openness": 0.8201558673754334,
+        "height": 118.73999999999998,
+        "tiltDeg": 0.945,
+        "upperFraction": 0.5364,
+        "openness": 0.7726,
         "outerSide": "right",
-        "style": "compressed"
+        "style": "triangle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.22176789111690598,
-          "caruncle": 0.3928954212926329
+          "roundness": 0.8874,
+          "caruncle": 0.5
         },
         "outer": {
-          "roundness": 0.5640460667083972
+          "roundness": 0.7847
         }
       },
       "epicanthicFold": {
@@ -899,7 +940,7 @@
           "roughness": 0.33152602983172985,
           "clearcoat": 0.26308301880490037
         },
-        "radius": 0.21228159361439608,
+        "radius": 0.318343514151358,
         "aspect": 1.0412470010342076,
         "fibers": 30,
         "limbalRing": 0.8945579655468463,
@@ -992,20 +1033,20 @@
       "seed": 965909449,
       "shape": {
         "width": 150,
-        "height": 102.21475589065813,
-        "tiltDeg": -4.0748980939388275,
-        "upperFraction": 0.524741147113964,
-        "openness": 1.0842757193464787,
+        "height": 104.74603021144867,
+        "tiltDeg": 4.9885557719971985,
+        "upperFraction": 0.6149551077559591,
+        "openness": 1.0878109947778285,
         "outerSide": "right",
-        "style": "rounded_rect"
+        "style": "almond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.07086905215401203,
-          "caruncle": 0.5133323401212693
+          "roundness": 0.7769620072329417,
+          "caruncle": 0.6442043334711344
         },
         "outer": {
-          "roundness": 0.8359034083667212
+          "roundness": 0.22577618876239286
         }
       },
       "epicanthicFold": {
@@ -1043,7 +1084,7 @@
           "roughness": 0.16712762884562835,
           "clearcoat": 0.19828623961657288
         },
-        "radius": 0.5331231988989515,
+        "radius": 0.5246238801033172,
         "aspect": 1.0495171767193823,
         "fibers": 58,
         "limbalRing": 0.6322322491323575,
@@ -1114,7 +1155,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2736084721982479,
-            "y": -0.2529414349980652,
+            "y": -0.4263531479984522,
             "size": 0.23031266790349036,
             "intensity": 0.8,
             "confine": "iris"
@@ -1162,20 +1203,20 @@
       "seed": 653197705,
       "shape": {
         "width": 150,
-        "height": 97.51173253543672,
-        "tiltDeg": 12.1561989269685,
-        "upperFraction": 0.709059129357338,
-        "openness": 1.0941058549191804,
+        "height": 97.35243873274884,
+        "tiltDeg": -0.06161718862131238,
+        "upperFraction": 0.5342084630206227,
+        "openness": 1.0780880797468126,
         "outerSide": "right",
-        "style": "triangle"
+        "style": "round"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.37164398408494886,
-          "caruncle": 0.7257772280368955
+          "roundness": 0.30003074029227716,
+          "caruncle": 0.4688994861207903
         },
         "outer": {
-          "roundness": 0.4910389785422012
+          "roundness": 0.19580774706555532
         }
       },
       "epicanthicFold": {
@@ -1186,7 +1227,8 @@
         "crease": {
           "height": 0.107195314578712,
           "depth": 0.6321720813866705
-        }
+        },
+        "thickness": 0.010923276703304612
       },
       "iris": {
         "material": {
@@ -1213,8 +1255,8 @@
           "roughness": 0.29869560464285316,
           "clearcoat": 0.2722999999532476
         },
-        "radius": 0.3786442517247596,
-        "aspect": 1.1936336936196312,
+        "radius": 0.55,
+        "aspect": 1.08,
         "fibers": 70,
         "limbalRing": 0.7185505193425342,
         "glow": {
@@ -1279,7 +1321,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.22280042176134884,
-            "y": -0.26744343315251173,
+            "y": -0.4379547465220094,
             "size": 0.22548533317167313,
             "intensity": 0.8,
             "confine": "iris"
@@ -1316,6 +1358,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#cdb0c5"
+            },
+            {
+              "offset": 0.5,
+              "color": "#ffe6e6"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#b69794"
+        }
+      },
       "transform": {
         "x": 2040,
         "y": 114
@@ -1327,20 +1395,20 @@
       "seed": 3877979960,
       "shape": {
         "width": 150,
-        "height": 94.14296852541156,
-        "tiltDeg": 13.535913140745834,
-        "upperFraction": 0.5668344478867948,
-        "openness": 1.0992887155711653,
+        "height": 104.7530065064784,
+        "tiltDeg": 8.800155458971858,
+        "upperFraction": 0.5249694195855409,
+        "openness": 1.0986472760606558,
         "outerSide": "right",
-        "style": "circle"
+        "style": "sharp"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.12663564843824132,
-          "caruncle": 0.3906864029821009
+          "roundness": 0.17694081757217645,
+          "caruncle": 0.5503694576211274
         },
         "outer": {
-          "roundness": 0.4982354776933789
+          "roundness": 0.2853706185007468
         }
       },
       "epicanthicFold": {
@@ -1378,7 +1446,7 @@
           "roughness": 0.29243705302942546,
           "clearcoat": 0.3478041797410697
         },
-        "radius": 0.55,
+        "radius": 0.38524222812746145,
         "aspect": 1.0570214920444414,
         "fibers": 25,
         "limbalRing": 0.8122804560698569,
@@ -1418,7 +1486,14 @@
             "irregularity": 0.5,
             "opacity": 0.8
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 18,
+            "rings": 3,
+            "contrast": 0.75
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -1446,7 +1521,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2757396316854283,
-            "y": -0.28466446947306395,
+            "y": -0.45173157557845117,
             "size": 0.29994069559033965,
             "intensity": 0.8,
             "confine": "iris"
@@ -1494,20 +1569,20 @@
       "seed": 2018359498,
       "shape": {
         "width": 150,
-        "height": 104.89925792883149,
-        "tiltDeg": 12.56748634390533,
-        "upperFraction": 0.5203523891326041,
-        "openness": 1.024691930608824,
+        "height": 66.9303931184113,
+        "tiltDeg": -4.051518135005608,
+        "upperFraction": 0.5243807185254992,
+        "openness": 0.8829907918348908,
         "outerSide": "right",
-        "style": "diamond"
+        "style": "drooping"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.5171854758751578,
-          "caruncle": 0.5343839978799225
+          "roundness": 0.3664532567840069,
+          "caruncle": 0.5464073526673019
         },
         "outer": {
-          "roundness": 0.8155429470469244
+          "roundness": 0.19423782093217595
         }
       },
       "epicanthicFold": {
@@ -1545,7 +1620,7 @@
           "roughness": 0.3583697073394433,
           "clearcoat": 0.23086503392551097
         },
-        "radius": 0.29582822515127305,
+        "radius": 0.2713005837005019,
         "aspect": 1.2145963551942258,
         "fibers": 73,
         "limbalRing": 0.7212156736291945,
@@ -1615,20 +1690,20 @@
       "seed": 3226388504,
       "shape": {
         "width": 150,
-        "height": 104.05430441815405,
-        "tiltDeg": -1.8328611196484417,
-        "upperFraction": 0.6866611117310821,
-        "openness": 1.0789479756820948,
+        "height": 78.33860195148736,
+        "tiltDeg": -4.6861688329372555,
+        "upperFraction": 0.5986898402031511,
+        "openness": 1.0363991170283406,
         "outerSide": "right",
-        "style": "diamond_v2"
+        "style": "chibi"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.8169843735755421,
-          "caruncle": 0.2796857194043696
+          "roundness": 0.686839827185031,
+          "caruncle": 0.7008300689049065
         },
         "outer": {
-          "roundness": 0.22354827014496548
+          "roundness": 0.24359943538438528
         }
       },
       "epicanthicFold": {
@@ -1666,8 +1741,8 @@
           "roughness": 0.2935952410101891,
           "clearcoat": 0.1014967987081036
         },
-        "radius": 0.4010742830357967,
-        "aspect": 1.128248139936477,
+        "radius": 0.55,
+        "aspect": 1.08,
         "fibers": 27,
         "limbalRing": 0.6647218561498448,
         "glow": null
@@ -1730,20 +1805,20 @@
       "seed": 853991329,
       "shape": {
         "width": 150,
-        "height": 104.74603021144867,
-        "tiltDeg": 4.9885557719971985,
-        "upperFraction": 0.6149551077559591,
-        "openness": 1.0878109947778285,
+        "height": 101.01824011886491,
+        "tiltDeg": 12.067259497474879,
+        "upperFraction": 0.5557600087765604,
+        "openness": 1.0681855250615628,
         "outerSide": "right",
-        "style": "almond"
+        "style": "angular"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.7769620072329417,
-          "caruncle": 0.6442043334711344
+          "roundness": 0.3602339401142671,
+          "caruncle": 0.6997306275181473
         },
         "outer": {
-          "roundness": 0.22577618876239286
+          "roundness": 0.11535283410921693
         }
       },
       "epicanthicFold": {
@@ -1781,7 +1856,7 @@
           "roughness": 0.25001824982464316,
           "clearcoat": 0.37067252309061594
         },
-        "radius": 0.44964010004501054,
+        "radius": 0.33367701163880437,
         "aspect": 1.2248637099284678,
         "fibers": 53,
         "limbalRing": 0.7976720004575326,
@@ -1821,7 +1896,14 @@
             "irregularity": 0.5,
             "opacity": 0.8
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 18,
+            "rings": 3,
+            "contrast": 0.75
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -1849,7 +1931,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2787417575484142,
-            "y": -0.2308820895664394,
+            "y": -0.4087056716531515,
             "size": 0.21988494438119233,
             "intensity": 0.8,
             "confine": "iris"
@@ -1897,20 +1979,20 @@
       "seed": 3359371930,
       "shape": {
         "width": 150,
-        "height": 94.79664785368368,
-        "tiltDeg": -4.1238156540784985,
-        "upperFraction": 0.7180222432874143,
-        "openness": 1.0475210557691754,
+        "height": 77.91955814394169,
+        "tiltDeg": 12.289372188504785,
+        "upperFraction": 0.5639175695180894,
+        "openness": 0.8201558673754334,
         "outerSide": "right",
-        "style": "round"
+        "style": "compressed"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.5159176040440798,
-          "caruncle": 0.7966215825639666
+          "roundness": 0.22176789111690598,
+          "caruncle": 0.3928954212926329
         },
         "outer": {
-          "roundness": 0.5443438505986705
+          "roundness": 0.5640460667083972
         }
       },
       "epicanthicFold": {
@@ -1921,7 +2003,8 @@
         "crease": {
           "height": 0.13132492182776334,
           "depth": 0.9408464087871835
-        }
+        },
+        "thickness": 0.01236676380136249
       },
       "iris": {
         "material": {
@@ -1948,8 +2031,8 @@
           "roughness": 0.17154218935174867,
           "clearcoat": 0.32794103345368064
         },
-        "radius": 0.55,
-        "aspect": 1,
+        "radius": 0.23067464728978487,
+        "aspect": 0.9582222204422578,
         "fibers": 41,
         "limbalRing": 0.6850590939866379,
         "glow": null,
@@ -1988,7 +2071,14 @@
             "spotRadius": 0.12,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "bubbles": {
+            "count": 12,
+            "size": 0.08,
+            "opacity": 0.85
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -2044,6 +2134,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#c0b6b3"
+            },
+            {
+              "offset": 0.5,
+              "color": "#f8eaea"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#aca199"
+        }
+      },
       "transform": {
         "x": 840,
         "y": 314
@@ -2055,24 +2171,24 @@
       "seed": 272281978,
       "shape": {
         "width": 150,
-        "height": 83.45155894453637,
-        "tiltDeg": 12.135716293239966,
-        "upperFraction": 0.5281326999235898,
-        "openness": 1.0932452076394112,
+        "height": 102.21475589065813,
+        "tiltDeg": -4.0748980939388275,
+        "upperFraction": 0.524741147113964,
+        "openness": 1.0842757193464787,
         "outerSide": "right",
-        "style": "sharp"
+        "style": "rounded_rect"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.34903201869456096,
-          "caruncle": 0.6183976937085391
+          "roundness": 0.07086905215401203,
+          "caruncle": 0.5133323401212693
         },
         "outer": {
-          "roundness": 0.8973714651190676
+          "roundness": 0.8359034083667212
         }
       },
       "epicanthicFold": {
-        "amount": 0.36464948724023993,
+        "amount": 0,
         "reach": 0.5500098533462733
       },
       "lids": {
@@ -2106,7 +2222,7 @@
           "roughness": 0.36429874253226446,
           "clearcoat": 0.3699443888384849
         },
-        "radius": 0.3821433122555751,
+        "radius": 0.5230930407602914,
         "aspect": 1.069641365786083,
         "fibers": 33,
         "limbalRing": 0.6066935223760083,
@@ -2173,24 +2289,24 @@
       "seed": 2914884773,
       "shape": {
         "width": 150,
-        "height": 104.61065346118993,
-        "tiltDeg": 7.504378602374345,
-        "upperFraction": 0.5417115222942084,
-        "openness": 1.0390824275929482,
+        "height": 66.3310487314593,
+        "tiltDeg": 11.345665641594678,
+        "upperFraction": 0.5861679255776108,
+        "openness": 0.8479891701694577,
         "outerSide": "right",
-        "style": "drooping"
+        "style": "triangle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.652261957724113,
-          "caruncle": 0.5617645615246147
+          "roundness": 0.3669664902961813,
+          "caruncle": 0.4591924199834466
         },
         "outer": {
-          "roundness": 0.4303190145641565
+          "roundness": 0.845677773107309
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.4045030452078208,
         "reach": 0.9245914584957063
       },
       "lids": {
@@ -2224,7 +2340,7 @@
           "roughness": 0.18616570093436166,
           "clearcoat": 0.3734240503748879
         },
-        "radius": 0.3815958117163515,
+        "radius": 0.35523134775786286,
         "aspect": 1.0041837929747999,
         "fibers": 54,
         "limbalRing": 0.7056273618713022,
@@ -2255,7 +2371,19 @@
             "spotRadius": 0.1,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 14,
+            "rings": 2,
+            "contrast": 0.5
+          },
+          "bubbles": {
+            "count": 8,
+            "size": 0.06,
+            "opacity": 0.8
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -2283,7 +2411,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2919271262828261,
-            "y": -0.2349571366608143,
+            "y": -0.41196570932865145,
             "size": 0.22320121903903783,
             "intensity": 0.8,
             "confine": "iris"
@@ -2331,20 +2459,20 @@
       "seed": 341825855,
       "shape": {
         "width": 150,
-        "height": 103.96666219714098,
-        "tiltDeg": -2.206130733480677,
-        "upperFraction": 0.5379737362544984,
-        "openness": 1.0851690245233476,
+        "height": 94.14296852541156,
+        "tiltDeg": 13.535913140745834,
+        "upperFraction": 0.5668344478867948,
+        "openness": 1.0992887155711653,
         "outerSide": "right",
-        "style": "chibi"
+        "style": "circle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.2783197956159711,
-          "caruncle": 0.46475812396965926
+          "roundness": 0.12663564843824132,
+          "caruncle": 0.3906864029821009
         },
         "outer": {
-          "roundness": 0.10521851606899874
+          "roundness": 0.4982354776933789
         }
       },
       "epicanthicFold": {
@@ -2449,24 +2577,24 @@
       "seed": 1143392087,
       "shape": {
         "width": 150,
-        "height": 96.60679676779544,
-        "tiltDeg": 12.910389280645177,
-        "upperFraction": 0.7088405156321823,
-        "openness": 0.9284406819753349,
+        "height": 104.89925792883149,
+        "tiltDeg": 12.56748634390533,
+        "upperFraction": 0.5203523891326041,
+        "openness": 1.024691930608824,
         "outerSide": "right",
-        "style": "angular"
+        "style": "diamond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.7101482706610114,
-          "caruncle": 0.4224729323294014
+          "roundness": 0.5171854758751578,
+          "caruncle": 0.5343839978799225
         },
         "outer": {
-          "roundness": 0.15099047461990267
+          "roundness": 0.8155429470469244
         }
       },
       "epicanthicFold": {
-        "amount": 0.42650286764837797,
+        "amount": 0,
         "reach": 0.46619240720756355
       },
       "lids": {
@@ -2500,7 +2628,7 @@
           "roughness": 0.19461672640172764,
           "clearcoat": 0.3520320525625721
         },
-        "radius": 0.2983728919086003,
+        "radius": 0.3059594821336933,
         "aspect": 1.174377344106324,
         "fibers": 61,
         "limbalRing": 0.6269134169910103,
@@ -2571,7 +2699,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2626595761394128,
-            "y": -0.2485681374836713,
+            "y": -0.4228545099869371,
             "size": 0.212571589788422,
             "intensity": 0.8,
             "confine": "iris"
@@ -2619,31 +2747,32 @@
       "seed": 4263076338,
       "shape": {
         "width": 150,
-        "height": 66.16948450310156,
-        "tiltDeg": -3.5846878273878247,
-        "upperFraction": 0.7179798677377403,
-        "openness": 0.8502151749283074,
+        "height": 104.51454921090044,
+        "tiltDeg": 12.79060687427409,
+        "upperFraction": 0.6157686078734695,
+        "openness": 1.0771327783167364,
         "outerSide": "right",
-        "style": "compressed"
+        "style": "diamond_v2"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.3291194615070708,
-          "caruncle": 0.31260662018321456
+          "roundness": 0.08916199948871509,
+          "caruncle": 0.5038505358155818
         },
         "outer": {
-          "roundness": 0.4878795658354647
+          "roundness": 0.7942338977009058
         }
       },
       "epicanthicFold": {
-        "amount": 0.6558428471907973,
+        "amount": 0,
         "reach": 0.8673653909005224
       },
       "lids": {
         "crease": {
           "height": 0.49073046697303657,
           "depth": 0.8747151342919095
-        }
+        },
+        "thickness": 0.011777477600483349
       },
       "iris": {
         "material": {
@@ -2670,7 +2799,7 @@
           "roughness": 0.18356935089686885,
           "clearcoat": 0.2168222403386608
         },
-        "radius": 0.20055114388998285,
+        "radius": 0.4422804128434708,
         "aspect": 1.0619865498971195,
         "fibers": 71,
         "limbalRing": 0.7939912856323644,
@@ -2747,7 +2876,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.24111776929348705,
-            "y": -0.2939948550937697,
+            "y": -0.45919588407501577,
             "size": 0.2628306114114821,
             "intensity": 0.8,
             "confine": "iris"
@@ -2784,6 +2913,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#a5b9dd"
+            },
+            {
+              "offset": 0.5,
+              "color": "#e1eeff"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#a7807a"
+        }
+      },
       "transform": {
         "x": 2040,
         "y": 314
@@ -2795,24 +2950,24 @@
       "seed": 1704226435,
       "shape": {
         "width": 150,
-        "height": 104.8430510731414,
-        "tiltDeg": -2.7842390136793256,
-        "upperFraction": 0.6524398526456207,
-        "openness": 1.0917844439484181,
+        "height": 103.61089124553835,
+        "tiltDeg": 9.72859427263029,
+        "upperFraction": 0.6865483731776476,
+        "openness": 1.0992306454107166,
         "outerSide": "right",
-        "style": "rounded_rect"
+        "style": "almond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.5072290266864001,
-          "caruncle": 0.5891625665128232
+          "roundness": 0.18636670142877848,
+          "caruncle": 0.36685291156172756
         },
         "outer": {
-          "roundness": 0.24102917275158686
+          "roundness": 0.14561287433607503
         }
       },
       "epicanthicFold": {
-        "amount": 0.4593348028603941,
+        "amount": 0,
         "reach": 0.4998217098414898
       },
       "lids": {
@@ -2930,20 +3085,20 @@
       "seed": 961198538,
       "shape": {
         "width": 150,
-        "height": 67.90613530995324,
-        "tiltDeg": -4.796750188106671,
-        "upperFraction": 0.6425340983364731,
-        "openness": 1.0934816390927882,
+        "height": 94.79664785368368,
+        "tiltDeg": -4.1238156540784985,
+        "upperFraction": 0.7180222432874143,
+        "openness": 1.0475210557691754,
         "outerSide": "right",
-        "style": "triangle"
+        "style": "round"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.6145805879728868,
-          "caruncle": 0.23280229587107898
+          "roundness": 0.5159176040440798,
+          "caruncle": 0.7966215825639666
         },
         "outer": {
-          "roundness": 0.5895303603145294
+          "roundness": 0.5443438505986705
         }
       },
       "epicanthicFold": {
@@ -2954,7 +3109,8 @@
         "crease": {
           "height": 0.2926087046042085,
           "depth": 0.9046957209240645
-        }
+        },
+        "thickness": 0.01086166340072836
       },
       "iris": {
         "material": {
@@ -2981,8 +3137,8 @@
           "roughness": 0.19436524328775703,
           "clearcoat": 0.3242799604311586
         },
-        "radius": 0.3927846653234083,
-        "aspect": 1.1750703293364495,
+        "radius": 0.55,
+        "aspect": 1.08,
         "fibers": 65,
         "limbalRing": 0.8845521116629242,
         "glow": null
@@ -3048,6 +3204,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#a5b9dd"
+            },
+            {
+              "offset": 0.5,
+              "color": "#e1eeff"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#a7807a"
+        }
+      },
       "transform": {
         "x": 120,
         "y": 514
@@ -3059,24 +3241,24 @@
       "seed": 1200535751,
       "shape": {
         "width": 150,
-        "height": 80.002184698591,
-        "tiltDeg": 13.56397809740156,
-        "upperFraction": 0.5999464842304587,
-        "openness": 0.9375339653715491,
+        "height": 83.45155894453637,
+        "tiltDeg": 12.135716293239966,
+        "upperFraction": 0.5281326999235898,
+        "openness": 1.0932452076394112,
         "outerSide": "right",
-        "style": "circle"
+        "style": "sharp"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.5545796030084603,
-          "caruncle": 0.4432085282169283
+          "roundness": 0.34903201869456096,
+          "caruncle": 0.6183976937085391
         },
         "outer": {
-          "roundness": 0.6563497585826553
+          "roundness": 0.8973714651190676
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.36464948724023993,
         "reach": 0.5396389667410404
       },
       "lids": {
@@ -3110,8 +3292,8 @@
           "roughness": 0.21063301267568021,
           "clearcoat": 0.3705509604187682
         },
-        "radius": 0.55,
-        "aspect": 1,
+        "radius": 0.4296447359365171,
+        "aspect": 0.9518087855773046,
         "fibers": 60,
         "limbalRing": 0.8035750366514548,
         "glow": {
@@ -3191,31 +3373,32 @@
       "seed": 2568877614,
       "shape": {
         "width": 150,
-        "height": 98.0982639673166,
-        "tiltDeg": -3.9714374532923102,
-        "upperFraction": 0.7141662780474871,
-        "openness": 1.0181782270595432,
+        "height": 97.02485542511567,
+        "tiltDeg": 12.482239498523995,
+        "upperFraction": 0.5741747455950826,
+        "openness": 1.0551468268036843,
         "outerSide": "right",
-        "style": "diamond"
+        "style": "drooping"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.23071184010477735,
-          "caruncle": 0.6037052611354738
+          "roundness": 0.6882026369217783,
+          "caruncle": 0.30451953327283265
         },
         "outer": {
-          "roundness": 0.8212834514095448
+          "roundness": 0.3670347738196142
         }
       },
       "epicanthicFold": {
-        "amount": 0.34694140807259827,
+        "amount": 0,
         "reach": 0.8222446631640197
       },
       "lids": {
         "crease": {
           "height": 0.31354713439941406,
           "depth": 0.7197453351924196
-        }
+        },
+        "thickness": 0.010714080730229556
       },
       "iris": {
         "material": {
@@ -3242,7 +3425,7 @@
           "roughness": 0.33076581117929893,
           "clearcoat": 0.23663142889272423
         },
-        "radius": 0.2823163761559968,
+        "radius": 0.34899464284777487,
         "aspect": 1.1314203624846413,
         "fibers": 49,
         "limbalRing": 0.7273219544207676,
@@ -3299,7 +3482,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.23104638399090616,
-            "y": -0.25638777304440735,
+            "y": -0.4291102184355259,
             "size": 0.21468708841130138,
             "intensity": 0.8,
             "confine": "iris"
@@ -3336,6 +3519,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#cdb0c5"
+            },
+            {
+              "offset": 0.5,
+              "color": "#ffe6e6"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#b69794"
+        }
+      },
       "transform": {
         "x": 600,
         "y": 514
@@ -3347,24 +3556,24 @@
       "seed": 358113652,
       "shape": {
         "width": 150,
-        "height": 85.24073241837321,
-        "tiltDeg": -4.026264146901667,
-        "upperFraction": 0.5522868598625064,
-        "openness": 0.9929959891457111,
+        "height": 99.51881000306457,
+        "tiltDeg": 13.658908584387973,
+        "upperFraction": 0.7103168714605271,
+        "openness": 1.0411101030930878,
         "outerSide": "right",
-        "style": "diamond_v2"
+        "style": "chibi"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.5752961107646115,
-          "caruncle": 0.7000292603392155
+          "roundness": 0.5383867442025803,
+          "caruncle": 0.4882153320591897
         },
         "outer": {
-          "roundness": 0.3894474357482977
+          "roundness": 0.32435408417368305
         }
       },
       "epicanthicFold": {
-        "amount": 0.7460328310960903,
+        "amount": 0,
         "reach": 0.7485660834703595
       },
       "lids": {
@@ -3398,7 +3607,7 @@
           "roughness": 0.1617764229653403,
           "clearcoat": 0.2551758506335319
         },
-        "radius": 0.43256444476108985,
+        "radius": 0.55,
         "aspect": 1.0085305644199252,
         "fibers": 67,
         "limbalRing": 0.8839390378212556,
@@ -3465,24 +3674,24 @@
       "seed": 283888547,
       "shape": {
         "width": 150,
-        "height": 103.61089124553835,
-        "tiltDeg": 9.72859427263029,
-        "upperFraction": 0.6865483731776476,
-        "openness": 1.0992306454107166,
+        "height": 96.60679676779544,
+        "tiltDeg": 12.910389280645177,
+        "upperFraction": 0.7088405156321823,
+        "openness": 0.9284406819753349,
         "outerSide": "right",
-        "style": "almond"
+        "style": "angular"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.18636670142877848,
-          "caruncle": 0.36685291156172756
+          "roundness": 0.7101482706610114,
+          "caruncle": 0.4224729323294014
         },
         "outer": {
-          "roundness": 0.14561287433607503
+          "roundness": 0.15099047461990267
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.42650286764837797,
         "reach": 0.7666867999359965
       },
       "lids": {
@@ -3516,7 +3725,7 @@
           "roughness": 0.21680268177296966,
           "clearcoat": 0.20292378801386807
         },
-        "radius": 0.5075397332213061,
+        "radius": 0.320645736783348,
         "aspect": 1.09280219306238,
         "fibers": 41,
         "limbalRing": 0.8916062058415264,
@@ -3559,7 +3768,14 @@
             "spotRadius": 0.12,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "bubbles": {
+            "count": 12,
+            "size": 0.08,
+            "opacity": 0.85
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -3632,24 +3848,24 @@
       "seed": 570182468,
       "shape": {
         "width": 150,
-        "height": 103.6102557359263,
-        "tiltDeg": 9.494881216902286,
-        "upperFraction": 0.7141375056281686,
-        "openness": 1.028380886334926,
+        "height": 66.16948450310156,
+        "tiltDeg": -3.5846878273878247,
+        "upperFraction": 0.7179798677377403,
+        "openness": 0.8502151749283074,
         "outerSide": "right",
-        "style": "round"
+        "style": "compressed"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.1458317305194214,
-          "caruncle": 0.7100771660916507
+          "roundness": 0.3291194615070708,
+          "caruncle": 0.31260662018321456
         },
         "outer": {
-          "roundness": 0.6887445016996935
+          "roundness": 0.4878795658354647
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.6558428471907973,
         "reach": 0.6376116837840528
       },
       "lids": {
@@ -3683,8 +3899,8 @@
           "roughness": 0.2799491646932438,
           "clearcoat": 0.31924474213737997
         },
-        "radius": 0.55,
-        "aspect": 1.08,
+        "radius": 0.18175792290412457,
+        "aspect": 1.1729651347966865,
         "fibers": 33,
         "limbalRing": 0.6845588840777054,
         "glow": null
@@ -3750,24 +3966,24 @@
       "seed": 2732547656,
       "shape": {
         "width": 150,
-        "height": 73.02488591289148,
-        "tiltDeg": 7.022564311744645,
-        "upperFraction": 0.5254562549572438,
-        "openness": 0.9494247612822801,
+        "height": 104.8430510731414,
+        "tiltDeg": -2.7842390136793256,
+        "upperFraction": 0.6524398526456207,
+        "openness": 1.0917844439484181,
         "outerSide": "right",
-        "style": "sharp"
+        "style": "rounded_rect"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.1462556359707378,
-          "caruncle": 0.3412100013811141
+          "roundness": 0.5072290266864001,
+          "caruncle": 0.5891625665128232
         },
         "outer": {
-          "roundness": 0.6512813898618334
+          "roundness": 0.24102917275158686
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.4593348028603941,
         "reach": 0.5848767601884901
       },
       "lids": {
@@ -3801,7 +4017,7 @@
           "roughness": 0.27189351586857813,
           "clearcoat": 0.2808485199231655
         },
-        "radius": 0.3944745970608457,
+        "radius": 0.55,
         "aspect": 0.9634713062085211,
         "fibers": 73,
         "limbalRing": 0.7324537323089316,
@@ -3871,20 +4087,20 @@
       "seed": 477952241,
       "shape": {
         "width": 150,
-        "height": 101.7748293899931,
-        "tiltDeg": 3.0432819733396173,
-        "upperFraction": 0.7100941264349967,
-        "openness": 1.09357163249515,
+        "height": 101.68824355490506,
+        "tiltDeg": -3.825856601819396,
+        "upperFraction": 0.5354358616564423,
+        "openness": 1.0994386426638814,
         "outerSide": "right",
-        "style": "drooping"
+        "style": "triangle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.4758551162085496,
-          "caruncle": 0.4951251428108663
+          "roundness": 0.5670682042604313,
+          "caruncle": 0.792778023844585
         },
         "outer": {
-          "roundness": 0.6934437586227432
+          "roundness": 0.7775319968350232
         }
       },
       "epicanthicFold": {
@@ -3922,7 +4138,7 @@
           "roughness": 0.25454744438175114,
           "clearcoat": 0.3656256519258023
         },
-        "radius": 0.3511074760980477,
+        "radius": 0.38387903036454063,
         "aspect": 1.2209119562758133,
         "fibers": 67,
         "limbalRing": 0.6744429161539301,
@@ -4003,24 +4219,24 @@
       "seed": 1398462665,
       "shape": {
         "width": 150,
-        "height": 104.60014072456397,
-        "tiltDeg": 12.585310408379883,
-        "upperFraction": 0.6604275656677783,
-        "openness": 1.059707679245621,
+        "height": 80.002184698591,
+        "tiltDeg": 13.56397809740156,
+        "upperFraction": 0.5999464842304587,
+        "openness": 0.9375339653715491,
         "outerSide": "right",
-        "style": "chibi"
+        "style": "circle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.30759033450158313,
-          "caruncle": 0.272524142684415
+          "roundness": 0.5545796030084603,
+          "caruncle": 0.4432085282169283
         },
         "outer": {
-          "roundness": 0.855215487733949
+          "roundness": 0.6563497585826553
         }
       },
       "epicanthicFold": {
-        "amount": 0.328202634700574,
+        "amount": 0,
         "reach": 0.41425267015583817
       },
       "lids": {
@@ -4097,7 +4313,14 @@
             "irregularity": 0.5,
             "opacity": 0.8
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 18,
+            "rings": 3,
+            "contrast": 0.75
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -4131,7 +4354,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.28166691153310236,
-            "y": -0.2904422329785302,
+            "y": -0.4563537863828242,
             "size": 0.28098029280081394,
             "intensity": 0.8,
             "confine": "iris"
@@ -4179,20 +4402,20 @@
       "seed": 2588155232,
       "shape": {
         "width": 150,
-        "height": 87.36301844310945,
-        "tiltDeg": 13.577570185996592,
-        "upperFraction": 0.5257426862418652,
-        "openness": 1.0370529139880091,
+        "height": 77.15806672163308,
+        "tiltDeg": -0.8592727687209845,
+        "upperFraction": 0.6270648692082613,
+        "openness": 0.8716001516394317,
         "outerSide": "right",
-        "style": "angular"
+        "style": "diamond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.7943792618694715,
-          "caruncle": 0.5713388117961586
+          "roundness": 0.4947671253350563,
+          "caruncle": 0.7740195405203849
         },
         "outer": {
-          "roundness": 0.8028348954976536
+          "roundness": 0.4575833978597075
         }
       },
       "epicanthicFold": {
@@ -4230,7 +4453,7 @@
           "roughness": 0.25268153541255745,
           "clearcoat": 0.2456077911658213
         },
-        "radius": 0.3663303931417171,
+        "radius": 0.31210628843181776,
         "aspect": 1.0689629360102118,
         "fibers": 67,
         "limbalRing": 0.6634340161923319,
@@ -4287,7 +4510,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2827873106114566,
-            "y": -0.22263615373987705,
+            "y": -0.40210892299190165,
             "size": 0.26640083715319635,
             "intensity": 0.8,
             "confine": "iris"
@@ -4335,20 +4558,20 @@
       "seed": 890651552,
       "shape": {
         "width": 150,
-        "height": 82.71690956060773,
-        "tiltDeg": -4.939667298924178,
-        "upperFraction": 0.7124434800166637,
-        "openness": 1.0018656807672233,
+        "height": 100.53225661930627,
+        "tiltDeg": -4.727706551086158,
+        "upperFraction": 0.6252728548180312,
+        "openness": 1.0999851920921357,
         "outerSide": "right",
-        "style": "compressed"
+        "style": "diamond_v2"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.22286268797470254,
-          "caruncle": 0.24308668011799456
+          "roundness": 0.32733024953631684,
+          "caruncle": 0.34145136428996925
         },
         "outer": {
-          "roundness": 0.1371999531867914
+          "roundness": 0.5472944201785139
         }
       },
       "epicanthicFold": {
@@ -4386,7 +4609,7 @@
           "roughness": 0.36850416134111585,
           "clearcoat": 0.14948001860175283
         },
-        "radius": 0.24182647792851356,
+        "radius": 0.44042795230246357,
         "aspect": 1.0333678178722039,
         "fibers": 42,
         "limbalRing": 0.7869989533675834,
@@ -4473,24 +4696,24 @@
       "seed": 2381542012,
       "shape": {
         "width": 150,
-        "height": 91.87418939452618,
-        "tiltDeg": -3.9381995380390435,
-        "upperFraction": 0.5247172308433801,
-        "openness": 0.9782238602731377,
+        "height": 94.84761457680725,
+        "tiltDeg": 10.17516027786769,
+        "upperFraction": 0.6417041137162596,
+        "openness": 1.0700628720782697,
         "outerSide": "right",
-        "style": "rounded_rect"
+        "style": "almond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.38646765068406236,
-          "caruncle": 0.6831415827386083
+          "roundness": 0.1688907229225151,
+          "caruncle": 0.5064881684724243
         },
         "outer": {
-          "roundness": 0.8172062222962267
+          "roundness": 0.7907113204710186
         }
       },
       "epicanthicFold": {
-        "amount": 0.49303598839323964,
+        "amount": 0.9113513380289078,
         "reach": 0.46897527477703993
       },
       "lids": {
@@ -4524,7 +4747,7 @@
           "roughness": 0.2807694653514773,
           "clearcoat": 0.25614315487910067
         },
-        "radius": 0.528876666808202,
+        "radius": 0.55,
         "aspect": 0.9548701407620683,
         "fibers": 70,
         "limbalRing": 0.822048893943429,
@@ -4587,7 +4810,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2628588670166209,
-            "y": -0.27682920403778555,
+            "y": -0.44546336323022845,
             "size": 0.2968200159724802,
             "intensity": 0.8,
             "confine": "iris"
@@ -4635,20 +4858,20 @@
       "seed": 2313533773,
       "shape": {
         "width": 150,
-        "height": 102.75673355581236,
-        "tiltDeg": -4.331500051077455,
-        "upperFraction": 0.5383167169801891,
-        "openness": 1.0810169384256005,
+        "height": 103.6102557359263,
+        "tiltDeg": 9.494881216902286,
+        "upperFraction": 0.7141375056281686,
+        "openness": 1.028380886334926,
         "outerSide": "right",
-        "style": "triangle"
+        "style": "round"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.5461479383753612,
-          "caruncle": 0.5155932171270252
+          "roundness": 0.1458317305194214,
+          "caruncle": 0.7100771660916507
         },
         "outer": {
-          "roundness": 0.17692912904312835
+          "roundness": 0.6887445016996935
         }
       },
       "epicanthicFold": {
@@ -4686,7 +4909,7 @@
           "roughness": 0.2388436267268844,
           "clearcoat": 0.19927012955304235
         },
-        "radius": 0.44173167769105587,
+        "radius": 0.55,
         "aspect": 1.0415522827999666,
         "fibers": 38,
         "limbalRing": 0.6449205577606335,
@@ -4753,20 +4976,20 @@
       "seed": 3284753190,
       "shape": {
         "width": 150,
-        "height": 75.39766980987042,
-        "tiltDeg": -2.725356724811718,
-        "upperFraction": 0.5464520382042974,
-        "openness": 1.0937831329368055,
+        "height": 73.02488591289148,
+        "tiltDeg": 7.022564311744645,
+        "upperFraction": 0.5254562549572438,
+        "openness": 0.9494247612822801,
         "outerSide": "right",
-        "style": "circle"
+        "style": "sharp"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.21485284226946533,
-          "caruncle": 0.5480945375747979
+          "roundness": 0.1462556359707378,
+          "caruncle": 0.3412100013811141
         },
         "outer": {
-          "roundness": 0.46078242344083264
+          "roundness": 0.6512813898618334
         }
       },
       "epicanthicFold": {
@@ -4804,8 +5027,8 @@
           "roughness": 0.2739082055981271,
           "clearcoat": 0.24849441021215174
         },
-        "radius": 0.38611935983449774,
-        "aspect": 1.08,
+        "radius": 0.3417362678911774,
+        "aspect": 1.1026556665310636,
         "fibers": 67,
         "limbalRing": 0.6302691657794639,
         "glow": {
@@ -4871,20 +5094,20 @@
       "seed": 3486061287,
       "shape": {
         "width": 150,
-        "height": 70.69113419414498,
-        "tiltDeg": -4.079286313382909,
-        "upperFraction": 0.692771389875561,
-        "openness": 1.024902387773618,
+        "height": 101.7748293899931,
+        "tiltDeg": 3.0432819733396173,
+        "upperFraction": 0.7100941264349967,
+        "openness": 1.09357163249515,
         "outerSide": "right",
-        "style": "diamond"
+        "style": "drooping"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.5268393223639578,
-          "caruncle": 0.5487804151605815
+          "roundness": 0.4758551162085496,
+          "caruncle": 0.4951251428108663
         },
         "outer": {
-          "roundness": 0.823740025528241
+          "roundness": 0.6934437586227432
         }
       },
       "epicanthicFold": {
@@ -4922,7 +5145,7 @@
           "roughness": 0.2702683640876785,
           "clearcoat": 0.15210420137736946
         },
-        "radius": 0.3271525706489614,
+        "radius": 0.40644323693741696,
         "aspect": 1.0548741926904768,
         "fibers": 29,
         "limbalRing": 0.6221526221372187,
@@ -4989,20 +5212,20 @@
       "seed": 3962036265,
       "shape": {
         "width": 150,
-        "height": 67.23377118003555,
-        "tiltDeg": -4.334640246350318,
-        "upperFraction": 0.7017213265690952,
-        "openness": 1.0110875176079572,
+        "height": 94.40125190117396,
+        "tiltDeg": -4.497931621503085,
+        "upperFraction": 0.620624241726473,
+        "openness": 1.0728837844915688,
         "outerSide": "right",
-        "style": "diamond_v2"
+        "style": "chibi"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.7507637527189218,
-          "caruncle": 0.41161378631368284
+          "roundness": 0.45998732639709483,
+          "caruncle": 0.776004445180297
         },
         "outer": {
-          "roundness": 0.38871571376221253
+          "roundness": 0.25788306249305604
         }
       },
       "epicanthicFold": {
@@ -5013,7 +5236,8 @@
         "crease": {
           "height": 0.363316153921187,
           "depth": 0.5867458057589829
-        }
+        },
+        "thickness": 0.011337109446517139
       },
       "iris": {
         "material": {
@@ -5040,8 +5264,8 @@
           "roughness": 0.32531188379507514,
           "clearcoat": 0.27281156796962025
         },
-        "radius": 0.46361155821853434,
-        "aspect": 0.9674673749133944,
+        "radius": 0.55,
+        "aspect": 1,
         "fibers": 28,
         "limbalRing": 0.684397332672961,
         "glow": {
@@ -5074,7 +5298,19 @@
             "spotRadius": 0.1,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 14,
+            "rings": 2,
+            "contrast": 0.5
+          },
+          "bubbles": {
+            "count": 8,
+            "size": 0.06,
+            "opacity": 0.8
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -5108,7 +5344,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.21249606274068356,
-            "y": -0.2533016472170129,
+            "y": -0.42664131777361036,
             "size": 0.29609169396571816,
             "intensity": 0.8,
             "confine": "iris"
@@ -5145,6 +5381,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#c6b5b6"
+            },
+            {
+              "offset": 0.5,
+              "color": "#eceee4"
+            },
+            {
+              "offset": 1,
+              "color": "#e2e4da"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#b47b71"
+        }
+      },
       "transform": {
         "x": 1320,
         "y": 714
@@ -5156,31 +5418,32 @@
       "seed": 2013867502,
       "shape": {
         "width": 150,
-        "height": 94.84761457680725,
-        "tiltDeg": 10.17516027786769,
-        "upperFraction": 0.6417041137162596,
-        "openness": 1.0700628720782697,
+        "height": 101.35758511698803,
+        "tiltDeg": -4.724001553840935,
+        "upperFraction": 0.6726435715146363,
+        "openness": 1.0753267148230226,
         "outerSide": "right",
-        "style": "almond"
+        "style": "angular"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.1688907229225151,
-          "caruncle": 0.5064881684724243
+          "roundness": 0.35238233612617476,
+          "caruncle": 0.7419958668760955
         },
         "outer": {
-          "roundness": 0.7907113204710186
+          "roundness": 0.23744142545619978
         }
       },
       "epicanthicFold": {
-        "amount": 0.9113513380289078,
+        "amount": 0,
         "reach": 0.5944256145507097
       },
       "lids": {
         "crease": {
           "height": 0.3948202281259,
           "depth": 0.4601735751610249
-        }
+        },
+        "thickness": 0.012232234549547543
       },
       "iris": {
         "material": {
@@ -5207,7 +5470,7 @@
           "roughness": 0.23333539578597992,
           "clearcoat": 0.12377854874357583
         },
-        "radius": 0.4524028419881135,
+        "radius": 0.3692627270022692,
         "aspect": 1.190394945233129,
         "fibers": 48,
         "limbalRing": 0.6341375755844637,
@@ -5267,7 +5530,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.26297398505266756,
-            "y": -0.24128851853776723,
+            "y": -0.41703081483021376,
             "size": 0.2286734045483172,
             "intensity": 0.8,
             "confine": "iris"
@@ -5304,6 +5567,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#bbb4cb"
+            },
+            {
+              "offset": 0.5,
+              "color": "#fbe9f1"
+            },
+            {
+              "offset": 1,
+              "color": "#e4bcc8"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#9f8b8c"
+        }
+      },
       "transform": {
         "x": 1560,
         "y": 714
@@ -5315,31 +5604,32 @@
       "seed": 3329985754,
       "shape": {
         "width": 150,
-        "height": 101.12066925480029,
-        "tiltDeg": 12.475583360763267,
-        "upperFraction": 0.560491345198825,
-        "openness": 1.0699404988251628,
+        "height": 67.03772634873167,
+        "tiltDeg": 8.121995429508388,
+        "upperFraction": 0.6912948908098042,
+        "openness": 1.0539570732973518,
         "outerSide": "right",
-        "style": "round"
+        "style": "compressed"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.48228005785495043,
-          "caruncle": 0.39302431023679674
+          "roundness": 0.5025073859957047,
+          "caruncle": 0.32603786382824185
         },
         "outer": {
-          "roundness": 0.5334994543693028
+          "roundness": 0.6557893591118046
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.5651421785121784,
         "reach": 0.9456193852704018
       },
       "lids": {
         "crease": {
           "height": 0.33580393334850667,
           "depth": 0.4477008425397798
-        }
+        },
+        "thickness": 0.014095594687139125
       },
       "iris": {
         "material": {
@@ -5366,8 +5656,8 @@
           "roughness": 0.3291771620628424,
           "clearcoat": 0.19518752007279547
         },
-        "radius": 0.55,
-        "aspect": 1.08,
+        "radius": 0.24777238006601013,
+        "aspect": 1.118825494335033,
         "fibers": 38,
         "limbalRing": 0.8948283377336338,
         "glow": null,
@@ -5406,7 +5696,14 @@
             "irregularity": 0.5,
             "opacity": 0.8
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 18,
+            "rings": 3,
+            "contrast": 0.75
+          }
+        }
       },
       "pupil": {
         "shape": "slit_vertical",
@@ -5434,7 +5731,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.25127100762911136,
-            "y": -0.24950801565311848,
+            "y": -0.4236064125224948,
             "size": 0.2661934041650966,
             "intensity": 0.8,
             "confine": "iris"
@@ -5471,6 +5768,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#a5b9dd"
+            },
+            {
+              "offset": 0.5,
+              "color": "#e1eeff"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#a7807a"
+        }
+      },
       "transform": {
         "x": 1800,
         "y": 714
@@ -5482,31 +5805,32 @@
       "seed": 1479106762,
       "shape": {
         "width": 150,
-        "height": 102.71193873183802,
-        "tiltDeg": 13.726220668992028,
-        "upperFraction": 0.711230028308928,
-        "openness": 0.8875359022244811,
+        "height": 94.30428090901114,
+        "tiltDeg": -4.548676155041903,
+        "upperFraction": 0.7115463656187058,
+        "openness": 1.0650589157734067,
         "outerSide": "right",
-        "style": "sharp"
+        "style": "rounded_rect"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.6112093243631535,
-          "caruncle": 0.3873014838434756
+          "roundness": 0.8925930835772306,
+          "caruncle": 0.7420682056341321
         },
         "outer": {
-          "roundness": 0.4426052584662102
+          "roundness": 0.14415584430098533
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.444833208527416,
         "reach": 0.5870466365478932
       },
       "lids": {
         "crease": {
           "height": 0.249685387685895,
           "depth": 0.7465461727930233
-        }
+        },
+        "thickness": 0.013165924890230387
       },
       "iris": {
         "material": {
@@ -5533,7 +5857,7 @@
           "roughness": 0.39532011162955316,
           "clearcoat": 0.18112073293887082
         },
-        "radius": 0.28129478560921883,
+        "radius": 0.5040674659063827,
         "aspect": 1.0890242139343171,
         "fibers": 46,
         "limbalRing": 0.8525354880373925,
@@ -5600,6 +5924,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#a5b9dd"
+            },
+            {
+              "offset": 0.5,
+              "color": "#e1eeff"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#a7807a"
+        }
+      },
       "transform": {
         "x": 2040,
         "y": 714
@@ -5611,24 +5961,24 @@
       "seed": 1270792045,
       "shape": {
         "width": 150,
-        "height": 98.37811783980577,
-        "tiltDeg": 6.467490205541253,
-        "upperFraction": 0.6251028657704591,
-        "openness": 1.0714699573721738,
+        "height": 97.51173253543672,
+        "tiltDeg": 12.1561989269685,
+        "upperFraction": 0.709059129357338,
+        "openness": 1.0941058549191804,
         "outerSide": "right",
-        "style": "drooping"
+        "style": "triangle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.8753300535609014,
-          "caruncle": 0.6948331217281521
+          "roundness": 0.37164398408494886,
+          "caruncle": 0.7257772280368955
         },
         "outer": {
-          "roundness": 0.23229736618231983
+          "roundness": 0.4910389785422012
         }
       },
       "epicanthicFold": {
-        "amount": 0.9687155474210158,
+        "amount": 0,
         "reach": 0.5803273238241673
       },
       "lids": {
@@ -5662,7 +6012,7 @@
           "roughness": 0.22205120177241042,
           "clearcoat": 0.13177155451849104
         },
-        "radius": 0.3795688155142772,
+        "radius": 0.3674053483971961,
         "aspect": 1.0351938884705305,
         "fibers": 56,
         "limbalRing": 0.7375383811304346,
@@ -5722,7 +6072,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2483041740488261,
-            "y": -0.31339687677565964,
+            "y": -0.4747175014205277,
             "size": 0.28162375101819637,
             "intensity": 0.8,
             "confine": "iris"
@@ -5770,24 +6120,24 @@
       "seed": 1923064245,
       "shape": {
         "width": 150,
-        "height": 70.15378030249849,
-        "tiltDeg": -3.4880851639900357,
-        "upperFraction": 0.5751748049911112,
-        "openness": 0.9888832033518702,
+        "height": 75.39766980987042,
+        "tiltDeg": -2.725356724811718,
+        "upperFraction": 0.5464520382042974,
+        "openness": 1.0937831329368055,
         "outerSide": "right",
-        "style": "chibi"
+        "style": "circle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.07114714399212971,
-          "caruncle": 0.3719366922974587
+          "roundness": 0.21485284226946533,
+          "caruncle": 0.5480945375747979
         },
         "outer": {
-          "roundness": 0.3468970422982238
+          "roundness": 0.46078242344083264
         }
       },
       "epicanthicFold": {
-        "amount": 0.6670937041286379,
+        "amount": 0,
         "reach": 0.4821101315319538
       },
       "lids": {
@@ -5861,7 +6211,14 @@
             "spotRadius": 0.12,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "bubbles": {
+            "count": 12,
+            "size": 0.08,
+            "opacity": 0.85
+          }
+        }
       },
       "pupil": {
         "shape": "slit_vertical",
@@ -5928,20 +6285,20 @@
       "seed": 1113793082,
       "shape": {
         "width": 150,
-        "height": 82.26257232762875,
-        "tiltDeg": 11.954314577393234,
-        "upperFraction": 0.7147640958242119,
-        "openness": 0.8558661709818989,
+        "height": 94.00851874728687,
+        "tiltDeg": -1.5257145087234676,
+        "upperFraction": 0.6993202641420067,
+        "openness": 1.0515612578392028,
         "outerSide": "right",
-        "style": "angular"
+        "style": "diamond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.28678447790443895,
-          "caruncle": 0.4836695337202401
+          "roundness": 0.4091310423566028,
+          "caruncle": 0.582652966491878
         },
         "outer": {
-          "roundness": 0.47674044534796844
+          "roundness": 0.8432513058418408
         }
       },
       "epicanthicFold": {
@@ -5979,7 +6336,7 @@
           "roughness": 0.2297838342259638,
           "clearcoat": 0.26765706366859376
         },
-        "radius": 0.3139574014899427,
+        "radius": 0.33356687472045976,
         "aspect": 1.037300447653979,
         "fibers": 27,
         "limbalRing": 0.6845028908690437,
@@ -6022,7 +6379,14 @@
             "spotRadius": 0.12,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "bubbles": {
+            "count": 12,
+            "size": 0.08,
+            "opacity": 0.85
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -6095,24 +6459,24 @@
       "seed": 807733849,
       "shape": {
         "width": 150,
-        "height": 101.83181880321354,
-        "tiltDeg": -4.821253531146795,
-        "upperFraction": 0.540467593614012,
-        "openness": 0.9942607150971889,
+        "height": 68.76926864334382,
+        "tiltDeg": 1.4422661911230534,
+        "upperFraction": 0.6548126233555376,
+        "openness": 0.9248668847046793,
         "outerSide": "right",
-        "style": "compressed"
+        "style": "diamond_v2"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.31045057718874886,
-          "caruncle": 0.4287699752487243
+          "roundness": 0.8604129701619968,
+          "caruncle": 0.20562733598053456
         },
         "outer": {
-          "roundness": 0.5817134268931113
+          "roundness": 0.8903967681806535
         }
       },
       "epicanthicFold": {
-        "amount": 0.6196910836501046,
+        "amount": 0.8599187451414763,
         "reach": 0.9077103943563998
       },
       "lids": {
@@ -6146,7 +6510,7 @@
           "roughness": 0.2940872448147275,
           "clearcoat": 0.1393369025317952
         },
-        "radius": 0.21186371756784733,
+        "radius": 0.39684273713264406,
         "aspect": 1.1711621511727572,
         "fibers": 29,
         "limbalRing": 0.8091865477384999,
@@ -6180,7 +6544,19 @@
             "spotRadius": 0.1,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 14,
+            "rings": 2,
+            "contrast": 0.5
+          },
+          "bubbles": {
+            "count": 8,
+            "size": 0.06,
+            "opacity": 0.8
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -6208,7 +6584,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2492585914675146,
-            "y": -0.2839206750318408,
+            "y": -0.45113654002547265,
             "size": 0.21223804634064436,
             "intensity": 0.8,
             "confine": "iris"
@@ -6256,31 +6632,32 @@
       "seed": 2529459840,
       "shape": {
         "width": 150,
-        "height": 104.65068905940278,
-        "tiltDeg": -3.4054570561274886,
-        "upperFraction": 0.6975277313776314,
-        "openness": 0.9031368192844093,
+        "height": 74.26733417320065,
+        "tiltDeg": 13.330739364027977,
+        "upperFraction": 0.7133773275464773,
+        "openness": 0.9949038544390351,
         "outerSide": "right",
-        "style": "rounded_rect"
+        "style": "almond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.3363707907265052,
-          "caruncle": 0.22225027284584942
+          "roundness": 0.24445110782980917,
+          "caruncle": 0.280783298611641
         },
         "outer": {
-          "roundness": 0.3909148261649534
+          "roundness": 0.7769605195731856
         }
       },
       "epicanthicFold": {
-        "amount": 0.5981568250572309,
+        "amount": 0,
         "reach": 0.8060726890340448
       },
       "lids": {
         "crease": {
           "height": 0.21596292713657023,
           "depth": 0.6931342096300795
-        }
+        },
+        "thickness": 0.014519703388816103
       },
       "iris": {
         "material": {
@@ -6307,7 +6684,7 @@
           "roughness": 0.1745018049608916,
           "clearcoat": 0.2003667840966955
         },
-        "radius": 0.30667780888629187,
+        "radius": 0.3504640608767412,
         "aspect": 1.0278168740682303,
         "fibers": 37,
         "limbalRing": 0.752517206640914,
@@ -6388,6 +6765,32 @@
         "intensity": 1
       },
       "archetype": "demon",
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#c6b5b6"
+            },
+            {
+              "offset": 0.5,
+              "color": "#eceee4"
+            },
+            {
+              "offset": 1,
+              "color": "#e2e4da"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#b47b71"
+        }
+      },
       "transform": {
         "x": 840,
         "y": 914
@@ -6399,24 +6802,24 @@
       "seed": 938916226,
       "shape": {
         "width": 150,
-        "height": 66.3310487314593,
-        "tiltDeg": 11.345665641594678,
-        "upperFraction": 0.5861679255776108,
-        "openness": 0.8479891701694577,
+        "height": 101.12066925480029,
+        "tiltDeg": 12.475583360763267,
+        "upperFraction": 0.560491345198825,
+        "openness": 1.0699404988251628,
         "outerSide": "right",
-        "style": "triangle"
+        "style": "round"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.3669664902961813,
-          "caruncle": 0.4591924199834466
+          "roundness": 0.48228005785495043,
+          "caruncle": 0.39302431023679674
         },
         "outer": {
-          "roundness": 0.845677773107309
+          "roundness": 0.5334994543693028
         }
       },
       "epicanthicFold": {
-        "amount": 0.4045030452078208,
+        "amount": 0,
         "reach": 0.8923533380497247
       },
       "lids": {
@@ -6450,8 +6853,8 @@
           "roughness": 0.3972180563490838,
           "clearcoat": 0.16248963072430345
         },
-        "radius": 0.28641779663342415,
-        "aspect": 1.2454448234988376,
+        "radius": 0.55,
+        "aspect": 1.08,
         "fibers": 33,
         "limbalRing": 0.8953550979495049,
         "glow": null
@@ -6523,20 +6926,20 @@
       "seed": 3036008916,
       "shape": {
         "width": 150,
-        "height": 76.70897886506282,
-        "tiltDeg": -4.494678265880793,
-        "upperFraction": 0.6024214104562998,
-        "openness": 0.942204038463533,
+        "height": 102.71193873183802,
+        "tiltDeg": 13.726220668992028,
+        "upperFraction": 0.711230028308928,
+        "openness": 0.8875359022244811,
         "outerSide": "right",
-        "style": "circle"
+        "style": "sharp"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.416124048968777,
-          "caruncle": 0.5642936679534615
+          "roundness": 0.6112093243631535,
+          "caruncle": 0.3873014838434756
         },
         "outer": {
-          "roundness": 0.16199432513676584
+          "roundness": 0.4426052584662102
         }
       },
       "epicanthicFold": {
@@ -6574,8 +6977,8 @@
           "roughness": 0.3182774045621045,
           "clearcoat": 0.3978572808671743
         },
-        "radius": 0.55,
-        "aspect": 1,
+        "radius": 0.314175216395574,
+        "aspect": 0.9755250480491667,
         "fibers": 74,
         "limbalRing": 0.6639375864062458,
         "glow": null
@@ -6638,24 +7041,24 @@
       "seed": 2464682151,
       "shape": {
         "width": 150,
-        "height": 83.1032445137389,
-        "tiltDeg": 11.814209479140118,
-        "upperFraction": 0.5415831702575088,
-        "openness": 0.9086761317774653,
+        "height": 103.52498407009989,
+        "tiltDeg": 13.075751742348075,
+        "upperFraction": 0.6955390845704823,
+        "openness": 1.0799705757386984,
         "outerSide": "right",
-        "style": "diamond"
+        "style": "drooping"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.5580705671221949,
-          "caruncle": 0.23455588696524504
+          "roundness": 0.34782322676619515,
+          "caruncle": 0.6326187172904612
         },
         "outer": {
-          "roundness": 0.6958743858733215
+          "roundness": 0.8248564867652022
         }
       },
       "epicanthicFold": {
-        "amount": 0.5003256313735619,
+        "amount": 0,
         "reach": 0.6495988631155342
       },
       "lids": {
@@ -6689,7 +7092,7 @@
           "roughness": 0.21977276410907506,
           "clearcoat": 0.16408728677779438
         },
-        "radius": 0.3697471289712216,
+        "radius": 0.3658782262284202,
         "aspect": 1.1479785335017367,
         "fibers": 76,
         "limbalRing": 0.6895191336516291,
@@ -6759,24 +7162,24 @@
       "seed": 2782788334,
       "shape": {
         "width": 150,
-        "height": 104.51454921090044,
-        "tiltDeg": 12.79060687427409,
-        "upperFraction": 0.6157686078734695,
-        "openness": 1.0771327783167364,
+        "height": 87.41584647470154,
+        "tiltDeg": 13.636897595832124,
+        "upperFraction": 0.6081210781633853,
+        "openness": 0.9250431387778372,
         "outerSide": "right",
-        "style": "diamond_v2"
+        "style": "chibi"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.08916199948871509,
-          "caruncle": 0.5038505358155818
+          "roundness": 0.46562776174396275,
+          "caruncle": 0.5337521578650922
         },
         "outer": {
-          "roundness": 0.7942338977009058
+          "roundness": 0.6241668980335817
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.9482420426793396,
         "reach": 0.7214348780922593
       },
       "lids": {
@@ -6810,8 +7213,8 @@
           "roughness": 0.16389256893889978,
           "clearcoat": 0.2655278103426099
         },
-        "radius": 0.4162347030614544,
-        "aspect": 1.1284399072639644,
+        "radius": 0.5336656363195459,
+        "aspect": 1.08,
         "fibers": 43,
         "limbalRing": 0.8692999947583302,
         "glow": null
@@ -6877,20 +7280,20 @@
       "seed": 300043826,
       "shape": {
         "width": 150,
-        "height": 74.26733417320065,
-        "tiltDeg": 13.330739364027977,
-        "upperFraction": 0.7133773275464773,
-        "openness": 0.9949038544390351,
+        "height": 100.75182743766347,
+        "tiltDeg": -2.382841997081414,
+        "upperFraction": 0.5529119210597128,
+        "openness": 1.0681078700721265,
         "outerSide": "right",
-        "style": "almond"
+        "style": "angular"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.24445110782980917,
-          "caruncle": 0.280783298611641
+          "roundness": 0.5607320779003203,
+          "caruncle": 0.4999011119827629
         },
         "outer": {
-          "roundness": 0.7769605195731856
+          "roundness": 0.7334671232034452
         }
       },
       "epicanthicFold": {
@@ -6928,7 +7331,7 @@
           "roughness": 0.3490372305735946,
           "clearcoat": 0.23643394852988425
         },
-        "radius": 0.34518954842950056,
+        "radius": 0.36616338072656496,
         "aspect": 1.0426267492584884,
         "fibers": 73,
         "limbalRing": 0.6234291784465312,
@@ -6968,7 +7371,14 @@
             "irregularity": 0.5,
             "opacity": 0.8
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 18,
+            "rings": 3,
+            "contrast": 0.75
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -6996,7 +7406,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2797874621581286,
-            "y": -0.2687406871980056,
+            "y": -0.4389925497584045,
             "size": 0.2845453770831228,
             "intensity": 0.8,
             "confine": "iris"
@@ -7044,24 +7454,24 @@
       "seed": 1409546979,
       "shape": {
         "width": 150,
-        "height": 103.82476855628191,
-        "tiltDeg": 1.6419950395356864,
-        "upperFraction": 0.6665519770048558,
-        "openness": 1.0263824956025929,
+        "height": 101.83181880321354,
+        "tiltDeg": -4.821253531146795,
+        "upperFraction": 0.540467593614012,
+        "openness": 0.9942607150971889,
         "outerSide": "right",
-        "style": "round"
+        "style": "compressed"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.7776184944435954,
-          "caruncle": 0.20798500175587833
+          "roundness": 0.31045057718874886,
+          "caruncle": 0.4287699752487243
         },
         "outer": {
-          "roundness": 0.7396258299588226
+          "roundness": 0.5817134268931113
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.6196910836501046,
         "reach": 0.596492720535025
       },
       "lids": {
@@ -7095,8 +7505,8 @@
           "roughness": 0.3745060260174796,
           "clearcoat": 0.13447445048950613
         },
-        "radius": 0.55,
-        "aspect": 1.08,
+        "radius": 0.22528281547033255,
+        "aspect": 1.1020158386323602,
         "fibers": 28,
         "limbalRing": 0.6056116187246516,
         "glow": {
@@ -7138,7 +7548,14 @@
             "spotRadius": 0.12,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "bubbles": {
+            "count": 12,
+            "size": 0.08,
+            "opacity": 0.85
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -7205,31 +7622,32 @@
       "seed": 682163057,
       "shape": {
         "width": 150,
-        "height": 102.61297977785577,
-        "tiltDeg": -0.33815943263471127,
-        "upperFraction": 0.5481024843920023,
-        "openness": 1.072958364346996,
+        "height": 91.87418939452618,
+        "tiltDeg": -3.9381995380390435,
+        "upperFraction": 0.5247172308433801,
+        "openness": 0.9782238602731377,
         "outerSide": "right",
-        "style": "sharp"
+        "style": "rounded_rect"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.6253997070482001,
-          "caruncle": 0.6846636419184506
+          "roundness": 0.38646765068406236,
+          "caruncle": 0.6831415827386083
         },
         "outer": {
-          "roundness": 0.2998595832264982
+          "roundness": 0.8172062222962267
         }
       },
       "epicanthicFold": {
-        "amount": 0.5316853422671556,
+        "amount": 0.49303598839323964,
         "reach": 0.6031031681224703
       },
       "lids": {
         "crease": {
           "height": 0.34073153473436835,
           "depth": 0.6969187508802861
-        }
+        },
+        "thickness": 0.010563814319221859
       },
       "iris": {
         "material": {
@@ -7256,7 +7674,7 @@
           "roughness": 0.25966182983247565,
           "clearcoat": 0.37121581954415894
         },
-        "radius": 0.3486542809090094,
+        "radius": 0.43446534228876843,
         "aspect": 1.1623678303556517,
         "fibers": 67,
         "limbalRing": 0.6067712126299739,
@@ -7312,6 +7730,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#c0b6b3"
+            },
+            {
+              "offset": 0.5,
+              "color": "#f8eaea"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#aca199"
+        }
+      },
       "transform": {
         "x": 120,
         "y": 1114
@@ -7323,20 +7767,20 @@
       "seed": 869985335,
       "shape": {
         "width": 150,
-        "height": 103.52498407009989,
-        "tiltDeg": 13.075751742348075,
-        "upperFraction": 0.6955390845704823,
-        "openness": 1.0799705757386984,
+        "height": 83.08661977224985,
+        "tiltDeg": -3.807118884753436,
+        "upperFraction": 0.6487312579806894,
+        "openness": 0.8655611602496356,
         "outerSide": "right",
-        "style": "drooping"
+        "style": "triangle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.34782322676619515,
-          "caruncle": 0.6326187172904612
+          "roundness": 0.22220901597756892,
+          "caruncle": 0.7726998382247985
         },
         "outer": {
-          "roundness": 0.8248564867652022
+          "roundness": 0.29418237555073573
         }
       },
       "epicanthicFold": {
@@ -7374,7 +7818,7 @@
           "roughness": 0.21559573783306404,
           "clearcoat": 0.2913743217708543
         },
-        "radius": 0.37047904173191215,
+        "radius": 0.3235838241012744,
         "aspect": 1.13332337832544,
         "fibers": 32,
         "limbalRing": 0.8181048408150673,
@@ -7414,7 +7858,14 @@
             "spotRadius": 0.12,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "bubbles": {
+            "count": 12,
+            "size": 0.08,
+            "opacity": 0.85
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -7481,20 +7932,20 @@
       "seed": 1195233950,
       "shape": {
         "width": 150,
-        "height": 89.4919005758129,
-        "tiltDeg": 12.975750154349953,
-        "upperFraction": 0.6913374900631606,
-        "openness": 0.9829249274823815,
+        "height": 76.70897886506282,
+        "tiltDeg": -4.494678265880793,
+        "upperFraction": 0.6024214104562998,
+        "openness": 0.942204038463533,
         "outerSide": "right",
-        "style": "chibi"
+        "style": "circle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.7686546972603537,
-          "caruncle": 0.48102911184541886
+          "roundness": 0.416124048968777,
+          "caruncle": 0.5642936679534615
         },
         "outer": {
-          "roundness": 0.7567378315376118
+          "roundness": 0.16199432513676584
         }
       },
       "epicanthicFold": {
@@ -7505,7 +7956,8 @@
         "crease": {
           "height": 0.1494989068247378,
           "depth": 0.8543031625449657
-        }
+        },
+        "thickness": 0.01622198766045275
       },
       "iris": {
         "material": {
@@ -7611,6 +8063,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#cdb0c5"
+            },
+            {
+              "offset": 0.5,
+              "color": "#ffe6e6"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#b69794"
+        }
+      },
       "transform": {
         "x": 600,
         "y": 1114
@@ -7622,20 +8100,20 @@
       "seed": 3264447993,
       "shape": {
         "width": 150,
-        "height": 102.06251795450225,
-        "tiltDeg": 5.267770046833903,
-        "upperFraction": 0.6728762117959559,
-        "openness": 1.0989824328757822,
+        "height": 73.8764224103652,
+        "tiltDeg": -4.688474185299128,
+        "upperFraction": 0.574798899171874,
+        "openness": 0.8719065864291042,
         "outerSide": "right",
-        "style": "angular"
+        "style": "diamond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.6810305585851893,
-          "caruncle": 0.6911988708656283
+          "roundness": 0.8155052150716074,
+          "caruncle": 0.2516669587697834
         },
         "outer": {
-          "roundness": 0.7802629387937486
+          "roundness": 0.3847409756388515
         }
       },
       "epicanthicFold": {
@@ -7646,7 +8124,8 @@
         "crease": {
           "height": 0.14576962320134046,
           "depth": 0.7934550113044678
-        }
+        },
+        "thickness": 0.014644348498589163
       },
       "iris": {
         "material": {
@@ -7673,7 +8152,7 @@
           "roughness": 0.386501062696334,
           "clearcoat": 0.3035714274737984
         },
-        "radius": 0.35537338682055586,
+        "radius": 0.3168200730394454,
         "aspect": 1.0632293407572433,
         "fibers": 78,
         "limbalRing": 0.8014463380677626,
@@ -7707,7 +8186,19 @@
             "spotRadius": 0.1,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 14,
+            "rings": 2,
+            "contrast": 0.5
+          },
+          "bubbles": {
+            "count": 8,
+            "size": 0.06,
+            "opacity": 0.8
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -7735,7 +8226,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.23753165192902087,
-            "y": -0.22757828135974706,
+            "y": -0.40606262508779767,
             "size": 0.21262939707376063,
             "intensity": 0.8,
             "confine": "iris"
@@ -7772,6 +8263,32 @@
         "intensity": 1
       },
       "archetype": "demon",
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#a5b9dd"
+            },
+            {
+              "offset": 0.5,
+              "color": "#e1eeff"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#a7807a"
+        }
+      },
       "transform": {
         "x": 840,
         "y": 1114
@@ -7783,24 +8300,24 @@
       "seed": 2795207101,
       "shape": {
         "width": 150,
-        "height": 67.03772634873167,
-        "tiltDeg": 8.121995429508388,
-        "upperFraction": 0.6912948908098042,
-        "openness": 1.0539570732973518,
+        "height": 66.79744856106117,
+        "tiltDeg": -4.906253927620128,
+        "upperFraction": 0.6457354723289609,
+        "openness": 0.8705554702039808,
         "outerSide": "right",
-        "style": "compressed"
+        "style": "diamond_v2"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.5025073859957047,
-          "caruncle": 0.32603786382824185
+          "roundness": 0.34383638688595963,
+          "caruncle": 0.46410095789469785
         },
         "outer": {
-          "roundness": 0.6557893591118046
+          "roundness": 0.5859638507128694
         }
       },
       "epicanthicFold": {
-        "amount": 0.5651421785121784,
+        "amount": 0,
         "reach": 0.5873072736430913
       },
       "lids": {
@@ -7834,7 +8351,7 @@
           "roughness": 0.3313818592927419,
           "clearcoat": 0.31348055747803305
         },
-        "radius": 0.2744399894632741,
+        "radius": 0.3750586700119122,
         "aspect": 1.0101080974098295,
         "fibers": 28,
         "limbalRing": 0.7906790983630344,
@@ -7905,7 +8422,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.26097374011296776,
-            "y": -0.23020354158245027,
+            "y": -0.4081628332659602,
             "size": 0.26390997166745367,
             "intensity": 0.8,
             "confine": "iris"
@@ -7953,20 +8470,20 @@
       "seed": 4283827970,
       "shape": {
         "width": 150,
-        "height": 104.57262272341175,
-        "tiltDeg": 12.250804588897154,
-        "upperFraction": 0.7036898950394243,
-        "openness": 0.9564707960840315,
+        "height": 104.65715420991181,
+        "tiltDeg": -2.2751205950044096,
+        "upperFraction": 0.551137929065153,
+        "openness": 1.0515869490616023,
         "outerSide": "right",
-        "style": "rounded_rect"
+        "style": "almond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.3244630793458782,
-          "caruncle": 0.3163680194877088
+          "roundness": 0.17503813201328738,
+          "caruncle": 0.604997775470838
         },
         "outer": {
-          "roundness": 0.7198576012975536
+          "roundness": 0.7365022637764923
         }
       },
       "epicanthicFold": {
@@ -8004,7 +8521,7 @@
           "roughness": 0.18785463940585032,
           "clearcoat": 0.11370520070195199
         },
-        "radius": 0.49405213003051024,
+        "radius": 0.55,
         "aspect": 0.9589092295849695,
         "fibers": 48,
         "limbalRing": 0.6042907297611236,
@@ -8074,20 +8591,20 @@
       "seed": 2466707304,
       "shape": {
         "width": 150,
-        "height": 90.65805746312252,
-        "tiltDeg": 13.890025096712634,
-        "upperFraction": 0.6453252094145864,
-        "openness": 0.9620458006020636,
+        "height": 103.82476855628191,
+        "tiltDeg": 1.6419950395356864,
+        "upperFraction": 0.6665519770048558,
+        "openness": 1.0263824956025929,
         "outerSide": "right",
-        "style": "triangle"
+        "style": "round"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.4147140307235531,
-          "caruncle": 0.688438422093168
+          "roundness": 0.7776184944435954,
+          "caruncle": 0.20798500175587833
         },
         "outer": {
-          "roundness": 0.7585386326885782
+          "roundness": 0.7396258299588226
         }
       },
       "epicanthicFold": {
@@ -8098,7 +8615,8 @@
         "crease": {
           "height": 0.47141824616119266,
           "depth": 0.46256183150690044
-        }
+        },
+        "thickness": 0.01
       },
       "iris": {
         "material": {
@@ -8125,8 +8643,8 @@
           "roughness": 0.35726662129163744,
           "clearcoat": 0.2626814722083509
         },
-        "radius": 0.3328201973390126,
-        "aspect": 1.1865641023498028,
+        "radius": 0.55,
+        "aspect": 1.08,
         "fibers": 61,
         "limbalRing": 0.8016792768845334,
         "glow": null
@@ -8178,6 +8696,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#a5b9dd"
+            },
+            {
+              "offset": 0.5,
+              "color": "#e1eeff"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#a7807a"
+        }
+      },
       "transform": {
         "x": 1560,
         "y": 1114
@@ -8189,24 +8733,24 @@
       "seed": 1656302880,
       "shape": {
         "width": 150,
-        "height": 89.26943839620799,
-        "tiltDeg": 13.84263643110171,
-        "upperFraction": 0.5768396985530854,
-        "openness": 0.8268497060425579,
+        "height": 102.61297977785577,
+        "tiltDeg": -0.33815943263471127,
+        "upperFraction": 0.5481024843920023,
+        "openness": 1.072958364346996,
         "outerSide": "right",
-        "style": "circle"
+        "style": "sharp"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.6944441853673198,
-          "caruncle": 0.2542538012843579
+          "roundness": 0.6253997070482001,
+          "caruncle": 0.6846636419184506
         },
         "outer": {
-          "roundness": 0.42831950644031164
+          "roundness": 0.2998595832264982
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.5316853422671556,
         "reach": 0.7965168508701026
       },
       "lids": {
@@ -8240,7 +8784,7 @@
           "roughness": 0.35861362805590036,
           "clearcoat": 0.37384764382150026
         },
-        "radius": 0.55,
+        "radius": 0.3997450611782718,
         "aspect": 1.0138074473012237,
         "fibers": 31,
         "limbalRing": 0.7476465839194133,
@@ -8297,7 +8841,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2899456182029098,
-            "y": -0.27547328772954643,
+            "y": -0.44437863018363716,
             "size": 0.2914135847706348,
             "intensity": 0.8,
             "confine": "iris"
@@ -8345,31 +8889,32 @@
       "seed": 1860435109,
       "shape": {
         "width": 150,
-        "height": 93.95286605902946,
-        "tiltDeg": -3.7187033593654633,
-        "upperFraction": 0.6695313090737909,
-        "openness": 0.8943736088555306,
+        "height": 99.34448679350314,
+        "tiltDeg": -2.52310682926327,
+        "upperFraction": 0.7149818536639213,
+        "openness": 1.084733130047098,
         "outerSide": "right",
-        "style": "diamond"
+        "style": "drooping"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.43775783344171937,
-          "caruncle": 0.5598322162870318
+          "roundness": 0.5902406767825596,
+          "caruncle": 0.29792206981219355
         },
         "outer": {
-          "roundness": 0.22176650003530085
+          "roundness": 0.0873196808155626
         }
       },
       "epicanthicFold": {
-        "amount": 0.6334980223560706,
+        "amount": 0,
         "reach": 0.8780447877012193
       },
       "lids": {
         "crease": {
           "height": 0.11550246011465788,
           "depth": 0.8051761050941422
-        }
+        },
+        "thickness": 0.010375858089012292
       },
       "iris": {
         "material": {
@@ -8396,7 +8941,7 @@
           "roughness": 0.2628662166884169,
           "clearcoat": 0.1376800815574825
         },
-        "radius": 0.2537820557954487,
+        "radius": 0.35584114001722184,
         "aspect": 1.1720338727347552,
         "fibers": 68,
         "limbalRing": 0.657774128112942,
@@ -8449,6 +8994,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#a5b9dd"
+            },
+            {
+              "offset": 0.5,
+              "color": "#e1eeff"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#a7807a"
+        }
+      },
       "transform": {
         "x": 2040,
         "y": 1114
@@ -8460,24 +9031,24 @@
       "seed": 3372939345,
       "shape": {
         "width": 150,
-        "height": 79.94570582150482,
-        "tiltDeg": 12.672078972915187,
-        "upperFraction": 0.6097686567623168,
-        "openness": 0.9580837967060507,
+        "height": 71.04781423858367,
+        "tiltDeg": -2.9870936712250113,
+        "upperFraction": 0.6310668551176787,
+        "openness": 0.8831264370586723,
         "outerSide": "right",
-        "style": "diamond_v2"
+        "style": "chibi"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.8025802422664129,
-          "caruncle": 0.5676408014725894
+          "roundness": 0.8196480912039988,
+          "caruncle": 0.66675123879686
         },
         "outer": {
-          "roundness": 0.4369571623741649
+          "roundness": 0.08094023618614302
         }
       },
       "epicanthicFold": {
-        "amount": 0.7666683030547574,
+        "amount": 0.4162653835723176,
         "reach": 0.5422265658620745
       },
       "lids": {
@@ -8511,7 +9082,7 @@
           "roughness": 0.3701003574882634,
           "clearcoat": 0.22056262900587173
         },
-        "radius": 0.33625462480524876,
+        "radius": 0.32098245458557667,
         "aspect": 1.052646035212092,
         "fibers": 41,
         "limbalRing": 0.625580986845307,
@@ -8581,20 +9152,20 @@
       "seed": 17979345,
       "shape": {
         "width": 150,
-        "height": 104.65715420991181,
-        "tiltDeg": -2.2751205950044096,
-        "upperFraction": 0.551137929065153,
-        "openness": 1.0515869490616023,
+        "height": 87.36301844310945,
+        "tiltDeg": 13.577570185996592,
+        "upperFraction": 0.5257426862418652,
+        "openness": 1.0370529139880091,
         "outerSide": "right",
-        "style": "almond"
+        "style": "angular"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.17503813201328738,
-          "caruncle": 0.604997775470838
+          "roundness": 0.7943792618694715,
+          "caruncle": 0.5713388117961586
         },
         "outer": {
-          "roundness": 0.7365022637764923
+          "roundness": 0.8028348954976536
         }
       },
       "epicanthicFold": {
@@ -8632,7 +9203,7 @@
           "roughness": 0.3314784958260134,
           "clearcoat": 0.3568318405188621
         },
-        "radius": 0.47456091717198706,
+        "radius": 0.35183342576821003,
         "aspect": 1.1130085543962196,
         "fibers": 45,
         "limbalRing": 0.7138099449221045,
@@ -8699,20 +9270,20 @@
       "seed": 1303372585,
       "shape": {
         "width": 150,
-        "height": 88.98445856804028,
-        "tiltDeg": 4.857784712687135,
-        "upperFraction": 0.5538489682413638,
-        "openness": 1.0592984889540822,
+        "height": 75.25526570552029,
+        "tiltDeg": -2.4526433660648763,
+        "upperFraction": 0.5216109623480588,
+        "openness": 0.8303170126024633,
         "outerSide": "right",
-        "style": "round"
+        "style": "compressed"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.08680043432395906,
-          "caruncle": 0.686752455495298
+          "roundness": 0.058469440939370544,
+          "caruncle": 0.5011207428760827
         },
         "outer": {
-          "roundness": 0.27734574638307097
+          "roundness": 0.18365335450507703
         }
       },
       "epicanthicFold": {
@@ -8750,8 +9321,8 @@
           "roughness": 0.21935299071483313,
           "clearcoat": 0.3257204173132777
         },
-        "radius": 0.55,
-        "aspect": 1.08,
+        "radius": 0.1769092679665524,
+        "aspect": 1.1771751911146566,
         "fibers": 56,
         "limbalRing": 0.7484718207037075,
         "glow": null
@@ -8828,24 +9399,24 @@
       "seed": 1738705036,
       "shape": {
         "width": 150,
-        "height": 84.51195795927197,
-        "tiltDeg": 0.8657415939960629,
-        "upperFraction": 0.5289375141542405,
-        "openness": 0.9850101665314287,
+        "height": 102.84186995099297,
+        "tiltDeg": 7.289165830472484,
+        "upperFraction": 0.6690484904497862,
+        "openness": 0.9600956666562707,
         "outerSide": "right",
-        "style": "sharp"
+        "style": "rounded_rect"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.21486523870844393,
-          "caruncle": 0.716050367197022
+          "roundness": 0.2867133807507344,
+          "caruncle": 0.24513996015302839
         },
         "outer": {
-          "roundness": 0.7602761810878292
+          "roundness": 0.15225962334079668
         }
       },
       "epicanthicFold": {
-        "amount": 0.7023289887467399,
+        "amount": 0.4222675184020772,
         "reach": 0.549957092339173
       },
       "lids": {
@@ -8879,7 +9450,7 @@
           "roughness": 0.19756798822199925,
           "clearcoat": 0.28157626260072
         },
-        "radius": 0.36722912048516354,
+        "radius": 0.4661822983811031,
         "aspect": 1.0510499482508748,
         "fibers": 67,
         "limbalRing": 0.8349645413691178,
@@ -8955,31 +9526,32 @@
       "seed": 3793396602,
       "shape": {
         "width": 150,
-        "height": 99.34448679350314,
-        "tiltDeg": -2.52310682926327,
-        "upperFraction": 0.7149818536639213,
-        "openness": 1.084733130047098,
+        "height": 80.32981001213193,
+        "tiltDeg": 13.204393834341317,
+        "upperFraction": 0.599170247213915,
+        "openness": 0.9379404437821358,
         "outerSide": "right",
-        "style": "drooping"
+        "style": "triangle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.5902406767825596,
-          "caruncle": 0.29792206981219355
+          "roundness": 0.24963821998098867,
+          "caruncle": 0.7438903152942657
         },
         "outer": {
-          "roundness": 0.0873196808155626
+          "roundness": 0.6005758512532339
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.4207491968991235,
         "reach": 0.785149150621146
       },
       "lids": {
         "crease": {
           "height": 0.35739808194339273,
           "depth": 0.8465697142295538
-        }
+        },
+        "thickness": 0.011465422077456733
       },
       "iris": {
         "material": {
@@ -9006,7 +9578,7 @@
           "roughness": 0.3486934021115303,
           "clearcoat": 0.19016297445632518
         },
-        "radius": 0.41237434457134753,
+        "radius": 0.38392558518359626,
         "aspect": 1.0115441944450139,
         "fibers": 44,
         "limbalRing": 0.7357252895599231,
@@ -9049,7 +9621,14 @@
             "spotRadius": 0.12,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "bubbles": {
+            "count": 12,
+            "size": 0.08,
+            "opacity": 0.85
+          }
+        }
       },
       "pupil": {
         "shape": "diamond",
@@ -9105,6 +9684,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#a5b9dd"
+            },
+            {
+              "offset": 0.5,
+              "color": "#e1eeff"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#a7807a"
+        }
+      },
       "transform": {
         "x": 840,
         "y": 1314
@@ -9116,31 +9721,32 @@
       "seed": 2661872300,
       "shape": {
         "width": 150,
-        "height": 66.18117440398782,
-        "tiltDeg": -3.508599812630564,
-        "upperFraction": 0.7069971051346511,
-        "openness": 0.8544503713957965,
+        "height": 89.26943839620799,
+        "tiltDeg": 13.84263643110171,
+        "upperFraction": 0.5768396985530854,
+        "openness": 0.8268497060425579,
         "outerSide": "right",
-        "style": "chibi"
+        "style": "circle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.8029269550577738,
-          "caruncle": 0.5845033446792514
+          "roundness": 0.6944441853673198,
+          "caruncle": 0.2542538012843579
         },
         "outer": {
-          "roundness": 0.38800196718657387
+          "roundness": 0.42831950644031164
         }
       },
       "epicanthicFold": {
-        "amount": 0.5327609256375581,
+        "amount": 0,
         "reach": 0.4449896906502545
       },
       "lids": {
         "crease": {
           "height": 0.19797944417223334,
           "depth": 0.9802792514907195
-        }
+        },
+        "thickness": 0.011855728529792947
       },
       "iris": {
         "material": {
@@ -9207,7 +9813,14 @@
             "spotRadius": 0.12,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "bubbles": {
+            "count": 12,
+            "size": 0.08,
+            "opacity": 0.85
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -9263,6 +9876,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#a5b9dd"
+            },
+            {
+              "offset": 0.5,
+              "color": "#e1eeff"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#a7807a"
+        }
+      },
       "transform": {
         "x": 1080,
         "y": 1314
@@ -9274,31 +9913,32 @@
       "seed": 773405038,
       "shape": {
         "width": 150,
-        "height": 99.11661644862033,
-        "tiltDeg": 1.3060107433702797,
-        "upperFraction": 0.5385646685305983,
-        "openness": 1.0088513396121561,
+        "height": 93.96841323911212,
+        "tiltDeg": 6.5614325169008225,
+        "upperFraction": 0.715423034299165,
+        "openness": 1.0260243411920964,
         "outerSide": "right",
-        "style": "angular"
+        "style": "diamond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.20890120421536268,
-          "caruncle": 0.4632004864048213
+          "roundness": 0.5092225319240242,
+          "caruncle": 0.7650726998690516
         },
         "outer": {
-          "roundness": 0.39078578172484413
+          "roundness": 0.09093305080896244
         }
       },
       "epicanthicFold": {
-        "amount": 0.5709987534675747,
+        "amount": 0,
         "reach": 0.5214236941654236
       },
       "lids": {
         "crease": {
           "height": 0.17873476026579738,
           "depth": 0.9399190878495574
-        }
+        },
+        "thickness": 0.010973268163529984
       },
       "iris": {
         "material": {
@@ -9325,7 +9965,7 @@
           "roughness": 0.2722922932356596,
           "clearcoat": 0.3672425914555788
         },
-        "radius": 0.43283622454809606,
+        "radius": 0.39940612798974984,
         "aspect": 0.9502482688985765,
         "fibers": 74,
         "limbalRing": 0.7128883477533235,
@@ -9381,6 +10021,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#c0b6b3"
+            },
+            {
+              "offset": 0.5,
+              "color": "#f8eaea"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#aca199"
+        }
+      },
       "transform": {
         "x": 1320,
         "y": 1314
@@ -9392,20 +10058,20 @@
       "seed": 342121321,
       "shape": {
         "width": 150,
-        "height": 75.25526570552029,
-        "tiltDeg": -2.4526433660648763,
-        "upperFraction": 0.5216109623480588,
-        "openness": 0.8303170126024633,
+        "height": 92.85764726134948,
+        "tiltDeg": 13.776597201358527,
+        "upperFraction": 0.6923503258544952,
+        "openness": 1.008379086777568,
         "outerSide": "right",
-        "style": "compressed"
+        "style": "diamond_v2"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.058469440939370544,
-          "caruncle": 0.5011207428760827
+          "roundness": 0.361468717106618,
+          "caruncle": 0.5439409656450154
         },
         "outer": {
-          "roundness": 0.18365335450507703
+          "roundness": 0.19566952631575985
         }
       },
       "epicanthicFold": {
@@ -9416,7 +10082,8 @@
         "crease": {
           "height": 0.48913272460922597,
           "depth": 0.9671777493087574
-        }
+        },
+        "thickness": 0.012479055341803824
       },
       "iris": {
         "material": {
@@ -9443,7 +10110,7 @@
           "roughness": 0.2941411135019735,
           "clearcoat": 0.27148592311423275
         },
-        "radius": 0.1696178782572072,
+        "radius": 0.4004327185929343,
         "aspect": 1.2272262942744419,
         "fibers": 46,
         "limbalRing": 0.8444673679070547,
@@ -9500,7 +10167,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.276152532431297,
-            "y": -0.25125254784245044,
+            "y": -0.4250020382739603,
             "size": 0.26653942135162656,
             "intensity": 0.8,
             "confine": "iris"
@@ -9537,6 +10204,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#c6b5b6"
+            },
+            {
+              "offset": 0.5,
+              "color": "#eceee4"
+            },
+            {
+              "offset": 1,
+              "color": "#e2e4da"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#b47b71"
+        }
+      },
       "transform": {
         "x": 1560,
         "y": 1314
@@ -9548,20 +10241,20 @@
       "seed": 1460914658,
       "shape": {
         "width": 150,
-        "height": 103.42883520782925,
-        "tiltDeg": -0.6152950606774539,
-        "upperFraction": 0.5839959567692131,
-        "openness": 1.0824813511408866,
+        "height": 81.90636042295957,
+        "tiltDeg": -0.2847269249614328,
+        "upperFraction": 0.5245508925803006,
+        "openness": 1.0468391867540778,
         "outerSide": "right",
-        "style": "rounded_rect"
+        "style": "almond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.10546494709560647,
-          "caruncle": 0.5812302324455232
+          "roundness": 0.2343833857681602,
+          "caruncle": 0.4313531594816596
         },
         "outer": {
-          "roundness": 0.36972323524532835
+          "roundness": 0.5536826300667599
         }
       },
       "epicanthicFold": {
@@ -9599,7 +10292,7 @@
           "roughness": 0.3131445911480114,
           "clearcoat": 0.3878478730563075
         },
-        "radius": 0.5177040563857916,
+        "radius": 0.48707563665505177,
         "aspect": 1.0843762807780877,
         "fibers": 67,
         "limbalRing": 0.6393950535915792,
@@ -9666,20 +10359,20 @@
       "seed": 3701047744,
       "shape": {
         "width": 150,
-        "height": 97.3981172607746,
-        "tiltDeg": -3.606050546048209,
-        "upperFraction": 0.7174219791591168,
-        "openness": 0.9462549761217087,
+        "height": 88.98445856804028,
+        "tiltDeg": 4.857784712687135,
+        "upperFraction": 0.5538489682413638,
+        "openness": 1.0592984889540822,
         "outerSide": "right",
-        "style": "triangle"
+        "style": "round"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.14690099749714136,
-          "caruncle": 0.2996429354418069
+          "roundness": 0.08680043432395906,
+          "caruncle": 0.686752455495298
         },
         "outer": {
-          "roundness": 0.8255086148972623
+          "roundness": 0.27734574638307097
         }
       },
       "epicanthicFold": {
@@ -9717,8 +10410,8 @@
           "roughness": 0.2149740007938817,
           "clearcoat": 0.3397612309549004
         },
-        "radius": 0.3618590858573842,
-        "aspect": 1.1124109655618668,
+        "radius": 0.55,
+        "aspect": 1.08,
         "fibers": 34,
         "limbalRing": 0.7807505087228491,
         "glow": {
@@ -9798,31 +10491,32 @@
       "seed": 3669960636,
       "shape": {
         "width": 150,
-        "height": 85.68421462015249,
-        "tiltDeg": 3.9251214612741023,
-        "upperFraction": 0.6051015395950526,
-        "openness": 1.0050547060836106,
+        "height": 84.51195795927197,
+        "tiltDeg": 0.8657415939960629,
+        "upperFraction": 0.5289375141542405,
+        "openness": 0.9850101665314287,
         "outerSide": "right",
-        "style": "circle"
+        "style": "sharp"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.537265741021838,
-          "caruncle": 0.5739349776413292
+          "roundness": 0.21486523870844393,
+          "caruncle": 0.716050367197022
         },
         "outer": {
-          "roundness": 0.05226741195656359
+          "roundness": 0.7602761810878292
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.7023289887467399,
         "reach": 0.4613423861563206
       },
       "lids": {
         "crease": {
           "height": 0.1069764118641615,
           "depth": 0.3576090120943263
-        }
+        },
+        "thickness": 0.01339232742704135
       },
       "iris": {
         "material": {
@@ -9849,8 +10543,8 @@
           "roughness": 0.26238377436529847,
           "clearcoat": 0.3379490141058341
         },
-        "radius": 0.55,
-        "aspect": 1.08,
+        "radius": 0.31557207250635444,
+        "aspect": 1.2233866728143767,
         "fibers": 27,
         "limbalRing": 0.7606400101678445,
         "glow": null,
@@ -9889,7 +10583,14 @@
             "spotRadius": 0.12,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "bubbles": {
+            "count": 12,
+            "size": 0.08,
+            "opacity": 0.85
+          }
+        }
       },
       "pupil": {
         "shape": "slit_vertical",
@@ -9945,6 +10646,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#a5b9dd"
+            },
+            {
+              "offset": 0.5,
+              "color": "#e1eeff"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#a7807a"
+        }
+      },
       "transform": {
         "x": 2280,
         "y": 1314
@@ -9956,24 +10683,24 @@
       "seed": 3063515165,
       "shape": {
         "width": 150,
-        "height": 73.8764224103652,
-        "tiltDeg": -4.688474185299128,
-        "upperFraction": 0.574798899171874,
-        "openness": 0.8719065864291042,
+        "height": 101.86240951926447,
+        "tiltDeg": -2.7205686485394835,
+        "upperFraction": 0.5494206717982888,
+        "openness": 0.9383331147953868,
         "outerSide": "right",
-        "style": "diamond"
+        "style": "drooping"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.8155052150716074,
-          "caruncle": 0.2516669587697834
+          "roundness": 0.7111865148763172,
+          "caruncle": 0.6527412806171924
         },
         "outer": {
-          "roundness": 0.3847409756388515
+          "roundness": 0.47974941185675557
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.6435826016357169,
         "reach": 0.7461996679659932
       },
       "lids": {
@@ -10007,7 +10734,7 @@
           "roughness": 0.21244711123872548,
           "clearcoat": 0.32401775186881426
         },
-        "radius": 0.32707763339076057,
+        "radius": 0.3402223516296521,
         "aspect": 1.0542630028212443,
         "fibers": 47,
         "limbalRing": 0.7366709311958402,
@@ -10084,7 +10811,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.22716506733559072,
-            "y": -0.25546159248799083,
+            "y": -0.4283692739903927,
             "size": 0.28214899387676273,
             "intensity": 0.8,
             "confine": "iris"
@@ -10132,20 +10859,20 @@
       "seed": 2940489136,
       "shape": {
         "width": 150,
-        "height": 66.79744856106117,
-        "tiltDeg": -4.906253927620128,
-        "upperFraction": 0.6457354723289609,
-        "openness": 0.8705554702039808,
+        "height": 101.6025845829863,
+        "tiltDeg": 4.362239550566301,
+        "upperFraction": 0.6381193479802459,
+        "openness": 1.0856425771024079,
         "outerSide": "right",
-        "style": "diamond_v2"
+        "style": "chibi"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.34383638688595963,
-          "caruncle": 0.46410095789469785
+          "roundness": 0.4368408169713802,
+          "caruncle": 0.4591294602956623
         },
         "outer": {
-          "roundness": 0.5859638507128694
+          "roundness": 0.6012553988723085
         }
       },
       "epicanthicFold": {
@@ -10183,8 +10910,8 @@
           "roughness": 0.23347811788553371,
           "clearcoat": 0.2542967804474756
         },
-        "radius": 0.2819265356713886,
-        "aspect": 1.196735981060192,
+        "radius": 0.34983526071263604,
+        "aspect": 1.08,
         "fibers": 67,
         "limbalRing": 0.8198050727834925,
         "glow": {
@@ -10278,24 +11005,24 @@
       "seed": 3863641747,
       "shape": {
         "width": 150,
-        "height": 81.90636042295957,
-        "tiltDeg": -0.2847269249614328,
-        "upperFraction": 0.5245508925803006,
-        "openness": 1.0468391867540778,
+        "height": 77.95268525951542,
+        "tiltDeg": -1.30629365821369,
+        "upperFraction": 0.5296500584390015,
+        "openness": 1.09524523855187,
         "outerSide": "right",
-        "style": "almond"
+        "style": "angular"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.2343833857681602,
-          "caruncle": 0.4313531594816596
+          "roundness": 0.48941591641632837,
+          "caruncle": 0.6094581880606711
         },
         "outer": {
-          "roundness": 0.5536826300667599
+          "roundness": 0.5172088266117498
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.43742449635174124,
         "reach": 0.9395233975257724
       },
       "lids": {
@@ -10329,7 +11056,7 @@
           "roughness": 0.20062192340847104,
           "clearcoat": 0.19238586984574796
         },
-        "radius": 0.44277561580176006,
+        "radius": 0.37662871012114774,
         "aspect": 1.192868912569247,
         "fibers": 36,
         "limbalRing": 0.765420580515638,
@@ -10402,24 +11129,24 @@
       "seed": 2421309046,
       "shape": {
         "width": 150,
-        "height": 102.70740426401608,
-        "tiltDeg": -4.595398930832744,
-        "upperFraction": 0.5838689334969968,
-        "openness": 1.0262139542028308,
+        "height": 99.74618031783027,
+        "tiltDeg": 10.58254417590797,
+        "upperFraction": 0.6510816327575594,
+        "openness": 1.0243234792910516,
         "outerSide": "right",
-        "style": "round"
+        "style": "compressed"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.83309373522643,
-          "caruncle": 0.3970667312853039
+          "roundness": 0.05046831814106554,
+          "caruncle": 0.7216841520741584
         },
         "outer": {
-          "roundness": 0.25839663818478587
+          "roundness": 0.7872149711358362
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.9048586414195596,
         "reach": 0.5277709963731467
       },
       "lids": {
@@ -10453,8 +11180,8 @@
           "roughness": 0.35614414860028776,
           "clearcoat": 0.22642721608281138
         },
-        "radius": 0.55,
-        "aspect": 1.08,
+        "radius": 0.22799376218275333,
+        "aspect": 1.17337211209815,
         "fibers": 26,
         "limbalRing": 0.7209949821000918,
         "glow": {
@@ -10487,7 +11214,19 @@
             "spotRadius": 0.1,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 14,
+            "rings": 2,
+            "contrast": 0.5
+          },
+          "bubbles": {
+            "count": 8,
+            "size": 0.06,
+            "opacity": 0.8
+          }
+        }
       },
       "pupil": {
         "shape": "slit_vertical",
@@ -10521,7 +11260,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.22420145280193537,
-            "y": -0.28221951628103853,
+            "y": -0.4497756130248308,
             "size": 0.2765253153862432,
             "intensity": 0.8,
             "confine": "iris"
@@ -10569,20 +11308,20 @@
       "seed": 1293935272,
       "shape": {
         "width": 150,
-        "height": 103.61241656122729,
-        "tiltDeg": -3.7960865823552012,
-        "upperFraction": 0.6134454844798892,
-        "openness": 1.0592103153374046,
+        "height": 103.42883520782925,
+        "tiltDeg": -0.6152950606774539,
+        "upperFraction": 0.5839959567692131,
+        "openness": 1.0824813511408866,
         "outerSide": "right",
-        "style": "sharp"
+        "style": "rounded_rect"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.3488749620388262,
-          "caruncle": 0.5219584167934954
+          "roundness": 0.10546494709560647,
+          "caruncle": 0.5812302324455232
         },
         "outer": {
-          "roundness": 0.5045819056569598
+          "roundness": 0.36972323524532835
         }
       },
       "epicanthicFold": {
@@ -10620,7 +11359,7 @@
           "roughness": 0.31316899820230903,
           "clearcoat": 0.301414642110467
         },
-        "radius": 0.3445464421340154,
+        "radius": 0.4936403221222458,
         "aspect": 1.1372369193704799,
         "fibers": 66,
         "limbalRing": 0.8356320000719278,
@@ -10715,20 +11454,20 @@
       "seed": 1843546664,
       "shape": {
         "width": 150,
-        "height": 88.31679603061637,
-        "tiltDeg": 13.937622666591778,
-        "upperFraction": 0.5384401801321655,
-        "openness": 1.0709092879481614,
+        "height": 98.7335261113476,
+        "tiltDeg": 3.6063993251882493,
+        "upperFraction": 0.6549970494396984,
+        "openness": 1.0557417062297465,
         "outerSide": "right",
-        "style": "drooping"
+        "style": "triangle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.6345357309794054,
-          "caruncle": 0.5240230614319444
+          "roundness": 0.13570892427815123,
+          "caruncle": 0.4387700974475593
         },
         "outer": {
-          "roundness": 0.4657379724550992
+          "roundness": 0.08058911563130096
         }
       },
       "epicanthicFold": {
@@ -10766,7 +11505,7 @@
           "roughness": 0.2177147563546896,
           "clearcoat": 0.15534284156747163
         },
-        "radius": 0.37603031359183825,
+        "radius": 0.42757224410441647,
         "aspect": 1.057554032979533,
         "fibers": 55,
         "limbalRing": 0.7728947127470747,
@@ -10842,20 +11581,20 @@
       "seed": 3826259716,
       "shape": {
         "width": 150,
-        "height": 98.33589005260727,
-        "tiltDeg": 2.9182897936552763,
-        "upperFraction": 0.6572174493502825,
-        "openness": 1.0410968985315412,
+        "height": 85.68421462015249,
+        "tiltDeg": 3.9251214612741023,
+        "upperFraction": 0.6051015395950526,
+        "openness": 1.0050547060836106,
         "outerSide": "right",
-        "style": "chibi"
+        "style": "circle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.7196400659391656,
-          "caruncle": 0.6554167666472495
+          "roundness": 0.537265741021838,
+          "caruncle": 0.5739349776413292
         },
         "outer": {
-          "roundness": 0.2648841814720072
+          "roundness": 0.05226741195656359
         }
       },
       "epicanthicFold": {
@@ -10953,7 +11692,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.23854617110919207,
-            "y": -0.2201463268417865,
+            "y": -0.4001170614734292,
             "size": 0.22569787919055673,
             "intensity": 0.8,
             "confine": "iris"
@@ -11001,20 +11740,20 @@
       "seed": 3682479760,
       "shape": {
         "width": 150,
-        "height": 102.37400834122673,
-        "tiltDeg": -4.874672276433557,
-        "upperFraction": 0.7183680610079318,
-        "openness": 1.0977450117934495,
+        "height": 80.2037218795158,
+        "tiltDeg": 0.28968464373610914,
+        "upperFraction": 0.5393926936946809,
+        "openness": 0.9640960142202676,
         "outerSide": "right",
-        "style": "angular"
+        "style": "diamond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.7413128737243824,
-          "caruncle": 0.5242225841153414
+          "roundness": 0.7714708629064262,
+          "caruncle": 0.27839579130522907
         },
         "outer": {
-          "roundness": 0.5519818088738248
+          "roundness": 0.7050445024855435
         }
       },
       "epicanthicFold": {
@@ -11025,7 +11764,8 @@
         "crease": {
           "height": 0.3107077527791262,
           "depth": 0.5906837700866163
-        }
+        },
+        "thickness": 0.014757392622267551
       },
       "iris": {
         "material": {
@@ -11052,7 +11792,7 @@
           "roughness": 0.2866002599243075,
           "clearcoat": 0.27323813426774
         },
-        "radius": 0.55,
+        "radius": 0.5317724659608046,
         "aspect": 1.2388836518628523,
         "fibers": 45,
         "limbalRing": 0.8214970745611936,
@@ -11115,7 +11855,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2616213344503194,
-            "y": -0.28217708017211407,
+            "y": -0.4497416641376913,
             "size": 0.25996949488762766,
             "intensity": 0.8,
             "confine": "iris"
@@ -11152,6 +11892,32 @@
         "intensity": 1
       },
       "archetype": "doll",
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#a5b9dd"
+            },
+            {
+              "offset": 0.5,
+              "color": "#e1eeff"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#a7807a"
+        }
+      },
       "transform": {
         "x": 1800,
         "y": 1514
@@ -11163,24 +11929,24 @@
       "seed": 1614299485,
       "shape": {
         "width": 150,
-        "height": 99.74618031783027,
-        "tiltDeg": 10.58254417590797,
-        "upperFraction": 0.6510816327575594,
-        "openness": 1.0243234792910516,
+        "height": 86.85056092450394,
+        "tiltDeg": -4.337986258091405,
+        "upperFraction": 0.6981624202616512,
+        "openness": 0.9511288580391556,
         "outerSide": "right",
-        "style": "compressed"
+        "style": "diamond_v2"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.05046831814106554,
-          "caruncle": 0.7216841520741584
+          "roundness": 0.4010448726010509,
+          "caruncle": 0.24102900824509563
         },
         "outer": {
-          "roundness": 0.7872149711358362
+          "roundness": 0.5091778172296472
         }
       },
       "epicanthicFold": {
-        "amount": 0.9048586414195596,
+        "amount": 0,
         "reach": 0.7272938271518796
       },
       "lids": {
@@ -11214,7 +11980,7 @@
           "roughness": 0.39866620980901646,
           "clearcoat": 0.2328660361003131
         },
-        "radius": 0.21863808676735227,
+        "radius": 0.34085987634098514,
         "aspect": 1.223581518814899,
         "fibers": 36,
         "limbalRing": 0.8223552650772035,
@@ -11281,20 +12047,20 @@
       "seed": 771634349,
       "shape": {
         "width": 150,
-        "height": 88.7770079432521,
-        "tiltDeg": 13.45783826825209,
-        "upperFraction": 0.613683401402086,
-        "openness": 0.8732500685378909,
+        "height": 86.80652001849376,
+        "tiltDeg": 13.066864483291283,
+        "upperFraction": 0.6414794223662466,
+        "openness": 1.035973956314847,
         "outerSide": "right",
-        "style": "rounded_rect"
+        "style": "almond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.3077881259610876,
-          "caruncle": 0.23118652631528677
+          "roundness": 0.2991600019740872,
+          "caruncle": 0.2113761501852423
         },
         "outer": {
-          "roundness": 0.11816084701567889
+          "roundness": 0.8066811367869378
         }
       },
       "epicanthicFold": {
@@ -11332,7 +12098,7 @@
           "roughness": 0.3982527543907054,
           "clearcoat": 0.27073385335970673
         },
-        "radius": 0.37275255837135834,
+        "radius": 0.4483787631022893,
         "aspect": 1.1494005969259888,
         "fibers": 32,
         "limbalRing": 0.6655939310789108,
@@ -11392,7 +12158,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.20761877687182276,
-            "y": -0.3107764608738944,
+            "y": -0.4726211686991155,
             "size": 0.27242076748516414,
             "intensity": 0.8,
             "confine": "iris"
@@ -11440,20 +12206,20 @@
       "seed": 2226747691,
       "shape": {
         "width": 150,
-        "height": 85.54093303182162,
-        "tiltDeg": 13.934601957676932,
-        "upperFraction": 0.6957811184506864,
-        "openness": 0.8387846782710403,
+        "height": 102.70740426401608,
+        "tiltDeg": -4.595398930832744,
+        "upperFraction": 0.5838689334969968,
+        "openness": 1.0262139542028308,
         "outerSide": "right",
-        "style": "triangle"
+        "style": "round"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.6467815668205731,
-          "caruncle": 0.20409185849130154
+          "roundness": 0.83309373522643,
+          "caruncle": 0.3970667312853039
         },
         "outer": {
-          "roundness": 0.3023813113803044
+          "roundness": 0.25839663818478587
         }
       },
       "epicanthicFold": {
@@ -11491,8 +12257,8 @@
           "roughness": 0.39202475795755165,
           "clearcoat": 0.14759973420295866
         },
-        "radius": 0.5404319624041359,
-        "aspect": 0.9998322634026408,
+        "radius": 0.55,
+        "aspect": 1,
         "fibers": 67,
         "limbalRing": 0.7980563445948063,
         "glow": {
@@ -11581,24 +12347,24 @@
       "seed": 2631769331,
       "shape": {
         "width": 150,
-        "height": 103.50934888282792,
-        "tiltDeg": 2.7206651570741087,
-        "upperFraction": 0.5857723411452025,
-        "openness": 0.8797258818335831,
+        "height": 101.06253908062354,
+        "tiltDeg": -1.1493484729435295,
+        "upperFraction": 0.5968004963174462,
+        "openness": 1.0630641234107316,
         "outerSide": "right",
-        "style": "circle"
+        "style": "drooping"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.13169844748917967,
-          "caruncle": 0.3506137852557004
+          "roundness": 0.2878102461225353,
+          "caruncle": 0.4015841669403017
         },
         "outer": {
-          "roundness": 0.7455926533439197
+          "roundness": 0.7508888736716471
         }
       },
       "epicanthicFold": {
-        "amount": 0.33427083226852117,
+        "amount": 0.6854183437535539,
         "reach": 0.817556933220476
       },
       "lids": {
@@ -11632,7 +12398,7 @@
           "roughness": 0.31128063935320827,
           "clearcoat": 0.2137969197938219
         },
-        "radius": 0.55,
+        "radius": 0.3854646995200763,
         "aspect": 1.0140814806334675,
         "fibers": 41,
         "limbalRing": 0.6064520471496507,
@@ -11675,7 +12441,14 @@
             "irregularity": 0.5,
             "opacity": 0.8
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 18,
+            "rings": 3,
+            "contrast": 0.75
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -11709,7 +12482,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.29044326136354354,
-            "y": -0.22309942802414298,
+            "y": -0.4024795424193144,
             "size": 0.29730479277204724,
             "intensity": 0.8,
             "confine": "iris"
@@ -11757,20 +12530,20 @@
       "seed": 1034495380,
       "shape": {
         "width": 150,
-        "height": 101.66133404010905,
-        "tiltDeg": 12.477642162470147,
-        "upperFraction": 0.6027831416856497,
-        "openness": 0.8794203983340412,
+        "height": 87.29035346210004,
+        "tiltDeg": 3.201454842230305,
+        "upperFraction": 0.6101436178013683,
+        "openness": 1.0948224604316057,
         "outerSide": "right",
-        "style": "diamond"
+        "style": "chibi"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.1873803142574616,
-          "caruncle": 0.487486481294036
+          "roundness": 0.5360263813170605,
+          "caruncle": 0.20777883068658412
         },
         "outer": {
-          "roundness": 0.6819883478572593
+          "roundness": 0.44057328603230417
         }
       },
       "epicanthicFold": {
@@ -11808,7 +12581,7 @@
           "roughness": 0.23611214358825236,
           "clearcoat": 0.25566713290754706
         },
-        "radius": 0.361679866986562,
+        "radius": 0.55,
         "aspect": 1.0003356706583872,
         "fibers": 27,
         "limbalRing": 0.7400552748469635,
@@ -11848,7 +12621,14 @@
             "irregularity": 0.5,
             "opacity": 0.8
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 18,
+            "rings": 3,
+            "contrast": 0.75
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -11882,7 +12662,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.24735422860831022,
-            "y": -0.22246872827410696,
+            "y": -0.4019749826192856,
             "size": 0.2610200553201139,
             "intensity": 0.8,
             "confine": "iris"
@@ -11930,20 +12710,20 @@
       "seed": 1629270780,
       "shape": {
         "width": 150,
-        "height": 67.96299587236717,
-        "tiltDeg": 9.766673584003001,
-        "upperFraction": 0.5460554297827185,
-        "openness": 0.8237863701954483,
+        "height": 102.06251795450225,
+        "tiltDeg": 5.267770046833903,
+        "upperFraction": 0.6728762117959559,
+        "openness": 1.0989824328757822,
         "outerSide": "right",
-        "style": "diamond_v2"
+        "style": "angular"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.4758656863705255,
-          "caruncle": 0.4675544875208289
+          "roundness": 0.6810305585851893,
+          "caruncle": 0.6911988708656283
         },
         "outer": {
-          "roundness": 0.3529149697744287
+          "roundness": 0.7802629387937486
         }
       },
       "epicanthicFold": {
@@ -11981,7 +12761,7 @@
           "roughness": 0.27249698565574365,
           "clearcoat": 0.2818159325048328
         },
-        "radius": 0.40047221386294907,
+        "radius": 0.35562437252316315,
         "aspect": 1.2344652333064006,
         "fibers": 57,
         "limbalRing": 0.7088118018116801,
@@ -12021,7 +12801,14 @@
             "spotRadius": 0.12,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "bubbles": {
+            "count": 12,
+            "size": 0.08,
+            "opacity": 0.85
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -12104,20 +12891,20 @@
       "seed": 2160137303,
       "shape": {
         "width": 150,
-        "height": 86.80652001849376,
-        "tiltDeg": 13.066864483291283,
-        "upperFraction": 0.6414794223662466,
-        "openness": 1.035973956314847,
+        "height": 79.84398434800096,
+        "tiltDeg": 5.299591130809858,
+        "upperFraction": 0.5264760961104185,
+        "openness": 1.014519075555727,
         "outerSide": "right",
-        "style": "almond"
+        "style": "compressed"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.2991600019740872,
-          "caruncle": 0.2113761501852423
+          "roundness": 0.6785102889989503,
+          "caruncle": 0.5971216254401952
         },
         "outer": {
-          "roundness": 0.8066811367869378
+          "roundness": 0.3021633380558342
         }
       },
       "epicanthicFold": {
@@ -12155,7 +12942,7 @@
           "roughness": 0.15232712243450805,
           "clearcoat": 0.12228561346419156
         },
-        "radius": 0.41802054765018004,
+        "radius": 0.213030018828468,
         "aspect": 1.2330851865466683,
         "fibers": 50,
         "limbalRing": 0.6102040891069919,
@@ -12212,7 +12999,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2092923130840063,
-            "y": -0.2496617788495496,
+            "y": -0.4237294230796397,
             "size": 0.29155090174172077,
             "intensity": 0.8,
             "confine": "iris"
@@ -12265,24 +13052,24 @@
       "seed": 3458015587,
       "shape": {
         "width": 150,
-        "height": 76.24651825614274,
-        "tiltDeg": 11.379668619018048,
-        "upperFraction": 0.5333939903229475,
-        "openness": 0.9936123859044165,
+        "height": 85.29634744115174,
+        "tiltDeg": 13.792606011033058,
+        "upperFraction": 0.5214529064297676,
+        "openness": 0.9913853166811168,
         "outerSide": "right",
-        "style": "round"
+        "style": "rounded_rect"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.47014979993691663,
-          "caruncle": 0.7046323023270817
+          "roundness": 0.21288094758056103,
+          "caruncle": 0.5189049505162985
         },
         "outer": {
-          "roundness": 0.6318944028578699
+          "roundness": 0.5805630465387367
         }
       },
       "epicanthicFold": {
-        "amount": 0.3020543238148093,
+        "amount": 0.9404314161278307,
         "reach": 0.9203978002537042
       },
       "lids": {
@@ -12316,8 +13103,8 @@
           "roughness": 0.25979750921251255,
           "clearcoat": 0.1661197938024998
         },
-        "radius": 0.55,
-        "aspect": 1.08,
+        "radius": 0.4111937774257492,
+        "aspect": 1.1795630234992132,
         "fibers": 35,
         "limbalRing": 0.6580161970574409,
         "glow": null,
@@ -12373,7 +13160,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.23140892628580328,
-            "y": -0.2844703116035089,
+            "y": -0.4515762492828071,
             "size": 0.2893476217519492,
             "intensity": 0.8,
             "confine": "iris"
@@ -12421,24 +13208,24 @@
       "seed": 3342403840,
       "shape": {
         "width": 150,
-        "height": 95.65560948103666,
-        "tiltDeg": 13.909148098668084,
-        "upperFraction": 0.5681649504508823,
-        "openness": 0.9038225338794291,
+        "height": 74.93079364998266,
+        "tiltDeg": -4.64147466653958,
+        "upperFraction": 0.6699483065214008,
+        "openness": 1.097638450022787,
         "outerSide": "right",
-        "style": "sharp"
+        "style": "triangle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.840316014608834,
-          "caruncle": 0.573723634518683
+          "roundness": 0.821569082676433,
+          "caruncle": 0.501848084339872
         },
         "outer": {
-          "roundness": 0.45517233560094605
+          "roundness": 0.7023267913376913
         }
       },
       "epicanthicFold": {
-        "amount": 0.37310296967625617,
+        "amount": 0,
         "reach": 0.4726240315008909
       },
       "lids": {
@@ -12472,7 +13259,7 @@
           "roughness": 0.15104870344512164,
           "clearcoat": 0.28163392373826357
         },
-        "radius": 0.27230961445912594,
+        "radius": 0.3905647447533812,
         "aspect": 1.1888539921958,
         "fibers": 38,
         "limbalRing": 0.8071701306151225,
@@ -12506,7 +13293,19 @@
             "spotRadius": 0.1,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 14,
+            "rings": 2,
+            "contrast": 0.5
+          },
+          "bubbles": {
+            "count": 8,
+            "size": 0.06,
+            "opacity": 0.8
+          }
+        }
       },
       "pupil": {
         "shape": "diamond",
@@ -12534,7 +13333,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.23312309426255523,
-            "y": -0.23451409047003835,
+            "y": -0.4116112723760307,
             "size": 0.282443370227702,
             "intensity": 0.8,
             "confine": "iris"
@@ -12582,24 +13381,24 @@
       "seed": 2839283444,
       "shape": {
         "width": 150,
-        "height": 96.80644757836123,
-        "tiltDeg": 12.774427726864815,
-        "upperFraction": 0.6698030264861882,
-        "openness": 1.0002102730888873,
+        "height": 103.50934888282792,
+        "tiltDeg": 2.7206651570741087,
+        "upperFraction": 0.5857723411452025,
+        "openness": 0.8797258818335831,
         "outerSide": "right",
-        "style": "drooping"
+        "style": "circle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.1122900432907045,
-          "caruncle": 0.5524483376648277
+          "roundness": 0.13169844748917967,
+          "caruncle": 0.3506137852557004
         },
         "outer": {
-          "roundness": 0.5462940480560065
+          "roundness": 0.7455926533439197
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.33427083226852117,
         "reach": 0.6283202049788088
       },
       "lids": {
@@ -12633,8 +13432,8 @@
           "roughness": 0.372238784073852,
           "clearcoat": 0.3626815625699238
         },
-        "radius": 0.3272563399425387,
-        "aspect": 1.08204177133739,
+        "radius": 0.30979085798615963,
+        "aspect": 1.08,
         "fibers": 41,
         "limbalRing": 0.8664085927186533,
         "glow": {
@@ -12667,7 +13466,19 @@
             "spotRadius": 0.1,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 14,
+            "rings": 2,
+            "contrast": 0.5
+          },
+          "bubbles": {
+            "count": 8,
+            "size": 0.06,
+            "opacity": 0.8
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -12695,7 +13506,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2911588860210031,
-            "y": -0.23792948639485983,
+            "y": -0.41434358911588787,
             "size": 0.23062506155110896,
             "intensity": 0.8,
             "confine": "iris"
@@ -12743,24 +13554,24 @@
       "seed": 762666830,
       "shape": {
         "width": 150,
-        "height": 70.37126935855485,
-        "tiltDeg": 13.2576564156916,
-        "upperFraction": 0.6050545900408179,
-        "openness": 0.9966604683827609,
+        "height": 77.67235104320571,
+        "tiltDeg": -2.904733812669292,
+        "upperFraction": 0.693987333662808,
+        "openness": 0.8564228909742087,
         "outerSide": "right",
-        "style": "chibi"
+        "style": "diamond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.8559700185898692,
-          "caruncle": 0.6670322534162552
+          "roundness": 0.8591899826307782,
+          "caruncle": 0.6392655388452113
         },
         "outer": {
-          "roundness": 0.7638755529886112
+          "roundness": 0.31856972838286307
         }
       },
       "epicanthicFold": {
-        "amount": 0,
+        "amount": 0.8890981209930031,
         "reach": 0.5069422563072294
       },
       "lids": {
@@ -12794,8 +13605,8 @@
           "roughness": 0.33962766428012403,
           "clearcoat": 0.23572276597842576
         },
-        "radius": 0.55,
-        "aspect": 1.08,
+        "radius": 0.2577253060833505,
+        "aspect": 1.1816188361262903,
         "fibers": 79,
         "limbalRing": 0.7843385340878739,
         "glow": {
@@ -12854,7 +13665,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2990534221753478,
-            "y": -0.2765491278655827,
+            "y": -0.44523930229246617,
             "size": 0.20585536246653646,
             "intensity": 0.8,
             "confine": "iris"
@@ -12902,20 +13713,20 @@
       "seed": 1092535604,
       "shape": {
         "width": 150,
-        "height": 96.81231966102496,
-        "tiltDeg": 11.297954420326278,
-        "upperFraction": 0.6668117686919868,
-        "openness": 1.0636685676313937,
+        "height": 91.95253754057921,
+        "tiltDeg": 13.631517652887851,
+        "upperFraction": 0.6291253572609276,
+        "openness": 0.8529693827498703,
         "outerSide": "right",
-        "style": "angular"
+        "style": "diamond_v2"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.7994067212333903,
-          "caruncle": 0.22464835406281056
+          "roundness": 0.06171164269326255,
+          "caruncle": 0.6681558909825982
         },
         "outer": {
-          "roundness": 0.7537977579049766
+          "roundness": 0.7933864505495877
         }
       },
       "epicanthicFold": {
@@ -12926,7 +13737,8 @@
         "crease": {
           "height": 0.11700885109603405,
           "depth": 0.4955198390642181
-        }
+        },
+        "thickness": 0.012005445438637328
       },
       "iris": {
         "material": {
@@ -12953,7 +13765,7 @@
           "roughness": 0.313097943761386,
           "clearcoat": 0.3818998664151878
         },
-        "radius": 0.3622415545666418,
+        "radius": 0.4060634501327256,
         "aspect": 1.1260315012885258,
         "fibers": 67,
         "limbalRing": 0.6279151866445317,
@@ -12996,7 +13808,14 @@
             "spotRadius": 0.12,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "bubbles": {
+            "count": 12,
+            "size": 0.08,
+            "opacity": 0.85
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -13052,6 +13871,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#a5b9dd"
+            },
+            {
+              "offset": 0.5,
+              "color": "#e1eeff"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#a7807a"
+        }
+      },
       "transform": {
         "x": 2280,
         "y": 1714
@@ -13063,20 +13908,20 @@
       "seed": 2613248916,
       "shape": {
         "width": 150,
-        "height": 79.84398434800096,
-        "tiltDeg": 5.299591130809858,
-        "upperFraction": 0.5264760961104185,
-        "openness": 1.014519075555727,
+        "height": 104.98501037433742,
+        "tiltDeg": 3.487037332961336,
+        "upperFraction": 0.6758031682390719,
+        "openness": 1.0949145716801287,
         "outerSide": "right",
-        "style": "compressed"
+        "style": "almond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.6785102889989503,
-          "caruncle": 0.5971216254401952
+          "roundness": 0.8794394382508471,
+          "caruncle": 0.6737305391579866
         },
         "outer": {
-          "roundness": 0.3021633380558342
+          "roundness": 0.5472295337123796
         }
       },
       "epicanthicFold": {
@@ -13114,7 +13959,7 @@
           "roughness": 0.36313810435822236,
           "clearcoat": 0.11077474954072386
         },
-        "radius": 0.2674250711342487,
+        "radius": 0.55,
         "aspect": 0.9826021793298423,
         "fibers": 25,
         "limbalRing": 0.6367996139684692,
@@ -13192,24 +14037,24 @@
       "seed": 3241426357,
       "shape": {
         "width": 150,
-        "height": 85.29634744115174,
-        "tiltDeg": 13.792606011033058,
-        "upperFraction": 0.5214529064297676,
-        "openness": 0.9913853166811168,
+        "height": 76.24651825614274,
+        "tiltDeg": 11.379668619018048,
+        "upperFraction": 0.5333939903229475,
+        "openness": 0.9936123859044165,
         "outerSide": "right",
-        "style": "rounded_rect"
+        "style": "round"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.21288094758056103,
-          "caruncle": 0.5189049505162985
+          "roundness": 0.47014979993691663,
+          "caruncle": 0.7046323023270817
         },
         "outer": {
-          "roundness": 0.5805630465387367
+          "roundness": 0.6318944028578699
         }
       },
       "epicanthicFold": {
-        "amount": 0.9404314161278307,
+        "amount": 0.3020543238148093,
         "reach": 0.40434697875753045
       },
       "lids": {
@@ -13243,8 +14088,8 @@
           "roughness": 0.24843142319004982,
           "clearcoat": 0.2934769814833999
         },
-        "radius": 0.4180213066689851,
-        "aspect": 1.1602972566382959,
+        "radius": 0.55,
+        "aspect": 1.08,
         "fibers": 47,
         "limbalRing": 0.8199360814411193,
         "glow": {
@@ -13313,20 +14158,20 @@
       "seed": 453682470,
       "shape": {
         "width": 150,
-        "height": 102.18061945284715,
-        "tiltDeg": 3.372202444821596,
-        "upperFraction": 0.5309118262771517,
-        "openness": 0.9939980715326965,
+        "height": 66.13079462852329,
+        "tiltDeg": 10.51064151036553,
+        "upperFraction": 0.6686778658349066,
+        "openness": 0.8628949126042426,
         "outerSide": "right",
-        "style": "triangle"
+        "style": "chibi"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.48058521837228907,
-          "caruncle": 0.7674573256168515
+          "roundness": 0.8598723096423783,
+          "caruncle": 0.2697031205520034
         },
         "outer": {
-          "roundness": 0.1530316293006763
+          "roundness": 0.34277981162304055
         }
       },
       "epicanthicFold": {
@@ -13337,7 +14182,8 @@
         "crease": {
           "height": 0,
           "depth": 0.7642459746217355
-        }
+        },
+        "thickness": 0.014048462373107907
       },
       "iris": {
         "material": {
@@ -13364,8 +14210,8 @@
           "roughness": 0.16065808651037514,
           "clearcoat": 0.2062935917172581
         },
-        "radius": 0.439587596762974,
-        "aspect": 0.9690802447497844,
+        "radius": 0.55,
+        "aspect": 1,
         "fibers": 33,
         "limbalRing": 0.6569126933813095,
         "glow": null,
@@ -13451,6 +14297,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#cdb0c5"
+            },
+            {
+              "offset": 0.5,
+              "color": "#ffe6e6"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#b69794"
+        }
+      },
       "transform": {
         "x": 600,
         "y": 1914
@@ -13462,20 +14334,20 @@
       "seed": 468355730,
       "shape": {
         "width": 150,
-        "height": 89.82349364971742,
-        "tiltDeg": 7.051309066591784,
-        "upperFraction": 0.6457774010300636,
-        "openness": 1.0986880476307124,
+        "height": 81.60320170735942,
+        "tiltDeg": 12.393526633037254,
+        "upperFraction": 0.674019644903019,
+        "openness": 0.9067640362679958,
         "outerSide": "right",
-        "style": "circle"
+        "style": "angular"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.8660863117431291,
-          "caruncle": 0.7835083283483983
+          "roundness": 0.4164782095584087,
+          "caruncle": 0.7904117068275811
         },
         "outer": {
-          "roundness": 0.42321245559724047
+          "roundness": 0.8715101120062173
         }
       },
       "epicanthicFold": {
@@ -13513,8 +14385,8 @@
           "roughness": 0.24265860205050557,
           "clearcoat": 0.38022340056486437
         },
-        "radius": 0.55,
-        "aspect": 1.08,
+        "radius": 0.3094254449430089,
+        "aspect": 1.1118962784297763,
         "fibers": 37,
         "limbalRing": 0.814484580536373,
         "glow": {
@@ -13556,7 +14428,14 @@
             "spotRadius": 0.12,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "bubbles": {
+            "count": 12,
+            "size": 0.08,
+            "opacity": 0.85
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -13623,20 +14502,20 @@
       "seed": 1557284597,
       "shape": {
         "width": 150,
-        "height": 101.26411961135453,
-        "tiltDeg": -1.0576375261880457,
-        "upperFraction": 0.5401248631812632,
-        "openness": 1.0061666540056469,
+        "height": 82.71690956060773,
+        "tiltDeg": -4.939667298924178,
+        "upperFraction": 0.7124434800166637,
+        "openness": 1.0018656807672233,
         "outerSide": "right",
-        "style": "diamond"
+        "style": "compressed"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.6496044707717374,
-          "caruncle": 0.6006596974562854
+          "roundness": 0.22286268797470254,
+          "caruncle": 0.24308668011799456
         },
         "outer": {
-          "roundness": 0.3295130546786822
+          "roundness": 0.1371999531867914
         }
       },
       "epicanthicFold": {
@@ -13674,7 +14553,7 @@
           "roughness": 0.2980587311089039,
           "clearcoat": 0.3943718388909474
         },
-        "radius": 0.55,
+        "radius": 0.5038650922529189,
         "aspect": 1.242600343702361,
         "fibers": 79,
         "limbalRing": 0.6100083081750199,
@@ -13717,7 +14596,14 @@
             "spotRadius": 0.12,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "bubbles": {
+            "count": 12,
+            "size": 0.08,
+            "opacity": 0.85
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -13789,24 +14675,24 @@
       "seed": 4062366346,
       "shape": {
         "width": 150,
-        "height": 85.49409850593656,
-        "tiltDeg": 13.874864985235035,
-        "upperFraction": 0.5290018320363015,
-        "openness": 1.0424662306066603,
+        "height": 79.95175192086025,
+        "tiltDeg": -2.8082692155148834,
+        "upperFraction": 0.5813247721921653,
+        "openness": 0.9388110146764665,
         "outerSide": "right",
-        "style": "diamond_v2"
+        "style": "rounded_rect"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.45168114686384797,
-          "caruncle": 0.5565789512824268
+          "roundness": 0.16176334918709473,
+          "caruncle": 0.6274018731433899
         },
         "outer": {
-          "roundness": 0.19830589728662745
+          "roundness": 0.16401026698295026
         }
       },
       "epicanthicFold": {
-        "amount": 0.8800974687561391,
+        "amount": 0.9195142902201041,
         "reach": 0.8738181410823017
       },
       "lids": {
@@ -13840,7 +14726,7 @@
           "roughness": 0.3729847976122983,
           "clearcoat": 0.24809079524129632
         },
-        "radius": 0.435551197660181,
+        "radius": 0.4049636602010451,
         "aspect": 1.1995671409647912,
         "fibers": 66,
         "limbalRing": 0.8895480544539168,
@@ -13907,20 +14793,20 @@
       "seed": 272164961,
       "shape": {
         "width": 150,
-        "height": 94.40125190117396,
-        "tiltDeg": -4.497931621503085,
-        "upperFraction": 0.620624241726473,
-        "openness": 1.0728837844915688,
+        "height": 89.82349364971742,
+        "tiltDeg": 7.051309066591784,
+        "upperFraction": 0.6457774010300636,
+        "openness": 1.0986880476307124,
         "outerSide": "right",
-        "style": "chibi"
+        "style": "circle"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.45998732639709483,
-          "caruncle": 0.776004445180297
+          "roundness": 0.8660863117431291,
+          "caruncle": 0.7835083283483983
         },
         "outer": {
-          "roundness": 0.25788306249305604
+          "roundness": 0.42321245559724047
         }
       },
       "epicanthicFold": {
@@ -14056,20 +14942,20 @@
       "seed": 3667364244,
       "shape": {
         "width": 150,
-        "height": 76.3549813781865,
-        "tiltDeg": 10.047677875962108,
-        "upperFraction": 0.5249642589408905,
-        "openness": 0.8201751989964395,
+        "height": 67.92944531980902,
+        "tiltDeg": 11.38830347917974,
+        "upperFraction": 0.5485303605720401,
+        "openness": 1.0232375205866993,
         "outerSide": "right",
-        "style": "angular"
+        "style": "diamond"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.7024013241403736,
-          "caruncle": 0.7491634170990438
+          "roundness": 0.863105112046469,
+          "caruncle": 0.716188279958442
         },
         "outer": {
-          "roundness": 0.13294480693293736
+          "roundness": 0.5027788434294053
         }
       },
       "epicanthicFold": {
@@ -14080,7 +14966,8 @@
         "crease": {
           "height": 0,
           "depth": 0.9702019216259941
-        }
+        },
+        "thickness": 0.014105542696107965
       },
       "iris": {
         "material": {
@@ -14107,7 +14994,7 @@
           "roughness": 0.1860158742405474,
           "clearcoat": 0.2336837337817997
         },
-        "radius": 0.27420157844274695,
+        "radius": 0.4343820677499233,
         "aspect": 1.1630295457085595,
         "fibers": 31,
         "limbalRing": 0.7999503781087696,
@@ -14186,6 +15073,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#bbb4cb"
+            },
+            {
+              "offset": 0.5,
+              "color": "#fbe9f1"
+            },
+            {
+              "offset": 1,
+              "color": "#e4bcc8"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#9f8b8c"
+        }
+      },
       "transform": {
         "x": 1800,
         "y": 1914
@@ -14197,20 +15110,20 @@
       "seed": 3895247432,
       "shape": {
         "width": 150,
-        "height": 94.5914788779337,
-        "tiltDeg": 7.03911177883856,
-        "upperFraction": 0.6446069840155542,
-        "openness": 1.0881217994261534,
+        "height": 92.68249696400017,
+        "tiltDeg": 13.227993708336726,
+        "upperFraction": 0.6210444863699377,
+        "openness": 1.0628193899430336,
         "outerSide": "right",
-        "style": "rounded_rect"
+        "style": "angular"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.53414546957938,
-          "caruncle": 0.6306496853008867
+          "roundness": 0.7824067629757337,
+          "caruncle": 0.4434631962794811
         },
         "outer": {
-          "roundness": 0.6938060891698115
+          "roundness": 0.879471476667095
         }
       },
       "epicanthicFold": {
@@ -14221,7 +15134,8 @@
         "crease": {
           "height": 0.25266820853576066,
           "depth": 0.6472726688953117
-        }
+        },
+        "thickness": 0.013474508633126634
       },
       "iris": {
         "material": {
@@ -14248,7 +15162,7 @@
           "roughness": 0.3444218226708472,
           "clearcoat": 0.3265398600371555
         },
-        "radius": 0.519670596667291,
+        "radius": 0.3750580816110914,
         "aspect": 1.0697709558764472,
         "fibers": 76,
         "limbalRing": 0.7046127947978675,
@@ -14307,6 +15221,32 @@
         "intensity": 1
       },
       "archetype": null,
+      "sclera": {
+        "base": {
+          "type": "linear",
+          "angleDeg": 0,
+          "stops": [
+            {
+              "offset": 0,
+              "color": "#cdb0c5"
+            },
+            {
+              "offset": 0.5,
+              "color": "#ffe6e6"
+            },
+            {
+              "offset": 1,
+              "color": "#ffffff"
+            }
+          ]
+        }
+      },
+      "skin": {
+        "base": {
+          "type": "solid",
+          "color": "#b69794"
+        }
+      },
       "transform": {
         "x": 2040,
         "y": 1914
@@ -14318,24 +15258,24 @@
       "seed": 2629764255,
       "shape": {
         "width": 150,
-        "height": 72.06827824772336,
-        "tiltDeg": -4.695980759803206,
-        "upperFraction": 0.6887933545093983,
-        "openness": 0.8662092718947678,
+        "height": 101.4122253775131,
+        "tiltDeg": -3.8676400389522314,
+        "upperFraction": 0.6899847053270787,
+        "openness": 0.8934719969052821,
         "outerSide": "right",
-        "style": "triangle"
+        "style": "rounded_rect"
       },
       "canthi": {
         "inner": {
-          "roundness": 0.8886535198893398,
-          "caruncle": 0.5352560685481877
+          "roundness": 0.3477276225108653,
+          "caruncle": 0.7350991957355291
         },
         "outer": {
-          "roundness": 0.34253939832560715
+          "roundness": 0.6385775198694319
         }
       },
       "epicanthicFold": {
-        "amount": 0.5749890335369855,
+        "amount": 0.34633752382360394,
         "reach": 0.6233796134125441
       },
       "lids": {
@@ -14369,7 +15309,7 @@
           "roughness": 0.24585457039065658,
           "clearcoat": 0.28838210625108335
         },
-        "radius": 0.3672728003453523,
+        "radius": 0.4643650540414278,
         "aspect": 0.9933631706051528,
         "fibers": 63,
         "limbalRing": 0.7982661010231822,
@@ -14403,7 +15343,19 @@
             "spotRadius": 0.1,
             "opacity": 0.6
           }
-        ]
+        ],
+        "detail": {
+          "facets": {
+            "count": 14,
+            "rings": 2,
+            "contrast": 0.5
+          },
+          "bubbles": {
+            "count": 8,
+            "size": 0.06,
+            "opacity": 0.8
+          }
+        }
       },
       "pupil": {
         "shape": "round",
@@ -14431,7 +15383,7 @@
             "shape": "sparkle",
             "anchor": "iris",
             "x": -0.2743846963858232,
-            "y": -0.269347954755649,
+            "y": -0.43947836380451916,
             "size": 0.2841790075413883,
             "intensity": 0.8,
             "confine": "iris"

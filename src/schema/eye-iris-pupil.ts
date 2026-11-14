@@ -73,6 +73,35 @@ export const IrisDetail = z
     pupilHalo: Unit.default(0.35),
     /** Petits points de lumière dispersés dans la moitié basse. */
     sparkles: z.number().int().min(0).max(16).default(0),
+    /**
+     * FACETTES (cristal / gemme / prisme) : couronnes de facettes quadrilatères irrégulières (graine de l'œil), chacune d'un ton propre tiré de la palette de
+     * l'iris, avec un biseau clair sur l'arête haute-gauche. Absent : aucune (comportement historique). Dessiné sous les fibres, sous la pupille.
+     */
+    facets: z
+      .object({
+        /** Facettes par couronne. */
+        count: z.number().int().min(6).max(36).default(16),
+        /** Nombre de couronnes concentriques entre la pupille et le limbe. */
+        rings: z.number().int().min(1).max(4).default(2),
+        /** Écart de ton entre facettes voisines et netteté du biseau. */
+        contrast: Unit.default(0.6),
+      })
+      .strict()
+      .optional(),
+    /**
+     * BULLES (cristal, eau, givre) : petites sphères translucides à liseré clair, reflet interne et croissant d'ombre, groupées dans la partie basse de l'iris
+     * (ou partout). Absent : aucune. Dessinées au-dessus de tout le détail d'iris, sous la pupille.
+     */
+    bubbles: z
+      .object({
+        count: z.number().int().min(2).max(28).default(10),
+        /** Rayon moyen d'une bulle, en fraction du rayon horizontal de l'iris. */
+        size: z.number().min(0.03).max(0.2).default(0.08),
+        opacity: Unit.default(0.8),
+        zone: z.enum(['lower', 'all']).default('lower'),
+      })
+      .strict()
+      .optional(),
   })
   .strict();
 

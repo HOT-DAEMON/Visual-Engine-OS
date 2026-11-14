@@ -8,6 +8,8 @@ import { Shape } from '../schema/eye-shape';
 import { checkEyeEnvelope } from '../verify/eye-envelope';
 import { verifyEye } from '../verify/eye';
 import { generateRandomEye } from './random-eye';
+import { REF_FITS } from './eye-ref-fits';
+import { SPRITE_IRIS_OVER_HEIGHT, applyLook, lookForRef } from './eye-ref-looks';
 import { IRIS_FAMILIES, PUPIL_OVER_IRIS, ROUND_IRIS_ASPECT, irisFamily } from './eye-iris-families';
 import type { EyeInput } from './random-eye-helpers';
 
@@ -29,6 +31,8 @@ export const EXTRA_EYE_COUNT = 100;
 export const EXISTING_GALLERY_COUNT = 48;
 const STYLES = ['almond', 'round', 'sharp', 'drooping', 'chibi', 'angular', 'compressed', 'rounded_rect', 'triangle', 'circle', 'diamond', 'diamond_v2'] as const;
 /** Les 4 styles qui reçoivent une forme de plus (100 = 12 × 8 + 4) : ceux dont l'espace de paramètres produit le plus de silhouettes distinctes. */
+/** Distance minimale (profils, largeur = 1) d'une silhouette de référence ajustée à toutes les formes déjà retenues ; en dessous, la silhouette est écartée (doublon d'une forme existante). */
+const REF_MIN_DIST = 0.02;
 const EXTRA_QUOTA: readonly string[] = ['chibi', 'angular', 'triangle', 'rounded_rect'];
 const CANDIDATES_PER_STYLE = 320;
 const WIDTH = 240;
@@ -50,6 +54,8 @@ export interface EyeRecipe {
   readonly foldAmount: number;
   /** Distance au plus proche voisin (parmi les 48 existants et les formes déjà choisies) au moment du choix. */
   readonly nearest: number;
+  /** Identifiant de la silhouette mesurée (réfs 13 / 15 / 17) dont la recette est ajustée ; absent pour les formes tirées par échantillonnage du plus éloigné. */
+  readonly ref?: string;
 }
 
 interface Cand extends Omit<EyeRecipe, 'index' | 'seed' | 'nearest'> { readonly d: readonly number[]; }
@@ -90,6 +96,16 @@ export function extraEyeRecipes(): readonly EyeRecipe[] {
   const quota = new Map<string, number>(STYLES.map((s) => [s, 8 + (EXTRA_QUOTA.includes(s) ? 1 : 0)]));
   const taken: number[][] = existingVectors();
   const recipes: EyeRecipe[] = [];
+  // 1. Formes MESURÉES : une recette ajustée par silhouette tracée sur les réfs 13 / 15 / 17 (scripts/eye-refs/fit-recipes.ts), écartée si elle double une forme déjà retenue.
+  for (const f of REF_FITS) {
+    const style = f.style as (typeof STYLES)[number];
+    const d = profileVector(Shape.parse({ width: WIDTH, height: WIDTH * f.aspect, tiltDeg: f.tiltDeg, upperFraction: f.upperFraction, openness: f.openness, style }), Canthi.parse({ inner: { roundness: f.innerRoundness, caruncle: 0.5 }, outer: { roundness: f.outerRoundness } }));
+    const m = Math.min(...taken.map((t) => dist(d, t)));
+    if (m < REF_MIN_DIST || (quota.get(style) ?? 0) <= 0) continue;
+    taken.push(d); quota.set(style, (quota.get(style) ?? 0) - 1);
+    recipes.push({ style, aspect: f.aspect, tiltDeg: f.tiltDeg, upperFraction: f.upperFraction, openness: f.openness, innerRoundness: f.innerRoundness, outerRoundness: f.outerRoundness, caruncle: 0.5, foldAmount: 0, index: recipes.length, seed: 0, nearest: m, ref: f.id });
+  }
+  // 2. Le reste par échantillonnage du plus éloigné, quotas par style.
   while (recipes.length < EXTRA_EYE_COUNT) {
     for (const s of STYLES) {
       if ((quota.get(s) ?? 0) <= 0) continue;
@@ -100,9 +116,17 @@ export function extraEyeRecipes(): readonly EyeRecipe[] {
       taken.push([...c.d]);
       quota.set(s, (quota.get(s) ?? 0) - 1);
       const { d: _d, ...rest } = c;
-      recipes.push({ ...rest, index: recipes.length, seed: 5000 + recipes.length * 131, nearest: bestD });
+      recipes.push({ ...rest, index: recipes.length, seed: 0, nearest: bestD });
     }
   }
+  // 3. Entrelacement : jamais deux enveloppes identiques consécutives (échange déterministe), puis index et graines définitifs.
+  for (let i = 1; i < recipes.length; i++) {
+    if (recipes[i]!.style !== recipes[i - 1]!.style) continue;
+    const ok = (j: number): boolean => recipes[j]!.style !== recipes[i - 1]!.style && (i + 1 >= recipes.length || recipes[j]!.style !== recipes[i + 1]!.style) && recipes[i]!.style !== recipes[j - 1]!.style && (j + 1 >= recipes.length || recipes[i]!.style !== recipes[j + 1]!.style);
+    const j = recipes.findIndex((_, k) => k > i + 1 && ok(k));
+    if (j > 0) { const t = recipes[i]!; recipes[i] = recipes[j]!; recipes[j] = t; }
+  }
+  recipes.forEach((r, i) => { recipes[i] = { ...r, index: i, seed: 5000 + i * 131 }; });
   memo = recipes;
   return recipes;
 }
@@ -111,12 +135,13 @@ export function extraEyeRecipes(): readonly EyeRecipe[] {
  * L'œil complet de la case `index` (0..99) : traits tirés par la graine, enveloppe/canthi/pli/iris/pupille imposés par la recette.
  * Validé par `verifyEye` ; en cas d'échec d'une règle, nouvelles tentatives DÉTERMINISTES de plus en plus sages (regard nul, iris × 0,92ᵏ, reflets simplifiés).
  */
-export function generateExtraEye(index: number): EyeInput {
+export function generateExtraEye(index: number, expression?: EyeInput['expression']): EyeInput {
   const rc = extraEyeRecipes()[index];
   if (!rc) throw new Error(`generateExtraEye: index ${index} hors 0..${EXTRA_EYE_COUNT - 1}`);
   let eye = buildExtraEye(rc, 0);
   for (let attempt = 1; attempt <= 6 && !verifyEye(eye as never).ok; attempt++) eye = buildExtraEye(rc, attempt);
-  return eye;
+  // Expression : appliquée APRÈS la validation neutre (comme `galleryEye` : l'identité reste celle de la recette, seule l'expression change).
+  return expression ? ({ ...eye, expression } as EyeInput) : eye;
 }
 
 function buildExtraEye(rc: EyeRecipe, attempt: number): EyeInput {
@@ -132,7 +157,7 @@ function buildExtraEye(rc: EyeRecipe, attempt: number): EyeInput {
   const calm = attempt === 0 ? 1 : 0;
   const gaze = { ...e.gaze, yawDeg: cl(e.gaze?.yawDeg ?? 0, 8) * calm, pitchDeg: cl(e.gaze?.pitchDeg ?? 0, 5) * calm };
   const simple = attempt >= 2;
-  const out = {
+  const base = {
     ...e,
     // 'alien' impose un rayon d'iris absolu (presets.ts) qui annulerait la calibration sur l'ouverture : écarté ici, les autres archétypes ne touchent pas au rayon.
     archetype: e.archetype === 'alien' ? null : e.archetype,
@@ -140,16 +165,19 @@ function buildExtraEye(rc: EyeRecipe, attempt: number): EyeInput {
     shape: { width: WIDTH, height: WIDTH * rc.aspect, tiltDeg: rc.tiltDeg, upperFraction: rc.upperFraction, openness: rc.openness, outerSide: 'right', style: rc.style },
     canthi: { inner: { roundness: rc.innerRoundness, caruncle: rc.caruncle }, outer: { roundness: rc.outerRoundness } },
     epicanthicFold: { amount: rc.foldAmount, reach: e.epicanthicFold?.reach ?? 0.6 },
-    iris: { ...e.iris, radius: 0.4, aspect: ['round', 'chibi', 'circle'].includes(rc.style) ? Math.max(ROUND_IRIS_ASPECT[0], Math.min(ROUND_IRIS_ASPECT[1], e.iris?.aspect ?? 1)) : e.iris?.aspect, limbalRing: 0.6 + rnd() * 0.3, ...(fam ? { layers: fam.layers } : {}) },
+    iris: { ...e.iris, radius: 0.4, aspect: ['round', 'chibi', 'circle'].includes(rc.style) ? Math.max(ROUND_IRIS_ASPECT[0], Math.min(ROUND_IRIS_ASPECT[1], e.iris?.aspect ?? 1)) : e.iris?.aspect, limbalRing: 0.6 + rnd() * 0.3, ...(fam ? { layers: fam.layers, ...(fam.detail ? { detail: fam.detail } : {}) } : {}) },
     pupil: { ...e.pupil, shape: pupilShape, size: (PUPIL_OVER_IRIS[0] + rnd() * (PUPIL_OVER_IRIS[1] - PUPIL_OVER_IRIS[0])) },
     ...(fam ? { highlights: { list: simple ? fam.highlights.slice(0, 2) : fam.highlights } } : simple ? { highlights: { list: [{ kind: 'reflection', size: 0.22 }] } } : {}),
   } as EyeInput;
+  // Look issu des références (naturel mesuré / encre / sprite) : tiré APRÈS tous les autres tirages pour ne pas les décaler.
+  const look = lookForRef(rc.ref, rnd);
+  const out = applyLook(base, look, rnd, rc.aspect);
   // Rayon d'iris CALIBRÉ sur l'ouverture réelle : diamètre vertical = IRIS_OVER_HEIGHT × hauteur d'ouverture (références : 0,98–1,08), réduit à chaque nouvelle tentative.
   const spec = resolveEye(EyeSpec.parse(out));
   const geo = openingGeometry(spec.shape, spec.canthi);
   const openH = openingProfile(geo).aspect * geo.w;
   const ry = irisRadii(spec).ry;
-  const target = (rc.style === 'compressed' ? 0.94 : IRIS_OVER_HEIGHT) * 0.92 ** attempt;
+  const target = (look === 'sprite-tall' ? SPRITE_IRIS_OVER_HEIGHT : rc.style === 'compressed' ? 0.94 : IRIS_OVER_HEIGHT) * 0.92 ** attempt;
   return { ...out, iris: { ...(out.iris as object), radius: Math.max(0.15, Math.min(0.4 * ((openH / 2) * target) / ry, 0.55)) } } as EyeInput;
 }
 

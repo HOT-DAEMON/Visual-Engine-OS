@@ -1,0 +1,88 @@
+{
+ "galleryExtra": {
+  "eyes": 100,
+  "verifyEyeErrors": 0,
+  "pixelFailures": 0,
+  "fromReferences": [
+   {
+    "index": 0,
+    "ref": "13-E5",
+    "style": "diamond_v2"
+   },
+   {
+    "index": 1,
+    "ref": "17-C",
+    "style": "drooping"
+   },
+   {
+    "index": 2,
+    "ref": "15-A",
+    "style": "chibi"
+   },
+   {
+    "index": 3,
+    "ref": "15-B",
+    "style": "sharp"
+   },
+   {
+    "index": 4,
+    "ref": "15-C",
+    "style": "triangle"
+   },
+   {
+    "index": 5,
+    "ref": "15-D",
+    "style": "sharp"
+   },
+   {
+    "index": 6,
+    "ref": "15-E",
+    "style": "triangle"
+   }
+  ],
+  "distinctness": {
+   "minToExisting": 0.020577112418890445,
+   "minAmongNew": 0.008901729645898845,
+   "byStyle": {
+    "diamond_v2": 8,
+    "drooping": 8,
+    "chibi": 9,
+    "sharp": 8,
+    "triangle": 9,
+    "almond": 8,
+    "round": 8,
+    "angular": 9,
+    "compressed": 8,
+    "rounded_rect": 9,
+    "circle": 8,
+    "diamond": 8
+   }
+  }
+ },
+ "faces": {
+  "identities": 148,
+  "pairChecks": 888,
+  "pairFailures": 0
+ },
+ "almondPass2": {
+  "measuredFrontMean": {
+   "outerDeg": 119,
+   "innerDeg": 93.67
+  },
+  "neutral": {
+   "outerDeg": 112.6302,
+   "innerDeg": 118.6248,
+   "upperFraction": 0.6219
+  },
+  "passe1": {
+   "outerDeg": 127.9173,
+   "innerDeg": 98.4256,
+   "upperFraction": 0.6188
+  },
+  "passe2": {
+   "outerDeg": 123.6456,
+   "innerDeg": 98.4998,
+   "upperFraction": 0.6201
+  }
+ }
+}

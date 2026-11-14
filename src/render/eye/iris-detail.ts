@@ -4,6 +4,7 @@ import { el, urlRef } from '../../core/svg';
 import type { Vec } from '../../geometry/eye';
 import { gradientStop as stop } from '../../materials';
 import type { EyeSpec } from '../../schema';
+import { bubbles, facets } from './iris-crystal';
 import { collarette, crypts, flames, irisFrame, irisPalette, sparkles, stromaFibers } from './iris-strands';
 
 export interface IrisDetailRender {
@@ -55,6 +56,8 @@ export function renderIrisDetail(eye: EyeSpec, c: Vec, rx: number, ry: number, i
   );
   // 5. Cryptes.
   if (d.crypts > 0) layers.push(crypts(f, pal, rnd, d.crypts, rhoC));
+  // 5b. Facettes (cristal / gemme) : par-dessus les fibres et cryptes pour rester lisibles. Graine propre : n'altère pas le tirage des autres couches.
+  if (d.facets) layers.push(facets(f, pal, mulberry32((eye.seed ^ 0x7fb5d329) >>> 0), d.facets, rhoP * 1.06));
   // 6. Flammes d'accent : deux couronnes en quinconce, la seconde plus courte et plus claire.
   if (d.accent) {
     const a = d.accent;
@@ -91,6 +94,8 @@ export function renderIrisDetail(eye: EyeSpec, c: Vec, rx: number, ry: number, i
   }
   // 11. Scintillements.
   if (d.sparkles > 0) layers.push(sparkles(f, rnd, d.sparkles));
+  // 12. Bulles (cristal, eau, givre) : au-dessus de tout le détail, sous la pupille.
+  if (d.bubbles) layers.push(bubbles(f, pal, mulberry32((eye.seed ^ 0x2c1b3c6d) >>> 0), d.bubbles, rhoP));
 
   defs.push(el('clipPath', { id: `${id}-idetail-clip` }, [el('ellipse', whole)]));
   return { defs, markup: [el('g', { 'clip-path': urlRef(`${id}-idetail-clip`) }, layers)] };

@@ -6,6 +6,10 @@
  * Erreur quadratique moyenne vs profil de référence : 0,0192 (avant) -> 0,0020 (après) ; pic de la paupière haute à 0,55, creux de la basse 0,45 -> 0,55
  * (références : 0,46 / 0,56 / 0,62, moyenne ≈ 0,55). La hauteur de l'apex reste exactement `hEff × upperFraction` (pénalité dans l'ajustement).
  *
+ * PASSE 2 (EYES-REFS-2) : l'ajustement ajoute les angles de canthus des 3 yeux de face (mesurés : externe 119,0°, interne 93,7° ; moteur avant : 127,9° / 98,4°) sous contrainte
+ * d'apex inchangé (upperFraction exact) : u2dx 0,88 -> 0,96, l1dx 0,63 -> 0,73 et l2dx 1,95 -> 1,96 ramènent l'angle externe à 123,7° (erreur 8,9° -> 4,7°) pour +0,0003 d'erreur de profil ;
+ * l'angle interne (98,4°) ne peut pas bouger sans dégrader le profil : il demande un contrôle d'angle de canthus non exposé (reste à faire, docs/EYES-REFS-2.md).
+ *
  * Aucune valeur de forme n'est inventée ici : `tests/eye-ref-measures.test.ts` recalcule ces profils depuis measures.json et échoue si l'enveloppe dérive.
  */
 export interface EnvelopeRefFactors {
@@ -23,7 +27,7 @@ export interface EnvelopeRefFactors {
 export const NEUTRAL_REF: EnvelopeRefFactors = { u2dx: 1, u2dy: 1, l1dx: 1, l1dy: 1, l2dx: 1, l2dy: 1 };
 
 /** Amande mesurée (voir en-tête). Appliquée à almond / sharp / drooping / compressed ; 'round' (dessiné à la main) reste neutre. */
-export const ALMOND_REF: EnvelopeRefFactors = { u2dx: 0.88, u2dy: 1.01, l1dx: 0.63, l1dy: 1.09, l2dx: 1.95, l2dy: 0.85 };
+export const ALMOND_REF: EnvelopeRefFactors = { u2dx: 0.96, u2dy: 1.01, l1dx: 0.73, l1dy: 1.09, l2dx: 1.96, l2dy: 0.85 };
 
 /** Références utilisées pour l'ajustement (clés de measures.json). */
 export const ALMOND_REF_SOURCES = ['04', '07', '11'] as const;

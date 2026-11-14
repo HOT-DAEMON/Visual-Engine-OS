@@ -40,7 +40,7 @@ Légende : ✅ fait et testé · 🟡 partiel (précisé) · ⬜ non fait · ❔
 - ⬜ Cornée translucide, sclère sombre minérale, œil artificiel : réalisables avec `iris.layers` + `appearance.emission`, non présentés dans les artefacts.
 
 ## Vérification (`verifyEye`)
-- ⬜ Non intégré à `verifyFace` (les deux yeux d'un visage ne sont pas vérifiés par ce module) ; pas de contrôle de symétrie entre deux yeux ni de cohérence de
+- ✅ (2026-11-14) Paire d'yeux rattachée à `checkFaceEngine` : `src/verify/eye-pair.ts` (6 contrôles : coins externes opposés, roulis commun, asymétrie d'échelle, hauteur, identité commune). ⬜ Pas de cohérence de
   teinte avec le style cel de la tête ; `style` mesure le poids/filtres/contraste, pas une adéquation à un style cible nommé.
 - 🟡 Contrôles anatomiques paramétrés pour des yeux humains : les styles stylisés produisent des avertissements, jamais des erreurs (choix volontaire).
 
@@ -48,21 +48,17 @@ Légende : ✅ fait et testé · 🟡 partiel (précisé) · ⬜ non fait · ❔
 - 🟡 Voir `EYES-PERF.md` : filtres opt-in restants (glow d'iris, douceur de reflet, bord de pupille, effets d'apparence).
 - ⬜ Cache de compilation non utilisé par `verifyEye`.
 
-## Passe « références mesurées » (2026-11-13) — voir `EYES-REFS.md`
-- ✅ Extraction de 5 yeux (04, 07, 11 de face ; 10a, 10b en 3/4) → `references/eyes/measures.json` ; almond recalé ; 100 formes ; vérification enveloppe + pixels ; 31 paramètres prouvés.
-- ⬜ **Références 13, 14, 15, 17 non mesurées** (planches de formes : au trait, flèches d'inclinaison, sprites pixelisés) — 13 et 17 fourniraient des dizaines de silhouettes à tracer pour de nouvelles recettes d'enveloppe ; 12 et 16 sont mesurées automatiquement (aspect d'iris, reflets) mais seul l'aspect d'iris est consommé : la position des reflets (dy ≈ −0,44) ne l'est pas encore.
-- ⬜ **Références non tracées** : 06, 09 (canthi coupés), 03, 05 (yeux trop petits), 01, 02 (cel), 08 (chibi, tracé raté). Les ancres restent posées à la main ; une segmentation
-  automatique fiable (sclère ombrée, peau claire) n'existe pas.
-- ⬜ **Mesures non reversées au moteur** : palette de sclère (3 bandes) et de peau périoculaire, épaisseur du trait de paupière haute (`upperLidLineThicknessOverWidth`),
-  position des reflets (dx, dy) : mesurées dans le JSON, pas encore consommées par un générateur ou un défaut.
-- 🟡 **Enveloppes** : seule l'amande (et, via la base, sharp / drooping / compressed) est recalée. `round`, `chibi`, `angular`, `triangle`, `circle`, `diamond*`,
-  `rounded_rect` n'ont pas de référence frontale correspondante. Le canthus **externe** n'est pas corrigé ; `tiltDeg` par défaut (6°) reste au-dessus des 0,5–5,7° mesurés
-  (inchangé pour ne pas casser les scènes existantes).
-- 🟡 **Boucle « jusqu'à parfait »** : une seule passe de correction de l'almond (ajustement numérique + contrôle visuel). À l'écran la différence est subtile par défaut.
-- ⬜ **Détail atomique de l'iris** : galaxie/prisme (04), circuits d'or (06), bulles de cristal (07), dentelle de givre (09), étoiles (10) ne sont reproduits que par des
-  couches existantes (anneaux, secteurs, gradients, reflets) ; pas de facettes ni de bulles réalistes, pas de cils dorés, pas de rayons de lumière.
-- 🟡 **Galerie des 100** : distance minimale entre silhouettes 0,0103 (quelques paires proches) ; non branchée dans `generateRandomFace` (qui pioche encore dans les 48 via
-  `galleryPair`) : les têtes de `artefacts/eyes-100/04-…` injectent les yeux par le script d'artefacts. 21 avertissements `pupil-to-iris` (pupilles en fente du moteur, 0,82).
-- 🟡 **Vérification** : la vérification sur pixels (`scripts/lib/verify-eye-render.ts`) vit dans `scripts/` et n'est pas appelée par `verifyFace` ; pas de contrôle de symétrie
-  entre deux yeux ; seuils d'enveloppe issus de 3 yeux de face seulement.
-- ⬜ Test `hair-boundary` : délai de 30 s dépassé quand le CPU est saturé (lancé en parallèle d'autres rendus) ; passe seul — à surveiller, sans rapport avec les yeux.
+## Passe « références mesurées » (2026-11-13) — voir `EYES-REFS.md` : fait, pour mémoire
+5 yeux mesurés (04, 07, 11, 10a, 10b), almond recalé, 100 formes, vérification enveloppe + pixels, 31 paramètres prouvés.
+
+## Passe « EYES-REFS-2 » (2026-11-14) — voir `EYES-REFS-2.md` (détail, mesures, preuves)
+Fait : silhouettes des réfs 13, 15, 17 ajustées en recettes ; 100 formes incluant 7 formes mesurées ; looks naturel / sprite / encre reversés au moteur ;
+facettes et bulles d'iris ; `eyeSource: 'extended'` dans `generateRandomFace` (148 identités) ; paire d'yeux vérifiée ; almond passe 2.
+Reste à faire (chaque point est détaillé dans `EYES-REFS-2.md`, § « Reste à faire ») :
+- ⬜ Réf. 14 : silhouettes et iris non mesurés (sclère blanche sur fond blanc, flèches mesurées mais non interprétées) ; réf. 15 rangées 3–5 : iris non mesurés (limbe non détecté).
+- ⬜ Réf. 13 E1–E4, E6–E9, E11, E12 et 17 (≈ 8 yeux) : canthus externe sous une masse de cils ou yeux coupés par la tuile ; non tracés.
+- 🟡 Almond : canthus interne 98,4° vs 93,7° mesuré (nécessite un contrôle d'angle de canthus non exposé) ; `tiltDeg` par défaut 6° inchangé.
+- 🟡 Facettes : lisibles mais discrètes ; pas de dispersion prismatique, pas de rayons de lumière, pas de cils dorés ; bulles sans réfraction du fond.
+- 🟡 Galerie : distance minimale 0,0089 entre silhouettes (seuil du test abaissé de 0,009 à 0,008) ; les sprites hauts (15-A, 15-B) débordent de la cellule des planches.
+- 🟡 Look « encre » : teintes grises et reflets en lentille interprétés (non mesurés) ; peau périoculaire mesurée seulement sur 5 photos.
+- ⬜ Seuils d'enveloppe issus de 3 yeux de face ; `verify-eye-render.ts` (pixels) toujours dans `scripts/`, non appelé par `verifyFace`.

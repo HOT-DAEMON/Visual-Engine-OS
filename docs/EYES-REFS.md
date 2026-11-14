@@ -75,3 +75,5 @@ Résultat sur les 100 yeux (`artefacts/eyes-100/06-verification.json`) : **0 err
 `tests/eye-params-consumed.test.ts` exige un nombre minimal de pixels changés (150 par défaut). Résultat : **31/31**. Preuve :
 `artefacts/eyes-100/03-parametres-consommes-bas-vs-haut.png`. Piège découvert : le sourcil se dessine ≈ 220 px au-dessus du centre de l'œil ; un cadrage trop
 serré donnait faussement « non consommé » (corrigé dans le banc, pas dans le moteur).
+
+> Suite (2026-11-14) : `EYES-REFS-2.md` (silhouettes des réfs 13/15/17, looks, iris atomique, galerie étendue, vérification de paire).

@@ -50,10 +50,12 @@ export function verifyEyeRender(input: Record<string, unknown>): EyeImageCheck[]
   const pupilL = Math.min(...[[0, 0], [pr, 0], [-pr, 0], [0, pr], [0, -pr]].map(([a, b]) => lum(px, c.x + ox + (a as number), c.y + oy + (b as number))));
   if (eye.pupil.visible && eye.pupil.shape === 'round' && Number.isFinite(irisL)) add('anatomy', 'pupil-darker-than-iris-pixels', pupilL <= irisL + 2, pupilL - irisL, 2, 'la pupille rendue est plus claire que l’iris');
   // sclère : point entre le limbe et le canthus interne (s'il est dans l'ouverture) ; références : luminance moyenne 150–180, 5ᵉ centile 60–73 (ombre de paupière)
-  const s = g.s, sx = c.x + ox - s * rx * 1.35, sy = c.y + oy + (g.pi.y - c.y) * 0.1;
+  const s = g.s, sy = c.y + oy + (g.pi.y - c.y) * 0.1;
   const sc = dominantColor(eye.sclera.base); // sclère volontairement sombre (démon, alien…) : le ton clair n'est exigé que si la sclère SPÉCIFIÉE est claire
   const scLum = sc.startsWith('#') ? 0.2126 * parseInt(sc.slice(1, 3), 16) + 0.7152 * parseInt(sc.slice(3, 5), 16) + 0.0722 * parseInt(sc.slice(5, 7), 16) : 0;
-  if (scLum >= 170 && inside(poly, sx, sy)) add('anatomy', 'sclera-is-light-tone', lum(px, sx, sy) >= 60, lum(px, sx, sy), 60, 'la sclère claire rendue est plus sombre que le 5ᵉ centile mesuré sur les références (60–73)');
+  // Robuste à la graine : 6 points (2 côtés de l'iris × 3 distances) dans l'ouverture ; un seul point pouvait tomber sur la caroncule ou l'ombre de paupière. On exige la MAXIMALE (une sclère claire reste claire quelque part).
+  const probes = [-1, 1].flatMap((side) => [1.3, 1.55, 1.85].map((k) => ({ x: c.x + ox + side * s * rx * k, y: sy }))).filter((p) => inside(poly, p.x, p.y)).map((p) => lum(px, p.x, p.y));
+  if (scLum >= 170 && probes.length) { const best = Math.max(...probes); add('anatomy', 'sclera-is-light-tone', best >= 60, best, 60, 'la sclère claire rendue est plus sombre que le 5ᵉ centile mesuré sur les références (60–73) en tout point sondé'); }
 
   // style : l'iris n'est pas un aplat (écart-type de luminance sur 5 × 5 échantillons dans le disque 0,2–0,9 rayon)
   const vals: number[] = [];

@@ -40,9 +40,20 @@ const LAYERS: Record<IrisFamily, Layers> = {
 /** Reflets : le reflet physique suit la lumière (taille mesurée) ; un éclat « sparkle » à l'ancre de l'iris pour les familles les plus lumineuses. */
 const sparkle = (x: number, y: number, size: number): Highlights[number] => ({ shape: 'sparkle', anchor: 'iris', x, y, size, intensity: 0.8, confine: 'iris' }) as Highlights[number];
 
-export function irisFamily(f: IrisFamily, rnd: () => number): { layers: Layers; highlights: Highlights } {
+type Detail = NonNullable<NonNullable<EyeInput['iris']>['detail']>;
+/** Détail ATOMIQUE par famille (iris.detail existant + facettes / bulles) : prisme -> facettes de gemme ; cristal turquoise et givre -> bulles (réfs 07, 09, 04). */
+const DETAIL: Partial<Record<IrisFamily, Detail>> = {
+  prism: { facets: { count: 18, rings: 3, contrast: 0.75 } } as Detail,
+  'teal-gem': { bubbles: { count: 12, size: 0.08, opacity: 0.85 } } as Detail,
+  frost: { facets: { count: 14, rings: 2, contrast: 0.5 }, bubbles: { count: 8, size: 0.06, opacity: 0.8 } } as Detail,
+};
+/** Position verticale du reflet principal des planches 12 et 16 (mesurée : dy ≈ −0,44, fraction du rayon de l'iris, haut = négatif). */
+export const SHEET_HIGHLIGHT_DY = -0.44;
+
+export function irisFamily(f: IrisFamily, rnd: () => number): { layers: Layers; highlights: Highlights; detail?: Detail } {
   const lerp = (r: readonly [number, number]): number => r[0] + rnd() * (r[1] - r[0]);
   const list: Highlights = [{ kind: 'reflection', size: lerp(HIGHLIGHT_OVER_IRIS.primary) }, { kind: 'reflection', role: 'secondary', size: lerp(HIGHLIGHT_OVER_IRIS.secondary), opacity: 0.7 }] as Highlights;
-  if (f === 'prism' || f === 'frost' || f === 'ember' || f === 'golden') list.push(sparkle(-0.3 + rnd() * 0.1, -0.32 + rnd() * 0.1, 0.2 + rnd() * 0.1));
-  return { layers: LAYERS[f], highlights: list };
+  if (f === 'prism' || f === 'frost' || f === 'ember' || f === 'golden') list.push(sparkle(-0.3 + rnd() * 0.1, SHEET_HIGHLIGHT_DY + (rnd() - 0.5) * 0.08, 0.2 + rnd() * 0.1));
+  const detail = DETAIL[f];
+  return { layers: LAYERS[f], highlights: list, ...(detail ? { detail } : {}) };
 }
