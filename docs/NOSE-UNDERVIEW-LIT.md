@@ -20,7 +20,7 @@ découpées dans les autres surfaces · plan de peau z = 0 qui reçoit les ombre
 
 ## 4 · Défauts visibles (non cachés) — le résultat n'est PAS un chef-d'œuvre
 Vu sur `04-dessous-eclaire.png` :
-- **La silhouette lit « champignon » / « pique »** : les ailes sont de larges plaques plates qui s'évasent et la columelle une tige étroite. C'est un défaut de GÉOMÉTRIE (polygones d'ailes du moteur + rampe z), pas de lumière : ce travail ne l'a pas résolu.
+- **[CORRIGÉ le 14 nov. 2026 par `face/nose/base-mass.ts`, voir `NOSE-BASE-MASS.md` ; le texte ci-dessous décrit l'état d'avant]** **La silhouette lit « champignon » / « pique »** : les ailes sont de larges plaques plates qui s'évasent et la columelle une tige étroite. C'est un défaut de GÉOMÉTRIE (polygones d'ailes du moteur + rampe z), pas de lumière : ce travail ne l'a pas résolu.
 - Ombre portée très sombre et à bord net malgré la réduction de portée (0,55 × largeur) et l'adoucissement ; c'est la sortie du `LightModel` partagé, pas un réglage propre au nez.
 - Premier rendu : points parasites au centre du lobule à 40° et 60° (pixels du plan de peau entre deux surfaces) ; corrigés par la suppression des pixels-trous, vérifiée visuellement.
 - Les constantes z utilisées sont celles du jeu v1 NON validé (`NOSE-UNDERVIEW-CALIB.md`) : la forme éclairée hérite de cette limite.

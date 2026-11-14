@@ -23,6 +23,7 @@ import { checkHairNatural } from './hair-natural';
 import { checkHeadHair } from './head-hair';
 import { checkNoseRelief } from './nose-relief';
 import { checkNoseView } from './nose-underview';
+import { checkNoseLit } from './nose-lit';
 import { checkPerimeters } from './perimeters';
 import { report, type Check, type Report } from './types';
 
@@ -45,6 +46,7 @@ export { engineContext, REFERENCE_LIGHT, type EngineContext } from './face-engin
 export { checkPerimeters } from './perimeters';
 export { checkNoseRelief, noseReliefChecks, NOSE_RELIEF_LIMITS } from './nose-relief';
 export { checkNoseView, noseViewChecks, NOSE_VIEW_LIMITS } from './nose-underview';
+export { checkNoseLit, noseLitReliefChecks, noseLitStyleChecks, silhouetteOf, NOSE_LIT_LIMITS } from './nose-lit';
 export { checkStructure, structureContext, geometryDigest, type StructureContext } from './structure';
 
 /**
@@ -73,6 +75,7 @@ export function verifyFace(face: RandomFace): Report {
   // Relief du nez lu par le moteur d'éclairage : continuité, bornes, anatomie, style.
   checks.push(...checkNoseRelief(face));
   checks.push(...checkNoseView(face));
+  checks.push(...checkNoseLit(face));
   // Contrats entre composants : mesures observables, corrections du résolveur, ordre anatomique, budget de rendu.
   checks.push(...checkContracts(face, svg));
   // Cou (moteur de cou) : géométrie, anatomie, style — voir `neck.ts`.

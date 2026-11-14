@@ -267,7 +267,7 @@ describe('génération v2 et vérification', () => {
       const r = verifyFace(f);
       expect(r.failures.map((c) => `${c.id}: ${c.message}`)).toEqual([]);
     }
-  });
+  }, 90_000);   // 40 × verifyFace : +≈ 0,11 s par visage depuis `verify/nose-lit.ts` (rendu éclairé du dessous du nez), ce qui dépassait les 30 s par défaut
   it('la vérification détecte une incohérence (œil recouvert sans l\'avoir demandé)', () => {
     const f = generateRandomFace(53, { hairEngine: 'classic', hair: { style: 'short', fringe: 'straight' } as never });
     const lm = faceLandmarks(f.params, f.width, f.height);
