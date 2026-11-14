@@ -2,7 +2,7 @@ import { headRelief } from './engines/head-relief';
 import { hex } from './color';
 import { attach } from './hair-parts';
 import { regionKnots } from './hair-region';
-import { inHair, shellPoint, T_MIN, Y_SKULL_END } from './hair-shell';
+import { fringeY, inHair, shellPoint, T_MIN, Y_SKULL_END } from './hair-shell';
 import { PART, skullSurfacePoint } from './mesh';
 import { toCam } from './math';
 import { defaultFrame, refView, renderHead } from './render';
@@ -79,6 +79,7 @@ export function hairVolumeGeometryChecks(s: HeadTurnSpec, R: Rend): Check[] {
     const r = R.at(yaw, false), view = refView(yaw);
     for (const [az0, y] of knots) for (const sg of [1, -1]) {
       if (y >= 0.98 || (az0 === 0 && sg === -1)) continue;
+      if (fringeY(v, sg * az0) > y + 0.006) continue;   // sous la frange : le bord cheveux / peau est le bord de la frange (contrôle `geo.fringe.track`), pas la lisière de l'implantation
       if (s.hairVolume?.hang && az0 >= s.hairVolume.hang.az0 && y >= s.hairVolume.hang.y0 - 0.1) continue;   // le rideau continue sous la lisière de la nuque : ce n'est pas un bord cheveux / peau
       const th = sg * az0 * DEG, q = skullSurfacePoint(s, relief, y, th), nrm = toCam({ x: Math.sin(th), y: 0, z: Math.cos(th) }, { yaw: view.yaw, pitch: 0 });
       if (nrm.z < 0.5) continue;   // face cachée ou rasante (≤ 60° de la visée : la masse de cheveux la recouvre, légitimement) (le rastériseur garde le z le plus grand : plus grand = plus proche de la caméra)
@@ -105,6 +106,7 @@ export function hairVolumeAnatomyChecks(s: HeadTurnSpec, R: Rend): Check[] {
   // Pièces : la racine est sur le crâne (position normalisée dans l'ellipse de la section : 0,6 – 1,7).
   let worst = 1;
   for (const p of v.parts) {
+    if (p.kind === 'spike') continue;   // les épis sont posés sur la coque, pas sur une section : contrôle `spike.root` (anatomie) ci-dessous
     const o = attach(s, p, p.kind === 'braid' ? (Math.abs(p.x) >= 0.12 ? 'side' : 'back') : p.place), sec = sectionAt(s, Math.min(Math.max(o.y, s.rows[0]!.y), 1));
     const q = Math.hypot(o.x / Math.max(sec.a, 0.05), (o.z - sec.zc) / Math.max(sec.b, 0.05));
     // Au vertex la section du crâne se réduit à un point (a = 0, b = 0,02) : le rapport d'ellipse n'a plus de sens ; on exige alors que la racine soit à moins de 0,1 U du sommet.
@@ -155,7 +157,7 @@ export function hairVolumeStyleChecks(s: HeadTurnSpec, R: Rend): Check[] {
     c.push(check(S, P + `strands.${yaw}`, `Mèches lisibles à ${yaw}° : part des pavés de cheveux qui ne sont pas un aplat (écart-type de luminance ≥ 6 % de la moyenne)${buzz ? ' [rasé : mesure seule]' : ''}`, st.frac, yaw === 0 ? (v.hang ? 0.5 : 0.55) : v.hang ? 0.65 : 0.7, 1, buzz ? 'info' : 'hard'));   // cheveux pendants : les ailes vues à 0° sont rasantes, les colonnes y passent sous le pixel (borne 0,65 au lieu de 0,8)
     c.push(check(S, P + `contrast.${yaw}`, `Contraste des mèches à ${yaw}° : luminance du 90e centile / du 10e centile des pavés 5 × 5 px de cheveux (il en faut : pas un aplat ; pas trop : pas une bouillie)${buzz ? ' [rasé : mesure seule]' : ''}`, st.contrast, v.hang ? 1.1 : 1.15, 8, buzz ? 'info' : 'hard'));
     if (st.n > 200) c.push(check(S, P + `tint.${yaw}`, `Teinte des cheveux à ${yaw}° : distance RGB moyenne à la teinte de la palette (ombre et reflets compris)`, Math.hypot(st.mean[0] - hair[0], st.mean[1] - hair[1], st.mean[2] - hair[2]), 0, 90));
-    c.push(check(S, P + `teeth.${yaw}`, `Contour supérieur à ${yaw}° : retournements de plus de 0,02 U (dents de scie ; un dôme en a ≤ 2)`, teeth(r), 0, 6));
+    c.push(check(S, P + `teeth.${yaw}`, `Contour supérieur à ${yaw}° : retournements de plus de 0,02 U (dents de scie ; un dôme en a ≤ 2 ; coiffure en épis : les pointes sont voulues, borne 60)`, teeth(r), 0, v.style === 'spiky' ? 60 : 6));
   }
   // Couture : la grille se referme derrière la tête (θ = ±π) ; à 180° elle est au centre de l'image. L'écart de luminance entre les deux bandes de 8 px de part et d'autre de la couture
   // n'est pas plus grand (à 10 près) que le plus grand écart entre deux bandes voisines ailleurs (décalées de ±30, ±60, ±90 px) : des mèches de teintes différentes ne sont pas une couture.

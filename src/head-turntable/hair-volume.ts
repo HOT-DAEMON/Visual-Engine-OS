@@ -5,6 +5,7 @@ import type { FaceParams, HairStyle } from '../schema';
 import { faceYToU } from './hair-bridge';
 import { sampleRows, silhouetteRows } from './hair-silhouette';
 import { hairPartsOf } from './hair-parts-spec';
+import { flowOf, fringeOf, FRINGE_BROW_GAP, spikesOf } from './hair-features';
 import type { HairVolume } from './hair-volume-types';
 
 type Style = Exclude<HairStyle, 'bald'>;
@@ -22,6 +23,8 @@ const HANG_AZ0: Partial<Record<Style, number>> = { bob: 80, long: 78 };
 const HANG_FLARE = 0.3;
 /** Croissance maximale de la demi-largeur du rideau avec la hauteur (U par U), tout au long de la chute. */
 const HANG_GROW = 0.45;
+/** Frange du moteur v2 : une mèche est un triangle pointe en bas (aire ≈ la moitié à deux tiers du rectangle qui la contient) ; la bande 3D a la hauteur d'aire équivalente, soit `BLADE_AREA` × (1 − jour). Convention. */
+const BLADE_AREA = 0.6;
 /** Masses rondes : gauche et droite moyennées (le moteur de visage ne garde qu'un souffle d'asymétrie, `thickness.ts` GAIN_SPAN) : le volume 3D est centré sur le crâne, jamais penché. */
 const SYMMETRIC: ReadonlySet<Style> = new Set(['afro', 'curly']);
 
@@ -68,9 +71,12 @@ export function hairVolumeOf(p: FaceParams, lm: FaceLandmarks): HairVolume | nul
   }
   rL = smoothCol(rL, 3); rR = smoothCol(rR, 3);
   const { kzF, kzB } = DEPTH[style as Style];
+  // Frange (bord du dessin 2D, plafonné au-dessus du sourcil), sens du tourbillon et du balayage, épis : tout dérive du dessin de face et de la graine (`hair-features.ts`).
+  const fringe = fringeOf(geo, toU, toU(lm.browLimitY) - FRINGE_BROW_GAP, p.hair.seed, p.hair.fringeEngine.mode === 'off' ? 1 : BLADE_AREA * (1 - p.hair.fringeEngine.gap)), { whorl, sweep } = flowOf(style, p.hair.seed, fringe);
   return {
     style, texture: resolveTexture(style, p.hair.texture), seed: p.hair.seed, curl: p.hair.curl, ys, rL, rR, kzF, kzB,
     hang: hang ? { y0: napeU, yEnd, az0: hangAz } : null,
-    parts: hairPartsOf(geo, lm, kU, toU),
+    parts: [...hairPartsOf(geo, lm, kU, toU), ...(style === 'spiky' ? spikesOf(geo, kU, toU, p.hair.seed) : [])],
+    fringe, whorl, sweep,
   };
 }

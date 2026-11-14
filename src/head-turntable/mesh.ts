@@ -5,7 +5,7 @@ import { CUT_SLOPE, isBellHead, neckSection } from './engines/neck3d';
 import { headRelief, headReliefOver } from './engines/head-relief';
 
 /** Identifiants de parties (groupes de contour : 1 et 4 = peau de la tête, sans trait entre eux ; 2 et 5 = cou ; 3 = oreilles). */
-export const PART = { head: 1, neck: 2, ear: 3, bump: 4, neckCut: 5, earBack: 6, hair: 7, hairPart: 8, hairBun: 9 } as const;
+export const PART = { head: 1, neck: 2, ear: 3, bump: 4, neckCut: 5, earBack: 6, hair: 7, hairPart: 8, hairBun: 9, hairSpike: 10 } as const;
 
 /** Maillage triangulaire : positions et normales dans le repère de la tête. */
 export interface Mesh { readonly id: number; readonly P: V3[]; readonly N: V3[]; readonly T: [number, number, number][]; /** Coordonnées de texture (u, v) par sommet : interpolées par la rastérisation (oreille : plan de l'oreille). */ readonly UV?: [number, number][];

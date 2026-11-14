@@ -5,7 +5,7 @@ Volume 3D pour les 10 coiffures non chauves, rotation = celle du crâne, coque +
 
 ## Non fait ou limité — à traiter ensuite
 **Coque**
-- `spiky` : la coque est mince et lisse ; pas de vraies pointes 3D (pointes seulement dans la silhouette 2D). À faire : cônes sur la coque aux sommets de `geo.locks` de type `spike`.
+- `spiky` : **traité** (cônes 3D, `HAIR-SPIKY.md`). Frange 3D : traitée (`HAIR-FRINGE-3D.md`). Suite : `HAIR-3D-REMAINING.md`.
 - Petites encoches latérales à hauteur d'oreille sur le rideau (vue de dos) : la coque pendante naît à `y0 − 0,06` et croît sur 0,12 U ; à lisser.
 - Le bord de la lisière est coupé par `clip` par pixel : pas de frange de mèches individuelles qui dépassent.
 
@@ -23,7 +23,7 @@ Volume 3D pour les 10 coiffures non chauves, rotation = celle du crâne, coque +
 - Afros inclinés à gauche/droite dans le dessin 2D, croissant noir hors des mèches, surface plate non couverte par les mèches, dessus trop uniforme (« mécanique »), frange « rideau » hors limite, blocs sombres au bas des ailes de la lisière : le volume 3D les contourne (afro centré par moyenne gauche/droite, coque pleine) mais **le moteur 2D (`src/face/hair/*`) n'a pas été modifié**. Voir `HAIR-FORM-REMAINING.md`, `HAIR-COHERENCE-REMAINING.md`, `HAIR-SKULL-REMAINING.md`, `HAIR-BOUNDARY-REMAINING.md`.
 
 **Intégration**
-- Le volume n'est branché que sur le chemin « hôte » (`headSpecFromHost`). `headSpecFromFace` (planche de variété) n'a pas de volume.
+- Planche de variété : **câblée** par `variedHairedHead` (`engines/from-host.ts`) ; `variedHead` seul garde la calotte sans volume. Restent à migrer les scripts de galerie anciens (`audit-gallery.ts`, `artefacts-v6/v7.ts`).
 - `lisiere.track` à 0,7 : les ratés viennent de points de lisière recouverts par la masse à plus de 6 px ; une lisière à épaisseur nulle exacte ferait 0,9 mais ressemblerait à un autocollant.
 - Bornes de style calibrées sur 3 graines seulement ; élargir à 300 visages comme `HAIR-GRAMMAR-STATS.md`.
 

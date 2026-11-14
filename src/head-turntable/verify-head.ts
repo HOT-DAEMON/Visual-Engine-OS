@@ -13,6 +13,7 @@ import { headEdges, jawContourStats } from './verify-contour';
 import { topRow } from './silhouette';
 import { inkSpecks, inkWidth, outlineClosure } from './verify-style';
 import { hostChecks } from './verify-host';
+import { hairFeatureAnatomyChecks, hairFeatureGeometryChecks, hairFeatureStyleChecks } from './verify-hair-features';
 import { hairVolumeAnatomyChecks, hairVolumeGeometryChecks, hairVolumeStyleChecks } from './verify-hair-volume';
 import { browChecks } from './verify-brow';
 import { neckCutChecks } from './verify-neck-cut';
@@ -93,7 +94,7 @@ export function headGeometry(h: HeadSubject, Rh: HeadRenders): LayerReport {
   c.push(...skullGeometryChecks(s, R));
   c.push(...reliefGeometryChecks(s));
   c.push(...neckCutChecks(s).geometry);
-  c.push(...hairVolumeGeometryChecks(s, Rh));
+  c.push(...hairVolumeGeometryChecks(s, Rh), ...hairFeatureGeometryChecks(s, Rh));
   return layerOf(G, c);
 }
 
@@ -129,7 +130,7 @@ export function headAnatomy(h: HeadSubject, Rh: HeadRenders): LayerReport {
   c.push(...skullAnatomyChecks(s));
   c.push(...reliefAnatomyChecks(s, R));
   c.push(...neckCutChecks(s).anatomy);
-  c.push(...hairVolumeAnatomyChecks(s, Rh));
+  c.push(...hairVolumeAnatomyChecks(s, Rh), ...hairFeatureAnatomyChecks(s));
   return layerOf(A, c);
 }
 
@@ -147,7 +148,7 @@ export function headStyle(h: HeadSubject, R: HeadRenders): LayerReport {
   c.push(...skullStyleChecks(h.spec, R));
   c.push(...reliefStyleChecks(h.spec, R));
   c.push(...neckCutChecks(h.spec).style);
-  c.push(...hairVolumeStyleChecks(h.spec, R));
+  c.push(...hairVolumeStyleChecks(h.spec, R), ...hairFeatureStyleChecks(h.spec));
   return layerOf(S, c);
 }
 

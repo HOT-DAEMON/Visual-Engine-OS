@@ -4,8 +4,8 @@ import { gridMesh, PART, skullSurfacePoint, type Mesh, type SkullRelief } from '
 import { clamp, smooth, v3 } from './math';
 import { regionField, signedDistance } from './hair-region';
 import { hairlineY, sectionAt } from './sections';
-import { hemY } from './hair-hash';
-import type { HairVolume } from './hair-volume-types';
+import { HEM_VAR, hemY } from './hair-hash';
+import { FRINGE_STEP, type HairVolume } from './hair-volume-types';
 import type { HeadTurnSpec, V3 } from './types';
 
 /** Épaisseur minimale de la coque au-dessus du crâne (U), MESURÉE dans le plan horizontal le long du déplacement : jamais coplanaire (pas de z-fighting), jamais un trou, même devant où la profondeur est réduite (`kz` < 1). */
@@ -20,6 +20,12 @@ export const RAMP_FRONT = 0.24;
 export const Y_SKULL_END = 1.0;
 /** Le rideau naît à cette hauteur au-dessus de la nuque (U) : il recouvre la poche de peau derrière l'oreille que la lisière laisse nue (cheveux longs : l'arrière de l'oreille est caché). */
 export const HANG_UP = 0.2;
+/** Frange (`docs/HAIR-FRINGE-3D.md`) : la bande de mèches posée sur le front est mince et collée — épaisseur ajoutée à `T_MIN` (U), atteinte à `FR_RAMP` (U) du bord inférieur. */
+export const FR_LIFT = 0.016, FR_RAMP = 0.05;
+/** La frange se fond dans la patte : pleine jusqu'à `FR_AZ0` degrés d'azimut, nulle à `FR_AZ1` (au-delà, le front est celui des pattes et des tempes de la lisière). */
+export const FR_AZ0 = 76, FR_AZ1 = 92;
+/** Les mèches de la frange n'ont pas toutes la même longueur : le bord remonte jusqu'à `FR_VAR` U selon la mèche (même bruit que l'ourlet des cheveux pendants, `hair-hash.ts`). */
+export const FR_VAR = 0.035;
 const DEG = 180 / Math.PI, K = 96;
 
 interface Ell { readonly a: number; readonly b: number; readonly zc: number }
@@ -42,12 +48,29 @@ export const hairCenterZ = (spec: HeadTurnSpec, y: number): number => (y <= Y_SK
 /** Azimut (degrés ; 0 = face, +90 = côté +x) d'un point de la coque : le même repère que la région de lisière (`hair-region.ts`). */
 export const hairAzimuth = (spec: HeadTurnSpec, p: V3): number => Math.atan2(p.x, p.z - hairCenterZ(spec, p.y)) * DEG;
 
-/** Le point (azimut, hauteur) porte-t-il des cheveux ? Sommet : toujours ; ailleurs : dans la région de lisière ; rideau des cheveux pendants : sous la nuque, hors de l'ouverture avant. */
+/** Ordonnée (U) du bord inférieur de la frange à l'azimut `az` (degrés), mèches de longueurs inégales comprises ; −∞ sans frange ou hors de ±`FR_AZ1`. La table est celle du dessin 2D (`hair-volume.ts`). */
+export function fringeY(vol: HairVolume, az: number): number {
+  const f = vol.fringe;
+  const a = Math.abs(az);
+  if (!f || a >= FR_AZ1) return -Infinity;
+  const q = (az + 90) / FRINGE_STEP, i = Math.min(f.y.length - 2, Math.max(0, Math.floor(q))), t = clamp(q - i, 0, 1), y0 = f.y[i]! + (f.y[i + 1]! - f.y[i]!) * t;
+  // Bruit de longueur de mèche : g ∈ [0, 1) lu sur l'ourlet des cheveux pendants (même colonne de mèches), pris sur une référence arbitraire plus basse.
+  const g = (y0 + 0.2 - hemY(vol.texture, vol.seed & 0xffff, y0 + 0.2, az)) / HEM_VAR;
+  return (y0 - FR_VAR * g) * smooth((FR_AZ1 - a) / (FR_AZ1 - FR_AZ0));
+}
+
+/** Distance signée (U, > 0 dedans) à la lisière des cheveux, FRANGE comprise : union de la région de lisière et de la bande de frange. Plafonnée à `FR_RAMP` dans la frange (seul le voisinage du bord sert). */
+export function hairEdgeDistance(spec: HeadTurnSpec, vol: HairVolume, az: number, y: number): number {
+  const R = spec.hairline.region, sd = R ? signedDistance(regionField(R), az, y) : (hairlineY(spec, az) - y) * 0.5, fy = fringeY(vol, az);
+  return Number.isFinite(fy) && y > spec.rows[0]!.y ? Math.max(sd, Math.min(fy - y, FR_RAMP)) : sd;
+}
+
+/** Le point (azimut, hauteur) porte-t-il des cheveux ? Sommet : toujours ; ailleurs : dans la région de lisière ou sous la frange ; rideau des cheveux pendants : sous la nuque, hors de l'ouverture avant. */
 export function inHair(spec: HeadTurnSpec, vol: HairVolume, az: number, y: number, tol = 0): boolean {
   if (y <= spec.rows[0]!.y + 1e-6) return true;
   const R = spec.hairline.region, inside = R ? signedDistance(regionField(R), az, y) > -tol : y < hairlineY(spec, az) + tol;
   const h = vol.hang;
-  return inside || (!!h && y >= h.y0 - HANG_UP && y <= hemY(vol.texture, vol.seed & 0xffff, h.yEnd, az) && Math.abs(az) >= h.az0);
+  return inside || y < fringeY(vol, az) + tol || (!!h && y >= h.y0 - HANG_UP && y <= hemY(vol.texture, vol.seed & 0xffff, h.yEnd, az) && Math.abs(az) >= h.az0);
 }
 
 const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
@@ -89,7 +112,7 @@ function clearNeck(spec: HeadTurnSpec, vol: HairVolume, p: V3, sn: number, cs: n
 export function shellPoint(spec: HeadTurnSpec, vol: HairVolume, y: number, th: number, relief: SkullRelief = headRelief(spec.engine)): V3 {
   const sn = Math.sin(th), cs = Math.cos(th), rx = lerp(colAt(vol, vol.rL, y), colAt(vol, vol.rR, y), (1 + sn) / 2), kz = cs >= 0 ? vol.kzF : vol.kzB;
   const top = spec.rows[0]!.y;
-  let ramp = 1;
+  let ramp = 1, lift = 0;
   if (y > top) {
     const az = th * DEG, R = spec.hairline.region;
     const sd = R ? signedDistance(regionField(R), az, y) : (hairlineY(spec, az) - y) * 0.5;
@@ -97,12 +120,15 @@ export function shellPoint(spec: HeadTurnSpec, vol: HairVolume, y: number, th: n
     const frontW = smooth((cs - 0.15) / 0.55);
     if (frontW > 0) ramp *= 1 - frontW + frontW * smooth((hairlineY(spec, Math.abs(az)) - y) / RAMP_FRONT);
     if (vol.hang) ramp = Math.max(ramp, hangRamp(spec, vol, az, y));
+    // Frange : sous l'implantation la région n'a pas de cheveux (rampe = 0) ; la bande de mèches décolle légèrement du front, de plus en plus loin du bord inférieur.
+    const fz = fringeY(vol, az) - y;
+    if (fz > 0) lift = FR_LIFT * smooth(fz / FR_RAMP) * frontW;
   }
   if (y > Y_SKULL_END) {
     const e = ellipseBelow(spec, y), dMin = T_MIN / Math.hypot(sn, kz * cs), d = lerp(dMin, Math.max(dMin, rx - e.a), ramp);
     return clearNeck(spec, vol, v3((e.a + d) * sn, y, e.zc + (e.b + kz * d) * cs), sn, cs, e.zc);
   }
-  const s = sectionAt(spec, Math.max(y, top)), above = y < top, a = above ? 0 : s.a, q = above ? { x: 0, z: s.zc } : skullSurfacePoint(spec, relief, y, th), dMin = T_MIN / Math.hypot(sn, kz * cs), d = lerp(dMin, Math.max(dMin, rx - a), ramp);
+  const s = sectionAt(spec, Math.max(y, top)), above = y < top, a = above ? 0 : s.a, q = above ? { x: 0, z: s.zc } : skullSurfacePoint(spec, relief, y, th), dMin = T_MIN / Math.hypot(sn, kz * cs), d = Math.max(lerp(dMin, Math.max(dMin, rx - a), ramp), dMin + lift);
   return clearNeck(spec, vol, v3(q.x + d * sn, y, q.z + kz * d * cs), sn, cs, s.zc);
 }
 /**

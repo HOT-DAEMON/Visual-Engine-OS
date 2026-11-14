@@ -3,12 +3,15 @@ import { arcAt } from './hairline';
 import type { HairCtx } from './flow';
 import { lockFrom } from './flow';
 import { smoothstep, unit } from './noise';
-import { fitReach } from './reach';
+import { fitReach, REACH } from './reach';
 import { VOCAB } from './vocab';
 import type { HairLock } from './types';
 
 const lerpV = (a: Vec, b: Vec, t: number): Vec => ({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
 const TAU = Math.PI * 2;
+
+/** Plancher de la coiffure en pointes (`spiky`) : nombre d'épis, netteté minimale (`coneSharp`), gain et plafond de longueur (× H). Bornes de CONVENTION (anatomie / style anime), pas ajustées à un rendu. */
+export const SPIKY_CONES = { min: 12, sharp: 0.8, maxLen: 0.34, group: 2, width: [0.055, 0.04], fill: [0.5, 0.45] } as const;
 
 /** Racine tirée sur le crâne : abscisse normalisée s, profondeur t (0 = ligne d'implantation, 1 = contour du crâne). */
 function rootAt(ctx: HairCtx, s: number, t: number): Vec {
@@ -71,30 +74,37 @@ export function flowLocks(ctx: HairCtx): HairLock[] {
 export function coneLocks(ctx: HairCtx): HairLock[] {
   const { h, lm, rnd } = ctx;
   const f = h.flow;
-  if (!(f.mode === 'cones' || f.mode === 'mixed') || f.cones === 0) return [];
+  // `spiky` PORTE TOUJOURS des épis : avant, ils ne venaient que du tirage `flow.mode ∈ {cones, mixed}` (mesuré : 0 cône sur 58 % des tirages `spiky`, mèches identiques à `short` : `docs/HAIR-SPIKY.md`).
+  const spiky = h.style === 'spiky';
+  if (!spiky && !(f.mode === 'cones' || f.mode === 'mixed')) return [];
+  const nCones = spiky ? Math.max(f.cones, SPIKY_CONES.min) : f.cones, coneSharp = spiky ? Math.max(f.coneSharp, SPIKY_CONES.sharp) : f.coneSharp;
+  if (nCones === 0) return [];
   const out: HairLock[] = [];
-  const clusters = Math.max(1, Math.round(f.cones / 3));
-  const per = Math.ceil(f.cones / clusters);
+  const clusters = Math.max(1, Math.round(nCones / (spiky ? SPIKY_CONES.group : 3)));
+  const per = Math.ceil(nCones / clusters);
   let made = 0;
-  for (let k = 0; k < clusters && made < f.cones; k++) {
+  for (let k = 0; k < clusters && made < nCones; k++) {
     // Racines sur le DESSUS du crâne (|s| ≤ 0,7) : plus bas, l'arc passe à la tempe et le cône sortait de la joue de la tête.
     const s = -0.7 + (1.4 * (k + 0.5)) / clusters + (rnd() - 0.5) * 0.1;
     // L'axe d'un paquet est RADIAL : il part de la surface du crâne vers l'extérieur et le haut (les côtés restent courts et couchés),
     // au lieu d'un éventail vertical indépendant du crâne — c'est ce qui faisait des cônes collés autour de la tête.
     const axis = unit({ x: s * 0.9 + (rnd() - 0.5) * 0.3, y: -1.1 + 0.5 * Math.abs(s) });
-    for (let j = 0; j < per && made < f.cones; j++, made++) {
+    for (let j = 0; j < per && made < nCones; j++, made++) {
       const R = rootAt(ctx, s + (rnd() - 0.5) * 0.12, 0.85 + 0.15 * rnd());
       const a = (rnd() - 0.5) * 0.7 + (j - (per - 1) / 2) * 0.22;
       const d = unit({ x: axis.x * Math.cos(a) - axis.y * Math.sin(a), y: axis.x * Math.sin(a) + axis.y * Math.cos(a) });
       // Longueur : décroît vers les côtés (|s| → 1) et reste bornée à 0,3 H (un cône plus long qu'un tiers de tête n'est plus une mèche).
-      const len = Math.min(0.3 * lm.H, (0.1 + 0.2 * rnd() + 0.1 * h.silhouette.lift) * lm.H * ctx.gain(s) * (1 - 0.5 * Math.abs(s) ** 2));
+      // `spiky` : la longueur est tirée DANS le budget de portée (`REACH.spiky.up`) : au-delà, `fitReach` ramenait tous les épis à la même hauteur (créneau plat, mesuré sur la graine 4) ; des pointes inégales font des pointes.
+      const len = spiky
+        ? Math.min(SPIKY_CONES.maxLen * lm.H, ((SPIKY_CONES.fill[0] + SPIKY_CONES.fill[1] * rnd()) * REACH.spiky.up * lm.H * (1 - 0.35 * s * s)) / Math.max(0.5, -d.y))
+        : Math.min(0.3 * lm.H, (0.1 + 0.2 * rnd() + 0.1 * h.silhouette.lift) * lm.H * ctx.gain(s) * (1 - 0.5 * Math.abs(s) ** 2));
       const bend = (rnd() - 0.5) * 0.14;
-      const wd = lm.W * (0.09 + 0.07 * rnd()); // tiré ici (même ordre qu'avant) ; le cône s'effile : un quart de sa largeur de base compte pour la portée
+      const wd = lm.W * (spiky ? SPIKY_CONES.width[0] + SPIKY_CONES.width[1] * rnd() : 0.09 + 0.07 * rnd()); // tiré ici (même ordre qu'avant) ; le cône s'effile : un quart de sa largeur de base compte pour la portée
       const c = fitReach(ctx, Array.from({ length: 12 }, (_, i) => {
         const u = i / 11;
         return { x: R.x + (d.x + bend * u) * len * u, y: R.y + d.y * len * u };
       }), wd / 4);
-      out.push(...lockFrom(ctx, c, { width: wd, rank: 'mass', tone: -(0.05 + 0.3 * rnd()) * (0.4 + h.highlight), layer: 'front', profile: 'cone', power: 1 + 0.6 * f.coneSharp, raw: true, kind: 'cone', edgeFade: h.tips.edgeFade, ragged: h.tips.irregular * 0.5, reach: true }));
+      out.push(...lockFrom(ctx, c, { width: wd, rank: 'mass', tone: -(0.05 + 0.3 * rnd()) * (0.4 + h.highlight), layer: 'front', profile: 'cone', power: 1 + 0.6 * coneSharp, raw: true, kind: 'cone', edgeFade: h.tips.edgeFade, ragged: h.tips.irregular * 0.5, reach: true }));
     }
   }
   // Vocabulaire de la coiffure : les cônes sont tirés PUIS écartés (le flux aléatoire, donc le reste de la graine, ne bouge pas).

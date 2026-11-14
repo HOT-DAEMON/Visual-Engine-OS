@@ -1,7 +1,7 @@
 import { darken } from '../core/color';
 import type { FaceParams } from '../schema';
 import type { HairBoundary } from '../face/hair/boundary/types';
-import { regionKnots, smoothRegion, type HairRegion, type RegionPoint } from './hair-region';
+import { regionKnots, relaxRegion, smoothRegion, type HairRegion, type RegionPoint } from './hair-region';
 import { REF_ROWS } from './ref-fit';
 import { REF_SPEC } from './spec';
 import type { HeadTurnSpec } from './types';
@@ -41,7 +41,7 @@ const shadeOf = (c: string, k: number): string => darken(c, k);
  * couleur du matériau de l'hôte (`objects[0].material.color`) : elle n'est pas dans `FaceParams`.
  */
 export function headSpecFromFace(p: FaceParams, b: HairBoundary, skin: string, base: HeadTurnSpec = REF_SPEC): HeadTurnSpec {
-  const region = smoothRegion(regionFromBoundary(b));
+  const region = relaxRegion(smoothRegion(regionFromBoundary(b)));
   const hair = p.hair.color;
   return {
     ...base,

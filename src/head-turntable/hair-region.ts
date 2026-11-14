@@ -102,3 +102,21 @@ export function smoothRegion(poly: HairRegion, n = 2): HairRegion {
   }
   return P;
 }
+
+/**
+ * Adoucit la lisière : moyenne glissante [1 2 1]/4 des sommets (les points artificiels du sommet et du raccord restent fixes). Sur un polygone dense (≈ 0,7° entre deux points) `passes` passes
+ * lissent les accidents de moins de ≈ `1,2 × √passes` degrés d'azimut (la petite marche du dessin 2D au temple) sans toucher aux courbes de la lisière, plus longues.
+ */
+export function relaxRegion(poly: HairRegion, passes = 10): HairRegion {
+  const fix = (q: RegionPoint): boolean => q[1] <= 0 || Math.abs(q[0]) >= 180;
+  let P = poly.slice();
+  for (let k = 0; k < passes; k++) {
+    const Q = P;
+    P = Q.map((q, i) => {
+      if (fix(q)) return q;
+      const a = Q[(i + Q.length - 1) % Q.length]!, b = Q[(i + 1) % Q.length]!;
+      return [0.25 * a[0] + 0.5 * q[0] + 0.25 * b[0], 0.25 * a[1] + 0.5 * q[1] + 0.25 * b[1]] as RegionPoint;
+    });
+  }
+  return P;
+}

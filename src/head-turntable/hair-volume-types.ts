@@ -8,7 +8,18 @@
 export type HairPart =
   | { readonly kind: 'bun'; readonly x: number; readonly y: number; readonly r: number; readonly place: HairPlace }
   | { readonly kind: 'tail'; readonly x: number; readonly y: number; readonly len: number; readonly r0: number; readonly spread: number; readonly place: HairPlace }
-  | { readonly kind: 'braid'; readonly x: number; readonly y: number; readonly len: number; readonly r: number };
+  | { readonly kind: 'braid'; readonly x: number; readonly y: number; readonly len: number; readonly r: number }
+  /** Épi rigide posé SUR la coque (`docs/HAIR-SPIKY.md`) : racine en (azimut °, hauteur U) ; direction (non normalisée) = `up` vers le haut + `out` le long de la normale horizontale sortante + `sx` le long de l'azimut ; longueur, rayon de base et concavité du profil (`power` ≥ 1). */
+  | { readonly kind: 'spike'; readonly az: number; readonly y: number; readonly up: number; readonly out: number; readonly sx: number; readonly len: number; readonly r: number; readonly power: number };
+
+/** Frange : bord INFÉRIEUR des mèches qui retombent sur le front, par azimut (degrés, −90 … +90, pas `FRINGE_STEP`), en U. Source : `geo.fringeBottom` du moteur de visage (le dessin 2D de la frange). */
+export interface HairFringe {
+  readonly y: readonly number[];
+  /** Côté (−1 / +1) vers lequel la frange balaie : celui où son bord est le plus bas. */
+  readonly side: -1 | 1;
+}
+/** Pas (degrés) de la table de la frange. */
+export const FRINGE_STEP = 3;
 
 /** `top` : sur le dessus du crâne ; `side` : sur le contour latéral ; `back` : derrière la tête. */
 export type HairPlace = 'top' | 'side' | 'back';
@@ -29,4 +40,10 @@ export interface HairVolume {
   /** Cheveux pendants (bob, long) : rideau sous la nuque, de `y0` à `yEnd`, ouvert devant (|azimut| < `az0` degrés : le cou et le visage restent dégagés). */
   readonly hang: { readonly y0: number; readonly yEnd: number; readonly az0: number } | null;
   readonly parts: readonly HairPart[];
+  /** Mèches de frange qui recouvrent le front SOUS l'implantation (même bord que le dessin 2D), ou absent. */
+  readonly fringe?: HairFringe | null;
+  /** Épi (tourbillon) du sommet : nombre de colonnes dont le motif des mèches tourne autour du vertex (signe = sens). 0 = pas de tourbillon. */
+  readonly whorl?: number;
+  /** Balayage des mèches du front (cellules de décalage sur la hauteur de la frange ; signe = côté). 0 = mèches droites. */
+  readonly sweep?: number;
 }

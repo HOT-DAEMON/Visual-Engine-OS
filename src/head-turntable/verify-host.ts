@@ -34,7 +34,7 @@ function skinCover(spec: HeadTurnSpec, r: TurnRender): number {
   return want ? got / want : 0;
 }
 
-const isHairId = (id: number): boolean => id === PART.hair || id === PART.hairPart || id === PART.hairBun;
+const isHairId = (id: number): boolean => id === PART.hair || id === PART.hairPart || id === PART.hairBun || id === PART.hairSpike;
 
 /** Hauteurs (U) des rangées comparées : du front à la pointe du menton, pas 0,025. */
 const ROWS = Array.from({ length: 35 }, (_, i) => 0.15 + i * 0.025);
