@@ -28,7 +28,7 @@ Grille déduite des **vallées de la projection d'encre** (4 colonnes, 6 rangée
 ## 3 · Ce que le moteur fait de ces mesures (comparaison vérifiable, `tests/relief-underview.test.ts`)
 Nez du moteur en vue de dessous (tangages 20°, 40°, 60°), rapportés à la largeur de l'enveloppe lobule + ailes, comparés à `03` :
 - **Hauteur relative des narines** : 0,70–0,75 pour le nez par défaut et les archétypes « pyramide » et « cloche-ailes » → **dans la plage mesurée** (0,61–0,80).
-- **Séparation des narines** : 0,325 (défaut), 0,378 (pyramide), 0,372 (cloche-ailes), contre 0,381–0,496 mesuré → **le nez par défaut est SOUS la plage** (écart verrouillé par un test) ; pyramide à la limite basse.
+- **Séparation des narines** : ✅ CORRIGÉE par la loi de placement ajustée (`docs/NOSE-NOSTRIL-PLACEMENT.md`). Mesure « enveloppe lobule + ailes » : défaut 0,468, pyramide 0,491, cloche-ailes 0,490, contre 0,381–0,496 mesuré (avant : 0,325 / 0,378 / 0,372, défaut SOUS la plage). Pyramide et cloche-ailes sont près du PLAFOND : ne pas relever la constante sans re-mesurer.
 - Longueur : 0,116–0,135 du moteur contre 0,153–0,356 mesuré, **non comparable en l'état** (largeur d'ouverture du moteur contre trait sombre dessiné) : ni écart ni accord affirmés.
 - **Non fait** : aucune de ces mesures n'est branchée dans le moteur (pas de paramètre de séparation recalé, pas de brillance de pointe, pas de moucheture). Mesure et comparaison seulement.
 

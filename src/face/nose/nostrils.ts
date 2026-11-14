@@ -9,6 +9,14 @@ import type { NostrilGeo } from './types';
 const N_POINTS = 28;
 
 /**
+ * Part de la MARGE LIBRE du couloir (entre la columelle et 78 % de la crête alaire, une fois la narine posée) dont la narine s'éloigne de la columelle.
+ * 0 = narine collée à la columelle (ancienne loi : séparation 0,300 pour le nez par défaut) ; 1 = collée au flanc de l'aile. AJUSTÉE (pas choisie à l'œil) pour que le nez par défaut
+ * retrouve la MÉDIANE mesurée sur la réf. 03 (séparation / largeur du nez = 0,431, `refs.generated.ts`) : 0,42. Validée contre une plage non utilisée à l'ajustement (réf. 05 : 0,26–0,55) et sur
+ * les axes largeur, évasement, columelle, taille, forme, inclinaison (tests/nose-nostril-placement.test.ts). docs/NOSE-NOSTRIL-PLACEMENT.md.
+ */
+export const NOSTRIL_PLACEMENT = 0.42;
+
+/**
  * Contour d'une narine : une GOUTTE (large en bas, effilée vers le haut) dans son repère propre (u le long de l'axe, de bas en haut ;
  * v perpendiculaire), puis tournée de `tilt`. Pour la narine droite, le haut converge vers la ligne médiane (rotation vers x < 0).
  */
@@ -50,13 +58,15 @@ export function nostrilGeometry(p: FaceParams, F: NoseFrame): { left: NostrilGeo
     const extX = (aa: number, bb: number): number => Math.hypot(aa * Math.sin(t), bb * Math.cos(t));
     const extY = (aa: number, bb: number): number => Math.hypot(aa * Math.cos(t), bb * Math.sin(t));
     // Couloir disponible dans l'aile : de la columelle (+ marge) à 78 % de la crête alaire. Une narine trop grande est RÉDUITE pour y tenir :
-    // elle ne sort jamais de son aile, quelles que soient la taille, l'inclinaison et l'écartement des ailes.
+    // elle ne sort jamais de son aile, quelles que soient la taille, l'inclinaison et l'écartement des ailes. Elle est ensuite posée à NOSTRIL_PLACEMENT de la marge restante.
     const lo = F.colHalf + 0.03 * F.nw;
     const hi = F.alarX * 0.78;
     const fit = Math.min(1, (hi - lo) / Math.max(1e-6, 2 * extX(a, b)));
     const a2 = a * fit;
     const b2 = b * fit;
-    const c: Vec = { x: side * (lo + extX(a2, b2)), y: F.baseY - 0.001 * F.H - extY(a2, b2) };
+    // Marge libre une fois la narine posée contre la columelle ; la narine s'en éloigne de NOSTRIL_PLACEMENT (toujours dans le couloir : jamais au-delà de `hi`).
+    const slack = Math.max(0, hi - lo - 2 * extX(a2, b2));
+    const c: Vec = { x: side * (lo + extX(a2, b2) + NOSTRIL_PLACEMENT * slack), y: F.baseY - 0.001 * F.H - extY(a2, b2) };
     return { side, c, a: a2, b: b2, tiltDeg: tilt, poly: dropPoly(c, a2, b2, tilt, side) };
   };
   return { left: make(-1), right: make(1) };

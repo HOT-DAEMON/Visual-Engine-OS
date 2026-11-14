@@ -60,7 +60,7 @@ export function noseLitReliefChecks(r: UnderviewRelief, pitchDeg: number, ppu = 
 /** `skinLum` : luminance de la peau de l'hôte (0–255) ; « presque noir » est relatif à elle, sinon une peau foncée serait toujours en faute. */
 /**
  * Séparation des narines / largeur de la silhouette (mesurée sur la silhouette du rendu, pas sur l'ancienne enveloppe) : plage des dessins de la réf. 03 (0,38–0,50) ; `warn`.
- * ÉCART CONNU : le nez par défaut est à 0,30, même avec `nostrils.columella` = 1 on n'atteint que 0,365 (scripts, docs/NOSE-BASE-MASS.md) : la loi de placement des narines (`nostrils.ts`) est à changer.
+ * Le nez par défaut y est (0,432 ; ancienne loi : 0,300, corrigée dans `nostrils.ts`, docs/NOSE-NOSTRIL-PLACEMENT.md) : la règle garde les écarts futurs visibles.
  */
 export function noseSeparationCheck(r: Pick<UnderviewRelief, 'field' | 'grid'>, nostrilGapPx: number, ppu: number): Check {
   const { w, h } = r.grid; let lo = w, hi = -1;

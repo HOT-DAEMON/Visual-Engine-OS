@@ -28,7 +28,7 @@ Mesuré : 4 nez × 4 tangages, puis 120 visages tirés à 40° : solidité ≥ 0
 - ✅ Les résumés de `measures-03.json` et `measures-05.json` sont générés (test : égalité exacte avec les JSON) et lus par la règle de séparation des narines.
 - ⬜ **Aucune brillance, aucun matériau ni couleur de pointe** : 03 et 05 sont des dessins en niveaux de gris, l'information n'existe pas. Rien n'a été inventé.
 - ⬜ Moucheture de la réf. 05 (médiane 0,34 / 1000 px²) : ≈ 1 à 2 points par nez, sans effet visible ; aucune texture n'en est dérivée.
-- 🟡 **Séparation des narines : écart NON corrigé.** Nez par défaut 0,30 (mesuré 0,381–0,496) ; même `nostrils.columella = 1` n'atteint que 0,365. Le levier est la loi de placement de `nostrils.ts` (corridor `lo = colHalf + 0,03 × largeur`) ; la changer déplace tous les visages (golden). Test `ÉCART CONNU` dans `tests/nose-lit-verify.test.ts`.
+- ✅ **Séparation des narines : corrigée après coup** (nez par défaut 0,30 → 0,432 ; mesuré 0,381–0,496) en changeant la loi de placement de `nostrils.ts`, ce qui a déplacé tous les visages (références visuelles mises à jour). Voir `docs/NOSE-NOSTRIL-PLACEMENT.md`.
 
 ## 4 bis · Défauts visibles du résultat (non cachés)
 - Le défaut « champignon » est corrigé, mais le rendu se lit comme un museau arrondi : **les narines sont de petits creux ronds, loin des ouvertures sombres de la réf. 04, et le V de la columelle est à peine lisible**.

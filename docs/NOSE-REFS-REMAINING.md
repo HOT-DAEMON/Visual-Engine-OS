@@ -30,7 +30,7 @@ Légende : ✅ fait et prouvé · 🟡 partiel · ⬜ non fait. Rien ici n'est p
 - 🟡 Teinte partagée : la vue de dessous éclairée reçoit la couleur de peau de l'hôte ; cohérence nez/joues/membres supérieurs NON mesurée.
 - ✅ La vue de dessous est éclairée par `src/relief` (même `LightModel`, aucune lumière propre) ; ⬜ ✅ la silhouette « champignon » est corrigée (`NOSE-BASE-MASS.md`) ; ⬜ l'ombre reste très sombre, lobule allongé du nez par défaut à 60°, encoche de « cloche-ailes », bandes fines à 40°.
 - 🟡 Lisibilité : séparation des dômes, sillon alaire, ouverture des narines ne changent que ≈ 1–2 % des pixels dans la vue de face ; inchangé.
-- 🟡 **Séparation des narines du moteur sous la plage mesurée** (défaut 0,325 contre 0,381–0,496) : écart verrouillé par test, NON corrigé ; `nostrils.columella` = 1 n'atteint que 0,365 : le levier est la loi de placement de `nostrils.ts` (règle de style `nose-lit-nostril-separation`, avertissement).
+- ✅ **Séparation des narines** : corrigée (défaut 0,300 → 0,432 sur la silhouette, médiane de la réf. 03 : 0,431 ; 12 réglages dans 0,381–0,496) par la loi de placement de `nostrils.ts`, `docs/NOSE-NOSTRIL-PLACEMENT.md`. Les narines restent de petits creux ronds (aspect, longueur et profondeur NON traités : voir ci-dessous).
 
 ## Moteur
 - ⬜ **La vue de dessous n'est toujours pas branchée dans `head_3d`** : tentative faite puis retirée (1,6–2,5 % de pixels changés, échec de `head.roll.joined` si peu enfoui) : `NOSE-BASE-MASS.md` §5.

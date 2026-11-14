@@ -47,12 +47,13 @@ describe('mesures 03/05 branchées dans le moteur (src/face/nose/refs.generated.
     const { readFileSync } = await import('node:fs'), { NOSE_REFS } = await import('../src/face/nose/refs.generated');
     for (const [k, f] of [['r03', 'measures-03.json'], ['r05', 'measures-05.json']] as const) expect(NOSE_REFS[k]).toEqual(JSON.parse(readFileSync(`references/nez/${f}`, 'utf8')).summary);
   });
-  it('ÉCART CONNU, signalé par la règle de style (warn) : la séparation des narines du nez par défaut est sous la plage de la réf. 03, et `nostrils.columella` seul ne suffit pas à l\'atteindre', async () => {
+  it('séparation des narines : le nez par défaut est DANS la plage de la réf. 03 (règle de style) ; le mauvais écart de l\'ancienne loi (0,300) est toujours DÉTECTÉ', async () => {
     const { noseSeparationCheck } = await import('../src/verify/nose-lit'), sep = (col: number) => {
       const p = FaceParams.parse({ anatomyEngine: 'structured', nose: { nostrils: { columella: col } } } as never), n = noseGeometry(p, faceLandmarks(p, 300, 380));
-      return noseSeparationCheck(underviewRelief(n, { pitchDeg: 40 }, 2), n.nostrils.right.c.x - n.nostrils.left.c.x, 2);
+      const r = underviewRelief(n, { pitchDeg: 40 }, 2);
+      return { ok: noseSeparationCheck(r, n.nostrils.right.c.x - n.nostrils.left.c.x, 2).ok, old: noseSeparationCheck(r, (0.300 / 0.432) * (n.nostrils.right.c.x - n.nostrils.left.c.x), 2).ok };
     };
-    expect(sep(0.5).ok).toBe(false);
-    expect(sep(1).ok).toBe(false);   // si ceci passe : la loi de placement a changé, mettre à jour docs/NOSE-BASE-MASS.md et NOSE-REFS-REMAINING.md
+    for (const col of [0, 0.5, 1]) expect(sep(col).ok, `columella ${col}`).toBe(true);
+    expect(sep(0.5).old, 'contrôle négatif : l\'écart de l\'ancienne loi (0,300 / 0,432 de l\'écart actuel) doit rester hors plage').toBe(false);
   }, 30_000);
 });

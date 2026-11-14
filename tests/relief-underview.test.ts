@@ -55,8 +55,8 @@ describe('vue de dessous éclairée par le moteur unique (src/relief) — preuve
   });
 });
 
-describe('narines du moteur contre la mesure de la réf. 03 (écart verrouillé, pas masqué)', () => {
-  const m03 = JSON.parse(readFileSync('references/nez/measures-03.json', 'utf8')) as { summary: { separationOverNoseW: { min: number; median: number }; meanCyRel: { min: number; max: number } } };
+describe('narines du moteur contre la mesure de la réf. 03 (plage mesurée)', () => {
+  const m03 = JSON.parse(readFileSync('references/nez/measures-03.json', 'utf8')) as { summary: { separationOverNoseW: { min: number; median: number; max: number }; meanCyRel: { min: number; max: number } } };
   const stats = (patch: object, pitch: number) => {
     const v = noseView(nose(patch), pitch), xs = v.envelope.map((q) => q.x), ys = v.envelope.map((q) => q.y), x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
     const c = (poly: { x: number; y: number }[]) => ({ x: poly.reduce((s, q) => s + q.x, 0) / poly.length, y: poly.reduce((s, q) => s + q.y, 0) / poly.length });
@@ -65,7 +65,9 @@ describe('narines du moteur contre la mesure de la réf. 03 (écart verrouillé,
   it('hauteur relative des narines : DANS la plage mesurée (0,61–0,80) pour le nez par défaut et deux archétypes, à 20°, 40° et 60°', () => {
     for (const patch of [{}, noseArchetype('pyramide'), noseArchetype('cloche-ailes')]) for (const pitch of [20, 40, 60]) { const s = stats(patch, pitch); expect(s.cy).toBeGreaterThan(m03.summary.meanCyRel.min); expect(s.cy).toBeLessThan(m03.summary.meanCyRel.max); }
   });
-  it('ÉCART VERROUILLÉ : la séparation des narines du nez par défaut est SOUS la plage mesurée (0,38–0,50) ; si elle y entre, mettre à jour docs/NOSE-REFS-03-05.md', () => {
-    expect(stats({}, 40).sep).toBeLessThan(m03.summary.separationOverNoseW.min);
+  it('séparation des narines : DANS la plage mesurée (0,38–0,50, réf. 03) pour le nez par défaut et deux archétypes à 40° (écart de l\'ancienne loi de placement corrigé : docs/NOSE-NOSTRIL-PLACEMENT.md)', () => {
+    for (const patch of [{}, noseArchetype('pyramide'), noseArchetype('cloche-ailes')]) {
+      const s = stats(patch, 40).sep; expect(s).toBeGreaterThanOrEqual(m03.summary.separationOverNoseW.min); expect(s).toBeLessThanOrEqual(m03.summary.separationOverNoseW.max);
+    }
   });
 });
