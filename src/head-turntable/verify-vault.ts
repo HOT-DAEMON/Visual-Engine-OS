@@ -1,6 +1,7 @@
 import { VAULT_STRUCTURES } from '../skull/vault-registry';
 import { headRelief } from './engines/head-relief';
 import { vaultRise } from './engines/vault-model';
+import { vaultAnchors } from './engines/vault-relief';
 import { silhouetteProfile } from './silhouette';
 import { fy } from './engines/units';
 import { VAULT_VIEWS, vaultRender } from './vault-lab';
@@ -17,12 +18,13 @@ const G = 'geometry' as const, A = 'anatomy' as const, S = 'style' as const, D =
 
 function scanRelief(spec: HeadTurnSpec): { amp: number; step: number; face: number } {
   const rel = headRelief(spec.engine); if (!rel) return { amp: 0, step: 0, face: 0 };
+  const yFace = vaultAnchors(spec.engine!).yG + 0.05;   // sous la glabelle DE CETTE TÊTE (le nez et la bouche commencent plus bas)
   let amp = 0, step = 0, face = 0;
   for (let y = 0.02; y <= 1.0; y += 0.0125) for (let az = 0; az <= 180; az += 3) {
     const v = rel(y, az / D); amp = Math.max(amp, Math.abs(v));
     if (az > 0) step = Math.max(step, Math.abs(v - rel(y, (az - 3) / D)));
     if (y > 0.02) step = Math.max(step, Math.abs(v - rel(y - 0.0125, az / D)));
-    if (az <= 4 && y > 0.5) face = Math.max(face, Math.abs(v));
+    if (az <= 4 && y > yFace) face = Math.max(face, Math.abs(v));
   }
   return { amp, step, face };
 }
@@ -35,7 +37,7 @@ export function vaultGeometryChecks(spec: HeadTurnSpec): Check[] {
     check(G, 'vault.geo.rise', 'Hauteur réelle de la voûte : déplacement du sommet (U), borné pour que le remappage reste monotone (|Δ| < 0,1)', Math.abs(rise), 0, 0.1),
     check(G, 'vault.geo.amplitude', 'Relief de la voûte et des joues : amplitude radiale maximale (U) [≈ 0,06 U ≈ 14 mm d\'une tête de 230 mm, extrêmes compris]', r.amp, 0, 0.06),
     check(G, 'vault.geo.continuity', 'Relief : plus grand saut entre deux échantillons voisins (0,0125 U ou 3°) : une falaise ferait une arête dans le maillage', r.step, 0, 0.014),
-    check(G, 'vault.geo.face', 'Relief à moins de 4° du plan de face, sous la glabelle (U) : le nez, la bouche et le menton restent ceux des moteurs', r.face, 0, 0.002),
+    check(G, 'vault.geo.face', 'Relief à moins de 4° du plan de face, 0,05 U sous la glabelle de la tête (U) : le nez, la bouche et le menton restent ceux des moteurs', r.face, 0, 0.002),
   ];
 }
 
@@ -49,20 +51,20 @@ export function vaultAnatomyChecks(spec: HeadTurnSpec): Check[] {
     check(A, 'vault.anat.parietal.back', 'Éminence pariétale derrière le ptérion (z décroissant vers l\'arrière, U)', pt.local.z - pa.local.z, 0.05, 0.6),
     check(A, 'vault.anat.tissue.depth', 'Profondeur de l\'os : tempe (muscle temporal) plus profonde que glabelle et mastoïde (rapport tempe / glabelle)', tb.depthU / gl.depthU, 3, 9),
     check(A, 'vault.anat.sutures.hidden', 'Sutures et lignes masquées par défaut dans le rendu (nombre visibles par défaut parmi les sutures et lignes)', VAULT_STRUCTURES.filter((q) => (q.kind === 'suture' || q.kind === 'line') && q.visibleByDefault).length, 0, 0),
-    check(A, 'vault.anat.visible.back', 'Vue de dos : occipital, mastoïdes et pariétaux sont visibles (nombre / 4)', back.filter((p) => ['occipital-bone', 'mastoid-process', 'parietal-bone'].includes(p.id) && p.visible).length, 4, 5),
+    check(A, 'vault.anat.visible.back', 'Vue de dos : occipital, mastoïdes et pariétaux sont vus ou sur le contour (nombre sur 5 ; une éminence au point le plus large est sur le contour)', back.filter((p) => ['occipital-bone', 'mastoid-process', 'parietal-bone'].includes(p.id) && (p.visible || p.grazing)).length, 4, 5),
   ];
 }
 
 export function vaultStyleChecks(spec: HeadTurnSpec): Check[] {
   const c: Check[] = [];
   for (const v of ['face', 'profil', 'dos'] as const) {
-    const r = vaultRender(spec, v, 360, false), s = silhouetteProfile(r, Array.from({ length: 40 }, (_, i) => 0.05 + i * 0.02)), l = s.map((q) => q.left);
+    const r = vaultRender(spec, v, 360, false), s = silhouetteProfile(r, Array.from({ length: 40 }, (_, i) => 0.03 + i * 0.007)), l = s.map((q) => q.left);
     let kink = 0; for (let i = 1; i + 1 < l.length; i++) kink = Math.max(kink, Math.abs(l[i - 1]! - 2 * l[i]! + l[i + 1]!));
-    c.push(check(S, `vault.style.silhouette.${v}`, `Silhouette (${v}) : plus grande cassure (dérivée seconde, U) : un contour d'illustration est lisse, sans angle parasite`, kink, 0, 0.09));
+    c.push(check(S, `vault.style.silhouette.${v}`, `Silhouette (${v}) : plus grande cassure de la CALOTTE (t < 0,31 U ; dérivée seconde, U) : un contour d'illustration est lisse, sans angle parasite [calibré : 12 têtes de base ≤ 0,029 ; combinaisons extrêmes ≤ 0,039 ; borne = 1,5 × le pire]`, kink, 0, 0.06));
   }
   const lit = vaultRender(spec, 'trois_quarts', 360, true); let hf = 0, n = 0;
   for (let y = 1; y + 1 < lit.h; y++) for (let x = 1; x + 1 < lit.w; x++) { const i = y * lit.w + x; if (lit.ids[i] === 0 || lit.ids[i - 1] === 0 || lit.ids[i + 1] === 0 || lit.ids[i - lit.w] === 0 || lit.ids[i + lit.w] === 0) continue; const k = (j: number): number => lit.rgba[j * 4]!; hf += Math.abs(4 * k(i) - k(i - 1) - k(i + 1) - k(i - lit.w) - k(i + lit.w)) / 255; n++; }
-  c.push(check(S, 'vault.style.shading.noise', 'Modelé : énergie haute fréquence moyenne (laplacien, 0 – 1) : le relief se lit comme un volume et non comme du bruit', n ? hf / n : 0, 0, 0.06));
+  c.push(check(S, 'vault.style.shading.noise', 'Modelé : énergie haute fréquence moyenne (laplacien, 0 – 1) : le relief se lit comme un volume et non comme du bruit [calibré : 12 têtes de base ≤ 0,060, extrêmes ≤ 0,046 ; borne 0,075]', n ? hf / n : 0, 0, 0.075));
   return c;
 }
 export const vaultReport = (spec: HeadTurnSpec): LayerReport[] => [layerOf(G, vaultGeometryChecks(spec)), layerOf(A, vaultAnatomyChecks(spec)), layerOf(S, vaultStyleChecks(spec))];

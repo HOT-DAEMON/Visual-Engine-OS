@@ -1,3 +1,4 @@
+import { vaultRise, warpY } from './engines/vault-model';
 import { reliefAnatomyChecks, reliefGeometryChecks, reliefStyleChecks } from './verify-relief';
 import { halfWidthAt } from '../face/outline';
 import { CHIN_CAP_Y } from './engines/rows';
@@ -70,7 +71,7 @@ export function headGeometry(h: HeadSubject, Rh: HeadRenders): LayerReport {
   if (s.engine) {
     // Face : demi-largeur du rendu à tangage 0 vs contour du moteur de visage, sur le crâne (0,15–0,5) et la mâchoire (0,85–1,0), hors oreilles.
     const e = s.engine, ts = [...Array.from({ length: 8 }, (_, i) => 0.15 + i * 0.05), 0.85, 0.9, 0.95, 1.0], f0 = headEdges(R.at(0, true), ts);
-    const want = (y: number): number => halfWidthAt(e.lm.outline, Math.min(py(toEngineY(y)), e.lm.outline.bottomY - 1)) / 1000;
+    const rise = vaultRise(e), want = (y: number): number => halfWidthAt(e.lm.outline, Math.min(py(toEngineY(warpY(y - rise, rise))), e.lm.outline.bottomY - 1)) / 1000;   // `y` est mesuré depuis le SOMMET (headEdges) : le sommet est à −Δ (voûte rehaussée de Δ), la hauteur du maillage vaut y − Δ, que `warpY` remappe vers la hauteur source du contour 2D
     const dev = f0.map((p) => Math.abs((p.right - p.left) / 2 - want(p.t))), mean = dev.reduce((a, b) => a + b, 0) / Math.max(1, dev.length);
     c.push(...hostChecks(s, R.at(0, true)).geometry);
     c.push(...rollChecks(s, R.at(0, true), R.rolled(0, ROLL_PROBE), R.rolled(60, -ROLL_PROBE)).geometry);

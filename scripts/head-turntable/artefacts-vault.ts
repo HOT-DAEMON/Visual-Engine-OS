@@ -79,4 +79,8 @@ json('contraintes.json', { demande: ext, normal: assessVault(SkullParams.parse(e
 // 6. Tissus : scalp (cuir chevelu) × boneShow (os apparent), reliefs actifs.
 const tc: ProofCase = { id: 'tissus', lo: 0, hi: 0, nom: 0, base: RELIEF_ON, views: [] };
 for (const [i, sc] of [0.05, 0.5, 0.95].entries()) for (const [j, bs] of [-1, 0, 1].entries()) png(T('tissus', `${i}_${j}.png`), render(caseSpec({ ...tc, base: { ...RELIEF_ON, scalp: sc, boneShow: bs } }, undefined, 3), 'trois_quarts_arriere'));
+
+// 7. Cheveux : la coiffure est posée sur le MÊME maillage que la voûte ; elle suit donc largeur, hauteur et occiput.
+const HAIR = [['nominal', {}], ['large', { cranialBreadth: 1 }], ['etroit', { cranialBreadth: -1 }], ['haut', { vaultHeight: 1 }], ['bas', { vaultHeight: 0 }], ['occiput-plat', { occipitalFlat: 1, occipitalSlope: 0.6 }]] as const;
+for (const [n, ov] of HAIR) { const s = vaultSpec(ov as never, 3, false); for (const v of ['face', 'trois_quarts', 'profil', 'dos'] as const) png(T('cheveux', `${n}_${v}.png`), render(s, v)); }
 console.log('terminé', existsSync(out));

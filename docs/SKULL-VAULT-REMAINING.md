@@ -13,7 +13,7 @@ Tout ce qui est écrit ici n'est **pas fait** ou **fait partiellement**. Ce qui 
 | Vertex | ✅ hauteur réelle 3D | en 2D (`src/skull/vault.ts`, profil) le sommet reste lié à H (sommet → menton) : `vaultHeight` n'y change que la plénitude de la voûte, pas sa hauteur absolue |
 | Glabelle | ✅ relief médian | interaction avec les arcades (relief latéral) ; peau mince modélisée par la seule transmission |
 | Sutures et lignes | ⚠️ sillons / crêtes fins | reliefs persistants (crête métopique, carène sagittale), diastasis, formes pathologiques (craniosynostoses) |
-| Tissus | ⚠️ une carte d'épaisseur par région | âge, embonpoint, cuir chevelu rasé / dense ; matériau de la peau (texture) non spécialisé par couche ; les cheveux ne lisent pas la voûte au-delà de l'épaisseur de coupe |
+| Tissus | ⚠️ une carte d'épaisseur par région | âge, embonpoint, cuir chevelu rasé / dense ; matériau de la peau (texture) non spécialisé par couche ; cheveux : la lisière peinte suit le maillage (preuve : `cheveux-suivent-la-voute.png`) et le volume 3D de l'hôte (`hair-shell.ts`) lit `skullSurfacePoint`, donc la voûte, mais je ne l'ai **pas rendu** sur voûtes extrêmes (chaîne hôte non exercée ici) |
 | Contraintes | ⚠️ 2 strictes, 6 préférences | table complète des impossibilités (ex. relief maximal toléré selon l'épaisseur de tissu) |
 | Corrélations | ⚠️ 6 tendances posées a priori | à calibrer sur des mesures ; `generateRandomProfile` ne tire pas encore la voûte par défaut (option `vault` : voir `SKULL-VAULT-VALIDATION.md`) |
 | Familles | ⚠️ combinaisons posées à la main | l'axe `length` (existant) reste borné (`cranialLength`) : la diversité dolicho / brachy vient surtout de `cranialBreadth`, `occipitalFlat`, `templeBreadth` |

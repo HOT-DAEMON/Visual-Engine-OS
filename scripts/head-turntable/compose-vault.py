@@ -141,6 +141,11 @@ for k, (pid, p) in enumerate(proofs.items()):
     d.text((190 + 4 * 124 + 8, y + 18), '%s' % VLAB[v], font=FS, fill=(50, 50, 50)); d.text((190 + 4 * 124 + 8, y + 36), 'sil. %.2f %% · ombre %.2f %%' % (p['best']['xor'] * 100, p['best']['shadeFrac'] * 100), font=FS, fill=(50, 50, 50))
     d.text((190 + 4 * 124 + 8, y + 54), '✓' if p['perceptible'] else '✗ NON', font=FB, fill=(30, 140, 50) if p['perceptible'] else (200, 30, 30))
 im.save(f'{DST}/00-synthese-parametres.png', optimize=True)
+# 8b. Cheveux : la coiffure suit la voûte
+HN = ['nominal', 'large', 'etroit', 'haut', 'bas', 'occiput-plat']; HV = ['face', 'trois_quarts', 'profil', 'dos']
+grid('Cheveux sur voûtes extrêmes — la coiffure suit la voûte', 'même graine, même coiffure ; seule la voûte change (cheveux posés sur le même maillage continu)', len(HN), 4,
+     lambda i, j: load(S('cheveux', '%s_%s.png' % (HN[i], HV[j])), 250, 270), ['nominal', 'boîte large', 'boîte étroite', 'voûte haute', 'voûte basse', 'occiput plat+incliné'], [VLAB[v] for v in HV], 250, 270, f'{DST}/cheveux-suivent-la-voute.png')
+
 # 9. Variété : voûtes TIRÉES au hasard (graines 1..N, tendances facultatives à 0,5)
 rf = os.path.join(SRC, 'verification', 'aleatoire.json')
 if os.path.exists(rf):

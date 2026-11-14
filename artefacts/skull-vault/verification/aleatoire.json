@@ -1,0 +1,62 @@
+{
+ "1": {
+  "echecs": [],
+  "plausibilite": 0.828,
+  "corrections": 0
+ },
+ "2": {
+  "echecs": [],
+  "plausibilite": 0.772,
+  "corrections": 0
+ },
+ "3": {
+  "echecs": [],
+  "plausibilite": 0.685,
+  "corrections": 0
+ },
+ "4": {
+  "echecs": [],
+  "plausibilite": 0.854,
+  "corrections": 0
+ },
+ "5": {
+  "echecs": [],
+  "plausibilite": 0.904,
+  "corrections": 0
+ },
+ "6": {
+  "echecs": [],
+  "plausibilite": 0.646,
+  "corrections": 0
+ },
+ "7": {
+  "echecs": [],
+  "plausibilite": 0.77,
+  "corrections": 0
+ },
+ "8": {
+  "echecs": [],
+  "plausibilite": 0.778,
+  "corrections": 0
+ },
+ "9": {
+  "echecs": [],
+  "plausibilite": 0.769,
+  "corrections": 0
+ },
+ "10": {
+  "echecs": [],
+  "plausibilite": 0.884,
+  "corrections": 0
+ },
+ "11": {
+  "echecs": [],
+  "plausibilite": 0.841,
+  "corrections": 1
+ },
+ "12": {
+  "echecs": [],
+  "plausibilite": 0.707,
+  "corrections": 0
+ }
+}

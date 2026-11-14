@@ -1,0 +1,273 @@
+{
+ "dolichocephale": {
+  "overrides": {
+   "length": 1,
+   "cranialBreadth": -0.6,
+   "occipitalFlat": -0.5,
+   "frontalBreadth": -0.4
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "mesocephale": {
+  "overrides": {},
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "brachycephale": {
+  "overrides": {
+   "length": -1,
+   "cranialBreadth": 0.7,
+   "occipitalFlat": 1,
+   "templeBreadth": 0.4
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "haut": {
+  "overrides": {
+   "vaultHeight": 1,
+   "parietalFlat": -0.4
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "bas": {
+  "overrides": {
+   "vaultHeight": 0,
+   "parietalFlat": 0.7
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "occiput-plat": {
+  "overrides": {
+   "occipitalFlat": 1,
+   "occipitalSlope": 0.7
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "occiput-proeminent": {
+  "overrides": {
+   "occipitalFlat": -1,
+   "occipitalSlope": -0.8,
+   "occiput": 1,
+   "inion": 1
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "front-large": {
+  "overrides": {
+   "frontalBreadth": 1,
+   "frontalFlat": 0.8
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "front-etroit": {
+  "overrides": {
+   "frontalBreadth": -1,
+   "frontalFlat": -0.8,
+   "frontalBulge": 1
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "parietaux-bombes": {
+  "overrides": {
+   "parietalBulge": 1,
+   "parietalConvexity": 1
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "plans-lateraux-plats": {
+  "overrides": {
+   "temporalFlat": 1,
+   "parietalConvexity": -1,
+   "planeTransition": -1
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "asymetrique": {
+  "overrides": {
+   "asymParietal": 0.8,
+   "asymOccipital": 1,
+   "asymFrontal": 0.8,
+   "asymWidth": 0.6,
+   "asymFaceCoupling": 0
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "robuste": {
+  "overrides": {
+   "mastoid": 1,
+   "nuchalLine": 1,
+   "glabella": 1,
+   "temporalHollow": 0.6,
+   "boneShow": 1
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ }
+}

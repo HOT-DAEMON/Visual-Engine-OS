@@ -13,7 +13,7 @@ import { sy } from './units';
  * (`vault-tissue.ts` : transmission τ). Tout est nul quand les paramètres sont nuls (sauf l'inion, lu en écart à son nominal 0,4 : paramètre déjà existant, désormais visible en 3D).
  * Amplitudes (U ; tête de 230 mm ⇒ 1 U ≈ 230 mm) : 0,010 U ≈ 2,3 mm. Conventions d'anatomie artistique, justifiées dans `docs/SKULL-VAULT.md`.
  */
-export const VAULT_RELIEF = { hollow: 0.02, mastoid: 0.02, glabella: 0.022, inion: 0.012, inionRef: 0.4, nuchal: 0.012, suture: 0.006, tline: 0.007, width: 0.04, azU: 0.0055, curveSigma: 0.012 } as const;
+export const VAULT_RELIEF = { hollow: 0.02, mastoid: 0.03, glabella: 0.022, inion: 0.012, inionRef: 0.4, nuchal: 0.012, suture: 0.006, tline: 0.007, width: 0.04, azU: 0.0055, curveSigma: 0.012 } as const;
 const D = 180 / Math.PI, g = (d: number, s: number): number => Math.exp(-0.5 * (d / s) ** 2);
 
 interface Anchors { readonly yG: number; readonly yM: number; readonly yI: number; readonly yT: number; readonly curves: readonly { id: string; kind: VaultCurve['kind']; pts: readonly { y: number; az: number }[] }[] }

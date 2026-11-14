@@ -1,0 +1,1363 @@
+[
+ {
+  "id": "cranial-vault",
+  "fr": "Voûte crânienne (ensemble)",
+  "latin": "calvaria",
+  "kind": "region",
+  "region": "parietal",
+  "neighbors": {
+   "superior": [],
+   "inferior": [
+    "face",
+    "neck"
+   ],
+   "medial": [
+    "cranial-cavity"
+   ],
+   "lateral": [
+    "ear"
+   ],
+   "posterior": [],
+   "anterior": [
+    "face"
+   ]
+  },
+  "anchor": {
+   "yU": 0.3,
+   "az": 90,
+   "side": 1
+  },
+  "params": [
+   "cranialBreadth",
+   "asymWidth",
+   "asymParietal",
+   "asymOccipital",
+   "asymFrontal",
+   "asymFaceCoupling",
+   "boneShow",
+   "length",
+   "scalp"
+  ],
+  "influence": {
+   "fields": [
+    "a",
+    "relief"
+   ],
+   "yBand": [
+    0.01,
+    0.72
+   ],
+   "azBand": [
+    0,
+    180
+   ],
+   "views": [
+    "face",
+    "dos",
+    "dessus"
+   ]
+  },
+  "visibleByDefault": true,
+  "material": {
+   "inherits": "cranium"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 1.98
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 2.2
+   },
+   {
+    "id": "galéa",
+    "mm": 1.1
+   },
+   {
+    "id": "périoste",
+    "mm": 0.22
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.315,
+   "nominal": 1,
+   "epais": 0.685
+  }
+ },
+ {
+  "id": "frontal-bone",
+  "fr": "Os frontal",
+  "latin": "os frontale",
+  "kind": "bone",
+  "region": "frontal",
+  "neighbors": {
+   "superior": [
+    "parietal-bone"
+   ],
+   "inferior": [
+    "orbit",
+    "glabella"
+   ],
+   "medial": [
+    "glabella"
+   ],
+   "lateral": [
+    "pterion",
+    "temporal-bone"
+   ],
+   "posterior": [
+    "parietal-bone",
+    "temporal-bone",
+    "pterion",
+    "vertex",
+    "coronal-suture"
+   ],
+   "anterior": []
+  },
+  "anchor": {
+   "from": "bregma",
+   "to": "glabella",
+   "t": 0.55,
+   "az": 0,
+   "side": 0
+  },
+  "params": [
+   "foreheadSlope",
+   "frontalBulge",
+   "frontalFlat",
+   "frontalBreadth"
+  ],
+  "influence": {
+   "fields": [
+    "zf",
+    "pf",
+    "qf",
+    "relief"
+   ],
+   "yBand": [
+    0.04,
+    0.4
+   ],
+   "azBand": [
+    0,
+    75
+   ],
+   "views": [
+    "profil",
+    "trois_quarts",
+    "dessus"
+   ]
+  },
+  "visibleByDefault": true,
+  "material": {
+   "inherits": "cranium"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 1.386
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 1.54
+   },
+   {
+    "id": "galéa",
+    "mm": 0.77
+   },
+   {
+    "id": "périoste",
+    "mm": 0.154
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.326,
+   "nominal": 1.105,
+   "epais": 0.885
+  }
+ },
+ {
+  "id": "parietal-bone",
+  "fr": "Os pariétal",
+  "latin": "os parietale",
+  "kind": "bone",
+  "region": "parietal",
+  "neighbors": {
+   "superior": [
+    "vertex"
+   ],
+   "inferior": [
+    "temporal-bone",
+    "frontal-bone",
+    "occipital-bone",
+    "pterion",
+    "squamous-suture",
+    "temporal-line"
+   ],
+   "medial": [
+    "sagittal-suture",
+    "vertex"
+   ],
+   "lateral": [
+    "temporal-bone"
+   ],
+   "posterior": [
+    "occipital-bone",
+    "lambdoid-suture"
+   ],
+   "anterior": [
+    "frontal-bone",
+    "coronal-suture",
+    "temporal-line"
+   ]
+  },
+  "anchor": {
+   "yU": 0.24,
+   "az": 112,
+   "side": 1
+  },
+  "params": [
+   "parietalBulge",
+   "parietalFlat",
+   "parietalConvexity",
+   "vaultPeak"
+  ],
+  "influence": {
+   "fields": [
+    "a",
+    "zf",
+    "zb",
+    "qf",
+    "qb",
+    "relief"
+   ],
+   "yBand": [
+    0,
+    0.5
+   ],
+   "azBand": [
+    60,
+    160
+   ],
+   "views": [
+    "trois_quarts_arriere",
+    "dos",
+    "face",
+    "profil"
+   ]
+  },
+  "visibleByDefault": true,
+  "material": {
+   "inherits": "cranium"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 1.98
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 2.2
+   },
+   {
+    "id": "galéa",
+    "mm": 1.1
+   },
+   {
+    "id": "périoste",
+    "mm": 0.22
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.315,
+   "nominal": 1,
+   "epais": 0.685
+  }
+ },
+ {
+  "id": "temporal-bone",
+  "fr": "Os temporal (écaille)",
+  "latin": "squama temporalis",
+  "kind": "bone",
+  "region": "temporal",
+  "neighbors": {
+   "superior": [
+    "parietal-bone",
+    "squamous-suture",
+    "temporal-line"
+   ],
+   "inferior": [
+    "ear",
+    "mastoid-process"
+   ],
+   "medial": [
+    "cranial-cavity",
+    "frontal-bone",
+    "parietal-bone",
+    "occipital-bone",
+    "pterion",
+    "squamous-suture",
+    "temporal-line"
+   ],
+   "lateral": [],
+   "posterior": [
+    "mastoid-process",
+    "occipital-bone"
+   ],
+   "anterior": [
+    "frontal-bone",
+    "pterion"
+   ]
+  },
+  "anchor": {
+   "from": "pterion",
+   "dy": 0.03,
+   "az": 72,
+   "side": 1
+  },
+  "params": [
+   "temporalFlat",
+   "templeBreadth",
+   "temporalHollow"
+  ],
+  "influence": {
+   "fields": [
+    "a",
+    "qf",
+    "qb",
+    "relief"
+   ],
+   "yBand": [
+    0.25,
+    0.6
+   ],
+   "azBand": [
+    50,
+    110
+   ],
+   "views": [
+    "face",
+    "profil",
+    "trois_quarts"
+   ]
+  },
+  "visibleByDefault": true,
+  "material": {
+   "inherits": "cranium"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 3.3659999999999997
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 3.74
+   },
+   {
+    "id": "galéa",
+    "mm": 1.87
+   },
+   {
+    "id": "muscle temporal",
+    "mm": 4.2075
+   },
+   {
+    "id": "périoste",
+    "mm": 0.374
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.291,
+   "nominal": 0.755,
+   "epais": 0.25
+  }
+ },
+ {
+  "id": "occipital-bone",
+  "fr": "Os occipital",
+  "latin": "os occipitale",
+  "kind": "bone",
+  "region": "occipital",
+  "neighbors": {
+   "superior": [
+    "parietal-bone"
+   ],
+   "inferior": [
+    "neck",
+    "nuchal-line"
+   ],
+   "medial": [
+    "cranial-cavity"
+   ],
+   "lateral": [
+    "temporal-bone",
+    "mastoid-process"
+   ],
+   "posterior": [],
+   "anterior": [
+    "parietal-bone",
+    "temporal-bone",
+    "mastoid-process",
+    "vertex",
+    "lambdoid-suture"
+   ]
+  },
+  "anchor": {
+   "from": "opisthocranion",
+   "az": 180,
+   "side": 0
+  },
+  "params": [
+   "occipitalFlat",
+   "occipitalSlope",
+   "occiput",
+   "inion",
+   "nuchalLine"
+  ],
+  "influence": {
+   "fields": [
+    "zb",
+    "pb",
+    "qb",
+    "relief"
+   ],
+   "yBand": [
+    0.12,
+    0.7
+   ],
+   "azBand": [
+    110,
+    180
+   ],
+   "views": [
+    "profil",
+    "dos",
+    "trois_quarts_arriere",
+    "dessus"
+   ]
+  },
+  "visibleByDefault": true,
+  "material": {
+   "inherits": "cranium"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 2.1780000000000004
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 2.4200000000000004
+   },
+   {
+    "id": "galéa",
+    "mm": 1.2100000000000002
+   },
+   {
+    "id": "périoste",
+    "mm": 0.24200000000000002
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.312,
+   "nominal": 0.965,
+   "epais": 0.619
+  }
+ },
+ {
+  "id": "mastoid-process",
+  "fr": "Processus mastoïde (région mastoïdienne)",
+  "latin": "processus mastoideus",
+  "kind": "region",
+  "region": "mastoid",
+  "neighbors": {
+   "superior": [
+    "temporal-bone"
+   ],
+   "inferior": [
+    "neck"
+   ],
+   "medial": [
+    "cranial-cavity",
+    "occipital-bone",
+    "nuchal-line"
+   ],
+   "lateral": [
+    "ear"
+   ],
+   "posterior": [
+    "occipital-bone"
+   ],
+   "anterior": [
+    "ear"
+   ]
+  },
+  "anchor": {
+   "from": "mastoid",
+   "az": 118,
+   "side": 1
+  },
+  "params": [
+   "mastoid"
+  ],
+  "influence": {
+   "fields": [
+    "relief"
+   ],
+   "yBand": [
+    0.45,
+    0.7
+   ],
+   "azBand": [
+    100,
+    135
+   ],
+   "views": [
+    "profil",
+    "trois_quarts_arriere"
+   ]
+  },
+  "visibleByDefault": true,
+  "material": {
+   "inherits": "cranium"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 0.99
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 1.1
+   },
+   {
+    "id": "galéa",
+    "mm": 0.55
+   },
+   {
+    "id": "périoste",
+    "mm": 0.11
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.333,
+   "nominal": 1.175,
+   "epais": 1.018
+  }
+ },
+ {
+  "id": "pterion",
+  "fr": "Ptérion (région sphéno-temporale)",
+  "latin": "pterion",
+  "kind": "landmark",
+  "region": "temporal",
+  "neighbors": {
+   "superior": [
+    "parietal-bone",
+    "coronal-suture"
+   ],
+   "inferior": [
+    "sphenoid-bone"
+   ],
+   "medial": [
+    "sphenoid-bone",
+    "frontal-bone",
+    "coronal-suture"
+   ],
+   "lateral": [
+    "temporal-bone"
+   ],
+   "posterior": [
+    "temporal-bone",
+    "squamous-suture"
+   ],
+   "anterior": [
+    "frontal-bone"
+   ]
+  },
+  "anchor": {
+   "from": "pterion",
+   "az": 78,
+   "side": 1
+  },
+  "params": [
+   "planeTransition"
+  ],
+  "influence": {
+   "fields": [
+    "pf",
+    "qf",
+    "qb"
+   ],
+   "yBand": [
+    0.2,
+    0.5
+   ],
+   "azBand": [
+    50,
+    100
+   ],
+   "views": [
+    "trois_quarts",
+    "dessus"
+   ]
+  },
+  "visibleByDefault": true,
+  "material": {
+   "inherits": "cranium"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 3.3659999999999997
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 3.74
+   },
+   {
+    "id": "galéa",
+    "mm": 1.87
+   },
+   {
+    "id": "muscle temporal",
+    "mm": 4.2075
+   },
+   {
+    "id": "périoste",
+    "mm": 0.374
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.291,
+   "nominal": 0.755,
+   "epais": 0.25
+  }
+ },
+ {
+  "id": "vertex",
+  "fr": "Vertex (sommet du crâne)",
+  "latin": "vertex",
+  "kind": "landmark",
+  "region": "vertex",
+  "neighbors": {
+   "superior": [],
+   "inferior": [
+    "parietal-bone"
+   ],
+   "medial": [
+    "sagittal-suture"
+   ],
+   "lateral": [
+    "parietal-bone"
+   ],
+   "posterior": [
+    "occipital-bone"
+   ],
+   "anterior": [
+    "frontal-bone"
+   ]
+  },
+  "anchor": {
+   "from": "vertex",
+   "az": 0,
+   "side": 0
+  },
+  "params": [
+   "vaultHeight",
+   "vaultPeak",
+   "parietalFlat"
+  ],
+  "influence": {
+   "fields": [
+    "y",
+    "a",
+    "zf",
+    "zb"
+   ],
+   "yBand": [
+    -0.1,
+    0.3
+   ],
+   "azBand": [
+    0,
+    180
+   ],
+   "views": [
+    "face",
+    "profil",
+    "dos"
+   ]
+  },
+  "visibleByDefault": true,
+  "material": {
+   "inherits": "cranium"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 1.584
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 1.7600000000000002
+   },
+   {
+    "id": "galéa",
+    "mm": 0.8800000000000001
+   },
+   {
+    "id": "périoste",
+    "mm": 0.17600000000000002
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.322,
+   "nominal": 1.07,
+   "epais": 0.818
+  }
+ },
+ {
+  "id": "glabella",
+  "fr": "Glabelle",
+  "latin": "glabella",
+  "kind": "landmark",
+  "region": "glabella",
+  "neighbors": {
+   "superior": [
+    "frontal-bone"
+   ],
+   "inferior": [
+    "nose"
+   ],
+   "medial": [],
+   "lateral": [
+    "brow",
+    "orbit"
+   ],
+   "posterior": [
+    "frontal-bone"
+   ],
+   "anterior": []
+  },
+  "anchor": {
+   "from": "glabella",
+   "az": 0,
+   "side": 0
+  },
+  "params": [
+   "glabella",
+   "browRidge"
+  ],
+  "influence": {
+   "fields": [
+    "zf",
+    "relief"
+   ],
+   "yBand": [
+    0.3,
+    0.45
+   ],
+   "azBand": [
+    0,
+    30
+   ],
+   "views": [
+    "profil",
+    "trois_quarts"
+   ]
+  },
+  "visibleByDefault": true,
+  "material": {
+   "inherits": "cranium",
+   "specialize": "peau mince sur os (tissu minimal)"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 0.792
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 0.8800000000000001
+   },
+   {
+    "id": "galéa",
+    "mm": 0.44000000000000006
+   },
+   {
+    "id": "périoste",
+    "mm": 0.08800000000000001
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.336,
+   "nominal": 1.21,
+   "epais": 1.084
+  }
+ },
+ {
+  "id": "coronal-suture",
+  "fr": "Suture coronale",
+  "latin": "sutura coronalis",
+  "kind": "suture",
+  "region": "frontal",
+  "neighbors": {
+   "superior": [
+    "sagittal-suture"
+   ],
+   "inferior": [
+    "pterion"
+   ],
+   "medial": [
+    "sagittal-suture"
+   ],
+   "lateral": [
+    "pterion"
+   ],
+   "posterior": [
+    "parietal-bone",
+    "sagittal-suture"
+   ],
+   "anterior": [
+    "frontal-bone"
+   ]
+  },
+  "anchor": {
+   "from": "bregma",
+   "to": "pterion",
+   "t": 0.5,
+   "az": 40,
+   "side": 1
+  },
+  "params": [
+   "suturesShow"
+  ],
+  "influence": {
+   "fields": [
+    "relief"
+   ],
+   "yBand": [
+    0,
+    0.7
+   ],
+   "azBand": [
+    0,
+    180
+   ],
+   "views": [
+    "trois_quarts",
+    "dessus",
+    "profil"
+   ]
+  },
+  "visibleByDefault": false,
+  "material": {
+   "inherits": "cranium",
+   "specialize": "relief fin sous la peau (suturesShow)"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 1.386
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 1.54
+   },
+   {
+    "id": "galéa",
+    "mm": 0.77
+   },
+   {
+    "id": "périoste",
+    "mm": 0.154
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.326,
+   "nominal": 1.105,
+   "epais": 0.885
+  }
+ },
+ {
+  "id": "sagittal-suture",
+  "fr": "Suture sagittale",
+  "latin": "sutura sagittalis",
+  "kind": "suture",
+  "region": "vertex",
+  "neighbors": {
+   "superior": [],
+   "inferior": [
+    "cranial-cavity",
+    "coronal-suture",
+    "lambdoid-suture"
+   ],
+   "medial": [],
+   "lateral": [
+    "parietal-bone",
+    "vertex",
+    "coronal-suture",
+    "lambdoid-suture"
+   ],
+   "posterior": [
+    "lambdoid-suture"
+   ],
+   "anterior": [
+    "coronal-suture"
+   ]
+  },
+  "anchor": {
+   "from": "vertex",
+   "az": 0,
+   "side": 0
+  },
+  "params": [
+   "suturesShow"
+  ],
+  "influence": {
+   "fields": [
+    "relief"
+   ],
+   "yBand": [
+    0,
+    0.7
+   ],
+   "azBand": [
+    0,
+    180
+   ],
+   "views": [
+    "dessus",
+    "profil",
+    "face"
+   ]
+  },
+  "visibleByDefault": false,
+  "material": {
+   "inherits": "cranium",
+   "specialize": "relief fin sous la peau (suturesShow)"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 1.584
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 1.7600000000000002
+   },
+   {
+    "id": "galéa",
+    "mm": 0.8800000000000001
+   },
+   {
+    "id": "périoste",
+    "mm": 0.17600000000000002
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.322,
+   "nominal": 1.07,
+   "epais": 0.818
+  }
+ },
+ {
+  "id": "lambdoid-suture",
+  "fr": "Suture lambdoïde",
+  "latin": "sutura lambdoidea",
+  "kind": "suture",
+  "region": "occipital",
+  "neighbors": {
+   "superior": [
+    "sagittal-suture"
+   ],
+   "inferior": [
+    "squamous-suture"
+   ],
+   "medial": [
+    "sagittal-suture"
+   ],
+   "lateral": [
+    "squamous-suture"
+   ],
+   "posterior": [
+    "occipital-bone"
+   ],
+   "anterior": [
+    "parietal-bone",
+    "sagittal-suture",
+    "squamous-suture"
+   ]
+  },
+  "anchor": {
+   "from": "lambda",
+   "to": "asterion",
+   "t": 0.5,
+   "az": 150,
+   "side": 1
+  },
+  "params": [
+   "suturesShow"
+  ],
+  "influence": {
+   "fields": [
+    "relief"
+   ],
+   "yBand": [
+    0,
+    0.7
+   ],
+   "azBand": [
+    0,
+    180
+   ],
+   "views": [
+    "dos",
+    "trois_quarts_arriere",
+    "dessus"
+   ]
+  },
+  "visibleByDefault": false,
+  "material": {
+   "inherits": "cranium",
+   "specialize": "relief fin sous la peau (suturesShow)"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 2.1780000000000004
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 2.4200000000000004
+   },
+   {
+    "id": "galéa",
+    "mm": 1.2100000000000002
+   },
+   {
+    "id": "périoste",
+    "mm": 0.24200000000000002
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.312,
+   "nominal": 0.965,
+   "epais": 0.619
+  }
+ },
+ {
+  "id": "squamous-suture",
+  "fr": "Suture squameuse",
+  "latin": "sutura squamosa",
+  "kind": "suture",
+  "region": "temporal",
+  "neighbors": {
+   "superior": [
+    "parietal-bone",
+    "lambdoid-suture"
+   ],
+   "inferior": [
+    "temporal-bone"
+   ],
+   "medial": [
+    "cranial-cavity",
+    "lambdoid-suture"
+   ],
+   "lateral": [
+    "temporal-bone"
+   ],
+   "posterior": [
+    "lambdoid-suture"
+   ],
+   "anterior": [
+    "pterion"
+   ]
+  },
+  "anchor": {
+   "from": "pterion",
+   "to": "asterion",
+   "t": 0.5,
+   "az": 100,
+   "side": 1
+  },
+  "params": [
+   "suturesShow"
+  ],
+  "influence": {
+   "fields": [
+    "relief"
+   ],
+   "yBand": [
+    0,
+    0.7
+   ],
+   "azBand": [
+    0,
+    180
+   ],
+   "views": [
+    "profil",
+    "trois_quarts_arriere"
+   ]
+  },
+  "visibleByDefault": false,
+  "material": {
+   "inherits": "cranium",
+   "specialize": "relief fin sous la peau (suturesShow)"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 3.3659999999999997
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 3.74
+   },
+   {
+    "id": "galéa",
+    "mm": 1.87
+   },
+   {
+    "id": "muscle temporal",
+    "mm": 4.2075
+   },
+   {
+    "id": "périoste",
+    "mm": 0.374
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.291,
+   "nominal": 0.755,
+   "epais": 0.25
+  }
+ },
+ {
+  "id": "temporal-line",
+  "fr": "Ligne (crête) temporale",
+  "latin": "linea temporalis",
+  "kind": "line",
+  "region": "temporal",
+  "neighbors": {
+   "superior": [
+    "parietal-bone"
+   ],
+   "inferior": [
+    "temporal-bone"
+   ],
+   "medial": [
+    "frontal-bone"
+   ],
+   "lateral": [
+    "temporal-bone"
+   ],
+   "posterior": [
+    "parietal-bone"
+   ],
+   "anterior": [
+    "frontal-bone"
+   ]
+  },
+  "anchor": {
+   "from": "glabella",
+   "dy": -0.13,
+   "az": 76,
+   "side": 1
+  },
+  "params": [
+   "suturesShow"
+  ],
+  "influence": {
+   "fields": [
+    "relief"
+   ],
+   "yBand": [
+    0,
+    0.7
+   ],
+   "azBand": [
+    0,
+    180
+   ],
+   "views": [
+    "trois_quarts",
+    "profil",
+    "dessus"
+   ]
+  },
+  "visibleByDefault": false,
+  "material": {
+   "inherits": "cranium",
+   "specialize": "relief fin sous la peau (suturesShow)"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 3.3659999999999997
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 3.74
+   },
+   {
+    "id": "galéa",
+    "mm": 1.87
+   },
+   {
+    "id": "muscle temporal",
+    "mm": 4.2075
+   },
+   {
+    "id": "périoste",
+    "mm": 0.374
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.291,
+   "nominal": 0.755,
+   "epais": 0.25
+  }
+ },
+ {
+  "id": "nuchal-line",
+  "fr": "Ligne nuchale supérieure et protubérance occipitale externe",
+  "latin": "linea nuchae superior / protuberantia occipitalis externa",
+  "kind": "line",
+  "region": "occipital",
+  "neighbors": {
+   "superior": [
+    "occipital-bone"
+   ],
+   "inferior": [
+    "occipital-bone",
+    "neck"
+   ],
+   "medial": [],
+   "lateral": [
+    "mastoid-process"
+   ],
+   "posterior": [],
+   "anterior": []
+  },
+  "anchor": {
+   "from": "inion",
+   "az": 180,
+   "side": 0
+  },
+  "params": [
+   "nuchalLine",
+   "inion"
+  ],
+  "influence": {
+   "fields": [
+    "relief"
+   ],
+   "yBand": [
+    0,
+    0.7
+   ],
+   "azBand": [
+    0,
+    180
+   ],
+   "views": [
+    "profil",
+    "dos",
+    "trois_quarts_arriere"
+   ]
+  },
+  "visibleByDefault": false,
+  "material": {
+   "inherits": "cranium",
+   "specialize": "relief fin sous la peau (suturesShow)"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 2.1780000000000004
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 2.4200000000000004
+   },
+   {
+    "id": "galéa",
+    "mm": 1.2100000000000002
+   },
+   {
+    "id": "périoste",
+    "mm": 0.24200000000000002
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.312,
+   "nominal": 0.965,
+   "epais": 0.619
+  }
+ }
+]

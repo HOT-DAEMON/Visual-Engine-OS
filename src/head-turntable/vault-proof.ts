@@ -51,7 +51,8 @@ export const caseOverride = (c: ProofCase, v: number | undefined): Partial<Skull
 const specs = new Map<string, ReturnType<typeof vaultSpec>>();
 /** Spec mémoïsée par (cas, valeur, graine) : un même rendu n'est jamais refait (tests, planches et enregistrement partagent les mêmes têtes). */
 export const caseSpec = (c: ProofCase, v: number | undefined, seed = VAULT_SEED) => {
-  const k = `${c.id}|${v}|${seed}`; let s = specs.get(k);
+  // La base fait partie de la clé : des cas de même id mais de base différente (grilles d'interactions) sont des têtes différentes.
+  const k = `${c.id}|${v}|${seed}|${JSON.stringify(c.base)}`; let s = specs.get(k);
   if (!s) { s = vaultSpec(caseOverride(c, v), seed, true, c.faceOv); specs.set(k, s); }
   return s;
 };

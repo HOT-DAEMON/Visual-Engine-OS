@@ -1,0 +1,57 @@
+{
+ "demande": {
+  "temporalHollow": 1,
+  "templeBreadth": -1,
+  "occipitalFlat": 1,
+  "occipitalSlope": -1
+ },
+ "normal": [
+  {
+   "id": "temple-hollow-width",
+   "param": "skull.templeBreadth",
+   "requested": -1,
+   "applied": -0.5,
+   "reason": "un creux temporal profond ne coexiste pas avec des tempes très étroites (la fosse n’aurait plus de place)"
+  },
+  {
+   "id": "occiput-flat-slope",
+   "param": "skull.occipitalSlope",
+   "requested": -1,
+   "applied": -0.5,
+   "reason": "un occiput très aplati ne peut pas surplomber fortement"
+  }
+ ],
+ "caricature": [],
+ "preferences": [
+  {
+   "id": "robustesse",
+   "label": "mastoïde, ligne nuchale, glabelle de même ordre (robustesse osseuse cohérente)",
+   "score": 1
+  },
+  {
+   "id": "brachy-occiput",
+   "label": "occiput plat avec une tête longue : combinaison rare",
+   "score": 0
+  },
+  {
+   "id": "dolicho-largeur",
+   "label": "boîte crânienne large avec une tête très longue : combinaison rare",
+   "score": 0
+  },
+  {
+   "id": "front-voute",
+   "label": "front très plat avec un sommet très pointu : combinaison rare",
+   "score": 1
+  },
+  {
+   "id": "tissus",
+   "label": "os très apparent sous un cuir chevelu très épais : combinaison rare",
+   "score": 1
+  },
+  {
+   "id": "asymetrie",
+   "label": "asymétries propres de même ordre : une plagiocéphalie dominante est plus fréquente que quatre",
+   "score": 1
+  }
+ ]
+}
