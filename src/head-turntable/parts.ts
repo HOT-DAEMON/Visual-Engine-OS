@@ -5,6 +5,8 @@ import type { BumpKnots, HeadTurnSpec, V3 } from './types';
 import { earMesh, earRig } from './engines/ear3d';
 import { engineHead } from './engines/face-model';
 import { noseLandmarks } from './engines/nose-mouth';
+import { hairShellMesh } from './hair-shell';
+import { hairPartMeshes } from './hair-parts';
 
 /** Largeur d'ailes (U) et décalage hauteur ↔ base du nez de la planche : les ailes des autres têtes sont posées et dimensionnées par rapport à ces valeurs. */
 const REF_ALA = ((): number => noseLandmarks(engineHead()).crestX)();
@@ -38,5 +40,6 @@ export function buildParts(spec: HeadTurnSpec): Mesh[] {
     meshes.push(ellipsoid(PART.bump, a.c, ax, ay, az, a.ex, a.ey, a.ez, 10, 16));
     meshes.push(...earMesh(earRig(spec, sg)));
   }
+  if (spec.hairVolume) meshes.push(hairShellMesh(spec, spec.hairVolume), ...hairPartMeshes(spec, spec.hairVolume));
   return meshes;
 }

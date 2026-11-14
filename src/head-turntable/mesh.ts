@@ -5,10 +5,12 @@ import { CUT_SLOPE, isBellHead, neckSection } from './engines/neck3d';
 import { headRelief } from './engines/head-relief';
 
 /** Identifiants de parties (groupes de contour : 1 et 4 = peau de la tête, sans trait entre eux ; 2 et 5 = cou ; 3 = oreilles). */
-export const PART = { head: 1, neck: 2, ear: 3, bump: 4, neckCut: 5, earBack: 6 } as const;
+export const PART = { head: 1, neck: 2, ear: 3, bump: 4, neckCut: 5, earBack: 6, hair: 7, hairPart: 8, hairBun: 9 } as const;
 
 /** Maillage triangulaire : positions et normales dans le repère de la tête. */
-export interface Mesh { readonly id: number; readonly P: V3[]; readonly N: V3[]; readonly T: [number, number, number][]; /** Coordonnées de texture (u, v) par sommet : interpolées par la rastérisation (oreille : plan de l'oreille). */ readonly UV?: [number, number][] }
+export interface Mesh { readonly id: number; readonly P: V3[]; readonly N: V3[]; readonly T: [number, number, number][]; /** Coordonnées de texture (u, v) par sommet : interpolées par la rastérisation (oreille : plan de l'oreille). */ readonly UV?: [number, number][];
+  /** Test de DÉCOUPE évalué par la rastérisation sur la position 3D interpolée (repère tête) de chaque pixel : faux = pixel ignoré. Coque de cheveux : lisière (`hair-shell.ts`). */
+  readonly clip?: (p: V3) => boolean }
 
 /** Maillage d'une grille de rangées (rows[i][j]) : normales = produit vectoriel des tangentes, orientées à l'opposé de `inside(i)`. */
 export function gridMesh(id: number, rows: V3[][], wrap: boolean, inside: (i: number, j: number) => V3, uv?: [number, number][][]): Mesh {
@@ -28,21 +30,24 @@ export function gridMesh(id: number, rows: V3[][], wrap: boolean, inside: (i: nu
   return uv ? { id, P, N, T, UV: uv.flat() } : { id, P, N, T };
 }
 
+/** Relief du crâne (bosses pariétales, asymétrie, joues) : déplacement radial en (y, θ), ou `undefined` pour la planche. */
+export type SkullRelief = ReturnType<typeof headRelief>;
+
+/** Point de la surface du crâne à la hauteur y et à l'angle th, relief compris : source UNIQUE du maillage du crâne ET de la coque de cheveux (sans elle, les bosses pariétales percent une coque fine). */
+export function skullSurfacePoint(spec: HeadTurnSpec, relief: SkullRelief, y: number, th: number): V3 {
+  const s = sectionAt(spec, y), q = sectionPoint(s, th), d = relief ? relief(y, th) : 0;
+  if (d === 0) return v3(q.x, y, q.z);
+  const rx = q.x, rz = q.z - s.zc, rl = Math.hypot(rx, rz) || 1;   // direction radiale depuis l'axe vertical du centre de la section
+  const xr = q.x + (d * rx) / rl;
+  return v3(Math.max(-s.a, Math.min(s.a, xr)), y, q.z + (d * rz) / rl);   // jamais plus large que la demi-largeur de la section : le contour de FACE reste celui du moteur de visage (`head.geo.front2d`), les bosses se lisent de profil et de trois quarts
+}
+
 /** Crâne + mâchoire : pile de sections elliptiques (pas dy), fermée au sommet et au bas du menton. */
 export function headMesh(spec: HeadTurnSpec, K = 96, dy = 0.0125): Mesh {
   const y0 = spec.rows[0]!.y, y1 = spec.rows[spec.rows.length - 1]!.y;
   const ys: number[] = []; for (let y = y0; y < y1 - 1e-9; y += dy) ys.push(y); ys.push(y1);
   const relief = headRelief(spec.engine);   // bosses pariétales, asymétrie, joues : déplacement radial sur la superellipse (têtes issues d'un visage seulement)
-  const rows = ys.map((y) => {
-    const s = sectionAt(spec, y);
-    return Array.from({ length: K }, (_, j) => {
-      const th = (j / K) * 2 * Math.PI, q = sectionPoint(s, th), d = relief ? relief(y, th) : 0;
-      if (d === 0) return v3(q.x, y, q.z);
-      const rx = q.x, rz = q.z - s.zc, rl = Math.hypot(rx, rz) || 1;   // direction radiale depuis l'axe vertical du centre de la section
-      const xr = q.x + (d * rx) / rl;
-      return v3(Math.max(-s.a, Math.min(s.a, xr)), y, q.z + (d * rz) / rl);   // jamais plus large que la demi-largeur de la section : le contour de FACE reste celui du moteur de visage (`head.geo.front2d`), les bosses se lisent de profil et de trois quarts
-    });
-  });
+  const rows = ys.map((y) => Array.from({ length: K }, (_, j) => skullSurfacePoint(spec, relief, y, (j / K) * 2 * Math.PI)));
   return gridMesh(PART.head, rows, true, (i) => { const s = sectionAt(spec, ys[i]!); return v3(0, ys[i]!, s.zw); });
 }
 

@@ -4,6 +4,7 @@ import type { FaceParams } from '../../schema';
 import { regionFromBoundary } from '../hair-bridge';
 import { regionKnots, smoothRegion } from '../hair-region';
 import type { HairlineSpec, HeadTurnSpec } from '../types';
+import { hairVolumeOf } from '../hair-volume';
 import { headSpecFromProfile, type HeadSource } from './from-face';
 
 /**
@@ -28,5 +29,8 @@ export function hostHairline(params: FaceParams, lm: FaceLandmarks): HairlineSpe
 /** Spec de rotation d'un hôte : `src` = visage stylisé + crâne dérivé + couleurs ; `lm` = repères du visage de l'hôte (mêmes que ceux du visage de face). */
 export function headSpecFromHost(src: HeadSource, lm: FaceLandmarks, hair: HairMode = 'host'): HeadTurnSpec {
   const bald = src.face.params.hair.style === 'bald';   // un hôte chauve reste chauve quel que soit le mode
-  return headSpecFromProfile(src, undefined, bald ? BALD : hair === 'host' ? hostHairline(src.face.params, lm) : undefined);
+  const spec = headSpecFromProfile(src, undefined, bald ? BALD : hair === 'host' ? hostHairline(src.face.params, lm) : undefined);
+  // Volume 3D de la coiffure (coque, rideau, chignon, queue, tresses) : seulement avec la lisière réelle de l'hôte (même coiffure de face et en rotation).
+  const vol = !bald && hair === 'host' ? hairVolumeOf(src.face.params, lm) : null;
+  return vol ? { ...spec, hairVolume: vol } : spec;
 }

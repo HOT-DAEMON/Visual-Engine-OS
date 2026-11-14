@@ -64,7 +64,8 @@ export function verifyStyle(s: HeadTurnSpec, at: RenderAt): LayerReport {
   const c: Check[] = [], S = 'style' as const, p = s.palette, ink = hex(p.ink), skin = hex(p.skin), shade = hex(p.skinShade), hair = hex(p.hair), hairS = hex(p.hairShade);
   const r0 = at(0), r45 = at(45), r135 = at(135);
   c.push(check(S, 'tones.skin', 'Peau en aplats : part des pixels à ±16 du ton clair ou ombré (0°)', flatTones(r0, REGION.skin, [skin, shade], 16), 0.7, 1));
-  c.push(check(S, 'tones.hair', 'Cheveux en aplats : part des pixels à ±16 du ton clair ou ombré (135°)', flatTones(r135, REGION.hair, [hair, hairS], 16), 0.8, 1));
+  // Un volume de cheveux 3D est TEXTURÉ (mèches, boucles) : l'exigence d'aplats ne s'applique plus, elle est remplacée par `head.hair3d.style.*` (verify-hair-volume.ts).
+  if (!s.hairVolume) c.push(check(S, 'tones.hair', 'Cheveux en aplats : part des pixels à ±16 du ton clair ou ombré (135°)', flatTones(r135, REGION.hair, [hair, hairS], 16), 0.8, 1));
   let black = 0;
   for (const r of [r0, r45, r135]) for (let k = 0; k < r.w * r.h; k++) if (r.ids[k] && r.rgba[4 * k]! + r.rgba[4 * k + 1]! + r.rgba[4 * k + 2]! < 12) black++;
   c.push(check(S, 'pixels.black', 'Pixels noirs purs dans la tête (0,0,0 : valeur NaN peinte ; l\'encre est #493831)', black, 0, 0));

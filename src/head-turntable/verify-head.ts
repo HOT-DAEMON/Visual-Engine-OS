@@ -12,6 +12,7 @@ import { headEdges, jawContourStats } from './verify-contour';
 import { topRow } from './silhouette';
 import { inkSpecks, inkWidth, outlineClosure } from './verify-style';
 import { hostChecks } from './verify-host';
+import { hairVolumeAnatomyChecks, hairVolumeGeometryChecks, hairVolumeStyleChecks } from './verify-hair-volume';
 import { browChecks } from './verify-brow';
 import { neckCutChecks } from './verify-neck-cut';
 import { neckReliefChecks } from './verify-neck-relief';
@@ -43,6 +44,13 @@ export class HeadRenders {
     if (!r) { r = renderHead({ yaw, pitch: 0, roll }, this.spec, { frame: defaultFrame(this.heightPx), ss: 2 }); this.cache.set(key, r); }
     return r;
   }
+  private bareRenders?: HeadRenders;
+  /** Les mêmes rendus SANS le volume de cheveux 3D (la tête nue, même rotation, même cadrage) : les contrôles du crâne, de la face, de la mâchoire et du cou mesurent le crâne, que la coiffure recouvre ; la coiffure a ses propres contrôles (`head.hair3d.*`) sur la tête coiffée. */
+  get skull(): HeadRenders {
+    if (!this.spec.hairVolume) return this;
+    const { hairVolume: _v, ...rest } = this.spec;
+    return (this.bareRenders ??= new HeadRenders(rest as HeadTurnSpec, this.heightPx));
+  }
   at(yaw: number, flat = false): TurnRender {
     const key = `${yaw}/${flat}`; let r = this.cache.get(key);
     if (!r) { const v = refView(yaw); r = renderHead(flat ? { yaw, pitch: 0 } : v, this.spec, { frame: defaultFrame(this.heightPx), ss: 2 }); this.cache.set(key, r); }
@@ -55,8 +63,8 @@ const G = 'geometry', A = 'anatomy', S = 'style';
 
 const sep = (spec: HeadTurnSpec): number => { const a = hex(spec.palette.ink), b = hex(spec.palette.skin); return Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]); };
 
-export function headGeometry(h: HeadSubject, R: HeadRenders): LayerReport {
-  const s = h.spec, c: Check[] = [], rows = s.rows, inkOpts = { ink: hex(s.palette.ink) as [number, number, number], inkTol: Math.min(70, 0.7 * sep(s)) };
+export function headGeometry(h: HeadSubject, Rh: HeadRenders): LayerReport {
+  const R = Rh.skull, s = h.spec, c: Check[] = [], rows = s.rows, inkOpts = { ink: hex(s.palette.ink) as [number, number, number], inkTol: Math.min(70, 0.7 * sep(s)) };
   const bad = rows.filter((r, i) => ![r.a, r.zf, r.zb, r.zw ?? 0, r.pf ?? 2, r.qf ?? 2, r.pb ?? 2, r.qb ?? 2].every(Number.isFinite) || r.zf <= r.zb || (i > 0 && r.y >= JAW_SHAPE.y0 && r.y < CHIN_CAP_Y && r.zw !== undefined && rows[i - 1]!.zw !== undefined && r.zw < rows[i - 1]!.zw! - 1e-6)).length;
   c.push(check(G, 'head.geo.rows', 'Table de sections saine : valeurs finies, avant > arrière, point large jamais reculé (nombre de rangées fautives)', bad, 0, 0));
   if (s.engine) {
@@ -84,11 +92,12 @@ export function headGeometry(h: HeadSubject, R: HeadRenders): LayerReport {
   c.push(...skullGeometryChecks(s, R));
   c.push(...reliefGeometryChecks(s));
   c.push(...neckCutChecks(s).geometry);
+  c.push(...hairVolumeGeometryChecks(s, Rh));
   return layerOf(G, c);
 }
 
-export function headAnatomy(h: HeadSubject, R: HeadRenders): LayerReport {
-  const s = h.spec, c: Check[] = [], yMen = s.rows[s.rows.length - 1]!.y, deg = 180 / Math.PI;
+export function headAnatomy(h: HeadSubject, Rh: HeadRenders): LayerReport {
+  const R = Rh.skull, s = h.spec, c: Check[] = [], yMen = s.rows[s.rows.length - 1]!.y, deg = 180 / Math.PI;
   c.push(check(A, 'head.anat.eyeline', 'Ligne des yeux / hauteur sommet → menton [canon : ≈ ½ ; dessin stylisé : yeux plus bas, planche 0,59]', s.eye.y / yMen, 0.4, 0.66));
   const aMax = Math.max(...s.rows.map((r) => r.a)), top = sectionAt(s, 0.45);
   c.push(check(A, 'head.anat.depth', 'Profondeur du crâne au niveau du sourcil / hauteur de tête [canon : 0,70–0,95 ; planche ≈ 0,77]', (sectionAt(s, 0.45).zf - top.zb) / yMen, 0.66, 1.0));
@@ -119,6 +128,7 @@ export function headAnatomy(h: HeadSubject, R: HeadRenders): LayerReport {
   c.push(...skullAnatomyChecks(s));
   c.push(...reliefAnatomyChecks(s, R));
   c.push(...neckCutChecks(s).anatomy);
+  c.push(...hairVolumeAnatomyChecks(s, Rh));
   return layerOf(A, c);
 }
 
@@ -136,6 +146,7 @@ export function headStyle(h: HeadSubject, R: HeadRenders): LayerReport {
   c.push(...skullStyleChecks(h.spec, R));
   c.push(...reliefStyleChecks(h.spec, R));
   c.push(...neckCutChecks(h.spec).style);
+  c.push(...hairVolumeStyleChecks(h.spec, R));
   return layerOf(S, c);
 }
 

@@ -12,6 +12,7 @@ import { REGION, type HeadTurnSpec, type View } from './types';
 import { ambientOcclusion, castShadowScaled } from '../relief/cast';
 import { bounceAt, shadeAt, tonesOf, type LightModel, type Shade, type Tones } from '../relief/model';
 import { hairSheen, hairTones, sheenScreen } from './hair-light';
+import { strandColor } from './hair-strands';
 import { litDepth, softenedNormal } from './nose-light';
 import { parseHex } from '../core/color';
 
@@ -20,7 +21,7 @@ const LIGHT = norm(v3(-0.25, -0.55, 0.8));
 /** Coupe du cou : ombre de la peau × rapport de la planche (230,188,164 → 217,169,143), donc identique sur la planche et teintée par la peau des autres têtes. */
 const NECK_CUT_K: RGB = [217 / 230, 169 / 188, 143 / 164];
 /** Groupe de contour : les pièces d'un même groupe n'ont pas de trait entre elles (nez et lèvres font partie de la tête). */
-const group = (id: number): number => (id === PART.head || id === PART.bump ? 1 : id === PART.neck ? 2 : id === PART.ear || id === PART.earBack ? 3 : id === PART.neckCut ? 4 : 0);
+const group = (id: number): number => (id === PART.head || id === PART.bump ? 1 : id === PART.neck ? 2 : id === PART.ear || id === PART.earBack ? 3 : id === PART.neckCut ? 4 : id === PART.hair || id === PART.hairPart || id === PART.hairBun ? 5 : 0);
 
 /** Tolérance verticale (repère tête) du trait de lisière pour qu'il garde 0,0055 U d'épaisseur À L'ÉCRAN : elle croît avec la pente de la lisière projetée. */
 function hairTol(spec: HeadTurnSpec, view: View, az: number, hl: number, kw: number): number {
@@ -79,6 +80,14 @@ export function paint(spec: HeadTurnSpec, g: GBuf, view: View, o: PaintOpts): Pa
       const rig = earRig(spec, p.x >= 0 ? 1 : -1), front = nh.x * (p.x >= 0 ? 1 : -1) * Math.cos(rad(rig.pl.openingDeg)) + nh.z * Math.sin(rad(rig.pl.openingDeg)) > -0.05;
       const tx = earColor(rig.field, g.uv[2 * k]!, g.uv[2 * k + 1]!, front, kw, pal, 0.0055 * 2, rig.pl.hPx);
       col = tx.ink ? tx.c : lightOf(tx.c, mix(pal.shade, tx.c, 0.55)); ink = tx.ink; reg = tx.region;
+    }
+    else if ((id === PART.hair || id === PART.hairPart || id === PART.hairBun) && spec.hairVolume) {
+      // VOLUME DE CHEVEUX 3D : teinte des mèches par pixel (`hair-strands.ts`), éclairée avec les tons PROPRES des cheveux et la bande de brillance (mêmes que la calotte).
+      const st = strandColor(spec, spec.hairVolume, id, p, [g.uv[2 * k]!, g.uv[2 * k + 1]!], pal.hair, hairShade);
+      col = sh && rl && L ? sheenScreen(lightMul(st.c, rl.hair, sh, litB), L, hairSheen(L, nh, p.y, view, sh)) : lightOf(st.c, mix(st.c, hairShade, 0.5));
+      // Creux entre mèches : plus SOMBRES que les cheveux (l'encre du contour est plus claire qu'une chevelure noire : elle ferait des points clairs) : l'encre si elle est plus sombre que l'ombre des cheveux, sinon l'ombre assombrie.
+      const lumA = (c: RGB): number => 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2], dark: RGB = lumA(pal.ink) < lumA(hairShade) ? pal.ink : [hairShade[0] * 0.5, hairShade[1] * 0.5, hairShade[2] * 0.5];
+      col = mix(col, dark, 0.6 * st.ink); reg = REGION.hair;
     }
     else {
       const s = sectionAt(spec, p.y), az = (Math.atan2(p.x, p.z - s.zc) * 180) / Math.PI;

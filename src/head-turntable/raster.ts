@@ -30,6 +30,7 @@ export function rasterize(meshes: readonly Mesh[], view: View, f: Frame, neckCli
         if (view.persp) { const q0 = l0 * a.iw, q1 = l1 * b.iw, q2 = l2 * c.iw, qs = q0 + q1 + q2; m0 = q0 / qs; m1 = q1 / qs; m2 = q2 / qs; }
         const z = m0 * a.z + m1 * b.z + m2 * c.z, k = py * w + px;
         if (z <= g.depth[k]!) continue;
+        if (m.clip && !m.clip({ x: m0 * pa.x + m1 * pb.x + m2 * pc.x, y: m0 * pa.y + m1 * pb.y + m2 * pc.y, z: m0 * pa.z + m1 * pb.z + m2 * pc.z })) continue;
         g.depth[k] = z; g.id[k] = m.id;
         g.P[3 * k] = m0 * pa.x + m1 * pb.x + m2 * pc.x; g.P[3 * k + 1] = m0 * pa.y + m1 * pb.y + m2 * pc.y; g.P[3 * k + 2] = m0 * pa.z + m1 * pb.z + m2 * pc.z;
         if (ua && ub && uc) { g.uv[2 * k] = m0 * ua[0] + m1 * ub[0] + m2 * uc[0]; g.uv[2 * k + 1] = m0 * ua[1] + m1 * ub[1] + m2 * uc[1]; }

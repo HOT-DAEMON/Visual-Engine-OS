@@ -17,4 +17,4 @@ Preuve : `artefacts/hair-shapes/02-tete-complete-en-rotation.png` (6 coiffures �
 géométrie : région finie, fidélité (chaque point réel de la lisière à ≤ 0,012 U du bord) ; anatomie : yeux, sourcils, bouche hors région ; style : tracé déroulé sans angle aigu (avertissement).
 
 ## Limites
-Voir `HAIR-SHAPES-REMAINING.md` (volume de cheveux 3D, mèches longues, vent en 3D).
+Le volume de cheveux 3D est fait : `HAIR-VOLUME-3D.md` (principe), `HAIR-VOLUME-VERIFY.md` (contrôles), `HAIR-VOLUME-REMAINING.md` (reste à faire). Voir aussi `HAIR-SHAPES-REMAINING.md` (mèches longues individuelles, vent en 3D).

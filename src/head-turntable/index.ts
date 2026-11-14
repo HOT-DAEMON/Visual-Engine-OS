@@ -12,3 +12,7 @@ export type { Check, Layer, LayerReport, TurnReport } from './verify-types';
 export { FIT_YAWS, HOLDOUT_YAWS, silhouetteError, maskIoU } from './verify-geo';
 export { headSpecFromFace, regionFromBoundary, faceYToU } from './hair-bridge';
 export { inRegion, edgeDistance, regionKnots, regionField, signedDistance, smoothRegion, type HairRegion, type RegionField } from './hair-region';
+export type { HairVolume, HairPart, HairPlace } from './hair-volume-types';
+export { hairVolumeOf } from './hair-volume';
+export { shellPoint, hairShellMesh, inHair, T_MIN } from './hair-shell';
+export { hairPartMeshes } from './hair-parts';

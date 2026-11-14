@@ -34,6 +34,8 @@ function skinCover(spec: HeadTurnSpec, r: TurnRender): number {
   return want ? got / want : 0;
 }
 
+const isHairId = (id: number): boolean => id === PART.hair || id === PART.hairPart || id === PART.hairBun;
+
 /** Hauteurs (U) des rangées comparées : du front à la pointe du menton, pas 0,025. */
 const ROWS = Array.from({ length: 35 }, (_, i) => 0.15 + i * 0.025);
 
@@ -50,6 +52,8 @@ export function hostOverlap(spec: HeadTurnSpec, r0: TurnRender): HostOverlap | n
     for (let x = 0; x < r0.w; x++) if (r0.ids[y * r0.w + x] === PART.head) { if (l < 0) l = x; r = x; }   // la tête seule : ni cou, ni oreilles, ni bosses (comme `headEdges`)
     // Une rangée dont un bord est fait de cheveux n'est pas comparable : le contour du visage de l'hôte ne les contient pas.
     if (l < 0 || r0.regions[y * r0.w + l] === REGION.hair || r0.regions[y * r0.w + r] === REGION.hair) continue;
+    // Volume de cheveux 3D : la coque peut recouvrir le contour de la tête (la partie visible de la tête est alors plus étroite que le visage) — une rangée où un pixel voisin du bord est une pièce de cheveux n'est pas comparable.
+    if (isHairId(r0.ids[y * r0.w + Math.max(0, l - 1)]!) || isHairId(r0.ids[y * r0.w + Math.min(r0.w - 1, r + 1)]!)) continue;
     const want = halfWidthAt(e.lm.outline, Math.min(py(toEngineY(t)), e.lm.outline.bottomY - 1)) / 1000, got = (r - l + 1) / 2 / r0.ppu;
     inter += Math.min(got, want); union += Math.max(got, want); host += want; rows++;
   }

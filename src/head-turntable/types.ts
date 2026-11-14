@@ -52,6 +52,7 @@ export interface HairlineSpec {
 export interface PaletteSpec { readonly skin: string; readonly skinShade: string; readonly hair: string; readonly hairShade: string; readonly ink: string; readonly iris: string; readonly irisDeep: string; readonly lip: string; readonly mouthIn: string; readonly blush: string }
 
 import type { EngineHead } from './engines/face-model';
+import type { HairVolume } from './hair-volume-types';
 
 export interface HeadTurnSpec {
   readonly rows: readonly Row[];
@@ -61,6 +62,8 @@ export interface HeadTurnSpec {
   readonly engine?: EngineHead;
   /** Yeux RÉELS de l'hôte (forme de l'ouverture, taille, iris, pupille, regard), en U dans le repère de la tête : quand ils sont fournis, ils remplacent les yeux de la planche. */
   readonly eyeHost?: HostEyes;
+  /** Volume 3D de la coiffure (coque, rideau, chignon, queue, tresses) dérivé de la silhouette du moteur de cheveux : absent = calotte plate de la planche (comportement d'origine). Voir `HAIR-VOLUME-3D.md`. */
+  readonly hairVolume?: HairVolume;
 }
 
 /** Un œil de l'hôte en U, repère de la tête à plat, `x` = |x| (le côté gauche est miroité : x croît vers l'extérieur du visage). */

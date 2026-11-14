@@ -10,6 +10,8 @@ const faceObjs = (seed: number, hair?: Record<string, unknown>) => generateRando
 const head = (extra: Record<string, unknown> = {}) => ({ kind: 'head_3d', id: 't0', host: 'f0', resolution: 1, transform: { x: 380, y: 30, scale: 0.8 }, ...extra });
 const scene = (seed: number, heads: Record<string, unknown>[] = [head()]) => ({ width: 700, height: 460, background: '#ece6dc', objects: [...faceObjs(seed), ...heads] });
 const hostOf = (seed: number): HostSpec => SceneSpec.parse(scene(seed, [])).objects.find((o) => o.kind === 'host') as HostSpec;
+/** Le SVG sans les images PNG encodées en base64 : une chaîne aléatoire de base64 peut contenir « NaN » par hasard (faux positif dépendant des pixels). */
+const noImage = (svg: string): string => svg.replace(/base64,[A-Za-z0-9+/=]+/g, 'base64,');
 const svgOf = (sc: unknown): string => { const r = compileScene(sc); if (!r.ok) throw new Error(r.issues.join(' ; ')); return r.svg; };
 
 describe('tête 3D dans le pipeline principal', () => {
@@ -17,7 +19,7 @@ describe('tête 3D dans le pipeline principal', () => {
     const a = svgOf(scene(11)), b = svgOf(scene(11)), solo = svgOf(scene(11, []));
     expect(a).toBe(b);
     expect(a.length).toBeGreaterThan(solo.length + 3000);
-    expect(a).not.toMatch(/NaN|undefined|Infinity/);
+    expect(noImage(a)).not.toMatch(/NaN|undefined|Infinity/);
   });
 
   it('le lacet et le tangage changent réellement le rendu ; plusieurs angles du même hôte sont permis', () => {
@@ -30,7 +32,7 @@ describe('tête 3D dans le pipeline principal', () => {
   it('la tête tourne des deux côtés : −yaw et +yaw donnent deux rendus différents et valides', () => {
     const a = svgOf(scene(11, [head({ yaw: 60 })])), b = svgOf(scene(11, [head({ yaw: -60 })]));
     expect(a).not.toBe(b);
-    expect(b).not.toMatch(/NaN|undefined|Infinity/);
+    expect(noImage(b)).not.toMatch(/NaN|undefined|Infinity/);
   });
 
   it('c\'est la même personne que l\'hôte : iris, peau, cheveux et crâne viennent de l\'hôte', () => {

@@ -31,3 +31,6 @@ Fait : `HAIR-SHAPES.md`, `HAIR-WIND.md`, `HEAD-TURNTABLE-HAIR.md`. Chaque ligne 
 
 ## Sécurité
 14. Le jeton GitHub collé en clair dans la conversation est à **révoquer** ; il n'est écrit nulle part dans le dépôt ni dans l'URL distante.
+
+## Mise à jour (volume 3D)
+15. Le « volume de cheveux 3D » listé ici est réalisé pour les 10 coiffures non chauves : `HAIR-VOLUME-3D.md`. Ce qui reste (pointes 3D de `spiky`, mèches individuelles du rideau, moteur 2D afro/frange/lisière) : `HAIR-VOLUME-REMAINING.md`.
