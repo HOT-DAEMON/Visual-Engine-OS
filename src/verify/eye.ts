@@ -1,4 +1,4 @@
-import { IRIS_FIT, openingPolygon, openingGeometry, placeHighlights, pupilContours, scleraVessels, microLod, turnOpening, type Vec } from '../geometry/eye';
+import { IRIS_FIT, openingPolygon, openingGeometry, eyeLashSet, upperFrame, lowerFrame, placeHighlights, pupilContours, scleraVessels, microLod, turnOpening, type Vec } from '../geometry/eye';
 import { halfVectorXY, lightVector, toLocal, type LightVector } from '../lighting/light';
 import { rotateLightForHeadTurn } from '../lighting/head-turn';
 import { compileEye, resolveEye } from '../render/eye/eye';
@@ -7,6 +7,7 @@ import { dominantColor } from '../materials';
 import { EyeSpec } from '../schema';
 import { REFERENCE_LIGHT } from './face-engine';
 import { checkEyeEnvelope } from './eye-envelope';
+import { checkEyeLashes, type LashMetrics } from './eye-lashes';
 import { check, report, type Check, type Report } from './types';
 
 /**
@@ -42,6 +43,7 @@ export interface EyeMetrics {
   readonly irisVisible: number;
   readonly filters: number;
   readonly svgBytes: number;
+  readonly lashes: LashMetrics;
 }
 export interface EyeReport extends Report { readonly metrics: EyeMetrics; }
 
@@ -91,6 +93,9 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
   if (turned) out.push(check('geometry', 'eye-facing-camera', '>=', turned.facing, 0.05, 'l’œil est passé derrière le crâne (rotation trop forte pour sa position)'));
 
   out.push(...checkEyeEnvelope(g0, eye.shape.style, irisRy)); // enveloppe vs références mesurées (geometry / anatomy / style)
+  const lashTh = eye.lids.thickness * eye.shape.height;
+  const lashCheck = checkEyeLashes(eye, g, lashTh, eyeLashSet(eye, g, lashTh), (t) => upperFrame(g, t), (t) => lowerFrame(g, t)); // cils : géométrie / anatomie / style (eye-lashes.ts)
+  out.push(...lashCheck.checks);
 
   // ---- anatomy -----------------------------------------------------------------------------------------------
   const irisToOpening = (2 * irisRx) / (g.bbox.w || 1);
@@ -122,5 +127,5 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
   out.push(check('style', 'pupil-darker-than-iris', '>=', lum(irisBase) - lum(pupilFill), 0.02, 'pupille plus claire que l’iris', 'warn'));
 
   const r = report(out);
-  return { ...r, metrics: { openingArea, irisToOpeningWidth: irisToOpening, pupilToIris, irisVisible, filters, svgBytes } };
+  return { ...r, metrics: { openingArea, irisToOpeningWidth: irisToOpening, pupilToIris, irisVisible, filters, svgBytes, lashes: lashCheck.metrics } };
 }

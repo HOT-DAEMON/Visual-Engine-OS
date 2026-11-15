@@ -28,7 +28,7 @@ Légende : ✅ fait et testé · 🟡 partiel (précisé) · ⬜ non fait · ❔
   Correction possible : décaler le reflet primaire hors de la pupille quand `pupil.shape` ≠ ronde.
 - ⬜ Mode `fast` du flou de bord (`edge.softness`) : reste un filtre.
 
-## 06 Cils — ⬜ non traité dans cette passe (générateur existant non audité ; styles graphiques, faisceaux, asymétrie à vérifier).
+## 06 Cils — ✅ (2026-11-15) 10 familles tirées des réfs 12–16, 3 paramètres ajoutés (`bendDeg`, `rootFuse`, `span`), vérification dédiée : voir `EYES-LASHES.md` et `EYES-LASHES-VERIFY.md`. Reste à faire : fin de `EYES-LASHES.md` (écart visuel aplats/dégradés, mèches sur l'iris, cils non adaptés aux yeux très inclinés).
 
 ## 07 Microanatomie
 - ✅ A, B, C, F, H + LOD. ⬜ D microrelief cutané (pores, normales), E irrégularité des bords palpébraux, G petits plis des canthi.
@@ -64,5 +64,10 @@ Reste à faire (chaque point est détaillé dans `EYES-REFS-2.md`, § « Reste �
 - ⬜ Seuils d'enveloppe issus de 3 yeux de face ; `verify-eye-render.ts` (pixels) toujours dans `scripts/`, non appelé par `verifyFace`.
 
 
-## Cils (réfs 12–16) — voir docs/EYES-LASHES.md
-- Familles créées et branchées sur 57 des 100 yeux ; orientation externe à fiabiliser, réfs 14 et 15 non mesurées, yeux très hauts de la planche 04 encore rognés.
+## Cils (réfs 12–16) — voir docs/EYES-LASHES.md et EYES-LASHES-VERIFY.md (2026-11-15)
+Fait : orientation externe par construction (miroir / ancres), 66 yeux mesurés dont réfs 14 et 15, familles de cils non intégrées -> `generateRandomFace({ lashFamily })`, 10 familles, couche de vérification dédiée, planche 04 recadrée.
+- 🟡 Réf. 14 : cils (traits) mesurés ; **silhouette et iris toujours non mesurés** ; flèches non interprétées au-delà de la famille `trainants`.
+- 🟡 Réf. 15 : traits de cils mesurés (10 yeux) ; **limbe des rangées 3 à 5 toujours non détecté** (pas d'iris).
+- ⬜ Réfs 13 et 17 : yeux non tracés (≈ 8) ; 13 mesurée avec la détection d'origine (12 yeux), 17 non touchée dans cette passe.
+- ⬜ Facettes d'iris : dispersion prismatique et rayons de lumière, distance minimale de la galerie (0,0089), almond : non retouchés dans cette passe.
+- ⬜ Pixel : `verify-eye-render.ts` sans règle cils ; ⬜ cils non adaptés à l'inclinaison de l'ouverture (4 cas / 174).

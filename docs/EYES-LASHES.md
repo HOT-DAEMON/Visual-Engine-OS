@@ -1,34 +1,54 @@
-# EYES-LASHES — familles de cils (réfs 12, 13, 16 ; 14 et 15 non exploitées)
+# EYES-LASHES — familles de cils (réfs 12, 13, 14, 15, 16)
 
 Objectif : échantillonner les cils des références pixel par pixel et en tirer des familles distinctes (touffes, plumes, style féminin…) **en réglant le moteur de cils existant**
 (`src/schema/eye-lashes.ts`, `src/geometry/eye/lashes.ts`, `lash-extras.ts`, `src/render/eye/lashes-render.ts`), sans créer de moteur par référence.
+Vérification : voir `EYES-LASHES-VERIFY.md`. Reste à faire : fin de ce fichier. (Session du 2026-11-15, v2.)
 
-## Fichiers (tous nouveaux, aucun doublon trouvé avant création)
+## Fichiers (aucun doublon : les fichiers existants ont été modifiés en place)
 | Fichier | Rôle |
 |---|---|
-| `scripts/eye-refs/extract_lashes.py` | isole chaque œil (masque d'encre, composantes), profil de silhouette + analyse **trait par trait** (squelette de chaque cil) -> `references/eyes/measures-lashes.json`, contrôles `artefacts/eyes-refs3/02-cils-segmentation-{12,13,16}.png` |
-| `scripts/eye-refs/cluster_lashes.py` | k-means sur les mesures (essai de regroupement automatique) -> `references/eyes/lash-families.json` |
-| `src/generation/eye-lash-families.ts` | 6 familles = jeux de paramètres du moteur existant, chaque valeur annotée M (mesurée) / I (interprétée) / C (conversion largeur->hauteur) |
-| `tests/eye-lash-families.test.ts` | schéma valide, pixels ajoutés, distinction deux à deux (Jaccard < 0,6), lecture des paramètres sur l'image |
-| `scripts/artefacts-eyes-lashes.ts` | planche `artefacts/eyes-refs3/03-familles-de-cils.png` (6 familles × 2 yeux, + œil sans cils) |
+| `scripts/eye-refs/extract_lashes.py` (v2, réécrit en place) | échantillonnage des 5 planches -> `references/eyes/measures-lashes.json` (version 2) + contrôles `artefacts/eyes-refs3/02-cils-segmentation-{12..16}.png` |
+| `scripts/eye-refs/compose_lash_panel.py` | planche `06-references-vs-moteur.png` (œil de référence au-dessus du rendu moteur) |
+| `src/schema/eye-lashes.ts` | 3 paramètres ajoutés, tous opt-in (défaut = rendu historique, octet pour octet) : `bendDeg`, `rootFuse`, `span` |
+| `src/geometry/eye/lashes.ts`, `lash-extras.ts` | cil courbe (`bentLash`), mèches (`clump`) compatibles cubiques, point d'entrée unique `eyeLashSet` (rendu ET vérification) |
+| `src/generation/eye-lash-families.ts` | 10 familles = jeux de paramètres du moteur existant ; `lashFamilyForSeed` |
+| `src/generation/random-face.ts` | option `lashFamily: LashFamilyId \| 'auto' \| null` |
+| `src/verify/eye-lashes.ts` | couche de vérification des cils (géométrie / anatomie / style), appelée par `verifyEye` |
+| `tests/eye-lash-{families,params,verify}.test.ts`, `tests/random-face-lash-family.test.ts` | preuves (pixels, géométrie, défauts injectés, liaison aux mesures) |
+| `scripts/artefacts-eyes-lashes.ts` | planches 03, 04, 05, 07, 08, 09 |
 
-## Méthode d'extraction
-1. Encre = luminance < 110 ; fermeture ~0,6 % de la plus grande dimension ; composantes connexes ; on rejette paires fusionnées (réf. 16), sourcils et joues (plats, sans masse d'iris).
-2. Masse épaisse = ouverture par un disque de rayon 1 % de la largeur L (4 px pour les petits yeux de la réf. 12, dont les traits font 4 à 8 px) ; l'encre restante au contact de la masse = cils.
-3. Cils branchés sur un trait fin sans masse (arc de paupière de la réf. 12) : branches courtes du squelette finissant sur une jonction.
-4. Par cil : longueur, base, pointe, angle, courbure, largeur de base, nombre de pointes (touffe si > 1). Mesures en fraction de L.
+## Ce que le moteur ne savait pas faire, et ce qui a été ajouté
+Les références montrent des cils **tracés** : courbes en S, effilés en aiguille, enracinés dans un trait de paupière épais, groupés côté externe.
+Le moteur dessinait des triangles droits posés sur le bord (seule la mèche de coin `flick` était une courbe).
+- `bendDeg` (−60…80, défaut 0) : rotation de la tangente entre racine et pointe, vers la normale du bord. > 0 : la pointe se redresse (cas général mesuré) ; < 0 : elle se couche vers l'extérieur (réf. 14). Avec `bendDeg`, `curl` règle **où** la courbure se produit.
+- `rootFuse` (0…1, défaut 0) : racine enfoncée de +0,3 à −0,6 épaisseur de bord (test) et base élargie jusqu'à +80 %.
+- `span` ({from,to}, défaut 0,05–0,95) : zone du bord occupée par les cils (références : position médiane des pointes 0,65–0,83).
+- Familles tracées : `lids.thickness` relevée (`lidThickness`, valeur **I**) car le cil s'enracine dans un trait noir épais dans les références.
 
-## Familles
-`plume`, `touffes`, `frange-dense`, `fin-feminin`, `aile-liner`, `rond-kawaii` — sources et valeurs dans `eye-lash-families.ts`.
+## Méthode d'extraction v2
+1. **Regroupement autour de chaque iris** (planches 12, 16) : iris = blob compact après ouverture (rayon 1,2 % de la largeur de planche) ; chaque composante d'encre est rattachée à l'iris le plus proche ; sourcils, joues, sourires et boîtes contenant l'iris d'un autre œil (fusions) sont écartés. Le v1 ne gardait parfois que l'iris.
+2. Réf. 13 : composantes connexes (`eyes_of`). Réfs 14 et 15 (iris colorés) : cellules de grille mesurées ; encre = sombre **et** peu saturé (écarte iris, flèches rouges, aplats) ; sourcils retirés.
+3. **Orientation externe par construction** (le v1 la devinait au plus grand dépassement, ce qui était faux) : planches 12 et 16 = appariement de miroir (masque retourné qui recouvre l'autre à > 0,8 d'IoU ; le plus à gauche a son externe à gauche) ; 15 = colonne ; 13 et 14 = ancres visuelles consignées (externe à droite, sauf 13-04 : masse de cils à gauche). Les yeux sans partenaire sont étiquetés `heuristic` (jamais présentés comme sûrs).
+4. Par œil : **pointes** verticales par tranches de hauteur (15–92 %) -> ligne médiane, effilement, angle base/pointe par rapport à la normale locale ; **traits** (squelette de la base à la pointe, chemin ordonné) -> longueur, angle de départ, courbure signée, effilement, position le long de la paupière.
+5. Résumé par planche dans `measures-lashes.json` (`summary`). Résultat : 66 yeux (12 : 11, 13 : 12, 14 : 6, 15 : 10, 16 : 27) ; orientation par construction pour ≥ 80 %.
 
-## Limites connues (honnêtes)
-- **Regroupement automatique non concluant** : 23 yeux sur 50 ont < 2 cils du haut détectés ; un cluster de 16 mélange tout. Les familles viennent donc d'une lecture croisée mesures + planches, pas du k-means seul.
-- **Orientation interne/externe peu fiable** : le côté externe est déduit du côté du plus grand dépassement ; le rapport externe/interne sort à 0,4–0,8 pour la plupart des yeux, ce qui contredit la lecture visuelle. Les valeurs `outerLength`, `outerLift` et `flick` sont donc **interprétées (I)**.
-- **Réf. 16** : isolement incomplet (cils fins hors boîte, paires fusionnées) ; 12 composantes sur 26 sont des iris ou ovales sans cils.
-- **Réfs 14 (sens de tracé, flèches) et 15 (ailes fines/épaisses)** : non mesurées ; `aile-liner` s'appuie sur la lecture visuelle de la 15.
-- **Cils gris pâle (résolu)** : l'enveloppe `colorVariation` du moteur (0,15 par défaut) éclaircit certains cils jusqu'à #656566 sur une encre #120e18 ; les familles fixent `colorVariation: 0` + matériau d'encre opaque (`INK`). Mon premier diagnostic (cils masqués par le pli épicanthique) était faux : ce pli ne recouvre que la zone du canthus interne.
-- **Contrat de zone** : le test pixel « no-paint-outside-zone » (cils <= 0,55 de la plus grande dimension) a fait raccourcir les ailes (`aile-liner` 0,7, `plume` 0,8) ; la zone n'a pas été élargie.
-- **Intégration galerie** : `extraEyeLashFamily(index)` (`eye-gallery-ext.ts`) attribue une famille à 57 des 100 yeux avec un générateur à part (aucun tirage décalé) ; les 43 autres gardent leurs cils d'origine.
-- **Planches** : `04-galerie-100-familles-de-cils.png` (échelle 0,6 pour tenir dans les cellules ; les yeux très hauts #1 et #2 débordent encore).
-- Le test mesure la couleur des cils (luminance moyenne < 90) et une aire minimale de 900 px.
-- Pas de cils « plumes » multicolores, pas de dispersion de couleur le long du cil, pas d'animation.
+## Mesures retenues (ordres de grandeur, fraction de la largeur L de l'œil)
+- Position médiane des pointes : 0,65–0,83 (12, 13, 16) -> `span.from` ≥ 0,35 pour les familles à cils externes.
+- Courbure médiane des pointes −3° à −13°, des traits latéraux −15° à −32° (P10 jusqu'à −49° / −73° pour les ailes) -> `bendDeg` 12–55 (signe moteur inversé : > 0 = se redresse).
+- Longueur : pointes 0,04–0,08 L (P90 0,08–0,13), traits latéraux 0,12–0,14 L (P90 0,19–0,6) ; largeur à mi-longueur 0,37–0,74 de la base.
+- Réf. 14 : traits du canthus externe couchés (départ ≈ 90° de la normale, courbure −32°) -> famille `trainants` (`bendDeg` < 0).
+
+## Les 10 familles (sources, valeurs et provenance M/I/C dans `eye-lash-families.ts`)
+`plume`, `touffes`, `frange-dense`, `fin-feminin`, `aile-liner`, `rond-kawaii` (6 d'origine, retravaillées) ; **nouvelles** : `trio-externe` (12), `touffes-bas` (15, 16 : cils du bas en touffes), `ticks-reguliers` (15, 16), `trainants` (14).
+
+## Intégration
+- Galerie : `extraEyeLashFamily(index)` (55 % des 100 yeux ; flux PRNG à part) tire désormais parmi 10 familles. Planche 04 : échelle par œil.
+- `generateRandomFace(seed, { lashFamily })` : une famille imposée, ou `'auto'` (flux dérivé dédié `seed ^ 0x7c15a3e1`). Sans option, visages **inchangés** (testé).
+
+## Limites connues (honnêtes) -> aussi dans EYES-REMAINING.md
+- Les valeurs `bendDeg` (12–55) sont **interprétées** au-delà de la médiane mesurée : l'extraction mesure sur peu de pixels et sous-estime les courbes en S.
+- Écart visuel restant (planche 06) : les références sont des aplats noirs francs ; le moteur reste un rendu à dégradés. Épaisseur de paupière des familles = **I**, non mesurée.
+- `clump` avec `bendDeg` et une zone qui descend vers le canthus interne : les mèches convergent sur l'iris (planche 05, case « clump 0,9 + bend ») ; les familles à mèches utilisent `span.from` ≥ 0,2.
+- Mesures de lignes de squelette bruitées pour les traits très fins (largeur de base 1–2 px) : `taperMid/taperTip` des traits peu fiables ; l'effilement retenu vient des pointes.
+- Les familles ne s'adaptent pas à l'inclinaison de l'ouverture : 4 cas sur 174 (yeux très inclinés) gardent un cil dont la pointe retombe dans l'ouverture (avertissement `upper-lash-tips-outside-opening`).
+- Pas de cils multicolores, pas d'animation, pas de dispersion de couleur le long du cil.

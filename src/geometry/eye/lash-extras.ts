@@ -30,13 +30,15 @@ export function clumpLashes(lashes: readonly Lash[], clump: number, size: number
     const m = group.length;
     const meanTip: Vec = { x: group.reduce((a, l) => a + l.tip.x, 0) / m, y: group.reduce((a, l) => a + l.tip.y, 0) / m };
     const meanCtrl: Vec = { x: group.reduce((a, l) => a + l.ctrl.x, 0) / m, y: group.reduce((a, l) => a + l.ctrl.y, 0) / m };
+    const withC2 = group.filter((l) => l.ctrl2);
+    const meanCtrl2: Vec | null = withC2.length ? { x: withC2.reduce((a, l) => a + (l.ctrl2 as Vec).x, 0) / withC2.length, y: withC2.reduce((a, l) => a + (l.ctrl2 as Vec).y, 0) / withC2.length } : null;
     group.forEach((l, k) => {
       const centrality = m === 1 ? 1 : 1 - Math.abs(k - (m - 1) / 2) / ((m - 1) / 2 || 1);
       const grow = 1 + 0.2 * clump * centrality;
       const tip0 = lerp(l.tip, meanTip, clump * 0.72);
       const tip = { x: l.base.x + (tip0.x - l.base.x) * grow, y: l.base.y + (tip0.y - l.base.y) * grow };
       const ctrl = lerp(l.ctrl, meanCtrl, clump * 0.45);
-      out.push({ ...l, tip, ctrl });
+      out.push(l.ctrl2 && meanCtrl2 ? { ...l, tip, ctrl, ctrl2: lerp(l.ctrl2, meanCtrl2, clump * 0.45) } : { ...l, tip, ctrl });
     });
   }
   return out;

@@ -1,5 +1,5 @@
 import { darken } from '../../core/color';
-import { creaseCurve, cubicTopY, linerTopOffset, upperLashes, lowerLashes, type FoldGeometry, type OpeningGeometry, type Vec } from '../../geometry/eye';
+import { creaseCurve, cubicTopY, eyeLashSet, type FoldGeometry, type OpeningGeometry, type Vec } from '../../geometry/eye';
 import { direction2D, type LightVector } from '../../lighting/light';
 import { dominantColor, gradientStop as stop } from '../../materials';
 import { clamp01 } from '../../core/math';
@@ -125,17 +125,14 @@ export function renderLidsAndFold(
   // Couleur : le matériau propre au groupe (s'il est précisé) prime sur celle de la paupière —
   // voir eye-lashes.ts (`material: null` = hérite de `lidColor`, comportement historique).
   const lightDir = direction2D(L);
-  // Avec un liner, les racines des cils se posent sur son bord haut (voir geometry/eye/liner.ts).
-  const liner = eye.lids.liner;
-  const rootShift = liner ? (t: number) => linerTopOffset(liner, th, t) * 0.88 : undefined;
-  const upLashes = upperLashes(g, eye.lashes.upper, th, (eye.seed ^ 0xa5a5a5a5) >>> 0, rootShift);
+  // Les cils (graines, racines sur le liner) viennent du point d'entrée commun avec la vérification : geometry/eye/lashes.ts `eyeLashSet`.
+  const { upper: upLashes, lower: loLashes } = eyeLashSet(eye, g, th);
   if (upLashes.length > 0) {
     const upColor = eye.lashes.upper.material ? dominantColor(eye.lashes.upper.material.base) : lidColor;
     lids.push(
       el('g', { id: `${id}-lashes-up` }, renderLashGroup(upLashes, upColor, eye.lashes.upper.opacity, eye.lashes.upper.gloss, lightDir)),
     );
   }
-  const loLashes = lowerLashes(g, eye.lashes.lower, th, (eye.seed ^ 0x5a5a5a5a) >>> 0);
   if (loLashes.length > 0) {
     const loColor = eye.lashes.lower.material ? dominantColor(eye.lashes.lower.material.base) : lidColor;
     lids.push(

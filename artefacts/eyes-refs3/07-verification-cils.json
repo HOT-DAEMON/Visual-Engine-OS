@@ -1,0 +1,117 @@
+{
+ "galerie100": {
+  "lashes-finite": {
+   "checked": 94,
+   "failed": 0,
+   "severity": "error"
+  },
+  "lash-roots-on-lid": {
+   "checked": 94,
+   "failed": 0,
+   "severity": "error"
+  },
+  "lashes-in-zone": {
+   "checked": 94,
+   "failed": 0,
+   "severity": "error"
+  },
+  "upper-lash-tips-outside-opening": {
+   "checked": 94,
+   "failed": 1,
+   "severity": "warn"
+  },
+  "lashes-point-away-from-eye": {
+   "checked": 94,
+   "failed": 0,
+   "severity": "error"
+  },
+  "lash-max-length": {
+   "checked": 94,
+   "failed": 0,
+   "severity": "warn"
+  },
+  "outer-lashes-lean-outward": {
+   "checked": 94,
+   "failed": 0,
+   "severity": "error"
+  },
+  "lash-median-position": {
+   "checked": 94,
+   "failed": 0,
+   "severity": "warn"
+  },
+  "lash-median-position-max": {
+   "checked": 94,
+   "failed": 0,
+   "severity": "warn"
+  },
+  "lash-tapered": {
+   "checked": 94,
+   "failed": 0,
+   "severity": "error"
+  },
+  "lash-ink-dark": {
+   "checked": 57,
+   "failed": 0,
+   "severity": "warn"
+  }
+ },
+ "familles10x8yeux": {
+  "lashes-finite": {
+   "checked": 80,
+   "failed": 0,
+   "severity": "error"
+  },
+  "lash-roots-on-lid": {
+   "checked": 80,
+   "failed": 0,
+   "severity": "error"
+  },
+  "lashes-in-zone": {
+   "checked": 80,
+   "failed": 0,
+   "severity": "error"
+  },
+  "upper-lash-tips-outside-opening": {
+   "checked": 80,
+   "failed": 3,
+   "severity": "warn"
+  },
+  "lashes-point-away-from-eye": {
+   "checked": 80,
+   "failed": 0,
+   "severity": "error"
+  },
+  "lash-max-length": {
+   "checked": 80,
+   "failed": 0,
+   "severity": "warn"
+  },
+  "outer-lashes-lean-outward": {
+   "checked": 80,
+   "failed": 0,
+   "severity": "error"
+  },
+  "lash-median-position": {
+   "checked": 80,
+   "failed": 0,
+   "severity": "warn"
+  },
+  "lash-median-position-max": {
+   "checked": 80,
+   "failed": 0,
+   "severity": "warn"
+  },
+  "lash-ink-dark": {
+   "checked": 80,
+   "failed": 0,
+   "severity": "warn"
+  },
+  "lash-tapered": {
+   "checked": 80,
+   "failed": 0,
+   "severity": "error"
+  }
+ },
+ "note": "checked = nombre d’yeux où le contrôle s’applique ; failed = échecs (severity error = bloquant, warn = signalé). Défauts injectés : tests/eye-lash-verify.test.ts."
+}

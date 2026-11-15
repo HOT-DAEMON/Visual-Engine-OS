@@ -2,6 +2,7 @@ import { mulberry32 } from '../core/prng';
 import { faceLandmarks, fitEyeToFace, type EyeFit, type EyeSide } from '../face';
 import { FaceParams, type SceneInput } from '../schema';
 import { applyEyeAxes, type BrowLash, type EyelidFold } from './random-axes';
+import { LashFamilyId, applyLashFamily, lashFamilyForSeed } from './eye-lash-families';
 import { EXTENDED_IDENTITIES, extendedPair, galleryPair, GALLERY_IDENTITIES } from './eye-pool';
 import { generateRandomEye } from './random-eye';
 import { drawFaceParams, drawSkin, FACE_EXPRESSIONS, mouthFor, type ExpressionKind } from './random-face-helpers';
@@ -36,6 +37,8 @@ export interface RandomFaceOptions extends ExtrasOverride {
   readonly id?: string;
   /** 'gallery' (défaut) : paire d'yeux d'une des 48 identités des galeries ; 'extended' : une des 148 (48 + les 100 formes de `eye-gallery-ext`, identité tirée dans un flux DÉRIVÉ : les autres tirages ne bougent pas) ; 'random' : œil tiré de la seed du visage. */
   readonly eyeSource?: 'gallery' | 'random' | 'extended';
+  /** Famille de cils (réfs 12–16, voir eye-lash-families.ts) : un identifiant l'impose aux deux yeux ; 'auto' en tire une d'un flux dérivé dédié (les autres tirages ne bougent pas) ; absent ou null = cils de l'identité d'origine (visages d'avant inchangés). */
+  readonly lashFamily?: LashFamilyId | 'auto' | null;
   /** Identité de galerie imposée (0–47, ou 0–147 si eyeSource = 'extended') ; sinon tirée. Ignoré si eyeSource = 'random'. */
   readonly identity?: number;
   /** Expression imposée (yeux ET bouche) ; sinon tirée. */
@@ -93,12 +96,16 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
   const source = options.eyeSource ?? 'gallery';
   const gallery = source === 'gallery' || source === 'extended';
   const identity = source === 'extended' ? (options.identity ?? Math.floor(mulberry32((seed ^ 0x5eed1de9) >>> 0)() * EXTENDED_IDENTITIES)) : gallery ? (options.identity ?? drawnIdentity) : null;
-  const pair: Record<EyeSide, EyeInput> = gallery
+  const pair0: Record<EyeSide, EyeInput> = gallery
     ? source === 'extended' ? extendedPair(identity as number, expression) : galleryPair(identity as number, expression)
     : (() => {
         const eye = generateRandomEye(seed, { expression });
         return { left: { ...eye, shape: { ...eye.shape, outerSide: 'left' } }, right: { ...eye, shape: { ...eye.shape, outerSide: 'right' } } };
       })();
+
+  const lashFam = options.lashFamily ? (options.lashFamily === 'auto' ? lashFamilyForSeed(seed) : options.lashFamily) : null;
+  const withLashes = (e: EyeInput): EyeInput => (lashFam && e.kind === 'eye' ? (applyLashFamily(e as unknown as Record<string, unknown>, lashFam) as unknown as EyeInput) : e);
+  const pair: Record<EyeSide, EyeInput> = { left: withLashes(pair0.left), right: withLashes(pair0.right) };
 
   const sides: EyeSide[] = ['left', 'right'];
   const anchors = sides.map((side) => {

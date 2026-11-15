@@ -72,6 +72,23 @@ function lashGroup(maxCount: number, defaults: { count: number; length: number; 
       /** Mèches : 0 = cils indépendants ; 1 = cils regroupés en pointe par paquets de `clumpSize`. */
       clump: Unit.default(0),
       clumpSize: z.number().int().min(2).max(6).default(3),
+      /**
+       * Courbure en S du cil (opt-in, 0 = cil droit historique) : rotation (degrés) de la tangente entre la racine et la pointe, VERS la normale du bord (la pointe se redresse
+       * après une base penchée vers l'extérieur, comme les cils tracés des références 12–16 : −3° à −28° mesurés). > 0 : le cil devient une courbe cubique effilée ; `curl` règle alors
+       * où la courbure se produit (0 = près de la pointe, 1 = près de la base). Négatif : la pointe se couche vers l'extérieur.
+       */
+      bendDeg: z.number().min(-60).max(80).default(0),
+      /**
+       * Zone du bord occupée par les cils (opt-in) : 0 = canthus interne, 1 = externe. Défaut = 0,05–0,95 (répartition historique sur tout le bord). Les références montrent des cils
+       * concentrés sur la moitié externe (position médiane des pointes 0,65–0,83 mesurée sur les réfs 12, 13, 16).
+       */
+      span: z
+        .object({ from: z.number().min(0).max(0.98).default(0.05), to: z.number().min(0.02).max(1).default(0.95) })
+        .strict()
+        .refine((v) => v.to - v.from >= 0.04, { message: 'span.to doit dépasser span.from d\'au moins 0,04' })
+        .default({}),
+      /** Racine fondue dans le trait de paupière (opt-in, 0 = racine posée sur le bord) : racine enfoncée jusqu'à 0,9 épaisseur de bord et base élargie jusqu'à +80 %. */
+      rootFuse: Unit.default(0),
     })
     .strict();
 }
