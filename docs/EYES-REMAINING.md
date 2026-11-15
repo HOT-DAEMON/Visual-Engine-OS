@@ -57,8 +57,12 @@ facettes et bulles d'iris ; `eyeSource: 'extended'` dans `generateRandomFace` (1
 Reste à faire (chaque point est détaillé dans `EYES-REFS-2.md`, § « Reste à faire ») :
 - ⬜ Réf. 14 : silhouettes et iris non mesurés (sclère blanche sur fond blanc, flèches mesurées mais non interprétées) ; réf. 15 rangées 3–5 : iris non mesurés (limbe non détecté).
 - ⬜ Réf. 13 E1–E4, E6–E9, E11, E12 et 17 (≈ 8 yeux) : canthus externe sous une masse de cils ou yeux coupés par la tuile ; non tracés.
-- 🟡 Almond : canthus interne 98,4° vs 93,7° mesuré (nécessite un contrôle d'angle de canthus non exposé) ; `tiltDeg` par défaut 6° inchangé.
+- ✅ Almond passe 3 : contrôle d'angle du canthus interne exposé (`u1dx`, `u1dy` dans `EnvelopeRefFactors`), 8 facteurs ajustés (`scripts/eye-refs/fit-almond.ts`) : interne 93,66° (mesuré 93,67°), externe 118,99° (mesuré 119,0°) ; erreur de profil 0,022 → 0,026 (haut), 0,041 → 0,043 (bas). `tiltDeg` par défaut 6° inchangé. Références visuelles et empreinte first-eye régénérées (rms 0,7 à 5,2, limité aux yeux).
 - 🟡 Facettes : lisibles mais discrètes ; pas de dispersion prismatique, pas de rayons de lumière, pas de cils dorés ; bulles sans réfraction du fond.
 - 🟡 Galerie : distance minimale 0,0089 entre silhouettes (seuil du test abaissé de 0,009 à 0,008) ; les sprites hauts (15-A, 15-B) débordent de la cellule des planches.
 - 🟡 Look « encre » : teintes grises et reflets en lentille interprétés (non mesurés) ; peau périoculaire mesurée seulement sur 5 photos.
 - ⬜ Seuils d'enveloppe issus de 3 yeux de face ; `verify-eye-render.ts` (pixels) toujours dans `scripts/`, non appelé par `verifyFace`.
+
+
+## Cils (réfs 12–16) — voir docs/EYES-LASHES.md
+- Familles créées et branchées sur 57 des 100 yeux ; orientation externe à fiabiliser, réfs 14 et 15 non mesurées, yeux très hauts de la planche 04 encore rognés.

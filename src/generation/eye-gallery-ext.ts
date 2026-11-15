@@ -9,6 +9,7 @@ import { checkEyeEnvelope } from '../verify/eye-envelope';
 import { verifyEye } from '../verify/eye';
 import { generateRandomEye } from './random-eye';
 import { REF_FITS } from './eye-ref-fits';
+import { LASH_FAMILY_IDS, applyLashFamily, type LashFamilyId } from './eye-lash-families';
 import { SPRITE_IRIS_OVER_HEIGHT, applyLook, lookForRef } from './eye-ref-looks';
 import { IRIS_FAMILIES, PUPIL_OVER_IRIS, ROUND_IRIS_ASPECT, irisFamily } from './eye-iris-families';
 import type { EyeInput } from './random-eye-helpers';
@@ -135,6 +136,14 @@ export function extraEyeRecipes(): readonly EyeRecipe[] {
  * L'œil complet de la case `index` (0..99) : traits tirés par la graine, enveloppe/canthi/pli/iris/pupille imposés par la recette.
  * Validé par `verifyEye` ; en cas d'échec d'une règle, nouvelles tentatives DÉTERMINISTES de plus en plus sages (regard nul, iris × 0,92ᵏ, reflets simplifiés).
  */
+/** Famille de cils (réfs 12, 13, 16) d'un œil de la galerie, ou null : ~55 % des yeux. Générateur À PART (graine décalée) : n'ajoute aucun tirage aux autres paramètres de la recette. */
+export function extraEyeLashFamily(index: number): LashFamilyId | null {
+  const rc = extraEyeRecipes()[index];
+  if (!rc) throw new Error(`extraEyeLashFamily: index ${index} hors 0..${EXTRA_EYE_COUNT - 1}`);
+  const r = mulberry32(rc.seed ^ 0x1a5b2c3d);
+  return r() < 0.55 ? (LASH_FAMILY_IDS[Math.floor(r() * LASH_FAMILY_IDS.length)] as LashFamilyId) : null;
+}
+
 export function generateExtraEye(index: number, expression?: EyeInput['expression']): EyeInput {
   const rc = extraEyeRecipes()[index];
   if (!rc) throw new Error(`generateExtraEye: index ${index} hors 0..${EXTRA_EYE_COUNT - 1}`);
@@ -171,7 +180,9 @@ function buildExtraEye(rc: EyeRecipe, attempt: number): EyeInput {
   } as EyeInput;
   // Look issu des références (naturel mesuré / encre / sprite) : tiré APRÈS tous les autres tirages pour ne pas les décaler.
   const look = lookForRef(rc.ref, rnd);
-  const out = applyLook(base, look, rnd, rc.aspect);
+  const looked = applyLook(base, look, rnd, rc.aspect);
+  const lashFam = extraEyeLashFamily(rc.index);
+  const out = lashFam ? applyLashFamily(looked, lashFam) : looked;
   // Rayon d'iris CALIBRÉ sur l'ouverture réelle : diamètre vertical = IRIS_OVER_HEIGHT × hauteur d'ouverture (références : 0,98–1,08), réduit à chaque nouvelle tentative.
   const spec = resolveEye(EyeSpec.parse(out));
   const geo = openingGeometry(spec.shape, spec.canthi);
