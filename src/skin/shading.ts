@@ -92,6 +92,19 @@ export function skinShading(mat: SkinMaterial, L: LightVector, regions: SkinRegi
       spots.push({ region: id, e: { cx: r.cx + H.x * r.rx * 0.5, cy: r.cy + H.y * r.ry * 0.5, rx: r.rx * size, ry: r.ry * size }, alpha, soft: cel ? 0.04 : clamp01(0.55 + 0.4 * rough + 0.15 * soft), color: specColor });
     }
   });
+  // Matériau propre au nez (`noseDetail`) : un reflet concentré sur la POINTE (même loi que les reflets de région : rugosité du nez, graisse de la zone T,
+  // intensité de la lumière, réflexion de l'apparence) et une rougeur de transparence sur les AILES (teinte de l'ombre de la peau mêlée d'un rouge sang
+  // retenu : la couleur reste celle de la peau partagée). Absents (aucun spot ajouté) quand les deux axes valent 0.
+  const nd = mat.noseDetail;
+  if (regions.noseTip && nd.tipShine > 0.005) {
+    const rough = mat.roughness.nose, t = regions.noseTip;
+    const alpha = clamp01(I * sp.strength * (1 - 0.7 * rough) * (1 + 1.2 * mat.oiliness) * 0.34 * (2 * refl.intensity) * (0.35 + 1.65 * nd.tipShine) * 1.7);
+    spots.push({ region: 'nose', e: { cx: t.cx + H.x * t.rx * 0.35, cy: t.cy + H.y * t.ry * 0.35, rx: t.rx * (0.55 + 0.3 * rough), ry: t.ry * (0.55 + 0.3 * rough) }, alpha, soft: cel ? 0.04 : clamp01(0.4 + 0.4 * rough), color: specColor });
+  }
+  if (regions.noseAlae && nd.alarBlush > 0.005) {
+    const blush = mix(ra.shadow, '#c25048', 0.4);
+    for (const a of regions.noseAlae) spots.push({ region: 'nose', e: { cx: a.cx + Math.sign(a.cx - (regions.noseTip?.cx ?? a.cx)) * a.rx * 0.2, cy: a.cy + a.ry * 0.1, rx: a.rx * 0.72, ry: a.ry * 0.8 }, alpha: clamp01(nd.alarBlush * 0.55 * (0.6 + 0.8 * mat.subsurface.width)), soft: cel ? 0.04 : 0.65, color: blush });
+  }
   // Terminateur : position (0,45 + 0,25 · L.z : une lumière plus frontale éclaire davantage), largeur croissante avec la douceur du
   // matériau ET de la lumière. Au milieu, la diffusion sous-cutanée rougit la transition (la peau n'est pas un plâtre).
   const width = cel ? 0.01 : clamp01(0.12 + 0.5 * mat.softness * (0.5 + 0.5 * soft));

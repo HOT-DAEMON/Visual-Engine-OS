@@ -49,6 +49,21 @@ export const SkinSubsurface = z
   })
   .strict();
 
+/**
+ * Matériau PROPRE AU NEZ (sous-contrat du matériau de peau, mêmes couches, même modèle d'éclairage : aucun moteur de plus).
+ * Le nez n'est pas une peau de joue : la pointe est du cartilage sous une peau fine et grasse (reflet concentré), les ailes sont fines et
+ * vascularisées (rougeur de transparence), Chaque axe vaut 0 par défaut = rendu d'avant, identique.
+ * Un axe « pores du nez » a été essayé puis RETIRÉ : sans effet lisible (docs/NOSE-MATERIAL.md). Choix ARTISTIQUES et anatomiques, pas des mesures : les planches de `references/nez` sont des dessins gris, aucune brillance ni teinte n'y est lisible.
+ */
+export const SkinNoseDetail = z
+  .object({
+    /** Reflet concentré de la pointe (0 = aucun reflet propre ; 1 = pointe nettement brillante). */
+    tipShine: Unit.default(0),
+    /** Rougeur de transparence des ailes (0 = aucune ; 1 = nette), teinte tirée de l'ombre de la peau (couleur partagée). */
+    alarBlush: Unit.default(0),
+  })
+  .strict();
+
 export const SKIN_MODELS = ['skin', 'legacy'] as const;
 
 export const SkinMaterial = z
@@ -64,6 +79,8 @@ export const SkinMaterial = z
     oiliness: Unit.default(0.3),
     /** Micro-relief (pores, grain) : visible surtout dans les régions rugueuses. */
     pores: Unit.default(0.25),
+    /** Matériau propre au nez : reflet de pointe, rougeur des ailes (tous à 0 par défaut). */
+    noseDetail: SkinNoseDetail.default({}),
   })
   .strict();
 

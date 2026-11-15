@@ -12,7 +12,17 @@ export interface Ellipse {
 }
 
 /** Régions de la peau (une ou deux ellipses chacune) + `shoulders` (épaules, hors matériau de peau : zone lumineuse seulement). */
-export type SkinRegions = Readonly<Record<SkinRegionId | 'shoulders', readonly Ellipse[]>>;
+export type SkinRegions = Readonly<Record<SkinRegionId | 'shoulders', readonly Ellipse[]>> & {
+  /** Pointe du nez (ellipse de `noseGeometry().tip`) et les deux ailes : sous-régions du nez lues par le matériau propre au nez (`skinMaterial.noseDetail`). */
+  readonly noseTip?: Ellipse;
+  readonly noseAlae?: readonly Ellipse[];
+};
+
+/** Ellipse englobante (centre et demi-axes de la boîte) d'un polygone. */
+function boxEllipse(poly: readonly { x: number; y: number }[]): Ellipse {
+  const xs = poly.map((q) => q.x), ys = poly.map((q) => q.y), x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+  return { cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, rx: (x1 - x0) / 2, ry: (y1 - y0) / 2 };
+}
 
 /**
  * Découpe du visage en RÉGIONS NOMMÉES (front, nez, joues, tempes, menton, lèvre supérieure, cou, épaules). C'est le seul pont entre
@@ -37,5 +47,7 @@ export function skinRegions(lm: FaceLandmarks, nose: NoseGeometry): SkinRegions 
   const upperLip: Ellipse = { cx: 0, cy: lipY, rx: 0.05 * W, ry: Math.max(0.008 * H, (lm.lips.topY - lm.noseBaseY) / 2) };
   const neck: Ellipse = { cx: 0, cy: (lm.chinY + lm.neck.bottomY) / 2, rx: lm.neck.half, ry: Math.max(0.02 * H, (lm.neck.bottomY - lm.chinY) / 2) };
   const sh = (s: -1 | 1): Ellipse => ({ cx: s * lm.neck.half * 1.1, cy: lm.neck.bottomY - 0.02 * H, rx: lm.neck.half * 0.9, ry: 0.03 * H });
-  return { forehead: [forehead], nose: [noseE], cheeks: [cheek(-1), cheek(1)], temples: [temple(-1), temple(1)], chin: [chin], upperLip: [upperLip], neck: [neck], shoulders: [sh(-1), sh(1)] };
+  const noseTip: Ellipse = { cx: nose.tip.c.x, cy: nose.tip.c.y, rx: nose.tip.rx, ry: nose.tip.ry };
+  const noseAlae = [boxEllipse(nose.alae.left.poly), boxEllipse(nose.alae.right.poly)];
+  return { noseTip, noseAlae, forehead: [forehead], nose: [noseE], cheeks: [cheek(-1), cheek(1)], temples: [temple(-1), temple(1)], chin: [chin], upperLip: [upperLip], neck: [neck], shoulders: [sh(-1), sh(1)] };
 }

@@ -9,6 +9,7 @@ import { drawFaceExtras, type ExtrasOverride } from './random-face-extras';
 import { deepMerge, drawAnatomy, type AnatomyOverride } from './random-face-anatomy';
 import { randomNeck } from './random-face-neck';
 import { drawStructure, type StructureOverride } from './random-face-structure';
+import { noseArchetype, NOSE_ARCHETYPE_NAMES, type NoseArchetypeName } from '../face/nose/archetypes';
 import { applyStylization } from '../face/stylize';
 import { pick, range, type EyeInput } from './random-eye-helpers';
 
@@ -21,6 +22,12 @@ export interface RandomFaceOptions extends ExtrasOverride {
   readonly anatomy?: AnatomyOverride;
   /** Moteur de structure (T1–T13) : `true` ou un objet de surcharge active `anatomyEngine: 'structured'` et tire les axes de structure (flux dérivé : les autres tirages ne bougent pas). */
   readonly structure?: boolean | StructureOverride;
+  /**
+   * Archétype de nez mesuré sur references/nez/06.png (`pyramide`, `cloche-ailes`) imposé AU-DESSUS des tirages du nez ; `'random'` en tire un dans un flux
+   * DÉRIVÉ (`seed ^ 0x6e6f7365`, ne bouge aucun autre tirage). OPT-IN : sans l'option, les visages sont identiques graine pour graine.
+   * Étude `docs/NOSE-ARCHETYPE-WIRING.md` : la silhouette est la même en `classic` et en `structured` (écart de L/H < 0,002 sur 40 graines).
+   */
+  readonly noseArchetype?: NoseArchetypeName | 'random';
   /** Moteur de cheveux : 'v2' (défaut) ou 'classic' (reproduit exactement les visages d'avant la v2). */
   readonly hairEngine?: 'v2' | 'classic';
   /** Autorise des occlusions du visage par les cheveux tirées au hasard (v2) ; défaut : non. */
@@ -70,7 +77,10 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
   const base = drawFaceParams(rnd, mouthFor(kind, intensity));
   const extras = drawFaceExtras(rnd, options, { hairEngine: options.hairEngine, occlusions: options.occlusions });
   // Nouveaux axes (nez, menton, mâchoire, matériau, éclairage, apparence) : flux de tirage DÉRIVÉ, les tirages existants ne bougent pas.
-  const anatomy = drawAnatomy(seed, skin, options.anatomy);
+  const archetype = options.noseArchetype === 'random' ? NOSE_ARCHETYPE_NAMES[Math.floor(mulberry32((seed ^ 0x6e6f7365) >>> 0)() * NOSE_ARCHETYPE_NAMES.length)] : options.noseArchetype;
+  // L'archétype est une SURCHARGE du tirage : posée sous `anatomy.nose` explicite (l'utilisateur garde le dernier mot).
+  const anatomyOver = archetype ? { ...(options.anatomy ?? {}), nose: deepMerge((noseArchetype(archetype) as { nose: Record<string, unknown> }).nose, options.anatomy?.nose as Record<string, unknown> | undefined) } as AnatomyOverride : options.anatomy;
+  const anatomy = drawAnatomy(seed, skin, anatomyOver);
   const merged = { ...base, ...anatomy, nose: { ...(base.nose ?? {}), ...(anatomy.nose ?? {}) }, neck: randomNeck(seed, extras.neck as Record<string, unknown>, options.neck as Record<string, unknown> | undefined, { variety: options.neckVariety ?? 0, preset: options.neckPreset }), hair: extras.hair, facialHair: extras.facialHair, asymmetry: extras.asymmetry };
   // Structure (optionnelle) : axes tirés dans un flux dérivé, fusionnés en profondeur. Puis profil de stylisation appliqué UNE fois (idempotent) : les repères qui suivent
   // (ajustement des yeux) lisent déjà la géométrie stylisée.
