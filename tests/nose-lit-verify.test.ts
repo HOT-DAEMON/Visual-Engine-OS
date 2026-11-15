@@ -6,6 +6,13 @@ import { noseLitReliefChecks, noseLitStyleChecks, silhouetteOf, NOSE_LIT_LIMITS 
 import { underviewReliefV1 } from './helpers-nose-underview-v1';
 
 const noses = [['défaut', {}], ['pyramide', noseArchetype('pyramide' as never)], ['cloche-ailes', noseArchetype('cloche-ailes' as never)]] as const;
+/**
+ * NEZ TÉMOINS du contrôle négatif (détection de l'ancien défaut « champignon »). Le jeu de constantes v1 de « cloche-ailes » (ajustement de `scripts/nose-refs/fit.ts` AVANT la libération
+ * des axes `root.height`, `length ≥ plancher de zone` et `width ≤ 0,3`, `docs/NOSE-ASPECT-CEILING.md`) est GELÉ ici : avec l'archétype actuel, la carte v1 n'a plus de col détectable à 40°
+ * (marge −0,23 mesurée), donc le contrôle serait aveugle sur ce nez. Garder le nez gelé conserve la couverture de détection ; les règles POSITIVES restent appliquées aux archétypes actuels.
+ */
+const CLOCHE_V1 = {"nose":{"width":0.28,"length":0.115,"tip":{"width":0.833,"roundness":0.806},"alae":{"flare":0,"volume":0.172},"base":{"width":-0.925},"root":{"width":0.304},"dorsum":{"width":0.429},"sidewall":{"slope":0}}} as const;
+const controls = [['défaut', {}], ['pyramide', noseArchetype('pyramide' as never)], ['cloche-ailes v1 (gelé)', { nose: CLOCHE_V1.nose }]] as const;
 const geo = (patch: object) => { const p = FaceParams.parse({ anatomyEngine: 'structured', ...patch }); return noseGeometry(p, faceLandmarks(p, 300, 380)); };
 
 describe('règles de vérification du rendu éclairé du nez (src/verify/nose-lit.ts)', () => {
@@ -17,7 +24,7 @@ describe('règles de vérification du rendu éclairé du nez (src/verify/nose-li
   }, 120_000);
 
   it('DÉTECTE le défaut « champignon » : la carte v1 (plaques + tige) échoue le col à 40° et la masse unique + le col à 60°', () => {
-    for (const [lab, patch] of noses) for (const pitch of [40, 60]) {
+    for (const [lab, patch] of controls) for (const pitch of [40, 60]) {
       const failed = noseLitReliefChecks(underviewReliefV1(geo(patch), { pitchDeg: pitch }, 2), pitch).filter((c) => !c.ok).map((c) => c.id);
       // le col (tige) est détecté dès 40° ; la solidité (plaques séparées) l'est à 60° (à 40° le défaut v1 a une solidité de 0,78–0,80, au-dessus de la borne 0,75 : voir NOSE_LIT_LIMITS)
       expect(failed, `${lab} ${pitch}°`).toEqual(expect.arrayContaining(pitch === 60 ? ['nose-lit-single-mass', 'nose-lit-no-stalk'] : ['nose-lit-no-stalk']));
@@ -25,7 +32,7 @@ describe('règles de vérification du rendu éclairé du nez (src/verify/nose-li
   }, 120_000);
 
   it('le col sépare nettement les deux (marge ≥ 0,2 de chaque côté de la borne) et la solidité à 60° aussi', () => {
-    for (const [, patch] of noses) {
+    for (const [, patch] of controls) {
       const n = silhouetteOf(underviewRelief(geo(patch), { pitchDeg: 40 }, 2)), o = silhouetteOf(underviewReliefV1(geo(patch), { pitchDeg: 40 }, 2));
       expect(n.neck - NOSE_LIT_LIMITS.neckMin).toBeGreaterThan(0.2);
       expect(NOSE_LIT_LIMITS.neckMin - o.neck).toBeGreaterThan(0.2);

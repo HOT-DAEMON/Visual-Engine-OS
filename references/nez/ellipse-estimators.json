@@ -1,0 +1,381 @@
+{
+ "method": "moments d'aire (moteur) vs cv2.fitEllipse sur le contour r\u00e9\u00e9chantillonn\u00e9 \u00e0 3 px",
+ "summary": {
+  "cases": 36,
+  "relRatioGap": {
+   "median": 0.0163,
+   "max": 0.0461
+  },
+  "angleGapDeg": {
+   "median": 0.04,
+   "max": 0.6
+  },
+  "majorLSOverMoments": {
+   "median": 1.0156,
+   "min": 1.0022,
+   "max": 1.0362
+  }
+ },
+ "cases": [
+  {
+   "nose": "d\u00e9faut",
+   "pitch": 20,
+   "yaw": 0,
+   "axisRatioMoments": 0.603,
+   "axisRatioLeastSquares": 0.6013,
+   "relRatioGap": 0.0028,
+   "angleGapDeg": 0.04,
+   "majorLSOverMoments": 1.0043
+  },
+  {
+   "nose": "d\u00e9faut",
+   "pitch": 20,
+   "yaw": 25,
+   "axisRatioMoments": 0.6533,
+   "axisRatioLeastSquares": 0.6506,
+   "relRatioGap": 0.0043,
+   "angleGapDeg": 0.3,
+   "majorLSOverMoments": 1.0061
+  },
+  {
+   "nose": "d\u00e9faut",
+   "pitch": 40,
+   "yaw": 0,
+   "axisRatioMoments": 0.5832,
+   "axisRatioLeastSquares": 0.5782,
+   "relRatioGap": 0.0085,
+   "angleGapDeg": 0.05,
+   "majorLSOverMoments": 1.0077
+  },
+  {
+   "nose": "d\u00e9faut",
+   "pitch": 40,
+   "yaw": 25,
+   "axisRatioMoments": 0.6068,
+   "axisRatioLeastSquares": 0.5998,
+   "relRatioGap": 0.0117,
+   "angleGapDeg": 0.08,
+   "majorLSOverMoments": 1.0102
+  },
+  {
+   "nose": "d\u00e9faut",
+   "pitch": 60,
+   "yaw": 0,
+   "axisRatioMoments": 0.4951,
+   "axisRatioLeastSquares": 0.4853,
+   "relRatioGap": 0.0203,
+   "angleGapDeg": 0.04,
+   "majorLSOverMoments": 1.0153
+  },
+  {
+   "nose": "d\u00e9faut",
+   "pitch": 60,
+   "yaw": 25,
+   "axisRatioMoments": 0.4902,
+   "axisRatioLeastSquares": 0.4766,
+   "relRatioGap": 0.0286,
+   "angleGapDeg": 0.11,
+   "majorLSOverMoments": 1.0213
+  },
+  {
+   "nose": "pyramide",
+   "pitch": 20,
+   "yaw": 0,
+   "axisRatioMoments": 0.6302,
+   "axisRatioLeastSquares": 0.6201,
+   "relRatioGap": 0.0163,
+   "angleGapDeg": 0.01,
+   "majorLSOverMoments": 1.0141
+  },
+  {
+   "nose": "pyramide",
+   "pitch": 20,
+   "yaw": 25,
+   "axisRatioMoments": 0.6783,
+   "axisRatioLeastSquares": 0.6659,
+   "relRatioGap": 0.0186,
+   "angleGapDeg": 0.13,
+   "majorLSOverMoments": 1.0165
+  },
+  {
+   "nose": "pyramide",
+   "pitch": 40,
+   "yaw": 0,
+   "axisRatioMoments": 0.5625,
+   "axisRatioLeastSquares": 0.5555,
+   "relRatioGap": 0.0126,
+   "angleGapDeg": 0.03,
+   "majorLSOverMoments": 1.013
+  },
+  {
+   "nose": "pyramide",
+   "pitch": 40,
+   "yaw": 25,
+   "axisRatioMoments": 0.5781,
+   "axisRatioLeastSquares": 0.5696,
+   "relRatioGap": 0.0148,
+   "angleGapDeg": 0.09,
+   "majorLSOverMoments": 1.0146
+  },
+  {
+   "nose": "pyramide",
+   "pitch": 60,
+   "yaw": 0,
+   "axisRatioMoments": 0.4607,
+   "axisRatioLeastSquares": 0.4548,
+   "relRatioGap": 0.0129,
+   "angleGapDeg": 0.01,
+   "majorLSOverMoments": 1.0123
+  },
+  {
+   "nose": "pyramide",
+   "pitch": 60,
+   "yaw": 25,
+   "axisRatioMoments": 0.4528,
+   "axisRatioLeastSquares": 0.4445,
+   "relRatioGap": 0.0187,
+   "angleGapDeg": 0.03,
+   "majorLSOverMoments": 1.0165
+  },
+  {
+   "nose": "cloche-ailes",
+   "pitch": 20,
+   "yaw": 0,
+   "axisRatioMoments": 0.5639,
+   "axisRatioLeastSquares": 0.5542,
+   "relRatioGap": 0.0175,
+   "angleGapDeg": 0.01,
+   "majorLSOverMoments": 1.0158
+  },
+  {
+   "nose": "cloche-ailes",
+   "pitch": 20,
+   "yaw": 25,
+   "axisRatioMoments": 0.6075,
+   "axisRatioLeastSquares": 0.5969,
+   "relRatioGap": 0.0178,
+   "angleGapDeg": 0.12,
+   "majorLSOverMoments": 1.017
+  },
+  {
+   "nose": "cloche-ailes",
+   "pitch": 40,
+   "yaw": 0,
+   "axisRatioMoments": 0.499,
+   "axisRatioLeastSquares": 0.4911,
+   "relRatioGap": 0.016,
+   "angleGapDeg": 0.0,
+   "majorLSOverMoments": 1.0154
+  },
+  {
+   "nose": "cloche-ailes",
+   "pitch": 40,
+   "yaw": 25,
+   "axisRatioMoments": 0.5108,
+   "axisRatioLeastSquares": 0.5019,
+   "relRatioGap": 0.0178,
+   "angleGapDeg": 0.07,
+   "majorLSOverMoments": 1.0169
+  },
+  {
+   "nose": "cloche-ailes",
+   "pitch": 60,
+   "yaw": 0,
+   "axisRatioMoments": 0.3875,
+   "axisRatioLeastSquares": 0.3801,
+   "relRatioGap": 0.0195,
+   "angleGapDeg": 0.0,
+   "majorLSOverMoments": 1.0174
+  },
+  {
+   "nose": "cloche-ailes",
+   "pitch": 60,
+   "yaw": 25,
+   "axisRatioMoments": 0.3773,
+   "axisRatioLeastSquares": 0.3685,
+   "relRatioGap": 0.0237,
+   "angleGapDeg": 0.0,
+   "majorLSOverMoments": 1.0203
+  },
+  {
+   "nose": "al\u00e9a1",
+   "pitch": 20,
+   "yaw": 0,
+   "axisRatioMoments": 0.5388,
+   "axisRatioLeastSquares": 0.5316,
+   "relRatioGap": 0.0135,
+   "angleGapDeg": 0.02,
+   "majorLSOverMoments": 1.0133
+  },
+  {
+   "nose": "al\u00e9a1",
+   "pitch": 20,
+   "yaw": 25,
+   "axisRatioMoments": 0.5831,
+   "axisRatioLeastSquares": 0.5762,
+   "relRatioGap": 0.012,
+   "angleGapDeg": 0.32,
+   "majorLSOverMoments": 1.0136
+  },
+  {
+   "nose": "al\u00e9a1",
+   "pitch": 40,
+   "yaw": 0,
+   "axisRatioMoments": 0.5385,
+   "axisRatioLeastSquares": 0.5278,
+   "relRatioGap": 0.0202,
+   "angleGapDeg": 0.0,
+   "majorLSOverMoments": 1.0173
+  },
+  {
+   "nose": "al\u00e9a1",
+   "pitch": 40,
+   "yaw": 25,
+   "axisRatioMoments": 0.5635,
+   "axisRatioLeastSquares": 0.5491,
+   "relRatioGap": 0.0261,
+   "angleGapDeg": 0.04,
+   "majorLSOverMoments": 1.0229
+  },
+  {
+   "nose": "al\u00e9a1",
+   "pitch": 60,
+   "yaw": 0,
+   "axisRatioMoments": 0.4755,
+   "axisRatioLeastSquares": 0.4579,
+   "relRatioGap": 0.0385,
+   "angleGapDeg": 0.0,
+   "majorLSOverMoments": 1.0295
+  },
+  {
+   "nose": "al\u00e9a1",
+   "pitch": 60,
+   "yaw": 25,
+   "axisRatioMoments": 0.4742,
+   "axisRatioLeastSquares": 0.4533,
+   "relRatioGap": 0.0461,
+   "angleGapDeg": 0.24,
+   "majorLSOverMoments": 1.0362
+  },
+  {
+   "nose": "al\u00e9a2",
+   "pitch": 20,
+   "yaw": 0,
+   "axisRatioMoments": 0.6437,
+   "axisRatioLeastSquares": 0.6383,
+   "relRatioGap": 0.0085,
+   "angleGapDeg": 0.01,
+   "majorLSOverMoments": 1.0061
+  },
+  {
+   "nose": "al\u00e9a2",
+   "pitch": 20,
+   "yaw": 25,
+   "axisRatioMoments": 0.684,
+   "axisRatioLeastSquares": 0.6832,
+   "relRatioGap": 0.0012,
+   "angleGapDeg": 0.6,
+   "majorLSOverMoments": 1.0022
+  },
+  {
+   "nose": "al\u00e9a2",
+   "pitch": 40,
+   "yaw": 0,
+   "axisRatioMoments": 0.6658,
+   "axisRatioLeastSquares": 0.6585,
+   "relRatioGap": 0.011,
+   "angleGapDeg": 0.06,
+   "majorLSOverMoments": 1.008
+  },
+  {
+   "nose": "al\u00e9a2",
+   "pitch": 40,
+   "yaw": 25,
+   "axisRatioMoments": 0.6994,
+   "axisRatioLeastSquares": 0.6909,
+   "relRatioGap": 0.0122,
+   "angleGapDeg": 0.3,
+   "majorLSOverMoments": 1.0095
+  },
+  {
+   "nose": "al\u00e9a2",
+   "pitch": 60,
+   "yaw": 0,
+   "axisRatioMoments": 0.6097,
+   "axisRatioLeastSquares": 0.5967,
+   "relRatioGap": 0.0216,
+   "angleGapDeg": 0.02,
+   "majorLSOverMoments": 1.0159
+  },
+  {
+   "nose": "al\u00e9a2",
+   "pitch": 60,
+   "yaw": 25,
+   "axisRatioMoments": 0.6109,
+   "axisRatioLeastSquares": 0.5959,
+   "relRatioGap": 0.0251,
+   "angleGapDeg": 0.12,
+   "majorLSOverMoments": 1.0189
+  },
+  {
+   "nose": "al\u00e9a3",
+   "pitch": 20,
+   "yaw": 0,
+   "axisRatioMoments": 0.5195,
+   "axisRatioLeastSquares": 0.5128,
+   "relRatioGap": 0.0131,
+   "angleGapDeg": 0.01,
+   "majorLSOverMoments": 1.0149
+  },
+  {
+   "nose": "al\u00e9a3",
+   "pitch": 20,
+   "yaw": 25,
+   "axisRatioMoments": 0.5634,
+   "axisRatioLeastSquares": 0.5557,
+   "relRatioGap": 0.0139,
+   "angleGapDeg": 0.17,
+   "majorLSOverMoments": 1.0164
+  },
+  {
+   "nose": "al\u00e9a3",
+   "pitch": 40,
+   "yaw": 0,
+   "axisRatioMoments": 0.5069,
+   "axisRatioLeastSquares": 0.5005,
+   "relRatioGap": 0.0128,
+   "angleGapDeg": 0.0,
+   "majorLSOverMoments": 1.0139
+  },
+  {
+   "nose": "al\u00e9a3",
+   "pitch": 40,
+   "yaw": 25,
+   "axisRatioMoments": 0.5283,
+   "axisRatioLeastSquares": 0.5198,
+   "relRatioGap": 0.0163,
+   "angleGapDeg": 0.17,
+   "majorLSOverMoments": 1.0166
+  },
+  {
+   "nose": "al\u00e9a3",
+   "pitch": 60,
+   "yaw": 0,
+   "axisRatioMoments": 0.436,
+   "axisRatioLeastSquares": 0.4233,
+   "relRatioGap": 0.03,
+   "angleGapDeg": 0.01,
+   "majorLSOverMoments": 1.0248
+  },
+  {
+   "nose": "al\u00e9a3",
+   "pitch": 60,
+   "yaw": 25,
+   "axisRatioMoments": 0.4331,
+   "axisRatioLeastSquares": 0.4185,
+   "relRatioGap": 0.035,
+   "angleGapDeg": 0.07,
+   "majorLSOverMoments": 1.0288
+  }
+ ]
+}

@@ -1,16 +1,16 @@
 # Nez : ce qui n'est PAS fait (suite de `docs/NOSE-REFS.md`, `NOSE-UNDERVIEW.md`, `NOSE-UNDERVIEW-CALIB.md`, `NOSE-REFS-03-05.md`, `NOSE-UNDERVIEW-LIT.md`)
 
-Légende : ✅ fait et prouvé · 🟡 partiel · ⬜ non fait. Rien ici n'est prétendu fait ailleurs. Mise à jour du 14 nov. 2026 (voir `NOSE-BASE-MASS.md` et `NOSE-NOSTRIL-SLIT.md`).
+Légende : ✅ fait et prouvé · 🟡 partiel · ⬜ non fait. Rien ici n'est prétendu fait ailleurs. Mise à jour du 14 nov. 2026 (voir `NOSE-BASE-MASS.md`, `NOSE-NOSTRIL-SLIT.md` et `NOSE-ASPECT-CEILING.md`).
 
 ## Références
 - ✅ `04.jpg` : traits de narines quantifiés (9 traits, majorant, `measures-04-nostrils.json`) ; quantifiée (ellipse + triangle) et désormais aussi **dans le repère propre de l'ellipse** (roulis compensé, nez à orientation ambiguë 7 et 8 exclus).
 - ✅ `03.jpg` quantifiée (11 paires de narines sur 15 nez, un amas de deux nez fusionnés détecté et exclu) ; `05.jpg` quantifiée (grille 6 × 4, 16 paires de narines). Limites : `NOSE-REFS-03-05.md`.
-- ⬜ `01.jpg` et `02.jpg` toujours NON quantifiées (photo de croquis bruitée, trait fin : la segmentation utilisée pour 03/05 n'y est pas fiable).
+- ✅ `02.jpg` quantifiée (8 nez au trait ; seul le L/H de la boîte est robuste, médiane 0,59 : `NOSE-ASPECT-CEILING.md` §4). 🟡 `01.jpg` : 17 amas valides sur 21 après contrôle visuel, L/H seulement ; narines, lobule et reflet de pointe NON mesurés (§5).
 - ⬜ **Rougeurs de `05.jpg` : impossibles** (dessin au graphite en gris, aucune teinte). La moucheture mesurée est un proxy bruité (5.2 et 3.2 faux positifs probables).
 - ⬜ Rapport lobule/base de `04.jpg` : seul le rapport triangle/ellipse est mesuré, pas la taille du lobule seul.
-- 🟡 Planche 06 (ellipse large, trapèze plat, losange) : **non re-comparée** ce jour ; non prétendue reproduite.
-- ⬜ Le L/H de la silhouette de face plafonne à 0,825 sur trois ajustements (cause non établie).
-- ⬜ Les archétypes ne sont pas branchés dans le générateur aléatoire.
+- 🟡 Planche 06 : **re-comparée** (superposition sur la planche réelle, axes libérés). Pyramide et cloche-ailes suivies ; ellipse large, trapèze plat et losange **toujours non reproduits** (résidus 0,44 / 0,16 / 0,31 > 0,15) : `NOSE-ASPECT-CEILING.md` §2.
+- ✅ Le plafond 0,825 : **cause établie** (évasement à sa borne, largeur ≤ 0,28, `root.height` non exploré, longueur sous le plancher de zone inerte) ; plafond réel 1,40 ; ellipse large (1,60) et losange (1,52) hors de portée d'une silhouette de face qui part de la racine. Archétypes réajustés.
+- ⬜ Les archétypes ne sont pas branchés dans le générateur aléatoire, qui utilise le moteur `classic` (le plancher de zone, donc l'analyse du plafond, ne s'y applique pas) : à étudier avant branchement.
 
 ## Calibration de la vue de dessous
 - ✅ Défaut corrigé : le tangage n'est plus libre (identifié sur 2 observables), roulis compensé, erreurs normalisées, leave-one-out, comparaison à la médiane et à une régression, identifiabilité mesurée.
@@ -37,4 +37,4 @@ Légende : ✅ fait et prouvé · 🟡 partiel · ⬜ non fait. Rien ici n'est p
 - ⬜ Compilateur propre au nez : toujours non nécessaire (fonctions pures, pas un `kind` de scène) ; aucun enregistrement ajouté.
 - ✅ Couche de vérification du rendu éclairé : règles `src/verify/nose-lit.ts` (géométrie, anatomie, style) dans `verifyFace`, avec détection prouvée de l'ancien défaut ; ⬜ le déterminisme et le contraste restent des tests ; cohérence nez/joues/membres non mesurée.
 - ⬜ Asymétrie des ailes comme région, bosse osseuse volumétrique, cartilage supra-alaire.
-- ⬜ Estimateur d'ellipse du moteur (moments d'aire) différent de celui de la mesure (moindres carrés) : écart non quantifié.
+- ✅ Estimateur d'ellipse : écart moments d'aire / moindres carrés **quantifié** (rapport d'axes médian 1,6 %, max 4,6 % ; angle max 0,6°) sur 36 enveloppes du moteur ; non mesuré sur contours rasterisés bruités.

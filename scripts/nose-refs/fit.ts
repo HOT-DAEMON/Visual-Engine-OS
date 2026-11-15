@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { faceLandmarks, noseGeometry } from '../../src/face';
 import { FaceParams } from '../../src/schema';
 import { widthProfile25 } from '../../src/face/nose/measure';
+import { ZONE_LIMITS } from '../../src/face/zones-limits';
 
 /**
  * AJUSTEMENT PAR SYNTHÈSE des archétypes de nez sur les silhouettes MESURÉES de `references/nez/06.png` (`measures-06.json`).
@@ -14,8 +15,9 @@ const W = 300, H = 380;
 const UPPER = 18;
 const refs = JSON.parse(readFileSync('references/nez/measures-06.json', 'utf8')).shapes as { index: number; aspectWoverH: number; widthProfile25: number[] }[];
 const NAMES = ['pyramide', 'ellipse-large', 'cloche-ailes', 'plat-trapeze', 'losange-petit'] as const;
-// Axes explorés (chemin, min, max) : uniquement des axes du contrat existant (aucun nouveau paramètre).
-const AXES: [string, number, number][] = [['nose.width', 0.1, 0.28], ['nose.length', 0.1, 0.25], ['nose.tip.width', 0, 1], ['nose.alae.flare', 0, 1], ['nose.alae.volume', 0, 1], ['nose.base.width', -1, 1], ['nose.root.width', 0, 1], ['nose.dorsum.width', 0, 1], ['nose.sidewall.slope', 0, 1], ['nose.tip.roundness', 0, 1]];
+// Bornes alignées sur le moteur (cause du plafond 0,825 établie par `aspect-ceiling.ts`, `docs/NOSE-ASPECT-CEILING.md`) : la longueur ne descend pas sous le plancher
+// de zone (en dessous, l'axe est inerte), la largeur monte jusqu'au maximum du schéma (0,3) et la hauteur de racine, qui fixe le HAUT de la silhouette, est explorée.
+const AXES: [string, number, number][] = [['nose.width', 0.1, 0.3], ['nose.length', ZONE_LIMITS.nose.min, 0.26], ['nose.tip.width', 0, 1], ['nose.alae.flare', 0, 1], ['nose.alae.volume', 0, 1], ['nose.base.width', -1, 1], ['nose.root.width', 0, 1], ['nose.dorsum.width', 0, 1], ['nose.sidewall.slope', 0, 1], ['nose.tip.roundness', 0, 1], ['nose.root.height', 0, 1]];
 const build = (v: number[]): Record<string, unknown> => {
   const patch: Record<string, any> = { anatomyEngine: 'structured' };
   AXES.forEach(([path], i) => { const ks = path.split('.'); let c = patch; for (const k of ks.slice(0, -1)) c = (c[k] ??= {}); c[ks[ks.length - 1]!] = v[i]; });

@@ -1,0 +1,273 @@
+{
+ "source": "references/nez/01.jpg",
+ "method": "fond flou soustrait, encre > 50, amas par dilatation 5 ; contr\u00f4le visuel des amas",
+ "summary": {
+  "clusters": 21,
+  "visuallyValid": 17,
+  "excluded": [
+   2,
+   10,
+   14,
+   16
+  ],
+  "aspectWH": {
+   "median": 0.8654,
+   "min": 0.5109,
+   "max": 2.2931
+  }
+ },
+ "cells": [
+  {
+   "id": 1,
+   "bbox": [
+    73,
+    8,
+    73,
+    98
+   ],
+   "aspectWH": 0.7449,
+   "inkFraction": 0.1609,
+   "visuallyValid": true
+  },
+  {
+   "id": 2,
+   "bbox": [
+    237,
+    35,
+    88,
+    41
+   ],
+   "aspectWH": 2.1463,
+   "inkFraction": 0.2494,
+   "visuallyValid": false
+  },
+  {
+   "id": 3,
+   "bbox": [
+    392,
+    40,
+    133,
+    58
+   ],
+   "aspectWH": 2.2931,
+   "inkFraction": 0.1917,
+   "visuallyValid": true
+  },
+  {
+   "id": 4,
+   "bbox": [
+    155,
+    64,
+    80,
+    94
+   ],
+   "aspectWH": 0.8511,
+   "inkFraction": 0.1262,
+   "visuallyValid": true
+  },
+  {
+   "id": 5,
+   "bbox": [
+    272,
+    76,
+    83,
+    105
+   ],
+   "aspectWH": 0.7905,
+   "inkFraction": 0.1622,
+   "visuallyValid": true
+  },
+  {
+   "id": 6,
+   "bbox": [
+    369,
+    121,
+    100,
+    112
+   ],
+   "aspectWH": 0.8929,
+   "inkFraction": 0.1341,
+   "visuallyValid": true
+  },
+  {
+   "id": 7,
+   "bbox": [
+    35,
+    146,
+    89,
+    72
+   ],
+   "aspectWH": 1.2361,
+   "inkFraction": 0.1891,
+   "visuallyValid": true
+  },
+  {
+   "id": 8,
+   "bbox": [
+    157,
+    160,
+    90,
+    104
+   ],
+   "aspectWH": 0.8654,
+   "inkFraction": 0.1933,
+   "visuallyValid": true
+  },
+  {
+   "id": 9,
+   "bbox": [
+    287,
+    190,
+    92,
+    88
+   ],
+   "aspectWH": 1.0455,
+   "inkFraction": 0.1613,
+   "visuallyValid": true
+  },
+  {
+   "id": 10,
+   "bbox": [
+    380,
+    204,
+    144,
+    273
+   ],
+   "aspectWH": 0.5275,
+   "inkFraction": 0.1114,
+   "visuallyValid": false
+  },
+  {
+   "id": 11,
+   "bbox": [
+    29,
+    260,
+    116,
+    65
+   ],
+   "aspectWH": 1.7846,
+   "inkFraction": 0.2113,
+   "visuallyValid": true
+  },
+  {
+   "id": 12,
+   "bbox": [
+    150,
+    269,
+    105,
+    149
+   ],
+   "aspectWH": 0.7047,
+   "inkFraction": 0.1335,
+   "visuallyValid": true
+  },
+  {
+   "id": 13,
+   "bbox": [
+    285,
+    298,
+    105,
+    97
+   ],
+   "aspectWH": 1.0825,
+   "inkFraction": 0.1793,
+   "visuallyValid": true
+  },
+  {
+   "id": 14,
+   "bbox": [
+    23,
+    328,
+    101,
+    159
+   ],
+   "aspectWH": 0.6352,
+   "inkFraction": 0.1558,
+   "visuallyValid": false
+  },
+  {
+   "id": 15,
+   "bbox": [
+    230,
+    423,
+    101,
+    145
+   ],
+   "aspectWH": 0.6966,
+   "inkFraction": 0.1446,
+   "visuallyValid": true
+  },
+  {
+   "id": 16,
+   "bbox": [
+    12,
+    435,
+    189,
+    142
+   ],
+   "aspectWH": 1.331,
+   "inkFraction": 0.1574,
+   "visuallyValid": false
+  },
+  {
+   "id": 17,
+   "bbox": [
+    338,
+    515,
+    108,
+    113
+   ],
+   "aspectWH": 0.9558,
+   "inkFraction": 0.199,
+   "visuallyValid": true
+  },
+  {
+   "id": 18,
+   "bbox": [
+    451,
+    569,
+    110,
+    139
+   ],
+   "aspectWH": 0.7914,
+   "inkFraction": 0.163,
+   "visuallyValid": true
+  },
+  {
+   "id": 19,
+   "bbox": [
+    167,
+    575,
+    94,
+    184
+   ],
+   "aspectWH": 0.5109,
+   "inkFraction": 0.1347,
+   "visuallyValid": true
+  },
+  {
+   "id": 20,
+   "bbox": [
+    18,
+    596,
+    138,
+    121
+   ],
+   "aspectWH": 1.1405,
+   "inkFraction": 0.1632,
+   "visuallyValid": true
+  },
+  {
+   "id": 21,
+   "bbox": [
+    311,
+    649,
+    97,
+    121
+   ],
+   "aspectWH": 0.8017,
+   "inkFraction": 0.1954,
+   "visuallyValid": true
+  }
+ ]
+}
