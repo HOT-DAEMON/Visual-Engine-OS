@@ -67,7 +67,7 @@ export function openingGeometry(shape: EyeSpec['shape'], canthi: EyeSpec['canthi
   const loIn = w * (0.26 - 0.16 * rIn) * (1 - innerRoundBoost);
   let pi: Vec = { x: (-s * w) / 2, y: t };
   let po: Vec = { x: (s * w) / 2, y: -t };
-  let u1: Vec = { x: pi.x + s * upIn, y: pi.y - k * hUp * (1 + innerRoundBoost * 0.5) };
+  let u1: Vec = { x: pi.x + s * upIn * (ref.u1dx ?? 1), y: pi.y - k * hUp * (1 + innerRoundBoost * 0.5) * (ref.u1dy ?? 1) };
   let l2: Vec = { x: pi.x + s * loIn * ref.l2dx, y: pi.y + k * hLo * (1 + innerRoundBoost * 0.5) * ref.l2dy };
 
   // Canthus externe : chaque style ne touche que u2 (contrôle haut-externe), l1 (contrôle bas-externe)

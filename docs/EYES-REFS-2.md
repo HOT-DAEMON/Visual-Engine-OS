@@ -51,7 +51,7 @@ Canthus de face mesurés : externe **119,0°**, interne **93,7°** ; moteur avan
 1. **Réf. 14** : sclère blanche sur fond blanc → pas de silhouette ; iris colorés non segmentés ; 13 flèches mesurées (angles, longueurs) mais **non interprétées** ni consommées.
 2. **Réf. 15 rangées 3–5** : le limbe n'est pas détecté (repli sur l'indice, aspect exactement 1,0) → non consommées ; leurs silhouettes le sont.
 3. **13 / 17** : ≈ 8 yeux non tracés (canthus externe sous les cils, tuile coupée) ; 17-A écartée de la galerie.
-4. **Almond** : contrôle d'angle du canthus interne non exposé ; `tiltDeg` 6° par défaut inchangé.
+4. **Almond** : résolu en passe 3 (contrôle `u1dx`/`u1dy`, voir docs/EYES-REMAINING.md) ; `tiltDeg` 6° par défaut inchangé.
 5. **Iris** : facettes discrètes ; pas de dispersion prismatique, rayons de lumière, cils dorés ; bulles sans réfraction.
 6. **Encre** : gris et reflets en lentille interprétés ; peau périoculaire sur 5 photos seulement.
 7. **Galerie** : distance minimale 0,0089 ; sprites hauts débordant des cellules de planche.

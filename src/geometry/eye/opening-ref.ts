@@ -10,6 +10,10 @@
  * d'apex inchangé (upperFraction exact) : u2dx 0,88 -> 0,96, l1dx 0,63 -> 0,73 et l2dx 1,95 -> 1,96 ramènent l'angle externe à 123,7° (erreur 8,9° -> 4,7°) pour +0,0003 d'erreur de profil ;
  * l'angle interne (98,4°) ne peut pas bouger sans dégrader le profil : il demande un contrôle d'angle de canthus non exposé (reste à faire, docs/EYES-REFS-2.md).
  *
+ * PASSE 3 : contrôle d'angle du canthus interne exposé (`u1dx`, `u1dy` : contrôle haut-interne) ; ajustement à 8 facteurs (scripts/eye-refs/fit-almond.ts, Nelder-Mead, poids d'angle 0,01/°) :
+ * angles de canthus interne 98,2° -> 93,66° (mesuré 93,67°) et externe 123,5° -> 118,99° (mesuré 119,0°), fraction haute et pics inchangés (0,62 ; 0,55 / 0,55) ;
+ * coût : RMS de profil haut 0,022 -> 0,026, bas 0,041 -> 0,043 (seuil du test 0,07).
+ *
  * Aucune valeur de forme n'est inventée ici : `tests/eye-ref-measures.test.ts` recalcule ces profils depuis measures.json et échoue si l'enveloppe dérive.
  */
 export interface EnvelopeRefFactors {
@@ -22,12 +26,18 @@ export interface EnvelopeRefFactors {
   /** l2 (contrôle bas-interne) : plus long et plus plat => la paupière basse monte doucement depuis un canthus interne plus aigu. */
   readonly l2dx: number;
   readonly l2dy: number;
+  /**
+   * u1 (contrôle haut-interne) : multiplicateur du décalage horizontal / vertical. C'est le contrôle d'angle du canthus interne (PASSE 3) :
+   * l'angle interne = atan(k·hUp·u1dy / (upIn·u1dx)) + atan(k·hLo·l2dy / (loIn·l2dx)). Optionnels (1 par défaut) pour ne rien changer aux appelants existants.
+   */
+  readonly u1dx?: number;
+  readonly u1dy?: number;
 }
 
 export const NEUTRAL_REF: EnvelopeRefFactors = { u2dx: 1, u2dy: 1, l1dx: 1, l1dy: 1, l2dx: 1, l2dy: 1 };
 
 /** Amande mesurée (voir en-tête). Appliquée à almond / sharp / drooping / compressed ; 'round' (dessiné à la main) reste neutre. */
-export const ALMOND_REF: EnvelopeRefFactors = { u2dx: 0.96, u2dy: 1.01, l1dx: 0.73, l1dy: 1.09, l2dx: 1.96, l2dy: 0.85 };
+export const ALMOND_REF: EnvelopeRefFactors = { u1dx: 1.077, u1dy: 0.966, u2dx: 1.028, u2dy: 0.985, l1dx: 0.814, l1dy: 1.049, l2dx: 2.171, l2dy: 0.824 };
 
 /** Références utilisées pour l'ajustement (clés de measures.json). */
 export const ALMOND_REF_SOURCES = ['04', '07', '11'] as const;
