@@ -1,0 +1,92 @@
+{
+ "pyramide": {
+  "params": {
+   "nose.width": 0.294,
+   "nose.length": 0.249,
+   "nose.tip.width": 1,
+   "nose.alae.flare": 0,
+   "nose.alae.volume": 0.08,
+   "nose.base.width": -0.167,
+   "nose.root.width": 1,
+   "nose.dorsum.width": 0.528,
+   "nose.sidewall.slope": 0,
+   "nose.tip.roundness": 0,
+   "nose.root.height": 0.03
+  },
+  "residual": 0.0721,
+  "aspect": 0.729,
+  "refAspect": 0.73
+ },
+ "ellipse-large": {
+  "params": {
+   "nose.width": 0.3,
+   "nose.length": 0.17,
+   "nose.tip.width": 0.911,
+   "nose.alae.flare": 0,
+   "nose.alae.volume": 0.582,
+   "nose.base.width": -0.159,
+   "nose.root.width": 1,
+   "nose.dorsum.width": 0.192,
+   "nose.sidewall.slope": 0,
+   "nose.tip.roundness": 0.628,
+   "nose.root.height": 0.021
+  },
+  "residual": 0.4408,
+  "aspect": 1.047,
+  "refAspect": 1.597
+ },
+ "cloche-ailes": {
+  "params": {
+   "nose.width": 0.271,
+   "nose.length": 0.175,
+   "nose.tip.width": 1,
+   "nose.alae.flare": 0.194,
+   "nose.alae.volume": 0.174,
+   "nose.base.width": -0.047,
+   "nose.root.width": 0.191,
+   "nose.dorsum.width": 0.485,
+   "nose.sidewall.slope": 0,
+   "nose.tip.roundness": 0.228,
+   "nose.root.height": 0.03
+  },
+  "residual": 0.1227,
+  "aspect": 0.975,
+  "refAspect": 0.9767
+ },
+ "plat-trapeze": {
+  "params": {
+   "nose.width": 0.3,
+   "nose.length": 0.17,
+   "nose.tip.width": 0.639,
+   "nose.alae.flare": 0.172,
+   "nose.alae.volume": 0.403,
+   "nose.base.width": 0.187,
+   "nose.root.width": 1,
+   "nose.dorsum.width": 0.439,
+   "nose.sidewall.slope": 0,
+   "nose.tip.roundness": 0.282,
+   "nose.root.height": 0
+  },
+  "residual": 0.1644,
+  "aspect": 1.114,
+  "refAspect": 1.2282
+ },
+ "losange-petit": {
+  "params": {
+   "nose.width": 0.3,
+   "nose.length": 0.17,
+   "nose.tip.width": 1,
+   "nose.alae.flare": 0,
+   "nose.alae.volume": 0.436,
+   "nose.base.width": -0.748,
+   "nose.root.width": 1,
+   "nose.dorsum.width": 0.042,
+   "nose.sidewall.slope": 0,
+   "nose.tip.roundness": 0.729,
+   "nose.root.height": 0.033
+  },
+  "residual": 0.3098,
+  "aspect": 1.042,
+  "refAspect": 1.5205
+ }
+}

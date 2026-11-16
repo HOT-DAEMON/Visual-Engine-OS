@@ -39,3 +39,5 @@ Avec la cloche-ailes v2, la carte « champignon » v1 n'a plus de col détectabl
 
 ## Reste (voir `NOSE-REFS-REMAINING.md`)
 Archétypes toujours non branchés dans le générateur aléatoire (qui tourne en moteur `classic`, où le plancher de zone et donc cette analyse ne s'appliquent pas : à étudier avant tout branchement) ; vue de dessous non branchée dans `head_3d` ; matériau/texture propres au nez ; ellipse/trapèze/losange non reproduits.
+
+**Mise à jour (v3)** : `NOSE-PLATE06-GLOBAL.md` — un optimiseur global ramène le plat-trapèze à 0,134 (< 0,15) ; ellipse large et losange restent hors de portée. Les chiffres v2 ci-dessus sont conservés (`references/nez/fit-06-v2.json`).

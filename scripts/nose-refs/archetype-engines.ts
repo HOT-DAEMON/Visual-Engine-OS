@@ -12,7 +12,7 @@ import { generateRandomFace } from '../../src/generation/random-face';
  */
 const W = 300, H = 380, UPPER = 18;
 const refs = JSON.parse(readFileSync('references/nez/measures-06.json', 'utf8')).shapes as { aspectWoverH: number; widthProfile25: number[] }[];
-const REF_INDEX = { pyramide: 0, 'cloche-ailes': 2 } as const;
+const REF_INDEX = { pyramide: 0, 'cloche-ailes': 2, 'plat-trapeze': 3 } as const;
 const residual = (engine: 'classic' | 'structured', name: keyof typeof REF_INDEX): { r: number; aspect: number } => {
   const p = FaceParams.parse({ anatomyEngine: engine, ...noseArchetype(name) });
   const m = widthProfile25(noseGeometry(p, faceLandmarks(p, W, H)).silhouette), ref = refs[REF_INDEX[name]]!;

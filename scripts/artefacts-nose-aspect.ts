@@ -7,7 +7,7 @@ import { FaceParams } from '../src/schema';
  * pour `scripts/nose-refs/compose-06-overlay.py` (superposition sur la planche réelle). Sortie : artefacts/nez-aspect-plafond/silhouettes.json
  *   npx tsx scripts/artefacts-nose-aspect.ts
  */
-const v1 = JSON.parse(readFileSync('references/nez/fit-06-v1.json', 'utf8')), v2 = JSON.parse(readFileSync('references/nez/fit-06.json', 'utf8'));
+const v1 = JSON.parse(readFileSync('references/nez/fit-06-v1.json', 'utf8')), v2 = JSON.parse(readFileSync('references/nez/fit-06-v2.json', 'utf8'));
 const shapes = JSON.parse(readFileSync('references/nez/measures-06.json', 'utf8')).shapes as { index: number; bboxPx: number[] }[];
 const NAMES = ['pyramide', 'ellipse-large', 'cloche-ailes', 'plat-trapeze', 'losange-petit'];
 const sil = (flat: Record<string, number>) => {

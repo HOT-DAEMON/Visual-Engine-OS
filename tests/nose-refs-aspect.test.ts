@@ -30,10 +30,10 @@ describe('plafond du rapport L/H de la silhouette de face (cause du « 0,825 »)
     expect(c.reach['plat-trapeze'].reachable).toBe(true); expect(c.reach['cloche-ailes'].reachable).toBe(true);
     expect(c.ceiling.aspect).toBeCloseTo(aspect(nose({ width: 0.3, length: ZONE_LIMITS.nose.min }, { height: 0 }, { flare: 1 })), 6);
   });
-  it('après libération des axes, « cloche-ailes » reproduit le rapport L/H de la référence (±3 %) et les résidus de 06 ont baissé pour les 5 formes', () => {
-    const v1 = json('fit-06-v1.json'), v2 = json('fit-06.json');
-    expect(Math.abs(aspect(noseArchetype('cloche-ailes' as never)) / v2['cloche-ailes'].refAspect - 1)).toBeLessThan(0.03);
-    for (const k of Object.keys(v1)) expect(v2[k].residual).toBeLessThan(v1[k].residual);
+  it('après libération des axes, « cloche-ailes » reproduit le rapport L/H de la référence (±3 %) et les résidus de 06 ont baissé pour les 5 formes (v1 → v2 → v3)', () => {
+    const v1 = json('fit-06-v1.json'), v2 = json('fit-06-v2.json'), v3 = json('fit-06.json');
+    expect(Math.abs(aspect(noseArchetype('cloche-ailes' as never)) / v3['cloche-ailes'].refAspect - 1)).toBeLessThan(0.03);
+    for (const k of Object.keys(v1)) { expect(v2[k].residual).toBeLessThan(v1[k].residual); expect(v3[k].residual).toBeLessThanOrEqual(v2[k].residual); }
   });
 });
 

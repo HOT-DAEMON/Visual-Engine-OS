@@ -1,0 +1,30 @@
+{
+ "name": "pyramide",
+ "restarts": 30,
+ "residual": 0.0708,
+ "aspect": 0.73,
+ "refAspect": 0.73,
+ "bestOfRestarts": [
+  0.0707,
+  0.0707,
+  0.0707,
+  0.0707,
+  0.0707,
+  0.0707,
+  0.0707,
+  0.0707
+ ],
+ "params": {
+  "nose.width": 0.2884,
+  "nose.length": 0.1703,
+  "nose.tip.width": 0.8926,
+  "nose.alae.flare": 0,
+  "nose.base.width": 0.1679,
+  "nose.root.width": 0.9903,
+  "nose.sidewall.slope": 0,
+  "nose.tip.roundness": 0.0368,
+  "nose.root.height": 0.9972,
+  "nose.tip.rotation": 0.1609,
+  "nose.alae.attachment": 0.4577
+ }
+}

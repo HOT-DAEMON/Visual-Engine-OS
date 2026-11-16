@@ -1,0 +1,30 @@
+{
+ "name": "losange-petit",
+ "restarts": 30,
+ "residual": 0.2687,
+ "aspect": 1.045,
+ "refAspect": 1.5205,
+ "bestOfRestarts": [
+  0.2687,
+  0.2691,
+  0.2714,
+  0.2732,
+  0.2734,
+  0.2741,
+  0.2741,
+  0.2742
+ ],
+ "params": {
+  "nose.width": 0.3,
+  "nose.length": 0.17,
+  "nose.tip.width": 0.9978,
+  "nose.alae.flare": 0.0023,
+  "nose.base.width": -0.2788,
+  "nose.root.width": 0.9913,
+  "nose.sidewall.slope": 0.0004,
+  "nose.tip.roundness": 0.0007,
+  "nose.root.height": 0.0002,
+  "nose.tip.rotation": 1,
+  "nose.alae.attachment": 0.0053
+ }
+}

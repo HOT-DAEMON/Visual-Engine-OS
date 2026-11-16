@@ -1,0 +1,30 @@
+{
+ "name": "plat-trapeze",
+ "restarts": 30,
+ "residual": 0.1341,
+ "aspect": 1.228,
+ "refAspect": 1.2282,
+ "bestOfRestarts": [
+  0.134,
+  0.1341,
+  0.1343,
+  0.137,
+  0.1373,
+  0.1376,
+  0.1376,
+  0.1376
+ ],
+ "params": {
+  "nose.width": 0.2998,
+  "nose.length": 0.17,
+  "nose.tip.width": 1,
+  "nose.alae.flare": 0.5423,
+  "nose.base.width": -0.8255,
+  "nose.root.width": 0.9706,
+  "nose.sidewall.slope": 0.0005,
+  "nose.tip.roundness": 0.0034,
+  "nose.root.height": 0.0003,
+  "nose.tip.rotation": 0.9987,
+  "nose.alae.attachment": 0.0034
+ }
+}

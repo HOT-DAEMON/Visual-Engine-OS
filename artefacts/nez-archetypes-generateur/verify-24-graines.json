@@ -6,14 +6,19 @@
  },
  "pyramide": {
   "faces": 24,
-  "withErrors": 0,
-  "ids": {}
- },
- "cloche-ailes": {
-  "faces": 24,
   "withErrors": 1,
   "ids": {
    "round-dome-centered": 1
   }
+ },
+ "cloche-ailes": {
+  "faces": 24,
+  "withErrors": 0,
+  "ids": {}
+ },
+ "plat-trapeze": {
+  "faces": 24,
+  "withErrors": 0,
+  "ids": {}
  }
 }

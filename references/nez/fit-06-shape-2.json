@@ -1,0 +1,30 @@
+{
+ "name": "cloche-ailes",
+ "restarts": 30,
+ "residual": 0.0992,
+ "aspect": 0.977,
+ "refAspect": 0.9767,
+ "bestOfRestarts": [
+  0.0991,
+  0.1036,
+  0.1043,
+  0.1051,
+  0.1056,
+  0.1063,
+  0.1064,
+  0.1066
+ ],
+ "params": {
+  "nose.width": 0.286,
+  "nose.length": 0.17,
+  "nose.tip.width": 0.003,
+  "nose.alae.flare": 0.0001,
+  "nose.base.width": -0.2616,
+  "nose.root.width": 0.4142,
+  "nose.sidewall.slope": 0.0217,
+  "nose.tip.roundness": 0.993,
+  "nose.root.height": 0.097,
+  "nose.tip.rotation": 0.2796,
+  "nose.alae.attachment": 0.8575
+ }
+}

@@ -36,7 +36,12 @@ describe('archétypes de nez issus de references/nez/06.png', () => {
     const a = residual('pyramide'), b = residual('cloche-ailes');
     expect(Math.abs(a.aspect - b.aspect)).toBeGreaterThan(0.05);
   });
-  it('les trois autres formes de la planche sont déclarées NON reproductibles (résidu > seuil) : la doc ne doit pas les prétendre faites', () => {
-    for (const n of ['ellipse-large', 'plat-trapeze', 'losange-petit'] as const) expect(noseArchetypeResidual(n)).toBeGreaterThan(REPRODUCIBLE_MAX);
+  it('les deux formes qui restent hors de portée (ellipse large, losange : L/H de référence 1,60 et 1,52 > plafond 1,399) sont déclarées NON reproductibles : la doc ne doit pas les prétendre faites', () => {
+    for (const n of ['ellipse-large', 'losange-petit'] as const) expect(noseArchetypeResidual(n)).toBeGreaterThan(REPRODUCIBLE_MAX);
+    expect(NOSE_ARCHETYPE_NAMES).not.toContain('ellipse-large'); expect(NOSE_ARCHETYPE_NAMES).not.toContain('losange-petit');
+  });
+  it('« plat-trapeze » est exporté : son rapport L/H est atteignable (réf. 1,228 < 1,399) et reproduit à ±3 %', () => {
+    expect(NOSE_ARCHETYPE_NAMES).toContain('plat-trapeze');
+    expect(Math.abs(residual('plat-trapeze').aspect / refs[3]!.aspectWoverH - 1)).toBeLessThan(0.03);
   });
 });

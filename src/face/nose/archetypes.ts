@@ -4,12 +4,12 @@ import { NOSE_FIT } from './archetypes.generated';
  * ARCHÉTYPES DE NEZ tirés des silhouettes MESURÉES de `references/nez/06.png` (voir `scripts/nose-refs/` et `docs/NOSE-REFS.md`).
  * Les valeurs viennent de `archetypes.generated.ts` (ajustement par synthèse sur le profil de largeur) ; ce fichier ne fait que les mettre en forme
  * de patch `FaceParams`. Seuls les archétypes que la silhouette de FACE du moteur reproduit réellement (résidu ≤ `REPRODUCIBLE_MAX`) sont exportés :
- * les trois autres formes de la planche (ellipse large, trapèze plat, losange) sont des vues par DESSOUS ou un nez à base fermée par le lobule,
- * hors de portée du moteur actuel (documenté dans `docs/NOSE-REFS-REMAINING.md`, jamais « approché » en silence).
+ * deux formes de la planche restent hors de portée (ellipse large, losange : leur L/H de référence, 1,60 et 1,52, dépasse le
+ * plafond 1,399 de la silhouette de face, `docs/NOSE-ASPECT-CEILING.md`) ; elles sont documentées (`docs/NOSE-PLATE06-GLOBAL.md`), jamais « approchées » en silence.
  */
 export const REPRODUCIBLE_MAX = 0.15;
-export type NoseArchetypeName = 'pyramide' | 'cloche-ailes';
-export const NOSE_ARCHETYPE_NAMES: readonly NoseArchetypeName[] = ['pyramide', 'cloche-ailes'];
+export type NoseArchetypeName = 'pyramide' | 'cloche-ailes' | 'plat-trapeze';
+export const NOSE_ARCHETYPE_NAMES: readonly NoseArchetypeName[] = ['pyramide', 'cloche-ailes', 'plat-trapeze'];
 
 /** Transforme `{ 'nose.tip.width': 0.4 }` en `{ nose: { tip: { width: 0.4 } } }`. */
 function nest(flat: Readonly<Record<string, number>>): Record<string, unknown> {
