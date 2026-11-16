@@ -2,9 +2,10 @@ import { transmission, type VaultRegion } from '../../skull/vault-tissue';
 import { vaultCurves, type VaultCurve } from '../../skull/vault-curves';
 import { clamp, smooth } from '../math';
 import type { EngineHead } from './face-model';
-import { fromEngineY } from './rows';
-import { skullWeight } from './skull-model';
+import { fromEngineY, isBare } from './rows';
+import { skullWeightOf } from './skull-model';
 import { skullOf } from './vault-model';
+import { AZ_U, mastoidBump } from '../../skull/vault-mastoid';
 import { sy } from './units';
 
 /**
@@ -13,7 +14,7 @@ import { sy } from './units';
  * (`vault-tissue.ts` : transmission τ). Tout est nul quand les paramètres sont nuls (sauf l'inion, lu en écart à son nominal 0,4 : paramètre déjà existant, désormais visible en 3D).
  * Amplitudes (U ; tête de 230 mm ⇒ 1 U ≈ 230 mm) : 0,010 U ≈ 2,3 mm. Conventions d'anatomie artistique, justifiées dans `docs/SKULL-VAULT.md`.
  */
-export const VAULT_RELIEF = { hollow: 0.02, mastoid: 0.03, glabella: 0.022, inion: 0.012, inionRef: 0.4, nuchal: 0.012, suture: 0.006, tline: 0.007, width: 0.04, azU: 0.0055, curveSigma: 0.012 } as const;
+export const VAULT_RELIEF = { hollow: 0.02, mastoid: 0.03, glabella: 0.022, inion: 0.012, inionRef: 0.4, nuchal: 0.012, suture: 0.006, tline: 0.007, width: 0.04, azU: AZ_U, curveSigma: 0.012 } as const;
 const D = 180 / Math.PI, g = (d: number, s: number): number => Math.exp(-0.5 * (d / s) ** 2);
 
 interface Anchors { readonly yG: number; readonly yM: number; readonly yI: number; readonly yT: number; readonly curves: readonly { id: string; kind: VaultCurve['kind']; pts: readonly { y: number; az: number }[] }[] }
@@ -22,8 +23,8 @@ const cache = new WeakMap<EngineHead, Anchors>();
 export function vaultAnchors(e: EngineHead): Anchors {
   let a = cache.get(e);
   if (!a) {
-    const L = e.sk.bone.lm, Y = (id: string): number => fromEngineY(sy((L[id] ?? L.vertex!).y));
-    a = { yG: Y('glabella'), yM: Y('mastoid'), yI: Y('inion'), yT: Y('pterion'), curves: vaultCurves(e.sk).map((c) => ({ id: c.id, kind: c.kind, pts: c.pts.map((p) => ({ y: fromEngineY(p.y), az: p.az })) })) };
+    const L = e.sk.bone.lm, bare = isBare(e), Y = (id: string): number => fromEngineY(sy((L[id] ?? L.vertex!).y), bare);
+    a = { yG: Y('glabella'), yM: Y('mastoid'), yI: Y('inion'), yT: Y('pterion'), curves: vaultCurves(e.sk).map((c) => ({ id: c.id, kind: c.kind, pts: c.pts.map((p) => ({ y: fromEngineY(p.y, bare), az: p.az })) })) };
     cache.set(e, a);
   }
   return a;
@@ -49,13 +50,13 @@ const anyRelief = (e: EngineHead): boolean => { let v = act.get(e); if (v === un
 export function vaultRelief(e: EngineHead, y: number, th: number): number {
   const k = skullOf(e), R = VAULT_RELIEF;
   if (!anyRelief(e) && (k.inion === R.inionRef || Math.cos(th) > -0.86)) return 0;   // cos(th) > −0,86 ⇔ azimut < 150° : l'inion n'agit qu'à la nuque
-  const A = vaultAnchors(e), w = skullWeight(y);
+  const A = vaultAnchors(e), w = skullWeightOf(e, y);
   if (w <= 0) return 0;
   const az = Math.atan2(Math.abs(Math.sin(th)), Math.cos(th)) * D, side = clamp(Math.sin(th) / 0.5, -1, 1);
   const T = (r: VaultRegion): number => transmission(r, k.scalp, k.boneShow);
   let d = 0;   // un terme dont le paramètre est nul n'est pas évalué (résultat identique, coût nul : le maillage appelle cette fonction pour chaque sommet)
   if (k.temporalHollow) d -= R.hollow * k.temporalHollow * T('temporal') * g(y - (A.yT + 0.03), 0.07) * g(az - 72, 17);                 // fosse temporale
-  if (k.mastoid) d += R.mastoid * k.mastoid * T('mastoid') * g(y - A.yM, 0.055) * g(az - 118, 13);                                      // processus mastoïde, derrière l'oreille
+  if (k.mastoid) d += R.mastoid * k.mastoid * T('mastoid') * mastoidBump(y, az, A.yM, 118, k.mastoidSize, k.mastoidDirection, k.mastoidSlope);                                      // processus mastoïde, derrière l'oreille
   if (k.glabella) d += R.glabella * k.glabella * T('glabella') * g(y - A.yG, 0.02) * g(az, 12);                                        // glabelle (relief médian)
   if (az > 150 && k.inion !== R.inionRef) d += R.inion * (k.inion - R.inionRef) * T('occipital') * g(y - A.yI, 0.03) * g(az - 180, 12);   // protubérance occipitale externe
   if (k.nuchalLine && az > 118) d += R.nuchal * k.nuchalLine * T('occipital') * g(y - (A.yI + 0.012), 0.022) * smooth((az - 118) / 40);   // ligne nuchale supérieure

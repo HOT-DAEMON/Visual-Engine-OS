@@ -1,7 +1,7 @@
 import { clamp, smooth } from '../math';
 import type { EngineHead } from './face-model';
 import { skullOf } from './skull-of';
-import { skullWeight } from './skull-model';
+import { skullWeightOf } from './skull-model';
 
 /**
  * RELIEF DU CRÂNE : BOSSES PARIÉTALES ET ASYMÉTRIE. Les sections du crâne (`rows.ts` + `skull-model.ts`) donnent la FORME D'ENSEMBLE (superellipses) ; elles ne portent
@@ -20,6 +20,8 @@ export interface SkullReliefParams {
   /** Amplitude de base (U) des bosses, et gain de `vaultPeak` / `vaultHeight`. */ readonly a0: number; readonly kPeak: number; readonly kHeight: number; readonly aMin: number; readonly aMax: number;
   /** Asymétrie : amplitude max (U) de l'aplatissement occipital, du bombement frontal, et écart relatif des deux bosses. */ readonly flatOcc: number; readonly bossFront: number; readonly bossSplit: number;
 }
+/** Déplacement de l'éminence pariétale par `parietalHeight` (U pour ±1) et `parietalAzimuth` (° pour ±1) : conventions d'anatomie artistique ; 0 = position nominale ci-dessus. */
+export const PARIETAL_MOVE = { dy: 0.06, daz: 14 } as const;
 export const SKULL_RELIEF: SkullReliefParams = { yP: 0.24, azP: 112, sy: 0.085, saz: 24, a0: 0.02, kPeak: 0.022, kHeight: 0.01, aMin: 0.006, aMax: 0.026, flatOcc: 0.012, bossFront: 0.008, bossSplit: 0.25 };
 /** Asymétrie PROPRE du crâne (plagiocéphalie, bosses inégales) : plus ample que celle reportée du visage (quelques mm de tête) pour qu'un crâne asymétrique se lise sous un visage symétrique. */
 export const SKULL_OWN_ASYM = { flatOcc: 0.03, bossFront: 0.022, bossSplit: 0.6 } as const;
@@ -53,12 +55,12 @@ const g = (d: number, s: number): number => Math.exp(-0.5 * (d / s) ** 2);
 
 /** Déplacement radial du crâne (U) à la hauteur y (U) et à l'azimut th (rad ; 0 = face, + = côté +x). Nul en dehors de la voûte (poids `skullWeight`) et à la face. */
 export function skullRelief(e: EngineHead, y: number, th: number, sp: SkullReliefParams = SKULL_RELIEF): number {
-  const w = skullWeight(y);
+  const w = skullWeightOf(e, y);
   if (w <= 0) return 0;
   const side = clamp(Math.sin(th) / 0.5, -1, 1), az = (Math.atan2(Math.abs(Math.sin(th)), Math.cos(th)) * 180) / Math.PI;   // côté CONTINU (0 sur le plan médian : pas de saut à la nuque) ; azimut replié dans [0°, 180°]
   const fa = skullOf(e).asymFaceCoupling * faceAsymmetry(e), A = parietalAmplitude(e, sp), O = SKULL_OWN_ASYM, oP = ownAsymmetry(e, 'parietal'), oO = ownAsymmetry(e, 'occipital'), oF = ownAsymmetry(e, 'frontal');
   // Éminences pariétales : gaussienne en y et en azimut ; le côté « fort » de l'asymétrie est plus gros, l'autre plus petit (somme conservée).
-  const boss = A * (1 + sp.bossSplit * fa * side + O.bossSplit * oP * side) * g(y - sp.yP, sp.sy) * g(az - sp.azP, sp.saz);
+  const kk = skullOf(e), boss = A * (1 + sp.bossSplit * fa * side + O.bossSplit * oP * side) * g(y - (sp.yP + PARIETAL_MOVE.dy * kk.parietalHeight), sp.sy) * g(az - (sp.azP + PARIETAL_MOVE.daz * kk.parietalAzimuth), sp.saz);
   // Aplatissement occipital du côté +x (asym > 0) et bombement frontal du côté opposé : plagiocéphalie légère, bornée à quelques millimètres de tête.
   const occ = -(sp.flatOcc * Math.max(0, fa * side) + O.flatOcc * Math.max(0, oO * side)) * g(y - 0.3, 0.12) * g(az - 150, 20);
   const front = (sp.bossFront * Math.max(0, -fa * side) + O.bossFront * Math.max(0, -oF * side)) * g(y - 0.18, 0.09) * g(az - 40, 18);

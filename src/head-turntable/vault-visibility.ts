@@ -2,9 +2,9 @@ import { VAULT_STRUCTURES } from '../skull/vault-registry';
 import type { VaultAnchor, VaultStructure } from '../skull/vault-registry-types';
 import { boneDepthU } from '../skull/vault-tissue';
 import { headRelief } from './engines/head-relief';
-import { fromEngineY } from './engines/rows';
+import { fromEngineY, isBare } from './engines/rows';
 import { sy } from './engines/units';
-import { unwarpY, vaultRise } from './engines/vault-model';
+import { unwarpY, vaultRise, vaultTop } from './engines/vault-model';
 import { dirToCam, mul, norm, cross, sub, project, toCam, v3, type Cam } from './math';
 import { PART, skullSurfacePoint } from './mesh';
 import { sectionAt } from './sections';
@@ -29,9 +29,9 @@ export interface Placement {
 const D = Math.PI / 180;
 /** Hauteur de maillage (U) d'une ancre du registre, d'après les repères osseux de la tête. */
 export function anchorY(spec: HeadTurnSpec, a: VaultAnchor): number {
-  const e = spec.engine!, L = e.sk.bone.lm, Y = (id: string): number => fromEngineY(sy((L[id] ?? L.vertex!).y));
+  const e = spec.engine!, L = e.sk.bone.lm, Y = (id: string): number => fromEngineY(sy((L[id] ?? L.vertex!).y), isBare(e));
   const ySrc = a.yU ?? (a.from ? Y(a.from) + (a.to ? (a.t ?? 0) * (Y(a.to) - Y(a.from)) : 0) : 0.3) + (a.dy ?? 0);
-  return unwarpY(ySrc, vaultRise(e));
+  return unwarpY(ySrc, vaultRise(e), vaultTop(e));
 }
 /** Point de la peau (repère tête) : LE point du maillage de la tête, relief compris (`skullSurfacePoint`, même fonction que le maillage et le volume des cheveux). */
 export const skinPoint = (spec: HeadTurnSpec, y: number, th: number): V3 => skullSurfacePoint(spec, headRelief(spec.engine), y, th);

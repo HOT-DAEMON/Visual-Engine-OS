@@ -14,11 +14,20 @@ export const ROW_YS: readonly number[] = [0, 0.025, 0.05, 0.075, 0.1, 0.125, 0.1
 export const DENSE_YS: readonly number[] = [...Array.from({ length: 12 }, (_, i) => i * 0.05), ...Array.from({ length: 33 }, (_, i) => +(0.6 + i * 0.0125).toFixed(4)), 1.0125, 1.025, 1.0325, 1.04, 1.045, 1.05];
 const Y_STRETCH = 0.4;     // sous cette hauteur (U) la coupe de cheveux étire le haut du crâne ; au-dessus, identité
 
-/** Ordonnée du moteur (U) correspondant à la hauteur y de la tête : la coupe de cheveux ajoute Y0 au-dessus du vertex. */
-export const toEngineY = (y: number): number => (y >= Y_STRETCH ? y : Y0 + (y / Y_STRETCH) * (Y_STRETCH - Y0));
+/**
+ * CRÂNE NU (`fit.bare`). Héritage de la planche : sa coupe de cheveux ajoutait `Y0` au-dessus du vertex en ÉTIRANT la voûte de 14 % (sommet 3D = vertex du moteur) et épaississait le crâne de
+ * `hairTh` (0,05 U par côté). Sur une tête chauve, ou coiffée d'un volume de cheveux 3D (la coque ajoute elle-même l'épaisseur : elle était comptée DEUX fois), cela donnait une tête plus haute
+ * et plus large que le visage 2D du même hôte (mesuré : `docs/SKULL-ENLARGEMENT.md`). Un crâne nu est donc le crâne du moteur à l'échelle 1 : y 3D = ordonnée du moteur (le vertex est à `Y0`).
+ */
+export const isBare = (e: EngineHead): boolean => (e.fit as { bare?: boolean }).bare === true;
+/** Hauteur (U) du vertex dans le repère de la tête : 0 pour la planche et les coupes courtes peintes (le sommet est celui des cheveux), `Y0` pour un crâne nu. */
+export const vertexY = (e: EngineHead): number => (isBare(e) ? Y0 : 0);
+
+/** Ordonnée du moteur (U) correspondant à la hauteur y de la tête : la coupe de cheveux ajoute Y0 au-dessus du vertex ; crâne nu (`bare`) : identité. */
+export const toEngineY = (y: number, bare = false): number => (bare || y >= Y_STRETCH ? y : Y0 + (y / Y_STRETCH) * (Y_STRETCH - Y0));
 
 /** Inverse de `toEngineY` : hauteur de la tête (U) d'une ordonnée du moteur (U). */
-export const fromEngineY = (ye: number): number => (ye >= Y_STRETCH ? ye : ((ye - Y0) / (Y_STRETCH - Y0)) * Y_STRETCH);
+export const fromEngineY = (ye: number, bare = false): number => (bare || ye >= Y_STRETCH ? ye : ((ye - Y0) / (Y_STRETCH - Y0)) * Y_STRETCH);
 
 /** Plan du visage SANS nez ni lèvres (sur lequel reposent leurs bosses) : forme continue front → racine → sous-nez → menton. */
 export function facePlane(e: EngineHead): (y: number) => number {
@@ -69,12 +78,14 @@ export function closeChin(rows: readonly Row[]): Row[] {
 
 /** Table de sections (y, a, zf, zb [+ forme de la mâchoire]) DÉRIVÉE des moteurs : a = contour de face (`headOutline`), zf/zb = profil de `skullGeometry` + plan mandibulaire. */
 export function engineRows(e: EngineHead, ys: readonly number[] = ROW_YS, hairTh = (e.fit as { hairTh?: number }).hairTh ?? 0.02, shape: JawShapeParams = JAW_SHAPE): Row[] {
+  const bare = isBare(e), v0 = vertexY(e);
+  if (bare) ys = ys.filter((y) => y >= v0 - 1e-9);   // crâne nu : la table commence AU vertex (au-dessus, il n'y a pas de tête)
   const back: PV[] = backChain(e), plane = facePlane(e), mand = mandibularPlane(e);
   const P = skinPoints(e), yNuchal = P.get('nuchalGroove')!.y, yChin = P.get('menton')!.y;
   const base = ys.map((y): Row => {
-    const ye = toEngineY(y);
-    const a0 = y < 0.012 ? 0 : halfWidthAt(e.lm.outline, Math.min(py(ye), e.lm.outline.bottomY - 1)) / 1000;
-    const a = Math.max(0, a0 + (y < 0.012 ? 0 : hairTh * (1 - smooth((y - 0.3) / 0.25))));
+    const ye = toEngineY(y, bare), top = y < v0 + 0.012;
+    const a0 = top ? 0 : halfWidthAt(e.lm.outline, Math.min(py(ye), e.lm.outline.bottomY - 1)) / 1000;
+    const a = Math.max(0, a0 + (top || bare ? 0 : hairTh * (1 - smooth((y - 0.3) / 0.25))));
     const zf = y >= yChin ? mandibularFront(e, y) : plane(ye);
     const zbBack = zAt(back, Math.min(ye, yNuchal)) ?? -0.3;
     const lm = (e.fit as { mandLandmarks?: boolean }).mandLandmarks === true;

@@ -1,10 +1,10 @@
-import { vaultRise, warpY } from './engines/vault-model';
+import { vaultRise, vaultTop, warpY } from './engines/vault-model';
 import { reliefAnatomyChecks, reliefGeometryChecks, reliefStyleChecks } from './verify-relief';
 import { halfWidthAt } from '../face/outline';
 import { CHIN_CAP_Y } from './engines/rows';
 import { contrastRatio, hex } from './color';
 import { JAW_SHAPE, jawCtx } from './engines/jaw-model';
-import { toEngineY } from './engines/rows';
+import { isBare, toEngineY } from './engines/rows';
 import { py } from './engines/units';
 import { cranialLength } from './engines/skull-model';
 import { defaultFrame, refView, renderHead } from './render';
@@ -14,6 +14,7 @@ import { topRow } from './silhouette';
 import { inkSpecks, inkWidth, outlineClosure } from './verify-style';
 import { hostChecks } from './verify-host';
 import { hairFeatureAnatomyChecks, hairFeatureGeometryChecks, hairFeatureStyleChecks } from './verify-hair-features';
+import { enlargementAnatomyChecks, enlargementGeometryChecks, enlargementStyleChecks } from './verify-enlargement';
 import { hairVolumeAnatomyChecks, hairVolumeGeometryChecks, hairVolumeStyleChecks } from './verify-hair-volume';
 import { browChecks } from './verify-brow';
 import { neckCutChecks } from './verify-neck-cut';
@@ -72,7 +73,7 @@ export function headGeometry(h: HeadSubject, Rh: HeadRenders): LayerReport {
   if (s.engine) {
     // Face : demi-largeur du rendu à tangage 0 vs contour du moteur de visage, sur le crâne (0,15–0,5) et la mâchoire (0,85–1,0), hors oreilles.
     const e = s.engine, ts = [...Array.from({ length: 8 }, (_, i) => 0.15 + i * 0.05), 0.85, 0.9, 0.95, 1.0], f0 = headEdges(R.at(0, true), ts);
-    const rise = vaultRise(e), want = (y: number): number => halfWidthAt(e.lm.outline, Math.min(py(toEngineY(warpY(y - rise, rise))), e.lm.outline.bottomY - 1)) / 1000;   // `y` est mesuré depuis le SOMMET (headEdges) : le sommet est à −Δ (voûte rehaussée de Δ), la hauteur du maillage vaut y − Δ, que `warpY` remappe vers la hauteur source du contour 2D
+    const rise = vaultRise(e), want = (y: number): number => halfWidthAt(e.lm.outline, Math.min(py(toEngineY(warpY(y - rise + vaultTop(e), rise, vaultTop(e)), isBare(e))), e.lm.outline.bottomY - 1)) / 1000;   // `y` est mesuré depuis le SOMMET (headEdges) : le sommet est à −Δ (voûte rehaussée de Δ), la hauteur du maillage vaut y − Δ, que `warpY` remappe vers la hauteur source du contour 2D
     const dev = f0.map((p) => Math.abs((p.right - p.left) / 2 - want(p.t))), mean = dev.reduce((a, b) => a + b, 0) / Math.max(1, dev.length);
     c.push(...hostChecks(s, R.at(0, true)).geometry);
     c.push(...rollChecks(s, R.at(0, true), R.rolled(0, ROLL_PROBE), R.rolled(60, -ROLL_PROBE)).geometry);
@@ -91,6 +92,7 @@ export function headGeometry(h: HeadSubject, Rh: HeadRenders): LayerReport {
     c.push(check(G, `head.geo.jaw.${yaw}.ink`, `Mâchoire à ${yaw}° : plus longue interruption du trait (px ; une largeur de trait ≈ 4 px à 520 px)`, st.inkGapPx, 0, 4));
   }
   for (const yaw of [135, 180]) c.push(check(G, `head.geo.jaw.${yaw}.concavity`, `Mâchoire à ${yaw}° : creux maximal du contour (U)`, jawContourStats(R.at(yaw), { yMinU: 0.8, yMaxU: 1.25 }).concavityU, 0, 0.02));
+  c.push(...enlargementGeometryChecks(s, R.at(0, true)));
   c.push(...skullGeometryChecks(s, R));
   c.push(...reliefGeometryChecks(s));
   c.push(...neckCutChecks(s).geometry);
@@ -127,6 +129,7 @@ export function headAnatomy(h: HeadSubject, Rh: HeadRenders): LayerReport {
   c.push(check(A, 'head.anat.neck', 'Largeur du cou / largeur du crâne [canon : 0,35–0,65]', neckW / ear2, 0.3, 0.72, 'info'));
   const st = jawContourStats(R.at(90), { yMinU: 0.8, yMaxU: 1.25 });
   c.push(check(A, 'head.anat.chin.lowest', 'Profil 90° : le point le plus bas du contour de la mâchoire est le menton, côté face (x image, U ; face = gauche)', st.lowest.x, -0.7, -0.1));
+  c.push(...enlargementAnatomyChecks(s));
   c.push(...skullAnatomyChecks(s));
   c.push(...reliefAnatomyChecks(s, R));
   c.push(...neckCutChecks(s).anatomy);
@@ -145,6 +148,7 @@ export function headStyle(h: HeadSubject, R: HeadRenders): LayerReport {
   // Information : le pavillon des têtes autres que la planche est encore pointillé (hachures du moteur d'oreille sous-échantillonnées) ; la planche reste ≤ 6 (voir docs/HEAD-TURNTABLE-REMAINING.md).
   for (const yaw of [0, 45, 90]) c.push(check(S, `head.style.specks.${yaw}`, `Îlots d'encre isolés à ${yaw}° (points, traits pointillés) [planche ≤ 6]`, inkSpecks(R.at(yaw), ink, tolS), 0, 6, h.spec.engine && h.id !== 'planche' ? 'info' : 'hard'));
   c.push(check(S, 'head.style.specks.180', 'Îlots d\'encre isolés à 180° (cheveux et pavillon : la planche en compte 33, limite connue)', inkSpecks(R.at(180), ink, tolS), 0, 60, 'info'));
+  c.push(...enlargementStyleChecks(h.spec, (yaw) => R.skull.at(yaw)));
   c.push(...skullStyleChecks(h.spec, R));
   c.push(...reliefStyleChecks(h.spec, R));
   c.push(...neckCutChecks(h.spec).style);

@@ -1,3 +1,4 @@
+import { mastoidContour } from './vault-mastoid';
 import { mix } from '../core/color';
 import { el, num } from '../core/svg';
 import type { SkullGeo } from './geometry';
@@ -77,4 +78,16 @@ export function neckDetails(g: SkullGeo, ink: Ink): string[] {
   out.push(stroke(smoothPath([{ x: neck.xBack(nape.y + 0.05 * H) + 0.035 * H, y: nape.y + 0.05 * H }, { x: neck.xBack(nape.y + 0.14 * H) + 0.045 * H, y: nape.y + 0.14 * H }, { x: neck.xBack(neck.yC7 - 0.02 * H) + 0.05 * H, y: neck.yC7 - 0.02 * H }]), H * 0.0035, 0.35));
   for (let i = 0; i < 3; i++) { const y = neck.yTop + (0.05 + 0.045 * i) * H; out.push(stroke(`M${num(neck.xBack(y) + 0.012 * H)} ${num(y)}q${num(0.03 * H)} ${num(0.008 * H)} ${num(0.06 * H)} ${num(0.002 * H)}`, H * 0.0028, 0.3)); }
   return out;
+}
+
+/**
+ * Mastoïde du profil 2D : sa saillie (`mastoid` > 0) se lit comme un modelé SOUS la peau, derrière l'oreille ; sa taille, sa direction et sa pente (`vault-mastoid.ts`, la même forme que le relief 3D)
+ * donnent le contour de deux niveaux (50 % et 15 % de la saillie). Le profil regarde vers +x : l'azimut croissant (vers l'arrière) est −x. Rien à dessiner si la saillie est nulle ou effacée.
+ */
+export function mastoidDetail(g: SkullGeo, ink: Ink): string[] {
+  const k = g.params, m = g.bone.lm.mastoid as V2, H = g.H;
+  if (k.mastoid <= 0.02) return [];
+  const poly = (level: number): string => `M${mastoidContour(level, k.mastoidSize, k.mastoidDirection, k.mastoidSlope).map((c) => `${num(m.x - c.x * H)} ${num(m.y + c.y * H)}`).join('L')}Z`;
+  const a = Math.min(1, k.mastoid);
+  return [el('path', { d: poly(0.15), fill: ink.shade, opacity: num(0.16 * a) }), el('path', { d: poly(0.5), fill: ink.shade, opacity: num(0.22 * a) }), el('path', { d: poly(0.5), fill: 'none', stroke: ink.soft, 'stroke-width': num(H * 0.0022), opacity: num(0.5 * a) })];
 }

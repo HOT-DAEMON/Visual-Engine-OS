@@ -1,7 +1,7 @@
 /**
  * TISSUS DE LA VOÛTE — séparation os / parties molles. Le relief osseux (crête, tubérosité, suture) n'apparaît à la surface de la peau qu'ATTÉNUÉ par ce qui le recouvre :
  * périoste, galéa aponévrotique, tissu sous-cutané, peau, cheveux ; et, aux tempes, le muscle temporal. Chaque région porte une épaisseur relative `r` (1 = pariétal) ;
- * la transmission τ = (1,35 − 0,7·scalp·r) × (1 + 0,6·boneShow), bornée [0,25 ; 1,6], vaut EXACTEMENT 1 pour scalp = 0,5, r = 1, boneShow = 0 (calibrage d'origine des bosses).
+ * la transmission τ (formule ci-dessous, `TISSUE_T`), bornée [0,25 ; 1,6], vaut EXACTEMENT 1 pour scalp = 0,5, r = 1, boneShow = 0 (calibrage d'origine des bosses).
  * `scalp` est le paramètre d'épaisseur de tissu du crâne déjà présent (`SkullParams.scalp`) : il est désormais consommé par le modelé 3D, pas seulement par le profil 2D.
  */
 export type VaultRegion = 'frontal' | 'glabella' | 'parietal' | 'temporal' | 'mastoid' | 'occipital' | 'vertex';
@@ -10,10 +10,15 @@ export const TISSUE_LAYERS = ['os', 'périoste', 'galéa', 'sous-cutané', 'peau
 /** Épaisseur relative des parties molles par région (1 = pariétal). Conventions d'anatomie artistique (Richer, Zuckerkandl : mince au front et à la mastoïde, épais aux tempes et à la nuque). */
 export const SOFT_TISSUE: Readonly<Record<VaultRegion, number>> = { frontal: 0.7, glabella: 0.4, parietal: 1, temporal: 1.7, mastoid: 0.5, occipital: 1.1, vertex: 0.8 };
 
-export const TISSUE_T = { base: 1.35, k: 0.7, show: 0.6, min: 0.25, max: 1.6 } as const;
+/**
+ * Transmission : τ = (1,35 − 0,35 r) · exp(−κ r (scalp − 0,5)) · (1 + 0,6 boneShow), bornée [0,25 ; 1,6]. Le facteur de gauche est l'ANCIEN calibrage à `scalp` = 0,5 (inchangé pour toute région) ; le facteur exponentiel
+ * remplace la pente linéaire d'origine (0,7 · scalp · r : le relief ne variait que de ≈ 30 % de la mince à l'épaisse, `mastoid × scalp` 4 cellules voisines perceptibles sur 12) : un relief osseux traverse les parties molles
+ * en s'amortissant de façon exponentielle avec leur épaisseur (loi d'atténuation de type Beer-Lambert), ce qui est aussi le sens physique d'un cuir chevelu de 3 à 8 mm.
+ */
+export const TISSUE_T = { base: 1.35, half: 0.35, kappa: 1.4, show: 0.6, min: 0.25, max: 1.6 } as const;
 
 export function transmission(region: VaultRegion, scalp: number, boneShow: number): number {
-  const t = (TISSUE_T.base - TISSUE_T.k * scalp * SOFT_TISSUE[region]) * (1 + TISSUE_T.show * boneShow);
+  const r = SOFT_TISSUE[region], t = (TISSUE_T.base - TISSUE_T.half * r) * Math.exp(-TISSUE_T.kappa * r * (scalp - 0.5)) * (1 + TISSUE_T.show * boneShow);
   return Math.min(TISSUE_T.max, Math.max(TISSUE_T.min, t));
 }
 

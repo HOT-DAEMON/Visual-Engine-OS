@@ -84,9 +84,9 @@
    }
   ],
   "transmission": {
-   "fin": 1.315,
+   "fin": 1.6,
    "nominal": 1,
-   "epais": 0.685
+   "epais": 0.533
   }
  },
  {
@@ -180,9 +180,9 @@
    }
   ],
   "transmission": {
-   "fin": 1.326,
+   "fin": 1.6,
    "nominal": 1.105,
-   "epais": 0.885
+   "epais": 0.711
   }
  },
  {
@@ -229,6 +229,8 @@
    "parietalBulge",
    "parietalFlat",
    "parietalConvexity",
+   "parietalHeight",
+   "parietalAzimuth",
    "vaultPeak"
   ],
   "influence": {
@@ -282,9 +284,9 @@
    }
   ],
   "transmission": {
-   "fin": 1.315,
+   "fin": 1.6,
    "nominal": 1,
-   "epais": 0.685
+   "epais": 0.533
   }
  },
  {
@@ -385,9 +387,9 @@
    }
   ],
   "transmission": {
-   "fin": 1.291,
+   "fin": 1.6,
    "nominal": 0.755,
-   "epais": 0.25
+   "epais": 0.259
   }
  },
  {
@@ -481,9 +483,9 @@
    }
   ],
   "transmission": {
-   "fin": 1.312,
+   "fin": 1.6,
    "nominal": 0.965,
-   "epais": 0.619
+   "epais": 0.483
   }
  },
  {
@@ -520,7 +522,10 @@
    "side": 1
   },
   "params": [
-   "mastoid"
+   "mastoid",
+   "mastoidSize",
+   "mastoidDirection",
+   "mastoidSlope"
   ],
   "influence": {
    "fields": [
@@ -566,9 +571,9 @@
    }
   ],
   "transmission": {
-   "fin": 1.333,
+   "fin": 1.6,
    "nominal": 1.175,
-   "epais": 1.018
+   "epais": 0.858
   }
  },
  {
@@ -659,9 +664,9 @@
    }
   ],
   "transmission": {
-   "fin": 1.291,
+   "fin": 1.6,
    "nominal": 0.755,
-   "epais": 0.25
+   "epais": 0.259
   }
  },
  {
@@ -746,9 +751,9 @@
    }
   ],
   "transmission": {
-   "fin": 1.322,
+   "fin": 1.6,
    "nominal": 1.07,
-   "epais": 0.818
+   "epais": 0.646
   }
  },
  {
@@ -829,9 +834,9 @@
    }
   ],
   "transmission": {
-   "fin": 1.336,
+   "fin": 1.557,
    "nominal": 1.21,
-   "epais": 1.084
+   "epais": 0.94
   }
  },
  {
@@ -917,9 +922,9 @@
    }
   ],
   "transmission": {
-   "fin": 1.326,
+   "fin": 1.6,
    "nominal": 1.105,
-   "epais": 0.885
+   "epais": 0.711
   }
  },
  {
@@ -1003,9 +1008,9 @@
    }
   ],
   "transmission": {
-   "fin": 1.322,
+   "fin": 1.6,
    "nominal": 1.07,
-   "epais": 0.818
+   "epais": 0.646
   }
  },
  {
@@ -1092,9 +1097,9 @@
    }
   ],
   "transmission": {
-   "fin": 1.312,
+   "fin": 1.6,
    "nominal": 0.965,
-   "epais": 0.619
+   "epais": 0.483
   }
  },
  {
@@ -1184,9 +1189,9 @@
    }
   ],
   "transmission": {
-   "fin": 1.291,
+   "fin": 1.6,
    "nominal": 0.755,
-   "epais": 0.25
+   "epais": 0.259
   }
  },
  {
@@ -1274,9 +1279,9 @@
    }
   ],
   "transmission": {
-   "fin": 1.291,
+   "fin": 1.6,
    "nominal": 0.755,
-   "epais": 0.25
+   "epais": 0.259
   }
  },
  {
@@ -1355,9 +1360,9 @@
    }
   ],
   "transmission": {
-   "fin": 1.312,
+   "fin": 1.6,
    "nominal": 0.965,
-   "epais": 0.619
+   "epais": 0.483
   }
  }
 ]

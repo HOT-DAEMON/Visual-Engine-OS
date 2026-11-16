@@ -4,52 +4,52 @@
   "perView": {
    "profil": {
     "lo_nom": {
-     "xor": 0,
-     "shadeFrac": 0.017132904418298796,
+     "xor": 0.0027671192443919717,
+     "shadeFrac": 0.022136953955135773,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0,
-     "shadeFrac": 0.010983542459033874,
+     "xor": 0.0026637069922308544,
+     "shadeFrac": 0.01650018497965224,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0,
-     "shadeFrac": 0.03856680766359791,
+     "xor": 0.0054233536247924735,
+     "shadeFrac": 0.04364508393285372,
      "perceptible": true
     }
    },
    "trois_quarts": {
     "lo_nom": {
-     "xor": 0.007915111295451404,
-     "shadeFrac": 0.036361122632379374,
+     "xor": 0.0064678404599353215,
+     "shadeFrac": 0.032590729428674095,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.0071379547014413175,
-     "shadeFrac": 0.033321894303363075,
+     "xor": 0.006320074269799329,
+     "shadeFrac": 0.029172320217096336,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.014996568291008922,
-     "shadeFrac": 0.0771105010295127,
+     "xor": 0.012747268442476612,
+     "shadeFrac": 0.07273441405413125,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.0009088843444671666,
-     "shadeFrac": 0.063031129288798,
+     "xor": 0.003153853185848798,
+     "shadeFrac": 0.05736356156869915,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.002719238613188307,
-     "shadeFrac": 0.04790392023566735,
+     "xor": 0.0050932241928149154,
+     "shadeFrac": 0.044520236471123235,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0036256514842510764,
-     "shadeFrac": 0.1199637434851575,
+     "xor": 0.008231014097316962,
+     "shadeFrac": 0.12132787630741246,
      "perceptible": true
     }
    }
@@ -57,8 +57,8 @@
   "perceptible": true,
   "best": {
    "view": "dessus",
-   "xor": 0.0036256514842510764,
-   "shadeFrac": 0.1199637434851575
+   "xor": 0.008231014097316962,
+   "shadeFrac": 0.12132787630741246
   },
   "lo": -1,
   "nom": 0,
@@ -76,51 +76,51 @@
    "profil": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.009490633775281698,
+     "shadeFrac": 0.009730289688852714,
      "perceptible": true
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.007428997973909644,
+     "shadeFrac": 0.007251470642643087,
      "perceptible": true
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.020936267017381723,
+     "shadeFrac": 0.021384438935957675,
      "perceptible": true
     }
    },
    "trois_quarts": {
     "lo_nom": {
-     "xor": 0.00708557998064427,
-     "shadeFrac": 0.028169500898658925,
+     "xor": 0.006611570247933884,
+     "shadeFrac": 0.02285303629177147,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.005602337171335281,
-     "shadeFrac": 0.015363464512802887,
+     "xor": 0.00550314465408805,
+     "shadeFrac": 0.015544596912521441,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.012648221343873518,
-     "shadeFrac": 0.07296786389413988,
+     "xor": 0.01207833047455689,
+     "shadeFrac": 0.060891938250428816,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.00022722108611679165,
-     "shadeFrac": 0.065439672801636,
+     "xor": 0.0002742481031172868,
+     "shadeFrac": 0.05480391260627114,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.0004088307440719542,
-     "shadeFrac": 0.03361497229036068,
+     "xor": 0.00041120299721295744,
+     "shadeFrac": 0.03211952300452323,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0006359589352230399,
-     "shadeFrac": 0.12532933587716907,
+     "xor": 0.0006853383286882624,
+     "shadeFrac": 0.11294375656782565,
      "perceptible": true
     }
    }
@@ -128,8 +128,8 @@
   "perceptible": true,
   "best": {
    "view": "dessus",
-   "xor": 0.0006359589352230399,
-   "shadeFrac": 0.12532933587716907
+   "xor": 0.0006853383286882624,
+   "shadeFrac": 0.11294375656782565
   },
   "lo": -1,
   "nom": 0,
@@ -146,35 +146,35 @@
   "perView": {
    "trois_quarts_arriere": {
     "lo_nom": {
-     "xor": 0.00279995851913305,
-     "shadeFrac": 0.007190016938020671,
+     "xor": 0.0040235666043971835,
+     "shadeFrac": 0.007759735594194568,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.0027921406411582214,
-     "shadeFrac": 0.004998276456394347,
-     "perceptible": false
+     "xor": 0.004615384615384616,
+     "shadeFrac": 0.007084078711985689,
+     "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.005584281282316443,
-     "shadeFrac": 0.015546363322992071,
+     "xor": 0.008620381299853347,
+     "shadeFrac": 0.021068068819973532,
      "perceptible": true
     }
    },
    "dos": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.005942219304005253,
-     "perceptible": true
+     "shadeFrac": 0.0009193680196131844,
+     "perceptible": false
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.005187130663164806,
-     "perceptible": true
+     "shadeFrac": 0.0007831653500408608,
+     "perceptible": false
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.0304005252790545,
+     "shadeFrac": 0.030066739308090437,
      "perceptible": true
     }
    },
@@ -191,24 +191,24 @@
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.00013132407498604682,
+     "shadeFrac": 0.00006810365376102427,
      "perceptible": false
     }
    },
    "profil": {
     "lo_nom": {
-     "xor": 0.00007109088970248463,
-     "shadeFrac": 0.00014218177940496926,
+     "xor": 0.003366754226941433,
+     "shadeFrac": 0.001775870361463613,
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.000035544181417501956,
-     "shadeFrac": 0.0004976185398450273,
+     "xor": 0.0037598142209443767,
+     "shadeFrac": 0.002506542813962918,
      "perceptible": false
     },
     "lo_hi": {
-     "xor": 0.00010663254425250586,
-     "shadeFrac": 0.00600696665955783,
+     "xor": 0.007114158280806517,
+     "shadeFrac": 0.01249585314607984,
      "perceptible": true
     }
    }
@@ -217,7 +217,7 @@
   "best": {
    "view": "dos",
    "xor": 0,
-   "shadeFrac": 0.0304005252790545
+   "shadeFrac": 0.030066739308090437
   },
   "lo": -1,
   "nom": 0,
@@ -235,69 +235,69 @@
   "perView": {
    "trois_quarts_arriere": {
     "lo_nom": {
-     "xor": 0.009713436344152926,
-     "shadeFrac": 0.012824501365411871,
+     "xor": 0.013726687987351324,
+     "shadeFrac": 0.018901146286248158,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.009755596631751899,
-     "shadeFrac": 0.019613883754364347,
+     "xor": 0.013505848989719958,
+     "shadeFrac": 0.03867422899680964,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.01937427260902307,
-     "shadeFrac": 0.045149585815020196,
+     "xor": 0.027047146401985113,
+     "shadeFrac": 0.06859269762495569,
      "perceptible": true
     }
    },
    "dos": {
     "lo_nom": {
-     "xor": 0.015298752462245569,
-     "shadeFrac": 0.020223243598161522,
+     "xor": 0.017025333696540454,
+     "shadeFrac": 0.020055843094524652,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.015227441725130129,
-     "shadeFrac": 0.01858976431411852,
+     "xor": 0.016707402819164965,
+     "shadeFrac": 0.04185221147085412,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.030293233325789662,
-     "shadeFrac": 0.041867382237884325,
+     "xor": 0.03344828740750661,
+     "shadeFrac": 0.06559078581712258,
      "perceptible": true
     }
    },
    "face": {
     "lo_nom": {
-     "xor": 0.015299254735874453,
-     "shadeFrac": 0.021340162185232606,
+     "xor": 0.01702591344025607,
+     "shadeFrac": 0.0339496713998706,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.015227934044616876,
-     "shadeFrac": 0.024991917232460394,
+     "xor": 0.016707962231299806,
+     "shadeFrac": 0.0494542288890377,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.030294212738441642,
-     "shadeFrac": 0.04464920788878112,
+     "xor": 0.0334494073528427,
+     "shadeFrac": 0.06586084510814974,
      "perceptible": true
     }
    },
    "profil": {
     "lo_nom": {
-     "xor": 0.004194362492446593,
-     "shadeFrac": 0.006575907297479828,
+     "xor": 0.012060673325934147,
+     "shadeFrac": 0.016241213466518682,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.004071084678561314,
-     "shadeFrac": 0.020426224865477204,
+     "xor": 0.010724351231653308,
+     "shadeFrac": 0.0362724644046704,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.008248371566128575,
-     "shadeFrac": 0.06255310110450298,
+     "xor": 0.02265573530488251,
+     "shadeFrac": 0.07572652075250713,
      "perceptible": true
     }
    }
@@ -305,8 +305,8 @@
   "perceptible": true,
   "best": {
    "view": "face",
-   "xor": 0.030294212738441642,
-   "shadeFrac": 0.04464920788878112
+   "xor": 0.0334494073528427,
+   "shadeFrac": 0.06586084510814974
   },
   "lo": -1,
   "nom": 0,
@@ -324,52 +324,52 @@
   "perView": {
    "face": {
     "lo_nom": {
-     "xor": 0.05344363469240365,
-     "shadeFrac": 0.09598844461952596,
+     "xor": 0.050902281239359894,
+     "shadeFrac": 0.09107933265236635,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.051188584602922395,
-     "shadeFrac": 0.11315699286537682,
+     "xor": 0.048665111456713324,
+     "shadeFrac": 0.10769828926905133,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.10178204249485949,
-     "shadeFrac": 0.15779799364446384,
+     "xor": 0.09697067876235217,
+     "shadeFrac": 0.14786975538635996,
      "perceptible": true
     }
    },
    "dos": {
     "lo_nom": {
-     "xor": 0.05353860294117647,
-     "shadeFrac": 0.09194459033613446,
+     "xor": 0.05100095328884652,
+     "shadeFrac": 0.08637477870080348,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.05100641864522964,
-     "shadeFrac": 0.10085997382688353,
+     "xor": 0.048475422053724765,
+     "shadeFrac": 0.09361329833770779,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.1016949152542373,
-     "shadeFrac": 0.1557826520438684,
+     "xor": 0.09687975893464666,
+     "shadeFrac": 0.14425039691540031,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.058259486480345374,
-     "shadeFrac": 0.20299931833674165,
+     "xor": 0.05768351768900265,
+     "shadeFrac": 0.20125239967090228,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.07409745013885383,
-     "shadeFrac": 0.22271311958259699,
+     "xor": 0.0739078902810701,
+     "shadeFrac": 0.21287673552319675,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.12804005722460657,
-     "shadeFrac": 0.2904990322309181,
+     "xor": 0.12732814087368777,
+     "shadeFrac": 0.2767524551303759,
      "perceptible": true
     }
    }
@@ -377,8 +377,8 @@
   "perceptible": true,
   "best": {
    "view": "dessus",
-   "xor": 0.12804005722460657,
-   "shadeFrac": 0.2904990322309181
+   "xor": 0.12732814087368777,
+   "shadeFrac": 0.2767524551303759
   },
   "lo": -1,
   "nom": 0,
@@ -395,69 +395,69 @@
   "perView": {
    "trois_quarts_arriere": {
     "lo_nom": {
-     "xor": 0.002895253851721642,
-     "shadeFrac": 0.006686657705166649,
+     "xor": 0.0029021855965603725,
+     "shadeFrac": 0.006520960229308492,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.0041826540841370255,
-     "shadeFrac": 0.016972588060423795,
+     "xor": 0.00402457867691976,
+     "shadeFrac": 0.015164037514822667,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0070657980905111505,
-     "shadeFrac": 0.048426567400820325,
+     "xor": 0.006915084199211752,
+     "shadeFrac": 0.04510927982801863,
      "perceptible": true
     }
    },
    "dos": {
     "lo_nom": {
-     "xor": 0.0082403151674327,
-     "shadeFrac": 0.007879185817465528,
+     "xor": 0.008376464178697902,
+     "shadeFrac": 0.008546717515663308,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.008302943474863246,
-     "shadeFrac": 0.00937744204219849,
+     "xor": 0.00834121302174794,
+     "shadeFrac": 0.010164798054842631,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0164756446991404,
-     "shadeFrac": 0.03402578796561605,
+     "xor": 0.016648655950290425,
+     "shadeFrac": 0.030561934350938808,
      "perceptible": true
     }
    },
    "face": {
     "lo_nom": {
-     "xor": 0.008305429715711379,
-     "shadeFrac": 0.007320596152583547,
+     "xor": 0.008443990466462376,
+     "shadeFrac": 0.007320394960844399,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.008270113632663693,
-     "shadeFrac": 0.007228209552958031,
+     "xor": 0.008307162394894135,
+     "shadeFrac": 0.007564245432749131,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.016506055475973433,
-     "shadeFrac": 0.030016929287667665,
+     "xor": 0.01668017287952458,
+     "shadeFrac": 0.027383846569421933,
      "perceptible": true
     }
    },
    "profil": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.01414708705079444,
+     "shadeFrac": 0.013504014206962891,
      "perceptible": true
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.02246472114598514,
+     "shadeFrac": 0.0202005253616486,
      "perceptible": true
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.06561689119539331,
+     "shadeFrac": 0.06285841133597247,
      "perceptible": true
     }
    }
@@ -466,7 +466,7 @@
   "best": {
    "view": "profil",
    "xor": 0,
-   "shadeFrac": 0.06561689119539331
+   "shadeFrac": 0.06285841133597247
   },
   "lo": -1,
   "nom": 0,
@@ -484,52 +484,52 @@
   "perView": {
    "face": {
     "lo_nom": {
-     "xor": 0.00022979449806316066,
-     "shadeFrac": 0.023504694373317574,
+     "xor": 0.00023833844058563158,
+     "shadeFrac": 0.02373169901259789,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.0002297643274469901,
-     "shadeFrac": 0.008337162738790782,
+     "xor": 0.0002383059848845918,
+     "shadeFrac": 0.008579015455845305,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0004594834093668975,
-     "shadeFrac": 0.04404476681216975,
+     "xor": 0.0004765632978180209,
+     "shadeFrac": 0.04309493821697246,
      "perceptible": true
     }
    },
    "profil": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.04005971634735009,
+     "shadeFrac": 0.04184394539198639,
      "perceptible": true
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.04308107915970568,
+     "shadeFrac": 0.04480372932775907,
      "perceptible": true
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.0992073365798173,
+     "shadeFrac": 0.10307447556328388,
      "perceptible": true
     }
    },
    "trois_quarts": {
     "lo_nom": {
-     "xor": 0.0100580671920365,
-     "shadeFrac": 0.056097055163832434,
+     "xor": 0.010240747394897592,
+     "shadeFrac": 0.05810276679841897,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.009245942058763099,
-     "shadeFrac": 0.038456270118485035,
+     "xor": 0.009784735812133072,
+     "shadeFrac": 0.0399573029710016,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.019211012944318883,
-     "shadeFrac": 0.10242449147318677,
+     "xor": 0.019925280199252802,
+     "shadeFrac": 0.10460772104607721,
      "perceptible": true
     }
    }
@@ -537,8 +537,8 @@
   "perceptible": true,
   "best": {
    "view": "trois_quarts",
-   "xor": 0.019211012944318883,
-   "shadeFrac": 0.10242449147318677
+   "xor": 0.019925280199252802,
+   "shadeFrac": 0.10460772104607721
   },
   "lo": -1,
   "nom": 0,
@@ -555,52 +555,52 @@
   "perView": {
    "face": {
     "lo_nom": {
-     "xor": 0.021470781352593567,
-     "shadeFrac": 0.03883782009192383,
+     "xor": 0.022030781803323345,
+     "shadeFrac": 0.04174611822391719,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.02133744657604679,
-     "shadeFrac": 0.04334972203476976,
+     "xor": 0.02221112221112221,
+     "shadeFrac": 0.045321345321345324,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.04228927664770719,
-     "shadeFrac": 0.08856325717407372,
+     "xor": 0.04368964368964369,
+     "shadeFrac": 0.09000999000999,
      "perceptible": true
     }
    },
    "profil": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.07315252550385667,
+     "shadeFrac": 0.08035813385622849,
      "perceptible": true
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.048128532328582094,
+     "shadeFrac": 0.0477265159643346,
      "perceptible": true
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.13485941776561333,
+     "shadeFrac": 0.1356690961559806,
      "perceptible": true
     }
    },
    "trois_quarts": {
     "lo_nom": {
-     "xor": 0.01064565187335822,
-     "shadeFrac": 0.07389741462740218,
+     "xor": 0.010995328781890046,
+     "shadeFrac": 0.07592526051024075,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.011311212110856714,
-     "shadeFrac": 0.06465502511704199,
+     "xor": 0.01175384396860907,
+     "shadeFrac": 0.0665104222151202,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.02183644875781704,
-     "shadeFrac": 0.1301643713904931,
+     "xor": 0.022619935371613224,
+     "shadeFrac": 0.1299669756045595,
      "perceptible": true
     }
    }
@@ -608,8 +608,8 @@
   "perceptible": true,
   "best": {
    "view": "trois_quarts",
-   "xor": 0.02183644875781704,
-   "shadeFrac": 0.1301643713904931
+   "xor": 0.022619935371613224,
+   "shadeFrac": 0.1299669756045595
   },
   "lo": -1,
   "nom": 0,
@@ -627,51 +627,51 @@
    "face": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.0035785810433697756,
-     "perceptible": false
+     "shadeFrac": 0.0071508836449075495,
+     "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.0019370301060441905,
-     "shadeFrac": 0.0061722315243442,
+     "xor": 0.002962508938604556,
+     "shadeFrac": 0.014540130077978684,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0019370301060441905,
-     "shadeFrac": 0.021077514035260515,
+     "xor": 0.002962508938604556,
+     "shadeFrac": 0.031463888037593216,
      "perceptible": true
     }
    },
    "profil": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.018874631216009668,
+     "shadeFrac": 0.0234192903918014,
      "perceptible": true
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.020189812675505635,
+     "shadeFrac": 0.03329756927744275,
      "perceptible": true
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.04684889631393737,
+     "shadeFrac": 0.06189648155684635,
      "perceptible": true
     }
    },
    "trois_quarts": {
     "lo_nom": {
-     "xor": 0.001001346638582922,
-     "shadeFrac": 0.026794654880701634,
+     "xor": 0.0014352350197344816,
+     "shadeFrac": 0.03692142088266954,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.0005530208765380893,
-     "shadeFrac": 0.025335268906401216,
+     "xor": 0.0007545813869924542,
+     "shadeFrac": 0.040136543298598636,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0015538137495252236,
-     "shadeFrac": 0.05441801042781672,
+     "xor": 0.002188733405095084,
+     "shadeFrac": 0.06982418371008253,
      "perceptible": true
     }
    }
@@ -679,8 +679,8 @@
   "perceptible": true,
   "best": {
    "view": "trois_quarts",
-   "xor": 0.0015538137495252236,
-   "shadeFrac": 0.05441801042781672
+   "xor": 0.002188733405095084,
+   "shadeFrac": 0.06982418371008253
   },
   "lo": -1,
   "nom": 0,
@@ -697,44 +697,44 @@
   "perView": {
    "trois_quarts": {
     "lo_nom": {
-     "xor": 0.014476956092243759,
-     "shadeFrac": 0.07405388834008925,
+     "xor": 0.01511129985490321,
+     "shadeFrac": 0.07665357256608982,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.018249688925756947,
-     "shadeFrac": 0.10842665560624913,
+     "xor": 0.018325547969816745,
+     "shadeFrac": 0.10988142292490119,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.032462445072725415,
-     "shadeFrac": 0.16847770548761795,
+     "xor": 0.03315992497434264,
+     "shadeFrac": 0.16909084474643452,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.017985450975141697,
-     "shadeFrac": 0.06703262373365466,
+     "xor": 0.018440416367552045,
+     "shadeFrac": 0.09009332376166547,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.020994274288830318,
-     "shadeFrac": 0.09720076342815595,
+     "xor": 0.022441610676904793,
+     "shadeFrac": 0.12313177019059372,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.03860228489825063,
-     "shadeFrac": 0.1614155658693324,
+     "xor": 0.04046839248059581,
+     "shadeFrac": 0.18130019292027458,
      "perceptible": true
     }
    }
   },
   "perceptible": true,
   "best": {
-   "view": "trois_quarts",
-   "xor": 0.032462445072725415,
-   "shadeFrac": 0.16847770548761795
+   "view": "dessus",
+   "xor": 0.04046839248059581,
+   "shadeFrac": 0.18130019292027458
   },
   "lo": -1,
   "nom": 0,
@@ -750,69 +750,69 @@
   "perView": {
    "profil": {
     "lo_nom": {
-     "xor": 0,
-     "shadeFrac": 0.057050438986243915,
+     "xor": 0.002737597573156746,
+     "shadeFrac": 0.05993119011505309,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0,
-     "shadeFrac": 0.05456225784665695,
+     "xor": 0.002067717756526234,
+     "shadeFrac": 0.05486836761067829,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0,
-     "shadeFrac": 0.09184942949561013,
+     "xor": 0.004799704633561012,
+     "shadeFrac": 0.09448033967140483,
      "perceptible": true
     }
    },
    "dos": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.05830597504924491,
+     "shadeFrac": 0.06224461999455189,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0,
-     "shadeFrac": 0.060144451739986865,
+     "xor": 0.00003404950798460962,
+     "shadeFrac": 0.05819060914569785,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0,
-     "shadeFrac": 0.13345370978332238,
+     "xor": 0.00003404950798460962,
+     "shadeFrac": 0.12969457591337805,
      "perceptible": true
     }
    },
    "trois_quarts_arriere": {
     "lo_nom": {
-     "xor": 0.016073835943171213,
-     "shadeFrac": 0.062152165646928687,
+     "xor": 0.016062380969492255,
+     "shadeFrac": 0.05961407165187394,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.018557470484461935,
-     "shadeFrac": 0.06751255258515403,
+     "xor": 0.01903553299492386,
+     "shadeFrac": 0.06408629441624365,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.03433301669154566,
-     "shadeFrac": 0.129529108427195,
+     "xor": 0.0347927241962775,
+     "shadeFrac": 0.11696277495769881,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.03899113837764145,
-     "shadeFrac": 0.039036582594864803,
+     "xor": 0.04342261632690374,
+     "shadeFrac": 0.03766340616144072,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.0330872660163459,
-     "shadeFrac": 0.03919500834871254,
+     "xor": 0.03625390951940443,
+     "shadeFrac": 0.042729395180829036,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.07078829422620617,
-     "shadeFrac": 0.05993496792336761,
+     "xor": 0.07810228624289679,
+     "shadeFrac": 0.061142680939165674,
      "perceptible": true
     }
    }
@@ -820,8 +820,8 @@
   "perceptible": true,
   "best": {
    "view": "trois_quarts_arriere",
-   "xor": 0.03433301669154566,
-   "shadeFrac": 0.129529108427195
+   "xor": 0.0347927241962775,
+   "shadeFrac": 0.11696277495769881
   },
   "lo": -1,
   "nom": 0,
@@ -839,69 +839,69 @@
   "perView": {
    "profil": {
     "lo_nom": {
-     "xor": 0.022753326154166812,
-     "shadeFrac": 0.0588460068781047,
+     "xor": 0.027383951061532925,
+     "shadeFrac": 0.0654911838790932,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.023317811822414956,
-     "shadeFrac": 0.04347207905306935,
+     "xor": 0.028338882722900482,
+     "shadeFrac": 0.04580096189419164,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.04554139021085907,
-     "shadeFrac": 0.08208566366762775,
+     "xor": 0.054945845777409956,
+     "shadeFrac": 0.08643085891115829,
      "perceptible": true
     }
    },
    "dos": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.06713722915298752,
+     "shadeFrac": 0.0941500953418687,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0,
-     "shadeFrac": 0.062409717662508205,
+     "xor": 0.00003404950798460962,
+     "shadeFrac": 0.08239980932275529,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0,
-     "shadeFrac": 0.1313854235062377,
+     "xor": 0.00003404950798460962,
+     "shadeFrac": 0.14947734005243624,
      "perceptible": true
     }
    },
    "trois_quarts_arriere": {
     "lo_nom": {
-     "xor": 0.010669949728121473,
-     "shadeFrac": 0.07150918231250641,
+     "xor": 0.012105506052753026,
+     "shadeFrac": 0.0867620433810217,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.007708527774897162,
-     "shadeFrac": 0.09353935497251893,
+     "xor": 0.007977289877465953,
+     "shadeFrac": 0.11685651658342017,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.018296227899182654,
-     "shadeFrac": 0.13727300707910126,
+     "xor": 0.019986509993254995,
+     "shadeFrac": 0.15911107955553977,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.02399538720837399,
-     "shadeFrac": 0.01783021378515036,
+     "xor": 0.027903670132409134,
+     "shadeFrac": 0.019017150981960367,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.005544194501249716,
-     "shadeFrac": 0.01058850261304249,
+     "xor": 0.009644391626291252,
+     "shadeFrac": 0.015952097997988846,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.02940654661580768,
-     "shadeFrac": 0.018672935332209706,
+     "xor": 0.03727894783613259,
+     "shadeFrac": 0.019816937705500755,
      "perceptible": true
     }
    }
@@ -909,8 +909,8 @@
   "perceptible": true,
   "best": {
    "view": "trois_quarts_arriere",
-   "xor": 0.018296227899182654,
-   "shadeFrac": 0.13727300707910126
+   "xor": 0.019986509993254995,
+   "shadeFrac": 0.15911107955553977
   },
   "lo": -1,
   "nom": 0,
@@ -929,34 +929,34 @@
    "profil": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.0012085451249422387,
+     "shadeFrac": 0.0025528136446039437,
      "perceptible": false
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.009739451889240395,
+     "shadeFrac": 0.01198712493987939,
      "perceptible": true
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.01599545018305904,
+     "shadeFrac": 0.019312590180916793,
      "perceptible": true
     }
    },
    "trois_quarts_arriere": {
     "lo_nom": {
-     "xor": 0.001175291230253379,
-     "shadeFrac": 0.005219675757890007,
+     "xor": 0.0013654820510977756,
+     "shadeFrac": 0.006504006611807826,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.002000896953806879,
-     "shadeFrac": 0.017042122330699967,
+     "xor": 0.002437538086532602,
+     "shadeFrac": 0.02096999677384665,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.003173836547417808,
-     "shadeFrac": 0.028806016490150757,
+     "xor": 0.0037996917231243503,
+     "shadeFrac": 0.03376707172814281,
      "perceptible": true
     }
    }
@@ -964,8 +964,8 @@
   "perceptible": true,
   "best": {
    "view": "trois_quarts_arriere",
-   "xor": 0.003173836547417808,
-   "shadeFrac": 0.028806016490150757
+   "xor": 0.0037996917231243503,
+   "shadeFrac": 0.03376707172814281
   },
   "lo": -1,
   "nom": 0,
@@ -977,39 +977,376 @@
   "metric": "pixels"
  },
  {
-  "id": "glabella",
+  "id": "mastoidSize",
   "perView": {
    "profil": {
     "lo_nom": {
-     "xor": 0.0013862723491984501,
-     "shadeFrac": 0.0020971812462232966,
-     "perceptible": false
+     "xor": 0,
+     "shadeFrac": 0.009730289688852714,
+     "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.0015969905600113565,
-     "shadeFrac": 0.0028036056497977146,
-     "perceptible": false
+     "xor": 0.00007398912359883097,
+     "shadeFrac": 0.019533128630091375,
+     "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0029810490453545317,
-     "shadeFrac": 0.002839094328909078,
-     "perceptible": false
+     "xor": 0.00007398912359883097,
+     "shadeFrac": 0.024638378158410714,
+     "perceptible": true
     }
    },
-   "trois_quarts": {
+   "trois_quarts_arriere": {
+    "lo_nom": {
+     "xor": 0.0020073843065562605,
+     "shadeFrac": 0.013263074882603865,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.003927589531188632,
+     "shadeFrac": 0.023529831827757346,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.005927089656157389,
+     "shadeFrac": 0.04213232406184168,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "trois_quarts_arriere",
+   "xor": 0.005927089656157389,
+   "shadeFrac": 0.04213232406184168
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "profil",
+   "trois_quarts_arriere"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "mastoidDirection",
+  "perView": {
+   "profil": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.009332227291580257,
+     "shadeFrac": 0.006881497650671501,
      "perceptible": true
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.004113092769252039,
+     "shadeFrac": 0.011136187058344741,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0,
+     "shadeFrac": 0.016722779237115692,
+     "perceptible": true
+    }
+   },
+   "trois_quarts_arriere": {
+    "lo_nom": {
+     "xor": 0.0008601842227877137,
+     "shadeFrac": 0.006236335615210925,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.0014318442153493699,
+     "shadeFrac": 0.013387743413516609,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.002290622763063708,
+     "shadeFrac": 0.023156764495347173,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "trois_quarts_arriere",
+   "xor": 0.002290622763063708,
+   "shadeFrac": 0.023156764495347173
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "profil",
+   "trois_quarts_arriere"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "mastoidSlope",
+  "perView": {
+   "profil": {
+    "lo_nom": {
+     "xor": 0.0005546516787457476,
+     "shadeFrac": 0.006433959473450673,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.0002959783935772689,
+     "perceptible": false
+    },
+    "lo_hi": {
+     "xor": 0.0005546516787457476,
+     "shadeFrac": 0.012202336932406448,
+     "perceptible": true
+    }
+   },
+   "trois_quarts_arriere": {
+    "lo_nom": {
+     "xor": 0.002110987870764607,
+     "shadeFrac": 0.005402697770939926,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.00035846148331361794,
+     "shadeFrac": 0.00021507688998817078,
+     "perceptible": false
+    },
+    "lo_hi": {
+     "xor": 0.0024687824251314896,
+     "shadeFrac": 0.00572471286987012,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "profil",
+   "xor": 0.0005546516787457476,
+   "shadeFrac": 0.012202336932406448
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "profil",
+   "trois_quarts_arriere"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "parietalHeight",
+  "perView": {
+   "trois_quarts_arriere": {
+    "lo_nom": {
+     "xor": 0.0053161124589696015,
+     "shadeFrac": 0.014985014985014986,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.005178016641074171,
+     "shadeFrac": 0.008641931221654823,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.010041662215575259,
+     "shadeFrac": 0.02457002457002457,
+     "perceptible": true
+    }
+   },
+   "dos": {
+    "lo_nom": {
+     "xor": 0,
+     "shadeFrac": 0.014199128302914737,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.007082538817760828,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0,
+     "shadeFrac": 0.043346499591391995,
+     "perceptible": true
+    }
+   },
+   "face": {
+    "lo_nom": {
+     "xor": 0,
+     "shadeFrac": 0,
+     "perceptible": false
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.00010215548064153642,
      "perceptible": false
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.012892299184294208,
+     "shadeFrac": 0.00010215548064153642,
+     "perceptible": false
+    }
+   },
+   "profil": {
+    "lo_nom": {
+     "xor": 0.004660037427072249,
+     "shadeFrac": 0.006824936704216049,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.0035017877548011354,
+     "shadeFrac": 0.009805005713443178,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.008145294441386902,
+     "shadeFrac": 0.0186020913593836,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "dos",
+   "xor": 0,
+   "shadeFrac": 0.043346499591391995
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "trois_quarts_arriere",
+   "dos",
+   "face",
+   "profil"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "parietalAzimuth",
+  "perView": {
+   "trois_quarts_arriere": {
+    "lo_nom": {
+     "xor": 0.005398834423826379,
+     "shadeFrac": 0.010797668847652759,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.00481111903064861,
+     "shadeFrac": 0.00759087669280114,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.010182646776088582,
+     "shadeFrac": 0.035354434435860005,
+     "perceptible": true
+    }
+   },
+   "dos": {
+    "lo_nom": {
+     "xor": 0,
+     "shadeFrac": 0.006469626804685372,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.017910651048760554,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0,
+     "shadeFrac": 0.03047534731680741,
+     "perceptible": true
+    }
+   },
+   "face": {
+    "lo_nom": {
+     "xor": 0,
+     "shadeFrac": 0.00006810365376102427,
+     "perceptible": false
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0,
+     "perceptible": false
+    },
+    "lo_hi": {
+     "xor": 0,
+     "shadeFrac": 0.003200871726768141,
+     "perceptible": false
+    }
+   },
+   "profil": {
+    "lo_nom": {
+     "xor": 0.005013085627925836,
+     "shadeFrac": 0.011684912823915367,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.005426811381636844,
+     "shadeFrac": 0.024053974772660604,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.010412847400454646,
+     "shadeFrac": 0.04539121507662976,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "profil",
+   "xor": 0.010412847400454646,
+   "shadeFrac": 0.04539121507662976
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "trois_quarts_arriere",
+   "dos",
+   "face",
+   "profil"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "glabella",
+  "perView": {
+   "profil": {
+    "lo_nom": {
+     "xor": 0.003292272407797877,
+     "shadeFrac": 0.006140642917915141,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.003429203539823009,
+     "shadeFrac": 0.007190265486725664,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.006709924789854004,
+     "shadeFrac": 0.008811384751511577,
+     "perceptible": true
+    }
+   },
+   "trois_quarts": {
+    "lo_nom": {
+     "xor": 0.001113305799964087,
+     "shadeFrac": 0.014688453941461663,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.0017230239069567091,
+     "shadeFrac": 0.01048172876731998,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.002834284074193664,
+     "shadeFrac": 0.02834284074193664,
      "perceptible": true
     }
    }
@@ -1017,8 +1354,8 @@
   "perceptible": true,
   "best": {
    "view": "trois_quarts",
-   "xor": 0,
-   "shadeFrac": 0.012892299184294208
+   "xor": 0.002834284074193664,
+   "shadeFrac": 0.02834284074193664
   },
   "lo": -1,
   "nom": 0,
@@ -1034,52 +1371,52 @@
   "perView": {
    "profil": {
     "lo_nom": {
-     "xor": 0.0006753634521736039,
-     "shadeFrac": 0,
+     "xor": 0.0022936628315637603,
+     "shadeFrac": 0.00011098368539824646,
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.0006394089019928245,
-     "shadeFrac": 0.00003552271677737913,
+     "xor": 0.002436143510999557,
+     "shadeFrac": 0.0010704266942270781,
      "perceptible": false
     },
     "lo_hi": {
-     "xor": 0.001314340520763028,
-     "shadeFrac": 0.00003552271677737913,
-     "perceptible": false
+     "xor": 0.004724293201446815,
+     "shadeFrac": 0.004133756551265963,
+     "perceptible": true
     }
    },
    "dos": {
     "lo_nom": {
-     "xor": 0,
-     "shadeFrac": 0.013197636244254761,
+     "xor": 0.00003404950798460962,
+     "shadeFrac": 0.03139364636181007,
      "perceptible": true
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.011588969139855548,
+     "shadeFrac": 0.03575320076273495,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0,
-     "shadeFrac": 0.03056467498358503,
+     "xor": 0.00003404950798460962,
+     "shadeFrac": 0.0608464707684974,
      "perceptible": true
     }
    },
    "trois_quarts_arriere": {
     "lo_nom": {
-     "xor": 0.00024197172387569566,
-     "shadeFrac": 0.007086314770645373,
+     "xor": 0.00050307233461497,
+     "shadeFrac": 0.018469941428006755,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.00024191318772463368,
-     "shadeFrac": 0.004319878352225601,
-     "perceptible": false
+     "xor": 0.0008257934798219158,
+     "shadeFrac": 0.01120206807410599,
+     "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.00048382637544926735,
-     "shadeFrac": 0.015793475255736798,
+     "xor": 0.001328450380583082,
+     "shadeFrac": 0.03593996840442338,
      "perceptible": true
     }
    },
@@ -1104,8 +1441,8 @@
   "perceptible": true,
   "best": {
    "view": "dos",
-   "xor": 0,
-   "shadeFrac": 0.03056467498358503
+   "xor": 0.00003404950798460962,
+   "shadeFrac": 0.0608464707684974
   },
   "lo": -1,
   "nom": 0,
@@ -1128,13 +1465,13 @@
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.0007599309153713299,
-     "shadeFrac": 0.01081174438687392,
+     "xor": 0.0011847490486106124,
+     "shadeFrac": 0.016191570331011703,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0007599309153713299,
-     "shadeFrac": 0.01081174438687392,
+     "xor": 0.0011847490486106124,
+     "shadeFrac": 0.016191570331011703,
      "perceptible": true
     }
    },
@@ -1145,13 +1482,13 @@
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.0017246074248888081,
-     "shadeFrac": 0.020967595534174457,
+     "xor": 0.0022812300392371565,
+     "shadeFrac": 0.023952915411990145,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0017246074248888081,
-     "shadeFrac": 0.020967595534174457,
+     "xor": 0.0022812300392371565,
+     "shadeFrac": 0.023952915411990145,
      "perceptible": true
     }
    },
@@ -1162,13 +1499,13 @@
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.0008883834973881526,
-     "shadeFrac": 0.015138054795494118,
+     "xor": 0.0009245904064499427,
+     "shadeFrac": 0.022153186138540625,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0008883834973881526,
-     "shadeFrac": 0.015138054795494118,
+     "xor": 0.0009245904064499427,
+     "shadeFrac": 0.022153186138540625,
      "perceptible": true
     }
    },
@@ -1179,13 +1516,13 @@
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.00019698611247907023,
-     "shadeFrac": 0.01273843527364654,
+     "xor": 0.00030646644192460924,
+     "shadeFrac": 0.015289270269349951,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.00019698611247907023,
-     "shadeFrac": 0.01273843527364654,
+     "xor": 0.00030646644192460924,
+     "shadeFrac": 0.015289270269349951,
      "perceptible": true
     }
    },
@@ -1196,13 +1533,13 @@
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.0001969796454366382,
-     "shadeFrac": 0.00587655942219304,
+     "xor": 0.00023835467175156632,
+     "shadeFrac": 0.011849632252792154,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0001969796454366382,
-     "shadeFrac": 0.00587655942219304,
+     "xor": 0.00023835467175156632,
+     "shadeFrac": 0.011849632252792154,
      "perceptible": true
     }
    },
@@ -1213,13 +1550,13 @@
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.0007945281193864861,
-     "shadeFrac": 0.021935885035235594,
+     "xor": 0.0012206067133369233,
+     "shadeFrac": 0.029725363489499192,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0007945281193864861,
-     "shadeFrac": 0.021935885035235594,
+     "xor": 0.0012206067133369233,
+     "shadeFrac": 0.029725363489499192,
      "perceptible": true
     }
    }
@@ -1227,8 +1564,8 @@
   "perceptible": true,
   "best": {
    "view": "trois_quarts_arriere",
-   "xor": 0.0007945281193864861,
-   "shadeFrac": 0.021935885035235594
+   "xor": 0.0012206067133369233,
+   "shadeFrac": 0.029725363489499192
   },
   "lo": 0,
   "nom": 0,
@@ -1276,24 +1613,24 @@
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.014215364412344058,
+     "shadeFrac": 0.012224189594116044,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.0080561212944105,
-     "shadeFrac": 0.01701742475673229,
+     "xor": 0.007875449537943278,
+     "shadeFrac": 0.021395729958574226,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.007967406066093256,
-     "shadeFrac": 0.018062471706654596,
+     "xor": 0.007512634885944543,
+     "shadeFrac": 0.019942630788143696,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.015960324616771868,
-     "shadeFrac": 0.0390892696122633,
+     "xor": 0.01532740794485761,
+     "shadeFrac": 0.037865046254308,
      "perceptible": true
     }
    }
@@ -1301,8 +1638,8 @@
   "perceptible": true,
   "best": {
    "view": "dessus",
-   "xor": 0.015960324616771868,
-   "shadeFrac": 0.0390892696122633
+   "xor": 0.01532740794485761,
+   "shadeFrac": 0.037865046254308
   },
   "lo": -1,
   "nom": 0,
@@ -1337,34 +1674,34 @@
    "dos": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.01500328299409061,
+     "shadeFrac": 0.013722418959411604,
      "perceptible": true
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.0034143138542350624,
+     "shadeFrac": 0.002860256061018796,
      "perceptible": false
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.01841759684832567,
+     "shadeFrac": 0.016582675020430402,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.010543058395819132,
-     "shadeFrac": 0.010906612133605999,
+     "xor": 0.010969924124691471,
+     "shadeFrac": 0.011655544382484688,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.01063394683026585,
-     "shadeFrac": 0.014360372642581231,
+     "xor": 0.010604259987201756,
+     "shadeFrac": 0.015952097997988846,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.02117700522608498,
-     "shadeFrac": 0.025266984776187232,
+     "xor": 0.021574184111893227,
+     "shadeFrac": 0.027607642380473536,
      "perceptible": true
     }
    }
@@ -1372,8 +1709,8 @@
   "perceptible": true,
   "best": {
    "view": "dessus",
-   "xor": 0.02117700522608498,
-   "shadeFrac": 0.025266984776187232
+   "xor": 0.021574184111893227,
+   "shadeFrac": 0.027607642380473536
   },
   "lo": -1,
   "nom": 0,
@@ -1391,17 +1728,17 @@
    "face": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.002298171312255819,
+     "shadeFrac": 0.002928457111724044,
      "perceptible": false
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.000032831018746511706,
+     "shadeFrac": 0,
      "perceptible": false
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.002331002331002331,
+     "shadeFrac": 0.002928457111724044,
      "perceptible": false
     }
    },
@@ -1424,18 +1761,18 @@
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.00009088017448993502,
-     "shadeFrac": 0.003589766892352433,
+     "xor": 0.00009140767824497258,
+     "shadeFrac": 0.003016453382084095,
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.000045442152140325365,
-     "shadeFrac": 0.028583113696264654,
+     "xor": 0,
+     "shadeFrac": 0.02829326263826675,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.00013631406761177754,
-     "shadeFrac": 0.0321701199563795,
+     "xor": 0.00009140767824497258,
+     "shadeFrac": 0.031307129798903106,
      "perceptible": true
     }
    }
@@ -1443,8 +1780,8 @@
   "perceptible": true,
   "best": {
    "view": "dessus",
-   "xor": 0.00013631406761177754,
-   "shadeFrac": 0.0321701199563795
+   "xor": 0.00009140767824497258,
+   "shadeFrac": 0.031307129798903106
   },
   "lo": -1,
   "nom": 0,
@@ -1461,52 +1798,52 @@
   "perView": {
    "face": {
     "lo_nom": {
-     "xor": 0.02152140796681036,
-     "shadeFrac": 0.038472757916572134,
+     "xor": 0.021081299172886828,
+     "shadeFrac": 0.03725371528478246,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.022616077503807147,
-     "shadeFrac": 0.036905031915238314,
+     "xor": 0.022053385329119882,
+     "shadeFrac": 0.035466953539971764,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.04357423937038103,
-     "shadeFrac": 0.0886201490866046,
+     "xor": 0.04259486736828127,
+     "shadeFrac": 0.08472494273098503,
      "perceptible": true
     }
    },
    "dos": {
     "lo_nom": {
-     "xor": 0.022065971097142117,
-     "shadeFrac": 0.03097660553431404,
+     "xor": 0.021750823640153297,
+     "shadeFrac": 0.029113158071673504,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.021651055002755,
-     "shadeFrac": 0.03056428872394905,
+     "xor": 0.021216502471335868,
+     "shadeFrac": 0.028983558051175147,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.043161094224924014,
-     "shadeFrac": 0.07989121740521517,
+     "xor": 0.04243168763903184,
+     "shadeFrac": 0.07400644111690295,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.04304122570074835,
-     "shadeFrac": 0.1256697515830492,
+     "xor": 0.043121881682109765,
+     "shadeFrac": 0.15128296507483963,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.043824701195219126,
-     "shadeFrac": 0.12616201859229748,
+     "xor": 0.043807319027691215,
+     "shadeFrac": 0.14393197400053423,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.08468577348066299,
-     "shadeFrac": 0.21944060773480664,
+     "xor": 0.08475164987843001,
+     "shadeFrac": 0.22677144841959013,
      "perceptible": true
     }
    }
@@ -1514,8 +1851,8 @@
   "perceptible": true,
   "best": {
    "view": "dessus",
-   "xor": 0.08468577348066299,
-   "shadeFrac": 0.21944060773480664
+   "xor": 0.08475164987843001,
+   "shadeFrac": 0.22677144841959013
   },
   "lo": -1,
   "nom": 0,
@@ -1549,17 +1886,17 @@
    },
    "trois_quarts": {
     "lo_nom": {
-     "xor": 0.0024923036473116222,
+     "xor": 0.002577003092624125,
      "shadeFrac": 0,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.002459098231754747,
+     "xor": 0.001965219575517929,
      "shadeFrac": 0,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.004951401879066369,
+     "xor": 0.004542222668142054,
      "shadeFrac": 0,
      "perceptible": true
     }
@@ -1583,17 +1920,17 @@
    },
    "trois_quarts_arriere": {
     "lo_nom": {
-     "xor": 0.0007931633966181961,
+     "xor": 0.0007594903040707979,
      "shadeFrac": 0,
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.0008550574932771893,
+     "xor": 0.0008372512397758769,
      "shadeFrac": 0,
      "perceptible": false
     },
     "lo_hi": {
-     "xor": 0.0016482208898953854,
+     "xor": 0.0015967415438466748,
      "shadeFrac": 0,
      "perceptible": true
     }
@@ -1617,17 +1954,17 @@
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.0013670873026417202,
+     "xor": 0.0017407947293760617,
      "shadeFrac": 0,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.0037212520163743875,
+     "xor": 0.003924006389756368,
      "shadeFrac": 0,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.005088339319016108,
+     "xor": 0.005664801119132429,
      "shadeFrac": 0,
      "perceptible": true
     }
@@ -1636,7 +1973,7 @@
   "perceptible": true,
   "best": {
    "view": "dessus",
-   "xor": 0.005088339319016108,
+   "xor": 0.005664801119132429,
    "shadeFrac": 0
   },
   "lo": 0,
@@ -1657,69 +1994,69 @@
   "perView": {
    "profil": {
     "lo_nom": {
-     "xor": 0.00170255027843791,
-     "shadeFrac": 0.02053701273365729,
+     "xor": 0.0019134530468060053,
+     "shadeFrac": 0.03304386223138063,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.0006382299755345176,
-     "shadeFrac": 0.009147962982661418,
-     "perceptible": true
+     "xor": 0.00014718869590815426,
+     "shadeFrac": 0.0007359434795407713,
+     "perceptible": false
     },
     "lo_hi": {
-     "xor": 0.0023395958879829848,
-     "shadeFrac": 0.0424317617866005,
+     "xor": 0.0020603384841795438,
+     "shadeFrac": 0.03392200147167035,
      "perceptible": true
     }
    },
    "trois_quarts": {
     "lo_nom": {
-     "xor": 0.002206820454467087,
-     "shadeFrac": 0.01786145305334299,
+     "xor": 0.0025432532148869863,
+     "shadeFrac": 0.031020525128058172,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.000758463766117355,
-     "shadeFrac": 0.007550162035440944,
-     "perceptible": true
+     "xor": 0.00025081514923501377,
+     "shadeFrac": 0.0005732917696800315,
+     "perceptible": false
     },
     "lo_hi": {
-     "xor": 0.0029636777172789303,
-     "shadeFrac": 0.04114687435384933,
+     "xor": 0.002793296089385475,
+     "shadeFrac": 0.03144248674974932,
      "perceptible": true
     }
    },
    "trois_quarts_arriere": {
     "lo_nom": {
-     "xor": 0.002206896551724138,
-     "shadeFrac": 0.02406896551724138,
+     "xor": 0.0026509045316138275,
+     "shadeFrac": 0.033602006089915815,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.000758463766117355,
-     "shadeFrac": 0.002171964421154244,
+     "xor": 0.00025084211280728156,
+     "shadeFrac": 0.00007166917508779473,
      "perceptible": false
     },
     "lo_hi": {
-     "xor": 0.0029636777172789303,
-     "shadeFrac": 0.04411055207112827,
+     "xor": 0.0029009383281999855,
+     "shadeFrac": 0.03542009884678748,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.001452696568004358,
-     "shadeFrac": 0.025331396404575993,
+     "xor": 0.001553859512819341,
+     "shadeFrac": 0.023536401444175313,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.0005899705014749262,
-     "shadeFrac": 0.009121851599727705,
-     "perceptible": true
+     "xor": 0,
+     "shadeFrac": 0.0017825311942959,
+     "perceptible": false
     },
     "lo_hi": {
-     "xor": 0.002041742286751361,
-     "shadeFrac": 0.03398366606170599,
+     "xor": 0.001553859512819341,
+     "shadeFrac": 0.024998857456240572,
      "perceptible": true
     }
    }
@@ -1727,8 +2064,8 @@
   "perceptible": true,
   "best": {
    "view": "trois_quarts_arriere",
-   "xor": 0.0029636777172789303,
-   "shadeFrac": 0.04411055207112827
+   "xor": 0.0029009383281999855,
+   "shadeFrac": 0.03542009884678748
   },
   "lo": -1,
   "nom": 0,
@@ -1746,69 +2083,69 @@
   "perView": {
    "profil": {
     "lo_nom": {
-     "xor": 0.00007095217823187172,
-     "shadeFrac": 0.0028735632183908046,
+     "xor": 0.00014718869590815426,
+     "shadeFrac": 0.00044156608772446274,
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.0008158921603405463,
-     "shadeFrac": 0.01603405462930117,
+     "xor": 0.0015453107178336216,
+     "shadeFrac": 0.04455645903086942,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0008867763904653802,
-     "shadeFrac": 0.02199205448354143,
+     "xor": 0.0016922341169113048,
+     "shadeFrac": 0.045579958062024056,
      "perceptible": true
     }
    },
    "trois_quarts": {
     "lo_nom": {
-     "xor": 0.00003449465332873405,
-     "shadeFrac": 0.0026560883063125214,
+     "xor": 0.00025081514923501377,
+     "shadeFrac": 0.00039413809165502167,
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.001482605247732993,
-     "shadeFrac": 0.020239285591145743,
+     "xor": 0.002399455645883322,
+     "shadeFrac": 0.045088278480106006,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0015170321334988279,
-     "shadeFrac": 0.025755068266446007,
+     "xor": 0.0026494808449695666,
+     "shadeFrac": 0.04550662370211243,
      "perceptible": true
     }
    },
    "trois_quarts_arriere": {
     "lo_nom": {
-     "xor": 0,
-     "shadeFrac": 0.0006899406651028012,
+     "xor": 0.00025084211280728156,
+     "shadeFrac": 0.00007166917508779473,
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.001448225923244026,
-     "shadeFrac": 0.006758387641805455,
+     "xor": 0.0025427977938543085,
+     "shadeFrac": 0.034417305350619584,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.001448225923244026,
-     "shadeFrac": 0.009965173614702942,
+     "xor": 0.0027927960184754197,
+     "shadeFrac": 0.03705825486053922,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.00004540501271340356,
-     "shadeFrac": 0.0009081002542680712,
+     "xor": 0,
+     "shadeFrac": 0.00031994149641208463,
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.001089621356578589,
-     "shadeFrac": 0.011985834922364479,
+     "xor": 0.0016451878256100905,
+     "shadeFrac": 0.022575632940316243,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.001134970717755482,
-     "shadeFrac": 0.013710446270486221,
+     "xor": 0.0016451878256100905,
+     "shadeFrac": 0.02399232245681382,
      "perceptible": true
     }
    }
@@ -1816,8 +2153,8 @@
   "perceptible": true,
   "best": {
    "view": "trois_quarts",
-   "xor": 0.0015170321334988279,
-   "shadeFrac": 0.025755068266446007
+   "xor": 0.0026494808449695666,
+   "shadeFrac": 0.04550662370211243
   },
   "lo": 0.05,
   "nom": null,
@@ -1835,52 +2172,52 @@
   "perView": {
    "face": {
     "lo_nom": {
-     "xor": 0.009749532219413715,
-     "shadeFrac": 0.03587959163575485,
+     "xor": 0.010112015253140854,
+     "shadeFrac": 0.037588097102584185,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.00009848335631278314,
-     "shadeFrac": 0.0004924167815639157,
+     "xor": 0.00010214504596527068,
+     "shadeFrac": 0.0005107252298263534,
      "perceptible": false
     },
     "lo_hi": {
-     "xor": 0.009847042604871004,
-     "shadeFrac": 0.04752839230617738,
+     "xor": 0.010213113637911077,
+     "shadeFrac": 0.04871655205283584,
      "perceptible": true
     }
    },
    "dos": {
     "lo_nom": {
-     "xor": 0.00958634274458306,
-     "shadeFrac": 0.1567301378857518,
+     "xor": 0.009942794878779623,
+     "shadeFrac": 0.14938027785344593,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.00013131114175037753,
-     "shadeFrac": 0.00003282778543759438,
+     "xor": 0.0001361933946203609,
+     "shadeFrac": 0.00003404834865509023,
      "perceptible": false
     },
     "lo_hi": {
-     "xor": 0.009717024489527937,
-     "shadeFrac": 0.18091392554658262,
+     "xor": 0.010078311201906708,
+     "shadeFrac": 0.17218249914879127,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.08826719696284914,
-     "shadeFrac": 0.22154930850583024,
+     "xor": 0.08928896162938717,
+     "shadeFrac": 0.2198581560283688,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.01599820748375532,
-     "shadeFrac": 0.03737396370154605,
+     "xor": 0.01631218457101658,
+     "shadeFrac": 0.03735580389329488,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.10245207311636202,
-     "shadeFrac": 0.243468568880963,
+     "xor": 0.10374820659971305,
+     "shadeFrac": 0.24027080344332855,
      "perceptible": true
     }
    }
@@ -1888,8 +2225,8 @@
   "perceptible": true,
   "best": {
    "view": "dessus",
-   "xor": 0.10245207311636202,
-   "shadeFrac": 0.243468568880963
+   "xor": 0.10374820659971305,
+   "shadeFrac": 0.24027080344332855
   },
   "lo": -1,
   "nom": null,
@@ -1906,52 +2243,52 @@
   "perView": {
    "face": {
     "lo_nom": {
-     "xor": 0.057716930956367575,
-     "shadeFrac": 0.0670409402803769,
+     "xor": 0.0586372458882419,
+     "shadeFrac": 0.060033370790342905,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.049107142857142856,
-     "shadeFrac": 0.05897227772227772,
+     "xor": 0.0499805900621118,
+     "shadeFrac": 0.05735636645962733,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.10398976023976024,
-     "shadeFrac": 0.06712037962037962,
+     "xor": 0.10568711180124224,
+     "shadeFrac": 0.06007375776397515,
      "perceptible": true
     }
    },
    "profil": {
     "lo_nom": {
-     "xor": 0.06634919506734425,
-     "shadeFrac": 0.06570951348661999,
+     "xor": 0.06735214705773569,
+     "shadeFrac": 0.06110145356363502,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.05784238202096661,
-     "shadeFrac": 0.0534882942023646,
+     "xor": 0.05872313747344223,
+     "shadeFrac": 0.05705130437811292,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.12034959649064059,
-     "shadeFrac": 0.0719619596155778,
+     "xor": 0.12211427974511647,
+     "shadeFrac": 0.06382534210801212,
      "perceptible": true
     }
    },
    "dos": {
     "lo_nom": {
-     "xor": 0.057715036112935,
-     "shadeFrac": 0.06388706500328299,
+     "xor": 0.05863524925088532,
+     "shadeFrac": 0.057818033233451374,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.049105609839852654,
-     "shadeFrac": 0.05600474510660881,
+     "xor": 0.04997897324750105,
+     "shadeFrac": 0.05936013974703199,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.10398651390753286,
-     "shadeFrac": 0.06727437330253176,
+     "xor": 0.10568369294471582,
+     "shadeFrac": 0.05981302364700935,
      "perceptible": true
     }
    }
@@ -1959,8 +2296,8 @@
   "perceptible": true,
   "best": {
    "view": "profil",
-   "xor": 0.12034959649064059,
-   "shadeFrac": 0.0719619596155778
+   "xor": 0.12211427974511647,
+   "shadeFrac": 0.06382534210801212
   },
   "lo": 0,
   "nom": null,
@@ -1977,35 +2314,35 @@
   "perView": {
    "trois_quarts_arriere": {
     "lo_nom": {
-     "xor": 0.008697146785837058,
-     "shadeFrac": 0.014403575111722241,
+     "xor": 0.007723388279043158,
+     "shadeFrac": 0.012407480244573962,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.012523653879236195,
-     "shadeFrac": 0.022363667641493206,
+     "xor": 0.010596026490066225,
+     "shadeFrac": 0.0199391444424557,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.02077273193935868,
-     "shadeFrac": 0.03767838198555833,
+     "xor": 0.017814515267039584,
+     "shadeFrac": 0.03324188548829586,
      "perceptible": true
     }
    },
    "dos": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.002954694681549573,
+     "shadeFrac": 0.002485698719694906,
      "perceptible": false
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.018548916611950097,
+     "shadeFrac": 0.013960773631163171,
      "perceptible": true
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.04218647406434668,
+     "shadeFrac": 0.034935984745301005,
      "perceptible": true
     }
    },
@@ -2017,29 +2354,29 @@
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.00712433106799304,
-     "perceptible": true
+     "shadeFrac": 0.0034051826880512137,
+     "perceptible": false
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.021471486260218654,
+     "shadeFrac": 0.015595736711274559,
      "perceptible": true
     }
    },
    "profil": {
     "lo_nom": {
-     "xor": 0.006333816920844981,
-     "shadeFrac": 0.00870457520965288,
+     "xor": 0.006444960041247744,
+     "shadeFrac": 0.009170257430118218,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.008758554661182227,
-     "shadeFrac": 0.015283145987730931,
+     "xor": 0.008230604561895623,
+     "shadeFrac": 0.014209788144976747,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.014476889940326965,
-     "shadeFrac": 0.03375587020232337,
+     "xor": 0.013746967580680731,
+     "shadeFrac": 0.02914798206278027,
      "perceptible": true
     }
    }
@@ -2047,8 +2384,8 @@
   "perceptible": true,
   "best": {
    "view": "trois_quarts_arriere",
-   "xor": 0.02077273193935868,
-   "shadeFrac": 0.03767838198555833
+   "xor": 0.017814515267039584,
+   "shadeFrac": 0.03324188548829586
   },
   "lo": 0,
   "nom": null,
@@ -2066,52 +2403,52 @@
   "perView": {
    "profil": {
     "lo_nom": {
-     "xor": 0.010446711220541681,
-     "shadeFrac": 0.010235666549419627,
+     "xor": 0.009600234509545271,
+     "shadeFrac": 0.009820087208237148,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.02573307268526746,
-     "shadeFrac": 0.0465967655944553,
+     "xor": 0.02338056305723059,
+     "shadeFrac": 0.04235877326033073,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.035910241980866626,
-     "shadeFrac": 0.05901800787844682,
+     "xor": 0.032755651632286664,
+     "shadeFrac": 0.05558201736709046,
      "perceptible": true
     }
    },
    "trois_quarts": {
     "lo_nom": {
-     "xor": 0.009309515630367571,
-     "shadeFrac": 0.029096530401923736,
+     "xor": 0.00825383213634902,
+     "shadeFrac": 0.026833887161896594,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.02393343833458878,
-     "shadeFrac": 0.08090803259604191,
+     "xor": 0.021312234933532914,
+     "shadeFrac": 0.07740831818667807,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.033011162537435336,
-     "shadeFrac": 0.09338415464198203,
+     "xor": 0.029380493337113695,
+     "shadeFrac": 0.08686560816557981,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.007861492320276288,
-     "shadeFrac": 0.08547668817595201,
+     "xor": 0.007313282749794314,
+     "shadeFrac": 0.08483407989761405,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.022086925606612746,
-     "shadeFrac": 0.22015820815927473,
+     "xor": 0.020812818906096143,
+     "shadeFrac": 0.20844150031331124,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.02977380793671955,
-     "shadeFrac": 0.269875127760743,
+     "xor": 0.027974218959806642,
+     "shadeFrac": 0.2510518306328887,
      "perceptible": true
     }
    }
@@ -2119,8 +2456,8 @@
   "perceptible": true,
   "best": {
    "view": "dessus",
-   "xor": 0.02977380793671955,
-   "shadeFrac": 0.269875127760743
+   "xor": 0.027974218959806642,
+   "shadeFrac": 0.2510518306328887
   },
   "lo": 0,
   "nom": null,
@@ -2137,52 +2474,52 @@
   "perView": {
    "profil": {
     "lo_nom": {
-     "xor": 0.0042653017701002344,
-     "shadeFrac": 0.02381460154972631,
+     "xor": 0.0037735849056603774,
+     "shadeFrac": 0.019422863485016647,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.002021993614757006,
-     "shadeFrac": 0.004682511528910961,
+     "xor": 0.001957019422494646,
+     "shadeFrac": 0.00487408610885459,
      "perceptible": false
     },
     "lo_hi": {
-     "xor": 0.006278599553048846,
-     "shadeFrac": 0.030399772977191302,
+     "xor": 0.005723147361813684,
+     "shadeFrac": 0.027028024960307203,
      "perceptible": true
     }
    },
    "trois_quarts": {
     "lo_nom": {
-     "xor": 0.010701833120447406,
-     "shadeFrac": 0.03365899126592329,
+     "xor": 0.008863530340546166,
+     "shadeFrac": 0.029927871676176124,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.004613371892859602,
-     "shadeFrac": 0.012221992701232528,
+     "xor": 0.004010886692450939,
+     "shadeFrac": 0.007556224036670964,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.015267700560503422,
-     "shadeFrac": 0.04628451566314776,
+     "xor": 0.01283931189871607,
+     "shadeFrac": 0.03873252029612675,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.003938077131993482,
-     "shadeFrac": 0.10293318848451928,
+     "xor": 0.0035979414309787313,
+     "shadeFrac": 0.09550485038939746,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.0019085703898936654,
-     "shadeFrac": 0.030173589021176044,
+     "xor": 0.001371240515586434,
+     "shadeFrac": 0.03313831246000549,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.005748687307622669,
-     "shadeFrac": 0.13996016657613616,
+     "xor": 0.0049642483035023,
+     "shadeFrac": 0.1338525299448923,
      "perceptible": true
     }
    }
@@ -2190,8 +2527,8 @@
   "perceptible": true,
   "best": {
    "view": "dessus",
-   "xor": 0.005748687307622669,
-   "shadeFrac": 0.13996016657613616
+   "xor": 0.0049642483035023,
+   "shadeFrac": 0.1338525299448923
   },
   "lo": 0,
   "nom": null,
@@ -2208,35 +2545,35 @@
   "perView": {
    "profil": {
     "lo_nom": {
-     "xor": 0.0014922721620181205,
-     "shadeFrac": 0.013465979747734945,
+     "xor": 0.0014792352353833068,
+     "shadeFrac": 0.013608964165526424,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.001171916616357115,
-     "shadeFrac": 0.009339820306118825,
+     "xor": 0.0013673318551367332,
+     "shadeFrac": 0.00934959349593496,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0025914093006744764,
-     "shadeFrac": 0.017358892438764643,
+     "xor": 0.0027704924088508,
+     "shadeFrac": 0.017657271619075765,
      "perceptible": true
     }
    },
    "trois_quarts": {
     "lo_nom": {
-     "xor": 0.001001934770591487,
-     "shadeFrac": 0.013888888888888888,
+     "xor": 0.0008260604101569515,
+     "shadeFrac": 0.01443809934274324,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.000691013371108731,
-     "shadeFrac": 0.00950143385274505,
+     "xor": 0.0007542019824737825,
+     "shadeFrac": 0.009660968251687977,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.001692281125884994,
-     "shadeFrac": 0.019374892073907787,
+     "xor": 0.0015794952794629716,
+     "shadeFrac": 0.020030871953189505,
      "perceptible": true
     }
    }
@@ -2244,8 +2581,8 @@
   "perceptible": true,
   "best": {
    "view": "trois_quarts",
-   "xor": 0.001692281125884994,
-   "shadeFrac": 0.019374892073907787
+   "xor": 0.0015794952794629716,
+   "shadeFrac": 0.020030871953189505
   },
   "lo": 0,
   "nom": null,
@@ -2261,69 +2598,69 @@
   "perView": {
    "profil": {
     "lo_nom": {
-     "xor": 0.009846088223794121,
-     "shadeFrac": 0.006966907190843493,
+     "xor": 0.009471308594472604,
+     "shadeFrac": 0.004735654297236302,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.008703312191684284,
-     "shadeFrac": 0.007505285412262156,
+     "xor": 0.008546695033379795,
+     "shadeFrac": 0.005465483090015406,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.01846370683579986,
-     "shadeFrac": 0.048238195912614516,
+     "xor": 0.017937055241728412,
+     "shadeFrac": 0.044017313476634144,
      "perceptible": true
     }
    },
    "dos": {
     "lo_nom": {
-     "xor": 0.00003282886313646958,
-     "shadeFrac": 0.028232822297363843,
+     "xor": 0.00003404950798460962,
+     "shadeFrac": 0.028227042119241378,
      "perceptible": true
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.01874589625738674,
+     "shadeFrac": 0.0180128030509398,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.00003282886313646958,
-     "shadeFrac": 0.09474409901185121,
+     "xor": 0.00003404950798460962,
+     "shadeFrac": 0.09557696891279921,
      "perceptible": true
     }
    },
    "trois_quarts_arriere": {
     "lo_nom": {
-     "xor": 0.005949105914718019,
-     "shadeFrac": 0.018672627235213204,
+     "xor": 0.005471320268917179,
+     "shadeFrac": 0.017701330281790873,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.006524215540750457,
-     "shadeFrac": 0.01964168594014291,
+     "xor": 0.006243720396153294,
+     "shadeFrac": 0.019592364001722404,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.01243131868131868,
-     "shadeFrac": 0.10120192307692308,
+     "xor": 0.01160631383472609,
+     "shadeFrac": 0.09720734233269052,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.010056169595941293,
-     "shadeFrac": 0.017213263272331945,
+     "xor": 0.010606819319888924,
+     "shadeFrac": 0.02221514089315792,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.009081051775548929,
-     "shadeFrac": 0.015993494171862292,
+     "xor": 0.010410983815239134,
+     "shadeFrac": 0.02186761229314421,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.018960547649072238,
-     "shadeFrac": 0.055440461178166096,
+     "xor": 0.020919175911251982,
+     "shadeFrac": 0.06044826805524112,
      "perceptible": true
     }
    }
@@ -2331,8 +2668,8 @@
   "perceptible": true,
   "best": {
    "view": "trois_quarts_arriere",
-   "xor": 0.01243131868131868,
-   "shadeFrac": 0.10120192307692308
+   "xor": 0.01160631383472609,
+   "shadeFrac": 0.09720734233269052
   },
   "lo": 0,
   "nom": null,
@@ -2350,52 +2687,52 @@
   "perView": {
    "profil": {
     "lo_nom": {
-     "xor": 0.0006039505471081427,
-     "shadeFrac": 0.000035526502771067216,
+     "xor": 0.0006286052359118473,
+     "shadeFrac": 0.000036976778583049845,
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.001990261932686498,
+     "xor": 0.0017386157659157325,
      "shadeFrac": 0,
      "perceptible": false
     },
     "lo_hi": {
-     "xor": 0.002593066211992043,
-     "shadeFrac": 0.00003552145495879511,
+     "xor": 0.0023661638568470865,
+     "shadeFrac": 0.000036971310263235726,
      "perceptible": false
     }
    },
    "dos": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.00003282994090610637,
+     "shadeFrac": 0.000034050667393080905,
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.00003282886313646958,
-     "shadeFrac": 0.014772988411411312,
+     "xor": 0.00003404950798460962,
+     "shadeFrac": 0.013994347781674554,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.00003282886313646958,
-     "shadeFrac": 0.027871704802862676,
+     "xor": 0.00003404950798460962,
+     "shadeFrac": 0.02805679457931833,
      "perceptible": true
     }
    },
    "trois_quarts_arriere": {
     "lo_nom": {
-     "xor": 0.00017280707817792217,
-     "shadeFrac": 0.00013824566254233773,
+     "xor": 0.00017963641589423008,
+     "shadeFrac": 0.00014370913271538407,
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.0005530782260015901,
-     "shadeFrac": 0.011649210135158492,
+     "xor": 0.0005749398109885372,
+     "shadeFrac": 0.010025512954112616,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0007257897283472731,
-     "shadeFrac": 0.01569088269855533,
+     "xor": 0.0007544729467557663,
+     "shadeFrac": 0.014766113386505712,
      "perceptible": true
     }
    },
@@ -2407,12 +2744,12 @@
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.00004544421722335833,
+     "shadeFrac": 0.000045708017186214464,
      "perceptible": false
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.00004544421722335833,
+     "shadeFrac": 0.000045708017186214464,
      "perceptible": false
     }
    }
@@ -2420,8 +2757,8 @@
   "perceptible": true,
   "best": {
    "view": "dos",
-   "xor": 0.00003282886313646958,
-   "shadeFrac": 0.027871704802862676
+   "xor": 0.00003404950798460962,
+   "shadeFrac": 0.02805679457931833
   },
   "lo": 0,
   "nom": null,
@@ -2439,103 +2776,103 @@
   "perView": {
    "face": {
     "lo_nom": {
-     "xor": 0.001411502100840336,
-     "shadeFrac": 0.10264574579831932,
+     "xor": 0.0014639793000136184,
+     "shadeFrac": 0.10676835081029552,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.0006889989829062633,
-     "shadeFrac": 0.07244332163128711,
+     "xor": 0.0007146016946268758,
+     "shadeFrac": 0.07595195154319938,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.002099462012859205,
-     "shadeFrac": 0.16257708962078468,
+     "xor": 0.002177463255307567,
+     "shadeFrac": 0.16848121937942298,
      "perceptible": true
     }
    },
    "trois_quarts": {
     "lo_nom": {
-     "xor": 0.016210424443522744,
-     "shadeFrac": 0.164765657403567,
+     "xor": 0.01660019402824189,
+     "shadeFrac": 0.1733678272430024,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.015383044617636048,
-     "shadeFrac": 0.14797672123336622,
+     "xor": 0.016121619232808908,
+     "shadeFrac": 0.1534028637086795,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.031344655072661064,
-     "shadeFrac": 0.23190280093931864,
+     "xor": 0.03245421763416531,
+     "shadeFrac": 0.2431945131867355,
      "perceptible": true
     }
    },
    "profil": {
     "lo_nom": {
      "xor": 0,
-     "shadeFrac": 0.06899370845626134,
+     "shadeFrac": 0.07336564430796552,
      "perceptible": true
     },
     "nom_hi": {
      "xor": 0,
-     "shadeFrac": 0.04532044218533395,
+     "shadeFrac": 0.046986569980391434,
      "perceptible": true
     },
     "lo_hi": {
      "xor": 0,
-     "shadeFrac": 0.08637543098851883,
+     "shadeFrac": 0.08960745865551814,
      "perceptible": true
     }
    },
    "trois_quarts_arriere": {
     "lo_nom": {
-     "xor": 0.016073835943171213,
-     "shadeFrac": 0.01731826195167479,
+     "xor": 0.016673254518667576,
+     "shadeFrac": 0.01789500161701822,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.015452162962458733,
-     "shadeFrac": 0.014839522140158606,
+     "xor": 0.016053748231966054,
+     "shadeFrac": 0.015912305516265914,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.03127871753854532,
-     "shadeFrac": 0.030495898710050713,
+     "xor": 0.03246110325318246,
+     "shadeFrac": 0.03164780763790665,
      "perceptible": true
     }
    },
    "dos": {
     "lo_nom": {
-     "xor": 0.001313111417503775,
-     "shadeFrac": 0.0011161447048782089,
+     "xor": 0.001361933946203609,
+     "shadeFrac": 0.0011576438542730677,
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.0008201830648600768,
-     "shadeFrac": 0.0007873757422656737,
+     "xor": 0.0008506584096090373,
+     "shadeFrac": 0.0008166320732246759,
      "perceptible": false
     },
     "lo_hi": {
-     "xor": 0.0021323360561624513,
-     "shadeFrac": 0.0015418429944559263,
+     "xor": 0.002211561362321799,
+     "shadeFrac": 0.0015991289850634549,
      "perceptible": false
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.004770775591803353,
-     "shadeFrac": 0.07919487482393567,
+     "xor": 0.004844164153185266,
+     "shadeFrac": 0.08591536422630472,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.006457439602619101,
-     "shadeFrac": 0.07572815533980583,
+     "xor": 0.006494686165864293,
+     "shadeFrac": 0.0838859115269325,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.011196893764955529,
-     "shadeFrac": 0.10790554878324078,
+     "xor": 0.011306874943238579,
+     "shadeFrac": 0.12065207519752974,
      "perceptible": true
     }
    }
@@ -2543,8 +2880,8 @@
   "perceptible": true,
   "best": {
    "view": "trois_quarts",
-   "xor": 0.031344655072661064,
-   "shadeFrac": 0.23190280093931864
+   "xor": 0.03245421763416531,
+   "shadeFrac": 0.2431945131867355
   },
   "lo": 0,
   "nom": null,
@@ -2564,103 +2901,103 @@
   "perView": {
    "face": {
     "lo_nom": {
-     "xor": 0.00019696024685684273,
-     "shadeFrac": 0.0007878409874273709,
+     "xor": 0.00020428313642708795,
+     "shadeFrac": 0.0008171325457083518,
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.0007547665146194993,
-     "shadeFrac": 0.029698421553506382,
+     "xor": 0.0007828188284946054,
+     "shadeFrac": 0.030802219121200777,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0005579075186242657,
-     "shadeFrac": 0.022086574119654753,
+     "xor": 0.0005786446100956465,
+     "shadeFrac": 0.02290751897613942,
      "perceptible": true
     }
    },
    "trois_quarts": {
     "lo_nom": {
-     "xor": 0.012938874969969455,
-     "shadeFrac": 0.04420496276212376,
+     "xor": 0.013447476368824684,
+     "shadeFrac": 0.045942571785268414,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.05922726663988215,
-     "shadeFrac": 0.18123074862729344,
+     "xor": 0.061496210804421886,
+     "shadeFrac": 0.1881387749426406,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.046875,
-     "shadeFrac": 0.16120016163793102,
+     "xor": 0.0486815415821501,
+     "shadeFrac": 0.16744771630411975,
      "perceptible": true
     }
    },
    "profil": {
     "lo_nom": {
-     "xor": 0.02298003718906782,
-     "shadeFrac": 0.04048696628425078,
+     "xor": 0.023869484287747728,
+     "shadeFrac": 0.04211832548633162,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.10062491600591318,
-     "shadeFrac": 0.1572705281548179,
+     "xor": 0.10450104675505932,
+     "shadeFrac": 0.1632588974180042,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.08042041023902356,
-     "shadeFrac": 0.13890489913544668,
+     "xor": 0.08357988165680473,
+     "shadeFrac": 0.14426599041983657,
      "perceptible": true
     }
    },
    "trois_quarts_arriere": {
     "lo_nom": {
-     "xor": 0.012905883160568407,
-     "shadeFrac": 0.016303974737420197,
+     "xor": 0.013412285082399942,
+     "shadeFrac": 0.016908040236855246,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.05940063619621631,
-     "shadeFrac": 0.11505106311736146,
+     "xor": 0.0616721710411959,
+     "shadeFrac": 0.11948548583347819,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.047080218225904226,
-     "shadeFrac": 0.09372263756987943,
+     "xor": 0.048891375813107645,
+     "shadeFrac": 0.0973630831643002,
      "perceptible": true
     }
    },
    "dos": {
     "lo_nom": {
-     "xor": 0.00006565557087518876,
-     "shadeFrac": 0.00003282778543759438,
+     "xor": 0.00006809669731018046,
+     "shadeFrac": 0.00003404834865509023,
      "perceptible": false
     },
     "nom_hi": {
-     "xor": 0.0008203714641989893,
-     "shadeFrac": 0.06832053553849182,
+     "xor": 0.0008508610714042611,
+     "shadeFrac": 0.07092777891225921,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.0007547417470630701,
-     "shadeFrac": 0.05762289164533701,
+     "xor": 0.0007827921856919202,
+     "shadeFrac": 0.05983255054114764,
      "perceptible": true
     }
    },
    "dessus": {
     "lo_nom": {
-     "xor": 0.016405900759946357,
-     "shadeFrac": 0.019177469825659366,
+     "xor": 0.016499572899339118,
+     "shadeFrac": 0.019331924650451828,
      "perceptible": true
     },
     "nom_hi": {
-     "xor": 0.06479867341298524,
-     "shadeFrac": 0.0530209617755857,
+     "xor": 0.06515047879616963,
+     "shadeFrac": 0.0533515731874145,
      "perceptible": true
     },
     "lo_hi": {
-     "xor": 0.049364343722097026,
-     "shadeFrac": 0.05608231642501807,
+     "xor": 0.04963235294117647,
+     "shadeFrac": 0.056386798905608757,
      "perceptible": true
     }
    }
@@ -2668,8 +3005,8 @@
   "perceptible": true,
   "best": {
    "view": "profil",
-   "xor": 0.08042041023902356,
-   "shadeFrac": 0.13890489913544668
+   "xor": 0.08357988165680473,
+   "shadeFrac": 0.14426599041983657
   },
   "lo": 0,
   "nom": null,
