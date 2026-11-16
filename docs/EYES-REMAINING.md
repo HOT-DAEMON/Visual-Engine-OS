@@ -78,3 +78,11 @@ Fait : liner épais effilé par famille de cils (`lids.liner`), dégagement de l
 - 🟡 Cils : 24 cas non dégagés par la rotation ≤ 50° ; liner et épaisseurs interprétés (non mesurés) ; encre = noir bleuté des cils, pas l'aplat `#000` des références.
 - 🟡 Facettes : dispersion et rayons présents mais valeurs interprétées ; pas de faisceau volumétrique réel.
 - ⬜ Inchangé : yeux non tracés des réfs 13/17, réf. 14, limbe réf. 15 rangées 3–5, distance minimale de la galerie, règle « cils » en pixels.
+
+## Passe 5 (audit des cils) — état par composant (détails : `EYES-PASS-5.md`)
+- ✅ Cils : encre mesurée (`#040404`), contrat `ink: family | keep`, 0 cil sur l'ouverture (19 021), règle « cils » sur les pixels (géométrie / anatomie / style), corpus tracé (empreinte, sources, exclusions).
+- ✅ Extracteur : bug d'angles non ramenés à ±180° corrigé (54 traits sur 437) ; mesures régénérées.
+- 🟡 Galerie des 100 : distance minimale 0,0201 ; quotas adaptatifs (diamond 4, diamond_v2 5). ⬜ Almond et formes des 100 **non retravaillés** (seule la distinction l'a été).
+- 🟡 Iris colorés (réfs 14, 15 rangées 3–5) : 7 mesures fiables, 5 ambiguës (14-00, 14-02, 14-04, 15-06, 15-07) ; **non branchées au moteur** (plafond de hauteur/largeur : moteur 1,22 contre références 1,33).
+- ⬜ Réf. 17 (détecteur de cellules à écrire) · ⬜ 8 yeux de la réf. 13 non tracés · ❌ silhouette de la réf. 14 : non mesurable (sclère blanche sur fond blanc, paupière basse ouverte).
+- ⬜ Épaisseur du liner et dispersion des cils : encore **interprétées** (à mesurer en pixels) · ⬜ variation bornée entre les deux yeux · ⬜ familles dans `random-eye`.

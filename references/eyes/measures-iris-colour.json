@@ -1,0 +1,504 @@
+{
+ "method": "Mesure pixel par pixel des IRIS COLORÉS des planches 14 (6 yeux) et 15 (rangées 3 à 5 : 6 yeux) : `python3 scripts/eye-refs/extract_iris_colour.py`.",
+ "annotations": {
+  "cells": "boîtes CELLS (annotation humaine, identiques à extract_lashes.py)",
+  "humanReview": {
+   "14-00": "partiel : iris vert/jaune, ellipse décalée vers le bas",
+   "14-01": "ok",
+   "14-02": "sous-segmenté : iris gris-bleu clair, ellipse trop petite",
+   "14-03": "ok",
+   "14-04": "partiel : iris sombre, ellipse décalée",
+   "14-05": "ok",
+   "15-04": "ok",
+   "15-05": "ok",
+   "15-06": "ellipse inclinée à tort (iris droit)",
+   "15-07": "ellipse inclinée à tort (iris droit)",
+   "15-08": "ok",
+   "15-09": "ok"
+  }
+ },
+ "eyes": [
+  {
+   "cell": [
+    20,
+    60,
+    230,
+    200
+   ],
+   "eyeWidth": 147.0,
+   "center": [
+    139.2575225830078,
+    139.04822540283203
+   ],
+   "rx": 0.1425566121834476,
+   "ry": 0.2602145655625531,
+   "aspect": 1.8253419576757235,
+   "rotationDeg": 41.69768142700195,
+   "pupil": {
+    "dx": -0.11971711270607051,
+    "dy": -0.37482784868985686,
+    "rx": 1.0736873032085708,
+    "ry": 0.47056927550199396
+   },
+   "highlights": [],
+   "rimPx": 1.63,
+   "rimOverIrisRadius": 0.055,
+   "fitError": 0.1058,
+   "coverage": 0.822,
+   "confidence": "ambigu",
+   "id": "14-00",
+   "autoConfidence": "ambigu",
+   "humanReview": "partiel : iris vert/jaune, ellipse décalée vers le bas"
+  },
+  {
+   "cell": [
+    230,
+    50,
+    420,
+    200
+   ],
+   "eyeWidth": 157.0,
+   "center": [
+    322.4393005371094,
+    146.40222930908203
+   ],
+   "rx": 0.2670343241114525,
+   "ry": 0.3473128300563545,
+   "aspect": 1.3006299141955848,
+   "rotationDeg": 9.791215896606445,
+   "pupil": {
+    "dx": 0.0849314577396809,
+    "dy": 0.43276337327442466,
+    "rx": 0.05963116139457356,
+    "ry": 0.045847908573942275
+   },
+   "highlights": [
+    {
+     "dx": -0.34615214650859055,
+     "dy": 0.0780151806835463,
+     "r": 0.11462442565808507
+    },
+    {
+     "dx": 0.17112559102820077,
+     "dy": 0.45235293421056355,
+     "r": 0.07760110301296855
+    },
+    {
+     "dx": 0.3808510961602522,
+     "dy": -0.018265427321732464,
+     "r": 0.06617844300940166
+    }
+   ],
+   "rimPx": 1.41,
+   "rimOverIrisRadius": 0.029,
+   "fitError": 0.0414,
+   "coverage": 0.977,
+   "confidence": "fiable",
+   "id": "14-01",
+   "autoConfidence": "fiable",
+   "humanReview": "ok"
+  },
+  {
+   "cell": [
+    420,
+    55,
+    625,
+    215
+   ],
+   "eyeWidth": 153.0,
+   "center": [
+    515.9448013305664,
+    121.5266342163086
+   ],
+   "rx": 0.14079873078788807,
+   "ry": 0.16230523352529488,
+   "aspect": 1.1527464247515566,
+   "rotationDeg": 145.46376037597656,
+   "pupil": {
+    "dx": -0.010791493010864657,
+    "dy": -0.45865522397521463,
+    "rx": 0.39457426387777217,
+    "ry": 0.16107792880011323
+   },
+   "highlights": [],
+   "rimPx": 1.87,
+   "rimOverIrisRadius": 0.081,
+   "fitError": 0.1818,
+   "coverage": 0.816,
+   "confidence": "ambigu",
+   "id": "14-02",
+   "autoConfidence": "ambigu",
+   "humanReview": "sous-segmenté : iris gris-bleu clair, ellipse trop petite"
+  },
+  {
+   "cell": [
+    20,
+    270,
+    230,
+    420
+   ],
+   "eyeWidth": 144.0,
+   "center": [
+    130.74626922607422,
+    340.91507720947266
+   ],
+   "rx": 0.15496909618377686,
+   "ry": 0.21303639147016737,
+   "aspect": 1.3747024194909732,
+   "rotationDeg": 71.94374084472656,
+   "pupil": {
+    "dx": -0.09069599606747966,
+    "dy": -0.44597416796335143,
+    "rx": 0.7618006329181544,
+    "ry": 0.4400656589845041
+   },
+   "highlights": [
+    {
+     "dx": 0.8152667012568163,
+     "dy": 0.3672670956002184,
+     "r": 0.12231937188536644
+    }
+   ],
+   "rimPx": 2.14,
+   "rimOverIrisRadius": 0.081,
+   "fitError": 0.054,
+   "coverage": 1.006,
+   "confidence": "fiable",
+   "id": "14-03",
+   "autoConfidence": "fiable",
+   "humanReview": "ok"
+  },
+  {
+   "cell": [
+    230,
+    260,
+    430,
+    420
+   ],
+   "eyeWidth": 155.0,
+   "center": [
+    318.6247863769531,
+    339.05799102783203
+   ],
+   "rx": 0.1583891099499118,
+   "ry": 0.18479998188634073,
+   "aspect": 1.1667467665218965,
+   "rotationDeg": 1.5456223487854004,
+   "pupil": {
+    "dx": 0.16248164520573702,
+    "dy": -0.3442516508845435,
+    "rx": 0.9164852960439372,
+    "ry": 0.6982265731166362
+   },
+   "highlights": [
+    {
+     "dx": 0.7723494710363518,
+     "dy": 0.06418659672243042,
+     "r": 0.11423229039304594
+    }
+   ],
+   "rimPx": 1.48,
+   "rimOverIrisRadius": 0.056,
+   "fitError": 0.0913,
+   "coverage": 0.953,
+   "confidence": "ambigu",
+   "id": "14-04",
+   "autoConfidence": "ambigu",
+   "humanReview": "partiel : iris sombre, ellipse décalée"
+  },
+  {
+   "cell": [
+    430,
+    270,
+    625,
+    420
+   ],
+   "eyeWidth": 157.0,
+   "center": [
+    520.2289581298828,
+    341.8857955932617
+   ],
+   "rx": 0.18970292692731142,
+   "ry": 0.24368601999465067,
+   "aspect": 1.2845664742327567,
+   "rotationDeg": 60.796348571777344,
+   "pupil": {
+    "dx": 0.4080867382597313,
+    "dy": -0.649253545062165,
+    "rx": 0.6715159175201271,
+    "ry": 0.2744473437302142
+   },
+   "highlights": [],
+   "rimPx": 0.48,
+   "rimOverIrisRadius": 0.014,
+   "fitError": 0.059,
+   "coverage": 0.989,
+   "confidence": "fiable",
+   "id": "14-05",
+   "autoConfidence": "fiable",
+   "humanReview": "ok"
+  },
+  {
+   "cell": [
+    60,
+    615,
+    290,
+    760
+   ],
+   "eyeWidth": 207.0,
+   "center": [
+    186.75525665283203,
+    683.2282943725586
+   ],
+   "rx": 0.2045746033894267,
+   "ry": 0.21479664678158966,
+   "aspect": 1.0499673137466843,
+   "rotationDeg": 104.48152160644531,
+   "pupil": {
+    "dx": -0.1128096796963216,
+    "dy": -0.11687348392136603,
+    "rx": 0.8265059435652491,
+    "ry": 0.7984183510808975
+   },
+   "highlights": [
+    {
+     "dx": -0.5237567946429141,
+     "dy": 0.4167357264827991,
+     "r": 0.07466946325931995
+    }
+   ],
+   "rimPx": 4.07,
+   "rimOverIrisRadius": 0.094,
+   "fitError": 0.0128,
+   "coverage": 1.019,
+   "confidence": "fiable",
+   "id": "15-04",
+   "autoConfidence": "fiable",
+   "humanReview": "ok"
+  },
+  {
+   "cell": [
+    350,
+    615,
+    585,
+    760
+   ],
+   "eyeWidth": 207.0,
+   "center": [
+    452.52108001708984,
+    683.8041152954102
+   ],
+   "rx": 0.20305657501957844,
+   "ry": 0.21549313310263812,
+   "aspect": 1.0612467637743845,
+   "rotationDeg": 79.53045654296875,
+   "pupil": {
+    "dx": -0.10436551158079789,
+    "dy": -0.0817229408755504,
+    "rx": 0.7375208317772557,
+    "ry": 0.7846288332692806
+   },
+   "highlights": [
+    {
+     "dx": -0.5195208435563565,
+     "dy": 0.4315125963919015,
+     "r": 0.05676942179956067
+    },
+    {
+     "dx": -0.35141868453072583,
+     "dy": 0.28041255133844695,
+     "r": 0.05209519425421471
+    }
+   ],
+   "rimPx": 3.88,
+   "rimOverIrisRadius": 0.09,
+   "fitError": 0.017,
+   "coverage": 1.018,
+   "confidence": "fiable",
+   "id": "15-05",
+   "autoConfidence": "fiable",
+   "humanReview": "ok"
+  },
+  {
+   "cell": [
+    60,
+    850,
+    290,
+    1030
+   ],
+   "eyeWidth": 189.0,
+   "center": [
+    186.07652282714844,
+    934.4254455566406
+   ],
+   "rx": 0.21182210609395669,
+   "ry": 0.2999321064621052,
+   "aspect": 1.415962252443407,
+   "rotationDeg": 11.000433921813965,
+   "pupil": {
+    "dx": 0.06720557127525482,
+    "dy": -0.2876291998583658,
+    "rx": 1.036609084980598,
+    "ry": 0.723267740456539
+   },
+   "highlights": [],
+   "rimPx": 4.05,
+   "rimOverIrisRadius": 0.084,
+   "fitError": 0.0446,
+   "coverage": 0.99,
+   "confidence": "ambigu",
+   "id": "15-06",
+   "autoConfidence": "fiable",
+   "humanReview": "ellipse inclinée à tort (iris droit)"
+  },
+  {
+   "cell": [
+    350,
+    850,
+    585,
+    1030
+   ],
+   "eyeWidth": 189.0,
+   "center": [
+    456.2613296508789,
+    934.533805847168
+   ],
+   "rx": 0.21100237003709904,
+   "ry": 0.3052963377937438,
+   "aspect": 1.4468858228467563,
+   "rotationDeg": 12.122459411621094,
+   "pupil": {
+    "dx": 0.14465242408087312,
+    "dy": -0.2961656038176374,
+    "rx": 1.0280984848325423,
+    "ry": 0.7105595124359934
+   },
+   "highlights": [
+    {
+     "dx": -0.5958289515042723,
+     "dy": -0.13538036711937645,
+     "r": 0.04906010457267158
+    }
+   ],
+   "rimPx": 4.48,
+   "rimOverIrisRadius": 0.092,
+   "fitError": 0.0576,
+   "coverage": 0.992,
+   "confidence": "ambigu",
+   "id": "15-07",
+   "autoConfidence": "fiable",
+   "humanReview": "ellipse inclinée à tort (iris droit)"
+  },
+  {
+   "cell": [
+    60,
+    1110,
+    290,
+    1280
+   ],
+   "eyeWidth": 213.0,
+   "center": [
+    188.88525390625,
+    1196.2927169799805
+   ],
+   "rx": 0.21797864313976306,
+   "ry": 0.24844548400019256,
+   "aspect": 1.1397698436029573,
+   "rotationDeg": 101.6910400390625,
+   "pupil": {
+    "dx": 0.15162480012118595,
+    "dy": -0.023013089580055313,
+    "rx": 0.3230708027029705,
+    "ry": 0.3779368902312215
+   },
+   "highlights": [
+    {
+     "dx": 0.5390498711273726,
+     "dy": 0.4987591921800864,
+     "r": 0.23742976731299595
+    },
+    {
+     "dx": 0.3541290812376771,
+     "dy": 0.17519112207216306,
+     "r": 0.08423174407653852
+    }
+   ],
+   "rimPx": 3.8,
+   "rimOverIrisRadius": 0.077,
+   "fitError": 0.0331,
+   "coverage": 1.007,
+   "confidence": "fiable",
+   "id": "15-08",
+   "autoConfidence": "fiable",
+   "humanReview": "ok"
+  },
+  {
+   "cell": [
+    350,
+    1110,
+    585,
+    1280
+   ],
+   "eyeWidth": 213.0,
+   "center": [
+    447.76497650146484,
+    1194.4800491333008
+   ],
+   "rx": 0.21193172114555825,
+   "ry": 0.243723300701016,
+   "aspect": 1.1500085942001232,
+   "rotationDeg": 83.36653137207031,
+   "pupil": {
+    "dx": 0.20362080907310198,
+    "dy": 0.012545862486722952,
+    "rx": 0.3322887901377455,
+    "ry": 0.3852594862491621
+   },
+   "highlights": [
+    {
+     "dx": 0.4139842861330453,
+     "dy": 0.21354911367909066,
+     "r": 0.08464030693854578
+    }
+   ],
+   "rimPx": 3.26,
+   "rimOverIrisRadius": 0.067,
+   "fitError": 0.0594,
+   "coverage": 1.006,
+   "confidence": "fiable",
+   "id": "15-09",
+   "autoConfidence": "fiable",
+   "humanReview": "ok"
+  }
+ ],
+ "summary": {
+  "rx": {
+   "n": 7,
+   "p10": 0.176,
+   "median": 0.205,
+   "p90": 0.238
+  },
+  "ry": {
+   "n": 7,
+   "p10": 0.214,
+   "median": 0.244,
+   "p90": 0.288
+  },
+  "aspect": {
+   "n": 7,
+   "p10": 1.057,
+   "median": 1.15,
+   "p90": 1.33
+  },
+  "rimOverIrisRadius": {
+   "n": 7,
+   "p10": 0.023,
+   "median": 0.077,
+   "p90": 0.092
+  }
+ },
+ "notMeasured": [
+  "silhouette (sclère) de la réf. 14 : blanche sur fond blanc, bord inférieur de paupière ouvert -> aucun polygone fermé mesurable",
+  "épaisseur de liner (interprétée)"
+ ]
+}
