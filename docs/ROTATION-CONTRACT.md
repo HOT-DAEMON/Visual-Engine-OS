@@ -49,10 +49,12 @@ Trois comportements distincts : Y change x et z, X change y et z, Z ne change qu
 
 ## 4 bis. Chemin réel jusqu'au rendu SVG (mesuré, pas lu)
 
+> **État mesuré au commit `3d78330`, avant `8558f3b` (étape 2, autre agent).** Depuis, `render/face/face.ts` appelle `posedFace(lm, params.headPose.yawDeg)` **uniquement si** `headPose.yawDeg ≠ 0` (contour de tête et masses de cheveux en lacet ; schéma `FaceHeadPose`, lacet seul, tangage réservé à l'étape 5). À lacet 0 (cas ci-dessous) le chemin est inchangé. `poseTree` n'est toujours appelé par aucun rendu ; les yeux ne reçoivent pas ce lacet (`ROTATION-STEP-03-EYES-RESULT.md` §2).
+
 Trace d'exécution V8 (`NODE_V8_COVERAGE`) d'un `compileScene` sur `generateRandomFace(11)` (objets `host, eye, eye`, 972 460 octets de SVG) :
 
 - **Appelés au rendu** : `render/host.ts` (`compileHost`) → `render/face/face.ts` (`hostFace`, `faceParts`, `faceSurface`, `skinAppearance`, `contactSpecs`) → `face/outline.ts` (`headOutline`, `halfWidthAt`) ; cheveux : `render/face/hair.ts` (`renderHair`) ← `face/hair/index.ts` (`hairGeometry`) ; yeux : **objets séparés** `render/eye/eye.ts` (`compileEye`, **2 appels**) et `lighting/head-turn.ts` (`headTurnOf`, `rotateLightForHeadTurn`).
-- **`face/pose/skull.ts` (`skullOf`) et `neck.ts` (`neckOf`) : 1 appel**, par `face/hair/boundary/skull-surface.ts` (profondeur du crâne pour la lisière des cheveux). **`posedFace` et `poseTree` ne sont jamais appelés** : l'arbre de pose n'est pas branché au rendu (confirme `FACE-POSE-REMAINING.md` n°1 et 2).
+- **`face/pose/skull.ts` (`skullOf`) et `neck.ts` (`neckOf`) : 1 appel**, par `face/hair/boundary/skull-surface.ts` (profondeur du crâne pour la lisière des cheveux). **`posedFace` et `poseTree` ne sont jamais appelés à lacet 0** : à cet état l'arbre de pose n'était pas branché au rendu (confirme `FACE-POSE-REMAINING.md` n°1 et 2 ; voir l'encadré ci-dessus pour l'état après `8558f3b`).
 - **`geometry/eye/turn3d.ts` : aucune fonction exécutée** à ce rendu : `headTurn.model` vaut `flat` par défaut ; `turnOpening` n'est appelé que pour `sphere` (`render/eye/eye.ts:45`).
 - **`head-turntable/` : un seul appel d'`engineRows` et de `sectionAt`, à l'IMPORT** (`head-turntable/spec.ts:38` construit une constante au chargement) ; aucun maillage n'est construit pendant le rendu 2D. La voie volumétrique est un autre type d'objet (`head_3d`, `render/head-3d.ts`).
 
@@ -69,4 +71,4 @@ npx vitest run tests/head-turn.test.ts
 
 ## 6. Critère d'arrêt
 
-Le chemin réel est identifié et le contrat est cohérent avec le code **à une réserve près** : le sens du tangage (§4.1). Aucune implémentation n'est lancée ici ; l'étape 2 (silhouette) reste à l'autre agent.
+Le chemin réel est identifié et le contrat est cohérent avec le code **à une réserve près** : le sens du tangage (§4.1). Aucune implémentation n'est lancée ici ; l'étape 2 (silhouette) est à l'autre agent, qui a depuis publié `8558f3b` (non revalidé par moi).

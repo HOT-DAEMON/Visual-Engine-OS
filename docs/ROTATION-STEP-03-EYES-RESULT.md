@@ -19,13 +19,13 @@ Résultat des tests : `npx vitest run tests/rotation-eyes.test.ts` → **6 réus
 ## 2. Défauts constatés (non corrigés : décision de convention requise)
 
 1. **Signe du tangage entre `flat` et `sphere`.** Même champ `headTurn.pitchDeg` : `flat` (`headTurnOf`/`projectGaze`) déplace l'œil vers le BAS (`dy` = +34,2 pour 20°, conforme au commentaire du schéma) ; `sphere` (`turnPoint`, avec `parallax`) vers le HAUT (`y` = −34,2). `poseTree`, `toCam` et l'éclairage vont dans le sens de `sphere`. Porté par un `it.fails` : le jour où une convention unique est choisie, ce test **bascule en échec visible**. Je ne corrige pas : le sens voulu n'est pas fixé et trois modules sur quatre suivent déjà `sphere`.
-2. **Les yeux d'un visage hôte ne reçoivent aucune pose de tête.** `generateRandomFace(11)` produit deux objets `eye` compilés par `compileEye`, **sans** `headTurn` (test : `headTurn` indéfini pour les deux), donc modèle `flat`, azimut 0, quel que soit l'angle. Rien dans `HostSpec` ne porte de lacet. L'azimut anatomique de chaque œil existe pourtant dans l'arbre de pose (`faceNodes`, `azOf`) mais n'est lu par personne. **L'intégration n'existe pas** : elle dépend de l'étape 2 (pose branchée au rendu), qui est hors de mon périmètre.
+2. **Les yeux d'un visage hôte ne reçoivent aucune pose de tête.** `generateRandomFace(11)` produit deux objets `eye` compilés par `compileEye`, **sans** `headTurn` (test : `headTurn` indéfini pour les deux), donc modèle `flat`, azimut 0, quel que soit l'angle. Au moment de l'audit (`3d78330`) rien dans l'hôte ne portait de lacet ; depuis `8558f3b` le visage a `params.headPose.yawDeg` (étape 2), **que les yeux ne reçoivent toujours pas** : `generateRandomFace` n'écrit aucun `headTurn`. L'azimut anatomique de chaque œil existe pourtant dans l'arbre de pose (`faceNodes`, `azOf`) mais n'est lu par personne. **Les yeux de l'hôte ne sont pas connectés.** Conformément à `ROTATION-STEP-03-EYES.md` (« documenter ce blocage sans le corriger »), le branchement `headPose.yawDeg` → `headTurn` des deux yeux (azimut gauche/droite issu de `faceNodes`) est une étape séparée, après validation de l'étape 2.
 3. `azimuthDeg` est borné à ±55° (`HeadTurn`) alors que l'arbre de pose va à ±90° (contrat §4.2).
 
 ## 3. Ce qui reste à faire (documenté, non fait)
 
 - Choisir **une** convention de tangage et l'appliquer aux deux modèles (changement d'API visible : décision à prendre).
-- Brancher `headTurn` des yeux d'un hôte sur la pose de la tête (azimut gauche/droite issu de `faceNodes`) : **bloqué par l'étape 2**.
+- Brancher `headTurn` des yeux d'un hôte sur `headPose.yawDeg` (azimut gauche/droite issu de `faceNodes`) : **étape séparée**, à lancer après validation de l'étape 2 (publiée par l'autre agent en `8558f3b`).
 - Occlusion de l'œil lointain par l'arête du nez : absente (`FACE-POSE-REMAINING.md` n°3).
 - Sourcil : suit l'ouverture, mais n'a pas d'azimut propre (il est traité comme faisant partie de l'œil).
 - Les rendus ne montrent que les yeux ; aucun visage ni cheveu n'est tourné (étapes 2 et 4).
