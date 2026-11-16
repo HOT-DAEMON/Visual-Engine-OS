@@ -85,6 +85,10 @@ export const IrisDetail = z
         rings: z.number().int().min(1).max(4).default(2),
         /** Écart de ton entre facettes voisines et netteté du biseau. */
         contrast: Unit.default(0.6),
+        /** Dispersion prismatique (opt-in, 0 = aucune) : liseré spectral (rouge -> bleu selon l'angle de la facette) sur l'arête externe de chaque facette et son contre-liseré complémentaire plus bas ; opacité = 0,75 × valeur. */
+        dispersion: Unit.default(0),
+        /** Rayons de lumière (opt-in, 0 = aucun) : nombre de faisceaux fins issus du bord haut-gauche de l'iris (côté de la lumière) qui traversent l'iris ; largeur et opacité tirées par une graine dédiée. */
+        rays: z.number().int().min(0).max(12).default(0),
       })
       .strict()
       .optional(),

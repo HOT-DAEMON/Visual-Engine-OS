@@ -1,5 +1,7 @@
-import { cubicAt, type Lash, type OpeningGeometry, type Vec } from '../geometry/eye';
+import { type Lash, type OpeningGeometry, type Vec } from '../geometry/eye';
 import { openingPolygon } from '../geometry/eye';
+import { depthInOpening } from '../geometry/eye/lash-clearance';
+import { lashZoneExcess } from '../geometry/eye/lash-zone';
 import { dominantColor } from '../materials';
 import type { EyeSpec } from '../schema';
 import { check, type Check } from './types';
@@ -26,14 +28,6 @@ export const LASH_VERIFY_BOUNDS = {
 };
 
 const dist = (a: Vec, b: Vec): number => Math.hypot(a.x - b.x, a.y - b.y);
-const inside = (p: Vec, poly: readonly Vec[]): boolean => {
-  let c = false;
-  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-    const a = poly[i] as Vec; const b = poly[j] as Vec;
-    if (a.y > p.y !== b.y > p.y && p.x < ((b.x - a.x) * (p.y - a.y)) / (b.y - a.y) + a.x) c = !c;
-  }
-  return c;
-};
 const lum = (hex: string): number => {
   const m = /^#([0-9a-f]{6})/i.exec(hex); if (!m) return 0.5;
   const c = [0, 2, 4].map((i) => { const v = parseInt((m[1] as string).slice(i, i + 2), 16) / 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; });
@@ -41,17 +35,6 @@ const lum = (hex: string): number => {
 };
 const median = (v: number[]): number => { const s = [...v].sort((a, b) => a - b); return s.length ? ((s[Math.floor((s.length - 1) / 2)] as number) + (s[Math.ceil((s.length - 1) / 2)] as number)) / 2 : 0; };
 const lashPts = (l: Lash): Vec[] => (l.ctrl2 ? [l.base, l.ctrl, l.ctrl2, l.tip] : [l.base, l.ctrl, l.tip]);
-/** Points échantillonnés le long du cil (cubique ou quadratique), pour les contrôles de zone. */
-function sample(l: Lash): Vec[] {
-  const out: Vec[] = [];
-  for (let i = 0; i <= 8; i++) {
-    const s = i / 8;
-    if (l.ctrl2) out.push(cubicAt(l.base, l.ctrl, l.ctrl2, l.tip, s));
-    else { const u = 1 - s; out.push({ x: u * u * l.base.x + 2 * u * s * l.ctrl.x + s * s * l.tip.x, y: u * u * l.base.y + 2 * u * s * l.ctrl.y + s * s * l.tip.y }); }
-  }
-  return out;
-}
-
 export interface LashMetrics { readonly upperCount: number; readonly lowerCount: number; readonly medianPosition: number; readonly maxLengthOverWidth: number; readonly outwardShare: number; readonly worstRootDist: number }
 
 export function checkEyeLashes(
@@ -75,11 +58,11 @@ export function checkEyeLashes(
   const rootDist = (l: Lash, e: Vec[]): number => Math.min(...e.map((p) => dist(p, l.base))) / Math.max(th, 1e-6);
   const worstRoot = Math.max(...lashes.upper.map((l) => rootDist(l, upE)), ...lashes.lower.map((l) => rootDist(l, loE)), 0);
   out.push(check('geometry', 'lash-roots-on-lid', '<=', worstRoot, B.rootDistThickness, 'un cil est planté loin du bord palpébral (racine flottante)'));
-  const bb = g.bbox; const beyond = (p: Vec): number => Math.hypot(Math.max(bb.x - p.x, p.x - (bb.x + bb.w), 0), Math.max(bb.y - p.y, p.y - (bb.y + bb.h), 0));
-  const worstZone = Math.max(...all.flatMap((l) => sample(l).map(beyond)));
+  const worstZone = lashZoneExcess(g, all) * Math.max(g.w, g.h);
   out.push(check('geometry', 'lashes-in-zone', '<=', worstZone / Math.max(g.w, g.h), B.zoneFraction, 'un cil dépasse de l’ouverture de plus de la fraction autorisée de la plus grande dimension de l’œil'));
   const poly = openingPolygon(g);
-  const tipsInOpening = lashes.upper.filter((l) => inside(l.tip, poly)).length;
+  // même définition que le dégagement (geometry/eye/lash-clearance.ts) : la pointe doit être plus profonde que la demi-épaisseur du trait de paupière pour compter comme « dans l'ouverture »
+  const tipsInOpening = lashes.upper.filter((l) => depthInOpening(l.tip, poly) > th * 0.5).length;
   out.push(check('geometry', 'upper-lash-tips-outside-opening', '==', tipsInOpening, 0, 'la pointe d’un cil du haut retombe dans l’ouverture (sur l’iris ou la sclère)', 'warn'));
 
   // ---- anatomy ----

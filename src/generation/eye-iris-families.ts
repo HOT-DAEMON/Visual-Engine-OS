@@ -41,11 +41,11 @@ const LAYERS: Record<IrisFamily, Layers> = {
 const sparkle = (x: number, y: number, size: number): Highlights[number] => ({ shape: 'sparkle', anchor: 'iris', x, y, size, intensity: 0.8, confine: 'iris' }) as Highlights[number];
 
 type Detail = NonNullable<NonNullable<EyeInput['iris']>['detail']>;
-/** Détail ATOMIQUE par famille (iris.detail existant + facettes / bulles) : prisme -> facettes de gemme ; cristal turquoise et givre -> bulles (réfs 07, 09, 04). */
+/** Détail ATOMIQUE par famille (iris.detail existant + facettes / bulles) : prisme -> facettes de gemme avec dispersion spectrale et rayons de lumière (valeurs « I », la dispersion n'est pas mesurable sur les réfs) ; cristal turquoise et givre -> bulles (réfs 07, 09, 04). */
 const DETAIL: Partial<Record<IrisFamily, Detail>> = {
-  prism: { facets: { count: 18, rings: 3, contrast: 0.75 } } as Detail,
+  prism: { facets: { count: 18, rings: 3, contrast: 0.75, dispersion: 0.8, rays: 6 } } as Detail,
   'teal-gem': { bubbles: { count: 12, size: 0.08, opacity: 0.85 } } as Detail,
-  frost: { facets: { count: 14, rings: 2, contrast: 0.5 }, bubbles: { count: 8, size: 0.06, opacity: 0.8 } } as Detail,
+  frost: { facets: { count: 14, rings: 2, contrast: 0.5, dispersion: 0.35, rays: 4 }, bubbles: { count: 8, size: 0.06, opacity: 0.8 } } as Detail,
 };
 /** Position verticale du reflet principal des planches 12 et 16 (mesurée : dy ≈ −0,44, fraction du rayon de l'iris, haut = négatif). */
 export const SHEET_HIGHLIGHT_DY = -0.44;

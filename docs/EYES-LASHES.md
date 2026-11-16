@@ -52,3 +52,4 @@ Le moteur dessinait des triangles droits posés sur le bord (seule la mèche de 
 - Mesures de lignes de squelette bruitées pour les traits très fins (largeur de base 1–2 px) : `taperMid/taperTip` des traits peu fiables ; l'effilement retenu vient des pointes.
 - Les familles ne s'adaptent pas à l'inclinaison de l'ouverture : 4 cas sur 174 (yeux très inclinés) gardent un cil dont la pointe retombe dans l'ouverture (avertissement `upper-lash-tips-outside-opening`).
 - Pas de cils multicolores, pas d'animation, pas de dispersion de couleur le long du cil.
+- Passe 4 (2026-11-15) : mèches + `bendDeg` qui recouvraient l'iris et pointes des yeux très inclinés traitées par `lash-clearance.ts` ; liner de famille ; voir `EYES-PASS-4.md`.

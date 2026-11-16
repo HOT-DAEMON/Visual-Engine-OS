@@ -6,6 +6,12 @@ import { P } from './helpers';
 import type { IrisFrame, IrisPalette } from './iris-strands';
 
 type Rnd = () => number;
+/** Teinte spectrale (rouge 0° -> violet 270°) en hex, saturation et clarté fixes : couleur d'un liseré de dispersion. */
+function spectral(deg: number): string {
+  const h = (((deg % 360) + 360) % 360) / 60; const c = 0.85; const x = c * (1 - Math.abs((h % 2) - 1)); const m = 0.12;
+  const [r, g, b] = h < 1 ? [c, x, 0] : h < 2 ? [x, c, 0] : h < 3 ? [0, c, x] : h < 4 ? [0, x, c] : h < 5 ? [x, 0, c] : [c, 0, x];
+  return `#${[r, g, b].map((v) => Math.round((v + m) * 255).toString(16).padStart(2, '0')).join('')}`;
+}
 type IrisDetail = z.infer<typeof IrisDetailSchema>;
 type Facets = NonNullable<IrisDetail['facets']>;
 type Bubbles = NonNullable<IrisDetail['bubbles']>;
@@ -34,6 +40,12 @@ export function facets(f: IrisFrame, pal: IrisPalette, rnd: Rnd, o: Facets, rhoF
       const col = tone < 0.5 ? mix(darken(pal.dark, 0.35), pal.mid, tone * 2) : mix(pal.mid, lighten(pal.light, 0.35), (tone - 0.5) * 2);
       out.push(el('path', { d: `M${pts.map(P).join('L')}Z`, fill: col, 'fill-opacity': 0.2 + 0.62 * o.contrast * Math.abs(tone - 0.5) * 2, stroke: darken(pal.edge, 0.55), 'stroke-width': f.rx * 0.006, 'stroke-opacity': 0.3 + 0.4 * o.contrast }));
       out.push(el('path', { d: `M${P(pts[3]!)}L${P(pts[0]!)}L${P(pts[1]!)}`, fill: 'none', stroke: lighten(pal.light, 0.6), 'stroke-width': f.rx * 0.009, 'stroke-opacity': Math.min(0.95, 0.2 + 0.7 * o.contrast * toward) }));
+      if (o.dispersion > 0) {
+        // Prisme : la lumière se sépare au bord de la facette. Teinte = angle de la facette autour de l'iris (0° -> 270° : rouge -> violet) ; le liseré complémentaire (teinte + 150°) longe l'arête interne.
+        const hue = ((mid % TAU) / TAU) * 270; const w = f.rx * 0.017; const a = 0.75 * o.dispersion;
+        out.push(el('path', { d: `M${P(pts[1]!)}L${P(pts[2]!)}`, fill: 'none', stroke: spectral(hue), 'stroke-width': w, 'stroke-opacity': a, 'stroke-linecap': 'round' }));
+        out.push(el('path', { d: `M${P(pts[0]!)}L${P(pts[3]!)}`, fill: 'none', stroke: spectral(hue + 150), 'stroke-width': w * 0.8, 'stroke-opacity': a * 0.7, 'stroke-linecap': 'round' }));
+      }
     }
   }
   return el('g', {}, out);
@@ -55,6 +67,23 @@ export function bubbles(f: IrisFrame, pal: IrisPalette, rnd: Rnd, o: Bubbles, rh
     out.push(el('circle', { cx: c.x, cy: c.y, r, fill: lighten(pal.light, 0.5), 'fill-opacity': 0.14 * g, stroke: '#ffffff', 'stroke-width': r * 0.16, 'stroke-opacity': 0.5 * g }));
     out.push(el('path', { d: `M${P({ x: c.x + r * 0.62, y: c.y - r * 0.5 })}A${r * 0.8} ${r * 0.8} 0 0 1 ${P({ x: c.x - r * 0.4, y: c.y + r * 0.7 })}`, fill: 'none', stroke: darken(pal.edge, 0.4), 'stroke-width': r * 0.2, 'stroke-opacity': 0.35 * g }));
     out.push(el('circle', { cx: c.x - r * 0.36, cy: c.y - r * 0.4, r: r * 0.2, fill: '#ffffff', 'fill-opacity': 0.9 * g }));
+  }
+  return el('g', {}, out);
+}
+
+/**
+ * RAYONS DE LUMIÈRE : `count` faisceaux triangulaires très fins, issus du bord haut-gauche de l'iris (la lumière vient de là, comme les reflets par défaut) et qui traversent l'iris
+ * vers le côté opposé, dispersés en éventail autour de la direction du centre. Largeur, éventail et opacité tirés par `rnd` (graine dédiée : aucun autre tirage ne bouge) ;
+ * clarté de la palette (`light` éclaircie), opacité 0,07 à 0,6.
+ */
+export function lightRays(f: IrisFrame, pal: IrisPalette, rnd: Rnd, count: number, contrast: number): string {
+  if (count <= 0) return '';
+  const out: string[] = []; const src = (Math.PI * 5) / 4; const col = lighten(pal.light, 0.7);
+  for (let i = 0; i < count; i++) {
+    const spread = (i / Math.max(1, count - 1) - 0.5) * 1.5 + (rnd() - 0.5) * 0.18;
+    const apex = f.at(0.97, src + (rnd() - 0.5) * 0.35); const target = src + Math.PI + spread; const half = 0.02 + 0.045 * rnd();
+    const reach = 0.78 + 0.2 * rnd();
+    out.push(el('path', { d: `M${P(apex)}L${P(f.at(reach, target - half))}L${P(f.at(reach, target + half))}Z`, fill: col, 'fill-opacity': Math.min(0.6, (0.12 + 0.26 * rnd()) * (0.6 + contrast)) }));
   }
   return el('g', {}, out);
 }

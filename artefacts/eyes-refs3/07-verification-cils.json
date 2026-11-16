@@ -17,7 +17,7 @@
   },
   "upper-lash-tips-outside-opening": {
    "checked": 94,
-   "failed": 1,
+   "failed": 0,
    "severity": "warn"
   },
   "lashes-point-away-from-eye": {
@@ -74,7 +74,7 @@
   },
   "upper-lash-tips-outside-opening": {
    "checked": 80,
-   "failed": 3,
+   "failed": 0,
    "severity": "warn"
   },
   "lashes-point-away-from-eye": {

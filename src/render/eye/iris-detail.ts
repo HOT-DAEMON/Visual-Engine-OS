@@ -4,7 +4,7 @@ import { el, urlRef } from '../../core/svg';
 import type { Vec } from '../../geometry/eye';
 import { gradientStop as stop } from '../../materials';
 import type { EyeSpec } from '../../schema';
-import { bubbles, facets } from './iris-crystal';
+import { bubbles, facets, lightRays } from './iris-crystal';
 import { collarette, crypts, flames, irisFrame, irisPalette, sparkles, stromaFibers } from './iris-strands';
 
 export interface IrisDetailRender {
@@ -58,6 +58,7 @@ export function renderIrisDetail(eye: EyeSpec, c: Vec, rx: number, ry: number, i
   if (d.crypts > 0) layers.push(crypts(f, pal, rnd, d.crypts, rhoC));
   // 5b. Facettes (cristal / gemme) : par-dessus les fibres et cryptes pour rester lisibles. Graine propre : n'altère pas le tirage des autres couches.
   if (d.facets) layers.push(facets(f, pal, mulberry32((eye.seed ^ 0x7fb5d329) >>> 0), d.facets, rhoP * 1.06));
+  if (d.facets && d.facets.rays > 0) layers.push(lightRays(f, pal, mulberry32((eye.seed ^ 0x3d4e5f61) >>> 0), d.facets.rays, d.facets.contrast));
   // 6. Flammes d'accent : deux couronnes en quinconce, la seconde plus courte et plus claire.
   if (d.accent) {
     const a = d.accent;

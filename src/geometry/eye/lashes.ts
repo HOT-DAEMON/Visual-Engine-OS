@@ -6,6 +6,8 @@ import type { Frame, OpeningGeometry } from './opening';
 import { lowerFrame, upperFrame } from './opening';
 import type { Vec } from './primitives';
 import { linerTopOffset } from './liner';
+import { clearLashesFromOpening } from './lash-clearance';
+import { openingPolygon } from './opening-polygon';
 
 // ------------------------------------------------------------------ Cils
 
@@ -158,9 +160,11 @@ export function lowerLashes(g: OpeningGeometry, lashes: EyeSpec['lashes']['lower
 export function eyeLashSet(eye: EyeSpec, g: OpeningGeometry, th: number): { upper: Lash[]; lower: Lash[]; rootShift: ((t: number) => number) | undefined } {
   const liner = eye.lids.liner;
   const rootShift = liner ? (t: number) => linerTopOffset(liner, th, t) * 0.88 : undefined;
+  const poly = openingPolygon(g);
+  const center: Vec = { x: g.bbox.x + g.bbox.w / 2, y: g.bbox.y + g.bbox.h / 2 };
   return {
-    upper: upperLashes(g, eye.lashes.upper, th, (eye.seed ^ 0xa5a5a5a5) >>> 0, rootShift),
-    lower: lowerLashes(g, eye.lashes.lower, th, (eye.seed ^ 0x5a5a5a5a) >>> 0),
+    upper: clearLashesFromOpening(upperLashes(g, eye.lashes.upper, th, (eye.seed ^ 0xa5a5a5a5) >>> 0, rootShift), poly, center, th),
+    lower: clearLashesFromOpening(lowerLashes(g, eye.lashes.lower, th, (eye.seed ^ 0x5a5a5a5a) >>> 0), poly, center, th),
     rootShift,
   };
 }

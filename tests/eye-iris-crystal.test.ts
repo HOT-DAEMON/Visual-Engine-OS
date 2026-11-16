@@ -34,3 +34,32 @@ describe('iris détaillé : facettes et bulles (briques optionnelles de iris.det
     expect(() => IrisDetail.parse({ bubbles: { zone: 'top' } })).toThrow();
   });
 });
+
+describe('facettes : dispersion prismatique et rayons de lumière (opt-in)', () => {
+  const F = { count: 12, rings: 2, contrast: 0.6 };
+  const base = svg({ facets: F });
+  it('0 (défaut) : le rendu est identique octet pour octet', () => {
+    expect(svg({ facets: { ...F, dispersion: 0, rays: 0 } })).toBe(base);
+  });
+  it('dispersion : 2 liserés spectraux par facette, opacité proportionnelle à la valeur', () => {
+    const a = svg({ facets: { ...F, dispersion: 0.8 } });
+    expect(count(a, /<path /g) - count(base, /<path /g)).toBe((12 + 14) * 2);
+    expect(a).not.toBe(svg({ facets: { ...F, dispersion: 0.3 } }));
+    const hues = new Set(a.match(/stroke="#[0-9a-f]{6}" stroke-width="[\d.]+" stroke-opacity="0\.6"/g) ?? []);
+    expect(hues.size).toBeGreaterThan(8); // teintes distinctes autour de l'iris
+  });
+  it('rayons : exactement `rays` faisceaux, déterministes, la graine les déplace', () => {
+    const a = svg({ facets: { ...F, rays: 7 } });
+    expect(count(a, /<path /g) - count(base, /<path /g)).toBe(7);
+    expect(svg({ facets: { ...F, rays: 7 } })).toBe(a);
+    expect(svg({ facets: { ...F, rays: 7 } }, 9)).not.toBe(a);
+  });
+  it('rayons et dispersion ne décalent pas le tirage des facettes (mêmes quadrilatères)', () => {
+    const quads = (s: string): string[] => s.match(/<path d="M[^"]*Z" fill="#[0-9a-f]{6}" fill-opacity="[\d.]+" stroke="#[0-9a-f]{6}"/g) ?? [];
+    expect(quads(svg({ facets: { ...F, dispersion: 1, rays: 5 } })).filter((q) => /fill-opacity="0\.[0-9]+" stroke/.test(q)).slice(0, 26)).toEqual(quads(base).slice(0, 26));
+  });
+  it('schéma : bornes refusées', () => {
+    expect(() => IrisDetail.parse({ facets: { rays: 13 } })).toThrow();
+    expect(() => IrisDetail.parse({ facets: { dispersion: 1.5 } })).toThrow();
+  });
+});

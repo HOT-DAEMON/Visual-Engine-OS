@@ -71,3 +71,10 @@ Fait : orientation externe par construction (miroir / ancres), 66 yeux mesurés 
 - ⬜ Réfs 13 et 17 : yeux non tracés (≈ 8) ; 13 mesurée avec la détection d'origine (12 yeux), 17 non touchée dans cette passe.
 - ⬜ Facettes d'iris : dispersion prismatique et rayons de lumière, distance minimale de la galerie (0,0089), almond : non retouchés dans cette passe.
 - ⬜ Pixel : `verify-eye-render.ts` sans règle cils ; ⬜ cils non adaptés à l'inclinaison de l'ouverture (4 cas / 174).
+
+
+## Passe 4 (2026-11-15) — voir `EYES-PASS-4.md`
+Fait : liner épais effilé par famille de cils (`lids.liner`), dégagement de l'ouverture (848 -> 24 intrusions sur 19 021 cils), portée dans la zone du dessin, vérification alignée, facettes d'iris avec `dispersion` et `rays` (branchées sur `prism`, `frost`).
+- 🟡 Cils : 24 cas non dégagés par la rotation ≤ 50° ; liner et épaisseurs interprétés (non mesurés) ; encre = noir bleuté des cils, pas l'aplat `#000` des références.
+- 🟡 Facettes : dispersion et rayons présents mais valeurs interprétées ; pas de faisceau volumétrique réel.
+- ⬜ Inchangé : yeux non tracés des réfs 13/17, réf. 14, limbe réf. 15 rangées 3–5, distance minimale de la galerie, règle « cils » en pixels.
