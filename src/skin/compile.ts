@@ -1,4 +1,4 @@
-import { outlinePath, type FaceLandmarks, type SkinRegions } from '../face';
+import { outlinePath, type FaceLandmarks, type Outline, type SkinRegions } from '../face';
 import type { ResolvedAppearance } from '../appearance';
 import type { LightVector } from '../lighting/light';
 import type { FaceLighting, SkinMaterial } from '../schema';
@@ -16,11 +16,11 @@ export interface CompiledSkin {
  * Compile le matériau de peau sur la TÊTE : assemble les couches partagées (`layers.ts`) sur le contour de la tête. Le cou assemble les MÊMES couches
  * (`render/neck/skin.ts`) sur son propre contour : un seul modèle d'éclairage de la peau. Ordre : base → forme → terminateur (+ atténuation) →
  * zones (front, nez, joues, épaules) → reflets par région → Fresnel → pores (régions de la tête ; le cou a les siens) → effets de l'apparence.
- * Le matériau ne contient aucune coordonnée : `regions` (géométrie) et `L` (éclairage) arrivent en paramètres.
+ * Le matériau ne contient aucune coordonnée : `regions` (géométrie) et `L` (éclairage) arrivent en paramètres. `outline` : contour DESSINÉ de la tête (défaut `lm.outline` ; le contour en lacet de `face/pose/silhouette.ts` pour une tête tournée) ; les zones et régions restent celles du visage de face.
  */
-export function compileSkin(id: string, lm: FaceLandmarks, mat: SkinMaterial, ra: ResolvedAppearance, L: LightVector, regions: SkinRegions, zones: FaceLighting['zones']): CompiledSkin {
+export function compileSkin(id: string, lm: FaceLandmarks, mat: SkinMaterial, ra: ResolvedAppearance, L: LightVector, regions: SkinRegions, zones: FaceLighting['zones'], outline: Outline = lm.outline): CompiledSkin {
   const { W, H } = lm;
-  const s: SkinSurface = { d: outlinePath(lm.outline), w: W, h: H, top: -H / 2, bottom: lm.chinY, unit: W / 300 };
+  const s: SkinSurface = { d: outlinePath(outline), w: W, h: H, top: -H / 2, bottom: lm.chinY, unit: W / 300 };
   const sh = skinShading(mat, L, regions, ra, ra.base);
   const parts = [baseLayer(id, s, ra), formLayer(id, s, sh, L, ra), terminatorLayers(id, s, sh, L)];
   const z = compileZones(id, lm, regions, zones, L, ra, sh.dir);

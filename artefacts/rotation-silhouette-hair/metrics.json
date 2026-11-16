@@ -1,0 +1,164 @@
+[
+ {
+  "style": "short",
+  "seed": 9001,
+  "yaw": -40,
+  "silhouetteRatioEye": 0.9678,
+  "silhouetteRatioJaw": 0.9678,
+  "baseVertices": 821,
+  "baseVerticesFrontal": 434
+ },
+ {
+  "style": "short",
+  "seed": 9001,
+  "yaw": 0,
+  "silhouetteRatioEye": 1,
+  "silhouetteRatioJaw": 1,
+  "baseVertices": 434,
+  "baseVerticesFrontal": 434
+ },
+ {
+  "style": "short",
+  "seed": 9001,
+  "yaw": 40,
+  "silhouetteRatioEye": 0.9678,
+  "silhouetteRatioJaw": 0.9678,
+  "baseVertices": 821,
+  "baseVerticesFrontal": 434
+ },
+ {
+  "style": "long",
+  "seed": 9002,
+  "yaw": -40,
+  "silhouetteRatioEye": 0.9678,
+  "silhouetteRatioJaw": 0.9678,
+  "baseVertices": 1218,
+  "baseVerticesFrontal": 534
+ },
+ {
+  "style": "long",
+  "seed": 9002,
+  "yaw": 0,
+  "silhouetteRatioEye": 1,
+  "silhouetteRatioJaw": 1,
+  "baseVertices": 534,
+  "baseVerticesFrontal": 534
+ },
+ {
+  "style": "long",
+  "seed": 9002,
+  "yaw": 40,
+  "silhouetteRatioEye": 0.9678,
+  "silhouetteRatioJaw": 0.9678,
+  "baseVertices": 1218,
+  "baseVerticesFrontal": 534
+ },
+ {
+  "style": "afro",
+  "seed": 9000,
+  "yaw": -40,
+  "silhouetteRatioEye": 0.9678,
+  "silhouetteRatioJaw": 0.9678,
+  "baseVertices": 1444,
+  "baseVerticesFrontal": 484
+ },
+ {
+  "style": "afro",
+  "seed": 9000,
+  "yaw": 0,
+  "silhouetteRatioEye": 1,
+  "silhouetteRatioJaw": 1,
+  "baseVertices": 484,
+  "baseVerticesFrontal": 484
+ },
+ {
+  "style": "afro",
+  "seed": 9000,
+  "yaw": 40,
+  "silhouetteRatioEye": 0.9678,
+  "silhouetteRatioJaw": 0.9678,
+  "baseVertices": 1444,
+  "baseVerticesFrontal": 484
+ },
+ {
+  "style": "bob",
+  "seed": 9001,
+  "yaw": -40,
+  "silhouetteRatioEye": 0.9678,
+  "silhouetteRatioJaw": 0.9678,
+  "baseVertices": 965,
+  "baseVerticesFrontal": 549
+ },
+ {
+  "style": "bob",
+  "seed": 9001,
+  "yaw": 0,
+  "silhouetteRatioEye": 1,
+  "silhouetteRatioJaw": 1,
+  "baseVertices": 549,
+  "baseVerticesFrontal": 549
+ },
+ {
+  "style": "bob",
+  "seed": 9001,
+  "yaw": 40,
+  "silhouetteRatioEye": 0.9678,
+  "silhouetteRatioJaw": 0.9678,
+  "baseVertices": 965,
+  "baseVerticesFrontal": 549
+ },
+ {
+  "style": "buzz",
+  "seed": 9003,
+  "yaw": -40,
+  "silhouetteRatioEye": 0.9678,
+  "silhouetteRatioJaw": 0.9677,
+  "baseVertices": 420,
+  "baseVerticesFrontal": 140
+ },
+ {
+  "style": "buzz",
+  "seed": 9003,
+  "yaw": 0,
+  "silhouetteRatioEye": 1,
+  "silhouetteRatioJaw": 1,
+  "baseVertices": 140,
+  "baseVerticesFrontal": 140
+ },
+ {
+  "style": "buzz",
+  "seed": 9003,
+  "yaw": 40,
+  "silhouetteRatioEye": 0.9678,
+  "silhouetteRatioJaw": 0.9677,
+  "baseVertices": 420,
+  "baseVerticesFrontal": 140
+ },
+ {
+  "style": "ponytail",
+  "seed": 9001,
+  "yaw": -40,
+  "silhouetteRatioEye": 0.9678,
+  "silhouetteRatioJaw": 0.9678,
+  "baseVertices": 813,
+  "baseVerticesFrontal": 434
+ },
+ {
+  "style": "ponytail",
+  "seed": 9001,
+  "yaw": 0,
+  "silhouetteRatioEye": 1,
+  "silhouetteRatioJaw": 1,
+  "baseVertices": 434,
+  "baseVerticesFrontal": 434
+ },
+ {
+  "style": "ponytail",
+  "seed": 9001,
+  "yaw": 40,
+  "silhouetteRatioEye": 0.9678,
+  "silhouetteRatioJaw": 0.9678,
+  "baseVertices": 813,
+  "baseVerticesFrontal": 434
+ }
+]

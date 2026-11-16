@@ -4,6 +4,7 @@ import { compileEffects, toHsl, fromHsl, type ResolvedAppearance } from '../../a
 import type { FaceLandmarks } from '../../face';
 import { outlinePath } from '../../face/outline';
 import { hairGeometry, type HairLock } from '../../face/hair';
+import { poseHairMasses, type PosedFace } from '../../face/pose';
 import { polyBox, type Poly } from '../../face/poly';
 import { direction2D, type LightVector } from '../../lighting/light';
 import { compileSurface, resolvePreset, spotGradient, type Surface } from '../../materials';
@@ -45,9 +46,11 @@ const hueShift = (c: string, deg: number): string => (deg === 0 ? c : fromHsl({ 
  * à une. Toutes les teintes viennent du moteur d'apparence partagé (`hairAppearance`) : ombre, lumière, dégradé racine →
  * pointe, ombrage cel, reflets colorés cohérents avec la couleur, effets (glow, bloom…).
  */
-export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: LightVector, rot: number, skinShadow: string, skin: string): HairParts {
-  const geo = hairGeometry(p, lm);
-  if (!geo) return { defs: [], back: [], front: [], over: [] };
+export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: LightVector, rot: number, skinShadow: string, skin: string, posed: PosedFace | null = null): HairParts {
+  const geo0 = hairGeometry(p, lm);
+  if (!geo0) return { defs: [], back: [], front: [], over: [] };
+  // Pose de la tête : les MASSES sont reprojetées par la pose commune (`face/pose/hair-pose.ts`), à lacet nul la géométrie est inchangée (même objet).
+  const geo = posed ? poseHairMasses(geo0, posed.skull, posed.yaw, lm.W) : geo0;
   const h = p.hair;
   const ra: ResolvedAppearance = hairAppearance(h);
   const ink = h.sim.enabled && h.sim.ink ? '#08080c' : undefined;
@@ -87,7 +90,7 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
   });
   const frontLocks = geo.locks.filter((q) => q.layer === 'front');
   // Repousse : bande de la couleur de racine au ras du crâne, estompée vers la longueur teinte ; jamais jusqu'au bord de la coque (`root-band.ts`).
-  const band = !ink && rootColor !== shellColor && h.rootColor ? rootBand(geo.hairline, geo.bare.part, ringThickness(geo.boundary.skull, geo.base[0] as Poly), lm.W) : null;
+  const band = !ink && rootColor !== shellColor && h.rootColor ? rootBand(geo.hairline, geo.bare.part, ringThickness(geo.boundary.skull, geo0.base[0] as Poly), lm.W) : null;
   const roots: string[] = [];
   if (band) {
     const fid = `${id}-hair-root-blur`;

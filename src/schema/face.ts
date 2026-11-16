@@ -10,6 +10,7 @@ import { FaceCheek, FaceMandible, FaceSoftTissue } from './face-structure';
 import { FaceDeform } from './face-deform';
 import { FaceRenderMode, FaceStylization } from './face-style';
 import { FaceEars } from './face-ear';
+import { FaceHeadPose } from './face-pose';
 
 export { FaceNose, FaceEars };
 
@@ -96,6 +97,8 @@ export const FaceParams = z
     /** Profil de stylisation (géométrie) et mode de rendu (traitement) : deux champs distincts, voir `face-style.ts`. */
     stylization: FaceStylization.default({}),
     renderMode: FaceRenderMode.default('realistic'),
+    /** Pose de la tête (lacet) : voir `face-pose.ts`. Défaut : de face. */
+    headPose: FaceHeadPose.default({}),
   })
   .strict();
 export type FaceParams = z.infer<typeof FaceParams>;

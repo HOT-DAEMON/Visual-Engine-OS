@@ -1,5 +1,5 @@
 import { el } from '../../../core/svg';
-import { outlinePath, type FaceLandmarks, type NoseGeometry } from '../../../face';
+import { outlinePath, type FaceLandmarks, type NoseGeometry, type Outline } from '../../../face';
 import type { MouthGeo } from '../../../face/mouth';
 import type { StructureGeometry } from '../../../face/structure';
 import { lineD } from '../soft';
@@ -14,13 +14,13 @@ export function inkStrength(c: StructureCtx): number {
   return c.p.renderMode === 'ink' ? Math.max(0.5, c.p.stylization.outline) : c.p.stylization.outline;
 }
 
-export function renderInk(c: StructureCtx, lm: FaceLandmarks, nose: NoseGeometry, g: StructureGeometry, m: MouthGeo): string[] {
+export function renderInk(c: StructureCtx, lm: FaceLandmarks, nose: NoseGeometry, g: StructureGeometry, m: MouthGeo, outline: Outline = lm.outline): string[] {
   const s = inkStrength(c);
   if (s <= 0.01) return [];
   const ink = '#15101a';
   const w = (k: number): number => (0.5 + 2.6 * s) * k * c.u;
   const stroke = (d: string, k: number): string => el('path', { d, fill: 'none', stroke: ink, 'stroke-width': w(k), 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-opacity': 0.92 });
-  const out: string[] = [stroke(outlinePath(lm.outline), 1)];
+  const out: string[] = [stroke(outlinePath(outline), 1)];
   // Mâchoire : bord inférieur complet.
   out.push(stroke(lineD(g.mandible.lowerBorder), 0.8));
   // Nez : arêtes de l'arête nasale (deux bords de l'arête), contour des ailes, nez-narines, silhouette de la pointe.

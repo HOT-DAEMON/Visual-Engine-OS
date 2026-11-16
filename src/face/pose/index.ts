@@ -4,6 +4,8 @@ import { skullOf, type Skull } from './skull';
 import { poseTree, type PoseNode, type Posed, type V3 } from './tree';
 
 export { poseTree, skullOf, neckOf, TWIST };
+export { posedOutline } from './silhouette';
+export { poseHairMasses } from './hair-pose';
 export const FACE_POSE_VERSION = 1;
 export type { PoseNode, Posed, V3, Skull, Neck };
 

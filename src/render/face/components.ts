@@ -1,4 +1,4 @@
-import { outlinePath, headPoly, chinPoly, earGeometry, noseGeometry, rightSamples, type FaceLandmarks, type NoseGeometry } from '../../face';
+import { outlinePath, headPoly, chinPoly, earGeometry, noseGeometry, rightSamples, type FaceLandmarks, type NoseGeometry, type Outline } from '../../face';
 import { superEllipse } from '../../face/curve';
 import { hairGeometry } from '../../face/hair';
 import type { Poly } from '../../face/poly';
@@ -24,12 +24,12 @@ const ell = (cx: number, cy: number, rx: number, ry: number): Poly => superEllip
  * Chaque composant lit ses silhouettes dans la géométrie pure (jamais dans le SVG) : le sous-moteur travaille donc sur les mêmes formes
  * que le rendu et que la vérification. Pour ajouter un composant futur : l'ajouter ici (identité, parent, silhouette, receveurs).
  */
-export function faceComponents(p: FaceParams, lm: FaceLandmarks, nose?: NoseGeometry, orbits?: PublishedOrbits): { components: FaceComponent[]; receivers: Receivers } {
+export function faceComponents(p: FaceParams, lm: FaceLandmarks, nose?: NoseGeometry, orbits?: PublishedOrbits, outline?: Outline): { components: FaceComponent[]; receivers: Receivers } {
   const n = nose ?? noseGeometry(p, lm);
   const H = lm.H;
   const proj = n.tip.projectionPx;
   const comps: FaceComponent[] = [
-    { id: 'head', parent: null, kind: 'caster', opaque: true, polys: [headPoly(lm)], depth: 0.05 * H * (1 + lm.jaw.tissue.submentalTension) * (0.8 + 0.6 * p.chin.projection), receivers: ['neck'], contact: 'jaw', rim: 'head' },
+    { id: 'head', parent: null, kind: 'caster', opaque: true, polys: [headPoly(outline ? { ...lm, outline } : lm)], depth: 0.05 * H * (1 + lm.jaw.tissue.submentalTension) * (0.8 + 0.6 * p.chin.projection), receivers: ['neck'], contact: 'jaw', rim: 'head' },
     { id: 'nose', parent: 'head', kind: 'caster', polys: [n.silhouette], rimEdge: (['left', 'right'] as const).map((sd) => n.dorsum.axis.slice(4).map((q, i) => ({ x: q.x + (sd === 'left' ? -1 : 1) * (n.dorsum.half[i + 4] as number), y: q.y }))), depth: Math.max(1.5, proj * 0.25), receivers: ['head'], contact: 'nose', rim: 'nose' },
     { id: 'tip', parent: 'nose', kind: 'caster', polys: [n.tip.poly], depth: Math.max(1.5, proj * 0.35), receivers: ['head'], rim: 'tip' },
     { id: 'alaL', parent: 'nose', kind: 'caster', polys: [n.alae.left.poly], rimEdge: [n.alae.left.outerEdge], depth: 1 + n.alae.left.thicknessPx * 0.6, receivers: ['head'], contact: 'alae', rim: 'alae' },
@@ -50,6 +50,6 @@ export function faceComponents(p: FaceParams, lm: FaceLandmarks, nose?: NoseGeom
     const e = neckEdges(neckModelFor(p, lm));
     comps.push({ id: 'neck', parent: 'head', kind: 'caster', polys: [e.ring], rimEdge: [e.left, e.right], depth: 0, receivers: [], rim: 'neck' });
   }
-  const receivers: Receivers = { head: outlinePath(lm.outline), ...(p.neck.visible ? { neck: neckPath(p, lm) } : {}) };
+  const receivers: Receivers = { head: outlinePath(outline ?? lm.outline), ...(p.neck.visible ? { neck: neckPath(p, lm) } : {}) };
   return { components: comps, receivers };
 }

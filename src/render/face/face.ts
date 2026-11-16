@@ -2,7 +2,8 @@ import { mix } from '../../core/color';
 import { el, urlRef } from '../../core/svg';
 import { resolveAppearance, type ResolvedAppearance } from '../../appearance';
 import { compileContact, renderRim, resolveRims, type ContactMetric } from '../../contact';
-import { faceLandmarks, noseGeometry, outlinePath, skinRegions, type FaceLandmarks, type NoseGeometry } from '../../face';
+import { faceLandmarks, noseGeometry, outlinePath, skinRegions, type FaceLandmarks, type NoseGeometry, type Outline } from '../../face';
+import { posedFace, posedOutline } from '../../face/pose';
 import { applyStylization } from '../../face/stylize';
 import { dominantColor, spotGradient, type Surface } from '../../materials';
 import { compileSkin, type CompiledSkin } from '../../skin';
@@ -22,12 +23,14 @@ import { renderStructure, type StructureLayers } from './structure';
 import { inkFilter, inkThreshold } from './structure/ink-filter';
 
 /** Surface « crâne + mâchoire » d'un hôte `shape: 'face'`, habillable par le système de matériaux. */
-export function faceSurface(h: HostSpec, lm: FaceLandmarks): Surface {
-  return { bbox: { x: -h.width / 2, y: -h.height / 2, w: h.width, h: h.height }, curvature: 'sphere', draw: (a) => el('path', { d: outlinePath(lm.outline), ...a }) };
+export function faceSurface(h: HostSpec, lm: FaceLandmarks, outline: Outline = lm.outline): Surface {
+  return { bbox: { x: -h.width / 2, y: -h.height / 2, w: h.width, h: h.height }, curvature: 'sphere', draw: (a) => el('path', { d: outlinePath(outline), ...a }) };
 }
 
 export interface FaceParts {
   readonly lm: FaceLandmarks;
+  /** Contour DESSINÉ de la tête : `lm.outline` de face, contour en lacet (`face/pose/silhouette.ts`) quand `headPose.yawDeg` ≠ 0. */
+  readonly silhouette: Outline;
   readonly defs: string[];
   /** Peau de la tête (matériau de peau) ; `null` avec `skinMaterial.model = 'legacy'` : l'hôte utilise alors l'ancien ombrage générique. */
   readonly skin: CompiledSkin | null;
@@ -72,6 +75,9 @@ export function skinAppearance(skin: string, params: FaceParams): ResolvedAppear
 export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: PublishedOrbits, sex = 0): FaceParts {
   const { params, lm } = hostFace(h);
   const skin = dominantColor(h.material.base);
+  // Pose de la tête : calculée UNE fois ici (étape 2 de la rotation) ; elle ne sert pour l'instant qu'à la silhouette du crâne et aux MASSES de cheveux.
+  const posed = params.headPose.yawDeg === 0 ? null : posedFace(lm, params.headPose.yawDeg);
+  const silhouette = posed ? posedOutline(lm, posed) : lm.outline;
   // Apparence de la peau : teinte d'ombre (proche de la peau, légèrement bleutée), lumière et contour lues par TOUS les enfants.
   // Mode de rendu `anime` : aplats à bords nets (ombrage `cel`) ; la géométrie n'est pas touchée.
   const skinRa = skinAppearance(skin, params);
@@ -80,11 +86,11 @@ export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: Pub
   const u = lm.W / 300;
   const nose = renderNose(h.id, params, lm, skin, skinRa, L, g);
   const defs = [...nose.defs];
-  const skinLayer = params.skinMaterial.model === 'skin' ? compileSkin(h.id, lm, params.skinMaterial, skinRa, L, regions, params.lighting.zones) : null;
+  const skinLayer = params.skinMaterial.model === 'skin' ? compileSkin(h.id, lm, params.skinMaterial, skinRa, L, regions, params.lighting.zones, silhouette) : null;
   if (skinLayer) defs.push(...skinLayer.defs);
 
   // Sous-moteur : composants → ombres de contact → lumières de contour.
-  const { components, receivers } = faceComponents(params, lm, g, orbits);
+  const { components, receivers } = faceComponents(params, lm, g, orbits, silhouette);
   const shadowColor = mix(skinRa.shadow, '#000000', 0.45);
   const ct = compileContact(h.id, components, contactSpecs(params, lm), params.lighting.contacts.master, L, shadowColor, receivers, u);
   const rims = resolveRims(components, params.lighting.rims, skinRa);
@@ -107,7 +113,7 @@ export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: Pub
     defs.push(spotGradient(gid, '#e0566a', 0.38 * params.blush, 0.8));
     for (const sg of [-1, 1] as const) front.push(el('ellipse', { cx: sg * lm.W * 0.2, cy: lm.eyeY + 0.12 * lm.H, rx: lm.W * 0.1, ry: lm.H * 0.05, fill: urlRef(gid) }));
   }
-  const hair = renderHair(h.id, params, lm, L, rot, mix(skin, skinRa.shadow, 0.9), skin);
+  const hair = renderHair(h.id, params, lm, L, rot, mix(skin, skinRa.shadow, 0.9), skin, posed);
   const neck = renderNeck(h.id, params, lm, skin, skinRa, L, regions, sex);
   const chin = renderChin(h.id, params, lm, skinRa, L);
   const fh = renderFacialHair(h.id, params, lm, L, rot);
@@ -115,7 +121,7 @@ export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: Pub
   // Bouche et moustache forment UN groupe : l'asymétrie les incline ensemble autour du centre de la bouche.
   const tilt = params.asymmetry.mouthTiltDeg;
   // Moteur de structure : calques peints d'après la géométrie de structure ; la bouche structurée REMPLACE la bouche classique.
-  const st = params.anatomyEngine === 'structured' ? renderStructure(h.id, params, lm, g, skin, skinRa, L) : null;
+  const st = params.anatomyEngine === 'structured' ? renderStructure(h.id, params, lm, g, skin, skinRa, L, silhouette) : null;
   if (st) defs.push(...st.defs);
   const mouthGroup = [...(st ? st.mouth : renderMouth(params, lm, skin, skinRa, L)), ...fh.mustache];
   // Ordre : ombres de contact sur la peau (orbites, nez, ailes) → nez → contours du nez → menton → bouche (+ ombre de la lèvre) → barbe → ombre des
@@ -134,5 +140,5 @@ export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: Pub
   // Rendu `ink` : un filtre global (niveaux de gris + seuil) ; aucune anatomie n'est reconstruite.
   const ink = params.renderMode === 'ink' ? inkFilter(h.id, lm.W, lm.H, inkThreshold(skin)) : null;
   if (ink) defs.push(...ink.defs);
-  return { lm, defs, skin: skinLayer, behind, front: front.filter((s) => s !== ''), over: hair.over, contacts: ct.metrics, nose: g, structure: st, filter: ink ? ink.ref : null };
+  return { lm, silhouette, defs, skin: skinLayer, behind, front: front.filter((s) => s !== ''), over: hair.over, contacts: ct.metrics, nose: g, structure: st, filter: ink ? ink.ref : null };
 }

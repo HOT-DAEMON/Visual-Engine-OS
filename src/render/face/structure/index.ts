@@ -1,5 +1,5 @@
 import type { ResolvedAppearance } from '../../../appearance';
-import type { FaceLandmarks, NoseGeometry } from '../../../face';
+import type { FaceLandmarks, NoseGeometry, Outline } from '../../../face';
 import { facePose } from '../../../face/deform';
 import { mouthGeometry, type MouthGeo } from '../../../face/mouth';
 import { structureGeometry, type StructureGeometry } from '../../../face/structure';
@@ -32,7 +32,7 @@ export interface StructureLayers {
 }
 
 /** Assemble tous les calques de structure d'un visage `anatomyEngine: 'structured'`. */
-export function renderStructure(id: string, p: FaceParams, lm: FaceLandmarks, nose: NoseGeometry, skin: string, ra: ResolvedAppearance, L: LightVector): StructureLayers {
+export function renderStructure(id: string, p: FaceParams, lm: FaceLandmarks, nose: NoseGeometry, skin: string, ra: ResolvedAppearance, L: LightVector, outline: Outline = lm.outline): StructureLayers {
   const geometry = structureGeometry(p, lm, nose);
   const mouthGeo = mouthGeometry(p, lm);
   const pose = facePose(p, lm, geometry.tissue.cheeks);
@@ -40,7 +40,7 @@ export function renderStructure(id: string, p: FaceParams, lm: FaceLandmarks, no
   const tissue = renderTissue(c, geometry);
   const noseRegions = renderNoseRegions(c, nose, skin);
   const mouth = renderMouthStructured(c, mouthGeo, skin);
-  const after = [...renderFolds(c, geometry, mouthGeo, pose.field, pose.pulls.foldDeepen), ...renderChinStructure(c, geometry), ...renderInk(c, lm, nose, geometry, mouthGeo)];
+  const after = [...renderFolds(c, geometry, mouthGeo, pose.field, pose.pulls.foldDeepen), ...renderChinStructure(c, geometry), ...renderInk(c, lm, nose, geometry, mouthGeo, outline)];
   const neck = renderNeckStructure(c, lm, geometry);
   return { defs: [...c.kit.defs, ...mouth.defs], tissue, noseRegions, mouth: mouth.markup, after, neck, geometry, mouthGeo };
 }

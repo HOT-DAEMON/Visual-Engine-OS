@@ -16,7 +16,7 @@ export function compileHost(h: HostSpec, worldLight: LightVector, orbits?: Publi
   const bbox = { x: -rx, y: -ry, w: h.width, h: h.height };
   const parts = h.shape === 'face' ? faceParts(h, L, rot, orbits, sex) : null;
   const surface: Surface = parts
-    ? faceSurface(h, parts.lm)
+    ? faceSurface(h, parts.lm, parts.silhouette)
     : h.shape !== 'rounded_rect'
       ? { bbox, curvature: 'sphere', draw: (a) => el('ellipse', { cx: 0, cy: 0, rx, ry, ...a }) }
       : {
