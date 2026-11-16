@@ -5,18 +5,18 @@ import { verifyEyeRender } from '../scripts/lib/verify-eye-render';
 
 describe('galerie étendue : 100 formes d’yeux en plus des 48', () => {
   const rc = extraEyeRecipes();
-  it('100 recettes, 12 enveloppes représentées (≥ 8 chacune), graines uniques hors des 48 existantes', () => {
+  it('100 recettes, 12 enveloppes représentées (≥ 4 chacune ; quota adaptatif), graines uniques hors des 48 existantes', () => {
     expect(rc).toHaveLength(EXTRA_EYE_COUNT);
     const by = distinctness().byStyle;
     expect(Object.keys(by)).toHaveLength(12);
-    for (const n of Object.values(by)) expect(n).toBeGreaterThanOrEqual(8);
+    for (const n of Object.values(by)) expect(n).toBeGreaterThanOrEqual(4);  // quota adaptatif : diamond (4) et diamond_v2 (5) saturent, leurs places vont aux autres styles
     const seeds = new Set(rc.map((r) => r.seed)); expect(seeds.size).toBe(100);
     const existing = new Set(Array.from({ length: 48 }, (_, i) => 1000 + i * 101));
     for (const s of seeds) expect(existing.has(s)).toBe(false);
   });
   it('deux cases consécutives n’ont jamais la même enveloppe (entrelacement)', () => { for (let i = 1; i < rc.length; i++) expect(rc[i]!.style).not.toBe(rc[i - 1]!.style); });
-  it('distinction prouvée : distance minimale aux 48 existants ≥ 0,02 et entre les 100 ≥ 0,008 (largeur = 1 ; 0,0089 mesuré après l’ajout des silhouettes de références)', () => {
-    const d = distinctness(); expect(d.minToExisting).toBeGreaterThanOrEqual(0.02); expect(d.minAmongNew).toBeGreaterThanOrEqual(0.008);
+  it('distinction prouvée : distance minimale aux 48 existants ≥ 0,02 ET entre les 100 ≥ 0,02 (largeur = 1 ; était 0,0089 avec 320 candidats par style, 0,0201 avec 900)', () => {
+    const d = distinctness(); expect(d.minToExisting).toBeGreaterThanOrEqual(0.02); expect(d.minAmongNew).toBeGreaterThanOrEqual(0.02);
   });
   it('déterministe', () => { expect(JSON.stringify(generateExtraEye(7))).toBe(JSON.stringify(generateExtraEye(7))); });
   it('la recette est CONSOMMÉE : style, inclinaison, fraction haute et rondeurs des canthi se retrouvent dans l’œil', () => {

@@ -18,3 +18,10 @@ export function lashZoneExcess(g: OpeningGeometry, lashes: readonly Lash[]): num
   const beyond = (p: Vec): number => Math.hypot(Math.max(bb.x - p.x, p.x - (bb.x + bb.w), 0), Math.max(bb.y - p.y, p.y - (bb.y + bb.h), 0));
   return Math.max(0, ...lashes.flatMap((l) => lashSamples(l).map(beyond))) / Math.max(g.w, g.h);
 }
+
+/** Dépassement maximal de points (pointe et bord de l'aile du liner) hors du cadre de l'ouverture, même unité que `lashZoneExcess`. */
+export function pointsZoneExcess(g: OpeningGeometry, pts: readonly Vec[]): number {
+  const bb = g.bbox;
+  const beyond = (p: Vec): number => Math.hypot(Math.max(bb.x - p.x, p.x - (bb.x + bb.w), 0), Math.max(bb.y - p.y, p.y - (bb.y + bb.h), 0));
+  return Math.max(0, ...pts.map(beyond)) / Math.max(g.w, g.h);
+}

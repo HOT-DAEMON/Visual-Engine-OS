@@ -56,17 +56,43 @@ export function lashHitsOpening(l: Lash, poly: readonly Vec[], lidPx: number): b
 }
 const turn = (l: Lash, a: number): Lash => ({ ...l, ctrl: rotAbout(l.ctrl, l.base, a), tip: rotAbout(l.tip, l.base, a), ...(l.ctrl2 ? { ctrl2: rotAbout(l.ctrl2, l.base, a) } : {}) });
 
-/** Dégage de l'ouverture les cils qui y retombent ; renvoie la liste (mêmes objets pour les cils déjà dégagés). */
+/** Rétrécit le cil vers sa racine (même courbe, longueur × f) : sa forme et son angle de départ sont conservés. */
+const shrink = (l: Lash, f: number): Lash => {
+  const k = (p: Vec): Vec => ({ x: l.base.x + (p.x - l.base.x) * f, y: l.base.y + (p.y - l.base.y) * f });
+  return { ...l, ctrl: k(l.ctrl), tip: k(l.tip), ...(l.ctrl2 ? { ctrl2: k(l.ctrl2) } : {}) };
+};
+/**
+ * Repli quand AUCUNE rotation ≤ `maxDeg` ne dégage le cil (audit des cils : 24 cas sur 19 021 laissés tels quels, donc dessinés sur l'iris) : on raccourcit le cil par paliers
+ * (× 0,85 → 0,3), en retestant les rotations à chaque palier. Anatomiquement un cil implanté sur un canthus très aigu ou une paupière très inclinée est court ; un cil long qui traverse
+ * l'œil est une erreur. Un cil dont la RACINE est elle-même dans l'ouverture (dessin dégénéré) n'est pas touché : le contrôle `verifyEye` le signale.
+ */
+export const CLEARANCE_SHRINK = [0.85, 0.7, 0.55, 0.4, 0.3] as const;
+/**
+ * 2ᵉ repli, mesuré sur la galerie : les 24 cils restants après rotation + raccourcissement sont tous des cils du BAS, des mèches plus LARGES que longues (largeur de base 18–28 px pour 4–13 px de
+ * longueur) dont la demi-largeur, ajoutée à la racine déjà à ≈ 0,5 épaisseur dans l'ouverture, dépasse le seuil : seule une mèche plus fine les dégage. On amincit la base par paliers (× 0,75 → 0,3)
+ * en conservant longueur et angle.
+ */
+export const CLEARANCE_NARROW = [0.75, 0.6, 0.45, 0.3] as const;
+
+/** Dégage de l'ouverture les cils qui y retombent ; renvoie la liste (mêmes objets pour les cils déjà dégagés ; un cil impossible à dégager est omis, voir le dernier recours). */
 export function clearLashesFromOpening(lashes: readonly Lash[], poly: readonly Vec[], center: Vec, lidPx: number): Lash[] {
-  return lashes.map((l) => {
-    if (!lashHitsOpening(l, poly, lidPx)) return l;
+  return lashes.flatMap((l): Lash[] => {
+    if (!lashHitsOpening(l, poly, lidPx)) return [l];
     const d = (x: Lash): number => Math.hypot(x.tip.x - center.x, x.tip.y - center.y);
-    for (let a = CLEARANCE.stepDeg; a <= CLEARANCE.maxDeg; a += CLEARANCE.stepDeg) {
-      const p = turn(l, rad(a)); const m = turn(l, -rad(a));
-      const first = d(p) >= d(m) ? p : m; const second = first === p ? m : p;
-      if (!lashHitsOpening(first, poly, lidPx)) return first;
-      if (!lashHitsOpening(second, poly, lidPx)) return second;
-    }
-    return l;
+    const rotate = (src: Lash): Lash | null => {
+      for (let a = CLEARANCE.stepDeg; a <= CLEARANCE.maxDeg; a += CLEARANCE.stepDeg) {
+        const p = turn(src, rad(a)); const m = turn(src, -rad(a));
+        const first = d(p) >= d(m) ? p : m; const second = first === p ? m : p;
+        if (!lashHitsOpening(first, poly, lidPx)) return first;
+        if (!lashHitsOpening(second, poly, lidPx)) return second;
+      }
+      return null;
+    };
+    const cleared = rotate(l);
+    if (cleared) return [cleared];
+    for (const f of CLEARANCE_SHRINK) { const s = shrink(l, f); if (!lashHitsOpening(s, poly, lidPx)) return [s]; const r = rotate(s); if (r) return [r]; }
+    for (const w of CLEARANCE_NARROW) { const n = { ...l, baseWidth: l.baseWidth * w }; if (!lashHitsOpening(n, poly, lidPx)) return [n]; }
+    // Dernier recours (8 cils sur 19 021 : racine déjà dans la fente d'une paupière basse concave) : un cil qui ne peut s'implanter nulle part sans recouvrir l'œil n'est pas dessiné.
+    return [];
   });
 }

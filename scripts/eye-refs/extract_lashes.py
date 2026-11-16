@@ -11,6 +11,8 @@ from scipy.ndimage import grey_opening
 
 ROOT, OUT = 'references/eyes/', 'artefacts/eyes-refs3/'
 SRC = {'12': '12.jpg', '13': '13.jpg', '14': '14.jpg', '15': '15.png', '16': '16.webp'}
+# Réf. 17 (motif de 14 yeux, encre GRISE luminance ≈ 57) : essayée avec `eyes_of` (2026-11-16) puis REJETÉE — boîtes sans les éventails de cils (yeux 1, 4, 17, 19), sourcils pris pour des yeux (13, 15), tuile coupée (0) :
+# artefacts/eyes-pass5/05-ref17-extraction-rejetee.png. Il faut un détecteur d'yeux propre à ce motif (cellules annotées comme les réfs 14/15) avant de l'ajouter ici.
 
 def load(name):
     im = cv2.imread(ROOT + SRC[name], cv2.IMREAD_UNCHANGED)
@@ -283,6 +285,10 @@ def stroke_polylines(c):
         out.append({'pts': path[:, ::-1].astype(float), 'width': np.array([dt[y, x] * 2 for y, x in path]), 'ends': len(ends)})
     return out, body
 
+def wrap180(d):
+    """Ramène un angle (ou une différence d'angles) dans [-180, 180). Sans cela, `a1 - a0` de deux atan2 pouvait valoir jusqu'à ±360° (54 traits sur 437 avaient |bendDeg| > 180°, physiquement impossible)."""
+    return float((d + 180.0) % 360.0 - 180.0)
+
 def stroke_features(poly, L, lid_slope_deg):
     pts, wd = poly['pts'], poly['width']; n = len(pts)
     seg = np.hypot(*np.diff(pts, axis=0).T); arc = float(seg.sum())
@@ -291,8 +297,8 @@ def stroke_features(poly, L, lid_slope_deg):
     a0, a1 = ang(pts[0], pts[k1]), ang(pts[k2], pts[-1])
     chord = float(np.hypot(*(pts[-1] - pts[0])))
     w0 = float(np.mean(wd[:max(2, n // 6)])); wm = float(np.mean(wd[n // 2 - 1:n // 2 + 2])); wt = float(np.mean(wd[-max(2, n // 6):]))
-    return {'baseX': float(pts[0][0] / L), 'tipX': float(pts[-1][0] / L), 'length': arc / L, 'chord': chord / L, 'startAngleDeg': a0 - lid_slope_deg, 'endAngleDeg': a1 - lid_slope_deg,
-            'bendDeg': a1 - a0, 'startVsHorizontalDeg': ang(pts[0], pts[k1]) - 90 if False else float(math.degrees(math.atan2(-(pts[k1][1] - pts[0][1]), pts[k1][0] - pts[0][0]))),
+    return {'baseX': float(pts[0][0] / L), 'tipX': float(pts[-1][0] / L), 'length': arc / L, 'chord': chord / L, 'startAngleDeg': wrap180(a0 - lid_slope_deg), 'endAngleDeg': wrap180(a1 - lid_slope_deg),
+            'bendDeg': wrap180(a1 - a0), 'startVsHorizontalDeg': ang(pts[0], pts[k1]) - 90 if False else float(math.degrees(math.atan2(-(pts[k1][1] - pts[0][1]), pts[k1][0] - pts[0][0]))),
             'baseWidth': w0 / L, 'taperMid': wm / max(w0, 0.5), 'taperTip': wt / max(w0, 0.5), 'baseY': float(pts[0][1])}
 
 def lid_slope(c, x):
@@ -338,7 +344,7 @@ def spike_geometry(comp, L, side):
         nrm = math.degrees(math.atan(float(slope[p])))
         a_base = ang(pts[0], pts[len(pts) // 2]) - nrm; a_tip = ang(pts[len(pts) // 2], pts[-1]) - nrm
         wb = max(wd[0] or 1.0, 1.0)
-        out.append({'x': float(p / max(bw - 1, 1)), 'length': hp / L, 'baseWidth': wb / L, 'baseAngleDeg': float(a_base), 'tipAngleDeg': float(a_tip), 'bendDeg': float(a_tip - a_base),
+        out.append({'x': float(p / max(bw - 1, 1)), 'length': hp / L, 'baseWidth': wb / L, 'baseAngleDeg': wrap180(a_base), 'tipAngleDeg': wrap180(a_tip), 'bendDeg': wrap180(a_tip - a_base),
                     'taper': [None if v is None else float(v / wb) for v in wd], 'prominence': float(prom / L)})
     out.sort(key=lambda s: s['x'])
     k = 0

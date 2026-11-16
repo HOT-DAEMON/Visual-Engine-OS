@@ -1,7 +1,8 @@
 import { mulberry32 } from '../core/prng';
 import { EyeSpec } from '../schema';
 import { eyeLashSet, openingGeometry } from '../geometry/eye';
-import { lashZoneExcess } from '../geometry/eye/lash-zone';
+import { lashZoneExcess, pointsZoneExcess } from '../geometry/eye/lash-zone';
+import { linerGeometry } from '../geometry/eye/liner';
 
 /**
  * FAMILLES DE CILS tirées des références 12, 13, 14, 15, 16 (traits noirs sur blanc ou sur sclère), échantillonnées par scripts/eye-refs/extract_lashes.py (v2 : regroupement autour de
@@ -19,8 +20,13 @@ export type LashFamilyId =
   | 'trio-externe' | 'touffes-bas' | 'ticks-reguliers' | 'trainants';
 
 type Patch = Record<string, unknown>;
-/** Encre des cils : noir bleuté opaque comme dans les références (les cils héritaient de la teinte de paupière, pâle et translucide à l'image). */
-const INK = { material: { base: { type: 'solid', color: '#120e18' }, roughness: 0.6 }, opacity: 1, gloss: 0, colorVariation: 0 } as const;
+/**
+ * Encre des cils : noir NEUTRE opaque, MESURÉ sur les pixels des références (references/eyes 12, 13, 15, 16 : luminance médiane de l'encre 0 à 2, BGR moyen du cœur 2–5, aucune dominante bleue ;
+ * la réf. 14 (médiane 34, JPEG teinté) et la 17 (médiane 57, encre grise) sont d'autres styles et ne servent pas de référence d'encre). Auparavant `#120e18` (luminance ≈ 14, bleuté) : valeur
+ * interprétée, plus claire que les aplats mesurés. Une seule encre pour le cil et le liner (racine, trait et cil forment une masse unie).
+ */
+export const LASH_INK_COLOR = '#040404';
+const INK = { material: { base: { type: 'solid', color: LASH_INK_COLOR }, roughness: 0.6 }, opacity: 1, gloss: 0, colorVariation: 0 } as const;
 export interface LashFamily {
   readonly id: LashFamilyId; readonly label: string; readonly sources: readonly string[]; readonly upper: Patch; readonly lower: Patch;
   /** Épaisseur du trait de paupière (`lids.thickness`, défaut du schéma 0,06) pour les styles tracés : les références montrent le cil enraciné dans un trait de paupière noir épais (valeur « I », interprétée sur les planches). N'abaisse jamais l'épaisseur déjà réglée. */
@@ -34,7 +40,7 @@ export interface LashFamily {
 }
 const W = (length: number, liftDeg: number, curve: number, sharpness = 0.92, thickness = 0.9) => ({ length, liftDeg, curve, sharpness, thickness });
 /** Encre du liner : la même que celle des cils, pour que racine, trait et cil ne forment qu'une masse noire. */
-const LINER_INK = '#0c0a10';
+const LINER_INK = LASH_INK_COLOR;
 
 export const LASH_FAMILIES: Readonly<Record<LashFamilyId, LashFamily>> = {
   // Peu de cils longs, balayés vers l'extérieur, effilés en aiguille, aile finale recourbée. 13-03, 13-06, 13-07, 13-10 : 3 à 5 cils du haut (M), longueur max 0,5–0,7 L (M), pointe qui se redresse (M, bendDeg I).
@@ -70,9 +76,9 @@ export const LASH_FAMILIES: Readonly<Record<LashFamilyId, LashFamily>> = {
       flick: { count: 2, length: 0.55, reach: 0.14, liftDeg: 38, curl: 0.7 } },
     lower: { count: 2, length: 0.06, thickness: 0.3, tipSharpness: 0.9 },
   },
-  // Quasi aucun cil visible, mais une aile épaisse de liner au canthus externe (réf. 15 rangée 3 ; 12-10, 12-11) : 1 à 3 cils (M).
+  // Quasi aucun cil visible, mais une aile épaisse de liner au canthus externe (réf. 15 rangée 3 ; 12-10) : 1 à 3 cils (M).
   'aile-liner': {
-    id: 'aile-liner', label: 'Aile de liner', sources: ['12-10', '12-11', '13-04', '15-04', '15-05'],
+    id: 'aile-liner', label: 'Aile de liner', sources: ['12-10', '13-04', '15-04', '15-05'],
     liner: { thickness: 1.9, start: 0.08, peak: 0.75, wing: W(0.34, 22, 0.35, 0.95, 1.0) },
     lidThickness: 0.11,
     upper: { count: 4, length: 0.16, thickness: 1.5, curl: 0.2, sweep: 14, tipSharpness: 0.9, bendDeg: 30, rootFuse: 1, span: { from: 0.55, to: 0.99 }, arch: { peak: 0.9, width: 0.3, strength: 0.7 }, outerLength: 0.5,
@@ -124,14 +130,26 @@ export const LASH_FAMILIES: Readonly<Record<LashFamilyId, LashFamily>> = {
 
 export const LASH_FAMILY_IDS = Object.keys(LASH_FAMILIES) as LashFamilyId[];
 
-/** Applique une famille de cils à un œil (spec brute) : remplace seulement les champs que la famille règle, le reste des cils (couleur, matériau, opacité) de l'œil est conservé. */
-export function applyLashFamily<T extends Record<string, unknown>>(eye: T, id: LashFamilyId): T {
+/**
+ * Contrat d'APPARENCE d'une famille (audit §6.1 : l'ancienne fusion écrasait l'encre alors que le commentaire annonçait le contraire ; on sépare désormais structure et matière) :
+ *  - `'family'` (défaut) : la famille impose son encre (noir mesuré des références : matériau, opacité 1, brillance 0, variation de teinte 0 ; cils du bas à 0,9 d'opacité) ;
+ *  - `'keep'`   : la famille ne règle que la STRUCTURE (nombre, longueur, courbure, mèches…) ; matériau, opacité, brillance et variation de teinte déjà présents sur l'œil sont conservés,
+ *                 sauf ce que la famille redéfinit elle-même (ex. `opacity` du bas d'une famille). Le trait de paupière (`lids.liner`) garde alors sa propre couleur (celle de l'œil, sinon l'encre).
+ */
+export type LashInkMode = 'family' | 'keep';
+export interface ApplyLashFamilyOptions { readonly ink?: LashInkMode }
+
+/** Applique une famille de cils à un œil (spec brute) : remplace les champs de STRUCTURE que la famille règle ; l'apparence suit `options.ink` (voir `LashInkMode`, défaut `'family'`). */
+export function applyLashFamily<T extends Record<string, unknown>>(eye: T, id: LashFamilyId, options: ApplyLashFamilyOptions = {}): T {
   const fam = LASH_FAMILIES[id];
+  const keep = options.ink === 'keep';
   const cur = ((eye as { lashes?: { upper?: Patch; lower?: Patch } }).lashes ?? {}) as { upper?: Patch; lower?: Patch };
   const lids = { ...(((eye as { lids?: Patch }).lids ?? {}) as Patch) };
   if (fam.lidThickness !== undefined) lids.thickness = Math.max(fam.lidThickness, (lids.thickness as number | undefined) ?? 0);
   if (fam.liner && !lids.liner) lids.liner = { color: LINER_INK, tipColor: null, gloss: 0, ...fam.liner };
-  const out = { ...eye, ...(fam.lidThickness !== undefined || fam.liner ? { lids } : {}), lashes: { upper: { ...(cur.upper ?? {}), ...INK, ...fam.upper }, lower: { ...(cur.lower ?? {}), ...INK, opacity: 0.9, ...fam.lower } } } as T;
+  const upperInk: Patch = keep ? {} : INK;
+  const lowerInk: Patch = keep ? {} : { ...INK, opacity: 0.9 };
+  const out = { ...eye, ...(fam.lidThickness !== undefined || fam.liner ? { lids } : {}), lashes: { upper: { ...(cur.upper ?? {}), ...upperInk, ...fam.upper }, lower: { ...(cur.lower ?? {}), ...lowerInk, ...fam.lower } } } as T;
   return fitLashesToZone(out);
 }
 
@@ -143,7 +161,10 @@ function fitLashesToZone<T extends Record<string, unknown>>(eye: T): T {
     const spec = EyeSpec.parse(cur);   // échoue tout de suite si une famille sort du schéma
     const g = openingGeometry(spec.shape, spec.canthi); const th = spec.lids.thickness * spec.shape.height;
     const set = eyeLashSet(spec, g, th);
-    if (lashZoneExcess(g, [...set.upper, ...set.lower]) <= ZONE_TARGET) return cur;
+    // l'aile du liner (sa pointe et son bord haut) compte aussi dans la zone du dessin : l'œil 13 de la galerie (réf. 15-B, sprite haut) la dépassait de quelques pixels
+    const liner = spec.lids.liner; const linerOut = liner ? pointsZoneExcess(g, (() => { const lg = linerGeometry(g, liner, th); return [lg.tip, ...lg.top]; })()) : 0;
+    if (lashZoneExcess(g, [...set.upper, ...set.lower]) <= ZONE_TARGET && linerOut <= ZONE_TARGET) return cur;
+    if (linerOut > ZONE_TARGET) { const L = (cur as unknown as { lids: { liner: { wing: { length: number } } } }).lids; cur = { ...cur, lids: { ...L, liner: { ...L.liner, wing: { ...L.liner.wing, length: L.liner.wing.length * 0.88 } } } }; continue; }
     const lz = (cur as unknown as { lashes: { upper: { length?: number; flick?: { length?: number; count?: number } }; lower: { length?: number } } }).lashes;
     const f = 0.93;
     cur = { ...cur, lashes: { ...lz, upper: { ...lz.upper, length: (lz.upper.length ?? spec.lashes.upper.length) * f, ...(lz.upper.flick?.count ? { flick: { ...lz.upper.flick, length: (lz.upper.flick.length ?? spec.lashes.upper.flick.length) * f } } : {}) }, lower: { ...lz.lower, length: (lz.lower.length ?? spec.lashes.lower.length) * f } } };

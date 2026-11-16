@@ -37,6 +37,8 @@ const REF_MIN_DIST = 0.02;
 const EXTRA_QUOTA: readonly string[] = ['chibi', 'angular', 'triangle', 'rounded_rect'];
 const CANDIDATES_PER_STYLE = 320;
 const WIDTH = 240;
+/** Distance minimale entre deux des 100 formes (largeur = 1), comme pour les 48 existantes. Un style dont le meilleur candidat restant est plus proche d'une forme déjà retenue est SATURÉ : il cède ses places (voir `extraEyeRecipes`). Mesuré avant : 0,0089 (diamond, diamond_v2) ; agrandir le pool de candidats ne change rien (320, 900, 2 000, 5 000 : 0,0095–0,0121), c'est l'espace de paramètres de ces styles qui est étroit. */
+export const NEW_MIN_DIST = 0.02;
 /** Diamètre vertical de l'iris / hauteur d'ouverture (mesuré sur references/eyes : rayon/hauteur 0,49–0,54 -> diamètre 0,98–1,08). */
 const IRIS_OVER_HEIGHT = 1.02;
 
@@ -106,27 +108,36 @@ export function extraEyeRecipes(): readonly EyeRecipe[] {
     taken.push(d); quota.set(style, (quota.get(style) ?? 0) - 1);
     recipes.push({ style, aspect: f.aspect, tiltDeg: f.tiltDeg, upperFraction: f.upperFraction, openness: f.openness, innerRoundness: f.innerRoundness, outerRoundness: f.outerRoundness, caruncle: 0.5, foldAmount: 0, index: recipes.length, seed: 0, nearest: m, ref: f.id });
   }
-  // 2. Le reste par échantillonnage du plus éloigné, quotas par style.
+  // 2. Le reste par échantillonnage du plus éloigné, quotas par style ; un style SATURÉ (meilleur candidat < NEW_MIN_DIST) cède ses places aux autres : mieux vaut 5 diamants distincts que 9 quasi-doublons.
+  const saturated = new Set<string>();
   while (recipes.length < EXTRA_EYE_COUNT) {
+    let placed = false;
     for (const s of STYLES) {
-      if ((quota.get(s) ?? 0) <= 0) continue;
+      if ((quota.get(s) ?? 0) <= 0 || saturated.has(s)) continue;
       const pool = pools.get(s) as Cand[];
       let best = -1; let bestD = -1;
       pool.forEach((c, k) => { const m = Math.min(...taken.map((t) => dist(c.d, t))); if (m > bestD) { bestD = m; best = k; } });
+      if (bestD < NEW_MIN_DIST) { saturated.add(s); const free = quota.get(s) ?? 0; quota.set(s, 0); const open = STYLES.filter((o) => !saturated.has(o) && o !== s); const to = open[recipes.length % Math.max(open.length, 1)]; if (to) quota.set(to, (quota.get(to) ?? 0) + free); continue; }
       const c = pool.splice(best, 1)[0] as Cand;
       taken.push([...c.d]);
       quota.set(s, (quota.get(s) ?? 0) - 1);
       const { d: _d, ...rest } = c;
       recipes.push({ ...rest, index: recipes.length, seed: 0, nearest: bestD });
+      placed = true;
     }
+    if (!placed && !STYLES.some((s) => (quota.get(s) ?? 0) > 0 && !saturated.has(s))) break;
   }
-  // 3. Entrelacement : jamais deux enveloppes identiques consécutives (échange déterministe), puis index et graines définitifs.
-  for (let i = 1; i < recipes.length; i++) {
-    if (recipes[i]!.style !== recipes[i - 1]!.style) continue;
-    const ok = (j: number): boolean => recipes[j]!.style !== recipes[i - 1]!.style && (i + 1 >= recipes.length || recipes[j]!.style !== recipes[i + 1]!.style) && recipes[i]!.style !== recipes[j - 1]!.style && (j + 1 >= recipes.length || recipes[i]!.style !== recipes[j + 1]!.style);
-    const j = recipes.findIndex((_, k) => k > i + 1 && ok(k));
-    if (j > 0) { const t = recipes[i]!; recipes[i] = recipes[j]!; recipes[j] = t; }
+  // 3. Entrelacement : jamais deux enveloppes identiques consécutives. Reorganisation gloutonne et déterministe (on place le style restant le plus nombreux qui diffère du précédent ; égalité : ordre de STYLES),
+  //    garantie tant qu'aucun style ne dépasse la moitié des cases ; l'ordre relatif des formes d'un même style est conservé. Puis index et graines définitifs.
+  const left = new Map<string, EyeRecipe[]>(STYLES.map((s) => [s, recipes.filter((r) => r.style === s)]));
+  const woven: EyeRecipe[] = [];
+  while (woven.length < recipes.length) {
+    const prev = woven[woven.length - 1]?.style;
+    const pick = STYLES.filter((s) => s !== prev && (left.get(s)?.length ?? 0) > 0).sort((a, b) => (left.get(b)?.length ?? 0) - (left.get(a)?.length ?? 0))[0];
+    if (!pick) break;
+    woven.push((left.get(pick) as EyeRecipe[]).shift() as EyeRecipe);
   }
+  if (woven.length === recipes.length) recipes.splice(0, recipes.length, ...woven);
   recipes.forEach((r, i) => { recipes[i] = { ...r, index: i, seed: 5000 + i * 131 }; });
   memo = recipes;
   return recipes;

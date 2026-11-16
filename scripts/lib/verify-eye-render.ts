@@ -1,6 +1,7 @@
 import { Resvg } from '@resvg/resvg-js';
 import { compileScene } from '../../src';
-import { openingGeometry, openingPolygon } from '../../src/geometry/eye';
+import { lashHalfWidth, signedDepth } from '../../src/geometry/eye/lash-clearance';
+import { cubicAt, eyeLashSet, openingGeometry, openingPolygon, type Lash, type Vec } from '../../src/geometry/eye';
 import { irisCenter, irisRadii } from '../../src/render/eye/helpers';
 import { resolveEye } from '../../src/render/eye/eye';
 import { EyeSpec } from '../../src/schema';
@@ -33,7 +34,7 @@ export function verifyEyeRender(input: Record<string, unknown>): EyeImageCheck[]
   const add = (layer: EyeImageCheck['layer'], id: string, ok: boolean, value: number, limit: number, message: string): void => { out.push({ layer, id, ok, value: Math.round(value * 1e3) / 1e3, limit, message }); };
 
   // géométrie : rien de dessiné au-delà de la boîte de l'ouverture élargie (cils ≤ 0,5 de la plus grande dimension)
-  const m = 0.55 * Math.max(g.bbox.w, g.bbox.h);
+  const m = 0.55 * Math.max(g.w, g.h);  // même normalisation que le contrat « zone du dessin » (lashZoneExcess : g.w / g.h nominaux, pas la boîte de l'ouverture : 240 contre 280 sur l'œil 13)
   let leaks = 0;
   for (let y = 0; y < H; y += 2) for (let x = 0; x < W; x += 2) if ((x < g.bbox.x + ox - m || x > g.bbox.x + g.bbox.w + ox + m || y < g.bbox.y + oy - m || y > g.bbox.y + g.bbox.h + oy + m) && !isBg(px, x, y)) leaks++;
   add('geometry', 'no-paint-outside-zone', leaks === 0, leaks, 0, 'de la peinture dépasse la zone de l’œil (cils compris)');
@@ -56,7 +57,7 @@ export function verifyEyeRender(input: Record<string, unknown>): EyeImageCheck[]
   // Robuste à la graine : 6 points (2 côtés de l'iris × 3 distances) dans l'ouverture ; un seul point pouvait tomber sur la caroncule ou l'ombre de paupière. On exige la MAXIMALE (une sclère claire reste claire quelque part).
   // Le point est pris au MILIEU VERTICAL de l'ouverture à chaque abscisse (et non sur la ligne iris-canthus) : près d'un canthus aigu la ligne sort de la fente ou rase le bord de paupière, et la mesure tombait dans l'ombre du bord.
   const midY = (x: number): number | null => { const ys: number[] = []; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const a = poly[i]!, b = poly[j]!; if (a.x > x !== b.x > x) ys.push(a.y + ((x - a.x) / (b.x - a.x)) * (b.y - a.y)); } return ys.length >= 2 ? (Math.min(...ys) + Math.max(...ys)) / 2 : null; };
-  const probes = [-1, 1].flatMap((side) => [1.3, 1.55, 1.85].map((k) => { const x = c.x + ox + side * s * rx * k; const y = midY(x); return y === null ? null : { x, y }; })).filter((p): p is { x: number; y: number } => p !== null && inside(poly, p.x, p.y)).map((p) => lum(px, p.x, p.y));
+  const probes = [-1, 1].flatMap((side) => [1.12, 1.2, 1.3, 1.55, 1.85].map((k) => { const x = c.x + ox + side * s * rx * k; const y = midY(x); return y === null ? null : { x, y }; })).filter((p): p is { x: number; y: number } => p !== null && inside(poly, p.x, p.y) && ((p.x - c.x - ox) / rx) ** 2 + ((p.y - c.y - oy) / ry) ** 2 > 1.1)  /* hors de l'iris (> 1,05 rayon) : sur un iris qui remplit l'ouverture (sprites, chibi, œil 23 et 30 de la galerie) la sonde mesurait l'iris, pas la sclère */.map((p) => lum(px, p.x, p.y));
   if (scLum >= 170 && probes.length) { const best = Math.max(...probes); add('anatomy', 'sclera-is-light-tone', best >= 60, best, 60, 'la sclère claire rendue est plus sombre que le 5ᵉ centile mesuré sur les références (60–73) en tout point sondé'); }
 
   // style : l'iris n'est pas un aplat (écart-type de luminance sur 5 × 5 échantillons dans le disque 0,2–0,9 rayon)
@@ -65,5 +66,28 @@ export function verifyEyeRender(input: Record<string, unknown>): EyeImageCheck[]
   const mean = vals.reduce((a, b) => a + b, 0) / Math.max(vals.length, 1);
   const sd = Math.sqrt(vals.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(vals.length, 1));
   add('style', 'iris-not-flat', sd >= 3, sd, 3, 'l’iris est un aplat (aucune texture, fibre ni dégradé mesurable)');
+
+  // ---- RÈGLE « CILS » SUR LES PIXELS (audit des cils : la vérification d'image n'avait aucune règle de cils) ----
+  // On échantillonne la ligne médiane de chaque cil réellement dessiné (eyeLashSet = le même appel que le rendu), au quart, au tiers et à la moitié de sa longueur (la pointe effilée est sous le pixel).
+  //   geometry : `lash-centerline-clear-of-opening` — aucun point échantillonné de la ligne médiane d'un cil du HAUT ne tombe dans l'ouverture (même à 2 px de marge) ;
+  //   anatomy  : `lash-ink-dark` — l'encre rendue des cils sombres et opaques est sombre sur l'image (médiane des luminances échantillonnées <= 45 ; références 12, 13, 15, 16 : médiane 0–2) ;
+  //   style    : `lash-ink-flat` — l'encre est un aplat franc comme les références (écart-type des luminances échantillonnées <= 12 ; mesure sur les références : écart-type du cœur 5–11).
+  // Non appliquées aux cils qui ne sont PAS une encre franche voulue (couleur > luminance 30, translucides, brillants ou à variation de teinte : style naturel de la galerie d'origine) ni s'il y en a moins de 3.
+  const lset = eyeLashSet(eye, g, eye.lids.thickness * eye.shape.height);
+  const at = (l: Lash, t: number): Vec => (l.ctrl2 ? cubicAt(l.base, l.ctrl, l.ctrl2, l.tip, t) : { x: (1 - t) ** 2 * l.base.x + 2 * (1 - t) * t * l.ctrl.x + t * t * l.tip.x, y: (1 - t) ** 2 * l.base.y + 2 * (1 - t) * t * l.ctrl.y + t * t * l.tip.y });
+  const hexLum = (hex: string): number => (hex.startsWith('#') && hex.length >= 7 ? 0.2126 * parseInt(hex.slice(1, 3), 16) + 0.7152 * parseInt(hex.slice(3, 5), 16) + 0.0722 * parseInt(hex.slice(5, 7), 16) : 255);
+  const isInk = (grp: { material: { base: Parameters<typeof dominantColor>[0] } | null; opacity: number; gloss: number; colorVariation: number }): boolean => grp.material !== null && hexLum(dominantColor(grp.material.base)) <= 30 && grp.opacity >= 0.9 && grp.gloss <= 0.05 && grp.colorVariation <= 0.05;
+  const inkLashes = [...(isInk(eye.lashes.upper) ? lset.upper : []), ...(isInk(eye.lashes.lower) ? lset.lower : [])];
+  if (inkLashes.length >= 3) {
+    const samples: number[] = []; let inOpening = 0, tested = 0;
+    for (const l of inkLashes) for (const t of [0.25, 0.33, 0.5]) { if (lashHalfWidth(l, t) * 2 < 3) continue; /* corps < 3 px : sous-pixel, gris par anti-crénelage, pas une mesure d'encre */ const q = at(l, t); const x = q.x + ox, y = q.y + oy; if (x < 0 || y < 0 || x >= W || y >= H) continue; samples.push(Math.min(...[[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].map(([dx, dy]) => lum(px, Math.min(W - 1, Math.max(0, x + (dx as number))), Math.min(H - 1, Math.max(0, y + (dy as number)))))));  /* le plus sombre de 5 pixels : un trait de 1–2 px est anti-crénelé */ }
+    for (const l of lset.upper) for (const t of [0.3, 0.45, 0.6, 0.75]) { const q = at(l, t); tested++; const x = q.x + ox, y = q.y + oy; if (signedDepth({ x, y }, poly) > eye.lids.thickness * eye.shape.height * 0.5) inOpening++; }  /* même seuil que le dégagement : la bande de paupière (demi-épaisseur du trait) n'est pas l'œil */
+    const med = [...samples].sort((a, b) => a - b)[Math.floor(samples.length / 2)] ?? 255;
+    const m = samples.reduce((a, b) => a + b, 0) / Math.max(samples.length, 1); const sdl = Math.sqrt(samples.reduce((a, b) => a + (b - m) ** 2, 0) / Math.max(samples.length, 1));
+    add('geometry', 'lash-centerline-clear-of-opening', inOpening === 0, inOpening, 0, 'la ligne médiane d’un cil du haut traverse l’ouverture (points échantillonnés dans la fente)');
+    if (samples.length >= 6) add('anatomy', 'lash-ink-dark', med <= 45, med, 45, 'l’encre des cils est rendue plus claire que le noir des références (médiane de luminance échantillonnée)');
+    if (samples.length >= 6) add('style', 'lash-ink-flat', sdl <= 12, sdl, 12, 'l’encre des cils n’est pas un aplat franc (écart-type de luminance sur la ligne médiane)');
+    void tested;
+  }
   return out;
 }

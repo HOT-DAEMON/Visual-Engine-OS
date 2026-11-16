@@ -36,13 +36,13 @@ describe('dégagement de l’ouverture (cils qui retombaient sur l’iris)', () 
     expect(depthInOpening({ x: g.bbox.x - 50, y: g.bbox.y - 50 }, poly)).toBe(0);
     expect(depthInOpening({ x: g.bbox.x + g.bbox.w / 2, y: g.bbox.y + g.bbox.h / 2 }, poly)).toBeGreaterThan(5);
   });
-  it('galerie × 10 familles (1 100 yeux) : moins de 40 cils sur 19 000 recouvrent encore l’ouverture (848 avant dégagement)', () => {
+  it('galerie × 10 familles (1 100 yeux) : AUCUN cil sur 19 000 ne recouvre encore l’ouverture (848 avant dégagement, 24 après rotation seule : repli par raccourcissement)', () => {
     let hits = 0; let tot = 0;
     for (let i = 0; i < EXTRA_EYE_COUNT; i++) for (const f of [null, ...LASH_FAMILY_IDS]) {
       const { spec, g, th, poly } = setup(f ? applyLashFamily(generateExtraEye(i) as never, f) : generateExtraEye(i));
       const s = eyeLashSet(spec, g, th); const all = [...s.upper, ...s.lower]; tot += all.length; hits += all.filter((l) => lashHitsOpening(l, poly, th)).length;
     }
-    expect(tot).toBeGreaterThan(18000); expect(hits).toBeLessThan(40);
+    expect(tot).toBeGreaterThan(18000); expect(hits).toBe(0);
   });
   it('les paramètres de dégagement sont bornés (rotation ≤ 50°)', () => { expect(CLEARANCE.maxDeg).toBeLessThanOrEqual(50); });
 });
