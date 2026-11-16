@@ -38,3 +38,10 @@ Légende : ✅ fait et prouvé · 🟡 partiel · ⬜ non fait. Rien ici n'est p
 - ✅ Couche de vérification du rendu éclairé : règles `src/verify/nose-lit.ts` (géométrie, anatomie, style) dans `verifyFace`, avec détection prouvée de l'ancien défaut ; ⬜ le déterminisme et le contraste restent des tests ; cohérence nez/joues/membres non mesurée.
 - ⬜ Asymétrie des ailes comme région, bosse osseuse volumétrique, cartilage supra-alaire.
 - ✅ Estimateur d'ellipse : écart moments d'aire / moindres carrés **quantifié** (rapport d'axes médian 1,6 %, max 4,6 % ; angle max 0,6°) sur 36 enveloppes du moteur ; non mesuré sur contours rasterisés bruités.
+
+## Ailes 3D et contour de la joue (16 nov. 2026, `NOSE-ALAR-SEAT.md`)
+- ✅ Débordement de l'aile lointaine à 30° **mesuré** (rendus et calcul, concordants) et corrigé : aile posée sur la joue + contrainte de contour ; plat-trapèze 0,083 → 0,017 U au pire sur 40 graines, pyramide / cloche-ailes / libre → 0. Preuves : `artefacts/nez-ailes-contour/`. Règles `eng.nose.alar-contour` (bloquante) et `eng.nose.alar-pull` (informative).
+- ⬜ Plat-trapèze : 72,5 % des graines rappelées, **4 sur 40 saturent** (0,017 U restant) : l'archétype est aux limites du modèle 3D.
+- ⬜ **Nez 3D de face 1,5 × plus large que la silhouette du moteur 2D** (ellipsoïde centré sur la crête `alaX`) : mesuré, NON corrigé, à trancher contre la planche (calée à la main sur ce modèle ?).
+- ⬜ 45° : débordement normal d'un nez en trois-quarts, aucune borne ; contrainte à un seul lacet (30°), côté lointain.
+- ⬜ Round-dome-centered de la pyramide (1 visage sur 24), matériau et texture propres au nez au-delà de l'existant, mesure de cohérence de teinte nez/joues, rougeurs de la réf. 05 (graphite, non mesurables), reste de `FACE-STRUCTURE-NOSE.md` : **non traités dans cette passe**.

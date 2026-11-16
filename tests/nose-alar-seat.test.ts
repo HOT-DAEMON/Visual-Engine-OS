@@ -1,0 +1,59 @@
+import { describe, expect, it } from 'vitest';
+import { head3dSubject } from '../src/render/head-3d';
+import { hostOf, noseOverflow } from '../scripts/nose-refs/alar-overflow';
+import { alaOf, alaPull, alaSeated } from '../src/head-turntable/parts';
+import { alaOverflow } from '../src/head-turntable/nose-contour';
+import { engineGeometry } from '../src/head-turntable/verify-engines';
+import { REF_SPEC } from '../src/head-turntable/spec';
+import type { HeadTurnSpec } from '../src/head-turntable';
+
+/** Ailes du nez 3D dans le contour de la joue (docs/NOSE-ALAR-SEAT.md). Têtes : graines fixes, archétype imposé. */
+const subject = (seed: number, a?: string): HeadTurnSpec => head3dSubject(hostOf(seed, a), {} as never).spec;
+const rule = (s: HeadTurnSpec, id: string) => engineGeometry(s).find((c) => c.id === id)!;
+
+describe('ailes du nez 3D : pose sur la joue et contrainte de contour', () => {
+  it('le nez de la planche de référence n\'est pas modifié (aucun rappel)', () => {
+    expect(alaPull(REF_SPEC)).toBe(0);
+    const a = alaOf(REF_SPEC, 1), b = alaSeated(REF_SPEC, 1, 0);
+    expect(a).toEqual(b);
+  });
+
+  it('la mesure analytique concorde avec la mesure par différence de rendus (±0,012 U)', () => {
+    // sans contrainte (aile posée seulement) et à 45° : valeurs non nulles des deux côtés, donc comparaison non triviale
+    for (const [seed, a] of [[77, 'plat-trapeze'], [11, 'pyramide']] as const) {
+      const s = subject(seed, a), analytic = alaOverflow(s, alaOf(s, -1), 45), render = noseOverflow(s, 45, 300).far;
+      expect(analytic).toBeGreaterThan(0.03);
+      expect(Math.abs(analytic - render)).toBeLessThan(0.012);
+    }
+  });
+
+  it('défaut ancien DÉTECTÉ : une aile non rappelée déborde à 30° (plat-trapèze graine 77 : ≈ 0,047 U)', () => {
+    const s = subject(77, 'plat-trapeze');
+    expect(alaOverflow(s, alaSeated(s, -1, 0), 30)).toBeGreaterThan(0.03);
+  });
+
+  it('contrainte : débordement à 30° nul après rappel, confirmé sur le RENDU (≤ une résolution de pixel)', () => {
+    const s = subject(77, 'plat-trapeze');
+    expect(alaPull(s)).toBeGreaterThan(0.02);
+    expect(alaOverflow(s, alaOf(s, -1), 30)).toBeLessThan(1e-4);
+    expect(noseOverflow(s, 30, 300).far).toBeLessThan(0.008);
+    expect(rule(s, 'eng.nose.alar-contour').ok).toBe(true);
+  });
+
+  it('un nez libre (graines 11, 77, 1203) n\'est pas rappelé de façon visible', () => {
+    for (const seed of [11, 77, 1203]) expect(alaPull(subject(seed))).toBeLessThan(0.006);
+  });
+
+  it('la règle voit la saturation : un nez bien plus large que le modèle ne peut pas tenir, la règle de rappel (info) le dit', () => {
+    const s = subject(77, 'plat-trapeze'), wide = { ...s, nose: { ...s.nose, alaX: s.nose.alaX * 1.8 } } as HeadTurnSpec;
+    expect(alaPull(wide)).toBeCloseTo(0.6 * wide.nose.alaX, 5);   // borne ALA_PULL_MAX
+    expect(rule(wide, 'eng.nose.alar-pull').ok).toBe(false);
+    expect(rule(wide, 'eng.nose.alar-contour').ok).toBe(false);
+  });
+
+  it('déterminisme : deux appels donnent la même aile', () => {
+    const s = subject(11, 'plat-trapeze');
+    expect(alaOf(s, 1)).toEqual(alaOf(s, 1));
+    expect(alaOf(s, 1).c.x).toBeCloseTo(-alaOf(s, -1).c.x, 12);
+  });
+});
