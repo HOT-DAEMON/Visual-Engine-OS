@@ -1,6 +1,6 @@
 import { el, urlRef } from '../../core/svg';
 import type { ResolvedAppearance } from '../../appearance';
-import { jawline, type FaceLandmarks } from '../../face';
+import { jawline, type FaceLandmarks, type Outline } from '../../face';
 import { catmullRom } from '../../face/curve';
 import { direction2D, type LightVector } from '../../lighting/light';
 import { intensityFor } from '../../lighting/rig';
@@ -16,8 +16,14 @@ import { lineD, softKit } from './soft';
  * S'y ajoutent la fossette / fente (symphyse `cleft`), l'ombrage de la ligne de mâchoire (côté opposé à la lumière) et le reflet du coin
  * de mâchoire (plus marqué quand l'angle est franc). La déformation des tissus à l'ouverture aplatit le sillon (`sulcusFlatten`).
  * L'ombre portée du menton sur le cou n'est PAS ici : elle est produite par le sous-moteur d'ombres de contact (composant `head`).
+ *
+ * SOUS POSE (`outline` ≠ contour de face) : la bande d'ombre de la ligne de mâchoire et le reflet du coin de mâchoire appartiennent à la SILHOUETTE de la tête, pas au menton. Ils sont donc tracés sur le contour POSÉ et rendus
+ * à part (`jaw`) : le groupe « menton » (sillon, coussinet, fente) suit le nœud `chin` de la pose, et y rattacher la bande de mâchoire la décalait de ~14 px à 30°, hors de la silhouette (halo pâle et ombre fantôme, mesurés
+ * `docs/ROTATION-HAIR-PASS-6.md`). À contour de face, `jaw` est vide et tout reste dans `markup`, dans le même ordre qu'avant : SVG identique à l'octet près.
  */
-export function renderChin(id: string, p: FaceParams, lm: FaceLandmarks, ra: ResolvedAppearance, L: LightVector): { defs: string[]; markup: string[] } {
+export function renderChin(id: string, p: FaceParams, lm: FaceLandmarks, ra: ResolvedAppearance, L: LightVector, outline: Outline = lm.outline): { defs: string[]; markup: string[]; jaw: string[] } {
+  const posed = outline !== lm.outline;
+  const lmo: FaceLandmarks = posed ? { ...lm, outline, jaw: { ...lm.jaw, gonion: outline.keys.gonion } } : lm;
   const kit = softKit(`${id}-chin`, lm.W, lm.H);
   const defs: string[] = [];
   const dir = direction2D(L);
@@ -46,15 +52,17 @@ export function renderChin(id: string, p: FaceParams, lm: FaceLandmarks, ra: Res
     for (const s of [-1, 1] as const) out.push(kit.stroke(lineD([{ x: s * 2.6 * u, y: top }, { x: s * 2.6 * u, y: bot }]), ra.light, 1.6 * u, 0.14 * I * c.cleft, 1.2 * u));
   }
   // Ligne de mâchoire : bande d'ombre douce le long du contour bas, du côté opposé à la lumière (la mandibule tourne vers l'ombre).
-  const jl = jawline(lm);
+  const jaw: string[] = [];
+  const onJaw = posed ? jaw : out;
+  const jl = jawline(lmo);
   const lit = (q: { x: number }): boolean => q.x * dir.x >= 0;
   const dark = jl.filter((q) => !lit(q));
-  if (dark.length > 1) out.push(kit.stroke(lineD(dark), ra.shadow, 0.05 * lm.W, 0.22 + 0.1 * (1 - p.jaw.angle), 0.02 * lm.W));
+  if (dark.length > 1) onJaw.push(kit.stroke(lineD(dark), ra.shadow, 0.05 * lm.W, 0.22 + 0.1 * (1 - p.jaw.angle), 0.02 * lm.W));
   // Coin de mâchoire : reflet du côté lumière (plus net quand l'angle est franc : `1 - angle`).
-  const g = lm.jaw.gonion;
+  const g = lmo.jaw.gonion;
   const sgn = dir.x >= 0 ? 1 : -1;
   const gg = `${id}-gonion`;
   defs.push(el('radialGradient', { id: gg, cx: 0.5, cy: 0.5, r: 0.5 }, [stop(0, ra.light, 0.18 * I * (0.5 + 0.8 * (1 - p.jaw.angle))), stop(1, ra.light, 0)]));
-  out.push(el('ellipse', { cx: sgn * (g.x - 0.03 * lm.W), cy: g.y - 0.02 * lm.H, rx: 0.05 * lm.W, ry: 0.04 * lm.H, fill: urlRef(gg) }));
-  return { defs: [...kit.defs, ...defs], markup: out };
+  onJaw.push(el('ellipse', { cx: sgn * (g.x - 0.03 * lm.W), cy: g.y - 0.02 * lm.H, rx: 0.05 * lm.W, ry: 0.04 * lm.H, fill: urlRef(gg) }));
+  return { defs: [...kit.defs, ...defs], markup: out, jaw };
 }

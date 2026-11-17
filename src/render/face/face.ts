@@ -121,7 +121,7 @@ export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: Pub
   }
   const hair = renderHair(h.id, params, lm, L, rot, mix(skin, skinRa.shadow, 0.9), skin, posed);
   const neck = renderNeck(h.id, params, lm, skin, skinRa, L, regions, sex);
-  const chin = renderChin(h.id, params, lm, skinRa, L);
+  const chin = renderChin(h.id, params, lm, skinRa, L, silhouette);
   const fh = renderFacialHair(h.id, params, lm, L, rot);
   defs.push(...hair.defs, ...neck.defs, ...chin.defs, ...fh.defs);
   // Bouche et moustache forment UN groupe : l'asymétrie les incline ensemble autour du centre de la bouche.
@@ -135,7 +135,7 @@ export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: Pub
   front.push(
     ...feat('eyeL', [shadow('orbitL')]), ...feat('eyeR', [shadow('orbitR')]), ...(st ? st.tissue : []),
     ...feat('nose', [shadow('nose'), shadow('alaL'), shadow('alaR'), ...nose.markup, ...(st ? st.noseRegions : []), rim('nose'), rim('tip'), rim('alaL'), rim('alaR')]),
-    ...feat('chin', chin.markup),
+    ...feat('chin', chin.markup), ...chin.jaw,
     ...feat('mouth', [shadow('mouth'), tilt === 0 ? mouthGroup.join('') : el('g', { transform: `rotate(${tilt} 0 ${lm.mouthY})` }, mouthGroup), rim('mouth')]),
     ...(st ? st.after : []), ...fh.beard, shadow('hair'), rim('chin'), rim('head'), ...hair.front,
   );
