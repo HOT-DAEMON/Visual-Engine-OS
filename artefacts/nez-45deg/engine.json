@@ -1,0 +1,50 @@
+{
+ "libre": {
+  "corde": {
+   "min": 0.0001,
+   "med": 0.0019,
+   "max": 0.0054
+  },
+  "exact": {
+   "min": 0,
+   "med": 0,
+   "max": 0
+  }
+ },
+ "pyramide": {
+  "corde": {
+   "min": 0.0001,
+   "med": 0.0032,
+   "max": 0.0248
+  },
+  "exact": {
+   "min": 0,
+   "med": 0,
+   "max": 0.0267
+  }
+ },
+ "cloche-ailes": {
+  "corde": {
+   "min": 0.0001,
+   "med": 0.0023,
+   "max": 0.0158
+  },
+  "exact": {
+   "min": 0,
+   "med": 0,
+   "max": 0.0167
+  }
+ },
+ "plat-trapeze": {
+  "corde": {
+   "min": 0.0001,
+   "med": 0.0043,
+   "max": 0.0325
+  },
+  "exact": {
+   "min": 0,
+   "med": 0.0033,
+   "max": 0.0333
+  }
+ }
+}

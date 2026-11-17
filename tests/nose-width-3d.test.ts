@@ -1,14 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { head3dSubject } from '../src/render/head-3d';
-import { alaOf, alaPull } from '../src/head-turntable/parts';
+import { alaOf, alaPull, alaSeated } from '../src/head-turntable/parts';
 import { frontWidthRatio } from '../src/head-turntable/nose-contour';
 import { engineSpec } from '../src/head-turntable/engines/spec-engine';
 import { hostOf } from '../scripts/nose-refs/alar-overflow';
 
 const types = [undefined, 'pyramide', 'cloche-ailes', 'plat-trapeze'] as const;
 const specs = types.flatMap((a) => [11, 77, 1203, 537].map((sd) => ({ a, spec: head3dSubject(hostOf(sd, a), {} as never).spec })));
-const shifted = (s: (typeof specs)[number]['spec']) => { const a = alaOf(s, 1); return { ...a, c: { ...a.c, x: a.c.x + a.ex } }; };
+// ancien comportement : aile posée SANS rappel de contour (pull 0), centre sur la crête (le rappel du 45° de docs/NOSE-YAW45.md rétrécit sinon l'aile)
+const shifted = (s: (typeof specs)[number]['spec']) => { const a = alaSeated(s, 1, 0); return { ...a, c: { ...a.c, x: a.c.x + a.ex } }; };
 
 describe('largeur de face du nez 3D (docs/NOSE-WIDTH-3D.md)', () => {
   it('la 3D ne dépasse plus la silhouette 2D : rapport ≤ 1,05 sur 4 types × 4 graines (avant : 1,50–1,54)', () => {

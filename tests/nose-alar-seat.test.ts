@@ -24,9 +24,9 @@ describe('ailes du nez 3D : pose sur la joue et contrainte de contour', () => {
   });
 
   it('la mesure analytique concorde avec la mesure par différence de rendus (±0,012 U)', () => {
-    // sans contrainte (aile posée seulement) et à 45° : valeurs non nulles des deux côtés, donc comparaison non triviale
+    // à 45° et nez élargi (le rappel plafonné du 45°, docs/NOSE-YAW45.md, laisse un débordement résiduel > 0,01) : valeurs non nulles des deux côtés, donc comparaison non triviale
     for (const [seed, a] of [[77, 'plat-trapeze'], [11, 'pyramide']] as const) {
-      const s = subject(seed, a), analytic = alaOverflow(s, alaOf(s, -1), 45), render = noseOverflow(s, 45, 300).far;
+      const s = wide(subject(seed, a), 1.3), analytic = alaOverflow(s, alaOf(s, -1), 45), render = noseOverflow(s, 45, 300).far;
       expect(analytic).toBeGreaterThan(0.01);
       expect(Math.abs(analytic - render)).toBeLessThan(0.012);
     }

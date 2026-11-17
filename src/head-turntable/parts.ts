@@ -1,7 +1,7 @@
 import { bumpMesh, ellipsoid, headMesh, neckMeshes, PART, type Mesh } from './mesh';
 import { rad, v3 } from './math';
 import { sectionAt, surfaceZ } from './sections';
-import { ALA_CONTOUR_YAW, ALA_PULL_MAX, alaOverflow, type AlaEllipsoid } from './nose-contour';
+import { ALA_CONTOUR_BOUNDS, alaOverflow, type AlaEllipsoid } from './nose-contour';
 import type { BumpKnots, HeadTurnSpec } from './types';
 import { earMesh, earRig } from './engines/ear3d';
 import { engineHead } from './engines/face-model';
@@ -40,17 +40,22 @@ export function alaSeated(spec: HeadTurnSpec, sg: 1 | -1, pull: number): AlaElli
 }
 
 /**
- * Contrainte « l'aile reste dans le contour de la joue à 30° » (`nose-contour.ts`, docs/NOSE-ALAR-SEAT.md), à la manière de `face/nose/constraints.ts` : valeur ramenée à la plus proche admissible, jamais de réglage global.
+ * Contrainte « l'aile reste dans le contour de la joue » à 30° (tolérance 0) et à 45° (tolérance de la planche, docs/NOSE-YAW45.md) (`nose-contour.ts`, docs/NOSE-ALAR-SEAT.md), à la manière de `face/nose/constraints.ts` : valeur ramenée à la plus proche admissible, jamais de réglage global.
  * Retourne le décalage vers l'axe (U) : 0 pour tout nez qui ne déborde pas (nez de la planche et nez libres : inchangés), saturé à (1 − `ALA_PULL_MAX`) × alaX.
  * Point fixe en 4 itérations : rapprocher l'aile de l'axe relève la surface de la joue sous elle, donc le recalcul.
  */
 export function alaPull(spec: HeadTurnSpec): number {
-  const max = (1 - ALA_PULL_MAX) * spec.nose.alaX, cs = Math.cos(rad(ALA_CONTOUR_YAW));
+  const alaX = spec.nose.alaX;
   let pull = 0;
-  for (let it = 0; it < 4; it++) {
-    const ov = alaOverflow(spec, alaSeated(spec, -1, pull), ALA_CONTOUR_YAW);
-    if (ov <= 1e-5) break;
-    pull = Math.min(max, pull + ov / cs + 1e-4);
+  for (let it = 0; it < 6; it++) {
+    const a = alaSeated(spec, -1, pull);
+    // chaque borne demande un rappel (excès / cos du lacet) plafonné à SA limite ; on retient le plus grand, jamais moins que le rappel déjà acquis
+    const next = Math.max(pull, ...ALA_CONTOUR_BOUNDS.map((b) => {
+      const ex = alaOverflow(spec, a, b.yaw) - b.tol;
+      return ex <= 1e-5 ? 0 : Math.min(b.maxPull * alaX, pull + ex / Math.cos(rad(b.yaw)) + 1e-4);
+    }));
+    if (next - pull <= 1e-9) break;
+    pull = next;
   }
   return pull;
 }
