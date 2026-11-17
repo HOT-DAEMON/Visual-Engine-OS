@@ -30,7 +30,7 @@ describe('projection d’un point de la vue de face sous un lacet (Skull.project
         const v = skull.projectX(s * hx, y, yaw);
         expect(v).toBeGreaterThan(prev - 1e-9);
         // Aucun saut : pente ≤ 4·ρ (mesurée : 1,35·ρ à 10°, 2,2·ρ à 30°, 3,8·ρ à 75°, toujours au limbe lointain, où la bande de cheveux écrasée de la vue de face est dépliée — `docs/ROTATION-HAIR-MASS.md`).
-        if (Number.isFinite(prev)) expect(v - prev).toBeLessThan(0.002 * hx * 4 * Math.hypot(Math.cos((yaw * Math.PI) / 180), 0.92 * Math.sin((yaw * Math.PI) / 180)));
+        if (Number.isFinite(prev)) expect(v - prev).toBeLessThan(0.002 * hx * 4 * Math.hypot(Math.cos((yaw * Math.PI) / 180), skull.depthRatio * Math.sin((yaw * Math.PI) / 180)));
         prev = v;
       }
       expect(skull.projectX(hx, y, yaw)).toBeCloseTo(skull.halfAt(y, yaw), 6);
@@ -96,10 +96,10 @@ describe('masses de cheveux sous pose', () => {
     });
   }
 
-  it('étendue horizontale des masses : jamais plus large que de face + l’épaisseur de cheveux (pas de débordement) et plus étroite côté crâne', () => {
+  it('étendue horizontale des masses : jamais plus large que de face × ρ(lacet) (ρ = √(cos²a + k²sin²a), la silhouette du crâne : pas de débordement)', () => {
     for (const style of STYLES) {
-      const { geo, skull, lm } = setup(style, 9003), a = spanOf(geo.base), b = spanOf(poseHairMasses(geo, skull, 40, lm.W).base);
-      expect(b.hi - b.lo).toBeLessThanOrEqual(a.hi - a.lo + 1e-6);
+      const { geo, skull, lm } = setup(style, 9003), a = spanOf(geo.base), b = spanOf(poseHairMasses(geo, skull, 40, lm.W).base), t = (40 * Math.PI) / 180;
+      expect(b.hi - b.lo).toBeLessThanOrEqual((a.hi - a.lo) * Math.hypot(Math.cos(t), skull.depthRatio * Math.sin(t)) + 1e-6);
     }
   });
 

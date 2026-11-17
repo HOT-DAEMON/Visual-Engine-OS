@@ -45,3 +45,6 @@ Faire suivre aux cheveux la rotation spatiale de la tête tout en conservant leu
 
 ## Critère d'arrêt
 Ne pas poursuivre vers les mèches individuelles si la masse capillaire n'est pas validée. Si l'étape 2 n'est pas intégrée ou si la projection commune manque, ne pas bricoler une rotation locale : fournir le blocage précis et le prérequis minimal.
+
+## Suites (état d'avancement)
+Mèches et pièces attachées : `ROTATION-HAIR-STRANDS.md` ; éléments liés et lisière : `ROTATION-HAIR-LINKED.md` ; vérification : `ROTATION-HAIR-VERIFY.md` ; traits du visage : `ROTATION-FACE-FEATURES.md` ; décisions et reste à faire : `ROTATION-HAIR-DECISIONS.md`.

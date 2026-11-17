@@ -1,5 +1,6 @@
 import { compose, selectAnchors, type ResolvedAnchor, type Similarity } from './anchors';
 import type { HostSpec, SceneSpec } from '../schema';
+import { eyePoseOf } from '../face/pose/eye-pose';
 
 export type SceneObject = SceneSpec['objects'][number];
 
@@ -36,7 +37,9 @@ export function expandPlacements(scene: SceneSpec): ExpandedObject[] {
       const { anchors } = selectAnchors(host, o.place);
       const hostT: Similarity = host.transform;
       anchors.forEach((a: ResolvedAnchor, i: number) => {
-        const anchorT: Similarity = { x: a.x, y: a.y, rotationDeg: a.rotationDeg, scale: a.scale };
+        // Visage hôte tourné (`face.headPose.yawDeg`) : l'œil suit son nœud de pose et reçoit la rotation de tête du moteur d'yeux (identité à 0°).
+        const ep = o.kind === 'eye' ? eyePoseOf(host, a.x) : null;
+        const anchorT: Similarity = { x: a.x + (ep ? ep.dx : 0), y: a.y + (ep ? ep.dy : 0), rotationDeg: a.rotationDeg, scale: a.scale };
         const world = compose(compose(hostT, anchorT), o.transform);
         if (o.kind === 'eye') {
           out.push({
@@ -46,6 +49,7 @@ export function expandPlacements(scene: SceneSpec): ExpandedObject[] {
               id: `${o.id}-${a.id}`,
               place: undefined,
               transform: world,
+              ...(ep ? { headTurn: { ...o.headTurn, ...ep.headTurn } } : {}),
               seed: o.place?.variation === 'vary' ? (o.seed + i * 7919) >>> 0 : o.seed,
               skin: o.skin ?? host.material,
               shape: { ...o.shape, outerSide: o.shape.outerSide === 'auto' ? sideFor(a.x) : o.shape.outerSide },

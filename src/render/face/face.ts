@@ -3,7 +3,7 @@ import { el, urlRef } from '../../core/svg';
 import { resolveAppearance, type ResolvedAppearance } from '../../appearance';
 import { compileContact, renderRim, resolveRims, type ContactMetric } from '../../contact';
 import { faceLandmarks, noseGeometry, outlinePath, skinRegions, type FaceLandmarks, type NoseGeometry, type Outline } from '../../face';
-import { posedFace, posedOutline } from '../../face/pose';
+import { featureTransform, featureVisible, poseFaceFeatures, poseRegions, posedOutline, type PosedFeatures } from '../../face/pose';
 import { applyStylization } from '../../face/stylize';
 import { dominantColor, spotGradient, type Surface } from '../../materials';
 import { compileSkin, type CompiledSkin } from '../../skin';
@@ -76,13 +76,19 @@ export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: Pub
   const { params, lm } = hostFace(h);
   const skin = dominantColor(h.material.base);
   // Pose de la tête : calculée UNE fois ici (étape 2 de la rotation) ; elle ne sert pour l'instant qu'à la silhouette du crâne et aux MASSES de cheveux.
-  const posed = params.headPose.yawDeg === 0 ? null : posedFace(lm, params.headPose.yawDeg);
+  const posed: PosedFeatures | null = params.headPose.yawDeg === 0 ? null : poseFaceFeatures(lm, params.headPose.yawDeg);
+  // Un composant posé : son dessin de face, déplacé et raccourci selon son nœud de pose (`docs/ROTATION-FACE-FEATURES.md`) ; identité à 0°.
+  const feat = (id: string, parts: readonly string[]): string[] => {
+    const body = parts.filter((x) => x !== '');
+    const tr = posed ? featureTransform(posed, id) : null;
+    return body.length === 0 ? [] : tr ? [el('g', { transform: tr }, body)] : body;
+  };
   const silhouette = posed ? posedOutline(lm, posed) : lm.outline;
   // Apparence de la peau : teinte d'ombre (proche de la peau, légèrement bleutée), lumière et contour lues par TOUS les enfants.
   // Mode de rendu `anime` : aplats à bords nets (ombrage `cel`) ; la géométrie n'est pas touchée.
   const skinRa = skinAppearance(skin, params);
   const g = noseGeometry(params, lm);
-  const regions = skinRegions(lm, g);
+  const regions = posed ? poseRegions(skinRegions(lm, g), posed) : skinRegions(lm, g);
   const u = lm.W / 300;
   const nose = renderNose(h.id, params, lm, skin, skinRa, L, g);
   const defs = [...nose.defs];
@@ -111,7 +117,7 @@ export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: Pub
   if (params.blush > 0.01) {
     const gid = `${h.id}-blush`;
     defs.push(spotGradient(gid, '#e0566a', 0.38 * params.blush, 0.8));
-    for (const sg of [-1, 1] as const) front.push(el('ellipse', { cx: sg * lm.W * 0.2, cy: lm.eyeY + 0.12 * lm.H, rx: lm.W * 0.1, ry: lm.H * 0.05, fill: urlRef(gid) }));
+    for (const sg of [-1, 1] as const) front.push(...feat(sg < 0 ? 'cheekL' : 'cheekR', [el('ellipse', { cx: sg * lm.W * 0.2, cy: lm.eyeY + 0.12 * lm.H, rx: lm.W * 0.1, ry: lm.H * 0.05, fill: urlRef(gid) })]));
   }
   const hair = renderHair(h.id, params, lm, L, rot, mix(skin, skinRa.shadow, 0.9), skin, posed);
   const neck = renderNeck(h.id, params, lm, skin, skinRa, L, regions, sex);
@@ -127,15 +133,19 @@ export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: Pub
   // Ordre : ombres de contact sur la peau (orbites, nez, ailes) → nez → contours du nez → menton → bouche (+ ombre de la lèvre) → barbe → ombre des
   // cheveux → contour de la tête et du menton → cheveux.
   front.push(
-    shadow('orbitL'), shadow('orbitR'), ...(st ? st.tissue : []), shadow('nose'), shadow('alaL'), shadow('alaR'),
-    ...nose.markup, ...(st ? st.noseRegions : []), rim('nose'), rim('tip'), rim('alaL'), rim('alaR'),
-    ...chin.markup,
-    shadow('mouth'),
-    tilt === 0 ? mouthGroup.join('') : el('g', { transform: `rotate(${tilt} 0 ${lm.mouthY})` }, mouthGroup), rim('mouth'),
+    ...feat('eyeL', [shadow('orbitL')]), ...feat('eyeR', [shadow('orbitR')]), ...(st ? st.tissue : []),
+    ...feat('nose', [shadow('nose'), shadow('alaL'), shadow('alaR'), ...nose.markup, ...(st ? st.noseRegions : []), rim('nose'), rim('tip'), rim('alaL'), rim('alaR')]),
+    ...feat('chin', chin.markup),
+    ...feat('mouth', [shadow('mouth'), tilt === 0 ? mouthGroup.join('') : el('g', { transform: `rotate(${tilt} 0 ${lm.mouthY})` }, mouthGroup), rim('mouth')]),
     ...(st ? st.after : []), ...fh.beard, shadow('hair'), rim('chin'), rim('head'), ...hair.front,
   );
   // Derrière la tête : ombre portée de la mâchoire sur le cou (dessinée juste après le cou), oreilles creusées contre la tête.
-  const behind = [...hair.back, ...neck.markup, ...(st ? st.neck : []), shadow('head'), rim('neck'), ...renderEars(params, lm, skin, skinRa, L, defs).flatMap((e, i) => [e, shadow(i === 0 ? 'earL' : 'earR')]), rim('earL'), rim('earR')];
+  // Oreilles : à 0° l'ordre historique (les deux oreilles, puis leurs liserés) est conservé à l'octet près ; posées, chacune est déplacée avec son liseré et omise quand elle est derrière le crâne.
+  const earMarkup = (ears: string[]): string[] => {
+    if (!posed) return [...ears.flatMap((e, i) => [e, shadow(i === 0 ? 'earL' : 'earR')]), rim('earL'), rim('earR')];
+    return ears.flatMap((e, i) => { const id = i === 0 ? 'earL' : 'earR'; return featureVisible(posed, id) ? feat(id, [e, shadow(id), rim(id)]) : []; });
+  };
+  const behind = [...hair.back, ...neck.markup, ...(st ? st.neck : []), shadow('head'), rim('neck'), ...earMarkup(renderEars(params, lm, skin, skinRa, L, defs))];
   defs.push(...rimKit.defs);
   // Rendu `ink` : un filtre global (niveaux de gris + seuil) ; aucune anatomie n'est reconstruite.
   const ink = params.renderMode === 'ink' ? inkFilter(h.id, lm.W, lm.H, inkThreshold(skin)) : null;

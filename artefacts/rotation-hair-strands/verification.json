@@ -1,0 +1,727 @@
+{
+ "checks": 2610,
+ "errors": 0,
+ "warnings": 80,
+ "warningDetail": [
+  {
+   "style": "buzz",
+   "seed": 9001,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.7,
+   "limit": 0.611
+  },
+  {
+   "style": "buzz",
+   "seed": 9001,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.751,
+   "limit": 0.611
+  },
+  {
+   "style": "buzz",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.089,
+   "limit": 2.211
+  },
+  {
+   "style": "buzz",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.edge-step",
+   "layer": "style",
+   "value": 3.537,
+   "limit": 3.2
+  },
+  {
+   "style": "buzz",
+   "seed": 9002,
+   "yaw": -30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.674,
+   "limit": 2.211
+  },
+  {
+   "style": "buzz",
+   "seed": 9002,
+   "yaw": 15,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.412,
+   "limit": 2.211
+  },
+  {
+   "style": "buzz",
+   "seed": 9002,
+   "yaw": 30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.921,
+   "limit": 2.211
+  },
+  {
+   "style": "buzz",
+   "seed": 9002,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.101,
+   "limit": 2.211
+  },
+  {
+   "style": "short",
+   "seed": 9001,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.7,
+   "limit": 0.611
+  },
+  {
+   "style": "short",
+   "seed": 9001,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.751,
+   "limit": 0.611
+  },
+  {
+   "style": "short",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.089,
+   "limit": 2.211
+  },
+  {
+   "style": "short",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.edge-step",
+   "layer": "style",
+   "value": 3.537,
+   "limit": 3.2
+  },
+  {
+   "style": "short",
+   "seed": 9002,
+   "yaw": -30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.674,
+   "limit": 2.211
+  },
+  {
+   "style": "short",
+   "seed": 9002,
+   "yaw": 15,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.412,
+   "limit": 2.211
+  },
+  {
+   "style": "short",
+   "seed": 9002,
+   "yaw": 30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.921,
+   "limit": 2.211
+  },
+  {
+   "style": "short",
+   "seed": 9002,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.101,
+   "limit": 2.211
+  },
+  {
+   "style": "spiky",
+   "seed": 9001,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.7,
+   "limit": 0.611
+  },
+  {
+   "style": "spiky",
+   "seed": 9001,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.751,
+   "limit": 0.611
+  },
+  {
+   "style": "spiky",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.089,
+   "limit": 2.211
+  },
+  {
+   "style": "spiky",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.edge-step",
+   "layer": "style",
+   "value": 3.537,
+   "limit": 3.2
+  },
+  {
+   "style": "spiky",
+   "seed": 9002,
+   "yaw": -30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.674,
+   "limit": 2.211
+  },
+  {
+   "style": "spiky",
+   "seed": 9002,
+   "yaw": 15,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.412,
+   "limit": 2.211
+  },
+  {
+   "style": "spiky",
+   "seed": 9002,
+   "yaw": 30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.921,
+   "limit": 2.211
+  },
+  {
+   "style": "spiky",
+   "seed": 9002,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.101,
+   "limit": 2.211
+  },
+  {
+   "style": "curly",
+   "seed": 9001,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.7,
+   "limit": 0.611
+  },
+  {
+   "style": "curly",
+   "seed": 9001,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.751,
+   "limit": 0.611
+  },
+  {
+   "style": "curly",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.089,
+   "limit": 2.211
+  },
+  {
+   "style": "curly",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.edge-step",
+   "layer": "style",
+   "value": 3.537,
+   "limit": 3.2
+  },
+  {
+   "style": "curly",
+   "seed": 9002,
+   "yaw": -30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.674,
+   "limit": 2.211
+  },
+  {
+   "style": "curly",
+   "seed": 9002,
+   "yaw": 15,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.412,
+   "limit": 2.211
+  },
+  {
+   "style": "curly",
+   "seed": 9002,
+   "yaw": 30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.921,
+   "limit": 2.211
+  },
+  {
+   "style": "curly",
+   "seed": 9002,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.101,
+   "limit": 2.211
+  },
+  {
+   "style": "afro",
+   "seed": 9001,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.7,
+   "limit": 0.611
+  },
+  {
+   "style": "afro",
+   "seed": 9001,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.751,
+   "limit": 0.611
+  },
+  {
+   "style": "afro",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.089,
+   "limit": 2.211
+  },
+  {
+   "style": "afro",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.edge-step",
+   "layer": "style",
+   "value": 3.537,
+   "limit": 3.2
+  },
+  {
+   "style": "afro",
+   "seed": 9002,
+   "yaw": -30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.674,
+   "limit": 2.211
+  },
+  {
+   "style": "afro",
+   "seed": 9002,
+   "yaw": 15,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.412,
+   "limit": 2.211
+  },
+  {
+   "style": "afro",
+   "seed": 9002,
+   "yaw": 30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.921,
+   "limit": 2.211
+  },
+  {
+   "style": "afro",
+   "seed": 9002,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.101,
+   "limit": 2.211
+  },
+  {
+   "style": "bob",
+   "seed": 9001,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.7,
+   "limit": 0.611
+  },
+  {
+   "style": "bob",
+   "seed": 9001,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.751,
+   "limit": 0.611
+  },
+  {
+   "style": "bob",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.089,
+   "limit": 2.211
+  },
+  {
+   "style": "bob",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.edge-step",
+   "layer": "style",
+   "value": 3.537,
+   "limit": 3.2
+  },
+  {
+   "style": "bob",
+   "seed": 9002,
+   "yaw": -30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.674,
+   "limit": 2.211
+  },
+  {
+   "style": "bob",
+   "seed": 9002,
+   "yaw": 15,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.412,
+   "limit": 2.211
+  },
+  {
+   "style": "bob",
+   "seed": 9002,
+   "yaw": 30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.921,
+   "limit": 2.211
+  },
+  {
+   "style": "bob",
+   "seed": 9002,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.101,
+   "limit": 2.211
+  },
+  {
+   "style": "long",
+   "seed": 9001,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.7,
+   "limit": 0.611
+  },
+  {
+   "style": "long",
+   "seed": 9001,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.751,
+   "limit": 0.611
+  },
+  {
+   "style": "long",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.089,
+   "limit": 2.211
+  },
+  {
+   "style": "long",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.edge-step",
+   "layer": "style",
+   "value": 3.537,
+   "limit": 3.2
+  },
+  {
+   "style": "long",
+   "seed": 9002,
+   "yaw": -30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.674,
+   "limit": 2.211
+  },
+  {
+   "style": "long",
+   "seed": 9002,
+   "yaw": 15,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.412,
+   "limit": 2.211
+  },
+  {
+   "style": "long",
+   "seed": 9002,
+   "yaw": 30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.921,
+   "limit": 2.211
+  },
+  {
+   "style": "long",
+   "seed": 9002,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.101,
+   "limit": 2.211
+  },
+  {
+   "style": "ponytail",
+   "seed": 9001,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.7,
+   "limit": 0.611
+  },
+  {
+   "style": "ponytail",
+   "seed": 9001,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.751,
+   "limit": 0.611
+  },
+  {
+   "style": "ponytail",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.089,
+   "limit": 2.211
+  },
+  {
+   "style": "ponytail",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.edge-step",
+   "layer": "style",
+   "value": 3.537,
+   "limit": 3.2
+  },
+  {
+   "style": "ponytail",
+   "seed": 9002,
+   "yaw": -30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.674,
+   "limit": 2.211
+  },
+  {
+   "style": "ponytail",
+   "seed": 9002,
+   "yaw": 15,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.412,
+   "limit": 2.211
+  },
+  {
+   "style": "ponytail",
+   "seed": 9002,
+   "yaw": 30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.921,
+   "limit": 2.211
+  },
+  {
+   "style": "ponytail",
+   "seed": 9002,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.101,
+   "limit": 2.211
+  },
+  {
+   "style": "bun",
+   "seed": 9001,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.7,
+   "limit": 0.611
+  },
+  {
+   "style": "bun",
+   "seed": 9001,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.751,
+   "limit": 0.611
+  },
+  {
+   "style": "bun",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.089,
+   "limit": 2.211
+  },
+  {
+   "style": "bun",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.edge-step",
+   "layer": "style",
+   "value": 3.537,
+   "limit": 3.2
+  },
+  {
+   "style": "bun",
+   "seed": 9002,
+   "yaw": -30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.674,
+   "limit": 2.211
+  },
+  {
+   "style": "bun",
+   "seed": 9002,
+   "yaw": 15,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.412,
+   "limit": 2.211
+  },
+  {
+   "style": "bun",
+   "seed": 9002,
+   "yaw": 30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.921,
+   "limit": 2.211
+  },
+  {
+   "style": "bun",
+   "seed": 9002,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.101,
+   "limit": 2.211
+  },
+  {
+   "style": "braids",
+   "seed": 9001,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.7,
+   "limit": 0.611
+  },
+  {
+   "style": "braids",
+   "seed": 9001,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 0.751,
+   "limit": 0.611
+  },
+  {
+   "style": "braids",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.089,
+   "limit": 2.211
+  },
+  {
+   "style": "braids",
+   "seed": 9002,
+   "yaw": -45,
+   "id": "pose.edge-step",
+   "layer": "style",
+   "value": 3.537,
+   "limit": 3.2
+  },
+  {
+   "style": "braids",
+   "seed": 9002,
+   "yaw": -30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.674,
+   "limit": 2.211
+  },
+  {
+   "style": "braids",
+   "seed": 9002,
+   "yaw": 15,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.412,
+   "limit": 2.211
+  },
+  {
+   "style": "braids",
+   "seed": 9002,
+   "yaw": 30,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 2.921,
+   "limit": 2.211
+  },
+  {
+   "style": "braids",
+   "seed": 9002,
+   "yaw": 45,
+   "id": "pose.hairline-smooth",
+   "layer": "style",
+   "value": 3.101,
+   "limit": 2.211
+  }
+ ]
+}

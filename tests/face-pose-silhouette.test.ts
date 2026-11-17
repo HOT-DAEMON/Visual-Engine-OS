@@ -2,9 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { compileScene, generateRandomFace, type SceneInput } from '../src';
 import { faceLandmarks, halfWidthAt, outlinePath } from '../src/face';
 import { posedFace, posedOutline } from '../src/face/pose';
+import { DEPTH_RATIO } from '../src/face/pose/skull';
 import { FaceParams } from '../src/schema';
 
-/** Étape 2 de la rotation (`docs/ROTATION-STEP-02-SVG-SILHOUETTE.md`) : la pose de tête atteint le DESSIN SVG de la silhouette du crâne ; les composants internes ne changent pas. */
+/** Étape 2 de la rotation (`docs/ROTATION-STEP-02-SVG-SILHOUETTE.md`) : la pose de tête atteint le DESSIN SVG de la silhouette du crâne. Les traits internes sont testés dans `face-pose-features.test.ts`. */
 const make = (seed: number, yaw: number | null) => {
   const f = generateRandomFace(seed, { id: 'f0', transform: { x: 0, y: 0, scale: 1 } });
   const host = f.objects[0] as unknown as { face: Record<string, unknown>; width: number; height: number };
@@ -34,7 +35,7 @@ describe('pose de tête → silhouette SVG du crâne', () => {
     expect(outlinePath(posedOutline(f.lm, posedFace(f.lm, -30)))).toBe(posed);
   });
 
-  it('yaw 30° : silhouette finie, fermée, sans NaN ; plus étroite que de face, d’autant plus que le lacet croît', () => {
+  it('yaw 30° : silhouette finie, fermée, sans NaN ; largeur = contour de face × ρ(lacet), entre cos(lacet) et le rapport de profondeur mesuré (une tête de 1,03 de profondeur relative n’est PAS plus étroite de profil)', () => {
     for (const seed of [321, 4000, 9001]) {
       const f = make(seed, null), lm = f.lm, o30 = posedOutline(lm, posedFace(lm, 30)), o60 = posedOutline(lm, posedFace(lm, 60));
       const d = outlinePath(o30);
@@ -43,8 +44,10 @@ describe('pose de tête → silhouette SVG du crâne', () => {
       for (const c of o30.right) for (const q of [c.p0, c.p1, c.p2, c.p3]) { expect(Number.isFinite(q.x)).toBe(true); expect(Number.isFinite(q.y)).toBe(true); }
       for (const y of [lm.eyeY, lm.mouthY, lm.jawY]) {
         const w0 = halfWidthAt(lm.outline, y), w30 = halfWidthAt(o30, y), w60 = halfWidthAt(o60, y);
-        expect(w30).toBeLessThan(w0);
-        expect(w60).toBeLessThan(w30);
+        for (const [w, yaw] of [[w30, 30], [w60, 60]] as const) {
+          expect(w / w0).toBeGreaterThanOrEqual(Math.cos((yaw * Math.PI) / 180) - 1e-3);
+          expect(w / w0).toBeLessThanOrEqual(DEPTH_RATIO + 1e-3);
+        }
         expect(w30 / w0).toBeCloseTo(posedFace(lm, 30).skullHalf(y) / w0, 2);
       }
       // Raccord des cubiques : l'extrémité d'un segment est le départ du suivant (contour continu), ordonnées inchangées.
@@ -55,7 +58,7 @@ describe('pose de tête → silhouette SVG du crâne', () => {
     }
   });
 
-  it('facteur de silhouette continu et ≤ 1 à toutes les hauteurs (pas de marche à la mâchoire, pas d’élargissement du menton), pour tous les lacets', () => {
+  it('facteur de silhouette continu et ≤ rapport de profondeur à toutes les hauteurs (pas de marche à la mâchoire, pas d’élargissement du menton), pour tous les lacets', () => {
     for (const seed of [321, 4000, 9001]) {
       const lm = make(seed, null).lm;
       for (const yaw of [15, 30, 45, 60, 75]) {
@@ -63,7 +66,7 @@ describe('pose de tête → silhouette SVG du crâne', () => {
         let prev = NaN;
         for (let y = -lm.H / 2 + 0.03 * lm.H; y < lm.chinY - 0.03 * lm.H; y += 0.5) {
           const s = P.skullHalf(y) / halfWidthAt(lm.outline, y);
-          expect(s).toBeLessThanOrEqual(1 + 1e-9);
+          expect(s).toBeLessThanOrEqual(DEPTH_RATIO + 1e-9);
           expect(s).toBeGreaterThan(Math.cos((yaw * Math.PI) / 180) - 1e-9);
           if (Number.isFinite(prev)) expect(Math.abs(s - prev)).toBeLessThan(0.01);
           prev = s;
@@ -77,12 +80,5 @@ describe('pose de tête → silhouette SVG du crâne', () => {
     expect(() => FaceParams.parse({ headPose: { yawDeg: 80 } })).toThrow();
     expect(() => FaceParams.parse({ headPose: { pitchDeg: 10 } })).toThrow();
     expect(FaceParams.parse({}).headPose.yawDeg).toBe(0);
-  });
-
-  it('les composants internes ne bougent pas : yeux, nez et bouche sont les mêmes qu’à 0° (étape 2 = silhouette seule)', () => {
-    const f = make(321, 0).svg, p = make(321, 30).svg;
-    // Les calques internes (marqués par id d’hôte) existent et leur nombre est inchangé ; seul le contour diffère.
-    const count = (s: string): number => (s.match(/<(path|ellipse|g|clipPath|linearGradient|radialGradient)\b/g) ?? []).length;
-    expect(count(p)).toBe(count(f));
   });
 });

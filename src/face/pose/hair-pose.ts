@@ -1,6 +1,9 @@
 import type { Vec } from '../../geometry/eye/primitives';
 import type { HairGeometry, HairLock } from '../hair/types';
 import type { Poly } from '../poly';
+import { densify } from './densify';
+import { poseLinked } from './hair-pose-lines';
+import { poseLock, rowCache } from './hair-pose-strand';
 import type { Skull } from './skull';
 
 /**
@@ -11,16 +14,7 @@ import type { Skull } from './skull';
  * après validation de la masse. À lacet nul la géométrie est rendue telle quelle (même objet).
  */
 const MAX_EDGE_FRACTION = 0.006;
-
-/** Insère des points sur les arêtes plus longues que `maxLen` : la projection n'est pas affine, une arête droite entre deux sommets éloignés serait fausse une fois projetée. */
-export function densify(poly: Poly, maxLen: number): Poly {
-  const out: Vec[] = [];
-  for (let i = 0; i < poly.length; i++) {
-    const a = poly[i] as Vec, b = poly[(i + 1) % poly.length] as Vec, n = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / maxLen));
-    for (let j = 0; j < n; j++) out.push({ x: a.x + ((b.x - a.x) * j) / n, y: a.y + ((b.y - a.y) * j) / n });
-  }
-  return out;
-}
+export { densify };
 
 export function poseHairMasses(geo: HairGeometry, skull: Skull, yawDeg: number, W: number): HairGeometry {
   if (yawDeg === 0) return geo;
@@ -42,4 +36,19 @@ export function poseHairMasses(geo: HairGeometry, skull: Skull, yawDeg: number, 
     back: layer(geo.back),
     over: layer(geo.over),
   };
+}
+
+/**
+ * CHEVELURE COMPLÈTE SOUS POSE : masses (tranche 1), mèches (tranche 2) et éléments liés (tranche 3). Même projection partout (`Skull.projectX`) ; à lacet nul la géométrie est rendue telle quelle (même objet).
+ * L'ordre et le nombre des calques `front` / `back` / `over` sont conservés (le rendu en lit la structure : base, bases de frange, mèches). Pas de maillage, pas de volume : du SVG 2D reprojeté.
+ */
+export function poseHair(geo: HairGeometry, skull: Skull, yawDeg: number, W: number): HairGeometry {
+  if (yawDeg === 0) return geo;
+  const masses = poseHairMasses(geo, skull, yawDeg, W), maxLen = MAX_EDGE_FRACTION * W;
+  const rows = rowCache(skull, yawDeg), locks = geo.locks.map((l) => poseLock(l, skull, yawDeg, W, geo.ties, rows));
+  const swap = new Map<Poly, Poly>(geo.locks.map((l, i) => [l.poly, (locks[i] as HairLock).poly]));
+  const layer = (a: Poly[]): Poly[] => a.map((q) => swap.get(q) ?? q);
+  const P = (q: Vec): Vec => ({ x: skull.projectX(q.x, q.y, yawDeg), y: q.y });
+  const linked = poseLinked(geo, skull, P, (p) => densify(p, maxLen), yawDeg, W, maxLen);
+  return { ...masses, locks, front: layer(masses.front), back: layer(masses.back), over: layer(masses.over), ...linked };
 }

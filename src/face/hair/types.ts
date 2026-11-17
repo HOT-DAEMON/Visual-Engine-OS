@@ -49,6 +49,8 @@ export interface HairLock {
   readonly fill?: number;
   /** Mèche de FRANGE (classique ou moteur v2) : lue par la mesure de régularité du bord (`verify/hair-fringe-edge.ts`). `kind` reste inchangé pour la frange classique (d'autres contrôles s'y réfèrent). */
   readonly bang?: boolean;
+  /** Opacité d'ensemble (0–1) fixée par la POSE de la tête : une mèche qui passe devant le visage s'efface quand son côté se détourne (`face/pose/hair-pose-strand.ts`). Absent = 1 (lacet nul : jamais renseigné). */
+  readonly alpha?: number;
   /** Trait de PEIGNAGE ou de chaume (`comb.ts`) : cheveux tirés ou rasés, texture du dôme sans volume. Rang `hairline`, hors mesures de longueur. */
   readonly comb?: boolean;
 }

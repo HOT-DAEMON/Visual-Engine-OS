@@ -31,6 +31,7 @@ export { checkHairZones } from './hair-zones';
 export { checkHairBoundary, selfCrossings } from './hair-boundary';
 export { checkHairShape, sharpTeeth } from './hair-shape';
 export { checkHairSkull } from './hair-skull';
+export { checkHairPose } from './hair-pose';
 export { checkHairForm } from './hair-form';
 export { checkHairEdge, silhouetteProfile, toothCount, maxBeyondRim, lowerFlare } from './hair-edge';
 export { checkHairCoherence } from './hair-coherence';

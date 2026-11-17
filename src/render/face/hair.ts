@@ -4,7 +4,7 @@ import { compileEffects, toHsl, fromHsl, type ResolvedAppearance } from '../../a
 import type { FaceLandmarks } from '../../face';
 import { outlinePath } from '../../face/outline';
 import { hairGeometry, type HairLock } from '../../face/hair';
-import { poseHairMasses, type PosedFace } from '../../face/pose';
+import { poseHair, posedOutline, type PosedFace } from '../../face/pose';
 import { polyBox, type Poly } from '../../face/poly';
 import { direction2D, type LightVector } from '../../lighting/light';
 import { compileSurface, resolvePreset, spotGradient, type Surface } from '../../materials';
@@ -49,8 +49,9 @@ const hueShift = (c: string, deg: number): string => (deg === 0 ? c : fromHsl({ 
 export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: LightVector, rot: number, skinShadow: string, skin: string, posed: PosedFace | null = null): HairParts {
   const geo0 = hairGeometry(p, lm);
   if (!geo0) return { defs: [], back: [], front: [], over: [] };
-  // Pose de la tête : les MASSES sont reprojetées par la pose commune (`face/pose/hair-pose.ts`), à lacet nul la géométrie est inchangée (même objet).
-  const geo = posed ? poseHairMasses(geo0, posed.skull, posed.yaw, lm.W) : geo0;
+  // Pose de la tête : masses, mèches et éléments liés (lisière, raie, zones rasées, ombres, attaches) sont reprojetés par la pose commune (`face/pose/hair-pose.ts`), à lacet nul la géométrie est inchangée (même objet).
+  const geo = posed ? poseHair(geo0, posed.skull, posed.yaw, lm.W) : geo0;
+  const outline = posed ? posedOutline(lm, posed) : lm.outline;
   const h = p.hair;
   const ra: ResolvedAppearance = hairAppearance(h);
   const ink = h.sim.enabled && h.sim.ink ? '#08080c' : undefined;
@@ -61,7 +62,8 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
   const draw = (l: HairLock, depth: number, cast: boolean): string[] => {
     const m = lockMarkup(l, k++, st, depth, cast);
     defs.push(...m.defs);
-    return m.markup;
+    // Mèche de devant dont le côté se détourne (pose de la tête) : fondue dans son ensemble (`HairLock.alpha`).
+    return l.alpha !== undefined ? [el('g', { opacity: l.alpha.toFixed(3) }, m.markup)] : m.markup;
   };
   const back: string[] = [];
   if (geo.backBase) {
@@ -103,8 +105,10 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
   // Dégradé de la coupe rase : voile de peau sur les flancs de la coque, en plus du chaume qui s'y raréfie (`comb.ts`).
   if (h.style === 'buzz' && !ink) {
     const gid = `${id}-hair-fade`, hw = lm.W * 0.5, bb = polyBox(geo.base[0] as Poly), veil = mix(skin, ra.base, 0.35);
-    // Abscisse normalisée (x + hw) / 2hw : plein voile de |x|/hw ≥ FADE.to jusqu'au bord, nul sous FADE.from (même rampe que `fadeAt`).
-    const stops = [[0, FADE.skin], [(1 - FADE.to) / 2, FADE.skin], [(1 - FADE.from) / 2, 0], [1 - (1 - FADE.from) / 2, 0], [1 - (1 - FADE.to) / 2, FADE.skin], [1, FADE.skin]] as const;
+    // Abscisse normalisée (x + hw) / 2hw : plein voile de |x|/hw ≥ FADE.to jusqu'au bord, nul sous FADE.from (même rampe que `fadeAt`). Sous pose, chaque borne de la rampe est projetée (même projection que la coque) à l'ordonnée de la tempe.
+    const px = (f: number): number => (posed ? posed.skull.projectX(f * hw, lm.hair.templeY, posed.yaw) : f * hw);
+    const nx = (f: number): number => Math.min(1, Math.max(0, (px(f) + hw) / (2 * hw)));
+    const stops = [[0, FADE.skin], [nx(-FADE.to), FADE.skin], [nx(-FADE.from), 0], [nx(FADE.from), 0], [nx(FADE.to), FADE.skin], [1, FADE.skin]] as const;
     defs.push(el('linearGradient', { id: gid, gradientUnits: 'userSpaceOnUse', x1: -hw, y1: 0, x2: hw, y2: 0 }, stops.map(([o, a]) => el('stop', { offset: o, 'stop-color': veil, 'stop-opacity': a }))));
     roots.push(el('g', { 'clip-path': urlRef(clipId) }, [el('rect', { x: -hw, y: bb.y, width: 2 * hw, height: bb.h, fill: urlRef(gid) })]));
   }
@@ -140,7 +144,7 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
   if (geo.skinShadows?.length && h.sim.skinShadow > 0) {
     const cid = `${id}-hair-skin-clip`;
     const fid = `${id}-hair-skin-blur`;
-    defs.push(el('clipPath', { id: cid }, [el('path', { d: outlinePath(lm.outline) })]), el('filter', { id: fid, x: '-10%', y: '-10%', width: '120%', height: '120%' }, [el('feGaussianBlur', { stdDeviation: lm.W * 0.006 })]));
+    defs.push(el('clipPath', { id: cid }, [el('path', { d: outlinePath(outline) })]), el('filter', { id: fid, x: '-10%', y: '-10%', width: '120%', height: '120%' }, [el('feGaussianBlur', { stdDeviation: lm.W * 0.006 })]));
     shadows.push(el('g', { 'clip-path': urlRef(cid) }, [el('g', { filter: urlRef(fid), opacity: h.sim.skinShadow }, geo.skinShadows.map((q) => el('path', { d: polyPath(q), fill: mix(skin, '#1a0f0a', 0.55) })))]));
   }
   const front: string[] = [...hairlineTransition(geo, p, lm, skinShadow, skin), ...shadows, fx.filter ? el('g', { filter: fx.filter }, body) : body.join('')];
