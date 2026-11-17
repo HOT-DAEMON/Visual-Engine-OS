@@ -8,6 +8,30 @@ import { noise1, smoothstep } from './noise';
 
 const N = 64;
 
+/** Angle de virage (rad) au-delà duquel un SOMMET de la ligne d'implantation est raboté. 0,8 rad ≈ 46° : la médiane des lisières de face est 0,29 rad, le 75e centile 0,49 (60 graines, `docs/ROTATION-HAIR-PASS-6.md`). */
+export const HAIRLINE_PEAK_TURN = 0.8;
+
+const turnAt = (a: Vec, b: Vec, c: Vec): number => Math.abs(Math.atan2((c.y - b.y) * (b.x - a.x) - (c.x - b.x) * (b.y - a.y), (c.x - b.x) * (b.x - a.x) + (c.y - b.y) * (b.y - a.y)));
+
+/**
+ * RABOTAGE DES SOMMETS. Le recul des tempes (golfe gaussien) tire la ligne vers le haut ; la contrainte « posée sur le crâne » (`onSkull`) la rabaisse là où le crâne est trop étroit. Au raccord des deux, la ligne montait puis
+ * retombait en coin : jusqu'à 92° (1,6 rad) sur 15 % des visages, à s ≈ ±0,65 où |x|/demi-largeur ≈ 0,97–0,985. Un SOMMET (ordonnée plus haute que ses deux voisins) dont le virage dépasse `HAIRLINE_PEAK_TURN` est descendu à mi-chemin
+ * de la moyenne de ses voisins, jusqu'à ce que plus aucun sommet ne dépasse le seuil. Descendre un point ne peut qu'ÉLARGIR le crâne qui le porte : la contrainte `onSkull` reste vraie (elle est reposée par sécurité). Seuls les SOMMETS
+ * sont touchés : les creux (pic de veuve, encoches vers le bas) et les extrémités (coins de tempe qui portent les pattes) ne bougent pas ; une lisière sans coin aigu est rendue à l'identique.
+ */
+function shavePeaks(pts: Vec[], onSkull: (q: Vec) => Vec): void {
+  for (let pass = 0; pass < 80; pass++) {
+    let moved = false;
+    for (let i = 1; i + 1 < pts.length; i++) {
+      const a = pts[i - 1] as Vec, b = pts[i] as Vec, c = pts[i + 1] as Vec;
+      if (!(b.y < a.y && b.y < c.y) || turnAt(a, b, c) <= HAIRLINE_PEAK_TURN) continue;
+      pts[i] = onSkull({ x: b.x, y: b.y + 0.5 * ((a.y + c.y) / 2 - b.y) });
+      moved = true;
+    }
+    if (!moved) return;
+  }
+}
+
 /** Ligne d'implantation : polyligne de la tempe gauche à la tempe droite, toujours au-dessus des sourcils. */
 export interface Hairline {
   readonly pts: Vec[];
@@ -78,6 +102,7 @@ export function buildHairline(p: FaceParams, lm: FaceLandmarks): Hairline {
     for (let i = 1; i < N; i++) ys[i] = 0.25 * (prev[i - 1] as number) + 0.5 * (prev[i] as number) + 0.25 * (prev[i + 1] as number);
   }
   const pts: Vec[] = ys.map((y, i) => onSkull({ x: (-1 + (2 * i) / N) * xEnd, y: clamp(y, high, low) }));
+  shavePeaks(pts, onSkull);
   const at = (s: number): Vec => {
     const f = clamp((s + 1) / 2, 0, 1) * N;
     const i = Math.min(N - 1, Math.floor(f));
