@@ -1,0 +1,1036 @@
+{
+ "method": "r\u00e9f. 17 : p\u00e9riode 477 px reconstruite (copies recal\u00e9es au sous-pixel), cellules d\u00e9tect\u00e9es sur motif 3\u00d73 (aucune coupure de tuile)",
+ "period": 477,
+ "subpixelShift": {
+  "x": [
+   0.3296785656553567,
+   0.5119233927803748
+  ],
+  "y": [
+   0.5275562091509869,
+   0.3427054209963529
+  ]
+ },
+ "cells": [
+  {
+   "bbox": [
+    130,
+    -35,
+    169,
+    100
+   ],
+   "centre": [
+    222.8,
+    7.3
+   ],
+   "inkPx": 2672,
+   "components": [
+    {
+     "kind": "ouverture",
+     "bbox": [
+      137,
+      -28,
+      155,
+      86
+     ],
+     "areaPx": 2672
+    }
+   ],
+   "id": "17-P00"
+  },
+  {
+   "bbox": [
+    314,
+    -35,
+    102,
+    78
+   ],
+   "centre": [
+    368.4,
+    1.6
+   ],
+   "inkPx": 2406,
+   "components": [
+    {
+     "kind": "ouverture",
+     "bbox": [
+      321,
+      -28,
+      88,
+      64
+     ],
+     "areaPx": 2406
+    }
+   ],
+   "id": "17-P01"
+  },
+  {
+   "bbox": [
+    -24,
+    148,
+    163,
+    58
+   ],
+   "centre": [
+    49.1,
+    171.3
+   ],
+   "inkPx": 2549,
+   "components": [
+    {
+     "kind": "sourcil",
+     "bbox": [
+      -17,
+      155,
+      149,
+      44
+     ],
+     "areaPx": 2549
+    }
+   ],
+   "id": "17-P02"
+  },
+  {
+   "bbox": [
+    -4,
+    25,
+    130,
+    122
+   ],
+   "centre": [
+    64.6,
+    82.6
+   ],
+   "inkPx": 4917,
+   "components": [
+    {
+     "kind": "ouverture",
+     "bbox": [
+      3,
+      32,
+      116,
+      74
+     ],
+     "areaPx": 1586
+    },
+    {
+     "kind": "iris",
+     "bbox": [
+      39,
+      56,
+      71,
+      84
+     ],
+     "areaPx": 3331
+    }
+   ],
+   "id": "17-P03"
+  },
+  {
+   "bbox": [
+    152,
+    45,
+    144,
+    104
+   ],
+   "centre": [
+    229.4,
+    93.6
+   ],
+   "inkPx": 3790,
+   "components": [
+    {
+     "kind": "cils",
+     "bbox": [
+      233,
+      52,
+      54,
+      15
+     ],
+     "areaPx": 159
+    },
+    {
+     "kind": "ouverture",
+     "bbox": [
+      159,
+      60,
+      125,
+      72
+     ],
+     "areaPx": 3355
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      221,
+      109,
+      68,
+      33
+     ],
+     "areaPx": 276
+    }
+   ],
+   "id": "17-P04"
+  },
+  {
+   "bbox": [
+    320,
+    61,
+    156,
+    107
+   ],
+   "centre": [
+    391.8,
+    115.9
+   ],
+   "inkPx": 4367,
+   "components": [
+    {
+     "kind": "sourcil",
+     "bbox": [
+      327,
+      68,
+      130,
+      49
+     ],
+     "areaPx": 1449
+    },
+    {
+     "kind": "ouverture",
+     "bbox": [
+      329,
+      106,
+      140,
+      55
+     ],
+     "areaPx": 2917
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      442,
+      122,
+      1,
+      1
+     ],
+     "areaPx": 1
+    }
+   ],
+   "id": "17-P05"
+  },
+  {
+   "bbox": [
+    -21,
+    196,
+    171,
+    115
+   ],
+   "centre": [
+    54.2,
+    251.6
+   ],
+   "inkPx": 5733,
+   "components": [
+    {
+     "kind": "ouverture",
+     "bbox": [
+      -14,
+      203,
+      112,
+      52
+     ],
+     "areaPx": 607
+    },
+    {
+     "kind": "ouverture",
+     "bbox": [
+      -9,
+      214,
+      152,
+      84
+     ],
+     "areaPx": 4832
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      63,
+      257,
+      3,
+      1
+     ],
+     "areaPx": 3
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      20,
+      261,
+      2,
+      1
+     ],
+     "areaPx": 2
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      62,
+      260,
+      3,
+      1
+     ],
+     "areaPx": 3
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      66,
+      261,
+      2,
+      1
+     ],
+     "areaPx": 2
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      12,
+      263,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      16,
+      262,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      62,
+      263,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      71,
+      262,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      20,
+      265,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      23,
+      264,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      58,
+      264,
+      2,
+      2
+     ],
+     "areaPx": 2
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      64,
+      264,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      66,
+      265,
+      2,
+      1
+     ],
+     "areaPx": 2
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      18,
+      266,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      25,
+      267,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      61,
+      266,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      69,
+      266,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      23,
+      268,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      52,
+      269,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      54,
+      268,
+      6,
+      6
+     ],
+     "areaPx": 6
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      64,
+      268,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      66,
+      269,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      23,
+      271,
+      3,
+      3
+     ],
+     "areaPx": 3
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      34,
+      271,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      37,
+      271,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      42,
+      271,
+      1,
+      7
+     ],
+     "areaPx": 7
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      45,
+      271,
+      1,
+      7
+     ],
+     "areaPx": 7
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      50,
+      271,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      53,
+      271,
+      2,
+      2
+     ],
+     "areaPx": 2
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      32,
+      273,
+      2,
+      2
+     ],
+     "areaPx": 2
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      36,
+      273,
+      1,
+      2
+     ],
+     "areaPx": 2
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      39,
+      273,
+      1,
+      3
+     ],
+     "areaPx": 3
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      48,
+      273,
+      1,
+      3
+     ],
+     "areaPx": 3
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      51,
+      273,
+      2,
+      4
+     ],
+     "areaPx": 4
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      27,
+      275,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      55,
+      274,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      31,
+      276,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      35,
+      276,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      49,
+      277,
+      1,
+      3
+     ],
+     "areaPx": 3
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      56,
+      276,
+      2,
+      2
+     ],
+     "areaPx": 2
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      99,
+      277,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      29,
+      279,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      34,
+      278,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      38,
+      278,
+      1,
+      2
+     ],
+     "areaPx": 2
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      53,
+      278,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      5,
+      279,
+      94,
+      25
+     ],
+     "areaPx": 206
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      33,
+      281,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      26,
+      295,
+      1,
+      1
+     ],
+     "areaPx": 1
+    }
+   ],
+   "id": "17-P06"
+  },
+  {
+   "bbox": [
+    156,
+    150,
+    149,
+    141
+   ],
+   "centre": [
+    234.9,
+    217.1
+   ],
+   "inkPx": 5196,
+   "components": [
+    {
+     "kind": "cils",
+     "bbox": [
+      231,
+      157,
+      1,
+      2
+     ],
+     "areaPx": 2
+    },
+    {
+     "kind": "ouverture",
+     "bbox": [
+      163,
+      160,
+      135,
+      79
+     ],
+     "areaPx": 1843
+    },
+    {
+     "kind": "iris",
+     "bbox": [
+      191,
+      191,
+      75,
+      77
+     ],
+     "areaPx": 2989
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      192,
+      251,
+      86,
+      33
+     ],
+     "areaPx": 362
+    }
+   ],
+   "id": "17-P07"
+  },
+  {
+   "bbox": [
+    313,
+    166,
+    103,
+    98
+   ],
+   "centre": [
+    367.5,
+    215.5
+   ],
+   "inkPx": 2997,
+   "components": [
+    {
+     "kind": "ouverture",
+     "bbox": [
+      320,
+      173,
+      89,
+      77
+     ],
+     "areaPx": 1009
+    },
+    {
+     "kind": "iris",
+     "bbox": [
+      352,
+      190,
+      52,
+      67
+     ],
+     "areaPx": 1988
+    }
+   ],
+   "id": "17-P08"
+  },
+  {
+   "bbox": [
+    28,
+    343,
+    187,
+    136
+   ],
+   "centre": [
+    115.7,
+    411.0
+   ],
+   "inkPx": 5652,
+   "components": [
+    {
+     "kind": "ouverture",
+     "bbox": [
+      35,
+      350,
+      173,
+      122
+     ],
+     "areaPx": 5652
+    }
+   ],
+   "id": "17-P09"
+  },
+  {
+   "bbox": [
+    104,
+    269,
+    107,
+    77
+   ],
+   "centre": [
+    153.3,
+    306.2
+   ],
+   "inkPx": 1791,
+   "components": [
+    {
+     "kind": "cils",
+     "bbox": [
+      117,
+      276,
+      65,
+      16
+     ],
+     "areaPx": 109
+    },
+    {
+     "kind": "ouverture",
+     "bbox": [
+      111,
+      283,
+      93,
+      56
+     ],
+     "areaPx": 1682
+    }
+   ],
+   "id": "17-P10"
+  },
+  {
+   "bbox": [
+    197,
+    374,
+    129,
+    45
+   ],
+   "centre": [
+    257.7,
+    396.9
+   ],
+   "inkPx": 833,
+   "components": [
+    {
+     "kind": "ouverture",
+     "bbox": [
+      204,
+      381,
+      115,
+      29
+     ],
+     "areaPx": 766
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      213,
+      388,
+      1,
+      1
+     ],
+     "areaPx": 1
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      233,
+      406,
+      40,
+      6
+     ],
+     "areaPx": 66
+    }
+   ],
+   "id": "17-P11"
+  },
+  {
+   "bbox": [
+    197,
+    325,
+    130,
+    60
+   ],
+   "centre": [
+    259.5,
+    347.7
+   ],
+   "inkPx": 803,
+   "components": [
+    {
+     "kind": "ouverture",
+     "bbox": [
+      204,
+      332,
+      116,
+      46
+     ],
+     "areaPx": 803
+    }
+   ],
+   "id": "17-P12"
+  },
+  {
+   "bbox": [
+    332,
+    270,
+    138,
+    139
+   ],
+   "centre": [
+    400.5,
+    339.1
+   ],
+   "inkPx": 6209,
+   "components": [
+    {
+     "kind": "ouverture",
+     "bbox": [
+      339,
+      277,
+      124,
+      125
+     ],
+     "areaPx": 6209
+    }
+   ],
+   "id": "17-P13"
+  },
+  {
+   "bbox": [
+    422,
+    399,
+    93,
+    107
+   ],
+   "centre": [
+    464.5,
+    451.5
+   ],
+   "inkPx": 2800,
+   "components": [
+    {
+     "kind": "ouverture",
+     "bbox": [
+      429,
+      406,
+      79,
+      42
+     ],
+     "areaPx": 720
+    },
+    {
+     "kind": "cils",
+     "bbox": [
+      434,
+      432,
+      34,
+      18
+     ],
+     "areaPx": 89
+    },
+    {
+     "kind": "iris",
+     "bbox": [
+      438,
+      440,
+      59,
+      59
+     ],
+     "areaPx": 1991
+    }
+   ],
+   "id": "17-P14"
+  }
+ ]
+}

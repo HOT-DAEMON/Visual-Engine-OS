@@ -14,8 +14,8 @@ const target = (f: (typeof REF_FITS)[number]): { upper: number[]; lower: number[
 };
 
 describe('silhouettes mesurées (réfs 13, 15, 17) -> recettes d’enveloppe du moteur existant', () => {
-  it('9 silhouettes ajustées, chacune reproduit son profil mesuré (RMS ≤ 0,08 en largeur d’ouverture), recalculé ici depuis le JSON', () => {
-    expect(REF_FITS).toHaveLength(9);
+  it('27 silhouettes ajustées, chacune reproduit son profil mesuré (RMS ≤ 0,08 en largeur d’ouverture), recalculé ici depuis le JSON', () => {
+    expect(REF_FITS).toHaveLength(27);
     for (const f of REF_FITS) {
       const t = target(f);
       const p = openingProfile(openingGeometry(Shape.parse({ width: 240, height: 240 * f.aspect, tiltDeg: f.tiltDeg, upperFraction: f.upperFraction, openness: f.openness, style: f.style }), Canthi.parse({ inner: { roundness: f.innerRoundness, caruncle: 0.5 }, outer: { roundness: f.outerRoundness } })));

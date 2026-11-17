@@ -17,7 +17,9 @@ interface M { upperProfile: number[]; lowerProfile: number[]; tiltDeg: number; a
 const sil = JSON.parse(readFileSync('references/eyes/measures-silhouettes.json', 'utf8')).eyes as Record<string, M>;
 const avg = (a: M, b: M): M => ({ upperProfile: a.upperProfile.map((v, i) => (v + b.upperProfile[i]!) / 2), lowerProfile: a.lowerProfile.map((v, i) => (v + b.lowerProfile[i]!) / 2), tiltDeg: (a.tiltDeg + b.tiltDeg) / 2, aspect: (a.aspect + b.aspect) / 2, upperFraction: (a.upperFraction + b.upperFraction) / 2 });
 const targets: Record<string, { m: M; source: string }> = {};
-for (const k of ['13-E5', '13-E10', '17-A', '17-C']) if (sil[k]) targets[k] = { m: sil[k]!, source: k };
+const LEGACY = ['13-E5', '13-E10', '17-A', '17-C', '15-A', '15-B', '15-C', '15-D', '15-E'];   // graines figées par identifiant : les ajustements existants ne bougent pas quand on ajoute des cibles
+for (const k of LEGACY.slice(0, 4)) if (sil[k]) targets[k] = { m: sil[k]!, source: k };
+for (const k of Object.keys(sil).filter((k) => !LEGACY.includes(k))) if (/^(13-|17-)/.test(k)) targets[k] = { m: sil[k]!, source: k };   // 13 et 17 : toutes les silhouettes tracées (17-P* = cellules du détecteur périodique)
 ['A', 'B', 'C', 'D', 'E'].forEach((n, i) => { const a = sil[`15-0${2 * i}`], b = sil[`15-0${2 * i + 1}`]; if (a && b) targets[`15-${n}`] = { m: avg(a, b), source: `15-0${2 * i}+15-0${2 * i + 1}` }; });
 
 type P = { aspect: number; upperFraction: number; openness: number; inner: number; outer: number };
@@ -48,8 +50,9 @@ function fit(m: M, seed: number) {
   }
   return best;
 }
-const out = Object.entries(targets).map(([id, { m, source }], i) => {
-  const b = fit(m, 0xe7e + i);
+const order = [...LEGACY, ...Object.keys(targets).filter((k) => !LEGACY.includes(k))].filter((k) => targets[k]);
+const out = order.map((id) => [id, targets[id]!] as const).map(([id, { m, source }]) => {
+  const li = LEGACY.indexOf(id); const b = fit(m, 0xe7e + (li >= 0 ? li : 100 + Number(id.replace(/\D/g, ''))));
   const r = (v: number): number => Math.round(v * 1e4) / 1e4;
   console.log(id.padEnd(6), b.style.padEnd(13), 'rms', r(b.c), 'asp', r(b.p.aspect), 'upF', r(b.p.upperFraction), 'open', r(b.p.openness), 'in/out', r(b.p.inner), r(b.p.outer), '| mesuré asp', m.aspect, 'upF', m.upperFraction, 'tilt', m.tiltDeg);
   return { id, source, style: b.style, aspect: r(b.p.aspect), tiltDeg: r(clamp(m.tiltDeg, -30, 30)), upperFraction: r(b.p.upperFraction), openness: r(b.p.openness), innerRoundness: r(b.p.inner), outerRoundness: r(b.p.outer), rms: r(b.c), measuredAspect: m.aspect, measuredUpperFraction: m.upperFraction };

@@ -8,7 +8,7 @@ import numpy as np, cv2
 from PIL import Image
 from scipy import ndimage as ndi
 sys.path.insert(0, os.path.dirname(__file__))
-from extract import lum, resample, snap, REF  # noqa: E402  (extract.py se lance depuis la racine du dépôt)
+from extract import lum, resample, snap, REF, SNAP  # noqa: E402  (extract.py se lance depuis la racine du dépôt)
 OUT = 'artefacts/eyes-refs2'
 # ancres humaines : id -> (fichier, canthus interne, canthus externe, marge haute [..], marge basse [..])
 TRACED = {
@@ -32,9 +32,15 @@ def descriptors(Ut, Dt, pit, pot):
             'upperProfile': prof(Ur_, -1), 'lowerProfile': prof(Dr_, 1),
             'canthusAngleDeg': {'inner': round(cant(Ut[0], Ut[k], Dt[k]), 1), 'outer': round(cant(Ut[-1], Ut[-1 - k], Dt[-1 - k]), 1)}}
 def mirrored(P, flip, pit): return np.c_[(-1.0 if flip else 1.0) * (P[:, 0] - pit[0]), P[:, 1]]
-def from_anchors(eid, fn, pi, po, up, lo):
-    img = np.array(Image.open(f'{REF}/{fn}').convert('RGB')); L = lum(img); pi, po = np.array(pi, float), np.array(po, float); mid = (pi + po) / 2
-    Ur, Dr = resample(np.vstack([pi, snap(up, L, mid), po]), 64), resample(np.vstack([pi, snap(lo, L, mid), po]), 64)
+def load_ref(fn):
+    """Image de la référence ; suffixe '#period' = motif périodique reconstruit 3×3 (detect_cells.py), ancres alors données dans le repère de la PÉRIODE (+P pour la tuile centrale)."""
+    if not fn.endswith('#period'): return np.array(Image.open(f'{REF}/{fn}').convert('RGB')), 0
+    from detect_cells import detect, P  # noqa: E402
+    big = detect(fn[:-7])[1].clip(0, 255).astype(np.uint8); return np.dstack([big] * 3), P
+def from_anchors(eid, fn, pi, po, up, lo, rad=SNAP):
+    img, off = load_ref(fn); L = lum(img); sh = lambda a: np.array(a, float) + off
+    pi, po, up, lo = sh(pi), sh(po), sh(up), sh(lo); mid = (pi + po) / 2
+    Ur, Dr = resample(np.vstack([pi, snap(up, L, mid, rad), po]), 64), resample(np.vstack([pi, snap(lo, L, mid, rad), po]), 64)
     flip = po[0] < pi[0]; Ut, Dt = mirrored(Ur, flip, pi), mirrored(Dr, flip, pi); pit, pot = mirrored(pi[None], flip, pi)[0], mirrored(po[None], flip, pi)[0]
     d = descriptors(Ut, Dt, pit, pot); d.update({'file': fn, 'method': 'anchors+snap'})
     ov = img.copy(); cv2.polylines(ov, [Ur.astype(np.int32)], False, (255, 0, 0), 2); cv2.polylines(ov, [Dr.astype(np.int32)], False, (0, 160, 0), 2)
@@ -75,7 +81,7 @@ if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True); eyes = {}
     traced = dict(TRACED)
     if os.path.exists(TRACED_JSON): traced.update({k: (v[0], tuple(v[1]), tuple(v[2]), [tuple(p) for p in v[3]], [tuple(p) for p in v[4]]) for k, v in json.load(open(TRACED_JSON)).items()})
-    for k, (fn, pi, po, up, lo) in traced.items(): eyes[k] = from_anchors(k, fn, pi, po, up, lo)
+    for k, (fn, pi, po, up, lo, *rd) in traced.items(): eyes[k] = from_anchors(k, fn, pi, po, up, lo, *rd)   # 6e élément optionnel : rayon d'accrochage (px) — petit pour les yeux « anneau » dont les cils voisins attirent le gradient
     eyes.update(from_alpha('15.png'))
     json.dump({'method': 'silhouettes : alpha (15) / ancres+accrochage gradient (13, 17, 14) ; descripteurs identiques à measures.json', 'eyes': eyes}, open(f'{REF}/measures-silhouettes.json', 'w'), indent=1)
     for k, v in eyes.items(): print(k, v['method'], 'tilt', v['tiltDeg'], 'asp', v['aspect'], 'upF', v['upperFraction'], 'pk', v['upperPeakAt'], v['lowerPeakAt'], 'cant', v['canthusAngleDeg'])

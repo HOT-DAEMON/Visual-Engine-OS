@@ -166,8 +166,9 @@ function fitLashesToZone<T extends Record<string, unknown>>(eye: T): T {
     if (lashZoneExcess(g, [...set.upper, ...set.lower]) <= ZONE_TARGET && linerOut <= ZONE_TARGET) return cur;
     if (linerOut > ZONE_TARGET) { const L = (cur as unknown as { lids: { liner: { wing: { length: number } } } }).lids; cur = { ...cur, lids: { ...L, liner: { ...L.liner, wing: { ...L.liner.wing, length: L.liner.wing.length * 0.88 } } } }; continue; }
     const lz = (cur as unknown as { lashes: { upper: { length?: number; flick?: { length?: number; count?: number } }; lower: { length?: number } } }).lashes;
+    // bornes du schéma (cils ≥ 0,02 ; mèche de coin ≥ 0,15) : sans elles, une enveloppe très ronde faisait lever une ZodError
     const f = 0.93;
-    cur = { ...cur, lashes: { ...lz, upper: { ...lz.upper, length: (lz.upper.length ?? spec.lashes.upper.length) * f, ...(lz.upper.flick?.count ? { flick: { ...lz.upper.flick, length: (lz.upper.flick.length ?? spec.lashes.upper.flick.length) * f } } : {}) }, lower: { ...lz.lower, length: (lz.lower.length ?? spec.lashes.lower.length) * f } } };
+    cur = { ...cur, lashes: { ...lz, upper: { ...lz.upper, length: Math.max(0.02, (lz.upper.length ?? spec.lashes.upper.length) * f), ...(lz.upper.flick?.count ? { flick: { ...lz.upper.flick, length: Math.max(0.15, (lz.upper.flick.length ?? spec.lashes.upper.flick.length) * f) } } : {}) }, lower: { ...lz.lower, length: Math.max(0.02, (lz.lower.length ?? spec.lashes.lower.length) * f) } } };
   }
   return cur;
 }

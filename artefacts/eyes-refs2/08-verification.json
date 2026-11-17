@@ -5,57 +5,142 @@
   "pixelFailures": 0,
   "fromReferences": [
    {
-    "index": 0,
-    "ref": "13-E5",
-    "style": "diamond_v2"
-   },
-   {
     "index": 1,
-    "ref": "17-C",
-    "style": "drooping"
-   },
-   {
-    "index": 2,
-    "ref": "15-A",
-    "style": "chibi"
-   },
-   {
-    "index": 3,
-    "ref": "15-B",
-    "style": "sharp"
-   },
-   {
-    "index": 4,
     "ref": "15-C",
     "style": "triangle"
    },
    {
-    "index": 5,
+    "index": 3,
+    "ref": "15-E",
+    "style": "triangle"
+   },
+   {
+    "index": 6,
+    "ref": "15-A",
+    "style": "chibi"
+   },
+   {
+    "index": 7,
+    "ref": "13-R1C2",
+    "style": "angular"
+   },
+   {
+    "index": 9,
+    "ref": "17-P07",
+    "style": "rounded_rect"
+   },
+   {
+    "index": 12,
+    "ref": "17-P03",
+    "style": "round"
+   },
+   {
+    "index": 13,
+    "ref": "15-B",
+    "style": "sharp"
+   },
+   {
+    "index": 14,
+    "ref": "17-P01",
+    "style": "drooping"
+   },
+   {
+    "index": 18,
+    "ref": "17-P08",
+    "style": "rounded_rect"
+   },
+   {
+    "index": 22,
+    "ref": "17-P09",
+    "style": "round"
+   },
+   {
+    "index": 23,
     "ref": "15-D",
     "style": "sharp"
    },
    {
-    "index": 6,
-    "ref": "15-E",
-    "style": "triangle"
+    "index": 24,
+    "ref": "17-P06",
+    "style": "drooping"
+   },
+   {
+    "index": 28,
+    "ref": "17-P13",
+    "style": "rounded_rect"
+   },
+   {
+    "index": 32,
+    "ref": "13-R1C1",
+    "style": "round"
+   },
+   {
+    "index": 33,
+    "ref": "13-R2C3",
+    "style": "sharp"
+   },
+   {
+    "index": 34,
+    "ref": "17-P10",
+    "style": "drooping"
+   },
+   {
+    "index": 38,
+    "ref": "17-P14",
+    "style": "rounded_rect"
+   },
+   {
+    "index": 42,
+    "ref": "13-R4C3",
+    "style": "round"
+   },
+   {
+    "index": 43,
+    "ref": "13-R3C2",
+    "style": "sharp"
+   },
+   {
+    "index": 44,
+    "ref": "13-R1C3",
+    "style": "drooping"
+   },
+   {
+    "index": 48,
+    "ref": "13-R2C1",
+    "style": "rounded_rect"
+   },
+   {
+    "index": 51,
+    "ref": "13-E5",
+    "style": "diamond_v2"
+   },
+   {
+    "index": 54,
+    "ref": "13-R4C1",
+    "style": "sharp"
+   },
+   {
+    "index": 59,
+    "ref": "13-R3C1",
+    "style": "rounded_rect"
    }
   ],
   "distinctness": {
-   "minToExisting": 0.020577112418890445,
-   "minAmongNew": 0.008901729645898845,
+   "minToExisting": 0.020809311506867254,
+   "minAmongNew": 0.020107041554475954,
    "byStyle": {
-    "diamond_v2": 8,
-    "drooping": 8,
+    "compressed": 12,
+    "triangle": 12,
     "chibi": 9,
-    "sharp": 8,
-    "triangle": 9,
+    "angular": 9,
+    "rounded_rect": 9,
     "almond": 8,
     "round": 8,
-    "angular": 9,
-    "compressed": 8,
-    "rounded_rect": 9,
+    "sharp": 8,
+    "drooping": 8,
     "circle": 8,
-    "diamond": 8
+    "diamond_v2": 5,
+    "diamond": 4
    }
   }
  },
@@ -70,19 +155,19 @@
    "innerDeg": 93.67
   },
   "neutral": {
-   "outerDeg": 112.6302,
-   "innerDeg": 118.6248,
-   "upperFraction": 0.6219
+   "outerDeg": 112.6595,
+   "innerDeg": 116.7164,
+   "upperFraction": 0.6176
   },
   "passe1": {
-   "outerDeg": 127.9173,
-   "innerDeg": 98.4256,
-   "upperFraction": 0.6188
+   "outerDeg": 127.9528,
+   "innerDeg": 96.5181,
+   "upperFraction": 0.6145
   },
   "passe2": {
-   "outerDeg": 123.6456,
-   "innerDeg": 98.4998,
-   "upperFraction": 0.6201
+   "outerDeg": 118.9893,
+   "innerDeg": 93.6649,
+   "upperFraction": 0.6202
   }
  }
 }

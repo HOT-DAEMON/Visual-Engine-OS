@@ -10,7 +10,7 @@ import { verifyEye } from '../verify/eye';
 import { generateRandomEye } from './random-eye';
 import { REF_FITS } from './eye-ref-fits';
 import { LASH_FAMILY_IDS, applyLashFamily, type LashFamilyId } from './eye-lash-families';
-import { SPRITE_IRIS_OVER_HEIGHT, applyLook, lookForRef } from './eye-ref-looks';
+import { INK_IRIS_OVER_HEIGHT, SPRITE_IRIS_OVER_HEIGHT, applyLook, lookForRef } from './eye-ref-looks';
 import { IRIS_FAMILIES, PUPIL_OVER_IRIS, ROUND_IRIS_ASPECT, irisFamily } from './eye-iris-families';
 import type { EyeInput } from './random-eye-helpers';
 
@@ -192,14 +192,14 @@ function buildExtraEye(rc: EyeRecipe, attempt: number): EyeInput {
   // Look issu des références (naturel mesuré / encre / sprite) : tiré APRÈS tous les autres tirages pour ne pas les décaler.
   const look = lookForRef(rc.ref, rnd);
   const looked = applyLook(base, look, rnd, rc.aspect);
-  const lashFam = extraEyeLashFamily(rc.index);
+  const lashFam = attempt >= 4 ? null : extraEyeLashFamily(rc.index);   // dernier recours après 4 échecs de vérification : cils naturels du tirage (la famille déterministe de l'indice ne pouvait pas rentrer dans la zone de cette enveloppe)
   const out = lashFam ? applyLashFamily(looked, lashFam) : looked;
   // Rayon d'iris CALIBRÉ sur l'ouverture réelle : diamètre vertical = IRIS_OVER_HEIGHT × hauteur d'ouverture (références : 0,98–1,08), réduit à chaque nouvelle tentative.
   const spec = resolveEye(EyeSpec.parse(out));
   const geo = openingGeometry(spec.shape, spec.canthi);
   const openH = openingProfile(geo).aspect * geo.w;
   const ry = irisRadii(spec).ry;
-  const target = (look === 'sprite-tall' ? SPRITE_IRIS_OVER_HEIGHT : rc.style === 'compressed' ? 0.94 : IRIS_OVER_HEIGHT) * 0.92 ** attempt;
+  const target = (look === 'sprite-tall' ? SPRITE_IRIS_OVER_HEIGHT : look === 'ink' ? INK_IRIS_OVER_HEIGHT : rc.style === 'compressed' ? 0.94 : IRIS_OVER_HEIGHT) * 0.92 ** attempt;
   return { ...out, iris: { ...(out.iris as object), radius: Math.max(0.15, Math.min(0.4 * ((openH / 2) * target) / ry, 0.55)) } } as EyeInput;
 }
 

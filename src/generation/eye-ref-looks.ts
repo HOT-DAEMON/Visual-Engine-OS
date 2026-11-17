@@ -25,6 +25,8 @@ export const REF_NATURAL = [
 export const LID_LINE_OVER_WIDTH = [0.0061, 0.0084] as const;
 /** Diamètre vertical de l'iris / hauteur d'ouverture des sprites 15 (rangées 1–2, mesuré 0,859–0,897 ; photos : 0,98–1,08). */
 export const SPRITE_IRIS_OVER_HEIGHT = 0.88;
+/** Diamètre vertical de l'iris / hauteur d'ouverture des yeux « encre » de la réf. 17 (cellules du détecteur périodique : P07 0,82 · P08 0,86 · P13 0,85 · P14 0,85 ; moyenne 0,85). P03, iris plein cadre (0,97), est l'exception. */
+export const INK_IRIS_OVER_HEIGHT = 0.85;
 export const SPRITE_TALL = [
   { id: '15-row1', irisAspect: 1.49, pupil: 0.67, top: '#29374e', bottom: '#49636e' },
   { id: '15-row2', irisAspect: 1.49, pupil: 0.47, top: '#407986', bottom: '#4b8282' },

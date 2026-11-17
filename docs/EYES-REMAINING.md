@@ -86,3 +86,11 @@ Fait : liner épais effilé par famille de cils (`lids.liner`), dégagement de l
 - 🟡 Iris colorés (réfs 14, 15 rangées 3–5) : 7 mesures fiables, 5 ambiguës (14-00, 14-02, 14-04, 15-06, 15-07) ; **non branchées au moteur** (plafond de hauteur/largeur : moteur 1,22 contre références 1,33).
 - ⬜ Réf. 17 (détecteur de cellules à écrire) · ⬜ 8 yeux de la réf. 13 non tracés · ❌ silhouette de la réf. 14 : non mesurable (sclère blanche sur fond blanc, paupière basse ouverte).
 - ⬜ Épaisseur du liner et dispersion des cils : encore **interprétées** (à mesurer en pixels) · ⬜ variation bornée entre les deux yeux · ⬜ familles dans `random-eye`.
+
+## Passe 6 — voir `EYES-REFS-3.md`
+- ✅ Réf. 17 : détecteur de cellules (motif périodique de 477 px reconstruit, 15 cellules annotées) ; 9 yeux tracés (`17-P*`).
+- ✅ Réf. 13 : 9 des yeux non tracés le sont maintenant (`13-R*`) ; ⬜ 13-R3C3 (sphère sans paupière) volontairement non tracé.
+- ✅ 27 recettes ajustées, 24 places mesurées dans la galerie des 100 (distance minimale 0,0208) ; tests yeux verts.
+- 🟡 Ancres lues à ≈ 2 px près ; RMS élevé pour 17-P07 (0,078), 17-P08 (0,077) ; P09 ambiguë (aile et iris mêlés).
+- ⬜ Almond et les 100 formes : toujours **non retravaillés** (boucle « jusqu'à parfait » non faite) ; ⬜ look « encre » en aplats noirs francs ; ⬜ réf. 14 ; ⬜ limbe réf. 15 rangées 3–5 ; ⬜ facettes d'iris (dispersion, rayons) ; ⬜ liner et dispersion à mesurer.
+
