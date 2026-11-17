@@ -7,7 +7,7 @@ import { hex } from './color';
 import { REF_ROWS } from './ref-fit';
 import { halfWidthAtZ, sectionAt } from './sections';
 import { alaOf, alaPull } from './parts';
-import { ALA_CONTOUR_YAW, alaOverflow } from './nose-contour';
+import { ALA_CONTOUR_YAW, alaOverflow, frontWidthRatio } from './nose-contour';
 import { REGION, type HeadTurnSpec, type TurnRender } from './types';
 import type { RenderAt } from './verify-geo';
 import { check, type Check } from './verify-types';
@@ -45,6 +45,7 @@ export function engineGeometry(s: HeadTurnSpec): Check[] {
   // Ailes du nez dans le contour de la joue à 30° (docs/NOSE-ALAR-SEAT.md). Mesuré sur 40 graines × 4 types de nez : SANS la contrainte jusqu'à 0,062 U de débordement (plat-trapèze), AVEC elle 0 sauf saturation (≤ 0,017 U, 4 graines sur 40 en plat-trapèze).
   c.push(check(G, 'eng.nose.alar-contour', `Aile du nez dans le contour de la joue à ${ALA_CONTOUR_YAW}° : débordement (U)`, alaOverflow(s, alaOf(s, -1), ALA_CONTOUR_YAW), 0, 0.02, 'hard', 'garde de la contrainte `alaPull` : sans elle, jusqu\'à 0,062'));
   c.push(check(G, 'eng.nose.alar-pull', 'Aile rappelée vers l\'axe par la contrainte : part de la position d\'aile (0 = forme libre ; > 0,25 = nez trop large pour le modèle 3D)', alaPull(s) / Math.max(1e-6, s.nose.alaX), 0, 0.25, 'info', 'plat-trapèze : 73 % des graines sont rappelées'));
+  c.push(check(G, 'eng.nose.front-width', 'Largeur de face du nez 3D ÷ silhouette 2D du moteur de nez (1 = la 3D ne dépasse pas la silhouette ; planche de rotation : nez 0,093–0,113 U)', frontWidthRatio(s, alaOf(s, 1)), 0.97, 1.08, 'hard', 'avant l\'ancrage du bord externe des ailes : 1,50–1,54 (docs/NOSE-WIDTH-3D.md)'));
   return c;
 }
 

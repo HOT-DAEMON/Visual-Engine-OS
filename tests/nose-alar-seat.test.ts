@@ -7,9 +7,14 @@ import { engineGeometry } from '../src/head-turntable/verify-engines';
 import { REF_SPEC } from '../src/head-turntable/spec';
 import type { HeadTurnSpec } from '../src/head-turntable';
 
-/** Ailes du nez 3D dans le contour de la joue (docs/NOSE-ALAR-SEAT.md). Têtes : graines fixes, archétype imposé. */
+/**
+ * Ailes du nez 3D dans le contour de la joue (docs/NOSE-ALAR-SEAT.md). Têtes : graines fixes, archétype imposé.
+ * Depuis l'ancrage du bord externe sur la crête (docs/NOSE-WIDTH-3D.md), les nez de ces graines ne débordent presque plus : les tests de la CONTRAINTE utilisent un nez élargi (`wide`, alaX × 1,3) et l'ancien défaut est reconstruit en décalant l'aile de `ex` (`oldAnchor`).
+ */
 const subject = (seed: number, a?: string): HeadTurnSpec => head3dSubject(hostOf(seed, a), {} as never).spec;
 const rule = (s: HeadTurnSpec, id: string) => engineGeometry(s).find((c) => c.id === id)!;
+const wide = (s: HeadTurnSpec, k: number): HeadTurnSpec => ({ ...s, nose: { ...s.nose, alaX: s.nose.alaX * k } }) as HeadTurnSpec;
+const oldAnchor = (s: HeadTurnSpec) => { const a = alaSeated(s, -1, 0); return { ...a, c: { ...a.c, x: a.c.x - a.ex } }; };
 
 describe('ailes du nez 3D : pose sur la joue et contrainte de contour', () => {
   it('le nez de la planche de référence n\'est pas modifié (aucun rappel)', () => {
@@ -22,18 +27,19 @@ describe('ailes du nez 3D : pose sur la joue et contrainte de contour', () => {
     // sans contrainte (aile posée seulement) et à 45° : valeurs non nulles des deux côtés, donc comparaison non triviale
     for (const [seed, a] of [[77, 'plat-trapeze'], [11, 'pyramide']] as const) {
       const s = subject(seed, a), analytic = alaOverflow(s, alaOf(s, -1), 45), render = noseOverflow(s, 45, 300).far;
-      expect(analytic).toBeGreaterThan(0.03);
+      expect(analytic).toBeGreaterThan(0.01);
       expect(Math.abs(analytic - render)).toBeLessThan(0.012);
     }
   });
 
-  it('défaut ancien DÉTECTÉ : une aile non rappelée déborde à 30° (plat-trapèze graine 77 : ≈ 0,047 U)', () => {
+  it('défaut ancien DÉTECTÉ : une aile ancrée par son centre sur la crête déborde à 30° (plat-trapèze graine 77 : ≈ 0,060 U)', () => {
     const s = subject(77, 'plat-trapeze');
-    expect(alaOverflow(s, alaSeated(s, -1, 0), 30)).toBeGreaterThan(0.03);
+    expect(alaOverflow(s, oldAnchor(s), 30)).toBeGreaterThan(0.03);
   });
 
   it('contrainte : débordement à 30° nul après rappel, confirmé sur le RENDU (≤ une résolution de pixel)', () => {
-    const s = subject(77, 'plat-trapeze');
+    const s = wide(subject(77, 'plat-trapeze'), 1.3);   // sans l'élargissement, ce nez ne déborde plus (≈ 0,0007 U) : la contrainte n'aurait rien à faire
+    expect(alaOverflow(s, alaSeated(s, -1, 0), 30)).toBeGreaterThan(0.03);
     expect(alaPull(s)).toBeGreaterThan(0.02);
     expect(alaOverflow(s, alaOf(s, -1), 30)).toBeLessThan(1e-4);
     expect(noseOverflow(s, 30, 300).far).toBeLessThan(0.008);
@@ -45,10 +51,10 @@ describe('ailes du nez 3D : pose sur la joue et contrainte de contour', () => {
   });
 
   it('la règle voit la saturation : un nez bien plus large que le modèle ne peut pas tenir, la règle de rappel (info) le dit', () => {
-    const s = subject(77, 'plat-trapeze'), wide = { ...s, nose: { ...s.nose, alaX: s.nose.alaX * 1.8 } } as HeadTurnSpec;
-    expect(alaPull(wide)).toBeCloseTo(0.6 * wide.nose.alaX, 5);   // borne ALA_PULL_MAX
-    expect(rule(wide, 'eng.nose.alar-pull').ok).toBe(false);
-    expect(rule(wide, 'eng.nose.alar-contour').ok).toBe(false);
+    const w = wide(subject(77, 'plat-trapeze'), 2.6);   // alaX × 1,8 suffisait avant l'ancrage du bord externe
+    expect(alaPull(w)).toBeCloseTo(0.6 * w.nose.alaX, 5);   // borne ALA_PULL_MAX
+    expect(rule(w, 'eng.nose.alar-pull').ok).toBe(false);
+    expect(rule(w, 'eng.nose.alar-contour').ok).toBe(false);
   });
 
   it('déterminisme : deux appels donnent la même aile', () => {

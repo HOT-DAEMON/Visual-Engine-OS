@@ -1,0 +1,130 @@
+{
+ "libre": {
+  "ratioLargeur": {
+   "avant": {
+    "med": 1.5175,
+    "max": 1.5516
+   },
+   "apres": {
+    "med": 1.0095,
+    "min": 1.001,
+    "max": 1.0321
+   }
+  },
+  "rappel30": {
+   "part": 0,
+   "satures": 0
+  },
+  "debordement": {
+   "30": {
+    "max": 0,
+    "part_sup_0_01": 0
+   },
+   "45": {
+    "max": 0.0252,
+    "part_sup_0_01": 0.15
+   }
+  },
+  "avantRef": {
+   "part": 0.025,
+   "max": 0.0055,
+   "satures": 0
+  }
+ },
+ "pyramide": {
+  "ratioLargeur": {
+   "avant": {
+    "med": 1.5315,
+    "max": 1.5364
+   },
+   "apres": {
+    "med": 1.0188,
+    "min": 1,
+    "max": 1.022
+   }
+  },
+  "rappel30": {
+   "part": 0.025,
+   "satures": 0
+  },
+  "debordement": {
+   "30": {
+    "max": 0,
+    "part_sup_0_01": 0
+   },
+   "45": {
+    "max": 0.0494,
+    "part_sup_0_01": 0.575
+   }
+  },
+  "avantRef": {
+   "part": 0.175,
+   "max": 0.0519,
+   "satures": 0
+  }
+ },
+ "cloche-ailes": {
+  "ratioLargeur": {
+   "avant": {
+    "med": 1.507,
+    "max": 1.5399
+   },
+   "apres": {
+    "med": 1.0025,
+    "min": 1,
+    "max": 1.0244
+   }
+  },
+  "rappel30": {
+   "part": 0.025,
+   "satures": 0
+  },
+  "debordement": {
+   "30": {
+    "max": 0,
+    "part_sup_0_01": 0
+   },
+   "45": {
+    "max": 0.0486,
+    "part_sup_0_01": 0.575
+   }
+  },
+  "avantRef": {
+   "part": 0.15,
+   "max": 0.0502,
+   "satures": 0
+  }
+ },
+ "plat-trapeze": {
+  "ratioLargeur": {
+   "avant": {
+    "med": 1.5316,
+    "max": 1.5382
+   },
+   "apres": {
+    "med": 1.0188,
+    "min": 1,
+    "max": 1.0232
+   }
+  },
+  "rappel30": {
+   "part": 0.1,
+   "satures": 0
+  },
+  "debordement": {
+   "30": {
+    "max": 0,
+    "part_sup_0_01": 0
+   },
+   "45": {
+    "max": 0.0584,
+    "part_sup_0_01": 1
+   }
+  },
+  "avantRef": {
+   "part": 0.725,
+   "max": 0.077,
+   "satures": 4
+  }
+ }
+}

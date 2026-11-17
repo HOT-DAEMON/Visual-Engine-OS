@@ -41,6 +41,7 @@ Rappel appliqué : libre 2,5 % des graines (max 0,0055 U) ; pyramide 17,5 % ; cl
 - `eng.nose.alar-pull` (informative, 0 – 0,25 de `alaX`) : signale un nez trop large pour le modèle 3D (test : nez à `alaX` ×1,8 sature et déclenche les deux règles).
 
 ## 7. Non fait, constats ouverts
+> **Mise à jour (2e passe, 16 nov.)** : le premier point (nez 3D 1,5 × plus large) est TRANCHÉ et corrigé, et le plat-trapèze n'est plus aux limites : voir `NOSE-WIDTH-3D.md`. Les chiffres de §4 décrivent l'état avant ce correctif.
 - **Le nez 3D de face est 1,5 × plus large que la silhouette du moteur 2D** (demi-largeur 0,079 contre 0,051 pour la planche ; 0,204 contre 0,134 pour le plat-trapèze graine 77). Cause : l'ellipsoïde est centré SUR la crête `alaX`, que `silhouette` et la règle `nose.width` traitent comme la demi-largeur. Ce rapport (1,50–1,54 sur 5 nez) **n'est pas corrigé** : la planche a peut-être été calée à la main sur ce modèle ; il faut le trancher contre la planche avant de toucher à tous les rendus 3D.
 - Le plat-trapèze reste aux limites du modèle 3D (72,5 % rappelés, 4 saturés).
 - **45° non traité** : même un nez libre dépasse le contour (45 % des graines > 0,01 U), ce qui est le comportement normal d'un nez en trois-quarts ; aucune borne n'est posée.

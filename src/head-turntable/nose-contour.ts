@@ -32,3 +32,24 @@ export function alaOverflow(s: HeadTurnSpec, ala: AlaEllipsoid, yawDeg: number):
 export const ALA_CONTOUR_YAW = 30;
 /** L'aile ne peut pas être ramenée sous cette fraction de sa position `alaX` : au-delà elle serait enfouie dans la bosse centrale (la contrainte est alors saturée et la règle de vérification le dit). */
 export const ALA_PULL_MAX = 0.4;
+
+/**
+ * LARGEUR DE FACE DU NEZ 3D CONTRE SA SILHOUETTE 2D, PAR CALCUL (aucun rendu). Pure, déterministe.
+ * Emprise frontale (lacet 0) de la bosse centrale (demi-largeur = nœuds de `spec.nose.knots`, qui viennent de la silhouette 2D du moteur de nez) et d'une aile (ellipsoïde, côté x > 0) :
+ * rapport = demi-largeur maximale de l'union ÷ demi-largeur maximale de la seule silhouette. 1 = la 3D ne dépasse pas la silhouette 2D ; avant l'ancrage du bord externe : 1,50–1,54.
+ * Mesure et arbitrage contre la planche de rotation : docs/NOSE-WIDTH-3D.md.
+ */
+export function frontWidthRatio(s: HeadTurnSpec, ala: AlaEllipsoid): number {
+  const k = s.nose.knots, y0 = k[0]![0], y1 = k[k.length - 1]![0], N = 400;
+  const half = (y: number): number => {
+    if (y <= y0) return k[0]![2];
+    for (let i = 0; i + 1 < k.length; i++) { const a = k[i]!, b = k[i + 1]!; if (y <= b[0]) return a[2] + (b[2] - a[2]) * ((y - a[0]) / (b[0] - a[0] || 1)); }
+    return k[k.length - 1]![2];
+  };
+  let m2 = 1e-9, m3 = 1e-9;
+  for (let i = 0; i <= N; i++) {
+    const y = y0 + ((y1 - y0) * i) / N, w = half(y), t = (y - ala.c.y) / ala.ey, wa = Math.abs(t) < 1 ? Math.abs(ala.c.x) + ala.ex * Math.sqrt(1 - t * t) : 0;
+    m2 = Math.max(m2, w); m3 = Math.max(m3, w, wa);
+  }
+  return m3 / m2;
+}

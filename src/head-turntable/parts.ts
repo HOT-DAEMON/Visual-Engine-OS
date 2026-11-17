@@ -11,6 +11,13 @@ import { hairPartMeshes } from './hair-parts';
 
 /** Largeur d'ailes (U) et décalage hauteur ↔ base du nez de la planche : les ailes des autres têtes sont posées et dimensionnées par rapport à ces valeurs. */
 const REF_ALA = ((): number => noseLandmarks(engineHead()).crestX)();
+/** Demi-axe horizontal de l'aile (U, à l'échelle de la planche). */
+export const ALA_EX = 0.026;
+/**
+ * Ancrage du BORD EXTERNE de l'aile sur la crête alaire `alaX` (1 = bord externe = crête, 0 = ancien comportement : centre sur la crête).
+ * Mesuré contre la planche de rotation (docs/NOSE-WIDTH-3D.md) : largeur du nez de face 0,093–0,113 U, silhouette 2D 0,103 U, ancien 3D 0,155 U (1,51 ×).
+ */
+export const ALA_OUTER_ANCHOR = 1;
 const ALA_ABOVE_BASE = 0.0147;   // les ailes sont centrées 0,0147 U au-dessus de la base du nez (planche : base 0,7897 → y = 0,775, comme avant)
 
 /** Interpolation linéaire d'une colonne (1 = z, 2 = demi-largeur) des nœuds d'une bosse à la hauteur y. */
@@ -28,8 +35,8 @@ function bumpOf(spec: HeadTurnSpec, k: BumpKnots): Mesh {
 
 /** Aile posée sur la joue, centre décalé de `pull` (U) vers l'axe : centre, demi-axes. z = surface de la joue À L'ABSCISSE de l'aile (comme la bosse centrale, `bumpMesh`), pas l'avant de l'axe `zf` : la joue recule vers les côtés, une aile large posée sur `zf` flottait devant elle. */
 export function alaSeated(spec: HeadTurnSpec, sg: 1 | -1, pull: number): AlaEllipsoid {
-  const ys = spec.nose.baseY - ALA_ABOVE_BASE, sa = sectionAt(spec, ys), ka = spec.engine ? spec.nose.alaX / REF_ALA : 1, x = sg * (spec.nose.alaX - pull);
-  return { c: v3(x, ys, surfaceZ(sa, x, true) + 0.022 * ka), ex: 0.026 * ka, ey: 0.024 * ka, ez: 0.026 * ka };
+  const ys = spec.nose.baseY - ALA_ABOVE_BASE, sa = sectionAt(spec, ys), ka = spec.engine ? spec.nose.alaX / REF_ALA : 1, ex = ALA_EX * ka, x = sg * (spec.nose.alaX - ex * ALA_OUTER_ANCHOR - pull);
+  return { c: v3(x, ys, surfaceZ(sa, x, true) + 0.022 * ka), ex, ey: 0.024 * ka, ez: 0.026 * ka };
 }
 
 /**

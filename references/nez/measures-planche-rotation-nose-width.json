@@ -1,0 +1,39 @@
+{
+ "iris_px": [
+  74.13,
+  124.19
+ ],
+ "iod_px": 50.06,
+ "seuils": {
+  "6": {
+   "w_px": 17,
+   "h_px": 16,
+   "w_U": 0.1133,
+   "touche_bord": true
+  },
+  "8": {
+   "w_px": 17,
+   "h_px": 16,
+   "w_U": 0.1133,
+   "touche_bord": true
+  },
+  "10": {
+   "w_px": 17,
+   "h_px": 15,
+   "w_U": 0.1133,
+   "touche_bord": false
+  },
+  "14": {
+   "w_px": 15,
+   "h_px": 13,
+   "w_U": 0.1,
+   "touche_bord": false
+  },
+  "18": {
+   "w_px": 14,
+   "h_px": 13,
+   "w_U": 0.0933,
+   "touche_bord": false
+  }
+ }
+}
