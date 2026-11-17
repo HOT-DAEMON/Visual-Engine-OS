@@ -1,8 +1,8 @@
 import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { encodePngRgba } from '../../src/core/png';
-import { fromEngineY } from '../../src/head-turntable/engines/rows';
-import { vaultRise, unwarpY } from '../../src/head-turntable/engines/vault-model';
+import { fromEngineY, isBare } from '../../src/head-turntable/engines/rows';
+import { vaultRise, vaultTop, unwarpY } from '../../src/head-turntable/engines/vault-model';
 import { variedHead } from '../../src/head-turntable/engines/from-face';
 import { vaultCurves } from '../../src/skull/vault-curves';
 import { VAULT_STRUCTURES } from '../../src/skull/vault-registry';
@@ -46,7 +46,7 @@ for (const [name, spec] of [['cheveux', hairy], ['chauve', bald]] as const) for 
   const r = render(spec, v, 420); png(T('tete', `${name}_${v}.png`), r);
   const e = spec.engine!, rise = vaultRise(e), view = VAULT_VIEWS[v];
   const curves = vaultCurves(e.sk).filter((c) => c.kind !== 'point').flatMap((c) => ([1, -1] as const).filter((s) => !(s === -1 && c.pts.every((p) => p.az === 0 || p.az === 180))).map((s) => ({
-    id: c.id, side: s, pts: c.pts.map((p) => { const y = unwarpY(fromEngineY(p.y), rise), { P, n } = surfaceFrame(spec, y, p.az * Math.PI / 180 * s), pr = project(toCam(P, view, 'head'), view); return { x: r.originX + pr.x * r.ppu, y: r.originY + pr.y * r.ppu, vis: dirToCam(n, view, 'head', y).z > 0.05 }; }) })));
+    id: c.id, side: s, pts: c.pts.map((p) => { const y = unwarpY(fromEngineY(p.y, isBare(e)), rise, vaultTop(e)), { P, n } = surfaceFrame(spec, y, p.az * Math.PI / 180 * s), pr = project(toCam(P, view, 'head'), view); return { x: r.originX + pr.x * r.ppu, y: r.originY + pr.y * r.ppu, vis: dirToCam(n, view, 'head', y).z > 0.05 }; }) })));
   overlay[`${name}_${v}`] = { curves, points: placeAll(spec, view, r).map((p) => ({ id: p.id, side: p.side, x: p.px, y: p.py, visible: p.visible, by: p.occludedBy, facing: +p.facing.toFixed(3), local: [p.local.x, p.local.y, p.local.z].map((q) => +q.toFixed(4)), bone: [p.bone.x, p.bone.y, p.bone.z].map((q) => +q.toFixed(4)), depthMm: +(p.depthU * 230).toFixed(2), global: [p.global.x, p.global.y, p.global.z].map((q) => +q.toFixed(4)) })) };
 }
 json('registre-placements.json', overlay);

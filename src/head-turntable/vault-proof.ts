@@ -25,6 +25,11 @@ export const RELIEF_ON: Partial<SkullParams> = { mastoid: 1, nuchalLine: 1, glab
 /** Visage franchement asymétrique (asymétrie crânienne reportée = +1) avec un crâne sans asymétrie propre. */
 const asymFace = (p: Profile): Profile => ({ ...p, face: { ...p.face, params: { ...p.face.params, asymmetry: { ...p.face.params.asymmetry, eyeDy: 0.012, eyeRollDeg: 4, mouthTiltDeg: 4 } } } });
 
+/** Paramètres de FORME ou de POSITION : sans la structure qu'ils règlent il n'y a rien à lire (une mastoïde nulle n'a ni taille ni direction ; une éminence pariétale effacée n'a pas de place). La base l'active. */
+export const SHAPE_BASE: Readonly<Record<string, Partial<SkullParams>>> = {
+  mastoidSize: { mastoid: 1 }, mastoidDirection: { mastoid: 1 }, mastoidSlope: { mastoid: 1 },
+  parietalHeight: { parietalBulge: 1 }, parietalAzimuth: { parietalBulge: 1 },
+};
 const ALL_VIEWS: readonly VaultView[] = ['face', 'trois_quarts', 'profil', 'trois_quarts_arriere', 'dos', 'dessus'];
 const viewsOf = (key: string): readonly VaultView[] => {
   const v = VAULT_STRUCTURES.filter((s) => s.params.includes(key)).flatMap((s) => s.influence.views);
@@ -38,7 +43,7 @@ export function proofCases(): ProofCase[] {
   for (const k of VAULT_KEYS) {
     const lo = k === 'suturesShow' || k === 'asymFaceCoupling' ? 0 : -1;
     if (k === 'boneShow') continue;   // prouvé plus bas, avec les reliefs actifs
-    const base: Partial<SkullParams> = {};
+    const base: Partial<SkullParams> = { ...(SHAPE_BASE[k] ?? {}) };
     out.push({ id: k, lo, hi: 1, nom: k === 'asymFaceCoupling' ? 0.5 : 0, base, views: k === 'asymFaceCoupling' ? ALL_VIEWS : viewsOf(k), ...(k === 'asymFaceCoupling' ? { faceOv: asymFace, metric: 'mirror' as const } : {}) });
   }
   out.push({ id: 'boneShow', lo: -1, hi: 1, nom: 0, base: RELIEF_ON, views: ['profil', 'trois_quarts', 'trois_quarts_arriere', 'dessus'] });

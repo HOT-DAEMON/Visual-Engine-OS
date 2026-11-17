@@ -141,7 +141,7 @@
    0,
    1
   ],
-  "voisinesPerceptibles": 10,
+  "voisinesPerceptibles": 12,
   "voisinesTotal": 12,
   "correctionsStrictes": [
    0,
@@ -167,7 +167,7 @@
    0.5,
    0.95
   ],
-  "voisinesPerceptibles": 4,
+  "voisinesPerceptibles": 5,
   "voisinesTotal": 12,
   "correctionsStrictes": [
    0,

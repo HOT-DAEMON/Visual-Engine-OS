@@ -1,0 +1,54 @@
+{
+  "graine": 11,
+  "largeurOuvertureAu0": 223.41,
+  "lignes": [
+    {
+      "yaw": 0,
+      "azimuth": -22,
+      "largeur": 223.41,
+      "rapport": 1,
+      "analytique": 1,
+      "facing": 0.9272
+    },
+    {
+      "yaw": 0,
+      "azimuth": 22,
+      "largeur": 223.41,
+      "rapport": 1,
+      "analytique": 1,
+      "facing": 0.9272
+    },
+    {
+      "yaw": 35,
+      "azimuth": -22,
+      "largeur": 234.78,
+      "rapport": 1.0509,
+      "analytique": 1.0509,
+      "facing": 0.9744
+    },
+    {
+      "yaw": 35,
+      "azimuth": 22,
+      "largeur": 131.23,
+      "rapport": 0.5874,
+      "analytique": 0.5874,
+      "facing": 0.5446
+    },
+    {
+      "yaw": -35,
+      "azimuth": -22,
+      "largeur": 131.23,
+      "rapport": 0.5874,
+      "analytique": 0.5874,
+      "facing": 0.5446
+    },
+    {
+      "yaw": -35,
+      "azimuth": 22,
+      "largeur": 234.78,
+      "rapport": 1.0509,
+      "analytique": 1.0509,
+      "facing": 0.9744
+    }
+  ]
+}

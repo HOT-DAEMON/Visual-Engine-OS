@@ -1,0 +1,185 @@
+{
+ "encre": {
+  "moteurAvant": {
+   "couleur": "#120e18",
+   "luminance": 14
+  },
+  "moteurMaintenant": {
+   "couleur": "#040404",
+   "luminanceRendue": "voir verifierPixels familles : lash-ink-dark"
+  },
+  "references": {
+   "12": 2,
+   "13": 0,
+   "15": 0,
+   "16": 1,
+   "note": "luminance médiane de l’encre (pixels < 110), mesurée sur references/eyes/*"
+  }
+ },
+ "cilsSurOuverture": {
+  "avantDegagement": 848,
+  "apresRotationSeule": 24,
+  "maintenant": 0,
+  "methode": "rotation ≤ 50°, puis raccourcissement, puis amincissement, puis omission (8 cils du bas dont la racine est dans la fente)"
+ },
+ "galerie100": {
+  "distanceMinAuxExistants": 0.023476986257010553,
+  "distanceMinEntreLes100": 0.020107041554475954,
+  "quotasParStyle": {
+   "chibi": 12,
+   "circle": 12,
+   "angular": 9,
+   "rounded_rect": 9,
+   "triangle": 9,
+   "almond": 8,
+   "round": 8,
+   "sharp": 8,
+   "drooping": 8,
+   "compressed": 8,
+   "diamond_v2": 5,
+   "diamond": 4
+  }
+ },
+ "verifierPixelsGalerie100": {
+  "geometry/no-paint-outside-zone": {
+   "checked": 100,
+   "failed": 0
+  },
+  "geometry/iris-centre-painted": {
+   "checked": 100,
+   "failed": 0
+  },
+  "geometry/opening-filled": {
+   "checked": 100,
+   "failed": 0
+  },
+  "anatomy/pupil-darker-than-iris-pixels": {
+   "checked": 65,
+   "failed": 0
+  },
+  "anatomy/sclera-is-light-tone": {
+   "checked": 94,
+   "failed": 0
+  },
+  "style/iris-not-flat": {
+   "checked": 100,
+   "failed": 0
+  },
+  "geometry/lash-centerline-clear-of-opening": {
+   "checked": 54,
+   "failed": 0
+  },
+  "anatomy/lash-ink-dark": {
+   "checked": 51,
+   "failed": 0
+  },
+  "style/lash-ink-flat": {
+   "checked": 51,
+   "failed": 0
+  }
+ },
+ "verifierPixelsFamilles10x8": {
+  "lash-centerline-clear-of-opening": {
+   "checked": 80,
+   "failed": 0
+  },
+  "lash-ink-dark": {
+   "checked": 78,
+   "failed": 0
+  },
+  "lash-ink-flat": {
+   "checked": 78,
+   "failed": 0
+  }
+ },
+ "irisCouleurMesures": {
+  "resume": {
+   "rx": {
+    "n": 7,
+    "p10": 0.176,
+    "median": 0.205,
+    "p90": 0.238
+   },
+   "ry": {
+    "n": 7,
+    "p10": 0.214,
+    "median": 0.244,
+    "p90": 0.288
+   },
+   "aspect": {
+    "n": 7,
+    "p10": 1.057,
+    "median": 1.15,
+    "p90": 1.33
+   },
+   "rimOverIrisRadius": {
+    "n": 7,
+    "p10": 0.023,
+    "median": 0.077,
+    "p90": 0.092
+   }
+  },
+  "yeux": [
+   {
+    "id": "14-00",
+    "confiance": "ambigu",
+    "relecture": "partiel : iris vert/jaune, ellipse décalée vers le bas"
+   },
+   {
+    "id": "14-01",
+    "confiance": "fiable",
+    "relecture": "ok"
+   },
+   {
+    "id": "14-02",
+    "confiance": "ambigu",
+    "relecture": "sous-segmenté : iris gris-bleu clair, ellipse trop petite"
+   },
+   {
+    "id": "14-03",
+    "confiance": "fiable",
+    "relecture": "ok"
+   },
+   {
+    "id": "14-04",
+    "confiance": "ambigu",
+    "relecture": "partiel : iris sombre, ellipse décalée"
+   },
+   {
+    "id": "14-05",
+    "confiance": "fiable",
+    "relecture": "ok"
+   },
+   {
+    "id": "15-04",
+    "confiance": "fiable",
+    "relecture": "ok"
+   },
+   {
+    "id": "15-05",
+    "confiance": "fiable",
+    "relecture": "ok"
+   },
+   {
+    "id": "15-06",
+    "confiance": "ambigu",
+    "relecture": "ellipse inclinée à tort (iris droit)"
+   },
+   {
+    "id": "15-07",
+    "confiance": "ambigu",
+    "relecture": "ellipse inclinée à tort (iris droit)"
+   },
+   {
+    "id": "15-08",
+    "confiance": "fiable",
+    "relecture": "ok"
+   },
+   {
+    "id": "15-09",
+    "confiance": "fiable",
+    "relecture": "ok"
+   }
+  ]
+ }
+}

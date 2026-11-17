@@ -1,6 +1,6 @@
 import { halfWidthAt } from '../face/outline';
 import { hex } from './color';
-import { toEngineY } from './engines/rows';
+import { isBare, toEngineY } from './engines/rows';
 import { py } from './engines/units';
 import { hairlineY } from './sections';
 import { PART } from './mesh';
@@ -25,7 +25,7 @@ function skinCover(spec: HeadTurnSpec, r: TurnRender): number {
   const e = spec.engine!, yTop = hairlineY(spec, 0) + 0.02, yBot = (spec.rows[spec.rows.length - 1]?.y ?? 1) - 0.03;
   let want = 0, got = 0;
   for (let y = Math.max(0, Math.ceil(yTop * r.ppu + r.originY)); y < Math.min(r.h, Math.floor(yBot * r.ppu + r.originY)); y++) {
-    const uy = (y + 0.5 - r.originY) / r.ppu, hw = (0.92 * halfWidthAt(e.lm.outline, Math.min(py(toEngineY(uy)), e.lm.outline.bottomY - 1))) / 1000;
+    const uy = (y + 0.5 - r.originY) / r.ppu, hw = (0.92 * halfWidthAt(e.lm.outline, Math.min(py(toEngineY(uy, isBare(e))), e.lm.outline.bottomY - 1))) / 1000;
     for (let x = Math.ceil(r.originX - hw * r.ppu); x < Math.floor(r.originX + hw * r.ppu); x++) {
       want++; const g = r.regions[y * r.w + x];
       if (g === REGION.skin || g === REGION.eye || g === REGION.mouth) got++;
@@ -54,7 +54,7 @@ export function hostOverlap(spec: HeadTurnSpec, r0: TurnRender): HostOverlap | n
     if (l < 0 || r0.regions[y * r0.w + l] === REGION.hair || r0.regions[y * r0.w + r] === REGION.hair) continue;
     // Volume de cheveux 3D : la coque peut recouvrir le contour de la tête (la partie visible de la tête est alors plus étroite que le visage) — une rangée où un pixel voisin du bord est une pièce de cheveux n'est pas comparable.
     if (isHairId(r0.ids[y * r0.w + Math.max(0, l - 1)]!) || isHairId(r0.ids[y * r0.w + Math.min(r0.w - 1, r + 1)]!)) continue;
-    const want = halfWidthAt(e.lm.outline, Math.min(py(toEngineY(t)), e.lm.outline.bottomY - 1)) / 1000, got = (r - l + 1) / 2 / r0.ppu;
+    const want = halfWidthAt(e.lm.outline, Math.min(py(toEngineY(t, isBare(e))), e.lm.outline.bottomY - 1)) / 1000, got = (r - l + 1) / 2 / r0.ppu;
     inter += Math.min(got, want); union += Math.max(got, want); host += want; rows++;
   }
   return { rows, iou: union ? inter / union : 0, coverage: host ? inter / host : 0, skinCover: skinCover(spec, r0) };

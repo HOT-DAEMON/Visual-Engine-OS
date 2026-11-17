@@ -38,6 +38,16 @@ export const VaultParams = z
     occipitalSlope: S0,
     /** Région mastoïdienne — relief derrière l'oreille : -1 effacé … +1 saillant. */
     mastoid: S0,
+    /** Région mastoïdienne — TAILLE de l'emprise du processus : -1 petit (×0,6) … +1 grand (×1,5). N'agit que si `mastoid` ≠ 0 (sans saillie il n'y a pas de forme à dimensionner). */
+    mastoidSize: S0,
+    /** Région mastoïdienne — DIRECTION de l'axe du processus : -1 incliné vers l'arrière … +1 vers l'avant et le bas (pointe antéro-inférieure, ±35°) ; s'allonge avec l'inclinaison. N'agit que si `mastoid` ≠ 0. */
+    mastoidDirection: S0,
+    /** Région mastoïdienne — PENTE des flancs : -1 conique (pointu, flancs raides au sommet) … +1 émoussé (plateau, flancs raides au pied). N'agit que si `mastoid` ≠ 0. */
+    mastoidSlope: S0,
+    /** Pariétaux — HAUTEUR de l'éminence pariétale : -1 basse (vers l'oreille) … +1 haute (vers le sommet), ±0,06 U. N'agit que si l'éminence existe (`parietalBulge` > −1). */
+    parietalHeight: S0,
+    /** Pariétaux — POSITION en azimut de l'éminence pariétale : -1 avancée (vers l'oreille, −14°) … +1 reculée (vers l'occiput, +14°). */
+    parietalAzimuth: S0,
     /** Glabelle — relief médian entre les arcades sourcilières : -1 lisse … +1 proéminent. */
     glabella: S0,
     /** Ligne nuchale — crête transversale de la nuque : -1 absente … +1 marquée. */

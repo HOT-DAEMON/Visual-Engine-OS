@@ -4,7 +4,7 @@ import { el, num } from '../core/svg';
 import { FaceParams } from '../schema';
 import { skullGeometry, type SkullGeo } from './geometry';
 import { boneLayer } from './render-anatomy';
-import { faceDetails, lipsLayer, neckDetails, type Ink } from './render-detail';
+import { faceDetails, lipsLayer, mastoidDetail, neckDetails, type Ink } from './render-detail';
 import { profileEar } from './render-ear';
 import { hairLayer } from './render-hair';
 import { beardShape, type BeardShape } from './beard-shape';
@@ -105,7 +105,7 @@ export function renderProfile(faceIn: unknown, skIn: unknown, o: ProfileOptions 
       el('ellipse', { cx: num(x.nasion - 0.14 * H), cy: num(f.eye * H + 0.08 * H), rx: num(0.05 * H), ry: num(0.028 * H), fill: 'url(#sk-hl)' }),
     ];
     body.push(el('g', clip, sh));
-    body.push(el('g', {}, [...lips, ...faceDetails(g, ink, !eyeOut), ...neckDetails(g, ink)]));
+    body.push(el('g', {}, [...lips, ...faceDetails(g, ink, !eyeOut), ...neckDetails(g, ink), ...mastoidDetail(g, ink)]));
     if (bs) body.push(el('g', {}, paintFacialHair(bs, face.facialHair, face.hair.color, H, ink.line)));
     if (eyeOut) body.push(el('g', {}, eyeOut.markup));
     body.push(el('path', { d: open, fill: 'none', stroke: ink.line, 'stroke-width': num(H * 0.0058), 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));

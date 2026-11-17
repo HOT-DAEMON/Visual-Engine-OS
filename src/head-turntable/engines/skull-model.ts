@@ -2,6 +2,7 @@ import { clamp, smooth } from '../math';
 import { LENGTH_REF } from '../../skull/derive';
 import type { EngineHead } from './face-model';
 import { skullOf } from './skull-of';
+import { Y0 } from './units';
 
 /**
  * MODÈLE DE SECTION DU CRÂNE (vue de dessus). Jusqu'ici toute coupe horizontale au-dessus de la mâchoire était une ELLIPSE centrée : toutes les têtes, quel que soit leur
@@ -36,11 +37,15 @@ export const hasSkullModel = (e: EngineHead): boolean => (e.fit as { mandLandmar
 export interface SkullFields { readonly zw: number; readonly pf: number; readonly qf: number; readonly pb: number; readonly qb: number }
 
 /** Poids du modèle de crâne à la hauteur y : 0 au vertex, 1 sur la voûte et le visage, 0 de nouveau avant la mâchoire. */
-export const skullWeight = (y: number, sp: SkullShapeParams = SKULL_SHAPE): number => smooth((y - sp.top0) / (sp.top1 - sp.top0)) * (1 - smooth((y - sp.out0) / (sp.out1 - sp.out0)));
+export const skullWeight = (y: number, sp: SkullShapeParams = SKULL_SHAPE, v = 0): number => smooth((y - v - sp.top0) / (sp.top1 - sp.top0)) * (1 - smooth((y - sp.out0) / (sp.out1 - sp.out0)));
+/** Hauteur du vertex (U) : 0, ou `Y0` pour un crâne nu (`rows.ts`, `isBare`) ; l'entrée progressive depuis le sommet se compte à partir d'elle. */
+const vtx = (e: EngineHead): number => ((e.fit as { bare?: boolean }).bare === true ? Y0 : 0);
+/** Poids de la voûte de CETTE tête à la hauteur y : l'entrée depuis le sommet se compte depuis son vertex (crâne nu : `Y0`). */
+export const skullWeightOf = (e: EngineHead, y: number): number => skullWeight(y, SKULL_SHAPE, vtx(e));
 
 /** Champs de forme du crâne pour la rangée y (demi-largeur a, avant zf, arrière zb) ; `null` hors de la zone (vertex, mâchoire). */
 export function skullFields(e: EngineHead, y: number, a: number, zf: number, zb: number, sp: SkullShapeParams = SKULL_SHAPE): SkullFields | null {
-  const w = skullWeight(y, sp);
+  const w = skullWeight(y, sp, vtx(e));
   if (w <= 0) return null;
   const k = skullOf(e), d = zf - zb, zc = (zf + zb) / 2, zPor = (e.fit as { zPorion: number }).zPorion;
   const faceW = smooth((y - sp.face0) / (sp.face1 - sp.face0));
@@ -67,5 +72,5 @@ export const cranialLength = (lengthH: number): number => clamp(LENGTH_REF + CRA
 /** Décalage de l'arrière du crâne (U, négatif = plus long) à la hauteur y ; 0 sans `cranialL` (planche) et hors de la zone du crâne (poids `skullWeight`). */
 export function cranialBackShift(e: EngineHead, y: number): number {
   const L0 = (e.fit as { cranialL?: number }).cranialL;
-  return L0 === undefined ? 0 : -(cranialLength(L0) - L0) * skullWeight(y);
+  return L0 === undefined ? 0 : -(cranialLength(L0) - L0) * skullWeight(y, SKULL_SHAPE, vtx(e));
 }

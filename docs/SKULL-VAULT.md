@@ -29,6 +29,7 @@ Poids gaussiens en hauteur `y` (U ; 0 = sommet, ≈ 0,45 = yeux). Constantes : `
 | Pariétaux | `parietalBulge` | gain des bosses ×(1 + 0,9 p) | éminences effacées ↔ doublées |
 | | `parietalFlat` | a, zf, zb près du sommet | sommet plat ↔ dôme pointu |
 | | `parietalConvexity` | qf, qb, a | plans latéraux plans ↔ convexes |
+| | `parietalHeight`, `parietalAzimuth` | position de l'éminence (relief) | ±0,06 U en hauteur ; ±14° en azimut (avancée vers l'oreille ↔ reculée) ; sans effet si l'éminence est effacée |
 | Largeur | `cranialBreadth` | a (0 au sommet, 0 avant la pommette) | ±12 % de la demi-largeur, **le visage ne bouge pas** |
 | Temporaux | `temporalFlat`, `templeBreadth` | qf/qb ; a (y ≈ 0,42) | plan temporal plat ; largeur aux tempes |
 | | `temporalHollow` | relief (fosse temporale) | creusé ↔ comblé |
@@ -36,6 +37,7 @@ Poids gaussiens en hauteur `y` (U ; 0 = sommet, ≈ 0,45 = yeux). Constantes : `
 | Occipital | `occipitalFlat`, `occipitalSlope` | pb, qb ; zb | arrondi ↔ plat ; partie basse fuyante ↔ en surplomb |
 | | `occiput`, `inion` (existants) | profil ; relief nuque | projection ; protubérance externe |
 | Mastoïde | `mastoid` | relief | effacée ↔ saillante |
+| | `mastoidSize`, `mastoidDirection`, `mastoidSlope` | forme du relief (`skull/vault-mastoid.ts`, une seule définition pour la 3D et le profil 2D) | emprise ×0,6 … ×1,5 ; axe incliné de ±35° et allongé ; flancs de conique à plateau ; sans effet si `mastoid` = 0 |
 | Glabelle | `glabella` | relief médian | lisse ↔ proéminente |
 | Ligne nuchale | `nuchalLine` | relief | absente ↔ marquée |
 | Sommet | `vaultHeight` | **hauteur réelle** (voir ci-dessous) | voûte basse ↔ haute |
@@ -57,6 +59,13 @@ Chaque région a une pile de couches (peau, sous-cutané, galéa, périoste, mus
 
 ### Structures et données
 Les 15 structures sont des composants canoniques (`anatomy/components.ts`, enfants de `cranium`). Chacune déclare ses 6 voisins (réciprocité garantie et testée), son ancrage, ses paramètres, son influence et ses vues. Sutures et lignes sont des **données** (`vaultCurves`), invisibles par défaut ; tous les os et régions sont visibles par défaut. Toutes les structures visibles appartiennent au **même maillage continu** (relief radial sur la superellipse) : aucune couture. Matériau : hérité de `cranium` (peau), spécialisé pour la glabelle (peau mince) et les sutures (relief fin).
+
+## Mise à jour : tissus, tête chauve, profil 2D
+
+- **Transmission des tissus** (`vault-tissue.ts`) : τ = (1,35 − 0,35 r) · exp(−κ r (scalp − 0,5)) · (1 + 0,6 boneShow), κ = 1,4, bornée [0,25 ; 1,6] ; identique à l'ancienne valeur à `scalp` = 0,5.
+- **Tête chauve** : le sommet est celui du visage 2D (`bare`, `SKULL-ENLARGEMENT.md`) ; les poids en hauteur « 0 = sommet » se comptent depuis le vertex (`vaultTop`, `vertexY`).
+- **Profil 2D** : lit 9 mesures de voûte (`SKULL-PROFILE-2D.md`).
+- Les paramètres de FORME et de POSITION n'ont de preuve que sur une base qui active leur structure (`SHAPE_BASE` dans `vault-proof.ts`).
 
 ## Régénérer
 ```

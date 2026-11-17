@@ -1,7 +1,8 @@
 import { bumpMesh, ellipsoid, headMesh, neckMeshes, PART, type Mesh } from './mesh';
-import { v3 } from './math';
-import { sectionAt } from './sections';
-import type { BumpKnots, HeadTurnSpec, V3 } from './types';
+import { rad, v3 } from './math';
+import { sectionAt, surfaceZ } from './sections';
+import { ALA_CONTOUR_YAW, ALA_PULL_MAX, alaOverflow, type AlaEllipsoid } from './nose-contour';
+import type { BumpKnots, HeadTurnSpec } from './types';
 import { earMesh, earRig } from './engines/ear3d';
 import { engineHead } from './engines/face-model';
 import { noseLandmarks } from './engines/nose-mouth';
@@ -25,11 +26,30 @@ function bumpOf(spec: HeadTurnSpec, k: BumpKnots): Mesh {
   return bumpMesh(spec, y0, y1, (y) => knotAt(k, y, 1) - sectionAt(spec, y).zf, (y) => knotAt(k, y, 2));
 }
 
-/** Aile du nez (ellipsoïde posé sur la face, côté `sg`) : centre et demi-axes. Source UNIQUE : le maillage (`buildParts`) et l'adoucissement des normales à l'éclairage (`nose-light.ts`) la lisent. */
-export function alaOf(spec: HeadTurnSpec, sg: 1 | -1): { c: V3; ex: number; ey: number; ez: number } {
-  const ys = spec.nose.baseY - ALA_ABOVE_BASE, sa = sectionAt(spec, ys), ka = spec.engine ? spec.nose.alaX / REF_ALA : 1;
-  return { c: v3(sg * spec.nose.alaX, ys, sa.zf + 0.022 * ka), ex: 0.026 * ka, ey: 0.024 * ka, ez: 0.026 * ka };
+/** Aile posée sur la joue, centre décalé de `pull` (U) vers l'axe : centre, demi-axes. z = surface de la joue À L'ABSCISSE de l'aile (comme la bosse centrale, `bumpMesh`), pas l'avant de l'axe `zf` : la joue recule vers les côtés, une aile large posée sur `zf` flottait devant elle. */
+export function alaSeated(spec: HeadTurnSpec, sg: 1 | -1, pull: number): AlaEllipsoid {
+  const ys = spec.nose.baseY - ALA_ABOVE_BASE, sa = sectionAt(spec, ys), ka = spec.engine ? spec.nose.alaX / REF_ALA : 1, x = sg * (spec.nose.alaX - pull);
+  return { c: v3(x, ys, surfaceZ(sa, x, true) + 0.022 * ka), ex: 0.026 * ka, ey: 0.024 * ka, ez: 0.026 * ka };
 }
+
+/**
+ * Contrainte « l'aile reste dans le contour de la joue à 30° » (`nose-contour.ts`, docs/NOSE-ALAR-SEAT.md), à la manière de `face/nose/constraints.ts` : valeur ramenée à la plus proche admissible, jamais de réglage global.
+ * Retourne le décalage vers l'axe (U) : 0 pour tout nez qui ne déborde pas (nez de la planche et nez libres : inchangés), saturé à (1 − `ALA_PULL_MAX`) × alaX.
+ * Point fixe en 4 itérations : rapprocher l'aile de l'axe relève la surface de la joue sous elle, donc le recalcul.
+ */
+export function alaPull(spec: HeadTurnSpec): number {
+  const max = (1 - ALA_PULL_MAX) * spec.nose.alaX, cs = Math.cos(rad(ALA_CONTOUR_YAW));
+  let pull = 0;
+  for (let it = 0; it < 4; it++) {
+    const ov = alaOverflow(spec, alaSeated(spec, -1, pull), ALA_CONTOUR_YAW);
+    if (ov <= 1e-5) break;
+    pull = Math.min(max, pull + ov / cs + 1e-4);
+  }
+  return pull;
+}
+
+/** Aile du nez (ellipsoïde posé sur la face, côté `sg`) : centre et demi-axes. Source UNIQUE : le maillage (`buildParts`) et l'adoucissement des normales à l'éclairage (`nose-light.ts`) la lisent. */
+export function alaOf(spec: HeadTurnSpec, sg: 1 | -1): AlaEllipsoid { return alaSeated(spec, sg, alaPull(spec)); }
 
 /** Toutes les pièces du modèle, dans le repère de la tête. Les oreilles viennent du moteur d'oreille (`src/face/ear`) : modèle, relief, placement. */
 export function buildParts(spec: HeadTurnSpec): Mesh[] {
