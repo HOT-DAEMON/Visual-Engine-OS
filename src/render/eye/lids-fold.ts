@@ -9,6 +9,7 @@ import { P, polygonPath } from './helpers';
 import { renderLashGroup } from './lashes-render';
 import { renderLiner } from './liner';
 import type { EyeLook } from './look';
+import { isFlat } from './flat-finish';
 
 export interface LidsAndFold {
   readonly defs: string[];
@@ -33,14 +34,15 @@ export function renderLidsAndFold(
 ): LidsAndFold {
   const defs: string[] = [];
   const outside: string[] = [];
+  const flat = isFlat(eye);   // fini flat : traits pleins, aucune ombre de pli ni trait translucide
 
   // Pli palpébral : ombre sous le pli (selon la lumière) + trait du pli
   const crease = creaseCurve(g, eye.lids.crease.height);
   if (crease) {
     const depth = eye.lids.crease.depth;
     const topY = cubicTopY(crease);
-    const shadowA = depth * 0.45 * clamp01(0.4 - L.y);
-    defs.push(
+    const shadowA = flat ? 0 : depth * 0.45 * clamp01(0.4 - L.y);
+    if (!flat) defs.push(
       el('linearGradient', { id: `${id}-crease-shadow`, gradientUnits: 'userSpaceOnUse', x1: 0, y1: topY, x2: 0, y2: g.bbox.y }, [
         stop(0, look ? look.skin.shadow : '#000000', shadowA),
         stop(1, look ? look.skin.shadow : '#000000', 0),
@@ -48,13 +50,13 @@ export function renderLidsAndFold(
     );
     const region = `M${P(g.pi)}C${P(g.u1)} ${P(g.u2)} ${P(g.po)}L${P(crease.p3)}C${P(crease.p2)} ${P(crease.p1)} ${P(crease.p0)}Z`;
     outside.push(
-      el('path', { id: `${id}-crease-fill`, d: region, fill: urlRef(`${id}-crease-shadow`) }),
+      ...(flat ? [] : [el('path', { id: `${id}-crease-fill`, d: region, fill: urlRef(`${id}-crease-shadow`) })]),
       el('path', {
         id: `${id}-crease`,
         d: `M${P(crease.p0)}C${P(crease.p1)} ${P(crease.p2)} ${P(crease.p3)}`,
         fill: 'none',
-        stroke: look ? look.skin.shadow : darken(skin, 0.5),
-        'stroke-opacity': 0.15 + 0.55 * depth,
+        stroke: flat ? lidColor : look ? look.skin.shadow : darken(skin, 0.5),
+        'stroke-opacity': flat ? 1 : 0.15 + 0.55 * depth,
         'stroke-width': g.h * 0.008 * (0.7 + depth),
         'stroke-linecap': 'round',
       }),
@@ -68,7 +70,7 @@ export function renderLidsAndFold(
       fill: 'none',
       stroke: lidColor,
       'stroke-width': th * 0.35,
-      'stroke-opacity': 0.55,
+      'stroke-opacity': flat ? 1 : 0.55,
       'stroke-linecap': 'round',
     }),
     el('path', {
@@ -172,11 +174,13 @@ export function renderLidsAndFold(
         'stroke-opacity': 0.9,
         'stroke-linecap': 'round',
       }),
-      el('g', { id: `${id}-fold` }, [
-        el('path', { ...common, 'stroke-width': g.h * 0.05, 'stroke-opacity': 0.08 * a }),
-        el('path', { ...common, 'stroke-width': g.h * 0.028, 'stroke-opacity': 0.12 * a }),
-        el('path', { ...common, 'stroke-width': g.h * 0.008, 'stroke-opacity': 0.55 * a }),
-      ]),
+      el('g', { id: `${id}-fold` }, flat
+        ? [el('path', { ...common, stroke: lidColor, 'stroke-width': g.h * 0.008, 'stroke-opacity': a > 0 ? 1 : 0 })]
+        : [
+            el('path', { ...common, 'stroke-width': g.h * 0.05, 'stroke-opacity': 0.08 * a }),
+            el('path', { ...common, 'stroke-width': g.h * 0.028, 'stroke-opacity': 0.12 * a }),
+            el('path', { ...common, 'stroke-width': g.h * 0.008, 'stroke-opacity': 0.55 * a }),
+          ]),
     );
   }
 

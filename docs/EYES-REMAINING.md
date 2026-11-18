@@ -100,3 +100,13 @@ Fait : liner épais effilé par famille de cils (`lids.liner`), dégagement de l
 - 🟡 RMS de la paupière basse inchangé (0,0230 → 0,0235) : épaule interne non reproduite, sommets non exposés (0,46–0,62 selon les références).
 - ⬜ `sharp` et `drooping` : −27 % de hauteur par rapport à la demande (défaut préexistant, borné par un test). ⬜ Dôme pâle au-dessus du trait pour `upperFraction` = 0,40.
 - ⬜ Toujours ouverts : look « encre » en aplats noirs francs · 17-P07, P08, P09 · réf. 14 · limbe réf. 15 rangées 3–5 · facettes d'iris (dispersion) · épaisseur du liner et dispersion à mesurer · 11 autres enveloppes non reprises une à une.
+
+## Passe 8 — voir `EYES-PASS-8.md` (encre en aplats, contrat de hauteur)
+- ✅ Look « encre » en aplats francs : `EyeSpec.finish: 'flat'`, encres mesurées (réf. 17 `#3f363b`, réf. 13 `#000000`), règle pixel `ink-flat` ; `toneShare` ≤ 0,02 sur les 20 yeux d'encre (0,000 sur les 4 de l'artefact 01).
+- ✅ `sharp` / `drooping` : contrat de hauteur (−25 % / −26 % → ≤ 1,6 %), règle étendue, refit de 12 recettes sur 27, appariement d'échelle des deux yeux (`PAIR_SCALE_MAX`).
+- 🟡 17-P01 (0,0876) et 15-B (0,0846) au-dessus de 0,08 · 🟡 17-P07 (0,0782) et 17-P08 (0,0767) : ancres déjà sur l'ouverture réelle, l'écart vient de la mesure ; P08 non revu · ✅ 17-P09 (0,0181 après refit, non retracé).
+- 🟡 Dôme pâle à `upperFraction` = 0,40 : non reproduit avec certitude ; piste = arête nette de l'ombre de paupière sur la sclère (`soft-shadow.ts`, `sharp` à 0,40). Non corrigé.
+- ⬜ `angular` −22 %, `triangle` −26 %, `chibi` −12 %, `diamond` −16 %, `round` +32 % de hauteur · ⬜ 17 combinaisons œil × famille de cils en échec (24 avant).
+- ⬜ Toujours ouverts : réf. 14 · limbe réf. 15 rangées 3–5 · facettes d'iris · épaisseur du liner et dispersion à mesurer · 11 autres enveloppes une à une · profil bas (0,0235) · 100 formes supplémentaires
+  (enveloppes 12, 13, 14, 15, 16, 17) · `finish` non relié au rendu de visage `ink` ni à `random-eye` · ton clair de l'iris 13 : interprétation (3 iris mesurés).
+

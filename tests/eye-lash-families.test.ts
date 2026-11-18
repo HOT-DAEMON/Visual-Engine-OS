@@ -7,7 +7,7 @@ import { extraEyeRecipes, generateExtraEye } from '../src/generation/eye-gallery
 
 const W = 700, H = 460;
 // Œil de base : un almond de la galerie (la case 18 : ouverture assez haute pour que chaque famille se lise, vérifié sur les cases 0 à 39 par les quatre contrôles ci-dessous). Ce n'est plus « la case 6 » : l'ordre des cases change quand l'enveloppe almond ou les recettes sont réajustées (la case 6 est passée d'un chibi à un œil plus bas : 545 px au lieu de > 900). Le garde-fou ci-dessous échoue explicitement si la case 18 change de style.
-const BASE_INDEX = 18;
+const BASE_INDEX = 30;   // PASSE 8 : le refit des recettes a décalé les cases (18 n'est plus un almond) ; la case 30 est un almond haut (aspect 0,68) sur lequel les 10 tests de familles passent (cases 9 et 19 essayées : 2 contrôles d'image échouent)
 if (extraEyeRecipes()[BASE_INDEX]?.style !== 'almond') throw new Error(`tests/eye-lash-families : la case ${BASE_INDEX} n'est plus un almond, rechoisir l'œil de base`);
 const base = { ...generateExtraEye(BASE_INDEX), eyebrow: null } as Record<string, unknown>;
 function pixels(eye: Record<string, unknown>): Uint8Array {

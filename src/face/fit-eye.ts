@@ -91,6 +91,9 @@ export interface EyeFit {
   readonly limitedBy: 'target' | 'outer' | 'inner' | 'up' | 'down';
 }
 
+/** Rapport maximal d'échelle entre les deux yeux (borne anatomique 1/0,85 = 1,176 de `eyes-scale-asymmetry`, avec marge). */
+export const PAIR_SCALE_MAX = 1.15;
+
 export interface FitOptions {
   /** Facteur de grosseur voulu (1 = proportion normale du visage) ; l'ajustement le réduit si besoin. */
   readonly size?: number;
@@ -101,6 +104,12 @@ export interface FitOptions {
    * Un sourcil ne chevauche plus la paupière et ne flotte plus loin au-dessus ; la distance reste FLEXIBLE à l'intérieur de la plage (expression comprise). Absent = comportement historique.
    */
   readonly perimeters?: boolean;
+  /**
+   * Plafond de l'échelle finale (`transform.scale`). Sert à l'appariement des deux yeux : quand les deux sont bridés par le sourcil, l'asymétrie d'ouverture et de roulis du visage
+   * se traduit en écart d'échelle gauche / droite (1,22 mesuré avec un `sharp` à hauteur respectée) ; l'œil le plus grand est alors ramené à `plus petit × PAIR_SCALE_MAX`.
+   * Réduire ne peut franchir aucune borne dure (sourcil, mâchoire, temple, canthus interne). Absent = comportement historique.
+   */
+  readonly maxScale?: number;
 }
 
 /**
@@ -158,7 +167,7 @@ function fitCore(input: EyeInput, side: EyeSide, lm: FaceLandmarks, options: Fit
   const [limitedBy, scale] = candidates.reduce((a, b) => (b[1] < a[1] ? b : a));
   // Asymétrie de taille : l'œil visé rétrécit (jamais ne grossit) → il reste dans l'orbite.
   const smaller = (A.eyeScale > 0 && side === 'right') || (A.eyeScale < 0 && side === 'left');
-  const k = Math.max(0.01, scale) * (smaller ? 1 - Math.abs(A.eyeScale) : 1);
+  const k = Math.min(Math.max(0.01, scale) * (smaller ? 1 - Math.abs(A.eyeScale) : 1), options.maxScale ?? Infinity);
 
   // Le canthus interne local `pi` doit tomber sur l'ancre APRÈS rotation : x,y = -k·R(ρ)·pi.
   const t = rad(A.eyeRollDeg);

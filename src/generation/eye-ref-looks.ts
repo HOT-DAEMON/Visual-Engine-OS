@@ -9,8 +9,9 @@ import type { EyeInput } from './random-eye-helpers';
  *    d'ombrage haut / bas mesurés, on remet le milieu à 0,93 de luminance (`normaliseSclera`).
  *  - `sprite-tall` : iris ovale haut (aspect 1,49) et pupille ovale, dégradé haut sombre -> bas clair, gros reflet haut-droite + petit reflet bas-gauche MESURÉS
  *    sur les sprites 15 rangées 1–2 (references/eyes/measures-sprites.json ; rangées 3–5 : ajustement du limbe échoué -> non consommées).
- *  - `ink` : yeux manga au trait des réfs 13 et 17 : sclère blanche, iris gris dégradé, pupille noire, gros trait de paupière, reflets en lentille. Les silhouettes
- *    sont MESURÉES ; les teintes grises et la forme des reflets sont une INTERPRÉTATION (non mesurée).
+ *  - `ink` : yeux manga au trait des réfs 13 et 17, en APLATS FRANCS (`finish: 'flat'`, passe 8) : sclère blanche, traits (paupière, cils, liner, pupille) de l'encre MESURÉE
+ *    (references/eyes/measures-ink.json : réf. 17 `#3f363b`, réf. 13 `#000000`), iris plat de la même encre (17) ou en deux tons nets (13 : corps gris mesuré sur 3 iris, calotte noire),
+ *    reflets blancs nets en lentille. Les silhouettes sont MESURÉES ; la coupe du ton clair de l'iris 13 et la forme des reflets sont une INTERPRÉTATION (non mesurée).
  */
 export type EyeLook = 'natural' | 'ink' | 'sprite-tall' | 'graphic';
 
@@ -27,6 +28,11 @@ export const LID_LINE_OVER_WIDTH = [0.0061, 0.0084] as const;
 export const SPRITE_IRIS_OVER_HEIGHT = 0.88;
 /** Diamètre vertical de l'iris / hauteur d'ouverture des yeux « encre » de la réf. 17 (cellules du détecteur périodique : P07 0,82 · P08 0,86 · P13 0,85 · P14 0,85 ; moyenne 0,85). P03, iris plein cadre (0,97), est l'exception. */
 export const INK_IRIS_OVER_HEIGHT = 0.85;
+/** Encre mesurée (references/eyes/measures-ink.json, `scripts/eye-refs/extract_ink.py`) : gris chaud de la réf. 17, noir franc de la réf. 13. */
+export const INK_COLOR = { '17': '#3f363b', '13': '#000000' } as const;
+/** Corps gris de l'iris de la réf. 13 (luminance médiane 96–124 sur les 3 iris isolables -> 100, soit `#646464`) ; le ton est plat, pas un dégradé. */
+export const INK_13_IRIS_BODY = '#646464';
+export const inkOf = (ref: string | undefined): string => (ref?.startsWith('13-') ? INK_COLOR['13'] : INK_COLOR['17']);
 export const SPRITE_TALL = [
   { id: '15-row1', irisAspect: 1.49, pupil: 0.67, top: '#29374e', bottom: '#49636e' },
   { id: '15-row2', irisAspect: 1.49, pupil: 0.47, top: '#407986', bottom: '#4b8282' },
@@ -51,7 +57,7 @@ export function normaliseSclera(p: { top: string; mid: string; bottom: string },
 type Mut = Record<string, unknown>;
 const solid = (color: string): Mut => ({ base: { type: 'solid', color } });
 /** Applique `look` à un œil déjà construit. `aspect` = hauteur nominale / largeur de l'enveloppe (pour convertir l'épaisseur du trait en fraction de la hauteur). */
-export function applyLook(eye: EyeInput, look: EyeLook, rnd: () => number, aspect: number): EyeInput {
+export function applyLook(eye: EyeInput, look: EyeLook, rnd: () => number, aspect: number, ref?: string): EyeInput {
   const e = eye as unknown as Mut & { iris: Mut; pupil: Mut; lids?: Mut };
   if (look === 'graphic') return eye;
   if (look === 'natural') {
@@ -65,8 +71,18 @@ export function applyLook(eye: EyeInput, look: EyeLook, rnd: () => number, aspec
     return { ...e, sclera: solid('#ffffff'), iris: { ...e.iris, aspect: s.irisAspect, layers: [{ color: s.top, color2: s.bottom, gradient: 'angular', angleDeg: 0, opacity: 1 }], detail: { bubbles: { count: 6, size: 0.06, opacity: 0.7 } } }, pupil: { ...e.pupil, shape: 'round', size: s.pupil },
       highlights: { list: [hl(h.primary.x, h.primary.y, h.primary.size), hl(h.secondary.x, h.secondary.y, h.secondary.size), hl(h.tertiary.x, h.tertiary.y, h.tertiary.size, { opacity: 0.8 })] } } as unknown as EyeInput;
   }
-  // ink : encre (interprétation des réfs 13 / 17)
-  return { ...e, sclera: solid('#ffffff'), lids: { ...(e.lids ?? {}), thickness: 0.13, wing: 0.9 }, iris: { ...e.iris, layers: [{ color: '#1c1c1c', color2: '#a6a6a6', gradient: 'radial', opacity: 1 }] }, pupil: { ...e.pupil, shape: 'round', size: 0.42, fill: { type: 'solid', color: '#050505' } },
-    highlights: { list: [hl(-0.3, -0.38, 0.36, { shape: 'ellipse', aspect: 0.45, rotationDeg: -20 }), hl(0.38, 0.34, 0.22, { shape: 'ellipse', aspect: 0.4, rotationDeg: -15 })] } } as unknown as EyeInput;
+  // ink : encre en aplats francs (réfs 13 / 17) ; la couleur des TRAITS (paupière, cils, liner) est posée après les cils par `inkLines`
+  const ink = inkOf(ref); const is13 = ref?.startsWith('13-') ?? false;
+  const hlw = (x: number, y: number, size: number, o: Mut = {}): Mut => hl(x, y, size, { color: '#ffffff', ...o });
+  const layers = is13 ? [{ color: INK_13_IRIS_BODY, mask: 'full', opacity: 1, gradient: 'none' }, { color: ink, mask: 'half', angleDeg: Math.round((rnd() - 0.5) * 60), opacity: 1, gradient: 'none', feather: 0 }] : [{ color: ink, mask: 'full', opacity: 1, gradient: 'none' }];
+  return { ...e, finish: 'flat', archetype: null, sclera: solid('#ffffff'), lids: { ...(e.lids ?? {}), thickness: 0.13, wing: 0.9, material: { base: { type: 'solid', color: ink } } }, iris: { ...e.iris, material: { base: { type: 'solid', color: ink } }, layers }, pupil: { ...e.pupil, shape: 'round', size: 0.42, fill: { type: 'solid', color: ink }, outlines: [] }, skin: solid('#ffffff'),
+    highlights: { list: [hlw(-0.3, -0.38, 0.36, { shape: 'ellipse', aspect: 0.45, rotationDeg: -20 }), hlw(0.38, 0.34, 0.22, { shape: 'ellipse', aspect: 0.4, rotationDeg: -15 })] } } as unknown as EyeInput;
+}
+
+/** Pose l'encre sur les TRAITS d'un œil `ink` après le choix des cils : matériau des cils haut / bas, couleur du liner (les familles de cils posent leur propre noir sinon). */
+export function inkLines(eye: EyeInput, ref: string | undefined): EyeInput {
+  const e = eye as unknown as { lids?: { liner?: Record<string, unknown> | null }; lashes?: { upper?: Mut; lower?: Mut }; eyebrow?: Mut | null };
+  const mat = { base: { type: 'solid', color: inkOf(ref) } };
+  return { ...e, ...(e.eyebrow ? { eyebrow: { ...e.eyebrow, material: mat } } : {}), lids: { ...(e.lids ?? {}), ...(e.lids?.liner ? { liner: { ...e.lids.liner, color: inkOf(ref), tipColor: null } } : {}) }, lashes: { ...(e.lashes ?? {}), upper: { ...(e.lashes?.upper ?? {}), material: mat }, lower: { ...(e.lashes?.lower ?? {}), material: mat } } } as unknown as EyeInput;
 }
 export const lookForRef = (id: string | undefined, rnd: () => number): EyeLook => (!id ? (rnd() < 0.4 ? 'natural' : 'graphic') : id === '15-A' || id === '15-B' ? 'sprite-tall' : id.startsWith('15-') ? 'graphic' : 'ink');

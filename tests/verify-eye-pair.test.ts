@@ -25,3 +25,13 @@ describe('vérification de la paire d’yeux (géométrie, anatomie, style)', ()
     expect(failing(mutate(f, 'eye-left', (o) => { o.transform.rotationDeg += 5; }))).toContain('eyes-share-roll');
   });
 });
+
+describe('PASSE 8 — appariement d’échelle des yeux bridés par le sourcil', () => {
+  it('un sharp à hauteur respectée (graine 3, galerie) reste sous la borne anatomique 1/0,85 grâce au plafond de paire ; sans plafond l’écart est de 1,22', async () => {
+    const { PAIR_SCALE_MAX } = await import('../src/face');
+    const f = generateRandomFace(3, { eyeSource: 'gallery' }); const sc = (s: string): number => (f.objects.find((o) => o.id.endsWith(s)) as any).transform.scale;
+    const r = Math.max(sc('eye-left') / sc('eye-right'), sc('eye-right') / sc('eye-left'));
+    expect(r).toBeLessThanOrEqual(PAIR_SCALE_MAX + 1e-9); expect(r).toBeLessThan(1 / 0.85);
+    const raw = Math.max(f.fits.left.scale / f.fits.right.scale, f.fits.right.scale / f.fits.left.scale); expect(raw).toBeLessThanOrEqual(PAIR_SCALE_MAX + 1e-9);
+  });
+});

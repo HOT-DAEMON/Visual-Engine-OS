@@ -1,5 +1,5 @@
 import { mulberry32 } from '../core/prng';
-import { faceLandmarks, fitEyeToFace, type EyeFit, type EyeSide } from '../face';
+import { faceLandmarks, fitEyeToFace, PAIR_SCALE_MAX, type EyeFit, type EyeSide } from '../face';
 import { FaceParams, type SceneInput } from '../schema';
 import { applyEyeAxes, type BrowLash, type EyelidFold } from './random-axes';
 import { LashFamilyId, applyLashFamily, lashFamilyForSeed } from './eye-lash-families';
@@ -125,7 +125,11 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
     anchors,
   };
   const withAxes = (e: EyeInput): EyeInput => (e.kind === 'eye' ? applyEyeAxes(e, extras.fold, extras.browLash) : e);
-  const fits = { left: fitEyeToFace(withAxes(pair.left), 'left', lm, { size: options.eyeSize, perimeters: !!options.structure }), right: fitEyeToFace(withAxes(pair.right), 'right', lm, { size: options.eyeSize, perimeters: !!options.structure }) };
+  const fitOpts = { size: options.eyeSize, perimeters: !!options.structure };
+  const fits = { left: fitEyeToFace(withAxes(pair.left), 'left', lm, fitOpts), right: fitEyeToFace(withAxes(pair.right), 'right', lm, fitOpts) };
+  // Appariement : si l'écart d'échelle dépasse la borne anatomique (yeux bridés par le sourcil + asymétrie d'ouverture), l'œil le plus grand est ramené sous `plus petit × PAIR_SCALE_MAX`.
+  const [big, small] = fits.left.scale >= fits.right.scale ? (['left', 'right'] as const) : (['right', 'left'] as const);
+  if (fits[big].scale > fits[small].scale * PAIR_SCALE_MAX) fits[big] = fitEyeToFace(withAxes(pair[big]), big, lm, { ...fitOpts, maxScale: fits[small].scale * PAIR_SCALE_MAX });
   const eyes = sides.map((side): SceneInput['objects'][number] => {
     const fit = fits[side];
     return { ...fit.eye, id: `${id}-eye-${side}`, place: { host: id, anchors: [`canthus-${side}`] }, transform: fit.transform };

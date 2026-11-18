@@ -14,6 +14,7 @@ import { renderLidsAndFold } from './lids-fold';
 import { renderEyebrow } from './eyebrow-render';
 import { DEFAULT_SKIN } from './default-skin';
 import { gradeEye, resolveEyeLook } from './look';
+import { flatSurface, flattenEye, isFlat } from './flat-finish';
 
 /**
  * Compile un œil complet : sclère, iris/pupille/regard 3D (globe-inner.ts), paupières/cils/pli
@@ -26,7 +27,7 @@ export function resolveEye(rawEye: EyeSpec): EyeSpec {
   const posed = applyExpression(applyArchetype(rawEye));
   // EYE-05G : la réponse lumineuse change la taille AVANT tout le reste (iris détaillé, fibres, pupille lisent la même taille).
   const sized = posed.pupil.response.model === 'fixed' ? posed : { ...posed, pupil: { ...posed.pupil, size: effectivePupilSize(posed.pupil) } };
-  return gradeEye(sized);
+  return flattenEye(gradeEye(sized));
 }
 
 export function compileEye(rawEye: EyeSpec, worldLight: LightVector): CompiledObject {
@@ -61,7 +62,7 @@ export function compileEye(rawEye: EyeSpec, worldLight: LightVector): CompiledOb
     curvature: 'sphere',
     draw: (a) => el('path', { d: openD, ...a }),
   };
-  const sclera = compileSurface(`${id}-sclera`, scleraSurface, eye.sclera, L, rot);
+  const sclera = isFlat(eye) ? flatSurface(`${id}-sclera`, scleraSurface, eye.sclera.base) : compileSurface(`${id}-sclera`, scleraSurface, eye.sclera, L, rot);
   defs.push(...sclera.defs);
 
   const globe = renderGlobeInner(eye, g, c, L, rot, headLight, skin, id, irisRx, irisRy, turned, look);

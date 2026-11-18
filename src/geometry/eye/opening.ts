@@ -4,6 +4,7 @@ import type { BBox } from '../../materials';
 import { extendedStyle } from './opening-styles';
 import { ALMOND_REF, NEUTRAL_REF } from './opening-ref';
 import { cubicAt, cubicDeriv, norm, type Vec } from './primitives';
+import { enforceApexHeights } from './height-contract';
 
 
 // ------------------------------------------------------------------ Fente palpébrale
@@ -100,6 +101,9 @@ export function openingGeometry(shape: EyeSpec['shape'], canthi: EyeSpec['canthi
     u2 = { x: po.x - s * upOut * 1.05, y: po.y - k * hUp * 0.55 };
     l1 = { x: po.x - s * loOut * 0.55, y: po.y + droop };
   }
+
+  // Contrat de hauteur : sharp et drooping posent leurs contrôles à la main ; leurs apex sont recalés sur la hauteur demandée (hUp, hLo), forme conservée.
+  if (style === 'sharp' || style === 'drooping') ({ pi, po, u1, u2, l1, l2 } = enforceApexHeights({ pi, po, u1, u2, l1, l2 }, w, hUp, hLo));
 
   // Styles ajoutés (chibi, angular, circle, triangle, diamond, diamond_v2, rounded_rect).
   const ext = extendedStyle(style, { pi, po, u1, u2, l1, l2 }, { s, w, k, hUp, hLo, hEff, t, rIn, rOut });

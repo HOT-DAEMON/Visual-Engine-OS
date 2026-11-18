@@ -1,0 +1,175 @@
+{
+ "encre": {
+  "toneShare": {
+   "17-P07": {
+    "apres": 0,
+    "avant": 0.1399
+   },
+   "17-P14": {
+    "apres": 0,
+    "avant": 0.0731
+   },
+   "13-R2C1": {
+    "apres": 0,
+    "avant": 0.2352
+   },
+   "13-R4C3": {
+    "apres": 0,
+    "avant": 0.3743
+   }
+  },
+  "referencesMesurees": {
+   "12": {
+    "file": "12.jpg",
+    "size": [
+     1176,
+     980
+    ],
+    "ink": "#020202",
+    "inkLuminanceMode": 2.5,
+    "inkPixels": 70757,
+    "paper": "#ffffff",
+    "nonPaperFlatPixels": 70757,
+    "dominantTones": [
+     2,
+     2,
+     2
+    ],
+    "toneShare": 0
+   },
+   "13": {
+    "file": "13.jpg",
+    "size": [
+     980,
+     980
+    ],
+    "ink": "#000000",
+    "inkLuminanceMode": 2.5,
+    "inkPixels": 85181,
+    "paper": "#ffffff",
+    "nonPaperFlatPixels": 117533,
+    "dominantTones": [
+     2,
+     86,
+     122
+    ],
+    "toneShare": 0.1218
+   },
+   "17": {
+    "file": "17.jpg",
+    "size": [
+     612,
+     612
+    ],
+    "ink": "#3f363b",
+    "inkLuminanceMode": 57.5,
+    "inkPixels": 21583,
+    "paper": "#fefef6",
+    "nonPaperFlatPixels": 21583,
+    "dominantTones": [
+     58,
+     2,
+     2
+    ],
+    "toneShare": 0
+   }
+  },
+  "note": "toneShare : 0 = aplats francs ; avant = même œil au fini shaded ; refs 12 et 17 = 0, ref 13 = 0,12 (iris en dégradé vectoriel)"
+ },
+ "hauteurDemandeeObtenue": {
+  "sharp": {
+   "moyenne": 0.03,
+   "min": 0,
+   "max": 1.6,
+   "n": 64
+  },
+  "drooping": {
+   "moyenne": 0,
+   "min": 0,
+   "max": 0.02,
+   "n": 64
+  },
+  "avantPassE8_pct": {
+   "sharp": -25.4,
+   "drooping": -26
+  },
+  "cas": {
+   "sharp-0.62": {
+    "avantPct": -28,
+    "apresPct": 0
+   },
+   "drooping-0.62": {
+    "avantPct": -24.5,
+    "apresPct": 0
+   },
+   "sharp-0.4": {
+    "avantPct": -21.8,
+    "apresPct": 0
+   },
+   "drooping-0.4": {
+    "avantPct": -30.2,
+    "apresPct": 0
+   }
+  }
+ },
+ "galerie100": {
+  "distanceMinAuxExistants": 0.02038318565084592,
+  "distanceMinEntreLes100": 0.020107041554475954,
+  "quotasParStyle": {
+   "drooping": 12,
+   "chibi": 9,
+   "angular": 9,
+   "rounded_rect": 9,
+   "triangle": 9,
+   "circle": 9,
+   "almond": 8,
+   "round": 8,
+   "sharp": 8,
+   "compressed": 8,
+   "diamond_v2": 7,
+   "diamond": 4
+  }
+ },
+ "verifierPixelsGalerie100": {
+  "geometry/no-paint-outside-zone": {
+   "checked": 100,
+   "failed": 0
+  },
+  "geometry/iris-centre-painted": {
+   "checked": 100,
+   "failed": 0
+  },
+  "geometry/opening-filled": {
+   "checked": 100,
+   "failed": 0
+  },
+  "anatomy/pupil-darker-than-iris-pixels": {
+   "checked": 73,
+   "failed": 0
+  },
+  "style/ink-flat": {
+   "checked": 22,
+   "failed": 0
+  },
+  "anatomy/sclera-is-light-tone": {
+   "checked": 76,
+   "failed": 0
+  },
+  "style/iris-not-flat": {
+   "checked": 78,
+   "failed": 0
+  },
+  "geometry/lash-centerline-clear-of-opening": {
+   "checked": 53,
+   "failed": 0
+  },
+  "anatomy/lash-ink-dark": {
+   "checked": 51,
+   "failed": 0
+  },
+  "style/lash-ink-flat": {
+   "checked": 51,
+   "failed": 0
+  }
+ }
+}

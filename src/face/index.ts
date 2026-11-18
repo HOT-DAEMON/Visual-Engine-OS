@@ -7,7 +7,7 @@ export { lerp, smooth, rotate, catmullRom, superEllipse, polylineLength, mirrorP
 export { hairGeometry, type HairGeometry, type HairLock } from './hair';
 export { facialHairGeometry, mustacheBand, type FacialHairGeometry } from './beard-geometry';
 export { inPoly, polyArea, polyBox, type Poly } from './poly';
-export { eyeReach, fitEyeToFace, type EyeFit, type EyeReach, type EyeSide, type EyeInput, type FitOptions } from './fit-eye';
+export { eyeReach, fitEyeToFace, PAIR_SCALE_MAX, type EyeFit, type EyeReach, type EyeSide, type EyeInput, type FitOptions } from './fit-eye';
 export { noseArchetype, noseArchetypeResidual, NOSE_ARCHETYPE_NAMES, REPRODUCIBLE_MAX, widthProfile25, type NoseArchetypeName, type WidthProfile } from './nose';
 export { noseGeometry, noseFrame, noseProfile, tipLift, type NoseGeometry, type NoseAlaGeo, type NostrilGeo, type NoseTipGeo, type NoseFrame, type NoseProfile } from './nose';
 export { skinRegions, type Ellipse, type SkinRegions } from './regions';

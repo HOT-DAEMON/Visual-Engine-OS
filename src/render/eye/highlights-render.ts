@@ -3,6 +3,7 @@ import { placeHighlights, type OpeningGeometry, type PlacedHighlight, type Vec }
 import type { EyeSpec } from '../../schema';
 import { el, urlRef } from '../../core/svg';
 import { polygonPath, smoothClosed } from './helpers';
+import { isFlat } from './flat-finish';
 
 /**
  * OPT-01/04 — Peinture des reflets détaillés (placement et règle d'occlusion : geometry/eye/highlights.ts).
@@ -26,6 +27,7 @@ function shapeMarkup(p: PlacedHighlight, attrs: Record<string, string | number>)
 export function renderHighlights(eye: EyeSpec, g: OpeningGeometry, c: Vec, localLight: LightVector, irisRx: number, irisRy: number, lightColor: string, id: string): HighlightsRender {
   const defs: string[] = [];
   const markup: string[] = [];
+  const flat = isFlat(eye);   // fini flat : reflets nets (ni halo d'intensité ni flou de douceur)
   const placed = placeHighlights(eye.highlights.list, { c, irisRx, irisRy, half: halfVectorXY(localLight), bbox: g.bbox });
   const needIrisClip = placed.some((p) => p.item.confine === 'iris');
   if (needIrisClip) defs.push(el('clipPath', { id: `${id}-hl-iris` }, [el('ellipse', { cx: c.x, cy: c.y, rx: irisRx, ry: irisRy })]));
@@ -34,13 +36,13 @@ export function renderHighlights(eye: EyeSpec, g: OpeningGeometry, c: Vec, local
     const { item } = p;
     const color = item.color ?? lightColor;
     const out: string[] = [];
-    if (item.intensity > 0) {
+    if (item.intensity > 0 && !flat) {
       const gid = `${id}-hl${i}-glow`;
       defs.push(el('filter', { id: gid, x: '-100%', y: '-100%', width: '300%', height: '300%' }, [el('feGaussianBlur', { stdDeviation: Math.max(p.rx, p.ry) * (0.45 + 0.5 * item.intensity) })]));
       out.push(shapeMarkup({ ...p, rx: p.rx * 1.35, ry: p.ry * 1.35, outline: p.outline.map((v) => ({ x: v.x * 1.35, y: v.y * 1.35 })) }, { fill: color, 'fill-opacity': Math.min(1, item.opacity * item.intensity * 0.8), filter: urlRef(gid) }));
     }
     const attrs: Record<string, string | number> = { fill: color, 'fill-opacity': item.opacity };
-    if (item.softness > 0) {
+    if (item.softness > 0 && !flat) {
       const sid = `${id}-hl${i}-soft`;
       defs.push(el('filter', { id: sid, x: '-50%', y: '-50%', width: '200%', height: '200%' }, [el('feGaussianBlur', { stdDeviation: item.softness * 0.35 * Math.min(p.rx, p.ry) })]));
       attrs.filter = urlRef(sid);

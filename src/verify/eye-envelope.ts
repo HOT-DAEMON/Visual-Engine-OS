@@ -41,11 +41,13 @@ export function checkEyeEnvelope(g: OpeningGeometry, style: EyeSpec['shape']['st
   out.push(check('anatomy', 'upper-peak-max', '<=', p.upperPeakAt, uHi, 'sommet de la paupière haute trop près du canthus externe', 'warn'));
   out.push(check('anatomy', 'lower-peak-min', '>=', p.lowerPeakAt, lLo, 'creux de la paupière basse trop près du canthus interne (références : 0,46–0,63)', 'warn'));
   out.push(check('anatomy', 'lower-peak-max', '<=', p.lowerPeakAt, lHi, 'creux de la paupière basse trop près du canthus externe', 'warn'));
-  // Les règles de la PASSE 7 ne s'appliquent qu'à l'almond (seul style calé sur des mesures) : sharp et drooping livrent ~27 % de hauteur en moins que demandée (contrôles écrits à la main, voir docs/EYES-REFS-4.md), compressed et les styles stylisés sortent volontairement des bornes humaines.
-  if (style === 'almond') {
-  // PASSE 7 — contrat de hauteur : la hauteur demandée (hEff / largeur) est la hauteur obtenue. Avant le réajustement de l'almond, le moteur livrait 3 % de moins (0,5295 pour 0,5466).
+  // Contrat de hauteur (PASSE 7 almond, PASSE 8 sharp et drooping : `geometry/eye/height-contract.ts`). Les angles de canthus restent propres à l'almond (seul style calé sur des mesures) ; compressed et les styles stylisés sortent volontairement des bornes humaines.
+  if (style === 'almond' || style === 'sharp' || style === 'drooping') {
+  // PASSE 7 — contrat de hauteur : la hauteur demandée (hEff / largeur) est la hauteur obtenue. Avant le réajustement de l'almond, le moteur livrait 3 % de moins (0,5295 pour 0,5466) ; sharp et drooping 25 % de moins avant la PASSE 8.
   const wanted = g.hEff / (g.w || 1);
   out.push(check('geometry', 'envelope-height-contract', '<=', Math.abs(p.aspect - wanted) / (wanted || 1), ENVELOPE_HEIGHT_TOLERANCE, 'la hauteur d’ouverture obtenue s’écarte de la hauteur demandée (shape.height × openness)', 'warn'));
+  }
+  if (style === 'almond') {
   // PASSE 7 — angles d'ouverture aux canthi, même définition (cordes à x = 0,05) pour les références et le moteur ; bornes = plage des 3 yeux de face ± 20°.
   const ang = canthusChordAngles(p.upper, p.lower);
   out.push(check('anatomy', 'canthus-opening-angle-inner', '>=', ang.inner, REF_RANGES.canthusChordInner[0], 'canthus interne plus aigu que toute référence mesurée', 'warn'));

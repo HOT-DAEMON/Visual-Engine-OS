@@ -5,6 +5,7 @@ import { compileSurface, dominantColor, type Surface } from '../../materials';
 import type { EyeSpec } from '../../schema';
 import { el } from '../../core/svg';
 import { P, smoothClosed } from './helpers';
+import { flatSurface, isFlat } from './flat-finish';
 
 export interface EyebrowRender {
   readonly defs: string[];
@@ -24,7 +25,7 @@ export function renderEyebrow(eye: EyeSpec, g: OpeningGeometry, L: LightVector, 
       curvature: 'flat',
       draw: (a) => el('path', { d: smoothClosed(bg.outline), ...a }),
     };
-    const browOut = compileSurface(`${id}-brow`, browSurface, brow.material, L, rot);
+    const browOut = isFlat(eye) ? flatSurface(`${id}-brow`, browSurface, brow.material.base) : compileSurface(`${id}-brow`, browSurface, brow.material, L, rot);
     defs.push(...browOut.defs);
     // Groupe identifiable (et non les chemins internes, qui seraient dupliqués car compileSurface
     // appelle `draw` plusieurs fois) : sert de point d'ancrage stable pour les tests bout-en-bout

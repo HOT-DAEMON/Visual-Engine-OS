@@ -21,6 +21,39 @@ const lum = (px: Uint8Array, x: number, y: number): number => { const i = (Math.
 const isBg = (px: Uint8Array, x: number, y: number): boolean => { const i = (Math.round(y) * W + Math.round(x)) * 4; return Math.abs((px[i] as number) - BG[0]) + Math.abs((px[i + 1] as number) - BG[1]) + Math.abs((px[i + 2] as number) - BG[2]) < 12; };
 const inside = (poly: readonly { x: number; y: number }[], x: number, y: number): boolean => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const a = poly[i]!, b = poly[j]!; if (a.y > y !== b.y > y && x < ((b.x - a.x) * (y - a.y)) / (b.y - a.y) + a.x) c = !c; } return c; };
 
+/**
+ * `toneShare` (même définition que scripts/eye-refs/extract_ink.py, mesurée sur les réfs 12, 13, 17) : part des pixels SANS gradient (max − min de luminance sur 5 × 5 <= 14), hors papier
+ * (lum < 235) et hors fond de test, qui n'appartiennent à AUCUN des 3 tons dominants (±16). 0 = aplats francs. Références : 12 et 17 → 0, 13 (iris en dégradé vectoriel) → 0,12 ;
+ * yeux d'encre AVANT le fini `flat` : 0,16 à 0,69.
+ */
+export function toneShare(px: Uint8Array, box: { x0: number; y0: number; x1: number; y1: number }): number {
+  const L = new Float32Array(W * H);
+  for (let i = 0; i < W * H; i++) L[i] = 0.2126 * (px[i * 4] as number) + 0.7152 * (px[i * 4 + 1] as number) + 0.0722 * (px[i * 4 + 2] as number);
+  const x0 = Math.max(2, Math.floor(box.x0)), x1 = Math.min(W - 3, Math.ceil(box.x1)), y0 = Math.max(2, Math.floor(box.y0)), y1 = Math.min(H - 3, Math.ceil(box.y1));
+  const vals: number[] = [];
+  for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
+    if (isBg(px, x, y)) continue;
+    const v = L[y * W + x] as number; if (v >= 235) continue;
+    let lo = 1e9, hi = -1e9, bg = false;
+    for (let dy = -2; dy <= 2 && !bg; dy++) for (let dx = -2; dx <= 2; dx++) { if (isBg(px, x + dx, y + dy)) { bg = true; break; } const q = L[(y + dy) * W + x + dx] as number; if (q < lo) lo = q; if (q > hi) hi = q; }
+    if (!bg && hi - lo <= 14) vals.push(v);
+  }
+  if (vals.length < 400) return 0;
+  const h = new Array<number>(64).fill(0); for (const v of vals) { const k = Math.min(63, Math.floor(v / 4)); h[k] = (h[k] as number) + 1; }
+  const tones: number[] = [];
+  for (let k = 0; k < 3; k++) { let j = 0; for (let i = 1; i < 64; i++) if ((h[i] as number) > (h[j] as number)) j = i; tones.push(j * 4 + 2); for (let i = Math.max(0, j - 4); i <= Math.min(63, j + 4); i++) h[i] = 0; }
+  return vals.filter((v) => !tones.some((t) => Math.abs(v - t) <= 16)).length / vals.length;
+}
+
+/** Rend l'œil (fond de test) et renvoie son `toneShare` sur la boîte de l'ouverture élargie — pour PROUVER que la règle `ink-flat` distingue un œil flat d'un œil ombré. */
+export function eyeToneShare(input: Record<string, unknown>): number {
+  const eye = resolveEye(EyeSpec.parse({ ...input, eyebrow: null })); const g = openingGeometry(eye.shape, eye.canthi);
+  const r = compileScene({ width: W, height: H, background: '#ff00ff', objects: [{ kind: 'eye', id: 'e', transform: { x: W / 2, y: H / 2 }, ...input, eyebrow: null }] } as never);
+  if (!r.ok) throw new Error(r.issues.join('\n'));
+  const px = new Resvg(r.svg, { fitTo: { mode: 'width', value: W } }).render().pixels as unknown as Uint8Array; const m = 0.55 * Math.max(g.w, g.h);
+  return toneShare(px, { x0: g.bbox.x + W / 2 - m, y0: g.bbox.y + H / 2 - m, x1: g.bbox.x + g.bbox.w + W / 2 + m, y1: g.bbox.y + g.bbox.h + H / 2 + m });
+}
+
 export function verifyEyeRender(input: Record<string, unknown>): EyeImageCheck[] {
   const raw = EyeSpec.parse({ ...input, eyebrow: null });
   const eye = resolveEye(raw);
@@ -60,14 +93,17 @@ export function verifyEyeRender(input: Record<string, unknown>): EyeImageCheck[]
   // Le trait de paupière haute (lids.thickness × hauteur nominale, rendu "encre" des réfs 13/17 : jusqu'à 0,13) recouvre le haut de la fente : on sonde la partie LIBRE, et on ignore une abscisse où le trait la remplit (aucune sclère n'y est visible, rien à mesurer).
   const lineTh = eye.lids.thickness * eye.shape.height;
   const probes = [-1, 1].flatMap((side) => [1.12, 1.2, 1.3, 1.55, 1.85].flatMap((k) => [0.5, 0.78].map((f) => { const x = c.x + ox + side * s * rx * k; const y = midY(x, f); return y === null ? null : { x, y }; }))).filter((p): p is { x: number; y: number } => p !== null && inside(poly, p.x, p.y) && ((p.x - c.x - ox) / rx) ** 2 + ((p.y - c.y - oy) / ry) ** 2 > 1.1)  /* hors de l'iris (> 1,05 rayon) : sur un iris qui remplit l'ouverture (sprites, chibi, œil 23 et 30 de la galerie) la sonde mesurait l'iris, pas la sclère */.map((p) => lum(px, p.x, p.y));
-  if (scLum >= 170 && probes.length) { const best = Math.max(...probes); add('anatomy', 'sclera-is-light-tone', best >= 60, best, 60, 'la sclère claire rendue est plus sombre que le 5ᵉ centile mesuré sur les références (60–73) en tout point sondé'); }
+  if (scLum >= 170 && probes.length && eye.finish !== 'flat') {   /* fini flat : la sclère est un aplat blanc par construction et l'iris des réfs au trait déborde l'ouverture (croissants de sclère trop fins pour les points de sondage, qui tombent sur l'encre) ; `ink-flat` vérifie alors le rendu */ const best = Math.max(...probes); add('anatomy', 'sclera-is-light-tone', best >= 60, best, 60, 'la sclère claire rendue est plus sombre que le 5ᵉ centile mesuré sur les références (60–73) en tout point sondé'); }
 
   // style : l'iris n'est pas un aplat (écart-type de luminance sur 5 × 5 échantillons dans le disque 0,2–0,9 rayon)
   const vals: number[] = [];
   for (let i = 0; i < 24; i++) for (const f of [0.35, 0.55, 0.75]) { const a = (i / 24) * Math.PI * 2; const x = c.x + ox + Math.cos(a) * rx * f, y = c.y + oy + Math.sin(a) * ry * f; if (inside(poly, x, y)) vals.push(lum(px, x, y)); }
   const mean = vals.reduce((a, b) => a + b, 0) / Math.max(vals.length, 1);
   const sd = Math.sqrt(vals.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(vals.length, 1));
-  add('style', 'iris-not-flat', sd >= 3, sd, 3, 'l’iris est un aplat (aucune texture, fibre ni dégradé mesurable)');
+  const flat = eye.finish === 'flat';
+  // fini `flat` : l'inverse exact — l'œil NE doit PAS avoir de dégradé (aplats francs des références au trait) ; les autres finis gardent la règle « iris non plat ».
+  if (flat) { const ts = toneShare(px, { x0: g.bbox.x + ox - m, y0: g.bbox.y + oy - m, x1: g.bbox.x + g.bbox.w + ox + m, y1: g.bbox.y + g.bbox.h + oy + m }); add('style', 'ink-flat', ts <= 0.02, ts, 0.02, 'un œil au fini flat contient des demi-teintes lisses (ombre, dégradé ou flou ajouté par le moteur)'); }
+  else add('style', 'iris-not-flat', sd >= 3, sd, 3, 'l’iris est un aplat (aucune texture, fibre ni dégradé mesurable)');
 
   // ---- RÈGLE « CILS » SUR LES PIXELS (audit des cils : la vérification d'image n'avait aucune règle de cils) ----
   // On échantillonne la ligne médiane de chaque cil réellement dessiné (eyeLashSet = le même appel que le rendu), au quart, au tiers et à la moitié de sa longueur (la pointe effilée est sous le pixel).

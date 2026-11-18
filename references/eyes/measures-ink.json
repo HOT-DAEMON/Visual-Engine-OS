@@ -1,0 +1,59 @@
+{
+ "definition": "toneShare = pixels sans gradient (max-min lum 5x5 <= 14) hors papier (lum < 235) à plus de 16 de luminance des 3 tons dominants / pixels sans gradient hors papier",
+ "refs": {
+  "12": {
+   "file": "12.jpg",
+   "size": [
+    1176,
+    980
+   ],
+   "ink": "#020202",
+   "inkLuminanceMode": 2.5,
+   "inkPixels": 70757,
+   "paper": "#ffffff",
+   "nonPaperFlatPixels": 70757,
+   "dominantTones": [
+    2.0,
+    2.0,
+    2.0
+   ],
+   "toneShare": 0.0
+  },
+  "13": {
+   "file": "13.jpg",
+   "size": [
+    980,
+    980
+   ],
+   "ink": "#000000",
+   "inkLuminanceMode": 2.5,
+   "inkPixels": 85181,
+   "paper": "#ffffff",
+   "nonPaperFlatPixels": 117533,
+   "dominantTones": [
+    2.0,
+    86.0,
+    122.0
+   ],
+   "toneShare": 0.1218
+  },
+  "17": {
+   "file": "17.jpg",
+   "size": [
+    612,
+    612
+   ],
+   "ink": "#3f363b",
+   "inkLuminanceMode": 57.5,
+   "inkPixels": 21583,
+   "paper": "#fefef6",
+   "nonPaperFlatPixels": 21583,
+   "dominantTones": [
+    58.0,
+    2.0,
+    2.0
+   ],
+   "toneShare": 0.0
+  }
+ }
+}

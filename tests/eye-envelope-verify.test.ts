@@ -58,11 +58,17 @@ describe('PASSE 7 : contrat de hauteur et angles d’ouverture de l’almond', (
       expect(a.outer, k).toBeGreaterThanOrEqual(REF_RANGES.canthusChordOuter[0]); expect(a.outer, k).toBeLessThanOrEqual(REF_RANGES.canthusChordOuter[1]);
     }
   });
-  it('sharp et drooping : écart de hauteur CONNU et borné (−19 % à −35 %), documenté, pas masqué', () => {
-    for (const style of ['sharp', 'drooping'] as const) {
-      const g = openingGeometry(Shape.parse({ style, width: 240, height: 240 * 0.55 }), Canthi.parse({}));
+  it('PASSE 8 — sharp et drooping respectent le contrat de hauteur (écart ≤ 2 % sur 48 combinaisons ; −19 % à −35 % avant)', () => {
+    for (const style of ['sharp', 'drooping'] as const) for (const asp of [0.35, 0.45, 0.55, 0.65]) for (const upF of [0.4, 0.5, 0.62, 0.75]) for (const tilt of [-4, 2, 8, 14]) {
+      const g = openingGeometry(Shape.parse({ style, width: 240, height: 240 * asp, upperFraction: upF, tiltDeg: tilt }), Canthi.parse({}));
       const rel = (openingProfile(g).aspect - g.hEff / g.w) / (g.hEff / g.w);
-      expect(rel, style).toBeLessThan(-0.1); expect(rel, style).toBeGreaterThan(-0.45);
+      expect(Math.abs(rel), `${style} ${asp} ${upF} ${tilt}`).toBeLessThan(0.02);
+      expect(checkEyeEnvelope(g, style, 0).find((c) => c.id === 'envelope-height-contract')?.ok, `${style} règle`).toBe(true);
     }
+  });
+  it('PASSE 8 — la règle de contrat de hauteur voit l’ancien défaut : un sharp sous-dimensionné de 27 % est refusé', () => {
+    const g = openingGeometry(Shape.parse({ style: 'sharp', width: 240, height: 240 * 0.55 }), Canthi.parse({}));
+    const short = { ...g, hEff: g.hEff / 0.73 };   // hauteur « demandée » 37 % plus grande que l'obtenue
+    expect(checkEyeEnvelope(short, 'sharp', 0).find((c) => c.id === 'envelope-height-contract')?.ok).toBe(false);
   });
 });

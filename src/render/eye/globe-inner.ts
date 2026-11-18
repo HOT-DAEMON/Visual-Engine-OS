@@ -8,6 +8,7 @@ import { renderIrisDetail } from './iris-detail';
 import { renderHighlights } from './highlights-render';
 import { renderIrisLayers } from './iris-layers-render';
 import { renderMicrodetail } from './micro-render';
+import { flatSurface, isFlat } from './flat-finish';
 import { softShadow } from './soft-shadow';
 import { openingPolygon } from '../../geometry/eye';
 import type { EyeLook } from './look';
@@ -51,7 +52,8 @@ export function renderGlobeInner(
     curvature: 'sphere',
     draw: (a) => el('ellipse', { cx: c.x, cy: c.y, rx: irisRx, ry: irisRy, ...a }),
   };
-  const iris = compileSurface(`${id}-iris`, irisSurface, eye.iris.material, L, rot);
+  const flat = isFlat(eye);
+  const iris = flat ? flatSurface(`${id}-iris`, irisSurface, eye.iris.material.base) : compileSurface(`${id}-iris`, irisSurface, eye.iris.material, L, rot);
   defs.push(...iris.defs);
   // Couches de couleur (EYE-04) : sous les fibres, pour que la texture radiale reste lisible par-dessus.
   const layers = renderIrisLayers(eye, c, irisRx, irisRy, id);
@@ -145,34 +147,38 @@ export function renderGlobeInner(
   const margin = Math.max(g.bbox.w, g.bbox.h) * 0.25;
   const b = g.bbox;
   const outer = `M${num(b.x - margin)} ${num(b.y - margin)}H${num(b.x + b.w + margin)}V${num(b.y + b.h + margin)}H${num(b.x - margin)}Z`;
-  const shadowColor = look ? darken(look.skin.shadow, 0.55) : '#000000';
-  const shiftedOpening = openingPath(g, -L.x * dist, -L.y * dist);
-  if (eye.renderQuality === 'reference') {
-    defs.push(el('filter', { id: `${id}-lidblur`, x: '-20%', y: '-20%', width: '140%', height: '140%' }, [el('feGaussianBlur', { stdDeviation: g.hEff * 0.035 })]));
-    inner.push(el('path', { d: outer + shiftedOpening, 'fill-rule': 'evenodd', fill: shadowColor, 'fill-opacity': 0.38, filter: urlRef(`${id}-lidblur`) }));
-  } else {
-    const sh = softShadow(id, openingPolygon(g, 48, -L.x * dist, -L.y * dist), { x: b.x - margin, y: b.y - margin, w: b.w + 2 * margin, h: b.h + 2 * margin }, g.hEff * 0.035, shadowColor, 0.38);
-    defs.push(...sh.defs);
-    inner.push(...sh.markup);
-  }
+  // Fini « flat » : ni ombre portée des paupières ni vignettage d'orbite (aplats francs, voir flat-finish.ts).
+  if (!flat) {
+    const shadowColor = look ? darken(look.skin.shadow, 0.55) : '#000000';
+    const shiftedOpening = openingPath(g, -L.x * dist, -L.y * dist);
+    if (eye.renderQuality === 'reference') {
+      defs.push(el('filter', { id: `${id}-lidblur`, x: '-20%', y: '-20%', width: '140%', height: '140%' }, [el('feGaussianBlur', { stdDeviation: g.hEff * 0.035 })]));
+      inner.push(el('path', { d: outer + shiftedOpening, 'fill-rule': 'evenodd', fill: shadowColor, 'fill-opacity': 0.38, filter: urlRef(`${id}-lidblur`) }));
+    } else {
+      const sh = softShadow(id, openingPolygon(g, 48, -L.x * dist, -L.y * dist), { x: b.x - margin, y: b.y - margin, w: b.w + 2 * margin, h: b.h + 2 * margin }, g.hEff * 0.035, shadowColor, 0.38);
+      defs.push(...sh.defs);
+      inner.push(...sh.markup);
+    }
 
-  // Vignettage aux coins (occlusion ambiante de l'orbite)
-  defs.push(
-    el('radialGradient', { id: `${id}-ao`, cx: 0.5, cy: 0.5, r: 0.5 }, [
-      stop(0, '#000000', 0),
-      stop(0.6, '#000000', 0),
-      stop(1, '#000000', 0.22),
-    ]),
-  );
-  inner.push(
-    el('ellipse', {
-      cx: b.x + b.w / 2,
-      cy: b.y + b.h / 2,
-      rx: b.w / 2,
-      ry: (b.h / 2) * 1.1,
-      fill: urlRef(`${id}-ao`),
-    }),
-  );
+    // Vignettage aux coins (occlusion ambiante de l'orbite)
+    defs.push(
+      el('radialGradient', { id: `${id}-ao`, cx: 0.5, cy: 0.5, r: 0.5 }, [
+        stop(0, '#000000', 0),
+        stop(0.6, '#000000', 0),
+        stop(1, '#000000', 0.22),
+      ]),
+    );
+    inner.push(
+      el('ellipse', {
+        cx: b.x + b.w / 2,
+        cy: b.y + b.h / 2,
+        rx: b.w / 2,
+        ry: (b.h / 2) * 1.1,
+        fill: urlRef(`${id}-ao`),
+      }),
+    );
+
+  }
 
   // Teinte des reflets : couleur de la lumière de la scène (cause physique) sauf si l'apparence impose une teinte de reflet.
   const hlColor = look && look.spec.reflection.tint ? look.skin.highlight : worldLight.color;
@@ -210,8 +216,8 @@ export function renderGlobeInner(
   const fold = foldGeometry(g, eye.epicanthicFold);
   if (fold) {
     inner.push(el('path', { d: polygonPath(fold.region), fill: skin }));
-    // Ombre douce de l'avancée de peau sur le globe, le long de la nouvelle bordure de la fente
-    inner.push(
+    // Ombre douce de l'avancée de peau sur le globe, le long de la nouvelle bordure de la fente (absente en fini flat)
+    if (!flat) inner.push(
       el('path', {
         d: `M${P(fold.pu)}C${P(fold.c1)} ${P(fold.c2)} ${P(fold.pl)}`,
         fill: 'none',
