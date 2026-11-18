@@ -13,7 +13,7 @@ import { ambientOcclusion, castShadowScaled } from '../relief/cast';
 import { bounceAt, shadeAt, tonesOf, type LightModel, type Shade, type Tones } from '../relief/model';
 import { hairSheen, hairTones, sheenScreen } from './hair-light';
 import { strandColor } from './hair-strands';
-import { litDepth, softenedNormal } from './nose-light';
+import { bounceAo, litDepth, softenedNormal } from './nose-light';
 import { parseHex } from '../core/color';
 
 /** Lumière de la PLANCHE DE RÉFÉRENCE (mode sans `light`), en repère CAMÉRA (haut-gauche, de face) : elle ne tourne pas avec la tête. Avec `PaintOpts.light`, c'est le `LightModel` de `src/relief` qui la remplace. */
@@ -37,11 +37,12 @@ export interface Painted { readonly rgba: Float32Array; readonly region: Uint8Ar
 export interface PaintOpts { readonly lineU: number; readonly ppuHi: number; readonly light?: LightModel; /** Teinte d'ombre IMPOSÉE par l'apparence de la peau de l'hôte (`skin.light.shadow`), lue comme sur la tête de face ; `null` = dérivée du modèle. */ readonly shadowTint?: string | null }
 
 /** Éclairage par relief du tampon : ombres portées + occlusion par marche de rayon sur la PROFONDEUR du G-buffer (nez sur la joue, menton sur le cou, oreille), mêmes fonctions que la tête de face. */
-export function reliefLight(spec: HeadTurnSpec, g: GBuf, o: PaintOpts, model: LightModel, view?: View): { cast: Float32Array; ao: Float32Array; tones: Tones; hair: Tones } {
+export function reliefLight(spec: HeadTurnSpec, g: GBuf, o: PaintOpts, model: LightModel, view?: View): { cast: Float32Array; ao: Float32Array; aoBounce: Float32Array; tones: Tones; hair: Tones } {
   const W = 2 * Math.max(...spec.rows.map((r) => r.a)), grid = { x0: 0, y0: 0, ppu: o.ppuHi, w: g.w, h: g.h };
   const depth = view ? litDepth(spec, g, view) : g.depth;   // ailes du nez allégées (nose-light.ts) ; sans vue : profondeur brute
   const cast = castShadowScaled(grid, depth, model.dir, { reach: 0.42 * W, penumbra: 0.08 + 0.5 * model.soft }, 4);
-  return { cast, ao: ambientOcclusion(grid, depth, 0.035 * W, 0.05 * W), tones: tonesOf(spec.palette.skin, model, { shadow: o.shadowTint ?? null }), hair: hairTones(spec, model) };
+  const ao = ambientOcclusion(grid, depth, 0.035 * W, 0.05 * W);
+  return { cast, ao, aoBounce: view ? bounceAo(spec, g, ao, Math.round(0.06 * o.ppuHi)) : ao, tones: tonesOf(spec.palette.skin, model, { shadow: o.shadowTint ?? null }), hair: hairTones(spec, model) };
 }
 /** Couleur `c` (déjà « pleine lumière ») éclairée : multiplicateurs par canal ombre → lumière (`lit`) puis → cœur (`core`), comme la couche `multiply` de la tête de face. */
 function lightMul(c: RGB, tones: Tones, s: Shade, litOverride?: number): RGB {
@@ -68,7 +69,7 @@ export function paint(spec: HeadTurnSpec, g: GBuf, view: View, o: PaintOpts): Pa
     const nc = dirToCam(nh, view, id === PART.neck || id === PART.neckCut ? 'neck' : 'head', p.y), lam = nc.x * LIGHT.x + nc.y * LIGHT.y + nc.z * LIGHT.z, t = smooth((lam - 0.02) / 0.22);
     const kw = Math.min(1.4, 1 / Math.max(0.7, nc.z));                         // compensation du raccourcissement des traits sur les faces obliques
     const ncL = L && id === PART.bump ? dirToCam(softenedNormal(spec, p, nh), view, 'head', p.y) : nc;   // ailes du nez : normale ramenée vers la face (pas de disque clair), éclairage seul
-    const sh = L && rl ? shadeAt(L, ncL, rl.cast[k]!, rl.ao[k]!) : null, litB = sh && L && rl ? sh.lit + (1 - sh.lit) * bounceAt(L, ncL, rl.ao[k]!) : 0;   // litB : part éclairée AVEC la lumière de rebond (seconde lumière, par en dessous)
+    const sh = L && rl ? shadeAt(L, ncL, rl.cast[k]!, rl.ao[k]!) : null, litB = sh && L && rl ? sh.lit + (1 - sh.lit) * bounceAt(L, ncL, rl.aoBounce[k]!) : 0;   // litB : part éclairée AVEC la lumière de rebond (seconde lumière, par en dessous)
     const lightOf = (c: RGB, legacyShade: RGB): RGB => (sh && rl ? lightMul(c, rl.tones, sh, litB) : mix(legacyShade, c, t));
     let ink = false, col = lightOf(pal.skin, pal.shade), reg: number = REGION.skin;
     if (id === PART.neckCut) { const sd = rl ? hex(rl.tones.shadow) : pal.shade; col = [sd[0] * NECK_CUT_K[0], sd[1] * NECK_CUT_K[1], sd[2] * NECK_CUT_K[2]]; reg = REGION.neck; ink = true; }
