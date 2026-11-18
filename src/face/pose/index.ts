@@ -6,7 +6,7 @@ import { poseTree, type PoseNode, type Posed, type V3 } from './tree';
 export { poseTree, skullOf, neckOf, TWIST };
 export { posedOutline } from './silhouette';
 export { poseHair, poseHairMasses } from './hair-pose';
-export { FACING, STRAND_SCALE, facing, poseLock, strandMap, rowCache, rootOf, anchorKind, anchorDepth } from './hair-pose-strand';
+export { FACING, STRAND_SCALE, STRAND_STRETCH, facing, poseLock, strandMap, rowCache, rootOf, anchorKind, anchorDepth } from './hair-pose-strand';
 export { poseFaceFeatures, featureTransform, featureVisible, poseRegions, type PosedFeatures } from './features';
 export { eyePoseOf, type EyePose } from './eye-pose';
 export const FACE_POSE_VERSION = 1;

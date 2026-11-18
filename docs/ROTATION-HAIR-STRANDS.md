@@ -2,6 +2,8 @@
 
 Code : `src/face/pose/hair-pose-strand.ts`, `densify.ts`, `hair-pose.ts`, `skull.ts` (`rowMap`), `src/render/face/hair.ts`. Tests : `tests/face-pose-hair-strands.test.ts` (50), `tests/face-pose-hair.test.ts`. Preuves : `artefacts/rotation-hair-strands/`.
 
+> **Passe 8 : la carte « accrochée à la racine, pente plafonnée à [0,45 ; 1] » décrite ci-dessous n'est plus utilisée pour les mèches ordinaires** (elle détachait la queue des mèches de balayage du crâne, jusqu'à 125 px). Les sommets sont projetés exactement ; voir `ROTATION-HAIR-PASS-8.md`. Les pièces attachées restent rigides.
+
 ## Principe
 On NE fait PAS un maillage 3D : on reprojette le dessin 2D existant (`HairGeometry`) avec la projection du crâne utilisée pour les masses (`skull.projectX`). Section du crâne = ellipse `(hx, k·hx)`, `k = DEPTH_RATIO = 1,03` (mesuré, voir DECISIONS). Un point à l'azimut φ passe de `hx·sin φ` à `hx·ρ·sin(φ + ψ·cos φ)` ; hors du contour, l'épaisseur est conservée.
 

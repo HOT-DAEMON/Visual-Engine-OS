@@ -17,7 +17,7 @@ import type { RowMap, Skull } from './skull';
  *  - plancher 0,45 : une mèche ne devient jamais un trait (le raccourcissement exact de 70° serait 0,34).
  * Par sommet : x' = P(x_r, y) + ∫ de x_r à x de clamp(P'(u, y)) du : les ordonnées ne changent pas (lacet seul). Partout où la pente de la projection est dans les bornes, c'est EXACTEMENT la projection de la masse
  * (x' = P(x, y)) : la mèche épouse la tête sur toute sa longueur et reste collée à la coque ; ailleurs seule la pente est bornée, donc la largeur d'une mèche à une ordonnée donnée est multipliée par un facteur
- * dans [min, max], jamais plus (propriété EXACTE, mesurée par `pose.strand-scale`). Une mèche qui épouse le crâne n'est pas redressée (le premier essai, translation fixe x_r + échelle, la ramenait à 0,34 de son étendue).
+ * dans [min, max], jamais plus. **OBSOLÈTE pour la position (passe 8)** : cette carte détachait la queue des mèches de balayage du crâne (jusqu'à 106 px) ; `poseLock` projette désormais chaque sommet exactement (`Skull.projectX`). `strandMap` / `rowCache` restent exportées (tests, rappel de méthode) ; `STRAND_SCALE` ne règle plus que `w0` (largeur de racine lue par le rendu).
  *
  * Mèches de la couche `over` (devant le visage) : elles s'effacent quand leur côté se détourne. Visibilité = composante z de la normale du crâne à la racine après la rotation EXACTE : `cos(φ + a)`, φ = asin(x_r / hx) ;
  * opacité `smoothstep(n_z / 0,35)`. Une mèche ne peut pas APPARAÎTRE : le dessin de face n'a rien derrière l'horizon (limite documentée).
@@ -26,6 +26,12 @@ import type { RowMap, Skull } from './skull';
  * Chaque sommet : x' = x·cos a + z·sin a. Les tresses (`braid`) naissent du cuir chevelu : modèle de mèche ordinaire.
  */
 export const STRAND_SCALE = { min: 0.45, max: 1 } as const;
+/**
+ * Enveloppe du facteur de largeur d'une mèche posée (largeur posée / largeur de face, par rangée), pour la projection EXACTE (passe 8). Elle remplace [0,45 ; 1] : une mèche qui épouse le crâne s'allonge sur la bande
+ * du limbe lointain et s'écrase vers le limbe proche, comme la surface qu'elle suit. MESURÉ sur 21 896 mèches (7 coiffures × 3 graines × lacets ±30 / ±45°) : max 3,10 (p99 3,04, p90 2,17), min 0,09 (p1 0,12).
+ * Bornes de garde : un peu au-delà du mesuré ; elles attrapent une mèche étirée / écrasée par un défaut, pas la déformation propre à la projection (`docs/ROTATION-HAIR-PASS-8.md`).
+ */
+export const STRAND_STRETCH = { min: 0.05, max: 3.5 } as const;
 /** Longueur maximale (fraction de W, ≈ 0,75 px) d'une arête du contour d'une mèche avant projection : la carte n'est pas affine (la translation varie avec y, jusqu'à ≈ 0,85 px par px près du sommet du crâne) ; deux sommets d'une même arête sont translatés différemment, l'erreur de largeur est ≈ pas × pente (1,45 px mesurés à 1,7 px de pas : cisaillement, pas étirement). La ligne médiane (`spine`) n'est JAMAIS rééchantillonnée : le rendu la lit par indice (bandes cel, dégradé). */
 export const STRAND_EDGE = 0.002;
 /** Fondu des mèches de devant : opaque dès `n_z` ≥ FACING.full, invisible à `n_z` ≤ 0. */
@@ -107,21 +113,22 @@ export function strandMap(skull: Skull, yawDeg: number, xr: number, rows: (y: nu
 }
 
 /** Pose d'UNE mèche. `ties` : attaches de la coiffure (pour la profondeur des pièces attachées). */
-export function poseLock(l: HairLock, skull: Skull, yawDeg: number, W: number, ties: readonly Tie[], rows: (y: number) => StrandRow = rowCache(skull, yawDeg)): HairLock {
+export function poseLock(l: HairLock, skull: Skull, yawDeg: number, W: number, ties: readonly Tie[]): HairLock {
   const root = rootOf(l), xr = root.x;
-  let map: (q: Vec) => Vec, scale: number;
   const tie = l.part === 'tail' || l.part === 'bun' ? near(ties, root) : null;
+  let rigid: ((q: Vec) => Vec) | null = null, scale: number;
   if (tie) {
     const a = (yawDeg * Math.PI) / 180, c = Math.cos(a), sn = Math.sin(a), z = anchorDepth(anchorKind(tie.at, skull, W), tie.at, skull);
-    map = (q) => ({ x: q.x * c + z * sn, y: q.y });
+    rigid = (q) => ({ x: q.x * c + z * sn, y: q.y });
     scale = Math.abs(c);
-  } else {
-    map = strandMap(skull, yawDeg, xr, rows);
-    scale = clamp(skull.slopeX(xr, root.y, yawDeg), STRAND_SCALE.min, STRAND_SCALE.max);
-  }
-  const poly: Poly = densify(l.poly, STRAND_EDGE * W).map(map);
+  } else scale = clamp(skull.slopeX(xr, root.y, yawDeg), STRAND_SCALE.min, STRAND_SCALE.max);   // facteur de la largeur de racine `w0` (lue par le rendu), conservé
+  const dense = densify(l.poly, STRAND_EDGE * W);
+  // Mèche ordinaire : EXACTEMENT la projection des masses (`Skull.projectX`), sommet par sommet. La mèche épouse donc le crâne et la coque sur toute sa longueur (passe 8 : l'ancienne carte accrochée à la racine, pente
+  // plafonnée à 1, laissait la queue d'une mèche de balayage jusqu'à 106 px de la surface du crâne : elle traversait la joue). Pièce attachée (queue, chignon) : carte rigide.
+  const exact = (q: Vec): Vec => ({ x: skull.projectX(q.x, q.y, yawDeg), y: q.y });
+  const poly: Poly = rigid ? dense.map(rigid) : dense.map(exact);
   const out: { -readonly [K in keyof HairLock]: HairLock[K] } = { ...l, poly };
-  if (l.spine) out.spine = l.spine.map(map);
+  if (l.spine) out.spine = l.spine.map(rigid ?? exact);
   if (l.w0 !== undefined) out.w0 = l.w0 * scale;
   if (l.layer === 'over') {
     const nz = facing(skull, xr, root.y, yawDeg), alpha = smoothstep(clamp(nz / FACING.full, 0, 1));

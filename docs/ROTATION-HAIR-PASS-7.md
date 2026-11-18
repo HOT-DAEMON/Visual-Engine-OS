@@ -1,6 +1,6 @@
 # Cheveux sous rotation — passe 7 (état, revue par coiffure, reste à faire)
 
-Branche `feat/hair-grammar`. Suite de `ROTATION-HAIR-PASS-6.md` (58 lignes, non recopié). Détails : `ROTATION-HAIR-LIMB.md`, `ROTATION-HAIR-VERIFY-2.md`, `ROTATION-HAIR-BUZZ.md`. Preuves : `artefacts/rotation-hair-limb/` (lisière) et `artefacts/rotation-hair-review/` (revue par coiffure, têtes entières −45/0/45°, 10 coiffures).
+Branche `feat/hair-grammar`. Suite de `ROTATION-HAIR-PASS-6.md` (58 lignes, non recopié). **Suite : `ROTATION-HAIR-PASS-8.md`** (§3.1 des longs traité : mèches conformes au crâne). Détails : `ROTATION-HAIR-LIMB.md`, `ROTATION-HAIR-VERIFY-2.md`, `ROTATION-HAIR-BUZZ.md`. Preuves : `artefacts/rotation-hair-limb/` (lisière) et `artefacts/rotation-hair-review/` (revue par coiffure, têtes entières −45/0/45°, 10 coiffures).
 
 ## 1. Fait dans cette passe
 | # | Sujet | Statut |
@@ -20,7 +20,7 @@ La coque (orange) est concentrique au crâne (gris) pour les 10 coiffures ; l'é
 Limite : mesure visuelle + `skull-shell-bound` ; pas de nouvelle règle numérique par coiffure.
 
 ## 3. Reste à faire, par composant
-1. **Cheveux longs à ±30–45° (NON TRAITÉ)** : vu sur `rotation-hair-review/05` (`long` 9004) : une mèche fine de la couche `over` traverse la joue en diagonale du côté lointain ; rideau de mèches empilées du côté proche, dalles à angles vifs, semi-transparences superposées. Cause probable : les mèches sont translatées rigidement avec leur racine (`poseLock`) ; une racine proche du limbe lointain voit sa mèche portée dans la bande dépliée. Pistes : ordre de calque par `anchorDepth`, fusion des mèches `over` voisines, atténuation d'opacité par recouvrement, coupe d'une mèche `over` au bord du visage ; ajouter la règle de style correspondante (`ROTATION-HAIR-VERIFY-2.md` §4).
+1. **Cheveux longs à ±30–45° (TRAITÉ en passe 8 : voir `ROTATION-HAIR-PASS-8.md`)** — diagnostic d'origine, conservé : vu sur `rotation-hair-review/05` (`long` 9004) : une mèche fine de la couche `over` traverse la joue en diagonale du côté lointain ; rideau de mèches empilées du côté proche, dalles à angles vifs, semi-transparences superposées. Cause probable : les mèches sont translatées rigidement avec leur racine (`poseLock`) ; une racine proche du limbe lointain voit sa mèche portée dans la bande dépliée. Pistes : ordre de calque par `anchorDepth`, fusion des mèches `over` voisines, atténuation d'opacité par recouvrement, coupe d'une mèche `over` au bord du visage ; ajouter la règle de style correspondante (`ROTATION-HAIR-VERIFY-2.md` §4).
 2. **Coque rasée à ±45°, côté lointain** : bloc à bord vertical encore perceptible (`ROTATION-HAIR-BUZZ.md` §3).
 3. **Coque (`base`) sous pose** : encore projetée point par point ; lui appliquer la coupe à l'horizon de `hairline-limb.ts`.
 4. **Tranche 7 (cheveux sous le menton / autour du cou)** : NON TRAITÉE. Défauts à 0° : crochets près de l'oreille, base afro à bords rectilignes. À corriger à 0° avant de poser.

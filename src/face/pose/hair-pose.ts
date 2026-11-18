@@ -3,7 +3,7 @@ import type { HairGeometry, HairLock } from '../hair/types';
 import type { Poly } from '../poly';
 import { densify } from './densify';
 import { poseLinked } from './hair-pose-lines';
-import { poseLock, rowCache } from './hair-pose-strand';
+import { poseLock } from './hair-pose-strand';
 import type { Skull } from './skull';
 
 /**
@@ -45,7 +45,7 @@ export function poseHairMasses(geo: HairGeometry, skull: Skull, yawDeg: number, 
 export function poseHair(geo: HairGeometry, skull: Skull, yawDeg: number, W: number): HairGeometry {
   if (yawDeg === 0) return geo;
   const masses = poseHairMasses(geo, skull, yawDeg, W), maxLen = MAX_EDGE_FRACTION * W;
-  const rows = rowCache(skull, yawDeg), locks = geo.locks.map((l) => poseLock(l, skull, yawDeg, W, geo.ties, rows));
+  const locks = geo.locks.map((l) => poseLock(l, skull, yawDeg, W, geo.ties));
   const swap = new Map<Poly, Poly>(geo.locks.map((l, i) => [l.poly, (locks[i] as HairLock).poly]));
   const layer = (a: Poly[]): Poly[] => a.map((q) => swap.get(q) ?? q);
   const P = (q: Vec): Vec => ({ x: skull.projectX(q.x, q.y, yawDeg), y: q.y });

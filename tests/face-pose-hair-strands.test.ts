@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { faceLandmarks, halfWidthAt } from '../src/face';
 import { hairGeometry, type HairLock } from '../src/face/hair';
-import { FACING, STRAND_SCALE, facing, poseHair, poseLock, rootOf, rowCache, skullOf } from '../src/face/pose';
+import { densify } from '../src/face/pose/densify';
+import { STRAND_EDGE } from '../src/face/pose/hair-pose-strand';
+import { FACING, STRAND_STRETCH, facing, poseHair, poseLock, rootOf, skullOf } from '../src/face/pose';
 import { FaceParams } from '../src/schema';
 import { WIDTH_SLACK, widthBounds } from '../src/verify/hair-pose';
 import { hairFace, type CleanStyle } from '../scripts/lib/hair-faces';
@@ -39,13 +41,13 @@ describe('chevelure complète sous pose (poseHair)', () => {
     });
   }
 
-  it('mèche ordinaire : racine EXACTEMENT sur la projection de la masse ; largeur à chaque ordonnée multipliée par un facteur dans [0,45 ; 1] (jamais étirée) ; ordonnées intactes', () => {
+  it('mèche ordinaire : racine ET tout le contour EXACTEMENT sur la projection de la masse ; largeur à chaque ordonnée dans l\'enveloppe mesurée `STRAND_STRETCH` ; ordonnées intactes', () => {
     let checked = 0, rows = 0, worstMax = 0, worstMin = Infinity;
     for (const style of STYLES) for (const yaw of [-45, -30, 30, 45]) {
-      const { geo, skull, lm } = setup(style), cache = rowCache(skull, yaw);
+      const { geo, skull, lm } = setup(style);
       for (const l of geo.locks) {
         if (l.part === 'tail' || l.part === 'bun' || ext(l.poly) < 0.008 * lm.W) continue;
-        const q = poseLock(l, skull, yaw, lm.W, geo.ties, cache), r0 = rootOf(l), r1 = rootOf(q);
+        const q = poseLock(l, skull, yaw, lm.W, geo.ties), r0 = rootOf(l), r1 = rootOf(q);
         if (l.spine?.length) { expect(r1.x).toBeCloseTo(skull.projectX(r0.x, r0.y, yaw), 6); expect(r1.y).toBe(r0.y); }   // racine = début de la ligne médiane ; sans ligne médiane la racine est le centre de la forme (non conservé par une carte non affine)
         expect(Math.min(...q.poly.map((v) => v.y))).toBeCloseTo(Math.min(...l.poly.map((v) => v.y)), 9);   // lacet seul : mêmes ordonnées (contour rééchantillonné)
         expect(Math.max(...q.poly.map((v) => v.y))).toBeCloseTo(Math.max(...l.poly.map((v) => v.y)), 9);
@@ -56,8 +58,25 @@ describe('chevelure complète sous pose (poseHair)', () => {
     }
     expect(checked).toBeGreaterThan(500);
     expect(rows).toBeGreaterThan(2000);
-    expect(worstMax).toBeLessThanOrEqual(STRAND_SCALE.max + 1e-6);
-    expect(worstMin).toBeGreaterThanOrEqual(STRAND_SCALE.min - 1e-6);
+    expect(worstMax).toBeLessThanOrEqual(STRAND_STRETCH.max + 1e-6);
+    expect(worstMin).toBeGreaterThanOrEqual(STRAND_STRETCH.min - 1e-6);
+  });
+
+  it('passe 8 : la mèche épouse le crâne — chaque sommet du contour et de la ligne médiane est la projection EXACTE de la masse (avant : jusqu\'à 106 px d\'écart, mèches de balayage détachées du crâne)', () => {
+    let n = 0, worst = 0, yMoved = 0;
+    for (const style of STYLES) for (const yaw of [-45, 30]) {
+      const { geo, skull, lm } = setup(style, 9002);
+      for (const l of geo.locks) {
+        if (l.part === 'tail' || l.part === 'bun') continue;
+        const q = poseLock(l, skull, yaw, lm.W, geo.ties), ref = densify(l.poly, STRAND_EDGE * lm.W);
+        expect(q.poly.length).toBe(ref.length);
+        q.poly.forEach((v, k) => { worst = Math.max(worst, Math.abs(v.x - skull.projectX(ref[k]!.x, ref[k]!.y, yaw))); if (v.y !== ref[k]!.y) yMoved++; n++; });
+        q.spine?.forEach((s, k) => { worst = Math.max(worst, Math.abs(s.x - skull.projectX(l.spine![k]!.x, l.spine![k]!.y, yaw))); if (s.y !== l.spine![k]!.y) yMoved++; n++; });
+      }
+    }
+    expect(n).toBeGreaterThan(100000);
+    expect(worst).toBeLessThan(1e-9);
+    expect(yMoved).toBe(0);
   });
 
   it('pente analytique de la projection = différence finie ; la carte d’une mèche est monotone de pente bornée à chaque rangée', () => {

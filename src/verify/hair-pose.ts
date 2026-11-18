@@ -1,11 +1,12 @@
 import type { Vec } from '../geometry/eye/primitives';
 import { faceLandmarks, halfWidthAt } from '../face';
 import { hairGeometry, type HairGeometry, type HairLock } from '../face/hair';
-import { FACING, STRAND_SCALE, facing, poseHair, rootOf } from '../face/pose';
+import { FACING, STRAND_STRETCH, facing, poseHair, rootOf } from '../face/pose';
 import { skullOf } from '../face/pose/skull';
 import type { RandomFace } from '../generation/random-face';
 import { selfCrossings } from './hair-boundary';
 import { checkHairPoseExtra } from './hair-pose-extra';
+import { checkStrandRules } from './hair-pose-strands';
 import { check, type Check } from './types';
 
 /**
@@ -17,7 +18,7 @@ import { check, type Check } from './types';
  *    `pose.finite`          aucune coordonnée non finie (masses, mèches, lisière, raie, zones rasées, ombres, attaches) ;
  *    `pose.layers`          mêmes nombres de mèches et de calques `front` / `back` / `over` (le rendu en lit la structure) ;
  *    `pose.root-glued`      la racine de chaque mèche ordinaire est EXACTEMENT sur la projection de la masse (elle ne se décolle pas de la coque) ;
- *    `pose.strand-scale`    la LARGEUR de chaque mèche ordinaire, à sept ordonnées de sa hauteur, est multipliée par un facteur dans [0,45 ; 1] : jamais étirée (2,2× à 30° avant la tranche 2), jamais réduite à un trait ;
+ *    `pose.strand-scale`    la LARGEUR de chaque mèche ordinaire, à sept ordonnées de sa hauteur, est multipliée par un facteur dans `STRAND_STRETCH` ([0,05 ; 3,5], enveloppe MESURÉE de la projection exacte, passe 8 ; [0,45 ; 1] avant) : ni étirée ni écrasée au-delà de ce que fait la surface ;
  *    `pose.shell-bound`     l'avance de la coque sur la silhouette posée du crâne, rangée par rangée (enveloppe du polygone), ne dépasse pas celle de face : la coque ne s'envole pas ;
  *  ANATOMIE   — la forme obéit à la tête :
  *    `pose.hairline-on-skull` chaque point de l'implantation posée est dans la silhouette posée du crâne ;
@@ -29,6 +30,7 @@ import { check, type Check } from './types';
  *    `pose.hairline-smooth`   la courbure maximale de l'implantation posée ne dépasse pas celle de face de plus de 35 % (+ 0,05 rad) : pas d'angle nouveau ;
  *    `pose.edge-step`         le plus grand pas entre points voisins de la lisière posée ≤ 3,2× celui de face (bande du limbe lointain dépliée, bornée par la pente de la projection).
  *  Règles ajoutées (`hair-pose-extra.ts`, `docs/ROTATION-HAIR-VERIFY-2.md`) : `pose.hairline-front-peak`, `pose.hairline-corner`, `pose.mass-thickness`.
+ *  Règles des mèches (`hair-pose-strands.ts`, passe 8) : `pose.strand-conform`, `pose.strand-face-cover`, `pose.strand-stack`.
  */
 type Face = Pick<RandomFace, 'params' | 'width' | 'height'>;
 const pts = (g: HairGeometry): Vec[] => [
@@ -100,9 +102,10 @@ export function checkHairPose(face: Face, yawDeg: number, override?: HairGeometr
   }
   out.push(check('geometry', 'pose.root-glued', '<=', glue, 1e-6 * lm.W, 'racine de mèche décollée de la projection de la masse'));
   if (Number.isFinite(lo)) {
-    out.push(check('geometry', 'pose.strand-scale.max', '<=', hi, STRAND_SCALE.max + 1e-6, 'mèche étirée au-delà de sa largeur de face (bande du limbe dépliée)'));
-    out.push(check('geometry', 'pose.strand-scale.min', '>=', lo, STRAND_SCALE.min - 1e-6, 'mèche réduite à un trait'));
+    out.push(check('geometry', 'pose.strand-scale.max', '<=', hi, STRAND_STRETCH.max + 1e-6, 'mèche étirée au-delà de l\'enveloppe mesurée de la projection (×3,1 sur la bande dépliée du limbe lointain)'));
+    out.push(check('geometry', 'pose.strand-scale.min', '>=', lo, STRAND_STRETCH.min - 1e-6, 'mèche écrasée en trait au-delà de l\'enveloppe mesurée (×0,09 au limbe proche)'));
   }
+  out.push(...checkStrandRules(g0, g, lm, skull, yawDeg));   // mèche conforme au crâne, visage couvert, empilement : `hair-pose-strands.ts`
   const archY = Math.min(g0.boundary.marks.earTopY.left, g0.boundary.marks.earTopY.right) - 0.03 * lm.H;
   // Avance de la coque sur la silhouette du crâne, comparée RANGÉE PAR RANGÉE par l'enveloppe horizontale du polygone (`spanAt`) : face et posé lus à la MÊME ordonnée bornée [haut + 2 % H, bas du menton − 2 % H]
   // (aux pointes la largeur est nulle : un côté non borné fabriquait 58 px d'excès fictifs au sommet) ; indépendant des sommets voisins (la coque a de longues arêtes).
