@@ -1,0 +1,22 @@
+{
+ "source": "references/face/rotation_head_1.jpg",
+ "cellule": "profil",
+ "H_px": 602.0,
+ "haut_px": 24,
+ "ligne_yeux_sur_H": 0.626,
+ "pointe_sur_H": 0.751,
+ "saillie": [
+  {
+   "delta": 0.06,
+   "saillie_H": 0.0496
+  },
+  {
+   "delta": 0.09,
+   "saillie_H": 0.0514
+  },
+  {
+   "delta": 0.12,
+   "saillie_H": 0.0548
+  }
+ ]
+}

@@ -16,7 +16,8 @@ const pull30 = (s: HeadTurnSpec): number => {   // état d'avant : seul le lacet
   return p;
 };
 const out: Record<string, unknown> = { tolerance45: ALA_TOL_45, bornes: ALA_CONTOUR_BOUNDS.map((b) => ({ ...b })) };
-const bounds = ALA_CONTOUR_BOUNDS as ContourBound[], DEFAULT45 = bounds[1]!, CAPS = { defaut_0_25: 0.25, plein_0_6: 0.6 } as const;
+const bounds = ALA_CONTOUR_BOUNDS as ContourBound[], DEFAULT45: ContourBound = { ...bounds[1]!, maxEmbed: 0 }, CAPS = { defaut_0_25: 0.25, plein_0_6: 0.6 } as const;   // DEFAULT45 = état du commit f5d0ce2 (sans enfoncement) : reproduit artefacts/nez-45deg/stats.json ; état actuel : docs/NOSE-YAW-BOUNDS.md
+bounds.length = 2;
 const stat = (sp: HeadTurnSpec[], pulls: number[]) => {
   const o = (yaw: number): number[] => sp.map((s, i) => alaOverflow(s, alaSeated(s, -1, pulls[i]!), yaw)), fw = sp.map((s, i) => frontWidthRatio(s, alaSeated(s, 1, pulls[i]!))), rel = pulls.map((p, i) => p / sp[i]!.nose.alaX);
   const o45 = o(45), sat = (cap: number): number => rel.filter((x) => x >= cap - 1e-6).length;

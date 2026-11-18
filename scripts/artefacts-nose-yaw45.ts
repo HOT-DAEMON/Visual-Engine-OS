@@ -13,7 +13,8 @@ import { rasterPng } from './lib/raster';
 const q = patternById('three-quarter-right'), lit = { style: q.style, shadowHue: q.shadowHue, bias: q.bias, light: { azimuthDeg: q.azimuthDeg, elevationDeg: q.elevationDeg, shadowHardness: q.hardness, sourceSize: q.sourceSize } };
 const light = lightModelOfSpec({} as never, lit as never), H = 420, frame = defaultFrame(H);
 const rows = [[77, 'plat-trapeze'], [11, 'pyramide'], [1203, 'cloche-ailes']] as const, yaws = [0, 45] as const, states = ['avant', 'defaut', 'plein'] as const;
-const def = ALA_CONTOUR_BOUNDS.map((b) => ({ ...b })), only30: ContourBound[] = [def[0]!], plein: ContourBound[] = [def[0]!, { ...def[1]!, maxPull: 0.6 }];
+const def = ALA_CONTOUR_BOUNDS.slice(0, 2).map((b) => ({ ...b, maxEmbed: 0 })),   // état du commit f5d0ce2 (sans enfoncement ni 60°/70°)
+   only30: ContourBound[] = [def[0]!], plein: ContourBound[] = [def[0]!, { ...def[1]!, maxPull: 0.6 }];
 const setBounds = (st: 'avant' | 'defaut' | 'plein'): void => { const arr = ALA_CONTOUR_BOUNDS as ContourBound[]; arr.length = 0; arr.push(...(st === 'avant' ? only30 : st === 'plein' ? plein : def)); };
 const cells: string[] = [], zooms: string[] = [], W = frame.w, ZW = 150, ZH = 110;
 rows.forEach(([seed, a], i) => yaws.forEach((yaw, j) => states.forEach((st, k) => {

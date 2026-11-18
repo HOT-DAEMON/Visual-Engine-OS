@@ -1,0 +1,66 @@
+[
+ {
+  "type": "pyramide",
+  "seed": 500,
+  "yaw": 70,
+  "tangage": 0,
+  "nez_entier": 0.035,
+  "ailes_seules": 0.035
+ },
+ {
+  "type": "pyramide",
+  "seed": 500,
+  "yaw": 70,
+  "tangage": -30,
+  "nez_entier": 0.0875,
+  "ailes_seules": 0
+ },
+ {
+  "type": "pyramide",
+  "seed": 500,
+  "yaw": 70,
+  "tangage": 30,
+  "nez_entier": 0.0758,
+  "ailes_seules": 0.0292
+ },
+ {
+  "type": "pyramide",
+  "seed": 500,
+  "yaw": 60,
+  "tangage": -30,
+  "nez_entier": 0.0758,
+  "ailes_seules": 0
+ },
+ {
+  "type": "plat-trapeze",
+  "seed": 537,
+  "yaw": 70,
+  "tangage": 0,
+  "nez_entier": 0.0525,
+  "ailes_seules": 0.0525
+ },
+ {
+  "type": "plat-trapeze",
+  "seed": 537,
+  "yaw": 70,
+  "tangage": -30,
+  "nez_entier": 0.0525,
+  "ailes_seules": 0.0117
+ },
+ {
+  "type": "plat-trapeze",
+  "seed": 537,
+  "yaw": 70,
+  "tangage": 30,
+  "nez_entier": 0.0583,
+  "ailes_seules": 0.0408
+ },
+ {
+  "type": "plat-trapeze",
+  "seed": 537,
+  "yaw": 60,
+  "tangage": -30,
+  "nez_entier": 0.0408,
+  "ailes_seules": 0.0058
+ }
+]

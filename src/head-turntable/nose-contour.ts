@@ -38,14 +38,31 @@ export const ALA_PULL_MAX = 0.4;
  * Calibrée sur UN seul nez stylisé : borne de style, pas un canon anatomique (un nez réaliste dépasse plus tôt).
  */
 export const ALA_TOL_45 = 0.0067;
+/** Décalage en z (U, à l'échelle de la planche) du centre de l'aile au-dessus de la surface de la joue : l'aile « libre » dépasse la joue de ce décalage + son demi-axe `ez`. Source unique (`parts.ts` le lit). */
+export const ALA_Z_LIFT = 0.022;
 /**
- * Bornes de contour : à chaque lacet `yaw` (°), l'aile peut dépasser le contour de la joue d'au plus `tol` (U), et la contrainte peut rappeler l'aile d'au plus `maxPull` × `alaX` vers l'axe.
- * 30° : rappel jusqu'à 0,6 (limite d'enfouissement dans la bosse centrale). 45° : rappel plafonné à 0,25, le seuil au-delà duquel la règle `eng.nose.alar-pull` dit « nez trop large pour le modèle 3D » :
- * au-delà, rappeler l'aile efface les ailes de face (mesuré, docs/NOSE-YAW45.md §5) ; le débordement résiduel est alors REPORTÉ par la règle `eng.nose.alar-contour-45`, pas caché.
- * Au-delà de 45° (60°, 70°) : NON borné, la planche montre le nez qui sort du contour.
+ * Tolérances de débordement à 60° et 70° (U) : le débordement PROPRE du nez de la planche (`REF_SPEC`, ajusté sur les 9 vues), par calcul : 0,0263 à 60°, 0,0406 à 70° (par rendu : 0,029 et 0,041 ; bande de pixels de la planche à 70° : 0,023–0,057, docs/NOSE-YAW45.md).
+ * Contrairement au 45°, la planche montre ICI le nez qui sort du contour de la joue : la borne n'est pas « zéro » mais « pas plus que le nez de la planche ». Calibrées sur UN nez stylisé (borne de style, pas un canon anatomique) ;
+ * à 80° et 90° le profil change de nature (le contour devient celui du nez lui-même) : non borné.
  */
-export interface ContourBound { readonly yaw: number; readonly tol: number; readonly maxPull: number }
-export const ALA_CONTOUR_BOUNDS: readonly ContourBound[] = [{ yaw: ALA_CONTOUR_YAW, tol: 0, maxPull: 1 - ALA_PULL_MAX }, { yaw: 45, tol: ALA_TOL_45, maxPull: 0.25 }];
+export const ALA_TOL_60 = 0.0265;
+export const ALA_TOL_70 = 0.041;
+/**
+ * Bornes de contour : à chaque lacet `yaw` (°), l'aile peut dépasser le contour de la joue d'au plus `tol` (U). Deux leviers, dans cet ORDRE :
+ *  1. `maxEmbed` : ENFONCER l'aile dans la joue (fraction du décalage en z `ALA_Z_LIFT`, 1 = centre de l'aile sur la surface). Ne touche NI la silhouette de face NI la position latérale : seul le relief éclairé de l'aile change ;
+ *  2. `maxPull` : rappeler l'aile vers l'axe d'au plus `maxPull` × `alaX` (change la largeur de face : à pleine force les ailes disparaissent de la silhouette de face, docs/NOSE-YAW45.md §5).
+ * 30° : tolérance 0, rappel jusqu'à 0,6, aucun enfoncement (comportement validé de docs/NOSE-ALAR-SEAT.md, inchangé).
+ * 45° : tolérance 1 px de planche, enfoncement jusqu'à 1 PUIS rappel plafonné à 0,25 (le seuil que `eng.nose.alar-pull` appelle « trop large pour le modèle 3D »).
+ * 60° et 70° : tolérance = nez de la planche, enfoncement seul (rappel 0 : la planche n'impose rien de latéral à ces lacets, et un rappel changerait la largeur de face de tous les nez).
+ * Le débordement résiduel est REPORTÉ par les règles `eng.nose.alar-contour-45` et `eng.nose.alar-contour-60-70`, pas caché. Au-delà de 70° : NON borné.
+ */
+export interface ContourBound { readonly yaw: number; readonly tol: number; readonly maxPull: number; readonly maxEmbed: number }
+export const ALA_CONTOUR_BOUNDS: readonly ContourBound[] = [
+  { yaw: ALA_CONTOUR_YAW, tol: 0, maxPull: 1 - ALA_PULL_MAX, maxEmbed: 0 },
+  { yaw: 45, tol: ALA_TOL_45, maxPull: 0.25, maxEmbed: 1 },
+  { yaw: 60, tol: ALA_TOL_60, maxPull: 0, maxEmbed: 1 },
+  { yaw: 70, tol: ALA_TOL_70, maxPull: 0, maxEmbed: 1 },
+];
 
 /**
  * LARGEUR DE FACE DU NEZ 3D CONTRE SA SILHOUETTE 2D, PAR CALCUL (aucun rendu). Pure, déterministe.

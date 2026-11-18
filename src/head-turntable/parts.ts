@@ -1,7 +1,7 @@
 import { bumpMesh, ellipsoid, headMesh, neckMeshes, PART, type Mesh } from './mesh';
 import { rad, v3 } from './math';
 import { sectionAt, surfaceZ } from './sections';
-import { ALA_CONTOUR_BOUNDS, alaOverflow, type AlaEllipsoid } from './nose-contour';
+import { ALA_CONTOUR_BOUNDS, ALA_Z_LIFT, alaOverflow, type AlaEllipsoid } from './nose-contour';
 import type { BumpKnots, HeadTurnSpec } from './types';
 import { earMesh, earRig } from './engines/ear3d';
 import { engineHead } from './engines/face-model';
@@ -33,35 +33,46 @@ function bumpOf(spec: HeadTurnSpec, k: BumpKnots): Mesh {
   return bumpMesh(spec, y0, y1, (y) => knotAt(k, y, 1) - sectionAt(spec, y).zf, (y) => knotAt(k, y, 2));
 }
 
-/** Aile posée sur la joue, centre décalé de `pull` (U) vers l'axe : centre, demi-axes. z = surface de la joue À L'ABSCISSE de l'aile (comme la bosse centrale, `bumpMesh`), pas l'avant de l'axe `zf` : la joue recule vers les côtés, une aile large posée sur `zf` flottait devant elle. */
-export function alaSeated(spec: HeadTurnSpec, sg: 1 | -1, pull: number): AlaEllipsoid {
+/**
+ * Aile posée sur la joue : centre décalé de `pull` (U) vers l'axe et enfoncé de `embed` (fraction de `ALA_Z_LIFT`, 0 = posée, 1 = centre sur la surface) ; centre et demi-axes. z = surface de la joue À L'ABSCISSE de l'aile (comme la bosse centrale, `bumpMesh`),
+ * pas l'avant de l'axe `zf` : la joue recule vers les côtés, une aile large posée sur `zf` flottait devant elle. L'enfoncement ne change pas x : la silhouette de face est celle de `pull` seul.
+ */
+export function alaSeated(spec: HeadTurnSpec, sg: 1 | -1, pull: number, embed = 0): AlaEllipsoid {
   const ys = spec.nose.baseY - ALA_ABOVE_BASE, sa = sectionAt(spec, ys), ka = spec.engine ? spec.nose.alaX / REF_ALA : 1, ex = ALA_EX * ka, x = sg * (spec.nose.alaX - ex * ALA_OUTER_ANCHOR - pull);
-  return { c: v3(x, ys, surfaceZ(sa, x, true) + 0.022 * ka), ex, ey: 0.024 * ka, ez: 0.026 * ka };
+  return { c: v3(x, ys, surfaceZ(sa, x, true) + ALA_Z_LIFT * ka * (1 - embed)), ex, ey: 0.024 * ka, ez: 0.026 * ka };
 }
 
 /**
- * Contrainte « l'aile reste dans le contour de la joue » à 30° (tolérance 0) et à 45° (tolérance de la planche, docs/NOSE-YAW45.md) (`nose-contour.ts`, docs/NOSE-ALAR-SEAT.md), à la manière de `face/nose/constraints.ts` : valeur ramenée à la plus proche admissible, jamais de réglage global.
- * Retourne le décalage vers l'axe (U) : 0 pour tout nez qui ne déborde pas (nez de la planche et nez libres : inchangés), saturé à (1 − `ALA_PULL_MAX`) × alaX.
- * Point fixe en 4 itérations : rapprocher l'aile de l'axe relève la surface de la joue sous elle, donc le recalcul.
+ * Contrainte « l'aile reste dans le contour de la joue » (`ALA_CONTOUR_BOUNDS` : 30°, 45°, 60°, 70°, docs/NOSE-ALAR-SEAT.md, NOSE-YAW45.md, NOSE-YAW-BOUNDS.md), à la manière de `face/nose/constraints.ts` : valeurs ramenées aux plus proches admissibles, jamais de réglage global.
+ * Retourne `{ pull, embed }` : rappel vers l'axe (U) et enfoncement (fraction de `ALA_Z_LIFT`). (0, 0) pour tout nez qui ne déborde pas (nez de la planche et nez libres étroits : inchangés).
+ * Pour chaque borne en excès : ENFONCER d'abord (abaisser z de Δ lève x' de Δ·sin(lacet), sans toucher la silhouette de face), puis RAPPELER pour le reste (excès / cos du lacet), chacun plafonné à SA limite par borne ; on retient pour chaque levier le plus grand demandé, jamais moins que l'acquis.
+ * Point fixe en 8 itérations : rapprocher ou enfoncer l'aile relève la surface de la joue sous elle, donc le recalcul.
  */
-export function alaPull(spec: HeadTurnSpec): number {
-  const alaX = spec.nose.alaX;
-  let pull = 0;
-  for (let it = 0; it < 6; it++) {
-    const a = alaSeated(spec, -1, pull);
-    // chaque borne demande un rappel (excès / cos du lacet) plafonné à SA limite ; on retient le plus grand, jamais moins que le rappel déjà acquis
-    const next = Math.max(pull, ...ALA_CONTOUR_BOUNDS.map((b) => {
+export function alaSeat(spec: HeadTurnSpec): { pull: number; embed: number } {
+  const alaX = spec.nose.alaX, ka = spec.engine ? alaX / REF_ALA : 1, lift = ALA_Z_LIFT * ka;
+  let pull = 0, embed = 0;
+  for (let it = 0; it < 8; it++) {
+    const a = alaSeated(spec, -1, pull, embed);
+    let np = pull, ne = embed;
+    for (const b of ALA_CONTOUR_BOUNDS) {
       const ex = alaOverflow(spec, a, b.yaw) - b.tol;
-      return ex <= 1e-5 ? 0 : Math.min(b.maxPull * alaX, pull + ex / Math.cos(rad(b.yaw)) + 1e-4);
-    }));
-    if (next - pull <= 1e-9) break;
-    pull = next;
+      if (ex <= 1e-5) continue;
+      const th = rad(b.yaw), e2 = Math.min(b.maxEmbed, embed + ex / (Math.sin(th) * lift) + 1e-3), left = ex - (e2 - embed) * lift * Math.sin(th);
+      ne = Math.max(ne, e2);
+      if (left > 1e-5) np = Math.max(np, Math.min(b.maxPull * alaX, pull + left / Math.cos(th) + 1e-4));
+    }
+    if (np - pull <= 1e-9 && ne - embed <= 1e-9) break;
+    pull = np; embed = ne;
   }
-  return pull;
+  return { pull, embed };
 }
+/** Rappel latéral seul (U) de `alaSeat` : conservé pour les mesures et règles qui le lisent. */
+export function alaPull(spec: HeadTurnSpec): number { return alaSeat(spec).pull; }
+/** Enfoncement seul de `alaSeat` (fraction de `ALA_Z_LIFT`). */
+export function alaEmbed(spec: HeadTurnSpec): number { return alaSeat(spec).embed; }
 
 /** Aile du nez (ellipsoïde posé sur la face, côté `sg`) : centre et demi-axes. Source UNIQUE : le maillage (`buildParts`) et l'adoucissement des normales à l'éclairage (`nose-light.ts`) la lisent. */
-export function alaOf(spec: HeadTurnSpec, sg: 1 | -1): AlaEllipsoid { return alaSeated(spec, sg, alaPull(spec)); }
+export function alaOf(spec: HeadTurnSpec, sg: 1 | -1): AlaEllipsoid { const { pull, embed } = alaSeat(spec); return alaSeated(spec, sg, pull, embed); }
 
 /** Toutes les pièces du modèle, dans le repère de la tête. Les oreilles viennent du moteur d'oreille (`src/face/ear`) : modèle, relief, placement. */
 export function buildParts(spec: HeadTurnSpec): Mesh[] {

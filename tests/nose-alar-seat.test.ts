@@ -23,12 +23,12 @@ describe('ailes du nez 3D : pose sur la joue et contrainte de contour', () => {
     expect(a).toEqual(b);
   });
 
-  it('la mesure analytique concorde avec la mesure par différence de rendus (±0,012 U)', () => {
-    // à 45° et nez élargi (le rappel plafonné du 45°, docs/NOSE-YAW45.md, laisse un débordement résiduel > 0,01) : valeurs non nulles des deux côtés, donc comparaison non triviale
-    for (const [seed, a] of [[77, 'plat-trapeze'], [11, 'pyramide']] as const) {
-      const s = wide(subject(seed, a), 1.3), analytic = alaOverflow(s, alaOf(s, -1), 45), render = noseOverflow(s, 45, 300).far;
-      expect(analytic).toBeGreaterThan(0.01);
-      expect(Math.abs(analytic - render)).toBeLessThan(0.012);
+  it('la mesure analytique concorde avec la mesure par différence de rendus (±0,012 U), à 45°, 60° et 70° (aile enfoncée comprise)', () => {
+    // nez élargi : le résiduel après enfoncement + rappel reste > 0,01 à chaque lacet (valeurs non nulles des deux côtés : comparaison non triviale)
+    for (const [seed, a, k] of [[77, 'plat-trapeze', 1.3], [11, 'pyramide', 1.6]] as const) for (const yaw of [45, 60, 70]) {
+      const s = wide(subject(seed, a), k), analytic = alaOverflow(s, alaOf(s, -1), yaw), render = noseOverflow(s, yaw, 300).far;
+      expect(analytic, `${a} ${yaw}°`).toBeGreaterThan(0.01);
+      expect(Math.abs(analytic - render), `${a} ${yaw}°`).toBeLessThan(0.012);
     }
   });
 
@@ -51,7 +51,7 @@ describe('ailes du nez 3D : pose sur la joue et contrainte de contour', () => {
   });
 
   it('la règle voit la saturation : un nez bien plus large que le modèle ne peut pas tenir, la règle de rappel (info) le dit', () => {
-    const w = wide(subject(77, 'plat-trapeze'), 2.6);   // alaX × 1,8 suffisait avant l'ancrage du bord externe
+    const w = wide(subject(77, 'plat-trapeze'), 3.5);   // alaX × 1,8 suffisait avant l'ancrage du bord externe ; × 2,6 tenait encore à 30° depuis que l'enfoncement (45°-70°) abaisse aussi le débordement à 30°
     expect(alaPull(w)).toBeCloseTo(0.6 * w.nose.alaX, 5);   // borne ALA_PULL_MAX
     expect(rule(w, 'eng.nose.alar-pull').ok).toBe(false);
     expect(rule(w, 'eng.nose.alar-contour').ok).toBe(false);

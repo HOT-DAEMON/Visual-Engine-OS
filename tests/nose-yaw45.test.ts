@@ -15,10 +15,10 @@ const wide = (s: HeadTurnSpec, k: number): HeadTurnSpec => ({ ...s, nose: { ...s
 const ref = JSON.parse(readFileSync('references/nez/measures-45deg-protrusion.json', 'utf8')) as { views: Record<string, { min: number; median: number; max: number }> };
 
 describe('nez à 45° : borne mesurée contre la planche de rotation', () => {
-  it('la planche : le nez de REF_SPEC ne dépasse pas le contour jusqu\'à 45° (rendu et calcul), il le dépasse à 60° : la borne s\'arrête donc à 45°', () => {
+  it('la planche : le nez de REF_SPEC ne dépasse pas le contour jusqu\'à 45° (rendu et calcul), il le dépasse à 60° : la borne 45° est zéro (1 px), celles de 60° et 70° prennent le débordement du nez de la planche', () => {
     for (const y of [20, 30, 45]) { expect(noseOverflow(REF_SPEC, y, 300).far, `${y}°`).toBeLessThan(ALA_TOL_45); expect(alaOverflow(REF_SPEC, alaOf(REF_SPEC, -1), y)).toBeLessThan(ALA_TOL_45); }
     expect(noseOverflow(REF_SPEC, 60, 300).far).toBeGreaterThan(0.015);
-    expect(ALA_CONTOUR_BOUNDS.map((b) => b.yaw)).toEqual([30, 45]);
+    expect(ALA_CONTOUR_BOUNDS.map((b) => b.yaw)).toEqual([30, 45, 60, 70]);   // 60° et 70° : tolérance = nez de la planche (docs/NOSE-YAW-BOUNDS.md)
   });
 
   it('parité d\'estimateur : la saillie à la corde de REF_SPEC rendu sous le tangage de la planche tombe dans la bande MESURÉE sur les pixels (±0,01 U) à 45° et à 70°', () => {

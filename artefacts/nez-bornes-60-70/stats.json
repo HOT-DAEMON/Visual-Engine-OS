@@ -1,0 +1,515 @@
+{
+ "tolerances": {
+  "45": 0.0067,
+  "60": 0.0265,
+  "70": 0.041
+ },
+ "etats": {
+  "avant": [
+   {
+    "yaw": 30,
+    "tol": 0,
+    "maxPull": 0.6,
+    "maxEmbed": 0
+   },
+   {
+    "yaw": 45,
+    "tol": 0.0067,
+    "maxPull": 0.25,
+    "maxEmbed": 0
+   }
+  ],
+  "defaut": [
+   {
+    "yaw": 30,
+    "tol": 0,
+    "maxPull": 0.6,
+    "maxEmbed": 0
+   },
+   {
+    "yaw": 45,
+    "tol": 0.0067,
+    "maxPull": 0.25,
+    "maxEmbed": 1
+   },
+   {
+    "yaw": 60,
+    "tol": 0.0265,
+    "maxPull": 0,
+    "maxEmbed": 1
+   },
+   {
+    "yaw": 70,
+    "tol": 0.041,
+    "maxPull": 0,
+    "maxEmbed": 1
+   }
+  ],
+  "rappel_plein": [
+   {
+    "yaw": 30,
+    "tol": 0,
+    "maxPull": 0.6,
+    "maxEmbed": 0
+   },
+   {
+    "yaw": 45,
+    "tol": 0.0067,
+    "maxPull": 0.6,
+    "maxEmbed": 0
+   }
+  ]
+ },
+ "libre": {
+  "avant": {
+   "d30": {
+    "max": 0,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d45": {
+    "max": 0.0117,
+    "med": 0,
+    "part_sup_tol": 0.025
+   },
+   "d60": {
+    "max": 0.0565,
+    "med": 0.0309,
+    "part_sup_tol": 0.525
+   },
+   "d70": {
+    "max": 0.0786,
+    "med": 0.0527,
+    "part_sup_tol": 0.725
+   },
+   "rappel": {
+    "part": 0.175,
+    "med": 0,
+    "max": 0.25
+   },
+   "enfoncement": {
+    "part": 0,
+    "med": 0,
+    "max": 0,
+    "satures_a_1": 0
+   },
+   "largeurFace": {
+    "min": 1,
+    "max": 1.0321
+   }
+  },
+  "defaut": {
+   "d30": {
+    "max": 0,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d45": {
+    "max": 0,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d60": {
+    "max": 0.0281,
+    "med": 0.0201,
+    "part_sup_tol": 0.025
+   },
+   "d70": {
+    "max": 0.041,
+    "med": 0.041,
+    "part_sup_tol": 0
+   },
+   "rappel": {
+    "part": 0,
+    "med": 0,
+    "max": 0
+   },
+   "enfoncement": {
+    "part": 0.725,
+    "med": 0.3792,
+    "max": 1,
+    "satures_a_1": 1
+   },
+   "largeurFace": {
+    "min": 1.001,
+    "max": 1.0321
+   }
+  },
+  "rappel_plein": {
+   "d30": {
+    "max": 0,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d45": {
+    "max": 0.0067,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d60": {
+    "max": 0.0565,
+    "med": 0.0309,
+    "part_sup_tol": 0.525
+   },
+   "d70": {
+    "max": 0.0786,
+    "med": 0.0527,
+    "part_sup_tol": 0.725
+   },
+   "rappel": {
+    "part": 0.175,
+    "med": 0,
+    "max": 0.3385
+   },
+   "enfoncement": {
+    "part": 0,
+    "med": 0,
+    "max": 0,
+    "satures_a_1": 0
+   },
+   "largeurFace": {
+    "min": 1,
+    "max": 1.0321
+   }
+  }
+ },
+ "pyramide": {
+  "avant": {
+   "d30": {
+    "max": 0,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d45": {
+    "max": 0.0358,
+    "med": 0.0067,
+    "part_sup_tol": 0.375
+   },
+   "d60": {
+    "max": 0.073,
+    "med": 0.0555,
+    "part_sup_tol": 1
+   },
+   "d70": {
+    "max": 0.0889,
+    "med": 0.0787,
+    "part_sup_tol": 1
+   },
+   "rappel": {
+    "part": 0.7,
+    "med": 0.1107,
+    "max": 0.25
+   },
+   "enfoncement": {
+    "part": 0,
+    "med": 0,
+    "max": 0,
+    "satures_a_1": 0
+   },
+   "largeurFace": {
+    "min": 1,
+    "max": 1.0197
+   }
+  },
+  "defaut": {
+   "d30": {
+    "max": 0,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d45": {
+    "max": 0.0067,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d60": {
+    "max": 0.0369,
+    "med": 0.0255,
+    "part_sup_tol": 0.375
+   },
+   "d70": {
+    "max": 0.0485,
+    "med": 0.0411,
+    "part_sup_tol": 0.5
+   },
+   "rappel": {
+    "part": 0.1,
+    "med": 0,
+    "max": 0.2382
+   },
+   "enfoncement": {
+    "part": 1,
+    "med": 1,
+    "max": 1,
+    "satures_a_1": 22
+   },
+   "largeurFace": {
+    "min": 1,
+    "max": 1.022
+   }
+  },
+  "rappel_plein": {
+   "d30": {
+    "max": 0,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d45": {
+    "max": 0.0122,
+    "med": 0.0066,
+    "part_sup_tol": 0.15
+   },
+   "d60": {
+    "max": 0.0646,
+    "med": 0.0545,
+    "part_sup_tol": 1
+   },
+   "d70": {
+    "max": 0.0889,
+    "med": 0.0756,
+    "part_sup_tol": 1
+   },
+   "rappel": {
+    "part": 0.7,
+    "med": 0.1107,
+    "max": 0.6
+   },
+   "enfoncement": {
+    "part": 0,
+    "med": 0,
+    "max": 0,
+    "satures_a_1": 0
+   },
+   "largeurFace": {
+    "min": 1,
+    "max": 1.0197
+   }
+  }
+ },
+ "cloche-ailes": {
+  "avant": {
+   "d30": {
+    "max": 0,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d45": {
+    "max": 0.0349,
+    "med": 0.0066,
+    "part_sup_tol": 0.325
+   },
+   "d60": {
+    "max": 0.0722,
+    "med": 0.0549,
+    "part_sup_tol": 1
+   },
+   "d70": {
+    "max": 0.0884,
+    "med": 0.0779,
+    "part_sup_tol": 1
+   },
+   "rappel": {
+    "part": 0.7,
+    "med": 0.0962,
+    "max": 0.25
+   },
+   "enfoncement": {
+    "part": 0,
+    "med": 0,
+    "max": 0,
+    "satures_a_1": 0
+   },
+   "largeurFace": {
+    "min": 1,
+    "max": 1.0159
+   }
+  },
+  "defaut": {
+   "d30": {
+    "max": 0,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d45": {
+    "max": 0.0067,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d60": {
+    "max": 0.0368,
+    "med": 0.0253,
+    "part_sup_tol": 0.375
+   },
+   "d70": {
+    "max": 0.0479,
+    "med": 0.041,
+    "part_sup_tol": 0.4
+   },
+   "rappel": {
+    "part": 0.1,
+    "med": 0,
+    "max": 0.2283
+   },
+   "enfoncement": {
+    "part": 1,
+    "med": 0.9973,
+    "max": 1,
+    "satures_a_1": 19
+   },
+   "largeurFace": {
+    "min": 1,
+    "max": 1.0244
+   }
+  },
+  "rappel_plein": {
+   "d30": {
+    "max": 0,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d45": {
+    "max": 0.0115,
+    "med": 0.0066,
+    "part_sup_tol": 0.075
+   },
+   "d60": {
+    "max": 0.0643,
+    "med": 0.0539,
+    "part_sup_tol": 1
+   },
+   "d70": {
+    "max": 0.0884,
+    "med": 0.0751,
+    "part_sup_tol": 1
+   },
+   "rappel": {
+    "part": 0.7,
+    "med": 0.0962,
+    "max": 0.6
+   },
+   "enfoncement": {
+    "part": 0,
+    "med": 0,
+    "max": 0,
+    "satures_a_1": 0
+   },
+   "largeurFace": {
+    "min": 1,
+    "max": 1.0159
+   }
+  }
+ },
+ "plat-trapeze": {
+  "avant": {
+   "d30": {
+    "max": 0,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d45": {
+    "max": 0.0565,
+    "med": 0.0185,
+    "part_sup_tol": 0.8
+   },
+   "d60": {
+    "max": 0.0957,
+    "med": 0.0719,
+    "part_sup_tol": 1
+   },
+   "d70": {
+    "max": 0.1112,
+    "med": 0.0962,
+    "part_sup_tol": 1
+   },
+   "rappel": {
+    "part": 1,
+    "med": 0.25,
+    "max": 0.2772
+   },
+   "enfoncement": {
+    "part": 0,
+    "med": 0,
+    "max": 0,
+    "satures_a_1": 0
+   },
+   "largeurFace": {
+    "min": 1,
+    "max": 1
+   }
+  },
+  "defaut": {
+   "d30": {
+    "max": 0,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d45": {
+    "max": 0.0203,
+    "med": 0.002,
+    "part_sup_tol": 0.1
+   },
+   "d60": {
+    "max": 0.0483,
+    "med": 0.0394,
+    "part_sup_tol": 1
+   },
+   "d70": {
+    "max": 0.0627,
+    "med": 0.0544,
+    "part_sup_tol": 1
+   },
+   "rappel": {
+    "part": 0.35,
+    "med": 0,
+    "max": 0.25
+   },
+   "enfoncement": {
+    "part": 1,
+    "med": 1,
+    "max": 1,
+    "satures_a_1": 40
+   },
+   "largeurFace": {
+    "min": 1,
+    "max": 1.0232
+   }
+  },
+  "rappel_plein": {
+   "d30": {
+    "max": 0,
+    "med": 0,
+    "part_sup_tol": 0
+   },
+   "d45": {
+    "max": 0.0282,
+    "med": 0.0066,
+    "part_sup_tol": 0.125
+   },
+   "d60": {
+    "max": 0.0778,
+    "med": 0.0645,
+    "part_sup_tol": 1
+   },
+   "d70": {
+    "max": 0.109,
+    "med": 0.0903,
+    "part_sup_tol": 1
+   },
+   "rappel": {
+    "part": 1,
+    "med": 0.4005,
+    "max": 0.6
+   },
+   "enfoncement": {
+    "part": 0,
+    "med": 0,
+    "max": 0,
+    "satures_a_1": 0
+   },
+   "largeurFace": {
+    "min": 1,
+    "max": 1
+   }
+  }
+ }
+}

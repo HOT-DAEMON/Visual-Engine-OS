@@ -1,0 +1,92 @@
+{
+ "pyramide@45": {
+  "calcul_tangage0_max": 0.0067,
+  "rendu_max_par_tangage": {
+   "0": 0.0175,
+   "15": 0.0292,
+   "30": 0.0117,
+   "-30": 0.0292,
+   "-15": 0.0175
+  }
+ },
+ "pyramide@60": {
+  "calcul_tangage0_max": 0.0341,
+  "rendu_max_par_tangage": {
+   "0": 0.0292,
+   "15": 0.0525,
+   "30": 0.0583,
+   "-30": 0.0758,
+   "-15": 0.035
+  }
+ },
+ "pyramide@70": {
+  "calcul_tangage0_max": 0.044,
+  "rendu_max_par_tangage": {
+   "0": 0.0408,
+   "15": 0.0583,
+   "30": 0.0758,
+   "-30": 0.0992,
+   "-15": 0.0525
+  }
+ },
+ "cloche-ailes@45": {
+  "calcul_tangage0_max": 0.0067,
+  "rendu_max_par_tangage": {
+   "0": 0.0175,
+   "15": 0.0175,
+   "30": 0.0058,
+   "-30": 0.035,
+   "-15": 0.0233
+  }
+ },
+ "cloche-ailes@60": {
+  "calcul_tangage0_max": 0.034,
+  "rendu_max_par_tangage": {
+   "0": 0.0292,
+   "15": 0.0467,
+   "30": 0.0525,
+   "-30": 0.0583,
+   "-15": 0.0292
+  }
+ },
+ "cloche-ailes@70": {
+  "calcul_tangage0_max": 0.0437,
+  "rendu_max_par_tangage": {
+   "0": 0.0408,
+   "15": 0.0525,
+   "30": 0.07,
+   "-30": 0.0817,
+   "-15": 0.0525
+  }
+ },
+ "plat-trapeze@45": {
+  "calcul_tangage0_max": 0.013,
+  "rendu_max_par_tangage": {
+   "0": 0.0233,
+   "15": 0.0233,
+   "30": 0.0058,
+   "-30": 0.0408,
+   "-15": 0.0292
+  }
+ },
+ "plat-trapeze@60": {
+  "calcul_tangage0_max": 0.0421,
+  "rendu_max_par_tangage": {
+   "0": 0.0408,
+   "15": 0.0525,
+   "30": 0.0583,
+   "-30": 0.0642,
+   "-15": 0.0408
+  }
+ },
+ "plat-trapeze@70": {
+  "calcul_tangage0_max": 0.0544,
+  "rendu_max_par_tangage": {
+   "0": 0.0525,
+   "15": 0.0525,
+   "30": 0.0758,
+   "-30": 0.0817,
+   "-15": 0.0467
+  }
+ }
+}

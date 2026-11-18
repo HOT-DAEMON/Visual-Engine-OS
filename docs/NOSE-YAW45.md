@@ -37,6 +37,8 @@ Le débordement à 30° reste 0 dans les trois cas ; la largeur de face (`front-
 ## 5. Pourquoi 0,25 par défaut (arbitrage visible, à trancher)
 À pleine force (0,6) le plat-trapèze est rappelé de 40 % en médiane : ses ailes rentrent dans la bosse centrale et **disparaissent de la silhouette de face** (`planche-tetes.png`, ligne 1, colonnes 0° « plein ») ; 5 nez sur 40 saturent encore. Le plafond 0,25 est le seuil que la règle `alar-pull` appelle déjà « trop large pour le modèle 3D ». Coût : la borne est **faible** pour le plat-trapèze (0,058 → 0,057) et partielle pour pyramide/cloche. Un seul réglage (`maxPull` du 45°) bascule d'un comportement à l'autre ; décision laissée au propriétaire du moteur.
 
+> **Mise à jour du 18 nov. 2026** : l'arbitrage du §5 est tranché par un levier d'enfoncement et 60°/70° sont bornés : `NOSE-YAW-BOUNDS.md`. Les chiffres ci-dessus décrivent l'état du commit f5d0ce2.
+
 ## 6. Limites (non traité)
 - Calibrée sur UN nez stylisé (planche) : borne de style, pas un canon anatomique. Une seconde planche (`rotation_head_1.jpg`, cheveux couvrant le contour) n'a pas été exploitée.
 - Mesure au tangage 0 (comme le 30°) : la contrainte n'est pas validée à d'autres tangages ; la comparaison planche utilise le tangage 17,73°.

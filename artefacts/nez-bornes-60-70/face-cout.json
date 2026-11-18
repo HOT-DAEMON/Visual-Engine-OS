@@ -1,0 +1,22 @@
+{
+ "libre": {
+  "part_profondeur_changee_moy": 0,
+  "max": 0,
+  "part_identifiants_changes_moy": 0.002
+ },
+ "pyramide": {
+  "part_profondeur_changee_moy": 0,
+  "max": 0,
+  "part_identifiants_changes_moy": 0.0028
+ },
+ "cloche-ailes": {
+  "part_profondeur_changee_moy": 0,
+  "max": 0,
+  "part_identifiants_changes_moy": 0.0033
+ },
+ "plat-trapeze": {
+  "part_profondeur_changee_moy": 0,
+  "max": 0,
+  "part_identifiants_changes_moy": 0.0084
+ }
+}
