@@ -78,8 +78,10 @@ const existingVectors = (): number[][] =>
 function candidates(style: (typeof STYLES)[number], rnd: () => number): Cand[] {
   const out: Cand[] = [];
   const r = (a: number, b: number): number => a + rnd() * (b - a);
+  // Les deux losanges n'ont que 3 degrés de liberté (aspect, inclinaison, ouverture) : sur la plage étroite ils saturent à 3-5 formes distinctes ; plage élargie pour eux seuls (les autres styles gardent leur plage : portée des cils bornée).
+  const wide = style === 'diamond' || style === 'diamond_v2';
   for (let n = 0; n < CANDIDATES_PER_STYLE * 3 && out.length < CANDIDATES_PER_STYLE; n++) {
-    const c = { style, aspect: r(0.44, 0.70), tiltDeg: r(-5, 14), upperFraction: r(0.52, 0.72), openness: r(0.82, 1.1), innerRoundness: r(0.05, 0.9), outerRoundness: r(0.05, 0.9), caruncle: r(0.2, 0.8), foldAmount: rnd() < 0.35 ? r(0.3, 1) : 0 };
+    const c = { style, aspect: wide ? r(0.40, 0.80) : r(0.44, 0.70), tiltDeg: wide ? r(-8, 16) : r(-5, 14), upperFraction: r(0.52, 0.72), openness: r(0.82, 1.1), innerRoundness: r(0.05, 0.9), outerRoundness: r(0.05, 0.9), caruncle: r(0.2, 0.8), foldAmount: rnd() < 0.35 ? r(0.3, 1) : 0 };
     const shape = Shape.parse({ width: WIDTH, height: WIDTH * c.aspect, tiltDeg: c.tiltDeg, upperFraction: c.upperFraction, openness: c.openness, style });
     const canthi = Canthi.parse({ inner: { roundness: c.innerRoundness, caruncle: c.caruncle }, outer: { roundness: c.outerRoundness } });
     const g = openingGeometry(shape, canthi);
@@ -94,8 +96,8 @@ let memo: EyeRecipe[] | null = null;
 /** Les 100 recettes (déterministes, mémoïsées). L'ordre est entrelacé par style : la case i et la case i+1 n'ont jamais le même style. */
 export function extraEyeRecipes(): readonly EyeRecipe[] {
   if (memo) return memo;
-  const rnd = mulberry32(0x9e11d00d);
-  const pools = new Map<string, Cand[]>(STYLES.map((s) => [s, candidates(s, rnd)]));
+  // Un flux pseudo-aléatoire PAR STYLE (graine = graine globale ^ rang du style) : changer la plage ou le nombre de tirages d'un style ne remélange plus les réservoirs des autres.
+  const pools = new Map<string, Cand[]>(STYLES.map((s, i) => [s, candidates(s, mulberry32((0x9e11d00d ^ Math.imul(i + 1, 0x9e3779b1)) >>> 0))]));
   const quota = new Map<string, number>(STYLES.map((s) => [s, 8 + (EXTRA_QUOTA.includes(s) ? 1 : 0)]));
   const taken: number[][] = existingVectors();
   const recipes: EyeRecipe[] = [];

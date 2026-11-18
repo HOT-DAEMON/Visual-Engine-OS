@@ -37,7 +37,7 @@ export interface EnvelopeRefFactors {
 export const NEUTRAL_REF: EnvelopeRefFactors = { u2dx: 1, u2dy: 1, l1dx: 1, l1dy: 1, l2dx: 1, l2dy: 1 };
 
 /** Amande mesurée (voir en-tête). Appliquée à almond / sharp / drooping / compressed ; 'round' (dessiné à la main) reste neutre. */
-export const ALMOND_REF: EnvelopeRefFactors = { u1dx: 1.077, u1dy: 0.966, u2dx: 1.028, u2dy: 0.985, l1dx: 0.814, l1dy: 1.049, l2dx: 2.171, l2dy: 0.824 };
+export const ALMOND_REF: EnvelopeRefFactors = { u1dx: 1.086, u1dy: 0.931, u2dx: 0.859, u2dy: 1.067, l1dx: 1.023, l1dy: 1.111, l2dx: 2.094, l2dy: 0.872 };
 
 /** Références utilisées pour l'ajustement (clés de measures.json). */
 export const ALMOND_REF_SOURCES = ['04', '07', '11'] as const;
@@ -59,4 +59,7 @@ export const REF_RANGES = {
   irisOverOpeningHeight: [0.88, 1.18],
   /** Position du centre de l'iris le long de l'axe des canthi (mesurée 0,47–0,51). */
   irisCentreAlongAxis: [0.42, 0.58],
+  /** Angle d'ouverture (cordes à x = 0,05 sur les profils de 21 points, `canthusChordAngles`) : mesuré 75–104° (interne) et 92–130° (externe) sur 04, 07, 11 ; marge 20°. */
+  canthusChordInner: [55, 125],
+  canthusChordOuter: [72, 150],
 } as const;

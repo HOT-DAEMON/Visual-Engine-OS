@@ -94,3 +94,9 @@ Fait : liner épais effilé par famille de cils (`lids.liner`), dégagement de l
 - 🟡 Ancres lues à ≈ 2 px près ; RMS élevé pour 17-P07 (0,078), 17-P08 (0,077) ; P09 ambiguë (aile et iris mêlés).
 - ⬜ Almond et les 100 formes : toujours **non retravaillés** (boucle « jusqu'à parfait » non faite) ; ⬜ look « encre » en aplats noirs francs ; ⬜ réf. 14 ; ⬜ limbe réf. 15 rangées 3–5 ; ⬜ facettes d'iris (dispersion, rayons) ; ⬜ liner et dispersion à mesurer.
 
+
+## Passe 7 — voir `EYES-REFS-4.md` (almond en unités de largeur)
+- ✅ Almond réajusté : contrat de hauteur (écart 0,0171 → 0,0003), RMS haut 0,0208 → 0,0149 ; 2 règles d'enveloppe ajoutées (`envelope-height-contract`, `canthus-opening-angle-*`), prouvées sur l'ancien défaut. Galerie : flux par style, losanges élargis (`diamond` 3 → 5), `fitLashesToZone` 10 → 40 tours.
+- 🟡 RMS de la paupière basse inchangé (0,0230 → 0,0235) : épaule interne non reproduite, sommets non exposés (0,46–0,62 selon les références).
+- ⬜ `sharp` et `drooping` : −27 % de hauteur par rapport à la demande (défaut préexistant, borné par un test). ⬜ Dôme pâle au-dessus du trait pour `upperFraction` = 0,40.
+- ⬜ Toujours ouverts : look « encre » en aplats noirs francs · 17-P07, P08, P09 · réf. 14 · limbe réf. 15 rangées 3–5 · facettes d'iris (dispersion) · épaisseur du liner et dispersion à mesurer · 11 autres enveloppes non reprises une à une.

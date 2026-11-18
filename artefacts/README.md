@@ -29,3 +29,5 @@ pointillé blanc = axe du visage, rectangles magenta = empreintes réelles des y
 | Erreur max d'ancrage du canthus (px, coordonnées monde, yeux tournés) | 1,1·10⁻¹³ |
 | Rotation d'asymétrie max / écart d'échelle max / décalage canthi max | 2,2° / 6 % / 0,70 % de H |
 | Visages avec cheveux / moustache / barbe | 1344 / 282 / 445 |
+
+> Yeux, passe 7 (almond réajusté, règles d'enveloppe, galerie des 100, têtes entières) : dossier `artefacts/eyes-pass7/` (régénérer : `npx tsx scripts/artefacts-eyes-pass7.ts`) ; détail dans `docs/EYES-REFS-4.md`.

@@ -3,10 +3,13 @@ import { Resvg } from '@resvg/resvg-js';
 import { describe, expect, it } from 'vitest';
 import { compileScene } from '../src';
 import { LASH_FAMILIES, LASH_FAMILY_IDS, applyLashFamily } from '../src/generation/eye-lash-families';
-import { generateExtraEye } from '../src/generation/eye-gallery-ext';
+import { extraEyeRecipes, generateExtraEye } from '../src/generation/eye-gallery-ext';
 
 const W = 700, H = 460;
-const base = { ...generateExtraEye(6), eyebrow: null } as Record<string, unknown>;
+// Œil de base : un almond de la galerie (la case 18 : ouverture assez haute pour que chaque famille se lise, vérifié sur les cases 0 à 39 par les quatre contrôles ci-dessous). Ce n'est plus « la case 6 » : l'ordre des cases change quand l'enveloppe almond ou les recettes sont réajustées (la case 6 est passée d'un chibi à un œil plus bas : 545 px au lieu de > 900). Le garde-fou ci-dessous échoue explicitement si la case 18 change de style.
+const BASE_INDEX = 18;
+if (extraEyeRecipes()[BASE_INDEX]?.style !== 'almond') throw new Error(`tests/eye-lash-families : la case ${BASE_INDEX} n'est plus un almond, rechoisir l'œil de base`);
+const base = { ...generateExtraEye(BASE_INDEX), eyebrow: null } as Record<string, unknown>;
 function pixels(eye: Record<string, unknown>): Uint8Array {
   const r = compileScene({ width: W, height: H, background: '#ff00ff', objects: [{ kind: 'eye', id: 'e', transform: { x: W / 2, y: H / 2 }, ...eye }] } as never);
   if (!r.ok) throw new Error(r.issues.join('\n'));

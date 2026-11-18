@@ -157,7 +157,8 @@ export function applyLashFamily<T extends Record<string, unknown>>(eye: T, id: L
 export const ZONE_TARGET = 0.5;
 function fitLashesToZone<T extends Record<string, unknown>>(eye: T): T {
   let cur = eye;
-  for (let k = 0; k < 10; k++) {
+  // 40 tours (était 10 : la boucle s'arrêtait en silence à 0,5506 > 0,55 sur un œil sharp à fraction haute 0,40, 10 × 0,93 ne raccourcissant pas assez)
+  for (let k = 0; k < 40; k++) {
     const spec = EyeSpec.parse(cur);   // échoue tout de suite si une famille sort du schéma
     const g = openingGeometry(spec.shape, spec.canthi); const th = spec.lids.thickness * spec.shape.height;
     const set = eyeLashSet(spec, g, th);

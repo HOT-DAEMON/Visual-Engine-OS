@@ -1,0 +1,207 @@
+{
+ "almond": {
+  "facteursAvant": {
+   "u1dx": 1.077,
+   "u1dy": 0.966,
+   "u2dx": 1.028,
+   "u2dy": 0.985,
+   "l1dx": 0.814,
+   "l1dy": 1.049,
+   "l2dx": 2.171,
+   "l2dy": 0.824
+  },
+  "facteursApres": {
+   "u1dx": 1.086,
+   "u1dy": 0.931,
+   "u2dx": 0.859,
+   "u2dy": 1.067,
+   "l1dx": 1.023,
+   "l1dy": 1.111,
+   "l2dx": 2.094,
+   "l2dy": 0.872
+  },
+  "avant": {
+   "rmsHautMoyen": 0.0208,
+   "rmsBasMoyen": 0.023,
+   "ecartHauteurMoyen": 0.0171,
+   "ecartFractionHauteMoyen": 0.0046,
+   "parOeil": [
+    {
+     "id": "04",
+     "rmsHaut": 0.0347,
+     "rmsBas": 0.0099,
+     "ecartHauteur": -0.0171,
+     "cordeMoteur": {
+      "inner": 83.6683,
+      "outer": 102.8627
+     },
+     "cordeReference": {
+      "inner": 75.086,
+      "outer": 114.7588
+     }
+    },
+    {
+     "id": "07",
+     "rmsHaut": 0.0111,
+     "rmsBas": 0.0227,
+     "ecartHauteur": -0.0175,
+     "cordeMoteur": {
+      "inner": 91.0518,
+      "outer": 113.7141
+     },
+     "cordeReference": {
+      "inner": 102.0709,
+      "outer": 130.0812
+     }
+    },
+    {
+     "id": "11",
+     "rmsHaut": 0.0165,
+     "rmsBas": 0.0366,
+     "ecartHauteur": -0.0168,
+     "cordeMoteur": {
+      "inner": 82.2417,
+      "outer": 104.847
+     },
+     "cordeReference": {
+      "inner": 103.5817,
+      "outer": 91.5455
+     }
+    }
+   ]
+  },
+  "apres": {
+   "rmsHautMoyen": 0.0149,
+   "rmsBasMoyen": 0.0235,
+   "ecartHauteurMoyen": 0.0003,
+   "ecartFractionHauteMoyen": 0.0016,
+   "parOeil": [
+    {
+     "id": "04",
+     "rmsHaut": 0.0236,
+     "rmsBas": 0.0133,
+     "ecartHauteur": -0.0001,
+     "cordeMoteur": {
+      "inner": 84.0137,
+      "outer": 104.8296
+     },
+     "cordeReference": {
+      "inner": 75.086,
+      "outer": 114.7588
+     }
+    },
+    {
+     "id": "07",
+     "rmsHaut": 0.014,
+     "rmsBas": 0.0245,
+     "ecartHauteur": -0.0006,
+     "cordeMoteur": {
+      "inner": 91.3851,
+      "outer": 114.5334
+     },
+     "cordeReference": {
+      "inner": 102.0709,
+      "outer": 130.0812
+     }
+    },
+    {
+     "id": "11",
+     "rmsHaut": 0.0071,
+     "rmsBas": 0.0327,
+     "ecartHauteur": -0.0001,
+     "cordeMoteur": {
+      "inner": 84.8528,
+      "outer": 106.2411
+     },
+     "cordeReference": {
+      "inner": 103.5817,
+      "outer": 91.5455
+     }
+    }
+   ]
+  },
+  "definitionAngle": "cordes à x = 0,05 (canthusChordAngles), identique pour références et moteur ; écart-type inter-références interne 13°, externe 16°"
+ },
+ "reglesAjoutees": {
+  "sweepAlmond48Combinaisons": {
+   "avant envelope-height-contract": 14
+  },
+  "note": "envelope-height-contract, canthus-opening-angle-inner/outer(-max), almond seulement"
+ },
+ "ecartHauteurDemandeeObtenue_pct": {
+  "almond": -0.1,
+  "sharp": -28,
+  "drooping": -24.5,
+  "note": "sharp et drooping : défaut préexistant NON corrigé (voir docs/EYES-REFS-4.md)"
+ },
+ "galerie100": {
+  "distanceMinAuxExistants": 0.022587095701650045,
+  "distanceMinEntreLes100": 0.020107041554475954,
+  "quotasParStyle": {
+   "rounded_rect": 12,
+   "sharp": 9,
+   "chibi": 9,
+   "angular": 9,
+   "triangle": 9,
+   "almond": 8,
+   "round": 8,
+   "drooping": 8,
+   "compressed": 8,
+   "circle": 8,
+   "diamond_v2": 7,
+   "diamond": 5
+  }
+ },
+ "verifierPixelsGalerie100": {
+  "geometry/no-paint-outside-zone": {
+   "checked": 100,
+   "failed": 0
+  },
+  "geometry/iris-centre-painted": {
+   "checked": 100,
+   "failed": 0
+  },
+  "geometry/opening-filled": {
+   "checked": 100,
+   "failed": 0
+  },
+  "anatomy/pupil-darker-than-iris-pixels": {
+   "checked": 66,
+   "failed": 0
+  },
+  "anatomy/sclera-is-light-tone": {
+   "checked": 91,
+   "failed": 0
+  },
+  "style/iris-not-flat": {
+   "checked": 100,
+   "failed": 0
+  },
+  "geometry/lash-centerline-clear-of-opening": {
+   "checked": 53,
+   "failed": 0
+  },
+  "anatomy/lash-ink-dark": {
+   "checked": 50,
+   "failed": 0
+  },
+  "style/lash-ink-flat": {
+   "checked": 50,
+   "failed": 0
+  }
+ },
+ "chord": {
+  "11": {
+   "inner": 103.5817,
+   "outer": 91.5455
+  },
+  "04": {
+   "inner": 75.086,
+   "outer": 114.7588
+  },
+  "07": {
+   "inner": 102.0709,
+   "outer": 130.0812
+  }
+ }
+}

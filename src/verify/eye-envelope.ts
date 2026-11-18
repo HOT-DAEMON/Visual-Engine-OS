@@ -1,4 +1,4 @@
-import { openingProfile, REF_PROFILE, REF_RANGES, type OpeningGeometry } from '../geometry/eye';
+import { canthusChordAngles, openingProfile, REF_PROFILE, REF_RANGES, type OpeningGeometry } from '../geometry/eye';
 import type { EyeSpec } from '../schema';
 import { check, type Check } from './types';
 
@@ -11,6 +11,9 @@ import { check, type Check } from './types';
  * vérifications géométriques (error) leur sont appliquées ; l'anatomie et le style ne concernent que les styles « naturels » (warn).
  */
 export const NATURAL_STYLES: readonly EyeSpec['shape']['style'][] = ['almond', 'sharp', 'drooping', 'compressed'];
+
+/** Écart relatif toléré entre hauteur demandée et obtenue (almond : −3,7 % à +0,9 % mesurés sur 48 combinaisons, −3,1 % avant le réajustement). */
+export const ENVELOPE_HEIGHT_TOLERANCE = 0.05;
 
 const norm = (v: readonly number[]): number[] => { const m = Math.max(...v.map(Math.abs)) || 1; return v.map((x) => x / m); };
 const rms = (a: readonly number[], b: readonly number[]): number => Math.sqrt(a.reduce((s, x, i) => s + (x - (b[i] as number)) ** 2, 0) / a.length);
@@ -38,6 +41,18 @@ export function checkEyeEnvelope(g: OpeningGeometry, style: EyeSpec['shape']['st
   out.push(check('anatomy', 'upper-peak-max', '<=', p.upperPeakAt, uHi, 'sommet de la paupière haute trop près du canthus externe', 'warn'));
   out.push(check('anatomy', 'lower-peak-min', '>=', p.lowerPeakAt, lLo, 'creux de la paupière basse trop près du canthus interne (références : 0,46–0,63)', 'warn'));
   out.push(check('anatomy', 'lower-peak-max', '<=', p.lowerPeakAt, lHi, 'creux de la paupière basse trop près du canthus externe', 'warn'));
+  // Les règles de la PASSE 7 ne s'appliquent qu'à l'almond (seul style calé sur des mesures) : sharp et drooping livrent ~27 % de hauteur en moins que demandée (contrôles écrits à la main, voir docs/EYES-REFS-4.md), compressed et les styles stylisés sortent volontairement des bornes humaines.
+  if (style === 'almond') {
+  // PASSE 7 — contrat de hauteur : la hauteur demandée (hEff / largeur) est la hauteur obtenue. Avant le réajustement de l'almond, le moteur livrait 3 % de moins (0,5295 pour 0,5466).
+  const wanted = g.hEff / (g.w || 1);
+  out.push(check('geometry', 'envelope-height-contract', '<=', Math.abs(p.aspect - wanted) / (wanted || 1), ENVELOPE_HEIGHT_TOLERANCE, 'la hauteur d’ouverture obtenue s’écarte de la hauteur demandée (shape.height × openness)', 'warn'));
+  // PASSE 7 — angles d'ouverture aux canthi, même définition (cordes à x = 0,05) pour les références et le moteur ; bornes = plage des 3 yeux de face ± 20°.
+  const ang = canthusChordAngles(p.upper, p.lower);
+  out.push(check('anatomy', 'canthus-opening-angle-inner', '>=', ang.inner, REF_RANGES.canthusChordInner[0], 'canthus interne plus aigu que toute référence mesurée', 'warn'));
+  out.push(check('anatomy', 'canthus-opening-angle-inner-max', '<=', ang.inner, REF_RANGES.canthusChordInner[1], 'canthus interne plus ouvert que toute référence mesurée', 'warn'));
+  out.push(check('anatomy', 'canthus-opening-angle-outer', '>=', ang.outer, REF_RANGES.canthusChordOuter[0], 'canthus externe plus aigu que toute référence mesurée', 'warn'));
+  out.push(check('anatomy', 'canthus-opening-angle-outer-max', '<=', ang.outer, REF_RANGES.canthusChordOuter[1], 'canthus externe plus ouvert que toute référence mesurée', 'warn'));
+  }
   const ratio = (2 * irisRy) / ((p.aspect * g.w) || 1);
   out.push(check('anatomy', 'iris-over-opening-height-min', '>=', ratio, REF_RANGES.irisOverOpeningHeight[0], 'iris bien plus petit que la hauteur d’ouverture (références ≈ 1,0)', 'warn'));
   out.push(check('anatomy', 'iris-over-opening-height-max', '<=', ratio, REF_RANGES.irisOverOpeningHeight[1], 'iris bien plus grand que la hauteur d’ouverture', 'warn'));

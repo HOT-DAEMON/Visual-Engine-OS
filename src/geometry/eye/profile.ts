@@ -61,3 +61,14 @@ export function openingProfile(g: OpeningGeometry): OpeningProfile {
     canthusAngleDeg: { inner: r4(inner), outer: r4(outer) },
   };
 }
+
+/**
+ * Angle d'ouverture (°) à chaque canthus, mesuré sur les profils de `PROFILE_SAMPLES` points : angle entre la corde qui va du canthus au 2e point de la paupière haute
+ * et celle qui va au 2e point de la basse (x = 0,05 dans le repère des canthi). Définition COMMUNE aux profils mesurés (measures.json) et à ceux du moteur,
+ * contrairement à `canthusAngleDeg` (tangentes sur la courbe paramétrique, différente de la mesure par longueur d'arc de l'extracteur).
+ */
+export function canthusChordAngles(upper: readonly number[], lower: readonly number[]): { readonly inner: number; readonly outer: number } {
+  const n = upper.length - 1;
+  const a = (yu: number, yl: number): number => Math.abs((Math.atan2(-yu, 1 / n) - Math.atan2(yl, 1 / n)) * 180 / Math.PI);
+  return { inner: r4(a(upper[1] as number, lower[1] as number)), outer: r4(a(upper[n - 1] as number, lower[n - 1] as number)) };
+}
