@@ -5,6 +5,7 @@ import { FACING, STRAND_SCALE, facing, poseHair, rootOf } from '../face/pose';
 import { skullOf } from '../face/pose/skull';
 import type { RandomFace } from '../generation/random-face';
 import { selfCrossings } from './hair-boundary';
+import { checkHairPoseExtra } from './hair-pose-extra';
 import { check, type Check } from './types';
 
 /**
@@ -27,6 +28,7 @@ import { check, type Check } from './types';
  *  STYLE      — le trait reste celui du dessin :
  *    `pose.hairline-smooth`   la courbure maximale de l'implantation posée ne dépasse pas celle de face de plus de 35 % (+ 0,05 rad) : pas d'angle nouveau ;
  *    `pose.edge-step`         le plus grand pas entre points voisins de la lisière posée ≤ 3,2× celui de face (bande du limbe lointain dépliée, bornée par la pente de la projection).
+ *  Règles ajoutées (`hair-pose-extra.ts`, `docs/ROTATION-HAIR-VERIFY-2.md`) : `pose.hairline-front-peak`, `pose.hairline-corner`, `pose.mass-thickness`.
  */
 type Face = Pick<RandomFace, 'params' | 'width' | 'height'>;
 const pts = (g: HairGeometry): Vec[] => [
@@ -85,6 +87,7 @@ export function checkHairPose(face: Face, yawDeg: number, override?: HairGeometr
   out.push(check('geometry', 'pose.finite', '==', bad, 0, 'coordonnée non finie dans la chevelure posée'));
   const layers = Math.abs(g.locks.length - g0.locks.length) + Math.abs(g.front.length - g0.front.length) + Math.abs(g.back.length - g0.back.length) + Math.abs(g.over.length - g0.over.length) + Math.abs(g.base.length - g0.base.length);
   out.push(check('geometry', 'pose.layers', '==', layers, 0, 'nombre de mèches ou de calques modifié par la pose'));
+  out.push(...checkHairPoseExtra(g0, g, lm, skull, yawDeg, spanAt));   // lisière de face, coin sur fenêtre d'arc fixe, épaisseur des masses : `hair-pose-extra.ts`
   if (yawDeg === 0) return out;
 
   const ord = g0.locks.map((l, i) => ({ l0: l, l1: g.locks[i] as HairLock })).filter(({ l0, l1 }) => l1 && !isTied(l0) && extent(l0.poly) > 0.008 * lm.W);

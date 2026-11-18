@@ -1,6 +1,6 @@
 # Cheveux sous rotation — passe 6 (état, mesures, reste à faire)
 
-Branche `feat/hair-grammar`. Preuves : `artefacts/rotation-hair-pass-6/`. Les autres docs `ROTATION-*.md` restent la référence des passes 1 à 5 ; ce fichier ne les recopie pas.
+Branche `feat/hair-grammar`. Preuves : `artefacts/rotation-hair-pass-6/`. **Suite : `ROTATION-HAIR-PASS-7.md`** (lisière consciente du limbe faite, rasé, nouvelles règles ; §2.1, 2.3, 2.8 et §3 de ce fichier y sont repris). Les autres docs `ROTATION-*.md` restent la référence des passes 1 à 5 ; ce fichier ne les recopie pas.
 
 ## 1. Fait dans cette passe
 

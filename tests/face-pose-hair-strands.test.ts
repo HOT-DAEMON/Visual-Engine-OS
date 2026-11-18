@@ -97,25 +97,45 @@ describe('chevelure complète sous pose (poseHair)', () => {
     }
   });
 
-  it('implantation posée : strictement croissante, dans la silhouette posée du crâne, au-dessus des sourcils, lacet seul (ordonnées intactes aux points d\'origine)', () => {
+  it('implantation posée : extrémités exactes, sans repli de plus de 0,6 % W, dans la silhouette posée du crâne, au-dessus des sourcils, hauteurs à 0,8 % W de celles de face (`docs/ROTATION-HAIR-LIMB.md`)', () => {
     for (const style of STYLES) for (const yaw of [-45, -30, 30, 45]) {
-      const { geo, skull, lm } = setup(style), p = poseHair(geo, skull, yaw, lm.W);
-      p.hairline.forEach((q, i) => {
-        if (i) expect(q.x).toBeGreaterThan(p.hairline[i - 1]!.x);
+      const { geo, skull, lm } = setup(style), p = poseHair(geo, skull, yaw, lm.W), h = p.hairline, F = geo.hairline;
+      // Extrémités = projection exacte des coins de tempe (ils portent les pattes).
+      const e0 = F[0]!, e1 = F[F.length - 1]!;
+      expect(h[0]!.x).toBeCloseTo(skull.projectX(e0.x, e0.y, yaw), 9);
+      expect(h[0]!.y).toBe(e0.y);
+      expect(h[h.length - 1]!.x).toBeCloseTo(skull.projectX(e1.x, e1.y, yaw), 9);
+      expect(h[h.length - 1]!.y).toBe(e1.y);
+      // Repli d'abscisse : mesuré ≤ 1,67 px (0,45 % W) sur 480 poses ; la carte brute en donnait 8 px.
+      const dir = Math.sign(h[h.length - 1]!.x - h[0]!.x);
+      for (let i = 1; i < h.length; i++) expect(-(dir * (h[i]!.x - h[i - 1]!.x))).toBeLessThanOrEqual(0.006 * lm.W);
+      h.forEach((q) => {
         expect(Math.abs(q.x)).toBeLessThanOrEqual(skull.halfAt(Math.min(lm.chinY - 0.02 * lm.H, Math.max(skull.topY + 0.02 * lm.H, q.y)), yaw) + 0.25);
         expect(q.y).toBeLessThanOrEqual(lm.browLimitY + 1e-9);
       });
-      expect(Math.min(...p.hairline.map((q) => q.y))).toBeCloseTo(Math.min(...geo.hairline.map((q) => q.y)), 6);
+      // Lacet seul : les hauteurs ne bougent que par l'arrondi des coins (mesuré ≤ 2,24 px = 0,6 % W).
+      expect(Math.abs(Math.min(...h.map((q) => q.y)) - Math.min(...F.map((q) => q.y)))).toBeLessThanOrEqual(0.008 * lm.W);
       // yAt / at relisent la ligne posée.
       const mid = p.boundary.hairline.at(0);
-      expect(p.boundary.hairline.yAt(mid.x)).toBeCloseTo(mid.y, 4);
+      expect(p.boundary.hairline.yAt(mid.x)).toBeCloseTo(mid.y, 0);
     }
   });
 
-  it('lisière posée = la lisière de face reprojetée point par point (tronçons relus sur la lisière posée)', () => {
+  it('lisière posée : tronçons pattes / oreille / nuque reprojetés point par point ; tronçon `front` = la ligne d\'implantation posée (même ligne, ≥ autant de points, extrémités exactes)', () => {
     const { geo, skull, lm } = setup('short'), p = poseHair(geo, skull, 30, lm.W);
-    expect(p.boundary.loop.length).toBe(geo.boundary.loop.length);
-    geo.boundary.loop.forEach((q, i) => { expect(p.boundary.loop[i]!.p.x).toBeCloseTo(skull.projectX(q.p.x, q.p.y, 30), 9); expect(p.boundary.loop[i]!.p.y).toBe(q.p.y); });
+    const rest = (b: typeof geo.boundary) => b.loop.filter((q) => q.kind !== 'front');
+    expect(rest(p.boundary).length).toBe(rest(geo.boundary).length);
+    rest(geo.boundary).forEach((q, i) => { expect(rest(p.boundary)[i]!.p.x).toBeCloseTo(skull.projectX(q.p.x, q.p.y, 30), 9); expect(rest(p.boundary)[i]!.p.y).toBe(q.p.y); });
+    const front = p.boundary.loop.filter((q) => q.kind === 'front'), f0 = geo.boundary.loop.filter((q) => q.kind === 'front');
+    expect(front.length).toBeGreaterThanOrEqual(f0.length);
+    expect(front.map((q) => q.p)).toEqual(p.hairline);
+    expect(front.map((q) => q.p)).toEqual(p.boundary.hairline.pts);
+    // Azimut et hauteur reportés de la ligne de face : bornés par ses extrémités, extrémités exactes.
+    expect(front[0]!.az).toBeCloseTo(f0[0]!.az, 9);
+    expect(front[front.length - 1]!.az).toBeCloseTo(f0[f0.length - 1]!.az, 9);
+    front.forEach((q) => { expect(Number.isFinite(q.az) && Number.isFinite(q.y)).toBe(true); });
+    // L'ordre du parcours fermé est conservé : front d'abord, puis le reste.
+    expect(p.boundary.loop.slice(0, front.length).every((q) => q.kind === 'front')).toBe(true);
     expect(p.boundary.segment('sideburn', 1).map((q) => q.p.x)).toEqual(geo.boundary.segment('sideburn', 1).map((q) => skull.projectX(q.p.x, q.p.y, 30)));
   });
 

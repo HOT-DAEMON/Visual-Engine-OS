@@ -27,6 +27,15 @@ export const COMB = { streaks: { n: 78, reach: [0.4, 0.95] }, stubble: { n: 220,
 export const FADE = { from: 0.55, to: 0.98, skin: 0.5 } as const;
 export const fadeAt = (x: number, hw: number): number => { const t = Math.min(1, Math.max(0, (Math.abs(x) / hw - FADE.from) / (FADE.to - FADE.from))); return t * t * (3 - 2 * t); };
 
+/**
+ * FONDU DE LISIÈRE de la coupe rase (`docs/ROTATION-HAIR-BUZZ.md`) : le chaume s'éclaircit aussi vers l'IMPLANTATION du front, pas seulement vers les flancs. Sans lui la coque s'arrête net sur une ligne et se lit comme une CALOTTE
+ * posée sur un crâne chauve. Voile de peau, trait flou le long de la ligne d'implantation, rogné à la coque : largeur du trait (part de H), flou (écart-type, part de H), opacité.
+ */
+export const HAIRLINE_FADE = { width: 0.05, blur: 0.018, alpha: 0.78 } as const;
+
+/** FONDU VERTICAL du flanc de la coupe rase : sous l'ordonnée de la tempe, voile de peau croissant jusqu'à `alpha` au bas de l'aile (sans lui l'aile finit sur une marche horizontale, `docs/ROTATION-HAIR-BUZZ.md`). */
+export const FLANK_FADE = { alpha: 1 } as const;
+
 export const combKind = (style: string): CombKind | null => (style === 'ponytail' || style === 'bun' || style === 'braids' ? 'streaks' : style === 'buzz' ? 'stubble' : null);
 
 /** Coupe le tracé au premier point hors de la coque (`base`). */

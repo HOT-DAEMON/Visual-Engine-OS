@@ -20,7 +20,7 @@ export interface ShellSpec {
 }
 
 export const SHELL: Record<Exclude<HairStyle, 'bald'>, ShellSpec> = {
-  buzz: { side: 0.9, reach: 'none' },
+  buzz: { side: 0.9, reach: 'ear' },
   short: { side: 0.75, reach: 'ear' },
   spiky: { side: 0.55, reach: 'ear' },
   curly: { side: 1, reach: 'ear' },
@@ -162,7 +162,9 @@ function sidePath(inp: ShellInput, sg: -1 | 1): { inner: Vec[]; outer: Vec[]; yE
   if (reach !== 'none') {
     const sb = ord(b.segment('sideburn', sg));
     const ear = ord(b.segment('ear', sg)).slice(0, 8);
-    for (const q of [...sb, ...ear]) if (q.y <= yEnd + 1e-6) inner.push(q.p);
+    // Coupe rase (coque de 1 % W) : la patte et l'arche de la lisière peuvent s'écarter du crâne de plusieurs pixels (graine 6211 : 10 px), la coque les ramène au contour.
+    const thin = inp.maxT < 0.02 * lm.W;
+    for (const q of [...sb, ...ear]) if (q.y <= yEnd + 1e-6) inner.push(thin && Math.abs(q.p.x) > S.a(q.p.y) ? { x: sg * S.a(q.p.y), y: q.p.y } : q.p);
     if (reach === 'cover') for (let i = 1; i <= 5; i++) { const y = yArch + ((yEnd - yArch) * i) / 5; inner.push({ x: sg * (S.a(y) - 0.012 * lm.W), y }); }
   }
   // Bord extérieur : le contour du crâne décalé de l'épaisseur T(y), du bas de l'aile au sommet.
@@ -184,6 +186,8 @@ function sidePath(inp: ShellInput, sg: -1 | 1): { inner: Vec[]; outer: Vec[]; yE
     // Le soulèvement des racines (bosse de la raie) fait partie de l'épaisseur des cheveux : T + soulèvement ≤ épaisseur maximale de la coiffure.
     const lift = Math.min(inp.bump(sg * q.x), Math.max(0, inp.maxT - T));
     let x = q.x + nrm.x * T;
+    // Coupe rase : la coque n'a que 1 % W d'épaisseur ; sous le coin de tempe le contour du visage (os de la pommette, joue) s'écarte du crâne de plusieurs pixels, l'aile suit alors le CRÂNE et non la joue (`skull-shell-bound`).
+    if (reach !== 'none' && inp.maxT < 0.02 * lm.W && q.y > yCorner - 0.05 * H) x = Math.min(x, S.a(q.y) + T);
     const y = q.y + nrm.y * T - lift;
     // Épaule du dôme : demi-largeur plafonnée au sommet du crâne, élargie en pente douce vers le bas (minimum lisse).
     if (inp.shoulder) x = smoothMin(x, inp.shoulder.halfWidth + inp.shoulder.slope * Math.max(0, y - S.topY), SHOULDER_BLEND * lm.W);

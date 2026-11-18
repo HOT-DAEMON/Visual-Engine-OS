@@ -3,7 +3,8 @@ import type { BoundaryPoint, HairBoundary } from '../hair/boundary/types';
 import type { Hairline } from '../hair/hairline';
 import type { BareScalp, HairGeometry } from '../hair/types';
 import type { Poly } from '../poly';
-import { anchorDepth, anchorKind } from './hair-pose-strand';
+import { anchorDepth, anchorKind, facing } from './hair-pose-strand';
+import { curvatureCap, HIDE_NZ, limbLine, type LimbLine } from './hairline-limb';
 import type { Skull } from './skull';
 
 /**
@@ -25,9 +26,11 @@ export function densifyOpen(line: readonly Vec[], maxLen: number): Vec[] {
   return out;
 }
 
-/** Ligne d'implantation posée : mêmes points projetés ; `yAt` interpole la ligne posée, `at(s)` lit la ligne posée par abscisse normalisée. */
-export function posedHairline(h: Hairline, P: Map2, maxLen: number): Hairline {
-  const pts = densifyOpen(h.pts, maxLen).map(P);
+/**
+ * Ligne d'implantation posée : `pts` vient de `limbLine` (échantillonnage adaptatif, abscisse monotone, pas d'arc constant, virages bornés : `hairline-limb.ts`). `yAt` interpole la ligne posée ; `at(s)` la lit par
+ * abscisse normalisée le long de la ligne POSÉE (pas d'arc constant : s n'est plus l'indice de la ligne de face, personne ne le relit après la pose).
+ */
+export function posedHairline(pts: Vec[]): Hairline {
   return {
     pts,
     yAt(x: number): number {
@@ -45,10 +48,30 @@ export function posedHairline(h: Hairline, P: Map2, maxLen: number): Hairline {
   };
 }
 
-/** Lisière posée : points du parcours projetés, tronçons relus sur la lisière posée. */
-export function posedBoundary(b: HairBoundary, P: Map2, maxLen: number): HairBoundary {
+/** Point `front` posé : hauteur et azimut lus par interpolation de la ligne de face à l'indice continu `u`. */
+function posedFront(front: readonly BoundaryPoint[], line: LimbLine): BoundaryPoint[] {
+  const last = front.length - 1;
+  return line.pts.map((p, k) => {
+    const u = Math.min(last, Math.max(0, line.u[k] as number)), i = Math.min(last - 1, Math.floor(u)), f = u - i, a = front[i] as BoundaryPoint, b = front[i + 1] as BoundaryPoint;
+    return { kind: 'front', y: a.y + (b.y - a.y) * f, az: a.az + (b.az - a.az) * f, p };
+  });
+}
+
+/**
+ * Lisière posée. Le tronçon `front` est REMPLACÉ par les points de la ligne posée (même ligne que `hairline`, voir `posedHairline`) ; les autres tronçons (pattes, oreille, nuque) sont projetés point par point.
+ * `segment` relit la lisière posée (côté lu sur l'azimut, comme à la construction).
+ */
+export function posedBoundary(b: HairBoundary, P: Map2, line: LimbLine): HairBoundary {
   const mapPt = (q: BoundaryPoint): BoundaryPoint => ({ ...q, p: P(q.p) });
-  return { ...b, loop: b.loop.map(mapPt), hairline: posedHairline(b.hairline, P, maxLen), segment: (kind, side) => b.segment(kind, side).map(mapPt) };
+  const front = b.loop.filter((q) => q.kind === 'front'), pf = front.length >= 3 ? posedFront(front, line) : front.map(mapPt);
+  let done = false;
+  const loop: BoundaryPoint[] = [];
+  for (const q of b.loop) {
+    if (q.kind !== 'front') loop.push(mapPt(q));
+    else if (!done) { loop.push(...pf); done = true; }
+  }
+  const segment = (kind: BoundaryPoint['kind'], side?: -1 | 1): readonly BoundaryPoint[] => loop.filter((q) => q.kind === kind && (side === undefined || (side === 1 ? q.az >= 0 : q.az < 0)));
+  return { ...b, loop, hairline: posedHairline(line.pts), segment };
 }
 
 /** Attaches posées : rigides, dans le plan de l'ancre (voir `hair-pose-strand.ts`). */
@@ -71,10 +94,17 @@ export interface LinkedPose {
 
 export function poseLinked(geo: HairGeometry, skull: Skull, P: Map2, densifyClosed: (p: Poly) => Poly, yawDeg: number, W: number, maxLen: number): LinkedPose {
   const closed = (p: Poly): Poly => densifyClosed(p).map(P);
+  // Une seule ligne posée pour `hairline`, `boundary.hairline` et le tronçon `front`, calculée une fois (`hairline-limb.ts`) : coupée à l'horizon (n_z = cos(φ + a) de la rotation exacte, comme le fondu des mèches de devant),
+  // ramenée dans la silhouette posée du crâne (mêmes bornes d'ordonnée que la vérification), courbure plafonnée à celle de la ligne de face.
+  const yc = (y: number): number => Math.min(skull.chinY - 0.02 * (-2 * skull.topY), Math.max(skull.topY + 0.02 * (-2 * skull.topY), y));
+  const line = limbLine(geo.hairline, P, maxLen, curvatureCap(geo.hairline), {
+    hidden: (q) => facing(skull, q.x, q.y, yawDeg) < HIDE_NZ,
+    inside: (q) => { const hx = skull.halfAt(yc(q.y), yawDeg); return Math.abs(q.x) > hx ? { x: Math.sign(q.x) * hx, y: q.y } : q; },
+  });
   const zone = (s: HairGeometry['sides']['left']) => ({ ...s, earZone: closed(s.earZone) });
   return {
-    hairline: densifyOpen(geo.hairline, maxLen).map(P),
-    boundary: posedBoundary(geo.boundary, P, maxLen),
+    hairline: line.pts,
+    boundary: posedBoundary(geo.boundary, P, line),
     scalp: closed(geo.scalp),
     bare: { part: geo.bare.part ? closed(geo.bare.part) : null, thin: geo.bare.thin.map(closed) },
     skinShadows: geo.skinShadows?.map(closed),

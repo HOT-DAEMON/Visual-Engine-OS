@@ -34,7 +34,10 @@ export function capBase(ctx: HairCtx): { base: Poly; scalp: Poly; wings: { left:
   const reachOf = (name: 'left' | 'right'): Reach => (own || !spec || spec.reach === 'none' ? 'none' : resolveEar(ctx, sideWant(ctx, name).ear) === 'covered' ? 'cover' : 'ear');
   const shell = capShell({ lm, boundary: ctx.boundary, crown, maxT: maxShell(h.style as Exclude<typeof h.style, 'bald'>, lm.W), side: spec?.side ?? 1, reach: { left: reachOf('left'), right: reachOf('right') }, gain: ctx.gain, bump: (x) => liftBump(h, ctx.partX, lm.W, lm.H, x) * (0.3 + 0.7 * THICKNESS[h.style as Exclude<typeof h.style, 'bald'>].puff), C: ctx.C, ...shoulder(h.style as Exclude<typeof h.style, 'bald'>, lm.W), round: ROUND_SHELL[h.style as Exclude<typeof h.style, 'bald'>], puff: ctx.puffW * lm.W });
   const scalp = orient([...hl.pts, ...[...arc].reverse()]);
-  const base = guard.fit(orient(shell.ring));
+  const fitted = guard.fit(orient(shell.ring));
+  // Coupe rase (coque de 1 % W) : le garde-fou repousse les sommets de la patte jusqu'au contour du VISAGE, qui peut dépasser le crâne de 9 px aux tempes. Au-dessus de la limite des sourcils (aucun œil en jeu), la coque est ramenée au crâne + son épaisseur.
+  const tMax = maxShell(h.style as Exclude<typeof h.style, 'bald'>, lm.W), thin = tMax < 0.02 * lm.W;
+  const base = thin ? fitted.map((q) => (q.y < lm.browLimitY - 0.05 * lm.H && Math.abs(q.x) > ctx.boundary.skull.a(q.y) + tMax ? { x: Math.sign(q.x) * (ctx.boundary.skull.a(q.y) + tMax), y: q.y } : q)) : fitted;
   const wings = { left: { reach: reachOf('left'), yEnd: shell.yEnd.left }, right: { reach: reachOf('right'), yEnd: shell.yEnd.right } };
   return { base, scalp, wings, crown };
 }

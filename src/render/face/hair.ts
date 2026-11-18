@@ -15,7 +15,7 @@ import { backMassFill } from './hair-back-fade';
 import { backMassColor, hairAppearance, rootColorOf, shellColorOf, tierHueShift } from './hair-look';
 import { rootBand } from '../../face/hair/root-band';
 import { ringThickness } from '../../face/hair/crown-fill';
-import { FADE } from '../../face/hair/comb';
+import { FADE, FLANK_FADE, HAIRLINE_FADE } from '../../face/hair/comb';
 import { polyPath } from './path';
 import { profileOf } from '../../face/hair/sim/profiles';
 import { sheenBands } from '../../face/hair/sim/sheen';
@@ -111,6 +111,14 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
     const stops = [[0, FADE.skin], [nx(-FADE.to), FADE.skin], [nx(-FADE.from), 0], [nx(FADE.from), 0], [nx(FADE.to), FADE.skin], [1, FADE.skin]] as const;
     defs.push(el('linearGradient', { id: gid, gradientUnits: 'userSpaceOnUse', x1: -hw, y1: 0, x2: hw, y2: 0 }, stops.map(([o, a]) => el('stop', { offset: o, 'stop-color': veil, 'stop-opacity': a }))));
     roots.push(el('g', { 'clip-path': urlRef(clipId) }, [el('rect', { x: -hw, y: bb.y, width: 2 * hw, height: bb.h, fill: urlRef(gid) })]));
+    // Fondu vertical du flanc (`FLANK_FADE`) : de la tempe au bas de l'aile, le voile de peau monte à pleine force.
+    const vid = `${id}-hair-flank-fade`, skinVeil = mix(skin, ra.base, 0.06), yT = Math.min(lm.hair.templeY, bb.y + bb.h - 1);
+    defs.push(el('linearGradient', { id: vid, gradientUnits: 'userSpaceOnUse', x1: 0, y1: yT, x2: 0, y2: bb.y + bb.h }, [el('stop', { offset: 0, 'stop-color': skinVeil, 'stop-opacity': 0 }), el('stop', { offset: 1, 'stop-color': skinVeil, 'stop-opacity': FLANK_FADE.alpha })]));
+    roots.push(el('g', { 'clip-path': urlRef(clipId) }, [el('rect', { x: -hw, y: yT, width: 2 * hw, height: bb.y + bb.h - yT, fill: urlRef(vid) })]));
+    // Fondu vers l'implantation (`HAIRLINE_FADE`) : la coque ne s'arrête pas sur une ligne nette, elle se fond dans la peau du front. La ligne lue est la ligne POSÉE (même ligne que la lisière).
+    const hid = `${id}-hair-hl-fade`, hline = `M${geo.hairline.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join('L')}`;
+    defs.push(el('filter', { id: hid, x: '-20%', y: '-80%', width: '140%', height: '260%' }, [el('feGaussianBlur', { stdDeviation: lm.H * HAIRLINE_FADE.blur })]));
+    roots.push(el('g', { 'clip-path': urlRef(clipId) }, [el('g', { filter: urlRef(hid), opacity: HAIRLINE_FADE.alpha }, [el('path', { d: hline, fill: 'none', stroke: veil, 'stroke-width': lm.H * HAIRLINE_FADE.width, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' })])]));
   }
   const body: string[] = [ink ? el('path', { d: base.d, fill: ink }) : base.markup, ...roots, el('g', { 'clip-path': urlRef(clipId) }, bare)];
   // Zones rasées : repousse sombre sur la peau (côtés / nuque), sous les mèches.
