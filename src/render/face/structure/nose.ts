@@ -10,6 +10,12 @@ import { blobEl, litSide, type StructureCtx } from './kit';
  * de profondeur `groove.depth`), base du nez (ombre sous les narines), columelle, narines à REBORD (anneau de peau + ouverture sombre inscrite), philtrum
  * (gouttière, crêtes, fondu avec la lèvre). Chaque élément lit la géométrie de `noseGeometry().regions`, sans rien recalculer.
  */
+/**
+ * Réponse LISIBLE des axes de région : `pivot(v, défaut, valeurDéfaut, pente, min, max)` = valeur historique au défaut (le rendu par défaut ne bouge pas d'un pixel)
+ * + `pente` × l'écart au défaut. Audit `docs/NOSE-VISIBILITY-AUDIT.md` : avec les anciennes pentes (≈ 0,3) ces axes changeaient < 100 px sur une tête de 600 px de large.
+ */
+const pivot = (v: number, d: number, at: number, k: number, lo = 0, hi = 1): number => Math.min(hi, Math.max(lo, at + k * (v - d)));
+
 export function renderNoseRegions(c: StructureCtx, g: NoseGeometry, skin: string): string[] {
   const { p, ra, I, u, detail } = c;
   const r = g.regions;
@@ -24,18 +30,18 @@ export function renderNoseRegions(c: StructureCtx, g: NoseGeometry, skin: string
   }
   // Dômes alaires : reflet sur chaque dôme (relief `prominence`), décalé vers la lumière ; creux d'ombre entre les deux dômes (séparation).
   for (const d of [r.domes.left, r.domes.right]) {
-    out.push(blobEl(c, { c: { x: d.c.x + c.dir.x * 0.25 * d.rx, y: d.c.y + c.dir.y * 0.25 * d.ry }, rx: d.rx * 0.7, ry: d.ry * 0.55, rotDeg: 0 }, ra.light, 0.5 * I * (0.3 + 0.9 * n.domes.prominence), 1.6 * u));
+    out.push(blobEl(c, { c: { x: d.c.x + c.dir.x * 0.25 * d.rx, y: d.c.y + c.dir.y * 0.25 * d.ry }, rx: d.rx * 0.7, ry: d.ry * 0.55, rotDeg: 0 }, ra.light, I * pivot(n.domes.prominence, 0.5, 0.375, 1.0, 0, 1), 1.6 * u));
     // Ombre propre du dôme : croissant sous le reflet, côté opposé à la lumière (donne le volume du lobule).
-    out.push(blobEl(c, { c: { x: d.c.x - c.dir.x * 0.45 * d.rx, y: d.c.y + 0.55 * d.ry }, rx: d.rx * 0.9, ry: d.ry * 0.5, rotDeg: 0 }, ra.shadow, 0.3 * (0.4 + 0.8 * n.domes.prominence) * detail, 1.6 * u));
+    out.push(blobEl(c, { c: { x: d.c.x - c.dir.x * 0.45 * d.rx, y: d.c.y + 0.55 * d.ry }, rx: d.rx * 0.9, ry: d.ry * 0.5, rotDeg: 0 }, ra.shadow, pivot(n.domes.prominence, 0.5, 0.24, 0.6) * detail, 1.6 * u));
   }
-  out.push(blobEl(c, { c: { x: 0, y: r.domes.left.c.y + 0.1 * r.domes.left.ry }, rx: Math.max(0.6 * u, r.domes.right.c.x - r.domes.right.rx * 0.4), ry: r.domes.left.ry * 0.7, rotDeg: 0 }, ra.shadow, 0.3 * n.domes.separation * detail, 1.4 * u));
+  out.push(blobEl(c, { c: { x: 0, y: r.domes.left.c.y + 0.1 * r.domes.left.ry }, rx: Math.max(0.6 * u, r.domes.right.c.x - r.domes.right.rx * 0.4), ry: r.domes.left.ry * 0.7, rotDeg: 0 }, ra.shadow, pivot(n.domes.separation, 0.35, 0.105, 0.6) * detail, 1.4 * u));
   // Sillons alaires : pli entre l'aile et la joue ; profondeur = `groove.depth`, prolongé vers la joue par un trait qui s'efface.
   for (const gr of [r.grooves.left, r.grooves.right]) {
-    out.push(c.kit.stroke(lineD(gr.line), ra.shadow, (1.2 + 2.2 * n.groove.depth) * u, (0.2 + 0.5 * n.groove.depth) * detail, 1.2 * u * c.soft));
-    out.push(c.kit.stroke(lineD(gr.cheekBlend), ra.shadow, 1.4 * u, 0.14 * n.groove.depth * detail, 1.8 * u * c.soft));
+    out.push(c.kit.stroke(lineD(gr.line), ra.shadow, pivot(n.groove.depth, 0.5, 2.3, 4, 0.5, 6) * u, pivot(n.groove.depth, 0.5, 0.45, 1.1, 0.04, 0.9) * detail, 1.2 * u * c.soft));
+    out.push(c.kit.stroke(lineD(gr.cheekBlend), ra.shadow, 1.4 * u, pivot(n.groove.depth, 0.5, 0.07, 0.35) * detail, 1.8 * u * c.soft));
   }
   // Base du nez : ombre sous les narines (plancher), plus profonde avec `base.depth` ; columelle : léger reflet de la cloison.
-  out.push(c.kit.fill(polyD(r.base.poly), ra.shadow, 0.26 + 0.3 * n.base.depth, 1.6 * u * c.soft));
+  out.push(c.kit.fill(polyD(r.base.poly), ra.shadow, pivot(n.base.depth, 0.5, 0.41, 0.8, 0.05, 0.85), 1.6 * u * c.soft));
   out.push(c.kit.fill(polyD(r.columella.poly), ra.light, 0.12 * I, 1.2 * u * c.soft));
   // Narines à rebord : anneau de peau (contour extérieur couvre le noir du nez de base) puis ouverture sombre inscrite. Le rebord est un peu plus clair que la peau côté lumière.
   const rimFill = mix(skin, ra.shadow, 0.28);
@@ -46,8 +52,8 @@ export function renderNoseRegions(c: StructureCtx, g: NoseGeometry, skin: string
   }
   // Philtrum : gouttière centrale (ombre), deux crêtes (reflet côté lumière), fondu avec la lèvre supérieure (ellipse de transition, `blend`).
   const ph = r.philtrum;
-  out.push(c.kit.stroke(lineD(ph.groove), ra.shadow, (1.4 + 3 * n.philtrum.depth) * u, (0.08 + 0.3 * n.philtrum.depth) * detail, 1.6 * u * c.soft));
-  for (const col of [ph.columns.left, ph.columns.right]) out.push(c.kit.stroke(lineD(col), ra.light, 1.1 * u, 0.16 * I * n.philtrum.depth * detail, 0.9 * u * c.soft));
-  out.push(blobEl(c, { c: ph.lipBand.c, rx: ph.lipBand.rx, ry: ph.lipBand.ry, rotDeg: 0 }, ra.shadow, 0.12 * (1 - 0.5 * n.philtrum.blend), (1 + 2 * n.philtrum.blend) * u));
+  out.push(c.kit.stroke(lineD(ph.groove), ra.shadow, Math.max(0.8, pivot(n.philtrum.depth, 0.4, 2.6, 6, 0.8, 7) + 5 * (n.philtrum.width - 0.5)) * u, Math.min(0.7, Math.max(0.02, pivot(n.philtrum.depth, 0.4, 0.2, 0.8, 0.02, 0.7) + 0.5 * (n.philtrum.width - 0.5))) * detail, 1.6 * u * c.soft));
+  for (const col of [ph.columns.left, ph.columns.right]) out.push(c.kit.stroke(lineD(col), ra.light, pivot(n.philtrum.depth, 0.4, 1.1, 1.8, 0.5, 3) * u, I * pivot(n.philtrum.depth, 0.4, 0.064, 0.5, 0, 0.6) * detail, 0.9 * u * c.soft));
+  out.push(blobEl(c, { c: ph.lipBand.c, rx: ph.lipBand.rx, ry: ph.lipBand.ry, rotDeg: 0 }, ra.shadow, pivot(n.philtrum.blend, 0.5, 0.09, -0.3, 0.02, 0.4), (1 + 2 * n.philtrum.blend) * u));
   return out.filter((s) => s !== '');
 }

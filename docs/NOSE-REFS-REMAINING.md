@@ -67,3 +67,13 @@ Légende : ✅ fait et prouvé · 🟡 partiel · ⬜ non fait. Rien ici n'est p
 - ✅ **Ovale clair à 60° : cause établie** (15 % de normale d'ellipsoïde franchissant le seuil du cel ; part éclairée de l'aile proche 0,25 / 0,02 / 0,07 → 0,00) et corrigé (`terminatorClamp`, `wingLighter`) ; règle `eng.nose.alar-terminator` (style, bloquante, détecte l'ancien état : jusqu'à 0,29 des points à 45°), tests `nose-alar-terminator.test.ts`, preuves `artefacts/nez-aile-tache-2/`.
 - ⬜ Plat-trapèze à 60° : petite tache résiduelle non quantifiée ; un seul éclairage (cel2 trois-quarts) ; marge 0,04 non calibrée sur référence ; métrique rapport / bord de l'aile lointaine biaisée, non remplacée.
 - ⬜ Toujours non traités : plat-trapèze 60°–70° (contour), teinte nez / joues, `round-dome-centered` de la pyramide, rougeurs de la réf. 05, reste de `FACE-STRUCTURE-NOSE.md`, vue de dessous dans `head_3d`.
+
+## Audit de visibilité des paramètres (19 nov. 2026) — détail dans `docs/NOSE-VISIBILITY-AUDIT.md`
+
+- ✅ Audit mesuré de 45 axes sur tête complète (face, 3 graines) et en 3D (45°, 90°) : `scripts/nose-audit/`, tableau dans `artefacts/nez-audit-visibilite/tableau.md`
+- ✅ Renforcés au rendu (défaut identique octet pour octet) : `philtrum.depth` 84 → 555 px, `philtrum.width` 0 → 165, `domes.prominence` 44 → 277, `groove.depth` 233 → 411, `base.depth` 132 → 251 ; test `tests/nose-visibility.test.ts`
+- ⬜ Faibles ou invisibles, non corrigés : `philtrum.blend` (0 px), `tip.alarBlend`, `junction.orbital`, `columella.hang`, `junction.nasolabial`, `tip.highlight`, `nostrils.rim`, `domes.separation`, `nostrils.opening`, `nostrils.tiltDeg`
+- ⬜ `head_3d` ne lit aucun axe de région du nez (0 px en 45° et 90°) : branchement non fait
+- ⬜ Dispersion inter-graines forte (graine 11 : `philtrum.width` 0 px, `groove.depth` 76 px contre ≈ 580 pour 77 et 1203) : cause non diagnostiquée
+- ⬜ Non mesuré : interactions entre axes, monotonie, autres éclairages, têtes avec cheveux/barbe ; « visible » n'est pas « convaincant » (jugement artistique non automatisé)
+- ⬜ Non traités cette session : plat-trapèze 60°–70°, teinte nez/joues, `round-dome-centered` de la pyramide, rougeurs de la réf. 05, vue de dessous dans `head_3d`, reste de `FACE-STRUCTURE-NOSE.md`

@@ -1,0 +1,685 @@
+{
+ "engine": "structured",
+ "seeds": [
+  11,
+  77,
+  1203
+ ],
+ "rows": [
+  {
+   "param": "length",
+   "share": 0.1703,
+   "strong": 0.0599,
+   "meanDelta": 15.22,
+   "maxDelta": 246,
+   "outside": 0.843,
+   "zoneShare": 0.1504,
+   "zonePixels": 8447,
+   "perSeed": [
+    0.1281,
+    0.1725,
+    0.2104
+   ]
+  },
+  {
+   "param": "width",
+   "share": 0.4253,
+   "strong": 0.1269,
+   "meanDelta": 29.15,
+   "maxDelta": 231,
+   "outside": 0.356,
+   "zoneShare": 0.2018,
+   "zonePixels": 11288,
+   "perSeed": [
+    0.3704,
+    0.4362,
+    0.4694
+   ]
+  },
+  {
+   "param": "nostril",
+   "share": 0.0075,
+   "strong": 0.0058,
+   "meanDelta": 1.38,
+   "maxDelta": 184,
+   "outside": 0.523,
+   "zoneShare": 0.0048,
+   "zonePixels": 268,
+   "perSeed": [
+    0.0076,
+    0,
+    0.0149
+   ]
+  },
+  {
+   "param": "bridge",
+   "share": 0.021,
+   "strong": 0,
+   "meanDelta": 3.11,
+   "maxDelta": 34,
+   "outside": 0,
+   "zoneShare": 0.0066,
+   "zonePixels": 369,
+   "perSeed": [
+    0.0149,
+    0.0162,
+    0.0318
+   ]
+  },
+  {
+   "param": "root.height",
+   "share": 0.1236,
+   "strong": 0.0412,
+   "meanDelta": 10.17,
+   "maxDelta": 146,
+   "outside": 0.447,
+   "zoneShare": 0.0566,
+   "zonePixels": 3143,
+   "perSeed": [
+    0.092,
+    0.2163,
+    0.0626
+   ]
+  },
+  {
+   "param": "root.depth",
+   "share": 0,
+   "strong": 0,
+   "meanDelta": 0.14,
+   "maxDelta": 8,
+   "outside": 0,
+   "zoneShare": 0,
+   "zonePixels": 0,
+   "perSeed": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "param": "root.width",
+   "share": 0.0121,
+   "strong": 0,
+   "meanDelta": 3.25,
+   "maxDelta": 31,
+   "outside": 0.043,
+   "zoneShare": 0.0039,
+   "zonePixels": 215,
+   "perSeed": [
+    0,
+    0.0228,
+    0.0135
+   ]
+  },
+  {
+   "param": "dorsum.shape(straight→convex)",
+   "share": 0.0008,
+   "strong": 0,
+   "meanDelta": 2.43,
+   "maxDelta": 24,
+   "outside": 0,
+   "zoneShare": 0.0002,
+   "zonePixels": 13,
+   "perSeed": [
+    0.001,
+    0.0016,
+    0
+   ]
+  },
+  {
+   "param": "dorsum.shape(straight→concave)",
+   "share": 0.0424,
+   "strong": 0,
+   "meanDelta": 3.18,
+   "maxDelta": 41,
+   "outside": 0,
+   "zoneShare": 0.013,
+   "zonePixels": 742,
+   "perSeed": [
+    0.0656,
+    0.0131,
+    0.0486
+   ]
+  },
+  {
+   "param": "dorsum.width",
+   "share": 0.0971,
+   "strong": 0.0062,
+   "meanDelta": 6.56,
+   "maxDelta": 77,
+   "outside": 0.001,
+   "zoneShare": 0.029,
+   "zonePixels": 1622,
+   "perSeed": [
+    0.0946,
+    0.1214,
+    0.0751
+   ]
+  },
+  {
+   "param": "dorsum.curvature",
+   "share": 0,
+   "strong": 0,
+   "meanDelta": 0,
+   "maxDelta": 0,
+   "outside": 0,
+   "zoneShare": 0,
+   "zonePixels": 0,
+   "perSeed": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "param": "dorsum.deviation",
+   "share": 0.3025,
+   "strong": 0.1025,
+   "meanDelta": 22.29,
+   "maxDelta": 174,
+   "outside": 0.016,
+   "zoneShare": 0.0934,
+   "zonePixels": 5209,
+   "perSeed": [
+    0.2205,
+    0.3809,
+    0.3062
+   ]
+  },
+  {
+   "param": "tip.width",
+   "share": 0.038,
+   "strong": 0.009,
+   "meanDelta": 4.14,
+   "maxDelta": 98,
+   "outside": 0.082,
+   "zoneShare": 0.0132,
+   "zonePixels": 727,
+   "perSeed": [
+    0.0183,
+    0.0599,
+    0.0357
+   ]
+  },
+  {
+   "param": "tip.roundness",
+   "share": 0.0092,
+   "strong": 0.0018,
+   "meanDelta": 2.24,
+   "maxDelta": 74,
+   "outside": 0.056,
+   "zoneShare": 0.0031,
+   "zonePixels": 169,
+   "perSeed": [
+    0.0023,
+    0.0157,
+    0.0095
+   ]
+  },
+  {
+   "param": "tip.projection",
+   "share": 0.0004,
+   "strong": 0,
+   "meanDelta": 2.12,
+   "maxDelta": 24,
+   "outside": 0.644,
+   "zoneShare": 0.0103,
+   "zonePixels": 576,
+   "perSeed": [
+    0,
+    0.0005,
+    0.0007
+   ]
+  },
+  {
+   "param": "tip.rotation",
+   "share": 0.0991,
+   "strong": 0.0281,
+   "meanDelta": 9.45,
+   "maxDelta": 231,
+   "outside": 0.171,
+   "zoneShare": 0.0371,
+   "zonePixels": 2064,
+   "perSeed": [
+    0.0703,
+    0.1336,
+    0.0935
+   ]
+  },
+  {
+   "param": "tip.alarBlend",
+   "share": 0.0016,
+   "strong": 0,
+   "meanDelta": 0.15,
+   "maxDelta": 30,
+   "outside": 0.151,
+   "zoneShare": 0.0007,
+   "zonePixels": 36,
+   "perSeed": [
+    0,
+    0.0023,
+    0.0023
+   ]
+  },
+  {
+   "param": "tip.highlight",
+   "share": 0.004,
+   "strong": 0,
+   "meanDelta": 0.23,
+   "maxDelta": 47,
+   "outside": 0,
+   "zoneShare": 0.0012,
+   "zonePixels": 68,
+   "perSeed": [
+    0.0023,
+    0.0052,
+    0.0045
+   ]
+  },
+  {
+   "param": "alae.thickness",
+   "share": 0.0102,
+   "strong": 0.0023,
+   "meanDelta": 0.88,
+   "maxDelta": 71,
+   "outside": 0.462,
+   "zoneShare": 0.0054,
+   "zonePixels": 298,
+   "perSeed": [
+    0.002,
+    0.0105,
+    0.018
+   ]
+  },
+  {
+   "param": "alae.volume",
+   "share": 0.0208,
+   "strong": 0.0035,
+   "meanDelta": 1.45,
+   "maxDelta": 86,
+   "outside": 0.196,
+   "zoneShare": 0.0081,
+   "zonePixels": 454,
+   "perSeed": [
+    0.0264,
+    0.013,
+    0.023
+   ]
+  },
+  {
+   "param": "alae.flare",
+   "share": 0.0472,
+   "strong": 0.0124,
+   "meanDelta": 5.16,
+   "maxDelta": 226,
+   "outside": 0.494,
+   "zoneShare": 0.0284,
+   "zonePixels": 1583,
+   "perSeed": [
+    0.023,
+    0.0201,
+    0.0984
+   ]
+  },
+  {
+   "param": "alae.attachment",
+   "share": 0.003,
+   "strong": 0.0004,
+   "meanDelta": 0.73,
+   "maxDelta": 36,
+   "outside": 0.667,
+   "zoneShare": 0.0032,
+   "zonePixels": 179,
+   "perSeed": [
+    0,
+    0,
+    0.009
+   ]
+  },
+  {
+   "param": "nostrils.shape",
+   "share": 0.0052,
+   "strong": 0.0034,
+   "meanDelta": 0.79,
+   "maxDelta": 183,
+   "outside": 0.597,
+   "zoneShare": 0.0038,
+   "zonePixels": 213,
+   "perSeed": [
+    0.0025,
+    0,
+    0.0132
+   ]
+  },
+  {
+   "param": "nostrils.tiltDeg",
+   "share": 0.0039,
+   "strong": 0.0024,
+   "meanDelta": 0.46,
+   "maxDelta": 168,
+   "outside": 0.562,
+   "zoneShare": 0.0025,
+   "zonePixels": 142,
+   "perSeed": [
+    0.0025,
+    0,
+    0.0092
+   ]
+  },
+  {
+   "param": "nostrils.asymmetry",
+   "share": 0.0072,
+   "strong": 0.0054,
+   "meanDelta": 1.26,
+   "maxDelta": 181,
+   "outside": 0.535,
+   "zoneShare": 0.0045,
+   "zonePixels": 252,
+   "perSeed": [
+    0.0056,
+    0,
+    0.016
+   ]
+  },
+  {
+   "param": "nostrils.columella",
+   "share": 0.0137,
+   "strong": 0.0052,
+   "meanDelta": 1.78,
+   "maxDelta": 213,
+   "outside": 0.53,
+   "zoneShare": 0.0088,
+   "zonePixels": 490,
+   "perSeed": [
+    0.0054,
+    0.0057,
+    0.03
+   ]
+  },
+  {
+   "param": "nostrils.visibility",
+   "share": 0.0071,
+   "strong": 0.0056,
+   "meanDelta": 1.37,
+   "maxDelta": 182,
+   "outside": 0.575,
+   "zoneShare": 0.0053,
+   "zonePixels": 298,
+   "perSeed": [
+    0.0043,
+    0,
+    0.0169
+   ]
+  },
+  {
+   "param": "nostrils.opening",
+   "share": 0.0036,
+   "strong": 0.003,
+   "meanDelta": 0.55,
+   "maxDelta": 144,
+   "outside": 0.603,
+   "zoneShare": 0.0024,
+   "zonePixels": 135,
+   "perSeed": [
+    0.0016,
+    0,
+    0.0092
+   ]
+  },
+  {
+   "param": "nostrils.rim",
+   "share": 0.0031,
+   "strong": 0.0023,
+   "meanDelta": 0.37,
+   "maxDelta": 131,
+   "outside": 0.589,
+   "zoneShare": 0.0021,
+   "zonePixels": 120,
+   "perSeed": [
+    0.0017,
+    0,
+    0.0075
+   ]
+  },
+  {
+   "param": "junction.glabella",
+   "share": 0,
+   "strong": 0,
+   "meanDelta": 0.22,
+   "maxDelta": 12,
+   "outside": 0.667,
+   "zoneShare": 0.0028,
+   "zonePixels": 154,
+   "perSeed": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "param": "junction.orbital",
+   "share": 0.0038,
+   "strong": 0,
+   "meanDelta": 1.64,
+   "maxDelta": 20,
+   "outside": 0,
+   "zoneShare": 0.0011,
+   "zonePixels": 57,
+   "perSeed": [
+    0,
+    0.0114,
+    0
+   ]
+  },
+  {
+   "param": "junction.cheek",
+   "share": 0.0072,
+   "strong": 0,
+   "meanDelta": 0.56,
+   "maxDelta": 35,
+   "outside": 0.129,
+   "zoneShare": 0.0029,
+   "zonePixels": 159,
+   "perSeed": [
+    0,
+    0.0111,
+    0.0106
+   ]
+  },
+  {
+   "param": "junction.nasolabial",
+   "share": 0,
+   "strong": 0,
+   "meanDelta": 0.08,
+   "maxDelta": 8,
+   "outside": 0.667,
+   "zoneShare": 0.0012,
+   "zonePixels": 67,
+   "perSeed": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "param": "sidewall.slope",
+   "share": 0.0102,
+   "strong": 0,
+   "meanDelta": 3.55,
+   "maxDelta": 37,
+   "outside": 0,
+   "zoneShare": 0.003,
+   "zonePixels": 161,
+   "perSeed": [
+    0,
+    0.0252,
+    0.0053
+   ]
+  },
+  {
+   "param": "sidewall.concavity",
+   "share": 0.0389,
+   "strong": 0.0037,
+   "meanDelta": 2.54,
+   "maxDelta": 55,
+   "outside": 0,
+   "zoneShare": 0.0119,
+   "zonePixels": 650,
+   "perSeed": [
+    0.0049,
+    0.0681,
+    0.0435
+   ]
+  },
+  {
+   "param": "domes.prominence",
+   "share": 0.0131,
+   "strong": 0.001,
+   "meanDelta": 0.77,
+   "maxDelta": 70,
+   "outside": 0.137,
+   "zoneShare": 0.005,
+   "zonePixels": 277,
+   "perSeed": [
+    0.0089,
+    0.0149,
+    0.0157
+   ]
+  },
+  {
+   "param": "domes.separation",
+   "share": 0.0062,
+   "strong": 0.0026,
+   "meanDelta": 0.58,
+   "maxDelta": 98,
+   "outside": 0.113,
+   "zoneShare": 0.0023,
+   "zonePixels": 127,
+   "perSeed": [
+    0.004,
+    0.0094,
+    0.0052
+   ]
+  },
+  {
+   "param": "groove.depth",
+   "share": 0.0122,
+   "strong": 0.0043,
+   "meanDelta": 0.93,
+   "maxDelta": 91,
+   "outside": 0.5,
+   "zoneShare": 0.0075,
+   "zonePixels": 411,
+   "perSeed": [
+    0.0017,
+    0.0051,
+    0.03
+   ]
+  },
+  {
+   "param": "groove.length",
+   "share": 0.0067,
+   "strong": 0,
+   "meanDelta": 0.54,
+   "maxDelta": 38,
+   "outside": 0.139,
+   "zoneShare": 0.0028,
+   "zonePixels": 152,
+   "perSeed": [
+    0,
+    0.0104,
+    0.0096
+   ]
+  },
+  {
+   "param": "base.width",
+   "share": 0.0074,
+   "strong": 0.001,
+   "meanDelta": 1.2,
+   "maxDelta": 60,
+   "outside": 0.645,
+   "zoneShare": 0.0064,
+   "zonePixels": 357,
+   "perSeed": [
+    0.0008,
+    0,
+    0.0212
+   ]
+  },
+  {
+   "param": "base.depth",
+   "share": 0.0061,
+   "strong": 0.0004,
+   "meanDelta": 0.35,
+   "maxDelta": 27,
+   "outside": 0.667,
+   "zoneShare": 0.0046,
+   "zonePixels": 251,
+   "perSeed": [
+    0,
+    0,
+    0.0183
+   ]
+  },
+  {
+   "param": "columella.hang",
+   "share": 0.0019,
+   "strong": 0,
+   "meanDelta": 0.12,
+   "maxDelta": 15,
+   "outside": 0.667,
+   "zoneShare": 0.0012,
+   "zonePixels": 66,
+   "perSeed": [
+    0,
+    0,
+    0.0057
+   ]
+  },
+  {
+   "param": "philtrum.depth",
+   "share": 0.0038,
+   "strong": 0.0003,
+   "meanDelta": 0.2,
+   "maxDelta": 21,
+   "outside": 0.917,
+   "zoneShare": 0.01,
+   "zonePixels": 555,
+   "perSeed": [
+    0,
+    0,
+    0.0115
+   ]
+  },
+  {
+   "param": "philtrum.width",
+   "share": 0.0001,
+   "strong": 0,
+   "meanDelta": 0.07,
+   "maxDelta": 9,
+   "outside": 0.657,
+   "zoneShare": 0.003,
+   "zonePixels": 165,
+   "perSeed": [
+    0,
+    0,
+    0.0004
+   ]
+  },
+  {
+   "param": "philtrum.blend",
+   "share": 0,
+   "strong": 0,
+   "meanDelta": 0,
+   "maxDelta": 0,
+   "outside": 0,
+   "zoneShare": 0,
+   "zonePixels": 0,
+   "perSeed": [
+    0,
+    0,
+    0
+   ]
+  }
+ ]
+}
