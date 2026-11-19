@@ -1,1 +1,7 @@
+# Résoudre Le problème majeur : 
+les deux moteurs capillaires sont-ils raccordés..: les deux systèmes coexistent, mais leur intégration dans une chaîne de génération unique n'est pas établie.Il faudrait un contrat d'interopérabilité explicite entre les deux systèmes.
 
+# 3.1 Grammaire de composition capillaire
+Ce qui existe déja :- masses dominantes ;- familles de mèches ;- couches arrière, avant et supérieures ;- sous-couches ;- distribution spatiale des mèches ;- raie et implantation ;- volumes et asymétries.
+Le Moteur doit implémenter ce qui manque apres avoir vérifier ou confirmer ce qui existe deja et comment ca existe...
+Il manque notamment : Une véritable Hiérarchie des masses dominantes (Les tests doivent prouver visuellement cette fonctionnalité), Une Direction principale de lecture complete(Les tests doivent prouver visuellement cette fonctionnalité), Une véritable Équilibre des volumes gauche/droite , Une véritable Gestion des espaces négatifs demontrable visuellement et correctement bien concu, Mettre en place de vrai Points focaux de la coiffure visible et présenté bien implémenté, implémenté des lignes de force complete de la silhouette, implémenter un systeme de Distribution intentionnelle complète de densité des cheveux bien sophistiqué et demontrable visuellement, implémenter un vrai system de Relations entre groupes de mèches qui fait vraiment ses preuves et qui est consommé de le moteur capillaire
