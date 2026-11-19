@@ -30,13 +30,13 @@ export type EyeStyle = EyeInput['shape'] extends infer S ? (S extends { style?: 
 
 export const EXTRA_EYE_COUNT = 100;
 export const EXISTING_GALLERY_COUNT = 48;
-const STYLES = ['almond', 'round', 'sharp', 'drooping', 'chibi', 'angular', 'compressed', 'rounded_rect', 'triangle', 'circle', 'diamond', 'diamond_v2'] as const;
+export const STYLES = ['almond', 'round', 'sharp', 'drooping', 'chibi', 'angular', 'compressed', 'rounded_rect', 'triangle', 'circle', 'diamond', 'diamond_v2'] as const;
 /** Les 4 styles qui reçoivent une forme de plus (100 = 12 × 8 + 4) : ceux dont l'espace de paramètres produit le plus de silhouettes distinctes. */
 /** Distance minimale (profils, largeur = 1) d'une silhouette de référence ajustée à toutes les formes déjà retenues ; en dessous, la silhouette est écartée (doublon d'une forme existante). */
 const REF_MIN_DIST = 0.02;
 const EXTRA_QUOTA: readonly string[] = ['chibi', 'angular', 'triangle', 'rounded_rect'];
 const CANDIDATES_PER_STYLE = 320;
-const WIDTH = 240;
+export const WIDTH = 240;
 /** Distance minimale entre deux des 100 formes (largeur = 1), comme pour les 48 existantes. Un style dont le meilleur candidat restant est plus proche d'une forme déjà retenue est SATURÉ : il cède ses places (voir `extraEyeRecipes`). Mesuré avant : 0,0089 (diamond, diamond_v2) ; agrandir le pool de candidats ne change rien (320, 900, 2 000, 5 000 : 0,0095–0,0121), c'est l'espace de paramètres de ces styles qui est étroit. */
 export const NEW_MIN_DIST = 0.02;
 /** Diamètre vertical de l'iris / hauteur d'ouverture (mesuré sur references/eyes : rayon/hauteur 0,49–0,54 -> diamètre 0,98–1,08). */
@@ -61,21 +61,21 @@ export interface EyeRecipe {
   readonly ref?: string;
 }
 
-interface Cand extends Omit<EyeRecipe, 'index' | 'seed' | 'nearest'> { readonly d: readonly number[]; }
+export interface Cand extends Omit<EyeRecipe, 'index' | 'seed' | 'nearest'> { readonly d: readonly number[]; }
 
-const profileVector = (shape: ReturnType<typeof Shape.parse>, canthi: ReturnType<typeof Canthi.parse>): number[] => {
+export const profileVector = (shape: ReturnType<typeof Shape.parse>, canthi: ReturnType<typeof Canthi.parse>): number[] => {
   const p = openingProfile(openingGeometry(shape, canthi));
   return [...p.upper, ...p.lower, (p.tiltDeg * Math.PI) / 180 * 0.4];
 };
-const dist = (a: readonly number[], b: readonly number[]): number => Math.sqrt(a.reduce((s, x, i) => s + (x - (b[i] as number)) ** 2, 0) / a.length);
+export const dist = (a: readonly number[], b: readonly number[]): number => Math.sqrt(a.reduce((s, x, i) => s + (x - (b[i] as number)) ** 2, 0) / a.length);
 
-const existingVectors = (): number[][] =>
+export const existingVectors = (): number[][] =>
   Array.from({ length: EXISTING_GALLERY_COUNT }, (_, i) => {
     const e = generateRandomEye(1000 + i * 101, { expression: { kind: 'neutral', intensity: 1 } });
     return profileVector(Shape.parse({ outerSide: 'right', ...e.shape }), Canthi.parse(e.canthi ?? {}));
   });
 
-function candidates(style: (typeof STYLES)[number], rnd: () => number): Cand[] {
+export function candidates(style: (typeof STYLES)[number], rnd: () => number): Cand[] {
   const out: Cand[] = [];
   const r = (a: number, b: number): number => a + rnd() * (b - a);
   // Les deux losanges n'ont que 3 degrés de liberté (aspect, inclinaison, ouverture) : sur la plage étroite ils saturent à 3-5 formes distinctes ; plage élargie pour eux seuls (les autres styles gardent leur plage : portée des cils bornée).
@@ -153,6 +153,10 @@ export function extraEyeRecipes(): readonly EyeRecipe[] {
 export function extraEyeLashFamily(index: number): LashFamilyId | null {
   const rc = extraEyeRecipes()[index];
   if (!rc) throw new Error(`extraEyeLashFamily: index ${index} hors 0..${EXTRA_EYE_COUNT - 1}`);
+  return lashFamilyForRecipe(rc);
+}
+/** Même tirage, à partir de la recette (la seconde galerie, passe 9, a ses propres recettes : l'indice ne désigne pas la même case). */
+export function lashFamilyForRecipe(rc: EyeRecipe): LashFamilyId | null {
   const r = mulberry32(rc.seed ^ 0x1a5b2c3d);
   return r() < 0.55 ? (LASH_FAMILY_IDS[Math.floor(r() * LASH_FAMILY_IDS.length)] as LashFamilyId) : null;
 }
@@ -166,7 +170,8 @@ export function generateExtraEye(index: number, expression?: EyeInput['expressio
   return expression ? ({ ...eye, expression } as EyeInput) : eye;
 }
 
-function buildExtraEye(rc: EyeRecipe, attempt: number): EyeInput {
+/** `override` (passe 9) : transforme l'œil AVANT la calibration du rayon d'iris (la seconde galerie y remplace l'iris par une famille « photo ») ; absent : comportement historique. */
+export function buildExtraEye(rc: EyeRecipe, attempt: number, override?: (e: EyeInput) => EyeInput): EyeInput {
   const e = generateRandomEye(rc.seed, { id: `extra-${rc.index}`, expression: { kind: 'neutral', intensity: 1 } });
   const rnd = mulberry32(rc.seed ^ 0x5bd1e995);
   // Pupille : ronde le plus souvent (références), fente verticale / losange en accent ; taille mesurée (pupille / iris 0,13–0,28 -> 0,2–0,34).
@@ -179,7 +184,7 @@ function buildExtraEye(rc: EyeRecipe, attempt: number): EyeInput {
   const calm = attempt === 0 ? 1 : 0;
   const gaze = { ...e.gaze, yawDeg: cl(e.gaze?.yawDeg ?? 0, 8) * calm, pitchDeg: cl(e.gaze?.pitchDeg ?? 0, 5) * calm };
   const simple = attempt >= 2;
-  const base = {
+  const base0 = {
     ...e,
     // 'alien' impose un rayon d'iris absolu (presets.ts) qui annulerait la calibration sur l'ouverture : écarté ici, les autres archétypes ne touchent pas au rayon.
     archetype: e.archetype === 'alien' ? null : e.archetype,
@@ -192,9 +197,10 @@ function buildExtraEye(rc: EyeRecipe, attempt: number): EyeInput {
     ...(fam ? { highlights: { list: simple ? fam.highlights.slice(0, 2) : fam.highlights } } : simple ? { highlights: { list: [{ kind: 'reflection', size: 0.22 }] } } : {}),
   } as EyeInput;
   // Look issu des références (naturel mesuré / encre / sprite) : tiré APRÈS tous les autres tirages pour ne pas les décaler.
+  const base = override ? override(base0) : base0;
   const look = lookForRef(rc.ref, rnd);
   const looked = applyLook(base, look, rnd, rc.aspect, rc.ref);
-  const lashFam = attempt >= 4 ? null : extraEyeLashFamily(rc.index);   // dernier recours après 4 échecs de vérification : cils naturels du tirage (la famille déterministe de l'indice ne pouvait pas rentrer dans la zone de cette enveloppe)
+  const lashFam = attempt >= 4 ? null : lashFamilyForRecipe(rc);   // dernier recours après 4 échecs de vérification : cils naturels du tirage (la famille déterministe de l'indice ne pouvait pas rentrer dans la zone de cette enveloppe)
   const out = lashFam ? applyLashFamily(looked, lashFam, { ink: look === 'ink' ? 'keep' : 'family' }) : looked;
   const inked = look === 'ink' ? inkLines(out, rc.ref) : out;
   // Rayon d'iris CALIBRÉ sur l'ouverture réelle : diamètre vertical = IRIS_OVER_HEIGHT × hauteur d'ouverture (références : 0,98–1,08), réduit à chaque nouvelle tentative.

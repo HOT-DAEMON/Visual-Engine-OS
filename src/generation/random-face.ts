@@ -3,7 +3,7 @@ import { faceLandmarks, fitEyeToFace, PAIR_SCALE_MAX, type EyeFit, type EyeSide 
 import { FaceParams, type SceneInput } from '../schema';
 import { applyEyeAxes, type BrowLash, type EyelidFold } from './random-axes';
 import { LashFamilyId, applyLashFamily, lashFamilyForSeed } from './eye-lash-families';
-import { EXTENDED_IDENTITIES, extendedPair, galleryPair, GALLERY_IDENTITIES } from './eye-pool';
+import { EXTENDED_IDENTITIES, EXTENDED2_IDENTITIES, extended2Pair, extendedPair, galleryPair, GALLERY_IDENTITIES } from './eye-pool';
 import { generateRandomEye } from './random-eye';
 import { drawFaceParams, drawSkin, FACE_EXPRESSIONS, mouthFor, type ExpressionKind } from './random-face-helpers';
 import { drawFaceExtras, type ExtrasOverride } from './random-face-extras';
@@ -35,11 +35,11 @@ export interface RandomFaceOptions extends ExtrasOverride {
   readonly occlusions?: boolean;
   /** Identifiant de l'hôte ; les yeux en dérivent (`<id>-eye-left`, …). Défaut : `face-<seed hex>`. */
   readonly id?: string;
-  /** 'gallery' (défaut) : paire d'yeux d'une des 48 identités des galeries ; 'extended' : une des 148 (48 + les 100 formes de `eye-gallery-ext`, identité tirée dans un flux DÉRIVÉ : les autres tirages ne bougent pas) ; 'random' : œil tiré de la seed du visage. */
-  readonly eyeSource?: 'gallery' | 'random' | 'extended';
+  /** 'gallery' (défaut) : paire d'yeux d'une des 48 identités des galeries ; 'extended' : une des 148 (48 + les 100 formes de `eye-gallery-ext`, identité tirée dans un flux DÉRIVÉ : les autres tirages ne bougent pas) ; 'extended2' (passe 9) : une des 248 (les 148 + les 100 de eye-gallery-ext2, 4 familles d'iris photo) ; 'random' : œil tiré de la seed du visage. */
+  readonly eyeSource?: 'gallery' | 'random' | 'extended' | 'extended2';
   /** Famille de cils (réfs 12–16, voir eye-lash-families.ts) : un identifiant l'impose aux deux yeux ; 'auto' en tire une d'un flux dérivé dédié (les autres tirages ne bougent pas) ; absent ou null = cils de l'identité d'origine (visages d'avant inchangés). */
   readonly lashFamily?: LashFamilyId | 'auto' | null;
-  /** Identité de galerie imposée (0–47, ou 0–147 si eyeSource = 'extended') ; sinon tirée. Ignoré si eyeSource = 'random'. */
+  /** Identité de galerie imposée (0–47, 0–147 si eyeSource = 'extended', 0–247 si 'extended2') ; sinon tirée. Ignoré si eyeSource = 'random'. */
   readonly identity?: number;
   /** Expression imposée (yeux ET bouche) ; sinon tirée. */
   readonly expression?: { readonly kind: ExpressionKind; readonly intensity: number };
@@ -94,10 +94,11 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
   const id = options.id ?? `face-${(seed >>> 0).toString(16)}`;
   const expression = { kind, intensity };
   const source = options.eyeSource ?? 'gallery';
-  const gallery = source === 'gallery' || source === 'extended';
-  const identity = source === 'extended' ? (options.identity ?? Math.floor(mulberry32((seed ^ 0x5eed1de9) >>> 0)() * EXTENDED_IDENTITIES)) : gallery ? (options.identity ?? drawnIdentity) : null;
+  const gallery = source === 'gallery' || source === 'extended' || source === 'extended2';
+  // 'extended2' (passe 9) : 248 identités (148 + les 100 de eye-gallery-ext2), même flux dérivé que 'extended' ; 'extended' et 'gallery' gardent leurs tirages.
+  const identity = source === 'extended2' ? (options.identity ?? Math.floor(mulberry32((seed ^ 0x5eed1de9) >>> 0)() * EXTENDED2_IDENTITIES)) : source === 'extended' ? (options.identity ?? Math.floor(mulberry32((seed ^ 0x5eed1de9) >>> 0)() * EXTENDED_IDENTITIES)) : gallery ? (options.identity ?? drawnIdentity) : null;
   const pair0: Record<EyeSide, EyeInput> = gallery
-    ? source === 'extended' ? extendedPair(identity as number, expression) : galleryPair(identity as number, expression)
+    ? source === 'extended2' ? extended2Pair(identity as number, expression) : source === 'extended' ? extendedPair(identity as number, expression) : galleryPair(identity as number, expression)
     : (() => {
         const eye = generateRandomEye(seed, { expression });
         return { left: { ...eye, shape: { ...eye.shape, outerSide: 'left' } }, right: { ...eye, shape: { ...eye.shape, outerSide: 'right' } } };

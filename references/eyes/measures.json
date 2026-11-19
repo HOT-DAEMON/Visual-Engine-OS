@@ -750,6 +750,306 @@
     "pixels": 85006
    },
    "upperLidLineThicknessOverWidth": 0.0344
+  },
+  "03": {
+   "file": "03.jpg",
+   "cropped": true,
+   "widthPx": 358.2,
+   "tiltDeg": 7.7,
+   "aspect": 0.6793,
+   "upperFraction": 0.4723,
+   "upperPeakAt": 0.4424,
+   "lowerPeakAt": 0.4081,
+   "upperProfile": [
+    -0.0,
+    0.1279,
+    0.161,
+    0.1965,
+    0.2202,
+    0.2386,
+    0.2564,
+    0.2755,
+    0.3014,
+    0.3205,
+    0.3182,
+    0.3159,
+    0.3048,
+    0.29,
+    0.2755,
+    0.2612,
+    0.2374,
+    0.2022,
+    0.1196,
+    0.0551,
+    -0.0
+   ],
+   "lowerProfile": [
+    0.0,
+    0.1765,
+    0.2282,
+    0.2786,
+    0.3054,
+    0.3214,
+    0.3354,
+    0.3467,
+    0.3572,
+    0.3567,
+    0.3546,
+    0.3525,
+    0.3503,
+    0.348,
+    0.3305,
+    0.3063,
+    0.2712,
+    0.2101,
+    0.1557,
+    0.1147,
+    0.0
+   ],
+   "normCurves": {
+    "pi": [
+     0.0,
+     0.5635
+    ],
+    "po": [
+     1.0,
+     0.3689
+    ],
+    "u1": [
+     0.0089,
+     0.0312
+    ],
+    "u2": [
+     0.8212,
+     -0.2306
+    ],
+    "l1": [
+     1.0716,
+     0.9837
+    ],
+    "l2": [
+     0.0364,
+     1.285
+    ],
+    "bboxAspect": 0.6948
+   },
+   "fitRmsNorm": {
+    "upper": 0.0148,
+    "lower": 0.0161
+   },
+   "canthusAngleDeg": {
+    "inner": 166.5,
+    "outer": 126.6
+   },
+   "iris": {
+    "centreAlongAxis": 0.4164,
+    "centreAcrossAxis": 0.0293,
+    "radiusOverWidth": 0.2811,
+    "radiusOverOpeningHeight": 0.4138,
+    "aspect": 1.0,
+    "limbusPointsUsed": 83
+   },
+   "pupilOverIris": 0.1332,
+   "highlights": [
+    {
+     "dx": 0.021,
+     "dy": 0.725,
+     "rOverIris": 0.325
+    },
+    {
+     "dx": -0.502,
+     "dy": -0.629,
+     "rOverIris": 0.199
+    },
+    {
+     "dx": 0.429,
+     "dy": 0.396,
+     "rOverIris": 0.136
+    },
+    {
+     "dx": 0.399,
+     "dy": -0.689,
+     "rOverIris": 0.107
+    },
+    {
+     "dx": 0.842,
+     "dy": 0.353,
+     "rOverIris": 0.091
+    },
+    {
+     "dx": -0.405,
+     "dy": 0.313,
+     "rOverIris": 0.07
+    }
+   ],
+   "sclera": {
+    "mean": "#bba8aa",
+    "top": "#7c7279",
+    "mid": "#b9a4a7",
+    "bottom": "#e9d2d0",
+    "lumRange": [
+     52,
+     232
+    ],
+    "pixels": 25394
+   },
+   "skin": {
+    "mean": "#d5b3a7",
+    "above": "#c5ab9e",
+    "below": "#e8beb2",
+    "pixels": 77610
+   },
+   "upperLidLineThicknessOverWidth": 0.0056
+  },
+  "05": {
+   "file": "05.jpg",
+   "cropped": false,
+   "widthPx": 330.7,
+   "tiltDeg": -3.81,
+   "aspect": 0.4913,
+   "upperFraction": 0.5496,
+   "upperPeakAt": 0.7363,
+   "lowerPeakAt": 0.4758,
+   "upperProfile": [
+    -0.0,
+    0.0842,
+    0.1215,
+    0.1585,
+    0.1918,
+    0.2246,
+    0.2328,
+    0.2299,
+    0.2286,
+    0.2397,
+    0.252,
+    0.2571,
+    0.2592,
+    0.2623,
+    0.2668,
+    0.2688,
+    0.2095,
+    0.1615,
+    0.1297,
+    0.0724,
+    -0.0
+   ],
+   "lowerProfile": [
+    0.0,
+    0.0789,
+    0.1179,
+    0.1504,
+    0.1742,
+    0.1915,
+    0.1982,
+    0.2049,
+    0.2114,
+    0.218,
+    0.2174,
+    0.2028,
+    0.1876,
+    0.1628,
+    0.1366,
+    0.114,
+    0.0929,
+    0.0685,
+    0.0428,
+    0.0213,
+    0.0
+   ],
+   "normCurves": {
+    "pi": [
+     0.0,
+     0.4662
+    ],
+    "po": [
+     1.0,
+     0.6069
+    ],
+    "u1": [
+     0.123,
+     -0.2256
+    ],
+    "u2": [
+     1.0392,
+     -0.1043
+    ],
+    "l1": [
+     0.7082,
+     1.0419
+    ],
+    "l2": [
+     0.0608,
+     1.1182
+    ],
+    "bboxAspect": 0.4741
+   },
+   "fitRmsNorm": {
+    "upper": 0.023,
+    "lower": 0.0218
+   },
+   "canthusAngleDeg": {
+    "inner": 118.3,
+    "outer": 78.5
+   },
+   "iris": {
+    "centreAlongAxis": 0.5321,
+    "centreAcrossAxis": -0.1026,
+    "radiusOverWidth": 0.2536,
+    "radiusOverOpeningHeight": 0.5162,
+    "aspect": 1.0,
+    "limbusPointsUsed": 61
+   },
+   "pupilOverIris": 0.1645,
+   "highlights": [
+    {
+     "dx": 0.248,
+     "dy": -0.285,
+     "rOverIris": 0.15
+    },
+    {
+     "dx": -0.231,
+     "dy": 0.649,
+     "rOverIris": 0.116
+    },
+    {
+     "dx": -0.759,
+     "dy": 0.559,
+     "rOverIris": 0.08
+    },
+    {
+     "dx": -0.201,
+     "dy": 0.416,
+     "rOverIris": 0.062
+    },
+    {
+     "dx": 0.155,
+     "dy": 0.074,
+     "rOverIris": 0.053
+    },
+    {
+     "dx": 0.69,
+     "dy": 0.531,
+     "rOverIris": 0.052
+    }
+   ],
+   "sclera": {
+    "mean": "#d5b1a8",
+    "top": "#9c7c78",
+    "mid": "#d3aba5",
+    "bottom": "#f4d1c5",
+    "lumRange": [
+     95,
+     236
+    ],
+    "pixels": 15929
+   },
+   "skin": {
+    "mean": "#c3836f",
+    "above": "#bf7c67",
+    "below": "#cb8f7c",
+    "pixels": 49672
+   },
+   "upperLidLineThicknessOverWidth": 0.0
   }
  }
 }

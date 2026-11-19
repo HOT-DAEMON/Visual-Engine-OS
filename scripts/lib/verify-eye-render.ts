@@ -16,6 +16,10 @@ import { dominantColor } from '../../src/materials';
  */
 export interface EyeImageCheck { readonly layer: 'geometry' | 'anatomy' | 'style'; readonly id: string; readonly ok: boolean; readonly value: number; readonly limit: number; readonly message: string }
 const BG = [0xff, 0x00, 0xff] as const;
+/** Seuil de texture d'iris (écart moyen de luminance entre points voisins à 5°, voir les règles d'iris de `verifyEyeRender`). */
+export const IRIS_TEXTURE_MIN = 2;
+/** Seuil pour un iris détaillé (`iris.detail` présent) : mesuré sur la galerie 2, les 4 familles photo donnent 11,9 à 21,8 (minimum 11,9), les références 22,5 à 42,1 ; un voile gris uni 3,3. */
+export const IRIS_TEXTURE_DETAIL_MIN = 8;
 const W = 700, H = 460;
 const lum = (px: Uint8Array, x: number, y: number): number => { const i = (Math.round(y) * W + Math.round(x)) * 4; return 0.2126 * (px[i] as number) + 0.7152 * (px[i + 1] as number) + 0.0722 * (px[i + 2] as number); };
 const isBg = (px: Uint8Array, x: number, y: number): boolean => { const i = (Math.round(y) * W + Math.round(x)) * 4; return Math.abs((px[i] as number) - BG[0]) + Math.abs((px[i + 1] as number) - BG[1]) + Math.abs((px[i + 2] as number) - BG[2]) < 12; };
@@ -104,6 +108,28 @@ export function verifyEyeRender(input: Record<string, unknown>): EyeImageCheck[]
   // fini `flat` : l'inverse exact — l'œil NE doit PAS avoir de dégradé (aplats francs des références au trait) ; les autres finis gardent la règle « iris non plat ».
   if (flat) { const ts = toneShare(px, { x0: g.bbox.x + ox - m, y0: g.bbox.y + oy - m, x1: g.bbox.x + g.bbox.w + ox + m, y1: g.bbox.y + g.bbox.h + oy + m }); add('style', 'ink-flat', ts <= 0.02, ts, 0.02, 'un œil au fini flat contient des demi-teintes lisses (ombre, dégradé ou flou ajouté par le moteur)'); }
   else add('style', 'iris-not-flat', sd >= 3, sd, 3, 'l’iris est un aplat (aucune texture, fibre ni dégradé mesurable)');
+
+  // ---- RÈGLES D'IRIS (passe 9, mesurées sur les réfs 03 / 05 / 06 / 09 : references/eyes/measures-iris-photos.json) ----
+  //   geometry : `pupil-core-centred` — le cœur sombre de la pupille (pixels <= minimum + 22 dans le disque 0,45 de l'iris) est centré sur l'iris, au décalage `pupil.center` près (mesuré : 0,02–0,06 sur les 4 réfs) ;
+  //   anatomy  : `specular-in-upper-iris` — tout reflet de réflexion primaire ancré à l'iris est dans la moitié HAUTE (y <= 0 ; mesuré : dy -0,66 à -0,15 sur les 4 réfs) ;
+  //   style    : `iris-texture` — écart moyen de luminance entre deux points voisins (pas de 5°, 4 anneaux de 0,4 à 0,85) >= IRIS_TEXTURE_MIN : l'ombrage lisse varie lentement, les fibres et filigranes non (une première règle « p85 - p15 » mesurait l'ombrage du moteur : un iris gris uni donnait 49 > galerie min 23).
+  if (eye.finish !== 'flat' && eye.pupil.visible) {
+    const dark: { x: number; y: number }[] = []; let mn = 1e9;
+    const samples: { x: number; y: number; v: number }[] = [];
+    for (let a = 0; a < 360; a += 10) for (let f = 0; f <= 0.45; f += 0.05) { const x = c.x + ox + Math.cos((a * Math.PI) / 180) * rx * f, y = c.y + oy + Math.sin((a * Math.PI) / 180) * ry * f; const v = lum(px, x, y); samples.push({ x, y, v }); if (v < mn) mn = v; }
+    for (const q of samples) if (q.v <= mn + 22) dark.push(q);
+    const cx = dark.reduce((t, q) => t + q.x, 0) / Math.max(dark.length, 1), cy = dark.reduce((t, q) => t + q.y, 0) / Math.max(dark.length, 1);
+    const off = Math.hypot((cx - (c.x + ox)) / rx, (cy - (c.y + oy)) / ry), allowed = 0.2 + Math.hypot(eye.pupil.center.x, eye.pupil.center.y);
+    add('geometry', 'pupil-core-centred', off <= allowed, off, allowed, 'le cœur sombre de la pupille n’est pas centré sur l’iris (au décalage pupil.center près)');
+    const hlItems = (eye.highlights?.list ?? []) as readonly { kind: string; role: string; anchor: string; y: number }[];
+    const lowSpec = hlItems.filter((h) => h.kind === 'reflection' && h.role === 'primary' && h.anchor === 'iris' && h.y > 0.05);
+    if (hlItems.some((h) => h.anchor === 'iris')) add('anatomy', 'specular-in-upper-iris', lowSpec.length === 0, lowSpec.length, 0, 'un reflet primaire ancré à l’iris est dans sa moitié basse (références : toujours dans la moitié haute)');
+    // style : texture de l'iris = écart moyen de luminance entre deux points voisins (pas de 5°) sur 4 anneaux ; l'ombrage lisse (paupière, vignettage) varie lentement, fibres et filigranes non.
+    let tex = 0, nt = 0;
+    for (const f of [0.4, 0.55, 0.7, 0.85]) { let prev: number | null = null; for (let k = 0; k <= 72; k++) { const a = (k * 5 * Math.PI) / 180; const x = c.x + ox + Math.cos(a) * rx * f, y = c.y + oy + Math.sin(a) * ry * f; if (!inside(poly, x, y)) { prev = null; continue; } const v = lum(px, x, y); if (prev !== null) { tex += Math.abs(v - prev); nt++; } prev = v; } }
+    const texMin = eye.iris.detail ? IRIS_TEXTURE_DETAIL_MIN : IRIS_TEXTURE_MIN;   // un iris qui DEMANDE du détail (`iris.detail`) doit en montrer : seuil plus haut
+    if (nt >= 40) add('style', 'iris-texture', tex / nt >= texMin, tex / nt, texMin, 'la texture de l’iris (écart de luminance entre points voisins) est sous le seuil : voile lisse, pas un iris détaillé');
+  }
 
   // ---- RÈGLE « CILS » SUR LES PIXELS (audit des cils : la vérification d'image n'avait aucune règle de cils) ----
   // On échantillonne la ligne médiane de chaque cil réellement dessiné (eyeLashSet = le même appel que le rendu), au quart, au tiers et à la moitié de sa longueur (la pointe effilée est sous le pixel).

@@ -152,7 +152,8 @@ export const PupilOutline = z
 export const Pupil = z
   .object({
     shape: z.enum(PUPIL_SHAPES).default('round'),
-    size: z.number().min(0.12).max(0.7).default(0.36),
+    /** Rayon / rayon d'iris. Plancher 0,08 (passe 9) : les réfs 06 et 09 mesurent 0,10 (pupille minuscule, collerette vive) ; l'ancien plancher 0,12 les refusait. */
+    size: z.number().min(0.08).max(0.7).default(0.36),
     /** false : aucune pupille dessinée (l'iris reste plein) — état explicitement invisible. */
     visible: z.boolean().default(true),
     /**

@@ -110,3 +110,10 @@ Fait : liner épais effilé par famille de cils (`lids.liner`), dégagement de l
 - ⬜ Toujours ouverts : réf. 14 · limbe réf. 15 rangées 3–5 · facettes d'iris · épaisseur du liner et dispersion à mesurer · 11 autres enveloppes une à une · profil bas (0,0235) · 100 formes supplémentaires
   (enveloppes 12, 13, 14, 15, 16, 17) · `finish` non relié au rendu de visage `ink` ni à `random-eye` · ton clair de l'iris 13 : interprétation (3 iris mesurés).
 
+
+## Passe 9 (détail : `EYES-PASS-9.md`)
+- ✅ Iris des réfs 03 / 05 / 06 / 09 mesurés pixel par pixel (`extract_iris_photos.py`) ; 4 familles d'iris additives (`eye-iris-families-photo.ts`), constantes testées contre le JSON ; plancher `pupil.size` 0,12 → 0,08.
+- ✅ Seconde galerie : 100 yeux de plus (`eye-gallery-ext2.ts`, distance min 0,0129 aux 148 existants), `eyeSource: 'extended2'` (248 identités) ; 0 erreur `verifyEye`, 0 échec pixel.
+- ✅ Règles d'iris : `pupil-core-centred` (géométrie), `specular-in-upper-iris` (anatomie), `iris-texture` (style ; voile gris 3,3 < 8 ≤ familles 11,9–21,8).
+- 🟡 Almond : validé hors échantillon sur 03 / 05 (haut 0,033 / 0,018 ; bas 0,051 / 0,058 contre 0,013–0,033 en entraînement), `ALMOND_REF` inchangé. ⬜ Paramètre `lowerPeak` exposé (sommet bas 0,40–0,65 selon l'œil) puis refit.
+- 🟡 Texture d'iris moteur 12–22 contre 22–42 sur les références : couleurs et proportions atteintes, filigranes fins non. ⬜ Réfs 08 et 10 sans mesure d'iris ; aspect de pupille de 05 / 09 et limbe de 05 non fiables ; canthus externe de 03 incertain.

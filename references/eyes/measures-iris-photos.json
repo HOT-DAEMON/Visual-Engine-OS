@@ -1,0 +1,869 @@
+{
+ "method": "annotation humaine (centre/rayons approchés) + limbe par gradient radial + tout le reste calculé",
+ "eyes": [
+  {
+   "id": "03",
+   "file": "03.jpg",
+   "note": "fente verticale, ciel bleu-vert en haut, rayons jaunes en bas",
+   "annotation": {
+    "cx": 364,
+    "cy": 614,
+    "rx": 98,
+    "ry": 104
+   },
+   "limbe": {
+    "cx": 364.4,
+    "cy": 613.3,
+    "rx": 99.4,
+    "ry": 110.2,
+    "angDeg": 5.9,
+    "rayonsRetenus": 72,
+    "aspectHW": 1.108
+   },
+   "pupille": {
+    "cx": -0.056,
+    "cy": -0.219,
+    "rOverIris": 0.232,
+    "aspectHW": 1.471,
+    "color": "#341b0e"
+   },
+   "radial": [
+    {
+     "r": 0.042,
+     "color": "#bc5325",
+     "dark": "#993317",
+     "bright": "#e6904b",
+     "lum": 104.9,
+     "lumSpread": 26.3,
+     "sat": 0.817
+    },
+    {
+     "r": 0.125,
+     "color": "#af502c",
+     "dark": "#8d2d17",
+     "bright": "#d29e65",
+     "lum": 99.5,
+     "lumSpread": 32.3,
+     "sat": 0.77
+    },
+    {
+     "r": 0.208,
+     "color": "#e3b05d",
+     "dark": "#af6133",
+     "bright": "#fbdb77",
+     "lum": 175.0,
+     "lumSpread": 72.5,
+     "sat": 0.603
+    },
+    {
+     "r": 0.292,
+     "color": "#f0c667",
+     "dark": "#d3a153",
+     "bright": "#fcdd7a",
+     "lum": 196.4,
+     "lumSpread": 20.1,
+     "sat": 0.571
+    },
+    {
+     "r": 0.375,
+     "color": "#deb765",
+     "dark": "#aa7b3e",
+     "bright": "#f9e58a",
+     "lum": 182.8,
+     "lumSpread": 66.7,
+     "sat": 0.56
+    },
+    {
+     "r": 0.458,
+     "color": "#c7a55f",
+     "dark": "#85623d",
+     "bright": "#f9e488",
+     "lum": 164.8,
+     "lumSpread": 91.5,
+     "sat": 0.542
+    },
+    {
+     "r": 0.542,
+     "color": "#86754b",
+     "dark": "#231c1a",
+     "bright": "#f9e488",
+     "lum": 119.4,
+     "lumSpread": 157.1,
+     "sat": 0.472
+    },
+    {
+     "r": 0.625,
+     "color": "#887f59",
+     "dark": "#1c1c24",
+     "bright": "#f8e78d",
+     "lum": 128.6,
+     "lumSpread": 159.9,
+     "sat": 0.494
+    },
+    {
+     "r": 0.708,
+     "color": "#989167",
+     "dark": "#2d313b",
+     "bright": "#fae78b",
+     "lum": 144.8,
+     "lumSpread": 128.4,
+     "sat": 0.533
+    },
+    {
+     "r": 0.792,
+     "color": "#999368",
+     "dark": "#2f333c",
+     "bright": "#f6dd85",
+     "lum": 144.9,
+     "lumSpread": 112.7,
+     "sat": 0.538
+    },
+    {
+     "r": 0.875,
+     "color": "#81765a",
+     "dark": "#1d1e26",
+     "bright": "#eccb7b",
+     "lum": 120.7,
+     "lumSpread": 108.3,
+     "sat": 0.541
+    },
+    {
+     "r": 0.958,
+     "color": "#6f6767",
+     "dark": "#151118",
+     "bright": "#decfc5",
+     "lum": 109.9,
+     "lumSpread": 134.5,
+     "sat": 0.407
+    }
+   ],
+   "secteurs": [
+    {
+     "angleDeg": 0,
+     "color": "#2d465b"
+    },
+    {
+     "angleDeg": 45,
+     "color": "#696f4e"
+    },
+    {
+     "angleDeg": 90,
+     "color": "#c7a158"
+    },
+    {
+     "angleDeg": 135,
+     "color": "#f3d87d"
+    },
+    {
+     "angleDeg": 180,
+     "color": "#f1db8e"
+    },
+    {
+     "angleDeg": 225,
+     "color": "#f3dd83"
+    },
+    {
+     "angleDeg": 270,
+     "color": "#bc9954"
+    },
+    {
+     "angleDeg": 315,
+     "color": "#5c544a"
+    }
+   ],
+   "anneauLimbique": {
+    "luminanceMin": 108.4,
+    "epaisseurOverRayon": 0.2
+   },
+   "reflets": [
+    {
+     "dx": 0.006,
+     "dy": 0.651,
+     "rOverIris": 0.332
+    },
+    {
+     "dx": -0.52,
+     "dy": -0.613,
+     "rOverIris": 0.184
+    },
+    {
+     "dx": 0.441,
+     "dy": 0.328,
+     "rOverIris": 0.146
+    },
+    {
+     "dx": -0.407,
+     "dy": 0.312,
+     "rOverIris": 0.108
+    },
+    {
+     "dx": 0.405,
+     "dy": -0.656,
+     "rOverIris": 0.103
+    },
+    {
+     "dx": 0.858,
+     "dy": 0.31,
+     "rOverIris": 0.093
+    }
+   ],
+   "fibres": {
+    "ecartTypeLuminance": [
+     42.89,
+     70.86,
+     80.25,
+     69.5
+    ]
+   },
+   "sclere": "#e2c7c4"
+  },
+  {
+   "id": "05",
+   "file": "05.jpg",
+   "note": "iris orange, calotte de ciel bleu en haut, éclats",
+   "annotation": {
+    "cx": 485,
+    "cy": 468,
+    "rx": 88,
+    "ry": 74
+   },
+   "limbe": {
+    "cx": 486.8,
+    "cy": 464.5,
+    "rx": 82.5,
+    "ry": 89.5,
+    "angDeg": 66.0,
+    "rayonsRetenus": 72,
+    "aspectHW": 1.085
+   },
+   "pupille": {
+    "cx": -0.098,
+    "cy": 0.073,
+    "rOverIris": 0.174,
+    "aspectHW": 0.912,
+    "color": "#221618"
+   },
+   "radial": [
+    {
+     "r": 0.042,
+     "color": "#412122",
+     "dark": "#422220",
+     "bright": "#412224",
+     "lum": 41.6,
+     "lumSpread": 6.9,
+     "sat": 0.513
+    },
+    {
+     "r": 0.125,
+     "color": "#727789",
+     "dark": "#492627",
+     "bright": "#8db6d9",
+     "lum": 116.4,
+     "lumSpread": 73.8,
+     "sat": 0.362
+    },
+    {
+     "r": 0.208,
+     "color": "#717f96",
+     "dark": "#472f31",
+     "bright": "#a0b9d1",
+     "lum": 129.3,
+     "lumSpread": 81.3,
+     "sat": 0.341
+    },
+    {
+     "r": 0.292,
+     "color": "#6e545e",
+     "dark": "#482120",
+     "bright": "#87a7cb",
+     "lum": 96.5,
+     "lumSpread": 63.8,
+     "sat": 0.489
+    },
+    {
+     "r": 0.375,
+     "color": "#9b6158",
+     "dark": "#682d26",
+     "bright": "#b19d9d",
+     "lum": 117.2,
+     "lumSpread": 55.8,
+     "sat": 0.556
+    },
+    {
+     "r": 0.458,
+     "color": "#ae6c5a",
+     "dark": "#7b3126",
+     "bright": "#d9a98c",
+     "lum": 127.2,
+     "lumSpread": 64.1,
+     "sat": 0.577
+    },
+    {
+     "r": 0.542,
+     "color": "#a26350",
+     "dark": "#5b2d2e",
+     "bright": "#f39858",
+     "lum": 116.9,
+     "lumSpread": 73.2,
+     "sat": 0.55
+    },
+    {
+     "r": 0.625,
+     "color": "#9e5e46",
+     "dark": "#4a201f",
+     "bright": "#f9a162",
+     "lum": 111.2,
+     "lumSpread": 111.6,
+     "sat": 0.582
+    },
+    {
+     "r": 0.708,
+     "color": "#995b45",
+     "dark": "#3e1b1b",
+     "bright": "#faa368",
+     "lum": 107.1,
+     "lumSpread": 123.7,
+     "sat": 0.568
+    },
+    {
+     "r": 0.792,
+     "color": "#8e553f",
+     "dark": "#341515",
+     "bright": "#faa56c",
+     "lum": 99.9,
+     "lumSpread": 135.1,
+     "sat": 0.564
+    },
+    {
+     "r": 0.875,
+     "color": "#8d523e",
+     "dark": "#341616",
+     "bright": "#f8a777",
+     "lum": 98.4,
+     "lumSpread": 135.9,
+     "sat": 0.569
+    },
+    {
+     "r": 0.958,
+     "color": "#915b4b",
+     "dark": "#331717",
+     "bright": "#ecb092",
+     "lum": 107.9,
+     "lumSpread": 140.3,
+     "sat": 0.535
+    }
+   ],
+   "secteurs": [
+    {
+     "angleDeg": 0,
+     "color": "#4f414e"
+    },
+    {
+     "angleDeg": 45,
+     "color": "#614242"
+    },
+    {
+     "angleDeg": 90,
+     "color": "#865046"
+    },
+    {
+     "angleDeg": 135,
+     "color": "#e87e51"
+    },
+    {
+     "angleDeg": 180,
+     "color": "#f08b56"
+    },
+    {
+     "angleDeg": 225,
+     "color": "#e7975b"
+    },
+    {
+     "angleDeg": 270,
+     "color": "#9d462f"
+    },
+    {
+     "angleDeg": 315,
+     "color": "#503e4c"
+    }
+   ],
+   "anneauLimbique": {
+    "luminanceMin": 97.7,
+    "epaisseurOverRayon": 0.25
+   },
+   "reflets": [
+    {
+     "dx": -0.36,
+     "dy": 0.709,
+     "rOverIris": 0.161
+    },
+    {
+     "dx": 0.19,
+     "dy": -0.223,
+     "rOverIris": 0.132
+    },
+    {
+     "dx": -0.256,
+     "dy": 0.429,
+     "rOverIris": 0.063
+    },
+    {
+     "dx": -0.036,
+     "dy": 0.964,
+     "rOverIris": 0.061
+    },
+    {
+     "dx": -0.789,
+     "dy": 0.542,
+     "rOverIris": 0.058
+    },
+    {
+     "dx": 0.62,
+     "dy": 0.751,
+     "rOverIris": 0.057
+    }
+   ],
+   "fibres": {
+    "ecartTypeLuminance": [
+     38.13,
+     34.94,
+     52.13,
+     58.81
+    ]
+   },
+   "sclere": "#eed2c7"
+  },
+  {
+   "id": "06",
+   "file": "06.jpg",
+   "note": "or filigrané, anneau interne + pupille, limbe sombre épais",
+   "annotation": {
+    "cx": 400,
+    "cy": 405,
+    "rx": 172,
+    "ry": 150
+   },
+   "limbe": {
+    "cx": 394.6,
+    "cy": 398.9,
+    "rx": 156.7,
+    "ry": 172.4,
+    "angDeg": 109.6,
+    "rayonsRetenus": 72,
+    "aspectHW": 1.1
+   },
+   "pupille": {
+    "cx": 0.021,
+    "cy": -0.086,
+    "rOverIris": 0.101,
+    "aspectHW": 1.158,
+    "color": "#41170a"
+   },
+   "radial": [
+    {
+     "r": 0.042,
+     "color": "#a45114",
+     "dark": "#6c280b",
+     "bright": "#d87b19",
+     "lum": 98.3,
+     "lumSpread": 55.3,
+     "sat": 0.891
+    },
+    {
+     "r": 0.125,
+     "color": "#ca8323",
+     "dark": "#8a4219",
+     "bright": "#f3e14b",
+     "lum": 139.9,
+     "lumSpread": 67.2,
+     "sat": 0.835
+    },
+    {
+     "r": 0.208,
+     "color": "#cb9d39",
+     "dark": "#853e1a",
+     "bright": "#f7f567",
+     "lum": 158.9,
+     "lumSpread": 115.6,
+     "sat": 0.743
+    },
+    {
+     "r": 0.292,
+     "color": "#d7a339",
+     "dark": "#a54f1a",
+     "bright": "#f6f066",
+     "lum": 165.5,
+     "lumSpread": 80.7,
+     "sat": 0.757
+    },
+    {
+     "r": 0.375,
+     "color": "#b87c23",
+     "dark": "#672512",
+     "bright": "#f4e436",
+     "lum": 132.7,
+     "lumSpread": 106.1,
+     "sat": 0.829
+    },
+    {
+     "r": 0.458,
+     "color": "#c79d30",
+     "dark": "#652510",
+     "bright": "#faf95b",
+     "lum": 157.6,
+     "lumSpread": 123.6,
+     "sat": 0.784
+    },
+    {
+     "r": 0.542,
+     "color": "#deac39",
+     "dark": "#be6018",
+     "bright": "#f9fa6f",
+     "lum": 174.1,
+     "lumSpread": 90.8,
+     "sat": 0.763
+    },
+    {
+     "r": 0.625,
+     "color": "#d5a73a",
+     "dark": "#9c4d1c",
+     "bright": "#f9f769",
+     "lum": 168.8,
+     "lumSpread": 97.9,
+     "sat": 0.751
+    },
+    {
+     "r": 0.708,
+     "color": "#c29133",
+     "dark": "#743315",
+     "bright": "#f3e65d",
+     "lum": 149.4,
+     "lumSpread": 104.7,
+     "sat": 0.764
+    },
+    {
+     "r": 0.792,
+     "color": "#ae7129",
+     "dark": "#5c220e",
+     "bright": "#e5be4d",
+     "lum": 124.1,
+     "lumSpread": 88.1,
+     "sat": 0.793
+    },
+    {
+     "r": 0.875,
+     "color": "#915220",
+     "dark": "#4f1d0d",
+     "bright": "#d2963b",
+     "lum": 96.1,
+     "lumSpread": 58.6,
+     "sat": 0.811
+    },
+    {
+     "r": 0.958,
+     "color": "#7a4927",
+     "dark": "#37130a",
+     "bright": "#d7a765",
+     "lum": 84.7,
+     "lumSpread": 69.7,
+     "sat": 0.746
+    }
+   ],
+   "secteurs": [
+    {
+     "angleDeg": 0,
+     "color": "#853f18"
+    },
+    {
+     "angleDeg": 45,
+     "color": "#ae6e32"
+    },
+    {
+     "angleDeg": 90,
+     "color": "#c98a29"
+    },
+    {
+     "angleDeg": 135,
+     "color": "#e3bc3e"
+    },
+    {
+     "angleDeg": 180,
+     "color": "#e6cd47"
+    },
+    {
+     "angleDeg": 225,
+     "color": "#e4be39"
+    },
+    {
+     "angleDeg": 270,
+     "color": "#d7ab34"
+    },
+    {
+     "angleDeg": 315,
+     "color": "#a05b21"
+    }
+   ],
+   "anneauLimbique": {
+    "luminanceMin": 84.9,
+    "epaisseurOverRayon": 0.2
+   },
+   "reflets": [
+    {
+     "dx": 0.031,
+     "dy": 0.662,
+     "rOverIris": 0.104
+    },
+    {
+     "dx": 0.345,
+     "dy": 0.426,
+     "rOverIris": 0.094
+    },
+    {
+     "dx": -0.368,
+     "dy": 0.372,
+     "rOverIris": 0.085
+    },
+    {
+     "dx": 0.198,
+     "dy": -0.289,
+     "rOverIris": 0.082
+    },
+    {
+     "dx": -0.207,
+     "dy": 0.598,
+     "rOverIris": 0.036
+    },
+    {
+     "dx": -0.093,
+     "dy": 0.519,
+     "rOverIris": 0.034
+    }
+   ],
+   "fibres": {
+    "ecartTypeLuminance": [
+     62.54,
+     51.48,
+     48.91,
+     57.03
+    ]
+   },
+   "sclere": "#c5b29a"
+  },
+  {
+   "id": "09",
+   "file": "09.jpg",
+   "note": "bleu glacé, fougères, collerette fibreuse, pupille noire",
+   "annotation": {
+    "cx": 395,
+    "cy": 380,
+    "rx": 182,
+    "ry": 168
+   },
+   "limbe": {
+    "cx": 397.3,
+    "cy": 385.0,
+    "rx": 165.8,
+    "ry": 175.7,
+    "angDeg": 110.6,
+    "rayonsRetenus": 72,
+    "aspectHW": 1.06
+   },
+   "pupille": {
+    "cx": 0.03,
+    "cy": -0.081,
+    "rOverIris": 0.105,
+    "aspectHW": 0.51,
+    "color": "#0c1128"
+   },
+   "radial": [
+    {
+     "r": 0.042,
+     "color": "#122a71",
+     "dark": "#0d1743",
+     "bright": "#1843a5",
+     "lum": 43.7,
+     "lumSpread": 26.6,
+     "sat": 0.835
+    },
+    {
+     "r": 0.125,
+     "color": "#245daf",
+     "dark": "#102561",
+     "bright": "#3c9ede",
+     "lum": 84.9,
+     "lumSpread": 54.2,
+     "sat": 0.811
+    },
+    {
+     "r": 0.208,
+     "color": "#2b79bb",
+     "dark": "#142f6d",
+     "bright": "#42bfe6",
+     "lum": 105.2,
+     "lumSpread": 67.6,
+     "sat": 0.788
+    },
+    {
+     "r": 0.292,
+     "color": "#3b88b7",
+     "dark": "#192755",
+     "bright": "#6ee5ee",
+     "lum": 119.7,
+     "lumSpread": 99.9,
+     "sat": 0.685
+    },
+    {
+     "r": 0.375,
+     "color": "#4593bb",
+     "dark": "#1c2c5d",
+     "bright": "#7deff1",
+     "lum": 130.0,
+     "lumSpread": 120.9,
+     "sat": 0.651
+    },
+    {
+     "r": 0.458,
+     "color": "#4ba9d4",
+     "dark": "#284f9d",
+     "bright": "#78edef",
+     "lum": 148.4,
+     "lumSpread": 96.3,
+     "sat": 0.663
+    },
+    {
+     "r": 0.542,
+     "color": "#4ab3e2",
+     "dark": "#2a6dc5",
+     "bright": "#75ecf2",
+     "lum": 154.9,
+     "lumSpread": 64.2,
+     "sat": 0.687
+    },
+    {
+     "r": 0.625,
+     "color": "#45a9db",
+     "dark": "#1f60b8",
+     "bright": "#77e7f1",
+     "lum": 148.4,
+     "lumSpread": 57.0,
+     "sat": 0.703
+    },
+    {
+     "r": 0.708,
+     "color": "#3f94d4",
+     "dark": "#1b51af",
+     "bright": "#6ed6ee",
+     "lum": 134.1,
+     "lumSpread": 57.8,
+     "sat": 0.724
+    },
+    {
+     "r": 0.792,
+     "color": "#3679bf",
+     "dark": "#16327e",
+     "bright": "#65c7ec",
+     "lum": 112.0,
+     "lumSpread": 62.9,
+     "sat": 0.748
+    },
+    {
+     "r": 0.875,
+     "color": "#2a5ca7",
+     "dark": "#132563",
+     "bright": "#50a4df",
+     "lum": 86.7,
+     "lumSpread": 51.9,
+     "sat": 0.774
+    },
+    {
+     "r": 0.958,
+     "color": "#3d5f98",
+     "dark": "#131f4f",
+     "bright": "#96bfdb",
+     "lum": 92.1,
+     "lumSpread": 78.7,
+     "sat": 0.655
+    }
+   ],
+   "secteurs": [
+    {
+     "angleDeg": 0,
+     "color": "#295a9f"
+    },
+    {
+     "angleDeg": 45,
+     "color": "#4886c5"
+    },
+    {
+     "angleDeg": 90,
+     "color": "#45a0d6"
+    },
+    {
+     "angleDeg": 135,
+     "color": "#4ab7de"
+    },
+    {
+     "angleDeg": 180,
+     "color": "#44abde"
+    },
+    {
+     "angleDeg": 225,
+     "color": "#4fb8e4"
+    },
+    {
+     "angleDeg": 270,
+     "color": "#47a9da"
+    },
+    {
+     "angleDeg": 315,
+     "color": "#337cc0"
+    }
+   ],
+   "anneauLimbique": {
+    "luminanceMin": 85.9,
+    "epaisseurOverRayon": 0.2
+   },
+   "reflets": [
+    {
+     "dx": 0.081,
+     "dy": 0.441,
+     "rOverIris": 0.169
+    },
+    {
+     "dx": -0.249,
+     "dy": 0.563,
+     "rOverIris": 0.109
+    },
+    {
+     "dx": 0.6,
+     "dy": -0.362,
+     "rOverIris": 0.103
+    },
+    {
+     "dx": 0.559,
+     "dy": 0.222,
+     "rOverIris": 0.091
+    },
+    {
+     "dx": -0.512,
+     "dy": -0.151,
+     "rOverIris": 0.067
+    },
+    {
+     "dx": 0.273,
+     "dy": -0.303,
+     "rOverIris": 0.062
+    }
+   ],
+   "fibres": {
+    "ecartTypeLuminance": [
+     60.94,
+     42.71,
+     34.86,
+     32.05
+    ]
+   },
+   "sclere": "#b5b8c0"
+  }
+ ]
+}
