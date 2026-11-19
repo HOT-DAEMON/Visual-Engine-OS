@@ -66,6 +66,27 @@ export const VaultParams = z
     asymWidth: S0,
     /** Part de l'asymétrie du VISAGE (yeux, bouche) reportée sur le crâne : 0 = crâne indépendant … 1 = reprise intégrale (comportement d'origine). */
     asymFaceCoupling: z.number().min(0).max(1).default(1),
+    // --- Passe 2 (docs/SKULL-VAULT-2.md) : ajoutés À LA FIN pour ne décaler aucun tirage aléatoire existant (`drawVault` consomme les clés dans cet ordre). ---
+    /** Os frontal — ÉMINENCES frontales (tubera frontalia, deux bosses arrondies au-dessus des arcades) : -1 front plan (méplat) … +1 bosses marquées. */
+    frontalEminence: S0,
+    /** Os frontal — ARCADES sourcilières latérales (arcus superciliares), fusionnées à la glabelle en un seul bourrelet ; amplitude échelonnée par `browRidge` : -1 gouttière sus-orbitaire … +1 torus marqué. */
+    browArch: S0,
+    /** Os frontal — CRÊTE métopique (reste de la suture frontale, de la glabelle au bregma) : -1 sillon médian … +1 crête. */
+    metopicRidge: S0,
+    /** Occipital — CHIGNON (bosse localisée de l'écaille au-dessus de la ligne nuchale, distincte de la projection globale `occiput`) : -1 méplat … +1 chignon prononcé. */
+    occipitalBun: S0,
+    /** Occipital — amplitude PROPRE de la protubérance occipitale externe (indépendante de `inion`) : -1 creux … +1 crochet saillant. */
+    inionSize: S0,
+    /** Temporaux — CRÊTE temporale persistante (linea temporalis, indépendante de `suturesShow`) : -1 aucune (creux) … +1 crête marquée. */
+    temporalLine: S0,
+    /** Temporaux — VOLUME du muscle temporal sous la crête (comble la fosse) : -1 atrophié … +1 muscle volumineux. */
+    temporalMuscle: S0,
+    /** Astérion (jonction lambdoïde / squameuse / occipito-mastoïdienne) : -1 fossette … +1 saillie (os sutural). */
+    asterion: S0,
+    /** Asymétrie PROPRE de la région mastoïdienne : le côté +x plus saillant et plus grand (+) ou plus effacé et plus petit (−). */
+    asymMastoid: S0,
+    /** Asymétrie PROPRE de POSITION des éminences pariétales : la bosse +x plus haute (+) ou plus basse (−), l'autre à l'opposé. N'agit que si l'éminence existe (`parietalBulge` > −1). */
+    asymParietalHeight: S0,
   })
   .strict();
 export type VaultParams = z.infer<typeof VaultParams>;

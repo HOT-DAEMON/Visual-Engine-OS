@@ -269,5 +269,119 @@
     "failed": []
    }
   ]
+ },
+ "arcade-torus": {
+  "overrides": {
+   "browArch": 1,
+   "glabella": 0.7,
+   "frontalEminence": -0.8,
+   "metopicRidge": -0.3,
+   "temporalLine": 0.6
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "front-bosses": {
+  "overrides": {
+   "frontalEminence": 1,
+   "browArch": -1,
+   "metopicRidge": 0.5,
+   "glabella": -0.5
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "dolicho-chignon": {
+  "overrides": {
+   "length": 1,
+   "cranialBreadth": -0.5,
+   "occipitalFlat": -0.6,
+   "occipitalBun": 1,
+   "inionSize": 0.7
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "muscle-temporal": {
+  "overrides": {
+   "temporalMuscle": 1,
+   "temporalLine": 0.8,
+   "templeBreadth": 0.3,
+   "mastoid": 0.6
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
+ },
+ "asym-fine": {
+  "overrides": {
+   "asymMastoid": 1,
+   "asymParietalHeight": 1,
+   "parietalBulge": 0.8,
+   "asterion": 0.7,
+   "mastoid": 0.5,
+   "asymFaceCoupling": 0
+  },
+  "layers": [
+   {
+    "layer": "geometry",
+    "failed": []
+   },
+   {
+    "layer": "anatomy",
+    "failed": []
+   },
+   {
+    "layer": "style",
+    "failed": []
+   }
+  ]
  }
 }

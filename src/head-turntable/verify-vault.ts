@@ -8,6 +8,7 @@ import { VAULT_VIEWS, vaultRender } from './vault-lab';
 import { place, placeAll } from './vault-visibility';
 import type { HeadTurnSpec } from './types';
 import { check, layerOf, type Check, type LayerReport } from './verify-types';
+import { vaultAnatomyChecks2, vaultGeometryChecks2, vaultStyleChecks2 } from './verify-vault-2';
 
 /**
  * COUCHE DE VÉRIFICATION DE RENDU DE LA VOÛTE CRÂNIENNE : cohérence GÉOMÉTRIQUE (maillage valide, relief continu et borné, sommet monotone), cohérence ANATOMIQUE (ordre des repères,
@@ -38,6 +39,7 @@ export function vaultGeometryChecks(spec: HeadTurnSpec): Check[] {
     check(G, 'vault.geo.amplitude', 'Relief de la voûte et des joues : amplitude radiale maximale (U) [≈ 0,06 U ≈ 14 mm d\'une tête de 230 mm, extrêmes compris]', r.amp, 0, 0.06),
     check(G, 'vault.geo.continuity', 'Relief : plus grand saut entre deux échantillons voisins (0,0125 U ou 3°) : une falaise ferait une arête dans le maillage', r.step, 0, 0.014),
     check(G, 'vault.geo.face', 'Relief à moins de 4° du plan de face, 0,05 U sous la glabelle de la tête (U) : le nez, la bouche et le menton restent ceux des moteurs', r.face, 0, 0.002),
+    ...vaultGeometryChecks2(spec),
   ];
 }
 
@@ -52,6 +54,7 @@ export function vaultAnatomyChecks(spec: HeadTurnSpec): Check[] {
     check(A, 'vault.anat.tissue.depth', 'Profondeur de l\'os : tempe (muscle temporal) plus profonde que glabelle et mastoïde (rapport tempe / glabelle)', tb.depthU / gl.depthU, 3, 9),
     check(A, 'vault.anat.sutures.hidden', 'Sutures et lignes masquées par défaut dans le rendu (nombre visibles par défaut parmi les sutures et lignes)', VAULT_STRUCTURES.filter((q) => (q.kind === 'suture' || q.kind === 'line') && q.visibleByDefault).length, 0, 0),
     check(A, 'vault.anat.visible.back', 'Vue de dos : occipital, mastoïdes et pariétaux sont vus ou sur le contour (nombre sur 5 ; une éminence au point le plus large est sur le contour)', back.filter((p) => ['occipital-bone', 'mastoid-process', 'parietal-bone'].includes(p.id) && (p.visible || p.grazing)).length, 4, 5),
+    ...vaultAnatomyChecks2(spec),
   ];
 }
 
@@ -65,6 +68,6 @@ export function vaultStyleChecks(spec: HeadTurnSpec): Check[] {
   const lit = vaultRender(spec, 'trois_quarts', 360, true); let hf = 0, n = 0;
   for (let y = 1; y + 1 < lit.h; y++) for (let x = 1; x + 1 < lit.w; x++) { const i = y * lit.w + x; if (lit.ids[i] === 0 || lit.ids[i - 1] === 0 || lit.ids[i + 1] === 0 || lit.ids[i - lit.w] === 0 || lit.ids[i + lit.w] === 0) continue; const k = (j: number): number => lit.rgba[j * 4]!; hf += Math.abs(4 * k(i) - k(i - 1) - k(i + 1) - k(i - lit.w) - k(i + lit.w)) / 255; n++; }
   c.push(check(S, 'vault.style.shading.noise', 'Modelé : énergie haute fréquence moyenne (laplacien, 0 – 1) : le relief se lit comme un volume et non comme du bruit [calibré : 12 têtes de base ≤ 0,060, extrêmes ≤ 0,046 ; borne 0,075]', n ? hf / n : 0, 0, 0.075));
-  return c;
+  return [...c, ...vaultStyleChecks2(spec)];
 }
 export const vaultReport = (spec: HeadTurnSpec): LayerReport[] => [layerOf(G, vaultGeometryChecks(spec)), layerOf(A, vaultAnatomyChecks(spec)), layerOf(S, vaultStyleChecks(spec))];

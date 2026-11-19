@@ -46,6 +46,13 @@ export const COMPONENTS: readonly AnatomicalComponent[] = [
   { id: 'squamous-suture', domain: 'head', parent: 'cranial-vault', aliases: {} },
   { id: 'temporal-line', domain: 'head', parent: 'frontal-bone', aliases: {} },
   { id: 'nuchal-line', domain: 'head', parent: 'occipital-bone', aliases: {} },
+  // Passe 2 de la voûte (docs/SKULL-VAULT-2.md) : reliefs régionaux et repères qui avaient des paramètres sans structure propre.
+  { id: 'frontal-eminence', domain: 'head', parent: 'frontal-bone', aliases: {} },
+  { id: 'supraorbital-arch', domain: 'head', parent: 'frontal-bone', aliases: {} },
+  { id: 'metopic-ridge', domain: 'head', parent: 'frontal-bone', aliases: {} },
+  { id: 'occipital-bun', domain: 'head', parent: 'occipital-bone', aliases: {} },
+  { id: 'temporal-muscle', domain: 'head', parent: 'temporal-bone', aliases: {} },
+  { id: 'asterion', domain: 'head', parent: 'cranial-vault', aliases: {} },
   { id: 'face', domain: 'head', parent: 'head', aliases: { pose: ['face'] } },
   { id: 'brow', domain: 'head', parent: 'face', aliases: { pose: ['browL', 'browR'] } },
   { id: 'eye', domain: 'head', parent: 'face', aliases: { contract: ['eye'], pose: ['eyeL', 'eyeR'] } },

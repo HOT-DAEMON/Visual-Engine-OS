@@ -21,7 +21,7 @@ export interface ProofCase {
   readonly metric?: 'mirror';
 }
 /** Reliefs osseux tous actifs : ce que `scalp` et `boneShow` ont à filtrer. */
-export const RELIEF_ON: Partial<SkullParams> = { mastoid: 1, nuchalLine: 1, glabella: 1, temporalHollow: 1, suturesShow: 1 };
+export const RELIEF_ON: Partial<SkullParams> = { mastoid: 1, nuchalLine: 1, glabella: 1, temporalHollow: 1, suturesShow: 1, browArch: 1, frontalEminence: 1, occipitalBun: 1, temporalLine: 1 };
 /** Visage franchement asymétrique (asymétrie crânienne reportée = +1) avec un crâne sans asymétrie propre. */
 const asymFace = (p: Profile): Profile => ({ ...p, face: { ...p.face, params: { ...p.face.params, asymmetry: { ...p.face.params.asymmetry, eyeDy: 0.012, eyeRollDeg: 4, mouthTiltDeg: 4 } } } });
 
@@ -29,6 +29,8 @@ const asymFace = (p: Profile): Profile => ({ ...p, face: { ...p.face, params: { 
 export const SHAPE_BASE: Readonly<Record<string, Partial<SkullParams>>> = {
   mastoidSize: { mastoid: 1 }, mastoidDirection: { mastoid: 1 }, mastoidSlope: { mastoid: 1 },
   parietalHeight: { parietalBulge: 1 }, parietalAzimuth: { parietalBulge: 1 },
+  // Passe 2 : une asymétrie de position ou de taille compare deux côtés, il faut qu'il y ait quelque chose à comparer (éminence pariétale, mastoïde saillante).
+  asymParietalHeight: { parietalBulge: 1 }, asymMastoid: { mastoid: 0.5 },
 };
 const ALL_VIEWS: readonly VaultView[] = ['face', 'trois_quarts', 'profil', 'trois_quarts_arriere', 'dos', 'dessus'];
 const viewsOf = (key: string): readonly VaultView[] => {
@@ -48,7 +50,8 @@ export function proofCases(): ProofCase[] {
   }
   out.push({ id: 'boneShow', lo: -1, hi: 1, nom: 0, base: RELIEF_ON, views: ['profil', 'trois_quarts', 'trois_quarts_arriere', 'dessus'] });
   out.push({ id: 'scalp', lo: 0.05, hi: 0.95, nom: undefined, base: RELIEF_ON, views: ['profil', 'trois_quarts', 'trois_quarts_arriere', 'dessus'] });
-  for (const k of EXISTING_PROOF_KEYS) out.push({ id: k, lo: k === 'length' ? -1 : 0, hi: 1, nom: undefined, base: {}, views: viewsOf(k) });
+  // `browRidge` échelonne l'arcade latérale (3D) : sans arcade il n'agit que sur la glabelle (≈ 0,2 % de silhouette) ; on le prouve donc AVEC l'arcade active (docs/SKULL-VAULT-2.md §2).
+  for (const k of EXISTING_PROOF_KEYS) out.push({ id: k, lo: k === 'length' ? -1 : 0, hi: 1, nom: undefined, base: k === 'browRidge' ? { browArch: 1 } : {}, views: viewsOf(k) });
   return out;
 }
 /** Valeurs absolues des surcharges pour une valeur du paramètre. */

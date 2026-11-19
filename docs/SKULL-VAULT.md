@@ -60,11 +60,14 @@ Chaque région a une pile de couches (peau, sous-cutané, galéa, périoste, mus
 ### Structures et données
 Les 15 structures sont des composants canoniques (`anatomy/components.ts`, enfants de `cranium`). Chacune déclare ses 6 voisins (réciprocité garantie et testée), son ancrage, ses paramètres, son influence et ses vues. Sutures et lignes sont des **données** (`vaultCurves`), invisibles par défaut ; tous les os et régions sont visibles par défaut. Toutes les structures visibles appartiennent au **même maillage continu** (relief radial sur la superellipse) : aucune couture. Matériau : hérité de `cranium` (peau), spécialisé pour la glabelle (peau mince) et les sutures (relief fin).
 
+## Passe 2 : front, occiput, tempes, astérion, asymétries
+Dix mesures de plus (`frontalEminence`, `browArch`, `metopicRidge`, `occipitalBun`, `inionSize`, `temporalLine`, `temporalMuscle`, `asterion`, `asymMastoid`, `asymParietalHeight`), une forme partagée (`skull/vault-shapes.ts`), six structures de plus au registre, une couche de vérification étendue, et la correction du sens de `parietalHeight` : voir **`SKULL-VAULT-2.md`**. Preuves : `artefacts/skull-vault-2/`.
+
 ## Mise à jour : tissus, tête chauve, profil 2D
 
 - **Transmission des tissus** (`vault-tissue.ts`) : τ = (1,35 − 0,35 r) · exp(−κ r (scalp − 0,5)) · (1 + 0,6 boneShow), κ = 1,4, bornée [0,25 ; 1,6] ; identique à l'ancienne valeur à `scalp` = 0,5.
 - **Tête chauve** : le sommet est celui du visage 2D (`bare`, `SKULL-ENLARGEMENT.md`) ; les poids en hauteur « 0 = sommet » se comptent depuis le vertex (`vaultTop`, `vertexY`).
-- **Profil 2D** : lit 9 mesures de voûte (`SKULL-PROFILE-2D.md`).
+- **Profil 2D** : lit 9 mesures de voûte (`SKULL-PROFILE-2D.md`) ; 14 depuis la passe 2.
 - Les paramètres de FORME et de POSITION n'ont de preuve que sur une base qui active leur structure (`SHAPE_BASE` dans `vault-proof.ts`).
 
 ## Régénérer
@@ -72,3 +75,4 @@ Les 15 structures sont des composants canoniques (`anatomy/components.ts`, enfan
 npx tsx scripts/head-turntable/artefacts-vault.ts /tmp/vault 300
 python3 scripts/head-turntable/compose-vault.py /tmp/vault artefacts/skull-vault
 ```
+La génération complète est longue (≈ 15 min) : `VAULT_SHARD=i/n` la découpe en tranches parallèles, `merge-vault-proofs.py` les réunit (détail dans `SKULL-VAULT-2.md`).

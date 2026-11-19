@@ -206,5 +206,135 @@
    0,
    0
   ]
+ },
+ "browArch__glabella": {
+  "view": "trois_quarts",
+  "va": [
+   -1,
+   0,
+   1
+  ],
+  "vb": [
+   -1,
+   0,
+   1
+  ],
+  "voisinesPerceptibles": 12,
+  "voisinesTotal": 12,
+  "correctionsStrictes": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "frontalEminence__browArch": {
+  "view": "trois_quarts",
+  "va": [
+   -1,
+   0,
+   1
+  ],
+  "vb": [
+   -1,
+   0,
+   1
+  ],
+  "voisinesPerceptibles": 12,
+  "voisinesTotal": 12,
+  "correctionsStrictes": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "occipitalBun__occipitalFlat": {
+  "view": "profil",
+  "va": [
+   -1,
+   0,
+   1
+  ],
+  "vb": [
+   -1,
+   0,
+   1
+  ],
+  "voisinesPerceptibles": 12,
+  "voisinesTotal": 12,
+  "correctionsStrictes": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1
+  ]
+ },
+ "temporalMuscle__temporalLine": {
+  "view": "trois_quarts",
+  "va": [
+   -1,
+   0,
+   1
+  ],
+  "vb": [
+   -1,
+   0,
+   1
+  ],
+  "voisinesPerceptibles": 12,
+  "voisinesTotal": 12,
+  "correctionsStrictes": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "browArch__browRidge": {
+  "view": "profil",
+  "va": [
+   0,
+   0.5,
+   1
+  ],
+  "vb": [
+   0,
+   0.5,
+   1
+  ],
+  "voisinesPerceptibles": 12,
+  "voisinesTotal": 12,
+  "correctionsStrictes": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
  }
 }

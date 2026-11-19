@@ -1,0 +1,872 @@
+[
+ {
+  "id": "parietalHeight",
+  "perView": {
+   "trois_quarts_arriere": {
+    "lo_nom": {
+     "xor": 0.005181717471321874,
+     "shadeFrac": 0.008648107779723404,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.005319908597543559,
+     "shadeFrac": 0.014995715509854327,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.010048818729287675,
+     "shadeFrac": 0.02458753518868261,
+     "perceptible": true
+    }
+   },
+   "dos": {
+    "lo_nom": {
+     "xor": 0,
+     "shadeFrac": 0.007082538817760828,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.014199128302914737,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0,
+     "shadeFrac": 0.043346499591391995,
+     "perceptible": true
+    }
+   },
+   "face": {
+    "lo_nom": {
+     "xor": 0,
+     "shadeFrac": 0.00010215548064153642,
+     "perceptible": false
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0,
+     "perceptible": false
+    },
+    "lo_hi": {
+     "xor": 0,
+     "shadeFrac": 0.00010215548064153642,
+     "perceptible": false
+    }
+   },
+   "profil": {
+    "lo_nom": {
+     "xor": 0.0035021750350217504,
+     "shadeFrac": 0.009806090098060901,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.004660550458715596,
+     "shadeFrac": 0.006825688073394495,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.008146191105239982,
+     "shadeFrac": 0.01860413914575077,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "dos",
+   "xor": 0,
+   "shadeFrac": 0.043346499591391995
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "trois_quarts_arriere",
+   "dos",
+   "face",
+   "profil"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "frontalEminence",
+  "perView": {
+   "trois_quarts": {
+    "lo_nom": {
+     "xor": 0.0033774073009485484,
+     "shadeFrac": 0.0617993676343777,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.006755549201129499,
+     "shadeFrac": 0.05779747649855238,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.010107503839422837,
+     "shadeFrac": 0.09553912639737133,
+     "perceptible": true
+    }
+   },
+   "dessus": {
+    "lo_nom": {
+     "xor": 0.0028909691629955946,
+     "shadeFrac": 0.0931075624082232,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.00220902940770399,
+     "shadeFrac": 0.08564591099452344,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.005093612334801762,
+     "shadeFrac": 0.13697687224669602,
+     "perceptible": true
+    }
+   },
+   "face": {
+    "lo_nom": {
+     "xor": 0,
+     "shadeFrac": 0.07375625702318929,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.04562944801988627,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0,
+     "shadeFrac": 0.09728606939762319,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "dessus",
+   "xor": 0.005093612334801762,
+   "shadeFrac": 0.13697687224669602
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "trois_quarts",
+   "dessus",
+   "face"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "browArch",
+  "perView": {
+   "profil": {
+    "lo_nom": {
+     "xor": 0.0019237883832778394,
+     "shadeFrac": 0.011764705882352941,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.004017248369144584,
+     "shadeFrac": 0.016584970331330853,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.005932859195931754,
+     "shadeFrac": 0.0196042303865571,
+     "perceptible": true
+    }
+   },
+   "trois_quarts": {
+    "lo_nom": {
+     "xor": 0.0011861543438409835,
+     "shadeFrac": 0.018475252507098954,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.003585771658060815,
+     "shadeFrac": 0.02574584050487665,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.004767195956844331,
+     "shadeFrac": 0.037456539660919747,
+     "perceptible": true
+    }
+   },
+   "face": {
+    "lo_nom": {
+     "xor": 0,
+     "shadeFrac": 0.007014676337385501,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.01699186161337556,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0,
+     "shadeFrac": 0.02533455919910103,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "trois_quarts",
+   "xor": 0.004767195956844331,
+   "shadeFrac": 0.037456539660919747
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "profil",
+   "trois_quarts",
+   "face"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "metopicRidge",
+  "perView": {
+   "profil": {
+    "lo_nom": {
+     "xor": 0.003515133575075853,
+     "shadeFrac": 0.006327240435136535,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.0059950715362830555,
+     "shadeFrac": 0.006289308176100629,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.009489131634116738,
+     "shadeFrac": 0.008017948435028873,
+     "perceptible": true
+    }
+   },
+   "trois_quarts": {
+    "lo_nom": {
+     "xor": 0.0015451507420316936,
+     "shadeFrac": 0.017355995544216466,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.0015806300966339764,
+     "shadeFrac": 0.014405287926141467,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.003123205054566341,
+     "shadeFrac": 0.030119184376794946,
+     "perceptible": true
+    }
+   },
+   "dessus": {
+    "lo_nom": {
+     "xor": 0.002570694087403599,
+     "shadeFrac": 0.03268453911127433,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.0016106764841233318,
+     "shadeFrac": 0.026184997699033593,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.004177186137250401,
+     "shadeFrac": 0.05017213679137021,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "dessus",
+   "xor": 0.004177186137250401,
+   "shadeFrac": 0.05017213679137021
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "profil",
+   "trois_quarts",
+   "dessus"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "occipitalBun",
+  "perView": {
+   "profil": {
+    "lo_nom": {
+     "xor": 0.020905794420187966,
+     "shadeFrac": 0.007918300895434027,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.020406683823262894,
+     "shadeFrac": 0.017325745768240964,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.04088586030664395,
+     "shadeFrac": 0.04081336764652579,
+     "perceptible": true
+    }
+   },
+   "dos": {
+    "lo_nom": {
+     "xor": 3.404950798460962e-05,
+     "shadeFrac": 0.07215090741938779,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.05962271860528466,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 3.404950798460962e-05,
+     "shadeFrac": 0.14028397289659164,
+     "perceptible": true
+    }
+   },
+   "trois_quarts_arriere": {
+    "lo_nom": {
+     "xor": 0.002912516630110388,
+     "shadeFrac": 0.06414727985329546,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.004583213978802635,
+     "shadeFrac": 0.04697794328272701,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.007482993197278911,
+     "shadeFrac": 0.09097744360902256,
+     "perceptible": true
+    }
+   },
+   "dessus": {
+    "lo_nom": {
+     "xor": 0.010398454035152296,
+     "shadeFrac": 0.016978006809607066,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.02249820014398848,
+     "shadeFrac": 0.015883729301655866,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.032660038688200096,
+     "shadeFrac": 0.018129470511493995,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "dos",
+   "xor": 3.404950798460962e-05,
+   "shadeFrac": 0.14028397289659164
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "profil",
+   "dos",
+   "trois_quarts_arriere",
+   "dessus"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "inionSize",
+  "perView": {
+   "profil": {
+    "lo_nom": {
+     "xor": 0.00296000296000296,
+     "shadeFrac": 0,
+     "perceptible": false
+    },
+    "nom_hi": {
+     "xor": 0.003135374400590188,
+     "shadeFrac": 3.688675765400221e-05,
+     "perceptible": false
+    },
+    "lo_hi": {
+     "xor": 0.006086090516764413,
+     "shadeFrac": 3.6885397071299475e-05,
+     "perceptible": true
+    }
+   },
+   "dos": {
+    "lo_nom": {
+     "xor": 3.404950798460962e-05,
+     "shadeFrac": 0.015458476625012768,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.018353309724870606,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 3.404950798460962e-05,
+     "shadeFrac": 0.03513909224011713,
+     "perceptible": true
+    }
+   },
+   "trois_quarts_arriere": {
+    "lo_nom": {
+     "xor": 0.00025170801869830995,
+     "shadeFrac": 0.010679611650485437,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.000359492396735809,
+     "shadeFrac": 0.011683502893913794,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.0006111151053274858,
+     "shadeFrac": 0.021604716370695234,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "dos",
+   "xor": 3.404950798460962e-05,
+   "shadeFrac": 0.03513909224011713
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "profil",
+   "dos",
+   "trois_quarts_arriere"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "temporalLine",
+  "perView": {
+   "trois_quarts": {
+    "lo_nom": {
+     "xor": 0.0003595828838547285,
+     "shadeFrac": 0.019057892844300612,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.001687188139426356,
+     "shadeFrac": 0.023800122051907957,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.0020461643393043043,
+     "shadeFrac": 0.037297627167318805,
+     "perceptible": true
+    }
+   },
+   "profil": {
+    "lo_nom": {
+     "xor": 0,
+     "shadeFrac": 0.017723673499592984,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.016946643972470955,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0,
+     "shadeFrac": 0.022348849256271737,
+     "perceptible": true
+    }
+   },
+   "dessus": {
+    "lo_nom": {
+     "xor": 4.6021445993833124e-05,
+     "shadeFrac": 0.010032675226655621,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.0088491538566802,
+     "shadeFrac": 0.022670254983350818,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.008894768051817726,
+     "shadeFrac": 0.019249190348036307,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "trois_quarts",
+   "xor": 0.0020461643393043043,
+   "shadeFrac": 0.037297627167318805
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "trois_quarts",
+   "profil",
+   "dessus"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "temporalMuscle",
+  "perView": {
+   "trois_quarts": {
+    "lo_nom": {
+     "xor": 0.00025170801869830995,
+     "shadeFrac": 0.02549442646530025,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.0005390835579514825,
+     "shadeFrac": 0.025983827493261457,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.0007906558849955077,
+     "shadeFrac": 0.05114106019766397,
+     "perceptible": true
+    }
+   },
+   "dessus": {
+    "lo_nom": {
+     "xor": 0.0008283860278889963,
+     "shadeFrac": 0.0055225735192599755,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.010564181958927188,
+     "shadeFrac": 0.01639269614316288,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.011383816766085334,
+     "shadeFrac": 0.01944355903647375,
+     "perceptible": true
+    }
+   },
+   "face": {
+    "lo_nom": {
+     "xor": 0.0048353594170327235,
+     "shadeFrac": 0.0061633806653726975,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.005284015852047556,
+     "shadeFrac": 0.007587304813196491,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.010093825153270331,
+     "shadeFrac": 0.014632659282593233,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "trois_quarts",
+   "xor": 0.0007906558849955077,
+   "shadeFrac": 0.05114106019766397
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "trois_quarts",
+   "dessus",
+   "face"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "asterion",
+  "perView": {
+   "trois_quarts_arriere": {
+    "lo_nom": {
+     "xor": 0.0002876766514437772,
+     "shadeFrac": 0.00334424107303391,
+     "perceptible": false
+    },
+    "nom_hi": {
+     "xor": 0.0008981820794711504,
+     "shadeFrac": 0.0038442193001365236,
+     "perceptible": false
+    },
+    "lo_hi": {
+     "xor": 0.0011856003449019184,
+     "shadeFrac": 0.010670403104117267,
+     "perceptible": true
+    }
+   },
+   "profil": {
+    "lo_nom": {
+     "xor": 0,
+     "shadeFrac": 0.01102641900392215,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.008103307925701176,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0,
+     "shadeFrac": 0.016317620069562642,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "profil",
+   "xor": 0,
+   "shadeFrac": 0.016317620069562642
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "trois_quarts_arriere",
+   "profil"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "asymMastoid",
+  "perView": {
+   "profil": {
+    "lo_nom": {
+     "xor": 0,
+     "shadeFrac": 0.004107156071930734,
+     "perceptible": false
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.018574705838821877,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0,
+     "shadeFrac": 0.02282986753496633,
+     "perceptible": true
+    }
+   },
+   "trois_quarts_arriere": {
+    "lo_nom": {
+     "xor": 0.004114195764167144,
+     "shadeFrac": 0.005902976531196337,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.001005855516039803,
+     "shadeFrac": 0.03132521464238244,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.005115912993703492,
+     "shadeFrac": 0.03709931310818546,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "trois_quarts_arriere",
+   "xor": 0.005115912993703492,
+   "shadeFrac": 0.03709931310818546
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "profil",
+   "trois_quarts_arriere"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "asymParietalHeight",
+  "perView": {
+   "trois_quarts_arriere": {
+    "lo_nom": {
+     "xor": 0.002398339060710195,
+     "shadeFrac": 0.005262027491408935,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.003288650580875782,
+     "shadeFrac": 0.0058266309204647,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.005110610771595011,
+     "shadeFrac": 0.012079625460133662,
+     "perceptible": true
+    }
+   },
+   "dos": {
+    "lo_nom": {
+     "xor": 0,
+     "shadeFrac": 0.004426586761100517,
+     "perceptible": false
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.0034731680740942524,
+     "perceptible": false
+    },
+    "lo_hi": {
+     "xor": 0,
+     "shadeFrac": 0.023460909833832744,
+     "perceptible": true
+    }
+   },
+   "face": {
+    "lo_nom": {
+     "xor": 0,
+     "shadeFrac": 0,
+     "perceptible": false
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.00010215548064153642,
+     "perceptible": false
+    },
+    "lo_hi": {
+     "xor": 0,
+     "shadeFrac": 0.00010215548064153642,
+     "perceptible": false
+    }
+   },
+   "profil": {
+    "lo_nom": {
+     "xor": 0,
+     "shadeFrac": 0.007004866538858575,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.0013272378705205723,
+     "perceptible": false
+    },
+    "lo_hi": {
+     "xor": 0,
+     "shadeFrac": 0.012276950302315293,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "dos",
+   "xor": 0,
+   "shadeFrac": 0.023460909833832744
+  },
+  "lo": -1,
+  "nom": 0,
+  "hi": 1,
+  "expectedViews": [
+   "trois_quarts_arriere",
+   "dos",
+   "face",
+   "profil"
+  ],
+  "metric": "pixels"
+ },
+ {
+  "id": "browRidge",
+  "perView": {
+   "profil": {
+    "lo_nom": {
+     "xor": 0.003499981579044321,
+     "shadeFrac": 0.020115683601665255,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.001986828065786085,
+     "shadeFrac": 0.013024761764597667,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.005406399411548363,
+     "shadeFrac": 0.025671202648032364,
+     "perceptible": true
+    }
+   },
+   "trois_quarts": {
+    "lo_nom": {
+     "xor": 0.0022236568395380533,
+     "shadeFrac": 0.02506993759414676,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0.0016491592872763777,
+     "shadeFrac": 0.018140752160040154,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0.003869719445340213,
+     "shadeFrac": 0.03765810312085707,
+     "perceptible": true
+    }
+   },
+   "face": {
+    "lo_nom": {
+     "xor": 0,
+     "shadeFrac": 0.009193993257738278,
+     "perceptible": true
+    },
+    "nom_hi": {
+     "xor": 0,
+     "shadeFrac": 0.009466407872782375,
+     "perceptible": true
+    },
+    "lo_hi": {
+     "xor": 0,
+     "shadeFrac": 0.020431096128307284,
+     "perceptible": true
+    }
+   }
+  },
+  "perceptible": true,
+  "best": {
+   "view": "trois_quarts",
+   "xor": 0.003869719445340213,
+   "shadeFrac": 0.03765810312085707
+  },
+  "lo": 0,
+  "nom": null,
+  "hi": 1,
+  "expectedViews": [
+   "profil",
+   "trois_quarts",
+   "face"
+  ],
+  "metric": "pixels"
+ }
+]

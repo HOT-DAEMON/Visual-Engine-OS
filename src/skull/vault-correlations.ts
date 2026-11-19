@@ -14,6 +14,11 @@ export const TENDENCIES: readonly { readonly from: keyof VaultParams; readonly t
   { from: 'temporalHollow', to: 'templeBreadth', sign: -1, rho: 0.4, why: 'une fosse temporale creuse accompagne des tempes plus fines' },
   { from: 'parietalFlat', to: 'parietalBulge', sign: -1, rho: 0.4, why: 'un sommet plat s\'accompagne de bosses pariétales plus latérales' },
   { from: 'boneShow', to: 'mastoid', sign: 1, rho: 0.3, why: 'un os apparent laisse mieux lire les reliefs osseux' },
+  // Passe 2
+  { from: 'browArch', to: 'glabella', sign: 1, rho: 0.6, why: 'l\'arcade et la glabelle forment un seul bourrelet sus-orbitaire' },
+  { from: 'frontalEminence', to: 'browArch', sign: -1, rho: 0.4, why: 'un front à bosses (type juvénile) s\'accompagne plutôt d\'arcades discrètes' },
+  { from: 'temporalMuscle', to: 'temporalLine', sign: 1, rho: 0.5, why: 'un muscle temporal puissant marque sa crête d\'insertion' },
+  { from: 'occipitalBun', to: 'inionSize', sign: 1, rho: 0.4, why: 'le chignon et la protubérance externe sont deux reliefs de l\'écaille occipitale' },
 ];
 
 export interface VaultDraw { readonly variety?: number; readonly tendency?: number }

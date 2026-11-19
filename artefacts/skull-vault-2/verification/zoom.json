@@ -1,0 +1,134 @@
+[
+ {
+  "id": "frontalEminence",
+  "parametre": "frontalEminence",
+  "valeurs": [
+   -1,
+   0,
+   1
+  ],
+  "vue": "trois_quarts",
+  "structure": "frontal-eminence",
+  "fenetre": "0,62 × 0,5 U centrée sur l'ancre du registre",
+  "base": {}
+ },
+ {
+  "id": "browArch-3-4",
+  "parametre": "browArch",
+  "valeurs": [
+   -1,
+   0,
+   1
+  ],
+  "vue": "trois_quarts",
+  "structure": "supraorbital-arch",
+  "fenetre": "0,62 × 0,5 U centrée sur l'ancre du registre",
+  "base": {}
+ },
+ {
+  "id": "browArch-profil",
+  "parametre": "browArch",
+  "valeurs": [
+   -1,
+   0,
+   1
+  ],
+  "vue": "profil",
+  "structure": "supraorbital-arch",
+  "fenetre": "0,62 × 0,5 U centrée sur l'ancre du registre",
+  "base": {}
+ },
+ {
+  "id": "metopicRidge",
+  "parametre": "metopicRidge",
+  "valeurs": [
+   -1,
+   0,
+   1
+  ],
+  "vue": "profil",
+  "structure": "metopic-ridge",
+  "fenetre": "0,62 × 0,5 U centrée sur l'ancre du registre",
+  "base": {}
+ },
+ {
+  "id": "occipitalBun",
+  "parametre": "occipitalBun",
+  "valeurs": [
+   -1,
+   0,
+   1
+  ],
+  "vue": "profil",
+  "structure": "occipital-bun",
+  "fenetre": "0,62 × 0,5 U centrée sur l'ancre du registre",
+  "base": {}
+ },
+ {
+  "id": "inionSize",
+  "parametre": "inionSize",
+  "valeurs": [
+   -1,
+   0,
+   1
+  ],
+  "vue": "trois_quarts_arriere",
+  "structure": "nuchal-line",
+  "fenetre": "0,62 × 0,5 U centrée sur l'ancre du registre",
+  "base": {}
+ },
+ {
+  "id": "temporalLine",
+  "parametre": "temporalLine",
+  "valeurs": [
+   -1,
+   0,
+   1
+  ],
+  "vue": "trois_quarts",
+  "structure": "temporal-line",
+  "fenetre": "0,62 × 0,5 U centrée sur l'ancre du registre",
+  "base": {}
+ },
+ {
+  "id": "temporalMuscle",
+  "parametre": "temporalMuscle",
+  "valeurs": [
+   -1,
+   0,
+   1
+  ],
+  "vue": "trois_quarts",
+  "structure": "temporal-muscle",
+  "fenetre": "0,62 × 0,5 U centrée sur l'ancre du registre",
+  "base": {}
+ },
+ {
+  "id": "asterion",
+  "parametre": "asterion",
+  "valeurs": [
+   -1,
+   0,
+   1
+  ],
+  "vue": "trois_quarts_arriere",
+  "structure": "asterion",
+  "fenetre": "0,62 × 0,5 U centrée sur l'ancre du registre",
+  "base": {}
+ },
+ {
+  "id": "asymMastoid",
+  "parametre": "asymMastoid",
+  "valeurs": [
+   -1,
+   0,
+   1
+  ],
+  "vue": "dos",
+  "structure": "mastoid-process",
+  "fenetre": "0,62 × 0,5 U centrée sur l'ancre du registre",
+  "base": {
+   "mastoid": 0.5
+  }
+ }
+]

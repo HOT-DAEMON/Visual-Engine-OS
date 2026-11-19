@@ -64,7 +64,7 @@ describe('registre anatomique de la voûte', () => {
     for (const p of owned) expect(all.has(p), `${p} inconnu`).toBe(true);
   });
   it('os et régions visibles par défaut ; sutures et lignes = données masquées ; courbes cohérentes avec le registre', () => {
-    for (const s of VAULT_STRUCTURES) expect(s.visibleByDefault, s.id).toBe(s.kind === 'bone' || s.kind === 'region' || s.id === 'glabella' || s.id === 'vertex' || s.id === 'pterion');
+    for (const s of VAULT_STRUCTURES) expect(s.visibleByDefault, s.id).toBe(s.kind === 'bone' || s.kind === 'region' || s.id === 'glabella' || s.id === 'vertex' || s.id === 'pterion' || s.id === 'asterion');
     const curves = vaultCurves(variedHead(3).spec.engine!.sk).map((c) => c.id);
     for (const s of VAULT_STRUCTURES.filter((q) => q.kind === 'suture')) expect(curves.some((c) => c.startsWith(`suture.${s.id.replace('-suture', '')}`)), s.id).toBe(true);
   });

@@ -5,6 +5,9 @@ import { headRelief } from './engines/head-relief';
 import { fromEngineY, isBare } from './engines/rows';
 import { sy } from './engines/units';
 import { unwarpY, vaultRise, vaultTop } from './engines/vault-model';
+import { skullOf } from './engines/skull-of';
+import { PARIETAL_MOVE } from './engines/skull-relief';
+import { VAULT_SHAPE } from '../skull/vault-shapes';
 import { dirToCam, mul, norm, cross, sub, project, toCam, v3, type Cam } from './math';
 import { PART, skullSurfacePoint } from './mesh';
 import { sectionAt } from './sections';
@@ -33,6 +36,15 @@ export function anchorY(spec: HeadTurnSpec, a: VaultAnchor): number {
   const ySrc = a.yU ?? (a.from ? Y(a.from) + (a.to ? (a.t ?? 0) * (Y(a.to) - Y(a.from)) : 0) : 0.3) + (a.dy ?? 0);
   return unwarpY(ySrc, vaultRise(e), vaultTop(e));
 }
+/**
+ * Ancre EFFECTIVE d'une structure sur CETTE tête et de CE côté (side = ±1 ; 0 pour les médianes). Seule l'éminence pariétale se déplace : sa hauteur suit `parietalHeight` + `asymParietalHeight` (signée par côté),
+ * son azimut suit `parietalAzimuth` (mêmes constantes que le relief, `PARIETAL_MOVE` et `VAULT_SHAPE.asym`) : la visibilité et l'occlusion se lisent là où la bosse EST, pas à son ancre nominale.
+ */
+export function anchorOf(spec: HeadTurnSpec, st: VaultStructure, side: -1 | 0 | 1): VaultAnchor {
+  const a = st.anchor; if (st.id !== 'parietal-bone' || !spec.engine) return a;
+  const k = skullOf(spec.engine);
+  return { ...a, yU: (a.yU ?? 0.24) - PARIETAL_MOVE.dy * (k.parietalHeight + VAULT_SHAPE.asym.parietalHeight * k.asymParietalHeight * side), az: a.az + PARIETAL_MOVE.daz * k.parietalAzimuth };
+}
 /** Point de la peau (repère tête) : LE point du maillage de la tête, relief compris (`skullSurfacePoint`, même fonction que le maillage et le volume des cheveux). */
 export const skinPoint = (spec: HeadTurnSpec, y: number, th: number): V3 => skullSurfacePoint(spec, headRelief(spec.engine), y, th);
 const OCCLUDER: Record<number, string> = { [PART.ear]: 'ear', [PART.earBack]: 'ear', [PART.bump]: 'nose', [PART.neck]: 'neck', [PART.neckCut]: 'neck' };
@@ -46,7 +58,7 @@ export function surfaceFrame(spec: HeadTurnSpec, y: number, th: number): { P: V3
 }
 
 export function place(spec: HeadTurnSpec, st: VaultStructure, side: -1 | 0 | 1, view: View, r?: TurnRender): Placement {
-  const y = anchorY(spec, st.anchor), th = (st.anchor.az * D) * (side < 0 ? -1 : 1), { P, n } = surfaceFrame(spec, y, th);
+  const an = anchorOf(spec, st, side), y = anchorY(spec, an), th = (an.az * D) * (side < 0 ? -1 : 1), { P, n } = surfaceFrame(spec, y, th);
   const depthU = boneDepthU(st.region), bone = sub(P, mul(n, depthU)), cam = toCam(P, view, 'head'), pr = project(cam, view);
   const px = r ? Math.round(r.originX + pr.x * r.ppu) : 0, py = r ? Math.round(r.originY + pr.y * r.ppu) : 0, facing = dirToCam(n, view, 'head', y).z;
   const grazing = Math.abs(facing) <= 0.05;

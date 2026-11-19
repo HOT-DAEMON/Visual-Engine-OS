@@ -23,6 +23,8 @@ import { FAMILIES, PAIRS } from './vault-boards';
  * Les rendus sont mémoïsés : un rendu identique n'est jamais refait (planches, preuve et enregistrement partagent les mêmes images).
  */
 const out = process.argv[2] ?? '/tmp/vault', H = Number(process.argv[3] ?? 300), VIEWS = Object.keys(VAULT_VIEWS) as VaultViewId[];
+// Tranches : `VAULT_SHARD=i/n` ne traite que les paramètres d'indice ≡ i (mod n) et écrit `proofs-i.json` ; la tranche 0 fait aussi les sections 2 à 7. `merge-vault-proofs.py` réunit les tranches.
+const [SI = 0, SN = 1] = (process.env.VAULT_SHARD ?? '0/1').split('/').map(Number);
 const memo = new WeakMap<object, Map<string, TurnRender>>();
 const render = (spec: object, v: VaultViewId, h = H): TurnRender => { let m = memo.get(spec); if (!m) memo.set(spec, (m = new Map())); const k = `${v}|${h}`; let r = m.get(k); if (!r) m.set(k, (r = vaultRender(spec as never, v, h))); return r; };
 const png = (path: string, r: TurnRender): void => { mkdirSync(join(path, '..'), { recursive: true }); writeFileSync(path, encodePngRgba(r.w, r.h, r.rgba)); };
@@ -31,13 +33,14 @@ const json = (rel: string, v: unknown): void => { const f = join(out, 'verificat
 
 // 1. Planches par paramètre : min / nominal / max × 6 vues, et enregistrement de la preuve (mêmes rendus).
 const cases = proofCases(), proofs = [];
-for (const c of cases) {
+for (const [ci, c] of cases.entries()) {
+  if (ci % SN !== SI) continue;
   const specs = { lo: caseSpec(c, c.lo), nom: caseSpec(c, c.nom), hi: caseSpec(c, c.hi) };
   for (const [n, s] of Object.entries(specs)) for (const v of VIEWS) png(T('param', c.id, `${n}_${v}.png`), render(s, v));
   proofs.push({ ...measureProof(c, H, 3, (s, v, h) => render(s, v, h)), lo: c.lo, nom: c.nom ?? null, hi: c.hi, expectedViews: c.views, metric: c.metric ?? 'pixels' });
   console.log('param', c.id);
 }
-json('proofs.json', proofs);
+if (SN > 1) { json(`proofs-${SI}.json`, proofs); if (SI !== 0) { console.log('tranche', SI, 'terminée'); process.exit(0); } } else json('proofs.json', proofs);
 writeFileSync(join(out, 'verification', 'proofs.csv'), ['parametre,perceptible,meilleure_vue,xor_pct,ombre_pct', ...proofs.map((p) => `${p.id},${p.perceptible},${p.best.view},${(p.best.xor * 100).toFixed(3)},${(p.best.shadeFrac * 100).toFixed(3)}`)].join('\n'));
 
 // 2. Têtes complètes (cheveux et chauve) sous les 6 vues ; calque anatomique (sutures, lignes, repères avec visibilité et occlusion).

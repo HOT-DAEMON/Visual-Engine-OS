@@ -37,7 +37,7 @@ export function enlargementAnatomyChecks(s: HeadTurnSpec): Check[] {
   const k = e.sk.params, c: Check[] = [];
   const W = 2 * Math.max(...[0.2, 0.3, 0.4, 0.5].map((y) => sectionAt(s, y).a)), L = Math.max(...[0.3, 0.4, 0.5].map((y) => sectionAt(s, y).zf)) - Math.min(...[0.25, 0.3, 0.35, 0.4, 0.45].map((y) => sectionAt(s, y).zb));
   c.push(check(A, 'head.anat.enlarge.cephalic', 'Indice céphalique 3D (largeur / longueur de la voûte) [canon : 0,70–0,90 ; dessin stylisé : jusqu\'à ≈ 1,10 (face large)]', W / L, 0.6, 1.15, 'info'));
-  const y = SKULL_RELIEF.yP + PARIETAL_MOVE.dy * k.parietalHeight, az = SKULL_RELIEF.azP + PARIETAL_MOVE.daz * k.parietalAzimuth;
+  const y = SKULL_RELIEF.yP - PARIETAL_MOVE.dy * k.parietalHeight, az = SKULL_RELIEF.azP + PARIETAL_MOVE.daz * k.parietalAzimuth;
   c.push(check(A, 'head.anat.parietal.height', 'Éminence pariétale : hauteur du centre (U) [canon : tiers supérieur de la voûte, 0,12–0,36]', y, 0.12, 0.36));
   c.push(check(A, 'head.anat.parietal.azimuth', 'Éminence pariétale : azimut du centre (°, 0 = face, 180 = nuque) [canon : au-dessus et derrière l\'oreille, 96–128°]', az, 96, 128));
   return c;

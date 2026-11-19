@@ -50,7 +50,22 @@
   },
   {
    "id": "asymetrie",
-   "label": "asymétries propres de même ordre : une plagiocéphalie dominante est plus fréquente que quatre",
+   "label": "asymétries propres de même ordre : une plagiocéphalie dominante est plus fréquente que six",
+   "score": 1
+  },
+  {
+   "id": "front-juvenile-robuste",
+   "label": "bosses frontales marquées avec de fortes arcades sourcilières : combinaison rare (front juvénile ou robuste, rarement les deux)",
+   "score": 1
+  },
+  {
+   "id": "muscle-crete",
+   "label": "muscle temporal puissant sans crête temporale : combinaison rare (le muscle marque son insertion)",
+   "score": 1
+  },
+  {
+   "id": "chignon-brachy",
+   "label": "chignon occipital avec une tête très courte : combinaison rare",
    "score": 1
   }
  ]

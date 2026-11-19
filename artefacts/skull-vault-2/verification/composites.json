@@ -1,0 +1,394 @@
+{
+ "arcade-torus": {
+  "label": "Arcade en torus : bourrelet sus-orbitaire, front sans bosses",
+  "overrides": {
+   "browArch": 1,
+   "glabella": 0.7,
+   "frontalEminence": -0.8,
+   "metopicRidge": -0.3,
+   "temporalLine": 0.6
+  },
+  "nouveauxControles": [
+   {
+    "id": "vault.geo.symmetry",
+    "value": 0,
+    "min": 0,
+    "max": 1e-9,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.arch.orbit",
+    "value": 0.0687,
+    "min": 0.03,
+    "max": 0.2,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.eminence.between",
+    "value": 0.135,
+    "min": 0.05,
+    "max": 1,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.bun.level",
+    "value": 0.16,
+    "min": 0.1,
+    "max": 1,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.line.above",
+    "value": 0.1563,
+    "min": 0.05,
+    "max": 0.4,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.parietal.anchor",
+    "value": 0,
+    "min": 0,
+    "max": 1,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.visible.front",
+    "value": 3,
+    "min": 3,
+    "max": 3,
+    "ok": true
+   },
+   {
+    "id": "vault.style.silhouette.back",
+    "value": 0.0243,
+    "min": 0,
+    "max": 0.037,
+    "ok": true
+   },
+   {
+    "id": "vault.style.relief.curvature",
+    "value": 0.0091,
+    "min": 0,
+    "max": 0.024,
+    "ok": true
+   }
+  ]
+ },
+ "front-bosses": {
+  "label": "Front à bosses : éminences marquées, arcades effacées",
+  "overrides": {
+   "frontalEminence": 1,
+   "browArch": -1,
+   "metopicRidge": 0.5,
+   "glabella": -0.5
+  },
+  "nouveauxControles": [
+   {
+    "id": "vault.geo.symmetry",
+    "value": 0,
+    "min": 0,
+    "max": 1e-9,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.arch.orbit",
+    "value": 0.0687,
+    "min": 0.03,
+    "max": 0.2,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.eminence.between",
+    "value": 0.135,
+    "min": 0.05,
+    "max": 1,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.bun.level",
+    "value": 0.16,
+    "min": 0.1,
+    "max": 1,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.line.above",
+    "value": 0.1563,
+    "min": 0.05,
+    "max": 0.4,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.parietal.anchor",
+    "value": 0,
+    "min": 0,
+    "max": 1,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.visible.front",
+    "value": 3,
+    "min": 3,
+    "max": 3,
+    "ok": true
+   },
+   {
+    "id": "vault.style.silhouette.back",
+    "value": 0.0243,
+    "min": 0,
+    "max": 0.037,
+    "ok": true
+   },
+   {
+    "id": "vault.style.relief.curvature",
+    "value": 0.0056,
+    "min": 0,
+    "max": 0.024,
+    "ok": true
+   }
+  ]
+ },
+ "dolicho-chignon": {
+  "label": "Dolichocéphale à chignon occipital",
+  "overrides": {
+   "length": 1,
+   "cranialBreadth": -0.5,
+   "occipitalFlat": -0.6,
+   "occipitalBun": 1,
+   "inionSize": 0.7
+  },
+  "nouveauxControles": [
+   {
+    "id": "vault.geo.symmetry",
+    "value": 0,
+    "min": 0,
+    "max": 1e-9,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.arch.orbit",
+    "value": 0.0687,
+    "min": 0.03,
+    "max": 0.2,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.eminence.between",
+    "value": 0.135,
+    "min": 0.05,
+    "max": 1,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.bun.level",
+    "value": 0.16,
+    "min": 0.1,
+    "max": 1,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.line.above",
+    "value": 0.1563,
+    "min": 0.05,
+    "max": 0.4,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.parietal.anchor",
+    "value": 0,
+    "min": 0,
+    "max": 1,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.visible.front",
+    "value": 3,
+    "min": 3,
+    "max": 3,
+    "ok": true
+   },
+   {
+    "id": "vault.style.silhouette.back",
+    "value": 0.0243,
+    "min": 0,
+    "max": 0.037,
+    "ok": true
+   },
+   {
+    "id": "vault.style.relief.curvature",
+    "value": 0.0022,
+    "min": 0,
+    "max": 0.024,
+    "ok": true
+   }
+  ]
+ },
+ "muscle-temporal": {
+  "label": "Muscle temporal puissant, crête temporale marquée",
+  "overrides": {
+   "temporalMuscle": 1,
+   "temporalLine": 0.8,
+   "templeBreadth": 0.3,
+   "mastoid": 0.6
+  },
+  "nouveauxControles": [
+   {
+    "id": "vault.geo.symmetry",
+    "value": 0,
+    "min": 0,
+    "max": 1e-9,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.arch.orbit",
+    "value": 0.0687,
+    "min": 0.03,
+    "max": 0.2,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.eminence.between",
+    "value": 0.135,
+    "min": 0.05,
+    "max": 1,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.bun.level",
+    "value": 0.16,
+    "min": 0.1,
+    "max": 1,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.line.above",
+    "value": 0.1563,
+    "min": 0.05,
+    "max": 0.4,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.parietal.anchor",
+    "value": 0,
+    "min": 0,
+    "max": 1,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.visible.front",
+    "value": 3,
+    "min": 3,
+    "max": 3,
+    "ok": true
+   },
+   {
+    "id": "vault.style.silhouette.back",
+    "value": 0.0243,
+    "min": 0,
+    "max": 0.037,
+    "ok": true
+   },
+   {
+    "id": "vault.style.relief.curvature",
+    "value": 0.0106,
+    "min": 0,
+    "max": 0.024,
+    "ok": true
+   }
+  ]
+ },
+ "asym-fine": {
+  "label": "Asymétries fines : mastoïdes, pariétaux, astérion (visage inchangé)",
+  "overrides": {
+   "asymMastoid": 1,
+   "asymParietalHeight": 1,
+   "parietalBulge": 0.8,
+   "asterion": 0.7,
+   "mastoid": 0.5,
+   "asymFaceCoupling": 0
+  },
+  "nouveauxControles": [
+   {
+    "id": "vault.geo.symmetry",
+    "value": 0,
+    "min": 0,
+    "max": 1e-9,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.arch.orbit",
+    "value": 0.0687,
+    "min": 0.03,
+    "max": 0.2,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.eminence.between",
+    "value": 0.135,
+    "min": 0.05,
+    "max": 1,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.bun.level",
+    "value": 0.16,
+    "min": 0.1,
+    "max": 1,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.line.above",
+    "value": 0.1563,
+    "min": 0.05,
+    "max": 0.4,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.parietal.anchor",
+    "value": 0.1,
+    "min": 0,
+    "max": 1,
+    "ok": true
+   },
+   {
+    "id": "vault.anat.visible.front",
+    "value": 3,
+    "min": 3,
+    "max": 3,
+    "ok": true
+   },
+   {
+    "id": "vault.style.silhouette.back",
+    "value": 0.0194,
+    "min": 0,
+    "max": 0.037,
+    "ok": true
+   },
+   {
+    "id": "vault.style.relief.curvature",
+    "value": 0.0031,
+    "min": 0,
+    "max": 0.024,
+    "ok": true
+   }
+  ]
+ },
+ "profil2d_browArch": {
+  "deplacementMaxEnH": 0.0234
+ },
+ "profil2d_frontalEminence": {
+  "deplacementMaxEnH": 0.018
+ },
+ "profil2d_metopicRidge": {
+  "deplacementMaxEnH": 0.012
+ },
+ "profil2d_occipitalBun": {
+  "deplacementMaxEnH": 0.06
+ },
+ "profil2d_inionSize": {
+  "deplacementMaxEnH": 0.024
+ },
+ "profil2d_parietalHeight": {
+  "deplacementMaxEnH": 0.05
+ }
+}

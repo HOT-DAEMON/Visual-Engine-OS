@@ -96,7 +96,7 @@ describe('éminence pariétale : position', () => {
       for (let y = 0.1; y <= 0.45; y += 0.005) for (let az = 80; az <= 150; az += 1) { const v = skullRelief(e, y, az * D); if (v > best.v) best = { y, az, v }; } return best; };
     const n = peak({}), hi = peak({ parietalHeight: 1 }), lo = peak({ parietalHeight: -1 }), bk = peak({ parietalAzimuth: 1 }), fw = peak({ parietalAzimuth: -1 });
     expect(Math.abs(n.y - SKULL_RELIEF.yP)).toBeLessThan(0.02); expect(Math.abs(n.az - SKULL_RELIEF.azP)).toBeLessThan(3);
-    expect(lo.y).toBeLessThan(n.y); expect(hi.y).toBeLessThan(0 + 1); expect(hi.y - lo.y).toBeGreaterThan(PARIETAL_MOVE.dy * 1.4);
+    expect(hi.y).toBeLessThan(n.y); expect(lo.y).toBeGreaterThan(n.y); expect(lo.y - hi.y).toBeGreaterThan(PARIETAL_MOVE.dy * 1.4);   // +1 = HAUTE : y est compté vers le bas, donc plus petit (sens corrigé en passe 2, voir docs/SKULL-VAULT-2.md)
     expect(bk.az - fw.az).toBeGreaterThan(PARIETAL_MOVE.daz * 1.4);
   });
 });
@@ -114,12 +114,12 @@ describe('profil 2D : lit les mesures de voûte qui changent la profondeur ou la
   const p = generateRandomProfile(3), H = 400;
   const poly = (ov: object) => skullGeometry(p.face.params, SkullParams.parse({ ...p.skull, ...ov }), H).poly;
   const dist = (a: ReturnType<typeof poly>, b: ReturnType<typeof poly>): number => { let m = 0; for (let i = 0; i < Math.min(a.length, b.length); i++) m = Math.max(m, Math.hypot(a[i]!.x - b[i]!.x, a[i]!.y - b[i]!.y)); return m / H; };
-  it.each(['frontalFlat', 'parietalBulge', 'parietalFlat', 'occipitalFlat', 'occipitalSlope', 'parietalHeight', 'parietalAzimuth', 'glabella', 'nuchalLine'])('%s déplace le contour de plus de 0,004 H, nominal identique', (k) => {
+  it.each(['frontalFlat', 'parietalBulge', 'parietalFlat', 'occipitalFlat', 'occipitalSlope', 'parietalHeight', 'parietalAzimuth', 'glabella', 'nuchalLine', 'browArch', 'frontalEminence', 'metopicRidge', 'occipitalBun', 'inionSize'])('%s déplace le contour de plus de 0,004 H, nominal identique', (k) => {
     const ex = k.startsWith('parietalH') || k.startsWith('parietalA') ? { parietalBulge: 1 } : {};
     expect(dist(poly({ ...ex, [k]: -1 }), poly({ ...ex, [k]: 1 }))).toBeGreaterThan(0.004);
     expect(dist(poly({}), poly({ [k]: 0 }))).toBe(0);
   });
-  it.each(['cranialBreadth', 'templeBreadth', 'frontalBreadth', 'temporalFlat', 'temporalHollow', 'planeTransition', 'parietalConvexity', 'asymWidth'])('%s (largeur seule) ne change pas la silhouette de profil', (k) => {
+  it.each(['cranialBreadth', 'templeBreadth', 'frontalBreadth', 'temporalFlat', 'temporalHollow', 'planeTransition', 'parietalConvexity', 'asymWidth', 'temporalLine', 'temporalMuscle', 'asterion', 'asymMastoid', 'asymParietalHeight'])('%s (largeur seule) ne change pas la silhouette de profil', (k) => {
     expect(dist(poly({ [k]: -1 }), poly({ [k]: 1 }))).toBe(0);
   });
 });

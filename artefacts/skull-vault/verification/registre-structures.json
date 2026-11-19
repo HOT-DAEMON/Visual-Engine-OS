@@ -115,6 +115,7 @@
     "temporal-bone",
     "pterion",
     "vertex",
+    "temporal-muscle",
     "coronal-suture"
    ],
    "anterior": []
@@ -231,6 +232,7 @@
    "parietalConvexity",
    "parietalHeight",
    "parietalAzimuth",
+   "asymParietalHeight",
    "vaultPeak"
   ],
   "influence": {
@@ -317,7 +319,8 @@
    "lateral": [],
    "posterior": [
     "mastoid-process",
-    "occipital-bone"
+    "occipital-bone",
+    "asterion"
    ],
    "anterior": [
     "frontal-bone",
@@ -419,6 +422,7 @@
     "temporal-bone",
     "mastoid-process",
     "vertex",
+    "asterion",
     "lambdoid-suture"
    ]
   },
@@ -496,7 +500,8 @@
   "region": "mastoid",
   "neighbors": {
    "superior": [
-    "temporal-bone"
+    "temporal-bone",
+    "asterion"
    ],
    "inferior": [
     "neck"
@@ -525,7 +530,8 @@
    "mastoid",
    "mastoidSize",
    "mastoidDirection",
-   "mastoidSlope"
+   "mastoidSlope",
+   "asymMastoid"
   ],
   "influence": {
    "fields": [
@@ -764,7 +770,8 @@
   "region": "glabella",
   "neighbors": {
    "superior": [
-    "frontal-bone"
+    "frontal-bone",
+    "metopic-ridge"
    ],
    "inferior": [
     "nose"
@@ -772,7 +779,8 @@
    "medial": [],
    "lateral": [
     "brow",
-    "orbit"
+    "orbit",
+    "supraorbital-arch"
    ],
    "posterior": [
     "frontal-bone"
@@ -786,7 +794,8 @@
   },
   "params": [
    "glabella",
-   "browRidge"
+   "browRidge",
+   "browArch"
   ],
   "influence": {
    "fields": [
@@ -840,6 +849,429 @@
   }
  },
  {
+  "id": "frontal-eminence",
+  "fr": "Éminences frontales (bosses du front)",
+  "latin": "tuber frontale",
+  "kind": "region",
+  "region": "frontal",
+  "neighbors": {
+   "superior": [
+    "coronal-suture"
+   ],
+   "inferior": [
+    "supraorbital-arch"
+   ],
+   "medial": [
+    "metopic-ridge"
+   ],
+   "lateral": [
+    "temporal-line"
+   ],
+   "posterior": [
+    "coronal-suture"
+   ],
+   "anterior": []
+  },
+  "anchor": {
+   "from": "glabella",
+   "dy": -0.135,
+   "az": 27,
+   "side": 1
+  },
+  "params": [
+   "frontalEminence",
+   "frontalBulge"
+  ],
+  "influence": {
+   "fields": [
+    "relief"
+   ],
+   "yBand": [
+    0.15,
+    0.45
+   ],
+   "azBand": [
+    10,
+    45
+   ],
+   "views": [
+    "trois_quarts",
+    "dessus",
+    "face"
+   ]
+  },
+  "visibleByDefault": true,
+  "material": {
+   "inherits": "cranium"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 1.386
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 1.54
+   },
+   {
+    "id": "galéa",
+    "mm": 0.77
+   },
+   {
+    "id": "périoste",
+    "mm": 0.154
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.6,
+   "nominal": 1.105,
+   "epais": 0.711
+  }
+ },
+ {
+  "id": "supraorbital-arch",
+  "fr": "Arcades sourcilières (arcus superciliares)",
+  "latin": "arcus superciliaris",
+  "kind": "region",
+  "region": "glabella",
+  "neighbors": {
+   "superior": [
+    "frontal-eminence"
+   ],
+   "inferior": [
+    "orbit"
+   ],
+   "medial": [
+    "glabella"
+   ],
+   "lateral": [
+    "temporal-line"
+   ],
+   "posterior": [],
+   "anterior": []
+  },
+  "anchor": {
+   "from": "glabella",
+   "dy": 0.016,
+   "az": 28,
+   "side": 1
+  },
+  "params": [
+   "browArch",
+   "browRidge"
+  ],
+  "influence": {
+   "fields": [
+    "relief"
+   ],
+   "yBand": [
+    0.4,
+    0.55
+   ],
+   "azBand": [
+    0,
+    60
+   ],
+   "views": [
+    "profil",
+    "trois_quarts",
+    "face"
+   ]
+  },
+  "visibleByDefault": true,
+  "material": {
+   "inherits": "cranium",
+   "specialize": "peau mince sur os (tissu minimal), fusionnée à la glabelle"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 0.792
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 0.8800000000000001
+   },
+   {
+    "id": "galéa",
+    "mm": 0.44000000000000006
+   },
+   {
+    "id": "périoste",
+    "mm": 0.08800000000000001
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.557,
+   "nominal": 1.21,
+   "epais": 0.94
+  }
+ },
+ {
+  "id": "occipital-bun",
+  "fr": "Chignon occipital",
+  "latin": "protuberantia squamae occipitalis (chignon)",
+  "kind": "region",
+  "region": "occipital",
+  "neighbors": {
+   "superior": [
+    "lambdoid-suture"
+   ],
+   "inferior": [
+    "nuchal-line"
+   ],
+   "medial": [],
+   "lateral": [
+    "lambdoid-suture"
+   ],
+   "posterior": [],
+   "anterior": []
+  },
+  "anchor": {
+   "from": "inion",
+   "dy": -0.16,
+   "az": 180,
+   "side": 0
+  },
+  "params": [
+   "occipitalBun",
+   "occiput"
+  ],
+  "influence": {
+   "fields": [
+    "relief"
+   ],
+   "yBand": [
+    0.3,
+    0.62
+   ],
+   "azBand": [
+    140,
+    180
+   ],
+   "views": [
+    "profil",
+    "dos",
+    "trois_quarts_arriere",
+    "dessus"
+   ]
+  },
+  "visibleByDefault": true,
+  "material": {
+   "inherits": "cranium"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 2.1780000000000004
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 2.4200000000000004
+   },
+   {
+    "id": "galéa",
+    "mm": 1.2100000000000002
+   },
+   {
+    "id": "périoste",
+    "mm": 0.24200000000000002
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.6,
+   "nominal": 0.965,
+   "epais": 0.483
+  }
+ },
+ {
+  "id": "temporal-muscle",
+  "fr": "Muscle temporal (volume sous la crête)",
+  "latin": "musculus temporalis",
+  "kind": "region",
+  "region": "temporal",
+  "neighbors": {
+   "superior": [
+    "temporal-line"
+   ],
+   "inferior": [
+    "zygomatic-arch"
+   ],
+   "medial": [
+    "cranial-cavity"
+   ],
+   "lateral": [],
+   "posterior": [
+    "ear"
+   ],
+   "anterior": [
+    "frontal-bone"
+   ]
+  },
+  "anchor": {
+   "from": "pterion",
+   "az": 84,
+   "side": 1
+  },
+  "params": [
+   "temporalMuscle",
+   "temporalHollow"
+  ],
+  "influence": {
+   "fields": [
+    "relief"
+   ],
+   "yBand": [
+    0.32,
+    0.6
+   ],
+   "azBand": [
+    55,
+    110
+   ],
+   "views": [
+    "trois_quarts",
+    "dessus",
+    "face"
+   ]
+  },
+  "visibleByDefault": true,
+  "material": {
+   "inherits": "cranium",
+   "specialize": "muscle sous la peau (couche « muscle temporal » de la pile de tissus)"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 3.3659999999999997
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 3.74
+   },
+   {
+    "id": "galéa",
+    "mm": 1.87
+   },
+   {
+    "id": "muscle temporal",
+    "mm": 4.2075
+   },
+   {
+    "id": "périoste",
+    "mm": 0.374
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.6,
+   "nominal": 0.755,
+   "epais": 0.259
+  }
+ },
+ {
+  "id": "asterion",
+  "fr": "Astérion",
+  "latin": "asterion",
+  "kind": "landmark",
+  "region": "temporal",
+  "neighbors": {
+   "superior": [
+    "lambdoid-suture"
+   ],
+   "inferior": [
+    "mastoid-process"
+   ],
+   "medial": [
+    "cranial-cavity"
+   ],
+   "lateral": [
+    "squamous-suture"
+   ],
+   "posterior": [
+    "occipital-bone"
+   ],
+   "anterior": [
+    "temporal-bone"
+   ]
+  },
+  "anchor": {
+   "from": "asterion",
+   "az": 122,
+   "side": 1
+  },
+  "params": [
+   "asterion"
+  ],
+  "influence": {
+   "fields": [
+    "relief"
+   ],
+   "yBand": [
+    0.45,
+    0.65
+   ],
+   "azBand": [
+    105,
+    140
+   ],
+   "views": [
+    "trois_quarts_arriere",
+    "profil"
+   ]
+  },
+  "visibleByDefault": true,
+  "material": {
+   "inherits": "cranium"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 3.3659999999999997
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 3.74
+   },
+   {
+    "id": "galéa",
+    "mm": 1.87
+   },
+   {
+    "id": "muscle temporal",
+    "mm": 4.2075
+   },
+   {
+    "id": "périoste",
+    "mm": 0.374
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.6,
+   "nominal": 0.755,
+   "epais": 0.259
+  }
+ },
+ {
   "id": "coronal-suture",
   "fr": "Suture coronale",
   "latin": "sutura coronalis",
@@ -850,7 +1282,8 @@
     "sagittal-suture"
    ],
    "inferior": [
-    "pterion"
+    "pterion",
+    "frontal-eminence"
    ],
    "medial": [
     "sagittal-suture"
@@ -863,7 +1296,9 @@
     "sagittal-suture"
    ],
    "anterior": [
-    "frontal-bone"
+    "frontal-bone",
+    "frontal-eminence",
+    "metopic-ridge"
    ]
   },
   "anchor": {
@@ -938,7 +1373,8 @@
    "inferior": [
     "cranial-cavity",
     "coronal-suture",
-    "lambdoid-suture"
+    "lambdoid-suture",
+    "metopic-ridge"
    ],
    "medial": [],
    "lateral": [
@@ -1024,10 +1460,13 @@
     "sagittal-suture"
    ],
    "inferior": [
-    "squamous-suture"
+    "squamous-suture",
+    "occipital-bun",
+    "asterion"
    ],
    "medial": [
-    "sagittal-suture"
+    "sagittal-suture",
+    "occipital-bun"
    ],
    "lateral": [
     "squamous-suture"
@@ -1118,6 +1557,7 @@
    ],
    "medial": [
     "cranial-cavity",
+    "asterion",
     "lambdoid-suture"
    ],
    "lateral": [
@@ -1205,10 +1645,13 @@
     "parietal-bone"
    ],
    "inferior": [
-    "temporal-bone"
+    "temporal-bone",
+    "temporal-muscle"
    ],
    "medial": [
-    "frontal-bone"
+    "frontal-bone",
+    "frontal-eminence",
+    "supraorbital-arch"
    ],
    "lateral": [
     "temporal-bone"
@@ -1227,7 +1670,8 @@
    "side": 1
   },
   "params": [
-   "suturesShow"
+   "suturesShow",
+   "temporalLine"
   ],
   "influence": {
    "fields": [
@@ -1292,7 +1736,8 @@
   "region": "occipital",
   "neighbors": {
    "superior": [
-    "occipital-bone"
+    "occipital-bone",
+    "occipital-bun"
    ],
    "inferior": [
     "occipital-bone",
@@ -1312,7 +1757,8 @@
   },
   "params": [
    "nuchalLine",
-   "inion"
+   "inion",
+   "inionSize"
   ],
   "influence": {
    "fields": [
@@ -1363,6 +1809,89 @@
    "fin": 1.6,
    "nominal": 0.965,
    "epais": 0.483
+  }
+ },
+ {
+  "id": "metopic-ridge",
+  "fr": "Crête métopique (reste de la suture frontale)",
+  "latin": "crista metopica",
+  "kind": "line",
+  "region": "frontal",
+  "neighbors": {
+   "superior": [
+    "sagittal-suture"
+   ],
+   "inferior": [
+    "glabella"
+   ],
+   "medial": [],
+   "lateral": [
+    "frontal-eminence"
+   ],
+   "posterior": [
+    "coronal-suture"
+   ],
+   "anterior": []
+  },
+  "anchor": {
+   "from": "bregma",
+   "to": "glabella",
+   "t": 0.5,
+   "az": 0,
+   "side": 0
+  },
+  "params": [
+   "metopicRidge"
+  ],
+  "influence": {
+   "fields": [
+    "relief"
+   ],
+   "yBand": [
+    0,
+    0.7
+   ],
+   "azBand": [
+    0,
+    180
+   ],
+   "views": [
+    "profil",
+    "trois_quarts",
+    "dessus"
+   ]
+  },
+  "visibleByDefault": false,
+  "material": {
+   "inherits": "cranium",
+   "specialize": "relief fin sous la peau (suturesShow)"
+  },
+  "tissues": [
+   {
+    "id": "peau",
+    "mm": 1.386
+   },
+   {
+    "id": "sous-cutané",
+    "mm": 1.54
+   },
+   {
+    "id": "galéa",
+    "mm": 0.77
+   },
+   {
+    "id": "périoste",
+    "mm": 0.154
+   },
+   {
+    "id": "os",
+    "mm": 6
+   }
+  ],
+  "transmission": {
+   "fin": 1.6,
+   "nominal": 1.105,
+   "epais": 0.711
   }
  }
 ]
