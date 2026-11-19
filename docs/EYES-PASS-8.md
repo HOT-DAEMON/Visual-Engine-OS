@@ -45,6 +45,8 @@ Un premier critère à 1 seul ton comptait le gris plat de l'iris 13 comme « d�
 - **Refit** (`scripts/eye-refs/fit-recipes.ts`) : 12 des 27 recettes changent (l'ancien `sharp` trop bas compensait par des paramètres déformés). Galerie : 100 yeux, 0 échec sur les règles de rendu.
 - **Appariement des yeux** : un `sharp` à hauteur respectée atteint la limite de sourcil des deux côtés, l'asymétrie d'ouverture devient écart d'échelle (1,217 > 1,176, graine 3).
   `FitOptions.maxScale` + `PAIR_SCALE_MAX = 1,15` (`src/face/fit-eye.ts`), appliqué dans `random-face.ts` (on ne fait que réduire le plus grand : aucune borne dure franchie).
+- **Références visuelles** (`references/visual/`, 34 cas) régénérées par `npm run regress:update` : neutraliser le seul contrat de hauteur ramène les 34 cas à `close/exact`, donc la cause est établie ; le seul changement visible est l'œil (plus haut, plus ouvert), nez / bouche / peau identiques.
+- **Dette d'orbite a priori** (`tests/anatomy-contract.test.ts`) : 12 → 14 yeux sur 80 ; la borne publiée (aucun œil hors orbite) et le pire a priori (< 1,4) tiennent.
 - Tests déplacés, pas assouplis : `eye-lash-families` (œil de base case 18 → 30), `eye-lash-verify` (case 25 → 22), plafond 0,09 pour 17-P01 et 15-B (§ 4).
 
 ## 4. Régressions ou limites connues (non masquées)
