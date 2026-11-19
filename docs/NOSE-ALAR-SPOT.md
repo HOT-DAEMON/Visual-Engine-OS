@@ -1,5 +1,7 @@
 # Tache claire de l'aile proche à 45° (pyramide) — 18 nov. 2026
 
+> **CORRECTION (3e passe, `NOSE-ALAR-SPOT-2.md`)** : la mesure de ce document portait sur l'aile **lointaine** (côté ombre, la moins visible), et non sur la proche comme écrit ; le correctif du rebond reste valide pour cette aile. Le rapport ≠ 1 des graines 2 et 5 est le contour de lumière de l'anneau (rapport 0,90–1,11 sans lui), pas un défaut ; l'ovale clair à 60° est celui de l'aile proche et est corrigé par la continuité du terminateur.
+
 Suite de `NOSE-YAW-BOUNDS.md` : l'enfoncement de l'aile proche avait laissé, à 45° sur la pyramide, une tache claire ovale à bord net sur la joue dans l'ombre. Cette passe la **mesure**, en établit la cause **par ablation**, et la corrige dans l'éclairage (`nose-light.ts`, `paint.ts`), sans toucher à la géométrie.
 
 ## 1. Mesure (`scripts/nose-refs/alar-spot-measure.ts`)

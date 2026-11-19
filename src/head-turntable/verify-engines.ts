@@ -7,6 +7,9 @@ import { hex } from './color';
 import { REF_ROWS } from './ref-fit';
 import { halfWidthAtZ, sectionAt } from './sections';
 import { alaEmbed, alaOf, alaPull } from './parts';
+import { wingTerminatorGap } from './nose-light';
+import { withRig } from './roll';
+import { lightModelOfSpec, patternById } from '../relief';
 import { ALA_CONTOUR_YAW, ALA_TOL_45, ALA_TOL_60, ALA_TOL_70, alaOverflow, frontWidthRatio } from './nose-contour';
 import { REGION, type HeadTurnSpec, type TurnRender } from './types';
 import type { RenderAt } from './verify-geo';
@@ -74,6 +77,17 @@ export function engineAnatomy(s: HeadTurnSpec): Check[] {
 
 const isInk = (r: TurnRender, k: number, ink: readonly number[]): boolean => Math.hypot(r.rgba[4 * k]! - ink[0]!, r.rgba[4 * k + 1]! - ink[1]!, r.rgba[4 * k + 2]! - ink[2]!) < 45;
 
+/** Style, éclairage : cohérence de l'éclairé / ombre de l'aile du nez avec la joue (pure : ne rend rien, rejoue la normale éclairée de `paint.ts`). */
+export function noseLightStyle(s: HeadTurnSpec): Check[] {
+  const S = 'style' as const;
+  // Continuité du terminateur sur l'aile proche (docs/NOSE-ALAR-SPOT-2.md) : lumière trois-quarts de la planche des artefacts (cel, terminateur franc), lacets 30 / 45 / 60 / 70°. Mesuré sur 12 graines × 4 types de nez : SANS la continuité jusqu'à 0,29 (45°), 0,17 (60°) ; AVEC, 0.
+  const q = patternById('three-quarter-right'), lm = lightModelOfSpec({} as never, { style: q.style, shadowHue: q.shadowHue, bias: q.bias, light: { azimuthDeg: q.azimuthDeg, elevationDeg: q.elevationDeg, shadowHardness: q.hardness, sourceSize: q.sourceSize } } as never);
+  const termGap = Math.max(...[30, 45, 60, 70].map((yaw) => wingTerminatorGap(s, withRig({ yaw, pitch: 0 }, s), lm)));
+  return [
+    check(S, 'eng.nose.alar-terminator', 'Aile du nez proche : part des points dont l\'éclairé / ombre diffère de la joue au-delà de la marge du terminateur (lumière trois-quarts, lacets 30–70°)', termGap, 0, 0.02, 'hard', 'sans la continuité du terminateur : ovale clair à bord net sur la joue (jusqu\'à 0,29 des points à 45°)'),
+  ];
+}
+
 /** Style : l'oreille de profil doit se lire comme un dessin (peu de plages d'encre, pas de bruit) et non comme un nuage de pixels sombres. */
 export function engineStyle(s: HeadTurnSpec, at: RenderAt): Check[] {
   const S = 'style' as const, r = at(90), ink = hex(s.palette.ink);
@@ -91,5 +105,6 @@ export function engineStyle(s: HeadTurnSpec, at: RenderAt): Check[] {
     check(S, 'eng.ear.ink', 'Part d\'encre dans l\'oreille de profil (dessin lisible : 0,08 – 0,45)', ink_n / Math.max(1, tot), 0.08, 0.45),
     check(S, 'eng.ear.noise', 'Plages d\'encre séparées dans l\'oreille de profil (≤ 14 : pas de bruit)', comps, 1, 14),
     check(S, 'eng.ear.size', 'Oreille de profil : hauteur / hauteur de la tête (planche ≈ 0,25)', (y1 - y0 + 1) / r.ppu / s.rows[s.rows.length - 1]!.y, 0.18, 0.34),
+    ...noseLightStyle(s),
   ];
 }

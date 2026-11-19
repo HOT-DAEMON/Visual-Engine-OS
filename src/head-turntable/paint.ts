@@ -13,7 +13,7 @@ import { ambientOcclusion, castShadowScaled } from '../relief/cast';
 import { bounceAt, shadeAt, tonesOf, type LightModel, type Shade, type Tones } from '../relief/model';
 import { hairSheen, hairTones, sheenScreen } from './hair-light';
 import { strandColor } from './hair-strands';
-import { bounceAo, litDepth, softenedNormal } from './nose-light';
+import { bounceAo, litDepth, wingLighter } from './nose-light';
 import { parseHex } from '../core/color';
 
 /** Lumière de la PLANCHE DE RÉFÉRENCE (mode sans `light`), en repère CAMÉRA (haut-gauche, de face) : elle ne tourne pas avec la tête. Avec `PaintOpts.light`, c'est le `LightModel` de `src/relief` qui la remplace. */
@@ -61,14 +61,14 @@ function rimScreen(c: RGB, s: Shade, model: LightModel): RGB {
 /** Peint le tampon géométrique : ombrage à deux tons (cel), lisière des cheveux, texture du visage, oreilles, ombre sous le menton, puis contours. */
 export function paint(spec: HeadTurnSpec, g: GBuf, view: View, o: PaintOpts): Painted {
   const { w, h } = g, n = w * h, pal: Pal = paletteOf(spec);
-  const rgba = new Float32Array(n * 4), region = new Uint8Array(n), hairShade = hex(spec.palette.hairShade), L = o.light, rl = L ? reliefLight(spec, g, o, L, view) : null;
+  const rgba = new Float32Array(n * 4), region = new Uint8Array(n), hairShade = hex(spec.palette.hairShade), L = o.light, rl = L ? reliefLight(spec, g, o, L, view) : null, wing = L ? wingLighter(spec, view, L) : null;
   for (let k = 0; k < n; k++) {
     const id = g.id[k]!;
     if (!id) continue;
     const p = { x: g.P[3 * k]!, y: g.P[3 * k + 1]!, z: g.P[3 * k + 2]! }, nh = norm({ x: g.N[3 * k]!, y: g.N[3 * k + 1]!, z: g.N[3 * k + 2]! });
     const nc = dirToCam(nh, view, id === PART.neck || id === PART.neckCut ? 'neck' : 'head', p.y), lam = nc.x * LIGHT.x + nc.y * LIGHT.y + nc.z * LIGHT.z, t = smooth((lam - 0.02) / 0.22);
     const kw = Math.min(1.4, 1 / Math.max(0.7, nc.z));                         // compensation du raccourcissement des traits sur les faces obliques
-    const ncL = L && id === PART.bump ? dirToCam(softenedNormal(spec, p, nh), view, 'head', p.y) : nc;   // ailes du nez : normale ramenée vers la face (pas de disque clair), éclairage seul
+    const ncL = wing && id === PART.bump ? wing(p, nh) : nc;   // ailes du nez : normale ramenée vers la face (pas de disque clair) puis continuité du terminateur (pas d'ovale clair à 60°), éclairage seul
     const sh = L && rl ? shadeAt(L, ncL, rl.cast[k]!, rl.ao[k]!) : null, litB = sh && L && rl ? sh.lit + (1 - sh.lit) * bounceAt(L, ncL, rl.aoBounce[k]!) : 0;   // litB : part éclairée AVEC la lumière de rebond (seconde lumière, par en dessous)
     const lightOf = (c: RGB, legacyShade: RGB): RGB => (sh && rl ? lightMul(c, rl.tones, sh, litB) : mix(legacyShade, c, t));
     let ink = false, col = lightOf(pal.skin, pal.shade), reg: number = REGION.skin;

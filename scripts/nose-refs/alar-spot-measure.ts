@@ -35,17 +35,21 @@ export function gbufOf(spec0: HeadTurnSpec, yaw: number, pitch = 0) {
   const spec = nohair(spec0), view = withRig({ yaw, pitch }, spec);
   return { spec, view, g: rasterize(cullFarEar(buildParts(spec), view), view, hi, neckClipPx(spec, view, hi)), ppuHi: hi.ppu };
 }
-export function spotOf(spec0: HeadTurnSpec, yaw: number, pitch = 0): Spot | null {
+/**
+ * `which` : `'lointaine'` (défaut) = l'aile à plus petite profondeur moyenne caméra, c'est-à-dire celle du côté OMBRE, la plus cachée (les mesures du 18 nov. 2026, docs/NOSE-ALAR-SPOT.md, portaient sur elle, appelée à tort « proche ») ;
+ * `'proche'` = l'aile la plus VISIBLE (plus grand nombre de pixels de coque), celle qui porte l'ovale clair à 60° (docs/NOSE-ALAR-SPOT-2.md).
+ */
+export function spotOf(spec0: HeadTurnSpec, yaw: number, pitch = 0, which: 'proche' | 'lointaine' = 'lointaine'): Spot | null {
   const { spec, view, g } = gbufOf(spec0, yaw, pitch);
   const pa = paint(spec, g, view, { lineU: 0.022, ppuHi: hi.ppu, light: model, shadowTint: null });
-  // aile proche = celle dont le centre est le plus proche de la caméra : lacet > 0 → on teste les deux et on retient celle qui a le plus de pixels visibles et la plus petite profondeur moyenne
+  // on teste les deux ailes ; `which` choisit ensuite (voir ci-dessus)
   const wing = new Uint8Array(g.w * g.h), sums = [0, 0], cnt = [0, 0], dsum = [0, 0];
   for (let k = 0; k < g.w * g.h; k++) if (g.id[k] === PART.bump) {
     const p = v3(g.P[3 * k]!, g.P[3 * k + 1]!, g.P[3 * k + 2]!); if (alaWeight(spec, p) < 0.999) continue;
     const s = p.x >= 0 ? 0 : 1, a = alaOf(spec, s === 0 ? 1 : -1); if (Math.hypot((p.x - a.c.x) / a.ex, (p.y - a.c.y) / a.ey, (p.z - a.c.z) / a.ez) > 1.4) continue;
     wing[k] = s + 1; cnt[s]!++; dsum[s]! += g.depth[k]!; sums[s]! += 1;
   }
-  const near = cnt[0]! && cnt[1]! ? (dsum[0]! / cnt[0]! < dsum[1]! / cnt[1]! ? 0 : 1) : cnt[0]! ? 0 : cnt[1]! ? 1 : -1;
+  const far = cnt[0]! && cnt[1]! ? (dsum[0]! / cnt[0]! < dsum[1]! / cnt[1]! ? 0 : 1) : cnt[0]! ? 0 : cnt[1]! ? 1 : -1, vis = cnt[0]! >= cnt[1]! ? 0 : 1, near = which === 'proche' ? (cnt[vis]! ? vis : -1) : far;
   if (near < 0 || cnt[near]! < 40) return null;
   const mask: Uint8Array = new Uint8Array(g.w * g.h); for (let k = 0; k < mask.length; k++) if (wing[k] === near + 1) mask[k] = 1;
   const dil = (src: Uint8Array): Uint8Array => { const o = new Uint8Array(src.length); for (let y = 1; y < g.h - 1; y++) for (let x = 1; x < g.w - 1; x++) { const k = y * g.w + x; if (src[k] || src[k - 1] || src[k + 1] || src[k - g.w] || src[k + g.w]) o[k] = 1; } return o; };

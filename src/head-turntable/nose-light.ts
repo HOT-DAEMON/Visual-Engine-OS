@@ -3,6 +3,7 @@ import { alaOf } from './parts';
 import { sectionAt, surfaceZ } from './sections';
 import type { GBuf } from './raster';
 import { PART } from './mesh';
+import type { LightModel } from '../relief/model';
 import type { HeadTurnSpec, V3, View } from './types';
 
 /**
@@ -79,4 +80,51 @@ export function bounceAo(spec: HeadTurnSpec, g: GBuf, ao: Float32Array, reachPx:
     if (n) out[k] = ao[k]! + (Math.max(ao[k]!, sum / n) - ao[k]!) * w;
   }
   return out;
+}
+
+/**
+ * CONTINUITÉ DU TERMINATEUR sur les ailes (éclairage uniquement ; docs/NOSE-ALAR-SPOT-2.md). L'aile est une partie de la face : la décision éclairé / ombre de l'ombrage cel (seuil franc de n·l) se prend sur la FACE, la rondeur de l'aile ne fait que déplacer le terminateur de `TERMINATOR_MARGIN` (en cosinus).
+ * Mesuré à 60° (pyramide, 3 graines) : la normale adoucie à 85 % garde 15 % de la normale de l'ellipsoïde, qui franchit le seuil là où la joue autour est à l'ombre (part éclairée de l'aile 0,02–0,25 contre 0,00 pour la joue) : OVALE clair à bord net, posé sur la joue.
+ * `n` (normale adoucie de l'aile) et `nFace` (normale de la face au même point), tous deux en repère CAMÉRA : on ramène `n·dir` dans `[nFace·dir − M, nFace·dir + M]`, fondu par le poids `w` de l'aile, en ajoutant la composante nécessaire le long de la lumière.
+ */
+export const TERMINATOR_MARGIN = 0.04;
+export function terminatorClamp(n: V3, nFace: V3, w: number, dir: V3, margin = TERMINATOR_MARGIN): V3 {
+  const tw = dot(n, dir), tf = dot(nFace, dir), target = tw + (Math.min(tf + margin, Math.max(tf - margin, tw)) - tw) * w;
+  if (Math.abs(target - tw) < 1e-9) return n;
+  let o = n;
+  for (let i = 0; i < 4; i++) { const e = target - dot(o, dir); if (Math.abs(e) < 1e-9) break; o = norm(v3(o.x + e * dir.x, o.y + e * dir.y, o.z + e * dir.z)); }   // la renormalisation défait une part de l'écart : 4 passes suffisent (écart < 1e-6)
+  return o;
+}
+
+/** Normale ÉCLAIRÉE (repère caméra) d'un point de `PART.bump` : adoucie vers la face (`BLEND`), puis continuité du terminateur sur les ailes. Les ellipsoïdes d'ailes ne sont résolus qu'UNE fois (l'ancien appel par pixel de `softenedNormal` refaisait `alaOf`). */
+export function wingLighter(spec: HeadTurnSpec, view: View, L: Pick<LightModel, 'dir'>): (p: V3, nh: V3) => V3 {
+  const weigh = alaWeigher(spec);
+  return (p, nh) => {
+    const w = weigh(p);
+    if (w <= 0) return dirToCam(nh, view, 'head', p.y);
+    const f = faceNormalAt(spec, p.x, p.y), ws = w * BLEND, ns = norm(v3(nh.x + (f.x - nh.x) * ws, nh.y + (f.y - nh.y) * ws, nh.z + (f.z - nh.z) * ws));
+    return terminatorClamp(dirToCam(ns, view, 'head', p.y), dirToCam(f, view, 'head', p.y), w, L.dir);
+  };
+}
+
+/**
+ * MESURE d'anatomie / de style pour la règle `eng.nose.alar-terminator` : sur la coque de l'aile la plus visible (échantillon de la surface de l'ellipsoïde tournée vers la caméra, repère tête), part des points dont la décision éclairé / ombre
+ * (cel : `n·dir − bias` au-dessus de 0,012) DIFFÈRE de celle de la face au même point ET dont l'écart de n·l à la face dépasse `TERMINATOR_MARGIN` (un point à moins de la marge du seuil peut basculer : c'est le déplacement permis du terminateur). `soften` = `false` rejoue l'état sans la continuité (adoucissement à 85 % seul), pour prouver que la règle détecte l'ancien défaut.
+ */
+export function wingTerminatorGap(spec: HeadTurnSpec, view: View, L: Pick<LightModel, 'dir' | 'bias'>, continuity = true, n = 24): number {
+  const lit = (nc: V3): boolean => dot(nc, L.dir) - L.bias > 0.012;
+  let best = { vis: -1, gap: 0 };
+  for (const sg of [1, -1] as const) {
+    const a = alaOf(spec, sg), weigh = alaWeigher(spec); let vis = 0, bad = 0;
+    for (let i = 1; i < n; i++) for (let j = 0; j < 2 * n; j++) {
+      const th = (Math.PI * i) / n, ph = (Math.PI * j) / n, u = v3(Math.sin(th) * Math.cos(ph), Math.cos(th), Math.sin(th) * Math.sin(ph)), p = v3(a.c.x + a.ex * u.x, a.c.y + a.ey * u.y, a.c.z + a.ez * u.z);
+      if (p.z < surfaceZ(sectionAt(spec, p.y), p.x) || weigh(p) < 0.999) continue;                 // pas la coque cachée dans la face
+      const nh = norm(v3(u.x / a.ex, u.y / a.ey, u.z / a.ez)), nCam = dirToCam(nh, view, 'head', p.y); if (nCam.z <= 0.05) continue;   // tournée vers la caméra
+      const f = faceNormalAt(spec, p.x, p.y), ws = BLEND, ns = norm(v3(nh.x + (f.x - nh.x) * ws, nh.y + (f.y - nh.y) * ws, nh.z + (f.z - nh.z) * ws)), nSoft = dirToCam(ns, view, 'head', p.y), nF = dirToCam(f, view, 'head', p.y);
+      const nW = continuity ? terminatorClamp(nSoft, nF, 1, L.dir) : nSoft;
+      vis++; if (lit(nW) !== lit(nF) && Math.abs(dot(nW, L.dir) - dot(nF, L.dir)) > TERMINATOR_MARGIN + 1e-6) bad++;   // décision différente ET écart de n·l au-delà de la marge tolérée (la bande de ± marge autour du seuil de la face reste permise)
+    }
+    if (vis > best.vis) best = { vis, gap: vis ? bad / vis : 0 };
+  }
+  return best.gap;
 }
