@@ -24,9 +24,16 @@ export type CurveSegment =
   /** Accélération : la courbure croît en loi de puissance (crochet tardif), θ = angle·u^power, power ≥ 2. */
   | { readonly kind: 'accelerate'; readonly len: number; readonly angle: number; readonly power?: number }
   /** Retournement de pointe : virage rapide `angle` (rad) sur un segment court, adouci aux deux bouts. */
-  | { readonly kind: 'tipFlip'; readonly len: number; readonly angle: number };
+  | { readonly kind: 'tipFlip'; readonly len: number; readonly angle: number }
+  /**
+   * ENTRELACS : le cap oscille AUTOUR de l'axe (θ = amp·(cos 2π(f·u+φ) − cos 2πφ), net nul sur un nombre entier de périodes) et le décollement
+   * oscille en phase (`lift` : les brins de phases différentes passent tour à tour devant et derrière). Deux brins de phases φ et φ+½ se
+   * croisent à chaque demi-période, avec l'alternance de profondeur que `occlusion.ts` sait lire. Voir `weave.ts` pour poser un groupe de brins.
+   */
+  | { readonly kind: 'weave'; readonly len: number; readonly amp: number; readonly freq: number; readonly phase: number; readonly lift?: number };
 
-export interface ProgramState { readonly theta: number; readonly twist: number; readonly seg: number; readonly u: number }
+/** `lift` : décollement ajouté (unités H) par le segment courant — nul hors entrelacs ; il s'annule aux deux bouts du segment (pas de saut de profondeur). */
+export interface ProgramState { readonly theta: number; readonly twist: number; readonly seg: number; readonly u: number; readonly lift: number }
 
 /** Cap local (rad) d'un segment à la position `u`. */
 export function segTheta(s: CurveSegment, u: number): number {
@@ -41,8 +48,12 @@ export function segTheta(s: CurveSegment, u: number): number {
     case 'wave': { const p = s.phase ?? 0; return s.amp * (Math.sin(2 * Math.PI * (s.freq * u + p)) - Math.sin(2 * Math.PI * p)); }
     case 'accelerate': return s.angle * u ** (s.power ?? 2.4);
     case 'tipFlip': return s.angle * smooth(u);
+    case 'weave': return s.amp * (Math.cos(2 * Math.PI * (s.freq * u + s.phase)) - Math.cos(2 * Math.PI * s.phase));
   }
 }
+
+/** Décollement local (unités H) d'un segment à la position `u` : seul l'entrelacs en a un, enveloppé en sin(πu)^½ pour s'annuler aux extrémités. */
+export const segLift = (s: CurveSegment, u: number): number => (s.kind === 'weave' ? (s.lift ?? 0) * Math.sin(Math.PI * Math.min(1, Math.max(0, u))) ** 0.5 * Math.cos(2 * Math.PI * (s.freq * u + s.phase)) : 0);
 
 /** Torsion locale (rad, cumulée dans le segment). */
 export const segTwist = (s: CurveSegment, u: number): number => (s.kind === 'twist' ? s.turns * 2 * Math.PI * smooth(u) : 0);
@@ -56,11 +67,11 @@ export function evalProgram(prog: readonly CurveSegment[], t: number): ProgramSt
     const s = prog[i] as CurveSegment;
     if (x <= acc + s.len || i === prog.length - 1) {
       const u = s.len > 0 ? Math.min(1, Math.max(0, (x - acc) / s.len)) : 1;
-      return { theta: theta + segTheta(s, u), twist: twist + segTwist(s, u), seg: i, u };
+      return { theta: theta + segTheta(s, u), twist: twist + segTwist(s, u), seg: i, u, lift: segLift(s, u) };
     }
     theta += segTheta(s, 1); twist += segTwist(s, 1); acc += s.len;
   }
-  return { theta, twist, seg: 0, u: 0 };
+  return { theta, twist, seg: 0, u: 0, lift: 0 };
 }
 
 /** Bornes de t [début, fin] de chaque segment (pour les tests et pour nommer le comportement dominant d'une portion). */

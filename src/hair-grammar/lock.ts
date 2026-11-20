@@ -57,17 +57,21 @@ export interface LockSpec {
 export interface Sample { readonly p: V3; readonly t: number; readonly n: V3; readonly twist?: number; /** Point de coque (y, azimut en radian) sous l'échantillon : permet de poser une mèche fille exactement dessus (`emerge.ts`). */ readonly shell: { readonly y: number; readonly az: number } }
 
 /** Rotation de `d` autour de l'axe `n` d'un angle `a` (Rodrigues). */
-function rotAbout(d: V3, n: V3, a: number): V3 {
+export function rotAbout(d: V3, n: V3, a: number): V3 {
   const c = Math.cos(a); const s = Math.sin(a);
   return add(add(mul(d, c), mul(cross(n, d), s)), mul(n, dot(n, d) * (1 - c)));
 }
 
+/** Racine d'une mèche en coordonnées de coque (y, azimut radian) : `shellRoot` si donnée, sinon le point de l'ellipsoïde (élévation, azimut) ramené à la coque. */
+export function rootShell(h: HeadSpec, L: LockSpec): { y: number; az: number } {
+  if (L.shellRoot) return L.shellRoot;
+  const el = rad(L.root.el); const az = rad(L.root.az);
+  return toShell(h, v3(h.rx * Math.cos(el) * Math.sin(az), -h.ry * Math.sin(el), h.cz + h.rz * Math.cos(el) * Math.cos(az)));
+}
+
 /** Marche d'une mèche sur la coque : renvoie `steps + 1` échantillons 3D (position décollée, paramètre t, normale). */
 export function walk(h: HeadSpec, L: LockSpec, steps = 28): Sample[] {
-  const el = rad(L.root.el); const az = rad(L.root.az);
-  // Racine : point de l'ellipsoïde (élévation, azimut) ramené à la coque.
-  const root3 = v3(h.rx * Math.cos(el) * Math.sin(az), -h.ry * Math.sin(el), h.cz + h.rz * Math.cos(el) * Math.cos(az));
-  let { y, az: a } = L.shellRoot ?? toShell(h, root3);
+  let { y, az: a } = rootShell(h, L);
   const out: Sample[] = [];
   const ds = L.length / steps;
   // Cap de référence : `aim` projeté sur le plan tangent de la racine, puis transporté le long de la coque (plan tangent courant).
@@ -76,8 +80,9 @@ export function walk(h: HeadSpec, L: LockSpec, steps = 28): Sample[] {
     const t = k / steps;
     const n = shellNormal(h, y, a);
     const base = shellPoint(h, y, a);
-    const off = lerp(L.lift0, L.lift1, t ** L.liftPow);
     const st = L.program ? evalProgram(L.program, t) : null;
+    // Décollement : rampe `lift0 → lift1` + oscillation d'entrelacs du programme (nulle sans segment `weave`).
+    const off = lerp(L.lift0, L.lift1, t ** L.liftPow) + (st ? st.lift : 0);
     out.push(st ? { p: add(base, mul(n, off)), t, n, twist: st.twist, shell: { y, az: a } } : { p: add(base, mul(n, off)), t, n, shell: { y, az: a } });
     if (k === steps) break;
     const tg = shellTangents(h, y, a);

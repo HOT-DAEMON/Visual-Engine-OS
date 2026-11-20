@@ -22,6 +22,8 @@ export interface CelBands {
  *  - REFLET : bande centrée en λ = 0,35·d, de demi-largeur `band`·0,5, sur u ∈ [0,12 ; 0,78], effilée aux deux bouts.
  *  - OMBRE PROPRE : toute la largeur sur le premier quart (u ≤ 0,26), bord bas irrégulier.
  * Les polygones sont ensuite ROGNÉS par le contour réel de la mèche (clip-path) : aucune bande ne peut en sortir.
+ * Avec `l.geom` (mèche du moteur de grammaire) : la demi-largeur est CELLE DE LA LAME, le reflet est étranglé par |cos φ|^1,2 (ruban torsadé
+ * = reflet cassé, ruban plat = continu), atténué de 60 % sous un recouvrement, et la lumière s'inverse sur le dessous du ruban.
  */
 export function celBands(l: HairLock, ld: Vec, band: number, wantCore: boolean, span: readonly [number, number] = [0.12, 0.78]): CelBands {
   const sp = l.spine;
@@ -29,13 +31,18 @@ export function celBands(l: HairLock, ld: Vec, band: number, wantCore: boolean, 
   const n = sp.length;
   const nn = normals(sp);
   const profile = l.profile ?? 'ribbon';
-  const hw = (i: number): number => halfWidth(i / (n - 1), l.w0 as number, l.sharp ?? 0.5, profile, l.power ?? 1, l.rootW);
+  // GÉOMÉTRIE LOCALE (moteur de grammaire) : largeur réelle de la lame, torsion, dessous visible, occlusion. Absente : formule d'origine, inchangée.
+  const g = l.geom && l.geom.width.length === n && l.geom.twist.length === n && l.geom.backface.length === n && l.geom.occlusion.length === n ? l.geom : undefined;
+  const hw = (i: number): number => (g ? Math.max(0.03 * (l.w0 as number), (g.width[i] as number) / 2) : halfWidth(i / (n - 1), l.w0 as number, l.sharp ?? 0.5, profile, l.power ?? 1, l.rootW));
+  /** Reflet d'un ruban torsadé : étranglé quand il est vu par la tranche, atténué sous un recouvrement. */
+  const gloss = (i: number): number => (g ? Math.abs(Math.cos(g.twist[i] as number)) ** 1.2 * (1 - 0.6 * (g.occlusion[i] as number)) : 1);
   const at = (i: number, lam: number): Vec => {
     const q = nn[i] as Vec;
     const w = hw(i) * lam;
     return { x: (sp[i] as Vec).x + q.x * w, y: (sp[i] as Vec).y + q.y * w };
   };
-  const d = (i: number): number => clamp((nn[i] as Vec).x * ld.x + (nn[i] as Vec).y * ld.y, -1, 1);
+  // Sur le dessous du ruban la lumière arrive du côté opposé : le signe de d s'inverse (même règle que `paint-pro.ts`).
+  const d = (i: number): number => { const o = clamp((nn[i] as Vec).x * ld.x + (nn[i] as Vec).y * ld.y, -1, 1); return g?.backface[i] ? -o : o; };
   const edge = (i: number): Vec => at(i, -Math.tanh(3 * d(i)) * 1.15);
   const inner = (i: number): Vec => at(i, -0.55 * d(i));
   const idx = Array.from({ length: n }, (_, i) => i);
@@ -44,7 +51,7 @@ export function celBands(l: HairLock, ld: Vec, band: number, wantCore: boolean, 
   if (band > 0.01) {
     const a = Math.floor(span[0] * (n - 1));
     const b = Math.floor(span[1] * (n - 1));
-    const half = (i: number): number => 0.5 * band * 0.55 * Math.max(0, Math.sin((Math.PI * (i - a)) / Math.max(1, b - a))) ** 0.7;
+    const half = (i: number): number => 0.5 * band * 0.55 * Math.max(0, Math.sin((Math.PI * (i - a)) / Math.max(1, b - a))) ** 0.7 * gloss(i);
     const sub = idx.filter((i) => i >= a && i <= b);
     highlight = [...sub.map((i) => at(i, 0.35 * d(i) + half(i))), ...[...sub].reverse().map((i) => at(i, 0.35 * d(i) - half(i)))];
   }
@@ -56,4 +63,10 @@ export function celBands(l: HairLock, ld: Vec, band: number, wantCore: boolean, 
     core = [...sub.map((i) => at(i, 1.2)), ...[...sub].reverse().map((i) => at(i, -1.2))].map((q, j, all) => (j % 2 === 1 && j > all.length / 4 ? { x: q.x * 0.98 + (sp[0] as Vec).x * 0.02, y: q.y } : q));
   }
   return { shade, core, highlight };
+}
+
+/** Part (0–1) des mèches épaisses de devant qui portent leur géométrie locale : leur reflet est LOCAL, la tache globale s'efface d'autant. */
+export function localGlossShare(locks: readonly HairLock[]): number {
+  const big = locks.filter((l) => (l.rank === 'mass' || l.rank === 'main' || l.rank === 'plait') && l.layer !== 'back');
+  return big.length ? big.filter((l) => l.geom).length / big.length : 0;
 }

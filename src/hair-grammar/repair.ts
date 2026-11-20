@@ -2,8 +2,8 @@ import { analyzeComposition } from './compose';
 import { verifyComposed, type Defect, type Verdict } from './compose-verify';
 import { emergeFrom } from './emerge';
 import { sampleLock, type HairProfile } from './grammar';
-import type { View } from './head';
-import type { LockSpec } from './lock';
+import { viewRayInHead, type View } from './head';
+import { rotAbout, type LockSpec } from './lock';
 import { paintLock } from './paint';
 import { clamp, norm, prng, v3, type V3 } from './vec';
 
@@ -17,6 +17,10 @@ export interface Attempt { readonly code: string; readonly lock?: string; readon
 export interface RepairResult { readonly specs: LockSpec[]; readonly verdict: Verdict; readonly journal: Attempt[] }
 
 const rotZ = (v: V3, a: number): V3 => v3(v.x * Math.cos(a) - v.y * Math.sin(a), v.x * Math.sin(a) + v.y * Math.cos(a), v.z);
+/** Tourne le cap autour de l'AXE DE VUE : déplace la direction dans l'image quel que soit le lacet (rotZ ne bouge presque rien en vue de profil). */
+const aroundView = (a: number): Fix => ({ name: `écarter le cap dans l'image (${a > 0 ? '+' : '−'}${Math.abs(a)} rad, axe de vue)`, apply: (L, c) => ({ ...L, aim: norm(rotAbout(L.aim, viewRayInHead(c.view), a)) }) });
+/** Déplace la RACINE de ±`d`° d'azimut : seul remède quand c'est la racine, et non la pointe, qui recouvre le repère (mèche du côté, vue de profil). Inchangé pour une mèche émergente (racine imposée par sa mère). */
+const moveRoot = (d: number): Fix => ({ name: `déplacer la racine (${d > 0 ? '+' : '−'}${Math.abs(d)}° d'azimut)`, apply: (L) => (L.parent || L.shellRoot ? L : { ...L, root: { el: L.root.el, az: L.root.az + d } }) });
 type Fix = { readonly name: string; readonly apply: (L: LockSpec, ctx: Ctx) => LockSpec };
 interface Ctx { readonly P: HairProfile; readonly view: View; readonly specs: readonly LockSpec[]; readonly seed: number; readonly defect: Defect }
 
@@ -26,7 +30,8 @@ const FIXES: Record<string, Fix[]> = {
   'geom.degenerate': [{ name: 'allonger ×1,5', apply: (L) => ({ ...L, length: L.length * 1.5 }) }, regenerate(1), regenerate(2)],
   'geom.self': [{ name: 'réduire la courbure et le retroussé', apply: (L) => ({ ...L, bend: L.bend * 0.5, flick: { ...L.flick, amt: L.flick.amt * 0.5 } }) }, { name: 'raccourcir ×0,8', apply: (L) => ({ ...L, length: L.length * 0.8 }) }, regenerate(1)],
   'geom.emerge': [{ name: 'détachement ÷2', apply: (L, c) => { const par = c.specs.find((s) => s.id === L.parent?.id); return par && L.parent ? emergeFrom(c.P.head, par, L, { t: L.parent.t, peel: 0.3 }) : L; } }, regenerate(1)],
-  'anat.eye': [{ name: 'écarter le cap de l\'œil (+0,4 rad)', apply: (L) => ({ ...L, aim: norm(rotZ(L.aim, 0.4)) }) }, { name: 'écarter le cap de l\'œil (−0,4 rad)', apply: (L) => ({ ...L, aim: norm(rotZ(L.aim, -0.4)) }) }, { name: 'raccourcir ×0,7', apply: (L) => ({ ...L, length: L.length * 0.7 }) }],
+  'anat.eye': [{ name: 'écarter le cap de l\'œil (+0,4 rad)', apply: (L) => ({ ...L, aim: norm(rotZ(L.aim, 0.4)) }) }, { name: 'écarter le cap de l\'œil (−0,4 rad)', apply: (L) => ({ ...L, aim: norm(rotZ(L.aim, -0.4)) }) }, aroundView(0.5), aroundView(-0.5), moveRoot(15), moveRoot(-15), { name: 'plaquer le décollement (÷2)', apply: (L) => ({ ...L, lift0: L.lift0 * 0.5, lift1: L.lift1 * 0.5 }) }, { name: 'raccourcir ×0,7', apply: (L) => ({ ...L, length: L.length * 0.7 }) }, { name: 'raccourcir ×0,4', apply: (L) => ({ ...L, length: L.length * 0.4 }) }],
+  'anat.face': [{ name: 'écarter le cap du visage (+0,4 rad)', apply: (L) => ({ ...L, aim: norm(rotZ(L.aim, 0.4)) }) }, { name: 'écarter le cap du visage (−0,4 rad)', apply: (L) => ({ ...L, aim: norm(rotZ(L.aim, -0.4)) }) }, aroundView(0.5), aroundView(-0.5), moveRoot(15), moveRoot(-15), { name: 'raccourcir ×0,6', apply: (L) => ({ ...L, length: L.length * 0.6 }) }, { name: 'plaquer le décollement (÷2)', apply: (L) => ({ ...L, lift0: L.lift0 * 0.5, lift1: L.lift1 * 0.5 }) }],
   'style.speckle': [{ name: 'élargir ×1,2', apply: (L) => ({ ...L, width: L.width * 1.2 }) }, { name: 'élargir ×1,4', apply: (L) => ({ ...L, width: L.width * 1.4 }) }],
   'style.coherence': [{ name: 'aligner le cap sur la lecture', apply: (L, c) => { const r = analyzeComposition(c.P.head, c.specs, c.view).reading.angle; return { ...L, aim: norm(rotZ(L.aim, clamp(r * 0.2, -0.5, 0.5))) }; } }],
 };

@@ -1,6 +1,6 @@
 import { emergenceContinuity } from './emerge';
 import { analyzeComposition, type Composition } from './compose';
-import { landmarks, project, type HeadSpec, type View } from './head';
+import { facing, landmarks, project, type HeadSpec, type View } from './head';
 import type { LockSpec } from './lock';
 import { paintLock, type PaintedLock } from './paint';
 import { bladeOutline } from './blade';
@@ -35,11 +35,24 @@ export function verifyComposed(h: HeadSpec, specs: readonly LockSpec[], view: Vi
     if (par) { const c = emergenceContinuity(h, par, p.spec); if (c.gap > 0.01 || c.angleDeg > 12 || c.widthRatio > 0.5) { emBad++; D.push({ code: 'geom.emerge', layer: 'geometry', lock: p.spec.id, family: p.spec.family, severity: 2, detail: `jonction : écart ${c.gap.toFixed(3)}, angle ${c.angleDeg.toFixed(0)}°, largeur ${c.widthRatio.toFixed(2)}` }); } }
   });
   G.push(chk('mèches non finies', bad, 0, 0), chk('lames dégénérées', deg, 0, 0), chk('axes qui se coupent (sans programme)', selfX, 0, 0), chk('émergences discontinues', emBad, 0, 0));
-  // ── Anatomie : yeux non recouverts, calotte couverte, proportions, équilibre.
-  const lm = landmarks(h); const eyes = [lm.eyeR, lm.eyeL].map((e) => project(view, e) as V2);
+  // ── Anatomie : yeux, nez et bouche non recouverts, calotte couverte, proportions, équilibre.
+  // Seuls les repères VISIBLES comptent : au-delà de ≈ 55° de lacet l'œil lointain est caché par la tête (mesuré : sans ce filtre, `anat.eye` passait de
+  // 0,75 à 2 défauts par coiffure entre 0° et 75°, presque tous sur un œil que personne ne voit).
+  const SEEN = 0.2;
+  const lm = landmarks(h); const eyes = [lm.eyeR, lm.eyeL].filter((e) => facing(h, view, e) > SEEN).map((e) => project(view, e) as V2);
   let eyeHit = 0;
-  for (const e of eyes) { const cov = painted.filter((p) => p.spec.family !== 'back' && inPoly(bladeOutline(p.blade), e.x, e.y)); if (cov.length) { eyeHit++; const w = cov[cov.length - 1] as PaintedLock; D.push({ code: 'anat.eye', layer: 'anatomy', lock: w.spec.id, family: w.spec.family, severity: 2, detail: 'recouvre le centre d\'un œil' }); } }
+  for (const e of eyes) { const cov = painted.filter((p) => p.spec.family !== 'back' && inPoly(bladeOutline(p.blade), e.x, e.y)); if (cov.length) { eyeHit++; for (const w of cov) D.push({ code: 'anat.eye', layer: 'anatomy', lock: w.spec.id, family: w.spec.family, severity: 2, detail: 'recouvre le centre d\'un œil' }); } }
   A.push(chk('yeux recouverts', eyeHit, 0, 0));
+  // UN défaut par mèche qui recouvre le repère (et non seulement la dernière) : sinon, quand deux mèches le couvrent, corriger l'une ne baisse pas le score
+  // et le cycle de réparation, qui exige une baisse stricte, abandonne sans jamais essayer l'autre (observé à ±75°).
+  // Nez et bouche : une mèche de devant qui recouvre le bout du nez ou le centre de la bouche est une erreur d'anatomie (une frange couvre le front, pas le visage).
+  let faceHit = 0;
+  for (const [name, mark] of [['le bout du nez', lm.noseTip], ['la bouche', lm.mouth]] as const) {
+    if (facing(h, view, mark) <= SEEN) continue;
+    const q = project(view, mark) as V2; const cov = painted.filter((p) => p.layer !== 'back' && inPoly(bladeOutline(p.blade), q.x, q.y));
+    if (cov.length) { faceHit++; for (const w of cov) D.push({ code: 'anat.face', layer: 'anatomy', lock: w.spec.id, family: w.spec.family, severity: 2, detail: `recouvre ${name}` }); }
+  }
+  A.push(chk('nez / bouche recouverts', faceHit, 0, 0));
   const c0 = project(view, v3(0, 0, h.cz)); const rx = h.rx * view.s; const ry = h.ry * view.s; const eyeY = project(view, lm.eyeR).y; let dome = 0; let domeCov = 0;
   const g = comp.grid;
   for (let y = 0; y < g.ny; y++) for (let x = 0; x < g.nx; x++) { const px = (x + 0.5) * g.cell; const py = (y + 0.5) * g.cell; if (py > eyeY - 0.12 * view.s) continue; if (((px - c0.x) / rx) ** 2 + ((py - c0.y) / ry) ** 2 > 0.8) continue; dome++; if (g.data[y * g.nx + x]) domeCov++; }

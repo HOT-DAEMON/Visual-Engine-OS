@@ -30,20 +30,29 @@ export const GAP_MIN = 0.03;
 export const SPAN_MIN = 0.03;
 
 
-/** Intervalles où la lame A recouvre la lame B (vus depuis A), découpés aux changements de signe de la profondeur. */
-function runs(A: Blade, gB: Geo, B: Blade): Interval[] {
+/**
+ * Intervalles où la lame A recouvre la lame B (vus depuis A), découpés aux changements de signe de la profondeur.
+ * `paired` : A et B sont deux brins d'un MÊME entrelacs (`weave`), paramétrés de la même façon — le point de B qui correspond à l'échantillon k de A
+ * est alors l'échantillon k de B (même position dans la tresse), et non le point le plus proche, qui forme un plateau là où les brins se croisent.
+ */
+function runs(A: Blade, gB: Geo, B: Blade, paired = false): Interval[] {
   const n = A.spine.length; const cover: boolean[] = [];
   for (let k = 0; k < n; k++) cover.push(inside(gB, A.spine[k] as V2) || inside(gB, A.left[k] as V2) || inside(gB, A.right[k] as V2));
   const out: Interval[] = []; let k = 0;
   while (k < n) {
     if (!cover[k]) { k++; continue; }
     let e = k; while (e + 1 < n && (cover[e + 1] || cover[e + 2])) e++;
-    // Sous-intervalles de signe constant de (profondeur A − profondeur de B au point le plus proche de l'axe).
-    let s0 = k; let prev = 0; const near = (kk: number): number => { let bi = 0; let bd = Infinity; const p = A.spine[kk] as V2; for (let m = 0; m < B.spine.length; m++) { const q = B.spine[m] as V2; const d = (p.x - q.x) ** 2 + (p.y - q.y) ** 2; if (d < bd) { bd = d; bi = m; } } return bi; };
+    // Sous-intervalles de signe constant de (profondeur A − profondeur de B au point le plus proche de l'axe). Le point de B le plus proche est
+    // calculé UNE fois par échantillon de A ; la portion de B recouverte est l'ÉTENDUE de ces points sur tout l'intervalle (et non celle des deux
+    // extrémités : deux brins entrelacés, presque parallèles, voient leurs extrémités tomber sur le même point de l'autre — étendue nulle,
+    // croisement franc jugé « faible »). Mesuré sur `weaveStrands` : étendue des extrémités 0 → 0,18.
+    let s0 = k; let prev = 0; const nr = new Map<number, number>();
+    const near = (kk: number): number => { if (paired) return Math.min(kk, B.spine.length - 1); const c = nr.get(kk); if (c !== undefined) return c; let bi = 0; let bd = Infinity; const p = A.spine[kk] as V2; for (let m = 0; m < B.spine.length; m++) { const q = B.spine[m] as V2; const d = (p.x - q.x) ** 2 + (p.y - q.y) ** 2; if (d < bd) { bd = d; bi = m; } } nr.set(kk, bi); return bi; };
     const flush = (from: number, to: number, sign: number): void => {
       if (to < from || sign === 0) return;
-      const ms = [near(from), near(to)]; const gap = Math.abs((A.depth[Math.floor((from + to) / 2)] as number) - (B.depth[near(Math.floor((from + to) / 2))] as number));
-      out.push({ a0: from / (n - 1), a1: to / (n - 1), b0: Math.min(...ms) / (B.spine.length - 1), b1: Math.max(...ms) / (B.spine.length - 1), front: sign > 0 ? 'a' : 'b', gap });
+      let lo = Infinity; let hi = -Infinity; for (let j = from; j <= to; j++) { const m = near(j); if (m < lo) lo = m; if (m > hi) hi = m; }
+      const gap = Math.abs((A.depth[Math.floor((from + to) / 2)] as number) - (B.depth[near(Math.floor((from + to) / 2))] as number));
+      out.push({ a0: from / (n - 1), a1: to / (n - 1), b0: lo / (B.spine.length - 1), b1: hi / (B.spine.length - 1), front: sign > 0 ? 'a' : 'b', gap });
     };
     for (let j = k; j <= e; j++) {
       const d = (A.depth[j] as number) - (B.depth[near(j)] as number);
@@ -64,7 +73,8 @@ export function relationsOf(locks: readonly PaintedLock[]): Relation[] {
     if (a.x1 < b.x0 || b.x1 < a.x0 || a.y1 < b.y0 || b.y1 < a.y0) continue;
     const A = locks[i] as PaintedLock; const B = locks[j] as PaintedLock;
     const swap = (r: Interval): Interval => ({ a0: r.b0, a1: r.b1, b0: r.a0, b1: r.a1, front: r.front === 'a' ? 'b' : 'a', gap: r.gap });
-    const iv = [...runs(A.blade, b, B.blade), ...runs(B.blade, a, A.blade).map(swap)];
+    const paired = A.spec.weave !== undefined && A.spec.weave === B.spec.weave;
+    const iv = [...runs(A.blade, b, B.blade, paired), ...runs(B.blade, a, A.blade, paired).map(swap)];
     if (!iv.length) continue;
     const strong = iv.filter((r) => r.gap >= GAP_MIN && Math.min(r.a1 - r.a0, r.b1 - r.b0) >= SPAN_MIN);
     const fronts = new Set(strong.map((r) => r.front));
@@ -96,11 +106,22 @@ export function resolveOrder(locks: readonly PaintedLock[], relations: readonly 
   const n = locks.length; const N = locks[0]?.blade.spine.length ?? 2;
   const cut = new Set<number>();
   for (const r of relations) if (r.kind === 'cross' && imposes(r, locks, mode)) { cut.add(r.a); cut.add(r.b); }
+  const marks: number[][] = locks.map(() => []);
+  for (const r of relations) {
+    if (r.kind !== 'cross' || !imposes(r, locks, mode)) continue;
+    for (const iv of r.intervals) { if (iv.gap < GAP_MIN || Math.min(iv.a1 - iv.a0, iv.b1 - iv.b0) < SPAN_MIN) continue; marks[r.a]?.push(iv.a0, iv.a1); marks[r.b]?.push(iv.b0, iv.b1); }
+  }
   const items: Item[] = []; const byLock: number[][] = locks.map(() => []);
   for (let l = 0; l < n; l++) {
     const b = (locks[l] as PaintedLock).blade;
     if (!cut.has(l)) { byLock[l]?.push(items.length); items.push({ lock: l, i0: 0, i1: N - 1, depth: meanDepth(b, 0, N - 1), whole: true, cut: false }); continue; }
-    for (let p = 0; p < PIECES; p++) { const i0 = Math.round((p * (N - 1)) / PIECES); const i1 = Math.min(N - 1, Math.round(((p + 1) * (N - 1)) / PIECES)); byLock[l]?.push(items.length); items.push({ lock: l, i0, i1, depth: meanDepth(b, i0, i1), whole: false, cut: true }); }
+    // Coupes : PIECES tronçons réguliers + une coupe à chaque borne d'intervalle franc de cette mèche. Sans elles, un tronçon régulier (≈ 5 échantillons)
+    // peut contenir à la fois un croisement et le changement d'ordre qui suit : ordre contradictoire, arête la plus faible rompue → mauvais brin devant
+    // (observé sur `weaveStrands` : croisement à u = 0,28, inversion à u = 0,36, même tronçon [10-15]).
+    const cuts = new Set<number>(); for (let p = 0; p <= PIECES; p++) cuts.add(Math.round((p * (N - 1)) / PIECES));
+    for (const t of marks[l] ?? []) cuts.add(Math.min(N - 1, Math.max(0, Math.round(t * (N - 1)))));
+    const bounds = [...cuts].sort((x, y) => x - y);
+    for (let p = 0; p + 1 < bounds.length; p++) { const i0 = bounds[p] as number; const i1 = bounds[p + 1] as number; byLock[l]?.push(items.length); items.push({ lock: l, i0, i1, depth: meanDepth(b, i0, i1), whole: false, cut: true }); }
   }
   const covers = (lock: number, t0: number, t1: number): number[] => {
     const a = Math.round(Math.min(t0, t1) * (N - 1)); const b = Math.round(Math.max(t0, t1) * (N - 1));

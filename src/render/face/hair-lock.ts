@@ -102,5 +102,15 @@ export function lockMarkup(l: HairLock, k: number, st: LockStyle, depth: number,
     if (bands.highlight) g.push(el('path', { d: polyPath(bands.highlight), fill: ra.highlight, stroke: mix(ra.light, '#ffffff', 0.4), 'stroke-width': W * 0.0011, 'stroke-linejoin': 'miter', opacity: 0.95 }));
     out.push(el('g', { 'clip-path': urlRef(cid) }, g));
   }
+  // Hors cel, une mèche qui PORTE sa géométrie locale (moteur de grammaire) reçoit SON reflet : une bande qui suit son axe, étranglée par la
+  // torsion et atténuée sous un recouvrement — à la place de la tache globale de `hairGloss` (qui s'efface d'autant : `localGlossShare`).
+  if (!cel && rankBig && sp && l.layer !== 'back' && l.geom) {
+    const band = celBands(l, ld, 0.35 + 0.6 * spec.reflection.size, false).highlight;
+    if (band) {
+      const cid = `${id}-c${k}`;
+      defs.push(el('clipPath', { id: cid }, [el('path', { d })]));
+      out.push(el('g', { 'clip-path': urlRef(cid) }, [el('path', { d: polyPath(band), fill: ra.highlight, opacity: clamp(0.2 + 0.5 * spec.reflection.intensity, 0, 0.7) })]));
+    }
+  }
   return { defs, markup: out };
 }

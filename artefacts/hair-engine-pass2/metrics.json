@@ -1,0 +1,118 @@
+{
+  "weave": {
+    "two": "cross",
+    "flat": "overlap",
+    "three": "cross+cross+cross"
+  },
+  "bridge": {
+    "locks": 50,
+    "withGeom": 50
+  },
+  "views": [
+    {
+      "yaw": -75,
+      "before": 2.5,
+      "after": 0.25,
+      "eyeFace": 0
+    },
+    {
+      "yaw": -60,
+      "before": 6.5,
+      "after": 0,
+      "eyeFace": 0
+    },
+    {
+      "yaw": -45,
+      "before": 0.75,
+      "after": 0,
+      "eyeFace": 0
+    },
+    {
+      "yaw": -30,
+      "before": 3.75,
+      "after": 0,
+      "eyeFace": 0
+    },
+    {
+      "yaw": -15,
+      "before": 3.5,
+      "after": 0,
+      "eyeFace": 0
+    },
+    {
+      "yaw": 0,
+      "before": 5,
+      "after": 0,
+      "eyeFace": 0
+    },
+    {
+      "yaw": 15,
+      "before": 6.25,
+      "after": 0,
+      "eyeFace": 0
+    },
+    {
+      "yaw": 30,
+      "before": 4,
+      "after": 1,
+      "eyeFace": 0
+    },
+    {
+      "yaw": 45,
+      "before": 2,
+      "after": 0,
+      "eyeFace": 0
+    },
+    {
+      "yaw": 60,
+      "before": 8,
+      "after": 0.75,
+      "eyeFace": 0
+    },
+    {
+      "yaw": 75,
+      "before": 4.25,
+      "after": 0,
+      "eyeFace": 0
+    }
+  ],
+  "face": {
+    "before": 13,
+    "after": 2,
+    "defectsBefore": "4 anat.face",
+    "defectsAfter": "0 anat.face",
+    "kept": [
+      "intruder-0: écarter le cap du visage (+0,4 rad)",
+      "intruder-0: écarter le cap de l'œil (+0,4 rad)",
+      "intruder-1: écarter le cap du visage (+0,4 rad)",
+      "intruder-1: écarter le cap de l'œil (+0,4 rad)",
+      "farSide-2: raccourcir ×0,8",
+      "farSide-3: raccourcir ×0,8",
+      "farSide-4: raccourcir ×0,8",
+      "farSide-6: raccourcir ×0,8"
+    ]
+  },
+  "intents": [
+    {
+      "name": "volume +1, lourd",
+      "seed": 2,
+      "before": 28,
+      "after": 20,
+      "kept": 4
+    },
+    {
+      "name": "vent 1 vers +0,6 rad",
+      "seed": 2,
+      "before": 5.25,
+      "after": 3,
+      "kept": 2
+    },
+    {
+      "name": "plaqué lisse",
+      "seed": 2,
+      "before": 4,
+      "after": 0,
+      "kept": 2
+    }
+  ]
+}

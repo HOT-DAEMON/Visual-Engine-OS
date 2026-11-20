@@ -19,8 +19,7 @@ grosses masses devant le visage. Décision : l'ordre d'écriture reste le défau
 (b) les groupes `LockSpec.weave` (tresses, entrelacs). `imposes(r, locks, mode)` porte la règle ; `mode = 'all'` force tout (outil de diagnostic).
 
 ## Limites connues (à faire)
-- Le moteur réel ne sait pas AUTEURISER un entrelacs : une onde `wave` dérive d'un seul côté, donc deux mèches ne se croisent pas deux fois. La tresse de
-  l'artefact 04 et du test utilise des lames fabriquées à la main (honnête : étiquetée « lames fabriquées »). Il faut un programme `weaveWith(partner)`.
+- ~~Le moteur ne sait pas AUTEURISER un entrelacs~~ FAIT (passe 2) : `weaveStrands` + segment `weave` ; le résolveur a été corrigé (correspondance appariée, coupes aux bornes d'intervalles) — `HAIR-WEAVE.md`. L'artefact 04 reste sur lames fabriquées (historique).
 - Profondeur de coque → profondeur réelle : à remplacer par une profondeur de volume (épaisseur de mèche) pour fiabiliser le mode `all`.
 - Les ombres de contact sont de simples traits ; pas d'ombre portée douce ni d'occlusion ambiante.
 - Pas de réapparition de sous-couche (cheveux de dessous visibles à travers un trou) : seul l'ordre d'écriture le gère.

@@ -3,6 +3,7 @@
 Légende : ✅ fait et prouvé (test + artefact) · 🟡 fait en partie (le reste est listé) · ⬜ non fait.
 Preuves : `tests/hair-engine-*.test.ts`, `artefacts/hair-engine/` (`npx tsx scripts/hair-grammar/artefacts-engine.ts`), `metrics.json`.
 Documents détaillés : `HAIR-ENGINE-CURVES`, `HAIR-OVERLAP`, `HAIR-COMPOSE`, `HAIR-FINISH-VERIFY`, `HAIR-INTENT`, `HAIR-INTEROP`.
+**Passe 2** (`artefacts/hair-engine-pass2/`, `HAIR-GEOM-BRIDGE`, `HAIR-WEAVE`, `HAIR-FACE-INTENT`, bilan et reste : `HAIR-PASS2-REMAINING`) : lignes marquées « P2 » ci-dessous.
 
 ## Problème majeur — contrat d'interopérabilité
 | Ligne | État | Détail |
@@ -39,19 +40,19 @@ Documents détaillés : `HAIR-ENGINE-CURVES`, `HAIR-OVERLAP`, `HAIR-COMPOSE`, `H
 |---|---|---|
 | 8 questions (devant, début, fin, visible, ombre de contact, sous-couche, croisement, silhouette) | 🟡 | 1–5, 7, 8 ✅ ; « sous-couche qui réapparaît » (6) non faite. |
 | Logique de relations plutôt que de calques | 🟡 | Graphe + ordre topologique + tronçons ; OPT-IN (constat mesuré : profondeur de coque peu fiable sur cheveux denses). |
-| Deux mèches alternativement devant/derrière | ✅ | tresse (04) mais sur lames fabriquées : le moteur ne sait pas auteurer un entrelacs. |
+| Deux mèches alternativement devant/derrière | ✅ P2 | `weaveStrands` (segment `weave`) : alternance écrite par la géométrie, lue par l'occlusion ; ablation lift 0 → pas d'alternance (`HAIR-WEAVE`, artefact pass2/01). |
 
 ## 3.4 Finition picturale
 | Ligne | État | Détail |
 |---|---|---|
 | Palette simplifiée (3 aplats, croissant, encre commune) | 🟡 | `paint-pro` : reflet et ombre calculés ; encre toujours commune ; 3 aplats de base conservés. |
-| Bénéficier de `hair-lock.ts` | ⬜ | `paint-pro` est un second pinceau dans la grammaire ; le principal n'en profite pas. |
+| Bénéficier de `hair-lock.ts` | 🟡 P2 | La géométrie de `paint-pro` est consommée par `lockMarkup` via `HairLock.geom` (`HAIR-GEOM-BRIDGE`). Le SVG de `paint-pro` reste un second pinceau. |
 
 ## 4.3 Moteur d'apparence
 | Ligne | État | Détail |
 |---|---|---|
-| Lumière ↔ forme (courbure, orientation, torsion) | ✅ dans la grammaire | `LockGeom` ; ruban plat vs torsadé (07). ⬜ côté moteur d'apparence principal. |
-| Reflets localisés suivant chaque mèche | ✅ dans la grammaire | bandes le long de l'axe ; `hairGloss()` du principal inchangé. |
+| Lumière ↔ forme (courbure, orientation, torsion) | ✅ P2 | `LockGeom` ; ruban plat vs torsadé (07) ; côté principal : `celBands` lit largeur, torsion, face, occlusion. Lumière toujours 2D (`ld`). |
+| Reflets localisés suivant chaque mèche | ✅ P2 | bandes le long de l'axe ; reflet local clippé par mèche hors cel ; `hairGloss` s'efface (`localGlossShare`). |
 | Dépendance au SVG | 🟡 | contournée dans `paint-pro` (géométrie) ; non traitée pour les filtres du principal. |
 | Interface normale/courbure/orientation/torsion/largeur/profondeur/exposition/occlusion | ✅ | `LockGeom`. |
 
@@ -62,16 +63,18 @@ Documents détaillés : `HAIR-ENGINE-CURVES`, `HAIR-OVERLAP`, `HAIR-COMPOSE`, `H
 | B. Grammaire de style | ✅ | couche supérieure = `CompositionSpec` + `Intent`. |
 | C. Forme et flux (structures ramifiées) | 🟡 | émergence ; séparation/jonction/enroulement/croisement : seul le croisement par tronçons. |
 | D. Composition et occlusion (graphe de relations) | ✅ grammaire / ⬜ principal | graphe `relationsOf` + relations de groupes. |
-| E. Apparence (ne pas dupliquer) | 🟡 | interface fournie ; le moteur commun ne la consomme pas encore. |
+| E. Apparence (ne pas dupliquer) | ✅ P2 / 🟡 | le moteur principal consomme `geom` (contrat vérifié) ; lumière 3D commune et mèches `part`/`sim` : ⬜. |
 | F. Art direction | 🟡 | 4 axes mesurables ; manquent raie, frange, reflets, « pointes libres » au-delà du retroussé. |
 | G. Variation | ✅ | 7 niveaux indépendants, test champ par champ. |
 | H. Cycle de réparation (6 étapes) | ✅ | `repairCycle` ; artefact 08 (5 → 0). Non branché sur `autofit`/`iso-verify`. |
-| Couche de vérification du rendu (géométrie, anatomie, style) | ✅ | `verifyComposed`, défauts localisés. |
+| Couche de vérification du rendu (géométrie, anatomie, style) | ✅ P2 | `verifyComposed`, défauts localisés ; + `anat.face` (nez, bouche), visibilité par `facing`, réparation multi-coupables, vues −75°…+75° (`HAIR-FACE-INTENT`). |
 
-## Constats à traiter ensuite (priorité décroissante)
-1. Brancher `LockGeom` dans `lockMarkup`/`hairGloss` (une seule apparence).
-2. Auteur d'entrelacs (`weaveWith`) + profondeur de volume pour fiabiliser le mode `all`.
-3. Contrôle `anat.face` (nez, bouche) et `repairCycle` automatique après `applyIntent`.
-4. Segmentation par mèche pour l'observation ; brancher `observe` → `autofit`.
-5. Validation des vues > +30° (artefact 11 montre le profil 01 calé sur −46°).
-6. Ramification complète (séparation, jonction, boucles).
+## Constats à traiter ensuite (priorité décroissante, après la passe 2)
+1. ✅ P2 — `LockGeom` branché dans `lockMarkup`/`hairGloss`.
+2. 🟡 P2 — auteur d'entrelacs fait (`weaveStrands`) ; profondeur de VOLUME pour le mode `all` : ⬜.
+3. ✅ P2 — `anat.face` et `repairCycle` après `applyIntent` (`generateIntended`).
+4. ⬜ Segmentation par mèche pour l'observation ; brancher `observe` → `autofit`.
+5. ✅ P2 — vues −75°…+75° validées (résidus `geom.self` : 30°, 60°, −75°).
+6. ⬜ Ramification complète (séparation, jonction, boucles).
+7. ⬜ Réparation de masse (« volume +1, lourd » garde 7 `geom.self` + 8 `anat.eye`) ; tests historiques `viewAt(0.3/0.5)` à passer en degrés.
+Reste détaillé par composant : `HAIR-PASS2-REMAINING.md`.

@@ -53,6 +53,25 @@ export interface HairLock {
   readonly alpha?: number;
   /** Trait de PEIGNAGE ou de chaume (`comb.ts`) : cheveux tirés ou rasés, texture du dôme sans volume. Rang `hairline`, hors mesures de longueur. */
   readonly comb?: boolean;
+  /** Géométrie locale réelle de la lame (mèche venue du moteur de grammaire) : sans elle, le rendu retombe sur la formule `spine/w0/sharp` (inchangé). */
+  readonly geom?: HairLockGeom;
+}
+
+/**
+ * GÉOMÉTRIE LOCALE d'une mèche, fournie par le moteur de grammaire (`hair-grammar/local-geometry.ts` → `interop.ts`) et lue par le rendu
+ * principal (`celBands`, `lockMarkup`, `hairGloss`) : une SEULE apparence, calculée sur la géométrie réelle de la lame au lieu d'être inventée
+ * par une formule de largeur. Tous les tableaux ont la longueur de `spine` ; AUCUNE grandeur ne dépend de la lumière (le rendu principal garde
+ * la sienne, `LockStyle.ld`) — la géométrie dit CE QU'EST la mèche, pas COMMENT elle est éclairée.
+ */
+export interface HairLockGeom {
+  /** Largeur complète de la lame à chaque échantillon (même unité que `poly`). */
+  readonly width: readonly number[];
+  /** Torsion du ruban (rad) : |cos φ| petit = ruban vu par la tranche (reflet étranglé). */
+  readonly twist: readonly number[];
+  /** Vrai si la face visible est le DESSOUS du ruban (la lumière arrive du côté opposé). */
+  readonly backface: readonly boolean[];
+  /** Occlusion locale 0–1 : 1 sous une mèche de devant (reflet atténué). */
+  readonly occlusion: readonly number[];
 }
 
 /** Masse de sous-couche visible d'un étage : silhouette, ton relatif et décalage de teinte (degrés). */

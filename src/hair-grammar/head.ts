@@ -89,6 +89,16 @@ export function viewRayInHead(v: View): V3 {
   return v3(-Math.sin(a) * z1, y1, Math.cos(a) * z1);
 }
 
+/**
+ * Cosinus entre la normale sortante du crâne (ellipsoïde) en `p` et la direction de la caméra : > 0 = point tourné vers la caméra, ≤ 0 = caché
+ * derrière la tête. Sert à ne juger que ce qui se VOIT : en vue de trois quarts ou de profil, l'œil lointain et la moitié du visage sont masqués
+ * par la tête elle-même, qu'une mèche passe ou non à leur emplacement projeté.
+ */
+export function facing(h: HeadSpec, v: View, p: V3): number {
+  const nx = p.x / (h.rx * h.rx); const ny = p.y / (h.ry * h.ry); const nz = (p.z - h.cz) / (h.rz * h.rz); const l = Math.hypot(nx, ny, nz) || 1;
+  const r = viewRayInHead(v); return (nx * r.x + ny * r.y + nz * r.z) / l;
+}
+
 /** Inverse de `project` à profondeur donnée : point de la tête vu en (x, y) image à la profondeur `d` (repère caméra). */
 export function unprojectAt(v: View, x: number, y: number, d: number): V3 {
   const X = (x - v.tx) / v.s; const Y2 = (y - v.ty) / v.s;

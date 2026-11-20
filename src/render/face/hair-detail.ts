@@ -8,6 +8,7 @@ import { polyBox, type Poly } from '../../face/poly';
 import { toLocal, type LightVector } from '../../lighting/light';
 import { spotGradient } from '../../materials';
 import type { FaceParams } from '../../schema';
+import { localGlossShare } from './hair-cel';
 import { polyPath } from './path';
 import { edgeStyle } from '../../face/hair/boundary/edge-style';
 import { resolveTexture } from '../../face/hair/texture';
@@ -91,7 +92,8 @@ const GLOSS = { straight: 0.9, wavy: 0.7, curly: 0.35, coily: 0.12, braided: 0.5
 export function hairGloss(id: string, geo: HairGeometry, p: FaceParams, lm: FaceLandmarks, L: LightVector, rot: number, ra: ResolvedAppearance): { defs: string[]; markup: string[] } {
   // En ombrage cel, le reflet est porté par les bandes de chaque mèche : pas de tache douce par-dessus.
   // Coupe rase : le chaume est MAT (poils de 1 à 3 mm) ; la tache de reflet d'un cheveu long en faisait un casque de plastique (`docs/HAIR-FORM-DOMES.md`).
-  const k = ra.spec.shading.mode === 'cel' ? 0 : GLOSS[geo.texture] * (0.4 + 1.2 * ra.spec.reflection.intensity) * (p.hair.style === 'buzz' ? 0.2 : 1);
+  // Les mèches qui portent leur géométrie locale ont leur propre reflet (`lockMarkup`) : la tache globale s'efface d'autant (une seule apparence).
+  const k = ra.spec.shading.mode === 'cel' ? 0 : GLOSS[geo.texture] * (0.4 + 1.2 * ra.spec.reflection.intensity) * (p.hair.style === 'buzz' ? 0.2 : 1) * (1 - localGlossShare(geo.locks));
   if (k === 0) return { defs: [], markup: [] };
   const loc = toLocal(L, rot);
   const box = polyBox(geo.front.flat());
