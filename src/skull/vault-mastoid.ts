@@ -6,7 +6,8 @@
  *   pente    le profil exp(−½ r^(2p)) passe de p = 0,55 (cône) à 1,45 (plateau) ; p = 1 est la gaussienne d'origine.
  */
 export const AZ_U = 0.0055;   // U par degré d'azimut au niveau de la largeur maximale
-export const MASTOID_SHAPE = { sAz: 0.0715, sY: 0.055, sizeUp: 0.5, sizeDown: 0.4, tiltDeg: 35, stretch: 0.5, slopeK: 0.45 } as const;
+/** `tail0` / `tail1` : rayons elliptiques (en σ) entre lesquels la queue d'un profil CONIQUE est fondue jusqu'à 0 (passe 3, `docs/SKULL-VAULT-3.md` : le cône exp(−½ r^1,1) laissait ≈ 2 mm de relief à 60° du processus, sur la tempe). Sans effet pour p ≥ 1 (nominal et plateau identiques). */
+export const MASTOID_SHAPE = { sAz: 0.0715, sY: 0.055, sizeUp: 0.5, sizeDown: 0.4, tiltDeg: 35, stretch: 0.5, slopeK: 0.45, tail0: 2, tail1: 4 } as const;
 
 interface Axes { readonly f: number; readonly su: number; readonly sv: number; readonly cs: number; readonly sn: number; readonly p: number }
 function axes(size: number, dir: number, slope: number, M = MASTOID_SHAPE): Axes {
@@ -18,7 +19,10 @@ function axes(size: number, dir: number, slope: number, M = MASTOID_SHAPE): Axes
 export function mastoidBump(y: number, az: number, yM: number, azM: number, size: number, dir: number, slope: number): number {
   const a = axes(size, dir, slope), dx = (az - azM) * AZ_U, dy = y - yM;
   const u = (dx * a.cs + dy * a.sn) / a.su, v = (-dx * a.sn + dy * a.cs) / a.sv;
-  return a.f * Math.exp(-0.5 * (u * u + v * v) ** a.p);
+  const lam = Math.min(1, (1 - a.p) / MASTOID_SHAPE.slopeK);   // 0 pour p ≥ 1 ; 1 pour le cône pur
+  let win = 1;
+  if (lam > 0) { const t = Math.min(1, Math.max(0, (Math.hypot(u, v) - MASTOID_SHAPE.tail0) / (MASTOID_SHAPE.tail1 - MASTOID_SHAPE.tail0))); win = 1 - lam * t * t * (3 - 2 * t); }
+  return a.f * Math.exp(-0.5 * (u * u + v * v) ** a.p) * win;
 }
 
 /** Contour (U, relatif au centre ; x = côté de l'azimut croissant, y vers le bas) où le relief vaut la fraction `level` (0 … 1) de son maximum : sert au dessin 2D de la forme. */

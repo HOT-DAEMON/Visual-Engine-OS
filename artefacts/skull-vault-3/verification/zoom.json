@@ -1,0 +1,82 @@
+[
+ {
+  "id": "nuchalGroove",
+  "parametre": "nuchalGroove",
+  "valeurs": [
+   -1,
+   0,
+   1
+  ],
+  "vue": "profil",
+  "structure": "nuchal-line",
+  "cote": 0,
+  "fenetre": "0,62 × 0,5 U centrée sur l'ancre du registre",
+  "base": {
+   "occipitalBun": 0.6
+  }
+ },
+ {
+  "id": "asymFrontalEminence-plus",
+  "parametre": "asymFrontalEminence",
+  "valeurs": [
+   -1,
+   0,
+   1
+  ],
+  "vue": "trois_quarts",
+  "structure": "frontal-eminence",
+  "cote": 1,
+  "fenetre": "0,62 × 0,5 U centrée sur l'ancre du registre",
+  "base": {
+   "frontalEminence": 0.5
+  }
+ },
+ {
+  "id": "asymFrontalEminence-moins",
+  "parametre": "asymFrontalEminence",
+  "valeurs": [
+   -1,
+   0,
+   1
+  ],
+  "vue": "trois_quarts",
+  "structure": "frontal-eminence",
+  "cote": -1,
+  "fenetre": "0,62 × 0,5 U centrée sur l'ancre du registre",
+  "base": {
+   "frontalEminence": 0.5
+  }
+ },
+ {
+  "id": "asymMastoidDirection-plus",
+  "parametre": "asymMastoidDirection",
+  "valeurs": [
+   -1,
+   0,
+   1
+  ],
+  "vue": "trois_quarts_arriere",
+  "structure": "mastoid-process",
+  "cote": 1,
+  "fenetre": "0,62 × 0,5 U centrée sur l'ancre du registre",
+  "base": {
+   "mastoid": 1
+  }
+ },
+ {
+  "id": "asymParietalAzimuth-plus",
+  "parametre": "asymParietalAzimuth",
+  "valeurs": [
+   -1,
+   0,
+   1
+  ],
+  "vue": "trois_quarts_arriere",
+  "structure": "parietal-bone",
+  "cote": 1,
+  "fenetre": "0,62 × 0,5 U centrée sur l'ancre du registre",
+  "base": {
+   "parietalBulge": 1
+  }
+ }
+]

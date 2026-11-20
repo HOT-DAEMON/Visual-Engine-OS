@@ -17,7 +17,9 @@ export interface VaultPts { readonly front: CPoint[]; readonly back: CPoint[]; r
  */
 export const PROFILE_VAULT = { flatTop: 0.4, flatBregma: 0.2, flatLambda: 0.18, bulgeX: 0.014, bulgeY: 0.009, parietalDy: 0.25, parietalDt: 0.08, occFlat: 0.01, occFlatLow: 0.035, occRound: 0.011, slopeX: 0.02, glabellaX: 0.012, nuchalX: 0.014, frontalFlatX: 0.01,
   /** Passe 2 (`docs/SKULL-VAULT-2.md`) : arcade (par unité de l'amplitude 3D `archAmp`, donc échelonnée par `browRidge` comme en 3D), éminence frontale, crête métopique (médiane : elle fait la silhouette), chignon et protubérance occipitale. */
-  archX: 0.014, eminenceX: 0.009, metopicX: 0.006, bunX: 0.03, inionSizeX: 0.012 } as const;
+  archX: 0.014, eminenceX: 0.009, metopicX: 0.006, bunX: 0.03, inionSizeX: 0.012,
+  /** Passe 3 : sillon nuchal (le contour recule sous la protubérance : le dernier point du contour, l'inion, se rapproche de la face ; la carène sagittale et les asymétries n'ont pas de contour médian). */
+  grooveX: 0.012 } as const;
 
 export function vaultPoints(fr: Frame, sk: SkullParams): VaultPts {
   const { H, f, x } = fr;
@@ -46,7 +48,7 @@ export function vaultPoints(fr: Frame, sk: SkullParams): VaultPts {
     { x: xO * (0.99 + oUp) - 0.6 * bun, y: yO - 0.14 * H },
     { x: xO - bun, y: yO, id: 'opisthocranion' },
     { x: xO * (0.965 + oLow) + P.slopeX * H * sk.occipitalSlope - 0.55 * bun, y: yO + (yIn - yO) * 0.55 },
-    { x: xO * 0.93 + 0.035 * H * (sk.inion - 0.4) + P.slopeX * H * sk.occipitalSlope * 1.3 - P.nuchalX * H * sk.nuchalLine - 0.25 * bun - P.inionSizeX * H * sk.inionSize, y: yIn, id: 'inion' },
+    { x: xO * 0.93 + 0.035 * H * (sk.inion - 0.4) + P.slopeX * H * sk.occipitalSlope * 1.3 - P.nuchalX * H * sk.nuchalLine - 0.25 * bun - P.inionSizeX * H * sk.inionSize + P.grooveX * H * sk.nuchalGroove, y: yIn, id: 'inion' },
   ];
   const front: CPoint[] = [
     { x: x.front - 0.002 * H + P.glabellaX * H * sk.glabella + P.archX * H * archU + 0.5 * mx, y: yGl - 0.052 * H, id: 'supraglabella' },

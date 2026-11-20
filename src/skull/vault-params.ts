@@ -87,6 +87,15 @@ export const VaultParams = z
     asymMastoid: S0,
     /** Asymétrie PROPRE de POSITION des éminences pariétales : la bosse +x plus haute (+) ou plus basse (−), l'autre à l'opposé. N'agit que si l'éminence existe (`parietalBulge` > −1). */
     asymParietalHeight: S0,
+    // --- Passe 3 (docs/SKULL-VAULT-3.md) : ajoutés À LA FIN pour ne décaler aucun tirage aléatoire existant. ---
+    /** Pariétaux — asymétrie PROPRE d'AZIMUT : l'éminence +x reculée (+) ou avancée (−), l'autre à l'opposé (±14° × valeur). N'agit que si l'éminence existe (`parietalBulge` > −1). */
+    asymParietalAzimuth: S0,
+    /** Os frontal — asymétrie PROPRE des éminences frontales : la bosse +x plus marquée (+) ou plus plate (−), l'autre à l'opposé. N'agit que si `frontalEminence` ≠ 0. */
+    asymFrontalEminence: S0,
+    /** Région mastoïdienne — asymétrie PROPRE de DIRECTION : l'axe du processus +x vers l'avant (+) ou vers l'arrière (−), l'autre à l'opposé. N'agit que si `mastoid` ≠ 0. */
+    asymMastoidDirection: S0,
+    /** Occipital — SILLON sous la ligne nuchale (plan nuchal concave entre le chignon et la nuque) : -1 plan comblé (bourrelet) … +1 sillon marqué. */
+    nuchalGroove: S0,
   })
   .strict();
 export type VaultParams = z.infer<typeof VaultParams>;

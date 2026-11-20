@@ -1,0 +1,158 @@
+[
+ {
+  "graine": 1,
+  "corrections": [
+   "muscle-fills-hollow"
+  ],
+  "plausibilite": 0.823,
+  "echecs": []
+ },
+ {
+  "graine": 2,
+  "corrections": [
+   "flat-occiput-bun"
+  ],
+  "plausibilite": 0.83,
+  "echecs": []
+ },
+ {
+  "graine": 3,
+  "corrections": [],
+  "plausibilite": 0.806,
+  "echecs": []
+ },
+ {
+  "graine": 4,
+  "corrections": [],
+  "plausibilite": 0.859,
+  "echecs": []
+ },
+ {
+  "graine": 5,
+  "corrections": [],
+  "plausibilite": 0.753,
+  "echecs": []
+ },
+ {
+  "graine": 6,
+  "corrections": [],
+  "plausibilite": 0.789,
+  "echecs": []
+ },
+ {
+  "graine": 7,
+  "corrections": [],
+  "plausibilite": 0.693,
+  "echecs": []
+ },
+ {
+  "graine": 8,
+  "corrections": [],
+  "plausibilite": 0.918,
+  "echecs": []
+ },
+ {
+  "graine": 9,
+  "corrections": [],
+  "plausibilite": 0.927,
+  "echecs": []
+ },
+ {
+  "graine": 10,
+  "corrections": [],
+  "plausibilite": 0.915,
+  "echecs": []
+ },
+ {
+  "graine": 11,
+  "corrections": [
+   "occiput-flat-slope"
+  ],
+  "plausibilite": 0.912,
+  "echecs": []
+ },
+ {
+  "graine": 12,
+  "corrections": [
+   "flat-occiput-bun"
+  ],
+  "plausibilite": 0.875,
+  "echecs": []
+ },
+ {
+  "graine": 13,
+  "corrections": [],
+  "plausibilite": 0.846,
+  "echecs": []
+ },
+ {
+  "graine": 14,
+  "corrections": [],
+  "plausibilite": 0.907,
+  "echecs": []
+ },
+ {
+  "graine": 15,
+  "corrections": [],
+  "plausibilite": 0.884,
+  "echecs": []
+ },
+ {
+  "graine": 16,
+  "corrections": [
+   "occiput-flat-slope"
+  ],
+  "plausibilite": 0.872,
+  "echecs": []
+ },
+ {
+  "graine": 17,
+  "corrections": [],
+  "plausibilite": 0.879,
+  "echecs": []
+ },
+ {
+  "graine": 18,
+  "corrections": [
+   "occiput-flat-slope"
+  ],
+  "plausibilite": 0.858,
+  "echecs": []
+ },
+ {
+  "graine": 19,
+  "corrections": [],
+  "plausibilite": 0.89,
+  "echecs": []
+ },
+ {
+  "graine": 20,
+  "corrections": [],
+  "plausibilite": 0.819,
+  "echecs": []
+ },
+ {
+  "graine": 21,
+  "corrections": [],
+  "plausibilite": 0.868,
+  "echecs": []
+ },
+ {
+  "graine": 22,
+  "corrections": [],
+  "plausibilite": 0.842,
+  "echecs": []
+ },
+ {
+  "graine": 23,
+  "corrections": [],
+  "plausibilite": 0.945,
+  "echecs": []
+ },
+ {
+  "graine": 24,
+  "corrections": [],
+  "plausibilite": 0.841,
+  "echecs": []
+ }
+]

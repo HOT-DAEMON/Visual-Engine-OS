@@ -19,6 +19,8 @@ export const TENDENCIES: readonly { readonly from: keyof VaultParams; readonly t
   { from: 'frontalEminence', to: 'browArch', sign: -1, rho: 0.4, why: 'un front à bosses (type juvénile) s\'accompagne plutôt d\'arcades discrètes' },
   { from: 'temporalMuscle', to: 'temporalLine', sign: 1, rho: 0.5, why: 'un muscle temporal puissant marque sa crête d\'insertion' },
   { from: 'occipitalBun', to: 'inionSize', sign: 1, rho: 0.4, why: 'le chignon et la protubérance externe sont deux reliefs de l\'écaille occipitale' },
+  // Passe 3
+  { from: 'occipitalBun', to: 'nuchalGroove', sign: 1, rho: 0.4, why: 'un chignon se lit d\'autant mieux que le plan nuchal en dessous est creusé' },
 ];
 
 export interface VaultDraw { readonly variety?: number; readonly tendency?: number }

@@ -1,0 +1,67 @@
+[
+ {
+  "id": "chignon-sillon",
+  "label": "Chignon occipital souligné par le sillon nuchal",
+  "ov": {
+   "length": 0.6,
+   "occipitalFlat": -0.5,
+   "occipitalBun": 0.9,
+   "inionSize": 0.5,
+   "nuchalGroove": 1
+  },
+  "graine": 3,
+  "hauteurPx": 420,
+  "vues": [
+   "face",
+   "trois_quarts",
+   "profil",
+   "trois_quarts_arriere",
+   "dos",
+   "dessus"
+  ]
+ },
+ {
+  "id": "asym-3",
+  "label": "Asymétries propres : bosses frontales, azimut pariétal, direction de mastoïde (visage inchangé)",
+  "ov": {
+   "frontalEminence": 0.7,
+   "asymFrontalEminence": 1,
+   "parietalBulge": 0.8,
+   "asymParietalAzimuth": 1,
+   "mastoid": 0.8,
+   "asymMastoidDirection": 1,
+   "asymFaceCoupling": 0
+  },
+  "graine": 3,
+  "hauteurPx": 420,
+  "vues": [
+   "face",
+   "trois_quarts",
+   "profil",
+   "trois_quarts_arriere",
+   "dos",
+   "dessus"
+  ]
+ },
+ {
+  "id": "cone-mastoide",
+  "label": "Mastoïde en cône, grande, tournée vers l'avant : la queue ne déborde plus sur la tempe",
+  "ov": {
+   "mastoid": 1,
+   "mastoidSize": 1,
+   "mastoidSlope": -1,
+   "mastoidDirection": -1,
+   "boneShow": 0.6
+  },
+  "graine": 3,
+  "hauteurPx": 420,
+  "vues": [
+   "face",
+   "trois_quarts",
+   "profil",
+   "trois_quarts_arriere",
+   "dos",
+   "dessus"
+  ]
+ }
+]

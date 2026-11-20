@@ -6,7 +6,7 @@ import { fromEngineY, isBare } from './rows';
 import { skullWeightOf } from './skull-model';
 import { skullOf } from './vault-model';
 import { AZ_U, mastoidBump } from '../../skull/vault-mastoid';
-import { archAmp, archShape, asterionShape, bunShape, curveYAt, eminenceShape, inionShape, metopicShape, muscleShape, softUnion, VAULT_SHAPE } from '../../skull/vault-shapes';
+import { archAmp, archShape, asterionShape, bunShape, curveYAt, eminenceShape, grooveShape, inionShape, metopicShape, muscleShape, softUnion, VAULT_SHAPE } from '../../skull/vault-shapes';
 import { sy } from './units';
 
 /**
@@ -43,7 +43,7 @@ function curveDist(pts: readonly { y: number; az: number }[], y: number, az: num
 }
 
 /** Part de la voûte qui produit du relief pour cette tête : tout nul (hors inion, lu seulement à la nuque) → la fonction rend 0 sans rien évaluer. */
-const REL_KEYS = ['temporalHollow', 'mastoid', 'glabella', 'nuchalLine', 'asymWidth', 'suturesShow', 'frontalEminence', 'browArch', 'metopicRidge', 'occipitalBun', 'inionSize', 'temporalLine', 'temporalMuscle', 'asterion', 'asymMastoid'] as const;
+const REL_KEYS = ['temporalHollow', 'mastoid', 'glabella', 'nuchalLine', 'asymWidth', 'suturesShow', 'frontalEminence', 'browArch', 'metopicRidge', 'occipitalBun', 'inionSize', 'temporalLine', 'temporalMuscle', 'asterion', 'asymMastoid', 'nuchalGroove'] as const;
 const act = new WeakMap<EngineHead, boolean>();
 const anyRelief = (e: EngineHead): boolean => { let v = act.get(e); if (v === undefined) { const k = skullOf(e); v = REL_KEYS.some((n) => k[n] !== 0); act.set(e, v); } return v; };
 
@@ -59,12 +59,12 @@ export function vaultRelief(e: EngineHead, y: number, th: number): number {
   if (k.temporalHollow) d -= R.hollow * k.temporalHollow * T('temporal') * g(y - (A.yT + 0.03), 0.07) * g(az - 72, 17);                 // fosse temporale
   if (k.mastoid || k.asymMastoid) {   // asymétrie propre : le côté +x plus saillant ET plus grand (asymMastoid > 0) ; nulle (identique à l'ancien terme) quand asymMastoid = 0
     const S = VAULT_SHAPE.asym, m = clamp(k.mastoid + S.mastoidAmp * k.asymMastoid * side, -1, 1), sz = clamp(k.mastoidSize + S.mastoidSize * k.asymMastoid * side, -1, 1);
-    d += R.mastoid * m * T('mastoid') * mastoidBump(y, az, A.yM, 118, sz, k.mastoidDirection, k.mastoidSlope);
+    d += R.mastoid * m * T('mastoid') * mastoidBump(y, az, A.yM, 118, sz, clamp(k.mastoidDirection + S.mastoidDirection * k.asymMastoidDirection * side, -1, 1), k.mastoidSlope);
   }                                      // processus mastoïde, derrière l'oreille
   let gl = k.glabella ? R.glabella * k.glabella * T('glabella') * g(y - A.yG, 0.02) * g(az, 12) : 0;   // glabelle (relief médian)
   if (k.browArch) gl = softUnion(gl, archAmp(k.browArch, k.browRidge) * T('glabella') * archShape(y, az, A.yG));   // arcades latérales : UN seul bourrelet avec la glabelle (fusion douce), amplitude échelonnée par `browRidge`
   d += gl;
-  if (k.frontalEminence) d += VAULT_SHAPE.eminence.amp * k.frontalEminence * T('frontal') * eminenceShape(y, az, A.yG);                    // éminences frontales (bosses arrondies)
+  if (k.frontalEminence) d += VAULT_SHAPE.eminence.amp * clamp(k.frontalEminence + VAULT_SHAPE.asym.eminence * k.asymFrontalEminence * side, -1, 1) * T('frontal') * eminenceShape(y, az, A.yG);                    // éminences frontales (bosses arrondies)
   if (k.metopicRidge) d += VAULT_SHAPE.metopic.amp * k.metopicRidge * T('frontal') * metopicShape(y, az, A.yG, A.yB);                      // crête (sillon) métopique, du bregma à la glabelle                                        // glabelle (relief médian)
   if (k.occipitalBun) d += VAULT_SHAPE.bun.amp * k.occipitalBun * T('occipital') * bunShape(y, az, A.yI);                                    // chignon occipital
   if (k.inionSize && az > 140) d += VAULT_SHAPE.inion.amp * k.inionSize * T('occipital') * inionShape(y, az, A.yI);                        // protubérance externe d'amplitude propre
@@ -74,6 +74,7 @@ export function vaultRelief(e: EngineHead, y: number, th: number): number {
     if (k.temporalLine) d += S.line.amp * k.temporalLine * T('temporal') * g(curveDist(ln.pts, y, az), S.line.sigma);                      // crête temporale persistante
     if (k.temporalMuscle) d += S.muscle.amp * k.temporalMuscle * T('temporal') * muscleShape(y, az, A.yT, curveYAt(ln.pts, az));          // volume du muscle temporal sous la crête
   }
+  if (k.nuchalGroove && az > VAULT_SHAPE.groove.az0) d -= VAULT_SHAPE.groove.amp * k.nuchalGroove * T('occipital') * grooveShape(y, az, A.yI) * Math.min(3, 1 / w);   // sillon sous la ligne nuchale (passe 3) ; le poids du crâne `w` (qui s'éteint vers la nuque, multiplié plus bas) est compensé jusqu'à ×3 (l'effet final w × min(3, 1/w) ne dépasse jamais 1) : sans cela le creux remonte au-dessus de la ligne nuchale quand l'inion est bas
   if (az > 150 && k.inion !== R.inionRef) d += R.inion * (k.inion - R.inionRef) * T('occipital') * g(y - A.yI, 0.03) * g(az - 180, 12);   // protubérance occipitale externe
   if (k.nuchalLine && az > 118) d += R.nuchal * k.nuchalLine * T('occipital') * g(y - (A.yI + 0.012), 0.022) * smooth((az - 118) / 40);   // ligne nuchale supérieure
   if (k.asymWidth) d += R.width * k.asymWidth * side * g(y - 0.3, 0.14) * g(az - 90, 35);                                              // un côté de la voûte plus large que l'autre

@@ -14,7 +14,7 @@ occipitalSlope,true,trois_quarts_arriere,2.018,15.939
 mastoid,true,trois_quarts_arriere,0.380,3.379
 mastoidSize,true,trois_quarts_arriere,0.593,4.216
 mastoidDirection,true,trois_quarts_arriere,0.229,2.317
-mastoidSlope,true,profil,0.055,1.220
+mastoidSlope,true,trois_quarts_arriere,0.364,1.230
 parietalHeight,true,dos,0.000,4.335
 parietalAzimuth,true,profil,1.041,4.540
 glabella,true,trois_quarts,0.284,2.836
@@ -47,3 +47,7 @@ occiput,true,trois_quarts_arriere,1.172,9.742
 inion,true,dos,0.003,2.806
 zygoma,true,trois_quarts,3.415,24.339
 maxilla,true,profil,8.345,14.231
+asymParietalAzimuth,true,profil,0.000,2.705
+asymFrontalEminence,true,trois_quarts,0.540,4.901
+asymMastoidDirection,true,trois_quarts_arriere,0.176,1.845
+nuchalGroove,true,dos,0.003,6.766

@@ -1,0 +1,32 @@
+[
+ {
+  "graine": 3,
+  "sens": "plus",
+  "echecs": []
+ },
+ {
+  "graine": 3,
+  "sens": "moins",
+  "echecs": []
+ },
+ {
+  "graine": 42,
+  "sens": "plus",
+  "echecs": []
+ },
+ {
+  "graine": 42,
+  "sens": "moins",
+  "echecs": []
+ },
+ {
+  "graine": 11,
+  "sens": "plus",
+  "echecs": []
+ },
+ {
+  "graine": 11,
+  "sens": "moins",
+  "echecs": []
+ }
+]

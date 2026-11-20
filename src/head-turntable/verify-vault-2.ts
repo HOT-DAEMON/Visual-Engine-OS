@@ -23,7 +23,7 @@ const G = 'geometry' as const, A = 'anatomy' as const, S = 'style' as const, D =
 export function vaultGeometryChecks2(spec: HeadTurnSpec): Check[] {
   const e = spec.engine!, k = skullOf(e);
   let m = 0;
-  if (k.asymWidth === 0 && k.asymMastoid === 0) for (let y = 0.05; y < 0.9; y += 0.05) for (let az = 10; az <= 170; az += 10) m = Math.max(m, Math.abs(vaultRelief(e, y, az * D) - vaultRelief(e, y, -az * D)));
+  if (k.asymWidth === 0 && k.asymMastoid === 0 && k.asymFrontalEminence === 0 && k.asymMastoidDirection === 0) for (let y = 0.05; y < 0.9; y += 0.05) for (let az = 10; az <= 170; az += 10) m = Math.max(m, Math.abs(vaultRelief(e, y, az * D) - vaultRelief(e, y, -az * D)));
   return [check(G, 'vault.geo.symmetry', 'Reliefs de la voûte symétriques gauche / droite quand aucune asymétrie propre (largeur, mastoïde) n\'est demandée : écart maximal (U) [0 = rien à reprocher]', m, 0, 1e-9)];
 }
 
@@ -34,7 +34,7 @@ export function vaultAnatomyChecks2(spec: HeadTurnSpec): Check[] {
   // L'éminence pariétale : l'ancre du registre doit se DÉPLACER comme le sommet du relief. On compare deux déplacements (celui du sommet du champ de relief et celui de l'ancre) par rapport à la même tête dont
   // les trois paramètres de position sont remis à 0 : la modulation du champ (poids de hauteur près du sommet, fondus d'azimut) décale le sommet du centre de la gaussienne, mais la même chose des deux côtés.
   const peak = (h: typeof e) => { let b = { v: -1, y: 0, az: 0 }; for (let y = 0.06; y <= 0.5; y += 0.005) for (let az = 70; az <= 160; az += 1) { const v = skullRelief(h, y, az * D); if (v > b.v) b = { v, y, az }; } return b; };
-  const ref = { ...e, fit: { ...e.fit, skull: { ...e.fit.skull, parietalHeight: 0, parietalAzimuth: 0, asymParietalHeight: 0 } } } as typeof e;
+  const ref = { ...e, fit: { ...e.fit, skull: { ...e.fit.skull, parietalHeight: 0, parietalAzimuth: 0, asymParietalHeight: 0, asymParietalAzimuth: 0 } } } as typeof e;
   const pk = peak(e), p0 = peak(ref), pa = anchorOf(spec, st('parietal-bone'), 1), a0 = st('parietal-bone').anchor;
   const moved = k.parietalBulge >= 0.3 ? Math.max(Math.abs(pk.y - p0.y - (pa.yU! - a0.yU!)) / PARIETAL_TOL.dy, Math.abs(pk.az - p0.az - (pa.az - a0.az)) / PARIETAL_TOL.daz) : 0;   // éminence effacée : pas de sommet à suivre
   return [

@@ -27,7 +27,9 @@ export const VAULT_SHAPE = {
   /** Astérion : gaussienne sur le repère. */
   asterion: { amp: 0.014, sy: 0.024, az: 122, saz: 8 },
   /** Asymétrie de la mastoïde : part de `asymMastoid` sur la taille et sur l'amplitude. Asymétrie de hauteur pariétale : part de `asymParietalHeight` sur `parietalHeight`. */
-  asym: { mastoidSize: 0.7, mastoidAmp: 0.5, parietalHeight: 1 },
+  asym: { mastoidSize: 0.7, mastoidAmp: 0.5, parietalHeight: 1, parietalAzimuth: 1, eminence: 0.6, mastoidDirection: 0.8 },
+  /** Passe 3 : sillon nuchal (sous l'inion, éteint avant 120°, plein à 150°). */
+  groove: { amp: 0.022, dyDown: 0.035, sy: 0.032, az0: 120, az1: 150 },
 } as const;
 
 const g = (d: number, s: number): number => Math.exp(-0.5 * (d / s) ** 2);
@@ -59,6 +61,8 @@ export function muscleShape(y: number, az: number, yT: number, yLine: number): n
   return g(y - (yT + M.dyDown), M.sy) * g(az - M.az, M.saz) * smooth((y - yLine) / M.edge) * (1 - smooth((y - (yT + M.drop)) / M.fade));
 }
 export const asterionShape = (y: number, az: number, yA: number): number => { const S = VAULT_SHAPE.asterion; return g(y - yA, S.sy) * g(az - S.az, S.saz); };
+
+export function grooveShape(y: number, az: number, yI: number): number { const G = VAULT_SHAPE.groove; return g(y - (yI + G.dyDown), G.sy) * smooth((az - G.az0) / (G.az1 - G.az0)); }
 
 /** Hauteur (U) de la courbe (azimuts croissants) à l'azimut az, interpolée ; bornée aux extrémités. */
 export function curveYAt(pts: readonly { y: number; az: number }[], az: number): number {

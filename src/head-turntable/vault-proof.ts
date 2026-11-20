@@ -27,10 +27,14 @@ const asymFace = (p: Profile): Profile => ({ ...p, face: { ...p.face, params: { 
 
 /** Paramètres de FORME ou de POSITION : sans la structure qu'ils règlent il n'y a rien à lire (une mastoïde nulle n'a ni taille ni direction ; une éminence pariétale effacée n'a pas de place). La base l'active. */
 export const SHAPE_BASE: Readonly<Record<string, Partial<SkullParams>>> = {
-  mastoidSize: { mastoid: 1 }, mastoidDirection: { mastoid: 1 }, mastoidSlope: { mastoid: 1 },
+  mastoidSize: { mastoid: 1 }, mastoidDirection: { mastoid: 1 },
+  // Passe 3 : le cône n'a plus de longue queue (elle laissait ≈ 2 mm de relief sur la tempe : défaut, `docs/SKULL-VAULT-3.md`), la pente ne se lit plus que sur le processus lui-même : on la prouve sur un grand processus (taille +1), sans toucher au seuil.
+  mastoidSlope: { mastoid: 1, mastoidSize: 1 },
   parietalHeight: { parietalBulge: 1 }, parietalAzimuth: { parietalBulge: 1 },
   // Passe 2 : une asymétrie de position ou de taille compare deux côtés, il faut qu'il y ait quelque chose à comparer (éminence pariétale, mastoïde saillante).
   asymParietalHeight: { parietalBulge: 1 }, asymMastoid: { mastoid: 0.5 },
+  // Passe 3 : asymétries de forme (il faut une bosse frontale, une éminence pariétale, une mastoïde à déformer d'un côté) ; le sillon se lit sous un chignon.
+  asymParietalAzimuth: { parietalBulge: 1 }, asymFrontalEminence: { frontalEminence: 0.5 }, asymMastoidDirection: { mastoid: 1 }, nuchalGroove: { occipitalBun: 0.6 },
 };
 const ALL_VIEWS: readonly VaultView[] = ['face', 'trois_quarts', 'profil', 'trois_quarts_arriere', 'dos', 'dessus'];
 const viewsOf = (key: string): readonly VaultView[] => {

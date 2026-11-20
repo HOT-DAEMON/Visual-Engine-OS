@@ -6,7 +6,7 @@ import { fromEngineY, isBare } from './engines/rows';
 import { sy } from './engines/units';
 import { unwarpY, vaultRise, vaultTop } from './engines/vault-model';
 import { skullOf } from './engines/skull-of';
-import { PARIETAL_MOVE } from './engines/skull-relief';
+import { PARIETAL_MOVE, parietalAzimuthOf } from './engines/skull-relief';
 import { VAULT_SHAPE } from '../skull/vault-shapes';
 import { dirToCam, mul, norm, cross, sub, project, toCam, v3, type Cam } from './math';
 import { PART, skullSurfacePoint } from './mesh';
@@ -43,7 +43,7 @@ export function anchorY(spec: HeadTurnSpec, a: VaultAnchor): number {
 export function anchorOf(spec: HeadTurnSpec, st: VaultStructure, side: -1 | 0 | 1): VaultAnchor {
   const a = st.anchor; if (st.id !== 'parietal-bone' || !spec.engine) return a;
   const k = skullOf(spec.engine);
-  return { ...a, yU: (a.yU ?? 0.24) - PARIETAL_MOVE.dy * (k.parietalHeight + VAULT_SHAPE.asym.parietalHeight * k.asymParietalHeight * side), az: a.az + PARIETAL_MOVE.daz * k.parietalAzimuth };
+  return { ...a, yU: (a.yU ?? 0.24) - PARIETAL_MOVE.dy * (k.parietalHeight + VAULT_SHAPE.asym.parietalHeight * k.asymParietalHeight * side), az: a.az + PARIETAL_MOVE.daz * parietalAzimuthOf(k, side) };
 }
 /** Point de la peau (repère tête) : LE point du maillage de la tête, relief compris (`skullSurfacePoint`, même fonction que le maillage et le volume des cheveux). */
 export const skinPoint = (spec: HeadTurnSpec, y: number, th: number): V3 => skullSurfacePoint(spec, headRelief(spec.engine), y, th);
