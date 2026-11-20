@@ -1,0 +1,51 @@
+{
+ "N": 120,
+ "jndPixels": 234,
+ "frame": [
+  130,
+  180
+ ],
+ "natural_checks": {},
+ "natural": {
+  "pairs": 7140,
+  "minPx": 891,
+  "p05": 2171,
+  "median": 3328,
+  "p95": 4210,
+  "share": 1,
+  "nearestMedian": 1883,
+  "greedyDistinct": 120,
+  "verifyErrors": 0,
+  "verifyWarnings": 0
+ },
+ "caricature_checks": {
+  "ear-outline-turn": 6
+ },
+ "caricature": {
+  "pairs": 7140,
+  "minPx": 1262,
+  "p05": 2463,
+  "median": 3997,
+  "p95": 5121,
+  "share": 1,
+  "nearestMedian": 2482,
+  "greedyDistinct": 120,
+  "verifyErrors": 0,
+  "verifyWarnings": 6
+ },
+ "fantasy_checks": {
+  "ear-outline-turn": 22
+ },
+ "fantasy": {
+  "pairs": 7140,
+  "minPx": 1560,
+  "p05": 4104,
+  "median": 6979,
+  "p95": 9815,
+  "share": 1,
+  "nearestMedian": 4034,
+  "greedyDistinct": 120,
+  "verifyErrors": 0,
+  "verifyWarnings": 22
+ }
+}

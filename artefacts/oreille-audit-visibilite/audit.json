@@ -1,0 +1,836 @@
+{
+ "rows": [
+  {
+   "param": "morph.pole.height",
+   "px": 8368,
+   "strong": 6393,
+   "share": 0.1371,
+   "meanDelta": 32.11,
+   "outside": 0,
+   "perSeed": [
+    8861,
+    7414,
+    8829
+   ]
+  },
+  {
+   "param": "morph.pole.round",
+   "px": 1163,
+   "strong": 691,
+   "share": 0.0265,
+   "meanDelta": 4.28,
+   "outside": 0,
+   "perSeed": [
+    1109,
+    1100,
+    1281
+   ]
+  },
+  {
+   "param": "morph.pole.lean",
+   "px": 928,
+   "strong": 542,
+   "share": 0.0209,
+   "meanDelta": 3.35,
+   "outside": 0,
+   "perSeed": [
+    931,
+    835,
+    1017
+   ]
+  },
+  {
+   "param": "morph.pole.tip",
+   "px": 4716,
+   "strong": 2568,
+   "share": 0.0912,
+   "meanDelta": 14.85,
+   "outside": 0,
+   "perSeed": [
+    4622,
+    4338,
+    5187
+   ]
+  },
+  {
+   "param": "morph.posterior.convexity",
+   "px": 2701,
+   "strong": 1163,
+   "share": 0.0606,
+   "meanDelta": 6.65,
+   "outside": 0,
+   "perSeed": [
+    2522,
+    2560,
+    3021
+   ]
+  },
+  {
+   "param": "morph.width",
+   "px": 7884,
+   "strong": 6208,
+   "share": 0.1618,
+   "meanDelta": 35.85,
+   "outside": 0,
+   "perSeed": [
+    8377,
+    6921,
+    8355
+   ]
+  },
+  {
+   "param": "morph.lobule.length",
+   "px": 6926,
+   "strong": 4820,
+   "share": 0.1388,
+   "meanDelta": 27.07,
+   "outside": 0,
+   "perSeed": [
+    7023,
+    6255,
+    7501
+   ]
+  },
+  {
+   "param": "morph.lobule.width",
+   "px": 733,
+   "strong": 486,
+   "share": 0.0161,
+   "meanDelta": 2.5,
+   "outside": 0,
+   "perSeed": [
+    797,
+    643,
+    760
+   ]
+  },
+  {
+   "param": "morph.lobule.attach",
+   "px": 754,
+   "strong": 526,
+   "share": 0.017,
+   "meanDelta": 2.63,
+   "outside": 0,
+   "perSeed": [
+    816,
+    651,
+    796
+   ]
+  },
+  {
+   "param": "morph.lobule.sag",
+   "px": 756,
+   "strong": 493,
+   "share": 0.0168,
+   "meanDelta": 2.64,
+   "outside": 0,
+   "perSeed": [
+    787,
+    682,
+    798
+   ]
+  },
+  {
+   "param": "morph.tragus.size",
+   "px": 183,
+   "strong": 97,
+   "share": 0.0042,
+   "meanDelta": 0.33,
+   "outside": 0,
+   "perSeed": [
+    181,
+    171,
+    198
+   ]
+  },
+  {
+   "param": "morph.tragus.projection",
+   "px": 1984,
+   "strong": 893,
+   "share": 0.0448,
+   "meanDelta": 4.57,
+   "outside": 0,
+   "perSeed": [
+    1977,
+    1802,
+    2172
+   ]
+  },
+  {
+   "param": "morph.antitragus.size",
+   "px": 165,
+   "strong": 32,
+   "share": 0.0038,
+   "meanDelta": 0.26,
+   "outside": 0,
+   "perSeed": [
+    90,
+    182,
+    222
+   ]
+  },
+  {
+   "param": "morph.antitragus.orientation",
+   "px": 81,
+   "strong": 20,
+   "share": 0.0019,
+   "meanDelta": 0.16,
+   "outside": 0,
+   "perSeed": [
+    61,
+    80,
+    102
+   ]
+  },
+  {
+   "param": "morph.notch.depth",
+   "px": 824,
+   "strong": 385,
+   "share": 0.0186,
+   "meanDelta": 2.3,
+   "outside": 0,
+   "perSeed": [
+    860,
+    732,
+    881
+   ]
+  },
+  {
+   "param": "morph.helix.thickness",
+   "px": 855,
+   "strong": 171,
+   "share": 0.0195,
+   "meanDelta": 1.38,
+   "outside": 0,
+   "perSeed": [
+    717,
+    819,
+    1028
+   ]
+  },
+  {
+   "param": "morph.helix.roll",
+   "px": 5006,
+   "strong": 3098,
+   "share": 0.1088,
+   "meanDelta": 17.04,
+   "outside": 0,
+   "perSeed": [
+    5167,
+    4493,
+    5358
+   ]
+  },
+  {
+   "param": "morph.antihelix.relief",
+   "px": 726,
+   "strong": 260,
+   "share": 0.0166,
+   "meanDelta": 1.31,
+   "outside": 0,
+   "perSeed": [
+    569,
+    715,
+    893
+   ]
+  },
+  {
+   "param": "morph.antihelix.branchAngle",
+   "px": 322,
+   "strong": 97,
+   "share": 0.0074,
+   "meanDelta": 0.54,
+   "outside": 0,
+   "perSeed": [
+    284,
+    288,
+    393
+   ]
+  },
+  {
+   "param": "morph.antihelix.upperLength",
+   "px": 355,
+   "strong": 122,
+   "share": 0.0081,
+   "meanDelta": 0.58,
+   "outside": 0,
+   "perSeed": [
+    341,
+    326,
+    398
+   ]
+  },
+  {
+   "param": "morph.antihelix.lowerLength",
+   "px": 206,
+   "strong": 62,
+   "share": 0.0047,
+   "meanDelta": 0.33,
+   "outside": 0,
+   "perSeed": [
+    190,
+    198,
+    230
+   ]
+  },
+  {
+   "param": "morph.concha.depth",
+   "px": 226,
+   "strong": 32,
+   "share": 0.0051,
+   "meanDelta": 0.33,
+   "outside": 0,
+   "perSeed": [
+    181,
+    251,
+    246
+   ]
+  },
+  {
+   "param": "morph.concha.cymba",
+   "px": 43,
+   "strong": 12,
+   "share": 0.001,
+   "meanDelta": 0.08,
+   "outside": 0,
+   "perSeed": [
+    40,
+    43,
+    47
+   ]
+  },
+  {
+   "param": "morph.scapha.width",
+   "px": 237,
+   "strong": 66,
+   "share": 0.0054,
+   "meanDelta": 0.41,
+   "outside": 0,
+   "perSeed": [
+    232,
+    238,
+    242
+   ]
+  },
+  {
+   "param": "morph.scapha.depth",
+   "px": 575,
+   "strong": 153,
+   "share": 0.0131,
+   "meanDelta": 0.9,
+   "outside": 0,
+   "perSeed": [
+    482,
+    633,
+    611
+   ]
+  },
+  {
+   "param": "morph.crus.thickness",
+   "px": 98,
+   "strong": 28,
+   "share": 0.0022,
+   "meanDelta": 0.16,
+   "outside": 0,
+   "perSeed": [
+    90,
+    93,
+    111
+   ]
+  },
+  {
+   "param": "attach.openingDeg",
+   "px": 12424,
+   "strong": 11304,
+   "share": 0.237,
+   "meanDelta": 65.86,
+   "outside": 0,
+   "perSeed": [
+    13778,
+    10618,
+    12875
+   ]
+  },
+  {
+   "param": "attach.pitchDeg",
+   "px": 0,
+   "strong": 0,
+   "share": 0,
+   "meanDelta": 0,
+   "outside": 0,
+   "perSeed": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "param": "attach.rotationDeg",
+   "px": 7318,
+   "strong": 5466,
+   "share": 0.142,
+   "meanDelta": 29.24,
+   "outside": 0,
+   "perSeed": [
+    7609,
+    6491,
+    7853
+   ]
+  },
+  {
+   "param": "attach.scale",
+   "px": 11324,
+   "strong": 9350,
+   "share": 0.1561,
+   "meanDelta": 39.84,
+   "outside": 0,
+   "perSeed": [
+    12125,
+    9824,
+    12023
+   ]
+  },
+  {
+   "param": "attach.insertion",
+   "px": 6290,
+   "strong": 3957,
+   "share": 0.1365,
+   "meanDelta": 20.27,
+   "outside": 0,
+   "perSeed": [
+    6327,
+    5682,
+    6862
+   ]
+  },
+  {
+   "param": "anchors.eye",
+   "px": 5948,
+   "strong": 3862,
+   "share": 0.1169,
+   "meanDelta": 21.53,
+   "outside": 0,
+   "perSeed": [
+    6085,
+    5401,
+    6359
+   ]
+  },
+  {
+   "param": "anchors.mouth",
+   "px": 9001,
+   "strong": 6551,
+   "share": 0.1312,
+   "meanDelta": 26.46,
+   "outside": 0,
+   "perSeed": [
+    10439,
+    8652,
+    7913
+   ]
+  },
+  {
+   "param": "anchors.crusLevel",
+   "px": 6856,
+   "strong": 4837,
+   "share": 0.128,
+   "meanDelta": 26.08,
+   "outside": 0,
+   "perSeed": [
+    7179,
+    6109,
+    7281
+   ]
+  },
+  {
+   "param": "style.exaggeration",
+   "px": 4638,
+   "strong": 2732,
+   "share": 0.0829,
+   "meanDelta": 14.37,
+   "outside": 0,
+   "perSeed": [
+    4655,
+    4265,
+    4993
+   ]
+  },
+  {
+   "param": "style.fidelity",
+   "px": 321,
+   "strong": 34,
+   "share": 0.0073,
+   "meanDelta": 0.54,
+   "outside": 0,
+   "perSeed": [
+    257,
+    317,
+    389
+   ]
+  },
+  {
+   "param": "style.angularity",
+   "px": 1102,
+   "strong": 452,
+   "share": 0.0249,
+   "meanDelta": 2.94,
+   "outside": 0,
+   "perSeed": [
+    1057,
+    1029,
+    1220
+   ]
+  },
+  {
+   "param": "style.softness",
+   "px": 908,
+   "strong": 35,
+   "share": 0.0211,
+   "meanDelta": 1.62,
+   "outside": 0,
+   "perSeed": [
+    392,
+    969,
+    1364
+   ]
+  },
+  {
+   "param": "style.asymmetry",
+   "px": 3777,
+   "strong": 1921,
+   "share": 0.0819,
+   "meanDelta": 11.21,
+   "outside": 0,
+   "perSeed": [
+    3653,
+    3589,
+    4089
+   ]
+  },
+  {
+   "param": "style.detail",
+   "px": 1043,
+   "strong": 3,
+   "share": 0.0241,
+   "meanDelta": 1.64,
+   "outside": 0,
+   "perSeed": [
+    425,
+    1287,
+    1418
+   ]
+  },
+  {
+   "param": "style.look(realistic→anime)",
+   "px": 3765,
+   "strong": 2580,
+   "share": 0.0856,
+   "meanDelta": 10.91,
+   "outside": 0,
+   "perSeed": [
+    3672,
+    3464,
+    4159
+   ]
+  },
+  {
+   "param": "material.translucency",
+   "px": 3508,
+   "strong": 268,
+   "share": 0.0801,
+   "meanDelta": 4.2,
+   "outside": 0,
+   "perSeed": [
+    2868,
+    3523,
+    4134
+   ]
+  },
+  {
+   "param": "material.roughness",
+   "px": 314,
+   "strong": 0,
+   "share": 0.0073,
+   "meanDelta": 1.05,
+   "outside": 0,
+   "perSeed": [
+    50,
+    402,
+    491
+   ]
+  },
+  {
+   "param": "material.glow",
+   "px": 4840,
+   "strong": 441,
+   "share": 0.1098,
+   "meanDelta": 6.62,
+   "outside": 0,
+   "perSeed": [
+    5158,
+    4272,
+    5091
+   ]
+  },
+  {
+   "param": "material.kind(skin→scaly)",
+   "px": 7777,
+   "strong": 5273,
+   "share": 0.1762,
+   "meanDelta": 14.03,
+   "outside": 0,
+   "perSeed": [
+    8640,
+    6678,
+    8013
+   ]
+  },
+  {
+   "param": "material.kind(skin→ceramic)",
+   "px": 7978,
+   "strong": 7733,
+   "share": 0.1808,
+   "meanDelta": 29.68,
+   "outside": 0,
+   "perSeed": [
+    8935,
+    6733,
+    8265
+   ]
+  },
+  {
+   "param": "family(human→feline)",
+   "px": 15196,
+   "strong": 12434,
+   "share": 0.2286,
+   "meanDelta": 51.48,
+   "outside": 0,
+   "perSeed": [
+    17465,
+    13447,
+    14676
+   ]
+  },
+  {
+   "param": "family(human→elven)",
+   "px": 12362,
+   "strong": 9817,
+   "share": 0.1497,
+   "meanDelta": 37.53,
+   "outside": 0,
+   "perSeed": [
+    12945,
+    10934,
+    13208
+   ]
+  },
+  {
+   "param": "family(human→draconic)",
+   "px": 15512,
+   "strong": 14095,
+   "share": 0.2325,
+   "meanDelta": 61.96,
+   "outside": 0,
+   "perSeed": [
+    17960,
+    13838,
+    14738
+   ]
+  },
+  {
+   "param": "morph.helix.darwin",
+   "px": 2263,
+   "strong": 1007,
+   "share": 0.05,
+   "meanDelta": 6.11,
+   "outside": 0,
+   "perSeed": [
+    2180,
+    2125,
+    2485
+   ]
+  },
+  {
+   "param": "morph.helix.fold",
+   "px": 716,
+   "strong": 170,
+   "share": 0.0164,
+   "meanDelta": 0.97,
+   "outside": 0,
+   "perSeed": [
+    688,
+    615,
+    846
+   ]
+  },
+  {
+   "param": "morph.lobule.cleft",
+   "px": 2145,
+   "strong": 1157,
+   "share": 0.0462,
+   "meanDelta": 6.47,
+   "outside": 0,
+   "perSeed": [
+    2134,
+    1929,
+    2371
+   ]
+  },
+  {
+   "param": "morph.lobule.stretch",
+   "px": 5286,
+   "strong": 3514,
+   "share": 0.12,
+   "meanDelta": 22.13,
+   "outside": 0,
+   "perSeed": [
+    5319,
+    4875,
+    5663
+   ]
+  },
+  {
+   "param": "morph.concha.wall",
+   "px": 241,
+   "strong": 57,
+   "share": 0.0055,
+   "meanDelta": 0.43,
+   "outside": 0,
+   "perSeed": [
+    193,
+    235,
+    294
+   ]
+  },
+  {
+   "param": "morph.fossa.depth",
+   "px": 193,
+   "strong": 59,
+   "share": 0.0044,
+   "meanDelta": 0.33,
+   "outside": 0,
+   "perSeed": [
+    154,
+    185,
+    241
+   ]
+  },
+  {
+   "param": "morph.fossa.width",
+   "px": 251,
+   "strong": 72,
+   "share": 0.0057,
+   "meanDelta": 0.38,
+   "outside": 0,
+   "perSeed": [
+    251,
+    229,
+    274
+   ]
+  },
+  {
+   "param": "morph.crus.angle",
+   "px": 123,
+   "strong": 28,
+   "share": 0.0028,
+   "meanDelta": 0.2,
+   "outside": 0,
+   "perSeed": [
+    107,
+    110,
+    152
+   ]
+  },
+  {
+   "param": "morph.crus.length",
+   "px": 75,
+   "strong": 31,
+   "share": 0.0017,
+   "meanDelta": 0.15,
+   "outside": 0,
+   "perSeed": [
+    75,
+    68,
+    81
+   ]
+  },
+  {
+   "param": "morph.tragus.tip",
+   "px": 144,
+   "strong": 84,
+   "share": 0.0033,
+   "meanDelta": 0.27,
+   "outside": 0,
+   "perSeed": [
+    142,
+    136,
+    153
+   ]
+  },
+  {
+   "param": "morph.antihelix.curvature",
+   "px": 739,
+   "strong": 194,
+   "share": 0.0169,
+   "meanDelta": 1.23,
+   "outside": 0,
+   "perSeed": [
+    612,
+    742,
+    864
+   ]
+  },
+  {
+   "param": "surface.pigmentation",
+   "px": 3020,
+   "strong": 235,
+   "share": 0.0672,
+   "meanDelta": 3.74,
+   "outside": 0,
+   "perSeed": [
+    3821,
+    3279,
+    1960
+   ]
+  },
+  {
+   "param": "surface.folds",
+   "px": 152,
+   "strong": 68,
+   "share": 0.0034,
+   "meanDelta": 0.23,
+   "outside": 0,
+   "perSeed": [
+    156,
+    155,
+    144
+   ]
+  },
+  {
+   "param": "surface.pores",
+   "px": 587,
+   "strong": 52,
+   "share": 0.0133,
+   "meanDelta": 0.83,
+   "outside": 0,
+   "perSeed": [
+    533,
+    674,
+    554
+   ]
+  },
+  {
+   "param": "surface.vessels",
+   "px": 294,
+   "strong": 46,
+   "share": 0.0066,
+   "meanDelta": 0.4,
+   "outside": 0,
+   "perSeed": [
+    354,
+    293,
+    234
+   ]
+  }
+ ]
+}

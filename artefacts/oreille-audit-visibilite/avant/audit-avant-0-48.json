@@ -1,0 +1,633 @@
+{
+ "seeds": [
+  11,
+  77,
+  1203
+ ],
+ "rows": [
+  {
+   "param": "morph.pole.height",
+   "px": 8299,
+   "strong": 6316,
+   "share": 0.1361,
+   "meanDelta": 32,
+   "outside": 0,
+   "perSeed": [
+    8679,
+    7400,
+    8819
+   ]
+  },
+  {
+   "param": "morph.pole.round",
+   "px": 1142,
+   "strong": 684,
+   "share": 0.026,
+   "meanDelta": 4.23,
+   "outside": 0,
+   "perSeed": [
+    1084,
+    1074,
+    1268
+   ]
+  },
+  {
+   "param": "morph.pole.lean",
+   "px": 899,
+   "strong": 534,
+   "share": 0.0202,
+   "meanDelta": 3.31,
+   "outside": 0,
+   "perSeed": [
+    901,
+    819,
+    976
+   ]
+  },
+  {
+   "param": "morph.pole.tip",
+   "px": 4151,
+   "strong": 2397,
+   "share": 0.0803,
+   "meanDelta": 14.34,
+   "outside": 0,
+   "perSeed": [
+    4020,
+    3846,
+    4586
+   ]
+  },
+  {
+   "param": "morph.posterior.convexity",
+   "px": 2618,
+   "strong": 1121,
+   "share": 0.0587,
+   "meanDelta": 6.53,
+   "outside": 0,
+   "perSeed": [
+    2424,
+    2502,
+    2928
+   ]
+  },
+  {
+   "param": "morph.width",
+   "px": 7781,
+   "strong": 6115,
+   "share": 0.1597,
+   "meanDelta": 35.29,
+   "outside": 0,
+   "perSeed": [
+    8221,
+    6865,
+    8257
+   ]
+  },
+  {
+   "param": "morph.lobule.length",
+   "px": 6591,
+   "strong": 4692,
+   "share": 0.1321,
+   "meanDelta": 26.74,
+   "outside": 0,
+   "perSeed": [
+    6606,
+    6011,
+    7156
+   ]
+  },
+  {
+   "param": "morph.lobule.width",
+   "px": 733,
+   "strong": 486,
+   "share": 0.0161,
+   "meanDelta": 2.5,
+   "outside": 0,
+   "perSeed": [
+    797,
+    643,
+    760
+   ]
+  },
+  {
+   "param": "morph.lobule.attach",
+   "px": 754,
+   "strong": 526,
+   "share": 0.017,
+   "meanDelta": 2.63,
+   "outside": 0,
+   "perSeed": [
+    816,
+    651,
+    796
+   ]
+  },
+  {
+   "param": "morph.lobule.sag",
+   "px": 756,
+   "strong": 493,
+   "share": 0.0168,
+   "meanDelta": 2.63,
+   "outside": 0,
+   "perSeed": [
+    787,
+    682,
+    798
+   ]
+  },
+  {
+   "param": "morph.tragus.size",
+   "px": 142,
+   "strong": 61,
+   "share": 0.0032,
+   "meanDelta": 0.25,
+   "outside": 0,
+   "perSeed": [
+    138,
+    129,
+    160
+   ]
+  },
+  {
+   "param": "morph.tragus.projection",
+   "px": 1954,
+   "strong": 890,
+   "share": 0.0442,
+   "meanDelta": 4.53,
+   "outside": 0,
+   "perSeed": [
+    1948,
+    1777,
+    2136
+   ]
+  },
+  {
+   "param": "morph.antitragus.size",
+   "px": 126,
+   "strong": 22,
+   "share": 0.0029,
+   "meanDelta": 0.2,
+   "outside": 0,
+   "perSeed": [
+    67,
+    143,
+    167
+   ]
+  },
+  {
+   "param": "morph.antitragus.orientation",
+   "px": 68,
+   "strong": 13,
+   "share": 0.0016,
+   "meanDelta": 0.13,
+   "outside": 0,
+   "perSeed": [
+    46,
+    70,
+    89
+   ]
+  },
+  {
+   "param": "morph.notch.depth",
+   "px": 822,
+   "strong": 385,
+   "share": 0.0186,
+   "meanDelta": 2.29,
+   "outside": 0,
+   "perSeed": [
+    857,
+    729,
+    880
+   ]
+  },
+  {
+   "param": "morph.helix.thickness",
+   "px": 526,
+   "strong": 89,
+   "share": 0.0121,
+   "meanDelta": 0.94,
+   "outside": 0,
+   "perSeed": [
+    368,
+    494,
+    715
+   ]
+  },
+  {
+   "param": "morph.helix.roll",
+   "px": 4864,
+   "strong": 3077,
+   "share": 0.1057,
+   "meanDelta": 16.9,
+   "outside": 0,
+   "perSeed": [
+    4973,
+    4374,
+    5246
+   ]
+  },
+  {
+   "param": "morph.antihelix.relief",
+   "px": 713,
+   "strong": 223,
+   "share": 0.0164,
+   "meanDelta": 1.24,
+   "outside": 0,
+   "perSeed": [
+    445,
+    799,
+    895
+   ]
+  },
+  {
+   "param": "morph.antihelix.branchAngle",
+   "px": 274,
+   "strong": 81,
+   "share": 0.0063,
+   "meanDelta": 0.47,
+   "outside": 0,
+   "perSeed": [
+    231,
+    239,
+    351
+   ]
+  },
+  {
+   "param": "morph.antihelix.upperLength",
+   "px": 465,
+   "strong": 116,
+   "share": 0.0106,
+   "meanDelta": 0.78,
+   "outside": 0,
+   "perSeed": [
+    415,
+    475,
+    504
+   ]
+  },
+  {
+   "param": "morph.antihelix.lowerLength",
+   "px": 210,
+   "strong": 65,
+   "share": 0.0048,
+   "meanDelta": 0.33,
+   "outside": 0,
+   "perSeed": [
+    196,
+    198,
+    236
+   ]
+  },
+  {
+   "param": "morph.concha.depth",
+   "px": 227,
+   "strong": 32,
+   "share": 0.0052,
+   "meanDelta": 0.34,
+   "outside": 0,
+   "perSeed": [
+    183,
+    253,
+    246
+   ]
+  },
+  {
+   "param": "morph.concha.cymba",
+   "px": 26,
+   "strong": 7,
+   "share": 0.0006,
+   "meanDelta": 0.04,
+   "outside": 0,
+   "perSeed": [
+    23,
+    22,
+    34
+   ]
+  },
+  {
+   "param": "morph.scapha.width",
+   "px": 0,
+   "strong": 0,
+   "share": 0,
+   "meanDelta": 0,
+   "outside": 0,
+   "perSeed": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "param": "morph.scapha.depth",
+   "px": 39,
+   "strong": 1,
+   "share": 0.0009,
+   "meanDelta": 0.18,
+   "outside": 0,
+   "perSeed": [
+    14,
+    62,
+    42
+   ]
+  },
+  {
+   "param": "morph.crus.thickness",
+   "px": 58,
+   "strong": 14,
+   "share": 0.0013,
+   "meanDelta": 0.1,
+   "outside": 0,
+   "perSeed": [
+    49,
+    59,
+    66
+   ]
+  },
+  {
+   "param": "attach.openingDeg",
+   "px": 12412,
+   "strong": 11322,
+   "share": 0.2368,
+   "meanDelta": 65.24,
+   "outside": 0,
+   "perSeed": [
+    13755,
+    10606,
+    12876
+   ]
+  },
+  {
+   "param": "attach.pitchDeg",
+   "px": 0,
+   "strong": 0,
+   "share": 0,
+   "meanDelta": 0,
+   "outside": 0,
+   "perSeed": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "param": "attach.rotationDeg",
+   "px": 7046,
+   "strong": 5273,
+   "share": 0.1368,
+   "meanDelta": 28.89,
+   "outside": 0,
+   "perSeed": [
+    7182,
+    6286,
+    7671
+   ]
+  },
+  {
+   "param": "attach.scale",
+   "px": 0,
+   "strong": 0,
+   "share": 0,
+   "meanDelta": 0,
+   "outside": 0,
+   "perSeed": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "param": "attach.insertion",
+   "px": 5904,
+   "strong": 3780,
+   "share": 0.1282,
+   "meanDelta": 19.77,
+   "outside": 0,
+   "perSeed": [
+    5837,
+    5383,
+    6492
+   ]
+  },
+  {
+   "param": "anchors.eye",
+   "px": 5627,
+   "strong": 3770,
+   "share": 0.1106,
+   "meanDelta": 21.22,
+   "outside": 0,
+   "perSeed": [
+    5734,
+    5094,
+    6052
+   ]
+  },
+  {
+   "param": "anchors.mouth",
+   "px": 8559,
+   "strong": 6278,
+   "share": 0.1245,
+   "meanDelta": 26.05,
+   "outside": 0,
+   "perSeed": [
+    9894,
+    8415,
+    7369
+   ]
+  },
+  {
+   "param": "anchors.crusLevel",
+   "px": 6483,
+   "strong": 4659,
+   "share": 0.1211,
+   "meanDelta": 25.7,
+   "outside": 0,
+   "perSeed": [
+    6634,
+    5841,
+    6974
+   ]
+  },
+  {
+   "param": "style.exaggeration",
+   "px": 4099,
+   "strong": 2526,
+   "share": 0.0733,
+   "meanDelta": 13.89,
+   "outside": 0,
+   "perSeed": [
+    4034,
+    3815,
+    4448
+   ]
+  },
+  {
+   "param": "style.fidelity",
+   "px": 0,
+   "strong": 0,
+   "share": 0,
+   "meanDelta": 0,
+   "outside": 0,
+   "perSeed": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "param": "style.angularity",
+   "px": 1065,
+   "strong": 452,
+   "share": 0.0241,
+   "meanDelta": 2.86,
+   "outside": 0,
+   "perSeed": [
+    1022,
+    988,
+    1184
+   ]
+  },
+  {
+   "param": "style.softness",
+   "px": 0,
+   "strong": 0,
+   "share": 0,
+   "meanDelta": 0,
+   "outside": 0,
+   "perSeed": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "param": "style.asymmetry",
+   "px": 3080,
+   "strong": 1602,
+   "share": 0.0661,
+   "meanDelta": 9.26,
+   "outside": 0,
+   "perSeed": [
+    2920,
+    2904,
+    3415
+   ]
+  },
+  {
+   "param": "style.detail",
+   "px": 38,
+   "strong": 0,
+   "share": 0.0008,
+   "meanDelta": 0.07,
+   "outside": 0,
+   "perSeed": [
+    35,
+    54,
+    25
+   ]
+  },
+  {
+   "param": "style.look(realistic→anime)",
+   "px": 3680,
+   "strong": 2543,
+   "share": 0.0837,
+   "meanDelta": 10.75,
+   "outside": 0,
+   "perSeed": [
+    3594,
+    3407,
+    4039
+   ]
+  },
+  {
+   "param": "material.translucency",
+   "px": 10,
+   "strong": 0,
+   "share": 0.0002,
+   "meanDelta": 0.51,
+   "outside": 0,
+   "perSeed": [
+    11,
+    14,
+    5
+   ]
+  },
+  {
+   "param": "material.roughness",
+   "px": 340,
+   "strong": 0,
+   "share": 0.0079,
+   "meanDelta": 1.04,
+   "outside": 0,
+   "perSeed": [
+    51,
+    447,
+    521
+   ]
+  },
+  {
+   "param": "material.glow",
+   "px": 0,
+   "strong": 0,
+   "share": 0,
+   "meanDelta": 0,
+   "outside": 0,
+   "perSeed": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "param": "material.kind(skin→scaly)",
+   "px": 7777,
+   "strong": 5314,
+   "share": 0.1762,
+   "meanDelta": 14.26,
+   "outside": 0,
+   "perSeed": [
+    8639,
+    6678,
+    8013
+   ]
+  },
+  {
+   "param": "material.kind(skin→ceramic)",
+   "px": 7978,
+   "strong": 7733,
+   "share": 0.1808,
+   "meanDelta": 30.07,
+   "outside": 0,
+   "perSeed": [
+    8935,
+    6733,
+    8265
+   ]
+  },
+  {
+   "param": "family(human→feline)",
+   "px": 15169,
+   "strong": 12298,
+   "share": 0.2283,
+   "meanDelta": 50.19,
+   "outside": 0,
+   "perSeed": [
+    17420,
+    13385,
+    14702
+   ]
+  },
+  {
+   "param": "family(human→elven)",
+   "px": 12250,
+   "strong": 9722,
+   "share": 0.1483,
+   "meanDelta": 37.41,
+   "outside": 0,
+   "perSeed": [
+    12700,
+    10871,
+    13178
+   ]
+  }
+ ]
+}

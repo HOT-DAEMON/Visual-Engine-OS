@@ -39,7 +39,7 @@ export function checkEars(p: FaceParams, lm: FaceLandmarks, skin: string): Check
   if (ears.length === 2) {
     const [a, b] = ears as [EarGeo, EarGeo];
     const h = Math.max(a.placement!.hPx, b.placement!.hPx);
-    o.push(check('anatomy', 'ear-bilateral-height', '<=', Math.abs(a.placement!.hPx - b.placement!.hPx) / h, 0.02, 'les deux oreilles ont des hauteurs trop différentes (asymétrie bornée par le moteur)'));
+    o.push(check('anatomy', 'ear-bilateral-height', '<=', Math.abs(a.placement!.hPx - b.placement!.hPx) / h, 0.02 + 0.35 * p.ears.style.asymmetry + 0.1 * p.ears.style.exaggeration, 'les deux oreilles ont des hauteurs trop différentes (la hauteur découle du niveau de la racine de l’hélix, qui dépend de la forme : tolérance = 2 % + part de l’asymétrie et de l’exagération demandées)'));
     const wA = a.model!.widthRatio, wB = b.model!.widthRatio;
     o.push(check('anatomy', 'ear-bilateral-width', '<=', Math.abs(wA - wB) / Math.max(wA, wB), 0.05 + 0.5 * p.ears.style.asymmetry, 'les deux oreilles ont des largeurs trop différentes'));
   }
@@ -70,7 +70,7 @@ export function earGeometryChecks(e: EarGeo): Check[] {
     if (d > Math.PI) d = 2 * Math.PI - d;
     worst = Math.max(worst, (d * 180) / Math.PI);
   }
-  o.push(check('geometry', `ear-outline-turn-${s}`, '<=', worst, 75, `le contour de l'oreille ${s} a une cassure franche (rotation > 75° entre deux segments)`, 'warn'));
+  o.push(check('geometry', `ear-outline-turn-${s}`, '<=', worst, 75 + 70 * Math.max(0, Math.min(1, m.resolved.flat['pole.tip'] ?? 0)) + 35 * Math.max(0, m.resolved.flat['helix.darwin'] ?? 0), `le contour de l'oreille ${s} a une cassure franche (rotation au-delà de 75° entre deux segments, élargie par une pointe ou un tubercule demandés)`, 'warn'));
   // Même modèle dans les quatre vues : l'ordonnée de chaque repère est IDENTIQUE (la caméra tourne autour de l'axe vertical).
   const proj = VIEWS.map((v) => projectEar(m, pl, VIEW_YAW[v] * e.side, v));
   let dy = 0;
@@ -115,7 +115,7 @@ export function earAnatomyChecks(p: FaceParams, lm: FaceLandmarks, e: EarGeo): C
   if (p.ears.anchors.eye >= 1) o.push(check('anatomy', `ear-crus-on-eye-line-${s}`, '<=', Math.abs(a.crusToEyeLine), 0.5, `la racine de l'hélix (fosse triangulaire) ${s} n'est pas sur la ligne des yeux`));
   if (p.ears.anchors.mouth >= 1 && m.resolved.present.lobule) {
     const corrected = a.corrections.length > 0;
-    o.push(check('anatomy', `ear-lobule-on-line-${s}`, '<=', Math.abs(a.lobuleToLine), corrected ? 0.2 * lm.H : 0.5, `le bas du lobule ${s} n'est pas sur la ligne visée (base du nez)`, corrected ? 'warn' : 'error'));
+    o.push(check('anatomy', `ear-lobule-on-line-${s}`, '<=', Math.abs(a.lobuleToLine - (p.ears.attach.scale - 1) * (a.lobuleLineY - lm.eyeY)), corrected ? 0.2 * lm.H : 0.5 + (p.ears.attach.scale !== 1 || (m.resolved.flat['lobule.stretch'] ?? 0) > 0 ? 0.015 * e.placement!.hPx : 0), `le bas du lobule ${s} n'est pas à l'écart attendu de la ligne visée (base du nez ; l’échelle relative attach.scale décale le lobule de (échelle − 1) × (ligne − yeux))`, corrected ? 'warn' : 'error'));
   }
   // L'oreille ne dépasse pas la zone sourcils → menton.
   o.push(check('anatomy', `ear-within-face-height-${s}`, '>=', pl.topY, -lm.H / 2, `le haut de l'oreille ${s} dépasse le sommet du crâne`));
@@ -129,10 +129,11 @@ function earStyleChecks(p: FaceParams, lm: FaceLandmarks, skin: string): Check[]
   const o: Check[] = [];
   const ra = resolveAppearance(skin, p.skin);
   const svg = renderEars(p, lm, skin, ra, undefined, []).join('');
-  const fills = new Set([...svg.matchAll(/fill="(#[0-9a-fA-F]{6})"/g)].map((x) => (x[1] as string).toLowerCase()));
+  // Palette perçue : deux teintes à moins de 16 niveaux par canal sont UN ton (les structures ont des variantes de ton quasi identiques, pas des tons distincts).
+  const fills = new Set([...svg.matchAll(/fill="#([0-9a-fA-F]{6})"/g)].map((x) => [0, 2, 4].map((i) => Math.round(parseInt((x[1] as string).slice(i, i + 2), 16) / 16)).join('.')));
   const widths = new Set([...svg.matchAll(/stroke-width="([\d.]+)"/g)].map((x) => Number(x[1]).toFixed(1)));
-  if (p.ears.style.look === 'anime') o.push(check('style', 'ear-cel-palette', '<=', fills.size, 14, "palette de l'oreille trop riche pour un rendu cel (≤ 14 couleurs de remplissage)", 'warn'));
-  o.push(check('style', 'ear-stroke-homogeneity', '<=', widths.size, 16, "trop d'épaisseurs de trait différentes dans l'oreille", 'warn'));
+  if (p.ears.style.look === 'anime') o.push(check('style', 'ear-cel-palette', '<=', fills.size, 14 + 2 * Object.values(p.ears.surface).filter((v) => v > 0).length, "palette de l'oreille trop riche pour un rendu cel (≤ 14 couleurs de remplissage, +2 par détail de surface actif)", 'warn'));
+  o.push(check('style', 'ear-stroke-homogeneity', '<=', widths.size, 16 + 2 * Object.values(p.ears.surface).filter((v) => v > 0).length + (p.ears.material.glow > 0.02 ? 3 : 0), "trop d'épaisseurs de trait différentes dans l'oreille (≤ 16, +2 par détail de surface actif, +3 si émission)", 'warn'));
   const kind = p.ears.material.kind ?? FAMILIES[p.ears.family].defaultMaterial;
   if (kind === 'skin') o.push(check('style', 'ear-matches-skin', '<=', Math.abs(lum(skin) - lum(ra.shadow)), 0.5, "l'ombre de l'oreille s'éloigne trop de la peau du visage", 'warn'));
   o.push(check('style', 'ear-shade-contrast', '>=', Math.abs(lum(ra.light) - lum(ra.shadow)), 0.04, "contraste lumière/ombre de l'oreille trop faible pour lire le relief", 'warn'));

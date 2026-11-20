@@ -29,20 +29,22 @@ export const EarMorph = z
     posterior: z.object({ convexity: Sg }).strict().default({}),
     /** Largeur de l'oreille (rapport largeur/hauteur de la famille, ±35 %). */
     width: Sg,
-    /** EAR-07 lobule : longueur (−1 = absent), largeur, attache (+1 = collé à la joue, −1 = libre), pendance. */
-    lobule: z.object({ length: Sg, width: Sg, attach: Sg, sag: Sg }).strict().default({}),
+    /** EAR-07 lobule : longueur (−1 = absent), largeur, attache (+1 = collé à la joue, −1 = libre), pendance ; `cleft` = lobule fendu (encoche du bas, 0 = aucune) ; `stretch` = lobule étiré par un bijou lourd (trou + boucle de peau, 0 = aucun). */
+    lobule: z.object({ length: Sg, width: Sg, attach: Sg, sag: Sg, cleft: Sg, stretch: Sg }).strict().default({}),
     /** EAR-06 tragus, antitragus, incisure intertragique. */
-    tragus: z.object({ size: Sg, projection: Sg }).strict().default({}),
+    tragus: z.object({ size: Sg, projection: Sg, tip: Sg }).strict().default({}),
     antitragus: z.object({ size: Sg, orientation: Sg }).strict().default({}),
     notch: z.object({ depth: Sg }).strict().default({}),
-    /** EAR-01 hélix : épaisseur du rebord et enroulement (relief). */
-    helix: z.object({ thickness: Sg, roll: Sg }).strict().default({}),
+    /** EAR-01 hélix : épaisseur du rebord et enroulement (relief) ; `darwin` = tubercule de Darwin (bosse du bord postérieur-supérieur, 0 = absent) ; `fold` = hélix replié (« cup ear », 0 = aucun). */
+    helix: z.object({ thickness: Sg, roll: Sg, darwin: Sg, fold: Sg }).strict().default({}),
     /** EAR-02 anthélix : relief, écart des branches, longueur des branches supérieure et inférieure. */
-    antihelix: z.object({ relief: Sg, branchAngle: Sg, upperLength: Sg, lowerLength: Sg }).strict().default({}),
-    /** EAR-05 conque : profondeur, part de la cymba. EAR-03 scapha : largeur, profondeur. EAR-02 crus de l'hélix : épaisseur. */
-    concha: z.object({ depth: Sg, cymba: Sg }).strict().default({}),
+    antihelix: z.object({ relief: Sg, branchAngle: Sg, upperLength: Sg, lowerLength: Sg, curvature: Sg }).strict().default({}),
+    /** EAR-05 conque : profondeur, part de la cymba, `wall` = rebord et paroi de conque distincts (05C–E ; 0 = aucun). EAR-03 scapha : largeur, profondeur. EAR-02 crus de l'hélix : épaisseur. */
+    concha: z.object({ depth: Sg, cymba: Sg, wall: Sg }).strict().default({}),
     scapha: z.object({ width: Sg, depth: Sg }).strict().default({}),
-    crus: z.object({ thickness: Sg }).strict().default({}),
+    crus: z.object({ thickness: Sg, angle: Sg, length: Sg }).strict().default({}),
+    /** EAR-04 fosse triangulaire : profondeur et largeur. */
+    fossa: z.object({ depth: Sg, width: Sg }).strict().default({}),
   })
   .strict();
 export type EarMorph = z.infer<typeof EarMorph>;
@@ -115,6 +117,11 @@ export const FaceEars = z
     /** Matériau : indépendant de la géométrie. `tint` null = dérivé de la peau du visage. */
     material: z
       .object({ kind: EarMaterialKind.optional(), translucency: Unit.default(0.5), roughness: Unit.default(0.55), tint: Hex.nullable().default(null), glow: Unit.default(0) })
+      .strict()
+      .default({}),
+    /** Détails secondaires SURF-05, TOUS à 0 par défaut (rien d'activé sans demande) ; leur visibilité dépend en plus de `style.detail` (LOD). */
+    surface: z
+      .object({ pigmentation: Unit.default(0), folds: Unit.default(0), pores: Unit.default(0), vessels: Unit.default(0), hair: Unit.default(0) })
       .strict()
       .default({}),
     extensions: z.array(EarExtension).max(6).default([]),

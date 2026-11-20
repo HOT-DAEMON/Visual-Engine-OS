@@ -14,6 +14,8 @@ export interface Built {
   readonly corrections: EarCorrection[];
 }
 
+/** Point le plus bas (y max) du lobule quand il est fendu (le centre du bas est alors l'encoche) ; sinon le repère historique. */
+const lowest = (o: Poly, a: number, b: number, dflt: Vec, cleft: boolean): Vec => (cleft ? o.slice(a, b + 1).reduce((m, q) => (q.y > m.y ? q : m), dflt) : dflt);
 const rad = (d: number): number => (d * Math.PI) / 180;
 const dir = (deg: number): Vec => pt(Math.sin(rad(deg)), -Math.cos(rad(deg)));
 const at = (a: Vec, d: Vec, l: number): Vec => pt(a.x + d.x * l, a.y + d.y * l);
@@ -24,74 +26,123 @@ const add = (c: PlacedStructure[]) => (id: string, kind: PlacedStructure['kind']
  * intérieurs), l'anthélix/la conque/le tragus sont placés relativement aux repères. Chaque structure = rôle + polygone + relief ; rien n'est « peint ».
  * `vf` = niveau (canonique) de la racine de l'hélix, c.-à-d. de la fosse triangulaire : le repère aligné sur la ligne des yeux.
  */
-export function buildStructures(outline: Poly, m: FlatMorph, r: ResolvedEar, vf: number, ctrlIdx: { lobuleStart: number; bottom: number; lobuleEnd: number; peak: number }): Built {
+export function buildStructures(outline: Poly, m: FlatMorph, r: ResolvedEar, vf: number, ctrlIdx: { lobuleStart: number; bottom: number; lobuleEnd: number; peak: number }, fidelity = 0.8): Built {
   const out: PlacedStructure[] = [];
   const S = add(out);
   const corr: EarCorrection[] = [];
   const g = (k: string): number => m[k] ?? 0;
   const thickness = 0.05 + 0.012 * g('helix.roll');
+  // Fidélité anatomique : articulation des raccords et sillons (sillons périphériques, jonction des branches, fosse, incisure, cymba). 1 au défaut (0,8) → géométrie historique.
+  const ff = Math.min(1.3, 0.05 + 1.1875 * fidelity);
+  const fold = Math.max(0, g('helix.fold'));
   // ── Hélix (EAR-01) : bande intérieure du contour, de la racine au lobule ; épaisseur variable (fusion progressive avec le lobule).
   const end = r.present.lobule ? ctrlIdx.lobuleStart * OUTLINE_N : ctrlIdx.bottom * OUTLINE_N;
   const idx = span(outline.length, 0, end);
   const tH0 = 0.075 + 0.03 * g('helix.thickness');
-  const wH = idx.map((_, k) => { const s = k / (idx.length - 1); return tH0 * smooth(s / 0.15) * (1 - 0.65 * smooth((s - 0.7) / 0.3)); });
+  const wH = idx.map((_, k) => { const s = k / (idx.length - 1); return tH0 * smooth(s / 0.15) * (1 - 0.65 * smooth((s - 0.7) / 0.3)) * (1 + 2.4 * fold * smooth((s - 0.06) / 0.14) * (1 - smooth((s - 0.42) / 0.16))); });
   // ── Anthélix (EAR-02, 02A–02D) : corps + deux branches + jonction (ruban à largeur variable, relief propre).
   const rel = g('antihelix.relief');
   const wB = 0.05 + 0.015 * rel;
-  const A0 = pt(0.4, 0.665), A1 = pt(0.5, 0.54), B = pt(0.52, 0.385);
+  const crv = g('antihelix.curvature');
+  const A0 = pt(0.4, 0.665), A1 = pt(0.5 + 0.07 * crv, 0.54), B = pt(0.52 + 0.025 * crv, 0.385);
   const sep = 62 + 24 * g('antihelix.branchAngle');
   const aU = sep * 0.35, aL = -sep * 0.65;
   const U = at(B, dir(aU), 0.26 * (1 + 0.45 * g('antihelix.upperLength')));
   const Lw = at(B, dir(aL), 0.2 * (1 + 0.45 * g('antihelix.lowerLength')));
   const bend = (a: Vec, b: Vec, k: number): Vec => { const m2 = lerp2(a, b, 0.5); return pt(m2.x + (b.y - a.y) * k, m2.y - (b.x - a.x) * k); };
   const pBody = path([A0, A1, B]);
-  const pUp = path([B, bend(B, U, 0.18), U]);
-  const pLow = path([B, bend(B, Lw, -0.15), Lw]);
-  // ── Scapha (EAR-03) : creux entre l'hélix et l'anthélix. CONTRAINTE STRICTE : l'hélix ne la recouvre jamais → largeur ≤ 90 % de l'intervalle mesuré.
-  const gap = Math.min(...[...pUp, ...pBody].map((q) => Math.min(...idx.filter((_, k) => k % 3 === 0).map((i) => dist(q, outline[i] as Vec)))));
-  const tS0 = 0.1 + 0.04 * g('scapha.width');
-  const tS = Math.max(0.012, Math.min(tS0, 0.9 * gap - tH0 - wB));
-  if (tS < tS0 - 1e-9) corr.push({ id: 'scapha-not-hidden', param: 'scapha.width', requested: tS0, applied: tS, reason: "l'hélix et l'anthélix ne recouvrent pas la scapha (largeur ≤ 90 % de l'intervalle)", tier: 'strict' });
-  S('helix', 'band', band(outline, idx, idx.map(() => 0), wH), 0.9 + 0.35 * g('helix.roll'));
+  const pUp = path([B, bend(B, U, 0.18 + 0.25 * crv), U]);
+  const pLow = path([B, bend(B, Lw, -0.15 - 0.25 * crv), Lw]);
+  // ── Scapha (EAR-03) : creux entre l'hélix et l'anthélix. CONTRAINTE STRICTE : l'hélix et l'anthélix ne la recouvrent jamais. La place disponible est mesurée
+  // POINT PAR POINT le long de l'hélix (distance au contour − largeur de l'hélix − demi-largeur de l'anthélix) : la scapha se pince là où la branche supérieure
+  // s'approche du bord et s'ouvre partout ailleurs. (Version précédente : un MINIMUM global écrasait la largeur à 0,012 partout → l'axe `scapha.width` était mort.)
   const sIdx = idx.filter((_, k) => k > idx.length * 0.08 && k < idx.length * 0.86);
-  S('scapha', 'cavity', band(outline, sIdx, sIdx.map((i) => wH[idx.indexOf(i)] as number), sIdx.map((i, k) => (wH[idx.indexOf(i)] as number) + tS * Math.sin((Math.PI * (k + 1)) / (sIdx.length + 1)) ** 0.6)), -0.25 - 0.2 * g('scapha.depth'));
+  const anti = [...pUp, ...pBody];
+  const sRoom = sIdx.map((i) => Math.min(...anti.map((q) => dist(q, outline[i] as Vec))) - wB - (wH[idx.indexOf(i)] as number));
+  const tS0 = 0.1 + 0.055 * g('scapha.width');
+  const sProf = sIdx.map((_, k) => Math.sin((Math.PI * (k + 1)) / (sIdx.length + 1)) ** 0.6);
+  const sW = sIdx.map((_, k) => Math.max(0.008, Math.min(tS0 * (sProf[k] as number), 0.85 * (sRoom[k] as number))));
+  const meanW = sW.reduce((a, b) => a + b, 0) / sW.length, meanReq = (tS0 * sProf.reduce((a, b) => a + b, 0)) / sProf.length;
+  const tS = meanW;
+  if (meanW < 0.9 * meanReq) corr.push({ id: 'scapha-not-hidden', param: 'scapha.width', requested: meanReq, applied: meanW, reason: "l'hélix et l'anthélix ne recouvrent pas la scapha (largeur ≤ 85 % de la place mesurée en chaque point)", tier: 'strict' });
+  S('helix', 'band', band(outline, idx, idx.map(() => 0), wH), 0.9 + 0.35 * g('helix.roll'));
+  S('scapha', 'cavity', band(outline, sIdx, sIdx.map((i) => wH[idx.indexOf(i)] as number), sIdx.map((i, k) => (wH[idx.indexOf(i)] as number) + (sW[k] as number))), -0.3 - 0.3 * g('scapha.depth'));
   if (r.present.antihelix) {
     const sh = (p: Vec[], w0: number, w1: number): number[] => p.map((_, k) => w0 + (w1 - w0) * (k / (p.length - 1)));
     S('antihelix:body', 'ridge', ribbon(pBody, sh(pBody, wB * 0.9, wB)), 0.6 + 0.3 * rel);
     S('antihelix:upper', 'ridge', ribbon(pUp, sh(pUp, wB * 0.85, wB * 0.4)), 0.6 + 0.3 * rel);
     S('antihelix:lower', 'ridge', ribbon(pLow, sh(pLow, wB * 0.85, wB * 0.35)), 0.55 + 0.3 * rel);
-    S('antihelix:junction', 'blob', ellipse(B, wB * 1.25, wB * 1.25), 0.56 + 0.3 * rel);
+    S('antihelix:junction', 'blob', ellipse(B, wB * 1.25, wB * 1.25), (0.56 + 0.3 * rel) * ff);
     // 02E sillons périphériques : creux étroits entre l'anthélix et la conque (côté concave) et entre l'anthélix et la scapha.
     const off = (p: Vec[], d: number): Vec[] => p.map((q, k) => { const a = p[Math.max(0, k - 1)] as Vec, b = p[Math.min(p.length - 1, k + 1)] as Vec; const l = dist(a, b) || 1; return pt(q.x + (-(b.y - a.y) / l) * d, q.y + ((b.x - a.x) / l) * d); });
-    S('antihelix:groove-conch', 'cavity', ribbon(off(pBody, -(wB + 0.014)), pBody.map(() => 0.011)), -0.3);
-    S('antihelix:groove-scapha', 'cavity', ribbon(off(pBody, wB + 0.014), pBody.map(() => 0.011)), -0.2);
-    if (r.present.fossa) S('fossa', 'cavity', blobOf([pt(B.x, B.y - 0.04), lerp2(B, U, 0.8), lerp2(B, Lw, 0.8)]), -0.3);
+    S('antihelix:groove-conch', 'cavity', ribbon(off(pBody, -(wB + 0.014)), pBody.map(() => 0.011)), -0.3 * ff);
+    S('antihelix:groove-scapha', 'cavity', ribbon(off(pBody, wB + 0.014), pBody.map(() => 0.011)), -0.2 * ff);
+    if (r.present.fossa) {
+      const fd = g('fossa.depth'), fw = g('fossa.width');
+      const f0 = [pt(B.x, B.y - 0.04), lerp2(B, U, 0.8), lerp2(B, Lw, 0.8)];
+      const fc = pt((f0[0]!.x + f0[1]!.x + f0[2]!.x) / 3, (f0[0]!.y + f0[1]!.y + f0[2]!.y) / 3);
+      S('fossa', 'cavity', blobOf(f0.map((q) => pt(fc.x + (q.x - fc.x) * (1 + 0.55 * fw), fc.y + (q.y - fc.y) * (1 + 0.55 * fw)))), -0.3 * ff * (1 + 2.2 * fd));
+    }
   }
   // ── Crus de l'hélix + conque (cymba au-dessus, cavum au-dessous : 05A–05F) + ouverture du conduit.
-  const tc = 0.028 + 0.014 * g('crus.thickness');
-  const crus = path([pt(0.02, vf), pt(0.17, vf + 0.012), pt(0.38, vf + 0.035)]);
+  const tc = Math.max(0.008, 0.028 + 0.034 * g('crus.thickness'));
+  const cl = 1 + 0.5 * g('crus.length'), ca = 0.11 * g('crus.angle');
+  const crus = path([pt(0.02, vf), pt(0.17 * cl, vf + 0.012 + ca * 0.4), pt(0.38 * cl, vf + 0.035 + ca)]);
   S('crus', 'ridge', ribbon(crus, crus.map((_, k) => tc * (0.8 + 0.2 * Math.sin((Math.PI * k) / 8) - 0.45 * smooth(k / (crus.length - 1))))), 0.55);
-  const cym = 0.05 * (1 + 0.5 * g('concha.cymba'));
-  S('cymba', 'cavity', blobOf([pt(0.12, vf - cym), pt(0.3, vf - cym - 0.005), pt(0.42, vf - cym * 0.6), pt(0.42, vf + 0.005), pt(0.2, vf - 0.005), pt(0.12, vf - 0.01)]), -0.5);
+  const cym = Math.max(0.006, 0.05 * (1 + 1.25 * g('concha.cymba')));
+  S('cymba', 'cavity', blobOf([pt(0.12, vf - cym), pt(0.3, vf - cym - 0.005), pt(0.42, vf - cym * 0.6), pt(0.42, vf + 0.005), pt(0.2, vf - 0.005), pt(0.12, vf - 0.01)]), -0.5 * (0.5 + 0.5 * ff));
   // Épaisseur de paroi (strict) : profondeur de la conque ≤ épaisseur − paroi minimale.
   const dReq = 0.032 * (1 + 0.6 * g('concha.depth'));
   const dMax = thickness - 0.012;
   const depth = Math.min(dReq, dMax);
   if (depth < dReq - 1e-9) corr.push({ id: 'concha-wall', param: 'concha.depth', requested: dReq, applied: depth, reason: 'la profondeur de la conque garde une paroi minimale (la cavité ne traverse pas le pavillon)', tier: 'strict' });
   const cav = blobOf([pt(0.09, vf + 0.045), pt(0.3, vf + 0.045), pt(0.43, vf + 0.08), pt(0.46, 0.5), pt(0.41, 0.61), pt(0.28, 0.645), pt(0.09, 0.58)]);
-  S('cavum', 'cavity', cav, -(depth / thickness) * 0.95);
+  const wall = g('concha.wall');
+  S('cavum', 'cavity', cav, -(depth / thickness) * 0.95 * (1 + 0.35 * Math.min(0, wall)));
+  // 05C–05E : rebord de conque (arête qui borde le cavum et masque une part du fond) et paroi postérieure ombrée, distincts de la cavité.
+  if (wall > 0.02) {
+    const rimW = cav.map(() => 0.008 + 0.014 * wall);
+    S('concha:rim', 'ridge', ribbon([...cav, cav[0] as Vec], [...rimW, rimW[0] as number]), 0.3 + 0.35 * wall);
+    S('concha:wall', 'cavity', ribbon(cav.slice(2, 6), [0.02 + 0.03 * wall, 0.03 + 0.04 * wall, 0.03 + 0.04 * wall, 0.02 + 0.03 * wall]), -0.55 - 0.3 * wall);
+  }
   const cy = vf + 0.045 + 0.55 * (0.6 - (vf + 0.045));
   const canal = pt(0.2, cy);
   S('canal', 'cavity', ellipse(canal, 0.04, 0.052), -1);
   // ── Tragus, antitragus, incisure intertragique (EAR-06).
-  const ts = 1 + 0.4 * g('tragus.size');
+  const ts = 1 + 0.55 * g('tragus.size'), tt = g('tragus.tip');
   const tragus = pt(0.07 - 0.03 * g('tragus.projection'), 0.5);
-  if (r.present.tragus) S('tragus', 'blob', ellipse(tragus, 0.095 * ts, 0.08 * ts, -20), 0.7);
-  const as = 1 + 0.4 * g('antitragus.size');
-  if (r.present.antitragus) S('antitragus', 'blob', ellipse(pt(0.34, 0.675), 0.1 * as, 0.052 * as, 20 + 25 * g('antitragus.orientation')), 0.55);
-  S('notch', 'cavity', ellipse(pt(0.13, 0.615), 0.032, 0.03 * (1 + g('notch.depth'))), -0.6);
+  if (r.present.tragus) {
+    const base = ellipse(tragus, 0.095 * ts, 0.08 * ts, -20);
+    // Pointe du tragus : le sommet côté conduit s'étire (tt > 0 : pointu) ou s'aplatit (tt < 0 : tronqué).
+    const tp = tt === 0 ? base : base.map((q) => { const dx = q.x - tragus.x, dy = q.y - tragus.y; const c = dx / (Math.hypot(dx, dy) || 1); const k = 1 + (c > 0 ? 1.5 * tt * c ** 3 : 0); return pt(tragus.x + dx * k, tragus.y + dy * (tt > 0 ? 1 - 0.25 * tt * Math.max(0, c) : 1)); });
+    S('tragus', 'blob', tp, 0.7);
+  }
+  const as = 1 + 0.6 * g('antitragus.size');
+  if (r.present.antitragus) S('antitragus', 'blob', ellipse(pt(0.34, 0.675), 0.1 * as, 0.052 * as, 20 + 65 * g('antitragus.orientation')), 0.55);
+  {
+    // L'incisure suit le bord antérieur : si ce bord recule (oreille étroite, conque creuse), on la décale vers le centre jusqu'à ce qu'elle reste dans le pavillon.
+    let nx = 0.13; const nry = 0.03 * (1 + g('notch.depth'));
+    while (nx < 0.3 && insideShare(ellipse(pt(nx, 0.615), 0.032, nry), outline) < 0.75) nx += 0.015;
+    S('notch', 'cavity', ellipse(pt(nx, 0.615), 0.032, nry), -0.6 * (0.5 + 0.5 * ff));
+  }
   // ── Lobule (EAR-07) : sans cartilage (relief doux), du début du bord inférieur à la jonction avec la joue.
   if (r.present.lobule) S('lobule', 'blob', outline.slice(ctrlIdx.lobuleStart * OUTLINE_N, ctrlIdx.lobuleEnd * OUTLINE_N + 1), 0.25);
+  // ── Variantes anatomiques ajoutées (0 = absentes) : tubercule de Darwin, hélix replié, lobule étiré (trou + boucle de peau).
+  const dwn = Math.max(0, g('helix.darwin'));
+  if (dwn > 0.05) {
+    const c0 = 4 * OUTLINE_N, sub = span(outline.length, c0 - 5, c0 + 6);
+    S('darwin', 'blob', band(outline, sub, sub.map(() => 0.016), sub.map((_, j) => 0.016 + (0.05 + 0.08 * dwn) * Math.sin((Math.PI * (j + 0.5)) / sub.length))), 0.95 + 0.4 * dwn);
+  }
+  if (fold > 0.05) {
+    // Pli de l'hélix replié : un sillon d'ombre le long du bord intérieur de la partie épaissie (le rebord se recourbe vers l'avant et recouvre une part de la scapha).
+    const top = idx.filter((_, k) => k > idx.length * 0.1 && k < idx.length * 0.52);
+    S('helix:fold', 'cavity', ribbon(inset(outline, top, top.map((i) => (wH[idx.indexOf(i)] as number) + 0.004)), top.map((_, k) => 0.008 + 0.012 * fold * Math.sin((Math.PI * (k + 0.5)) / top.length))), -0.55 - 0.3 * fold);
+  }
+  const stretch = Math.max(0, g('lobule.stretch'));
+  if (r.present.lobule && stretch > 0.25) {
+    const lb = outline[ctrlIdx.bottom * OUTLINE_N] as Vec;
+    S('lobule:hole', 'cavity', ellipse(pt(lb.x, lb.y - 0.11 - 0.03 * stretch), 0.03 + 0.03 * stretch, 0.04 + 0.04 * stretch), -0.95);
+  }
   // ── Extensions (EAR-08) : mécanisme de construction réutilisé, matériau et raccord adaptés (voir le rendu).
   for (const e of r.extensions) {
     const k = Math.min(idx.length - 1, Math.max(0, Math.round(e.at * (idx.length - 1))));
@@ -120,7 +171,7 @@ export function buildStructures(outline: Poly, m: FlatMorph, r: ResolvedEar, vf:
   }
   // Toute structure construite reste DANS le pavillon (invariant géométrique ; seules les extensions saillantes peuvent sortir).
   for (const s of out) if (s.kind !== 'ext' && s.id !== 'helix' && s.id !== 'lobule' && s.kind !== 'band' && insideShare(s.poly, outline) < 0.55 && !String(s.id).startsWith('antihelix:groove')) corr.push({ id: `inside:${s.id}`, param: String(s.id), requested: insideShare(s.poly, outline), applied: insideShare(s.poly, outline), reason: 'structure partiellement hors du pavillon', tier: 'preference' });
-  const landmarks: Record<string, Vec> = { crus: pt(0.02, vf), lobuleBottom: outline[ctrlIdx.bottom * OUTLINE_N] as Vec, top: outline[ctrlIdx.peak * OUTLINE_N] as Vec, tragus, canal, junction: B, upperEnd: U, lowerEnd: Lw, antitragus: pt(0.34, 0.675) };
+  const landmarks: Record<string, Vec> = { crus: pt(0.02, vf), lobuleBottom: lowest(outline, ctrlIdx.lobuleStart * OUTLINE_N, ctrlIdx.lobuleEnd * OUTLINE_N, outline[ctrlIdx.bottom * OUTLINE_N] as Vec, g('lobule.cleft') > 0.02), top: outline[ctrlIdx.peak * OUTLINE_N] as Vec, tragus, canal, junction: B, upperEnd: U, lowerEnd: Lw, antitragus: pt(0.34, 0.675) };
   const lobeC = pt((outline[ctrlIdx.bottom * OUTLINE_N] as Vec).x, (outline[ctrlIdx.bottom * OUTLINE_N] as Vec).y - 0.07);
   const hx = outline[idx[Math.round(idx.length * 0.12)] as number] as Vec;
   const anchors: PiercingAnchor[] = [

@@ -10,6 +10,7 @@ import type { LightVector } from '../../../lighting/light';
 import type { FaceEars } from '../../../schema/face-ear';
 import { polyPath } from '../path';
 import { earPaint, lightAngles, type EarPaint } from './paint';
+import { surfaceLayers } from './surface';
 
 export interface EarMarkup { readonly defs: string[]; readonly markup: string }
 
@@ -45,8 +46,11 @@ export function renderEarProjected(id: string, pe: ProjectedEar, model: EarModel
   const outside: string[] = [];
   let k = 0;
   const detail = e.style.detail;
+  // Douceur : 0,5 = rendu historique. Plus de douceur → croissants plus larges et plus pâles, éclairage plus flou, arêtes adoucies ; moins → arêtes franches et contrastées.
+  const soft = e.style.softness - 0.5;
+  const dk = 1 + 1.0 * soft, co = 1 - 0.55 * soft;
   for (const { s, poly } of pe.structures) {
-    if (s.id === 'helix') { body.push(helixLayer(id, k++, poly, P, lx, ly, hPx, anime, defs)); k += 2; continue; }
+    if (s.id === 'helix') { body.push(helixLayer(id, k++, poly, P, lx, ly, hPx * dk, anime, defs, co)); k += 2; continue; }
     if (s.kind === 'ext') { (s.ext === 'ornamental_growth' ? outside : body).push(extLayer(s, poly, P, hPx, anime)); continue; }
     if (s.id !== 'canal' && !detailOn(String(s.id), detail)) continue;
     if (s.id === 'lobule') { body.push(lobuleLayer(id, k++, poly, P, lx, ly, hPx, defs)); continue; }
@@ -54,17 +58,45 @@ export function renderEarProjected(id: string, pe: ProjectedEar, model: EarModel
       // Cavité : fond sombre (d'autant plus que le relief est négatif) ; la paroi qui regarde la source est dans l'ombre, la paroi opposée reçoit la lumière.
       const dark = s.id === 'canal' ? 0.92 : Math.min(0.85, 0.38 + 0.4 * -s.relief);
       body.push(el('path', { d: polyPath(poly), fill: mix(P.base, mix(P.shade, '#1a0d0d', 0.5), dark), opacity: anime ? 1 : 0.94 }));
-      if (s.id !== 'canal') body.push(crescent(id, k++, poly, lx, ly, hPx * (0.004 + 0.003 * -s.relief), P.shade, anime ? P.highlight : P.lit, anime ? 0.9 : 0.55, true, defs));
+      if (s.id !== 'canal') body.push(crescent(id, k++, poly, lx, ly, hPx * (0.004 + 0.003 * -s.relief) * dk, P.shade, anime ? P.highlight : P.lit, (anime ? 0.9 : 0.55) * co, true, defs));
     } else {
       // Relief : base, croissant éclairé côté source, croissant d'ombre propre du côté opposé (volume lisible sans trait de contour).
       body.push(el('path', { d: polyPath(poly), fill: mix(P.base, P.lit, Math.min(0.5, 0.14 * s.relief)) }));
-      body.push(crescent(id, k++, poly, lx, ly, hPx * (0.005 + 0.004 * s.relief), P.shade, anime ? P.highlight : P.lit, anime ? 0.95 : 0.8, false, defs));
+      body.push(crescent(id, k++, poly, lx, ly, hPx * (0.005 + 0.004 * s.relief) * dk, P.shade, anime ? P.highlight : P.lit, Math.min(1, (anime ? 0.95 : 0.8) * co), false, defs));
     }
   }
-  out.push(el('g', { 'clip-path': urlRef(`${id}-clip`) }, body));
+  if (soft > 0.02) defs.push(el('filter', { id: `${id}-soft`, x: '-5%', y: '-5%', width: '110%', height: '110%' }, [el('feGaussianBlur', { stdDeviation: num(hPx * 0.0028 * soft * 2) })]));
+  out.push(el('g', { 'clip-path': urlRef(`${id}-clip`) }, [el('g', soft > 0.02 ? { filter: urlRef(`${id}-soft`) } : {}, body)]));
+  const surf = surfaceLayers(id, pe, model, P, e, hPx, defs);
+  if (surf) out.push(surf);
   out.push(...outside);
   // 4. Éclairage de relief (réaliste) : la carte de hauteur est le canal alpha de ce groupe, le filtre en tire des normales.
-  if (!anime) out.push(reliefLighting(id, pe, model, P, L, hPx, defs));
+  if (!anime) out.push(reliefLighting(id, pe, model, P, L, hPx, defs, Math.pow(2, 2.2 * soft), 0.2 + 0.8 * (detail / 0.7)));
+  // Transmission de la lumière (SURF-04) : 0,5 = rendu historique ; au-dessus, les parties minces (hélix, scapha, lobule, tragus) rougeoient par transparence ;
+  // en dessous, elles s'opacifient (cartilage dense, ton d'ombre).
+  const ratio = e.material.translucency > 0 ? P.translucency / e.material.translucency : 1;
+  const tt = P.translucency - 0.5 * ratio;
+  if (Math.abs(tt) > 0.02) {
+    const thin = pe.structures.filter((x) => ['helix', 'scapha', 'tragus'].includes(String(x.s.id)));
+    const fl = anime ? {} : (defs.push(el('filter', { id: `${id}-tr`, x: '-10%', y: '-10%', width: '120%', height: '120%' }, [el('feGaussianBlur', { stdDeviation: num(hPx * 0.022) })])), { filter: urlRef(`${id}-tr`) });
+    const tone = tt > 0 ? mix(P.base, '#e8604a', 0.5) : mix(P.shade, '#2a120e', 0.3);
+    const a = Math.min(0.55, Math.abs(tt) * (tt > 0 ? 1.1 : 0.8));
+    out.push(el('g', { 'clip-path': urlRef(`${id}-clip`) }, [
+      el('g', { ...fl, opacity: num(a) }, thin.map((x) => el('path', { d: polyPath(x.poly), fill: tone }))),
+      el('path', { d: polyPath(hull), fill: 'none', stroke: tone, 'stroke-width': hPx * 0.085, opacity: num(Math.min(0.7, Math.abs(tt) * (tt > 0 ? 1.5 : 1))), 'stroke-linejoin': 'round', ...fl }),
+    ]));
+  }
+  // Émission : halo derrière le pavillon, liseré lumineux intérieur et crêtes qui s'allument (`material.glow`, toutes matières).
+  if (P.glow > 0.02) {
+    defs.push(el('filter', { id: `${id}-gl`, x: '-30%', y: '-30%', width: '160%', height: '160%' }, [el('feGaussianBlur', { stdDeviation: num(hPx * 0.03) })]));
+    defs.push(el('filter', { id: `${id}-gl2`, x: '-10%', y: '-10%', width: '120%', height: '120%' }, [el('feGaussianBlur', { stdDeviation: num(hPx * 0.006) })]));
+    out.unshift(el('path', { d: polyPath(hull), fill: 'none', stroke: P.glowColor, 'stroke-width': hPx * 0.12, opacity: num(0.6 * P.glow), filter: urlRef(`${id}-gl`), 'stroke-linejoin': 'round' }));
+    const ridges = pe.structures.filter((x) => (x.s.kind === 'ridge' || x.s.kind === 'band') && x.s.id !== 'crus');
+    out.push(el('g', { 'clip-path': urlRef(`${id}-clip`) }, [
+      el('path', { d: polyPath(hull), fill: 'none', stroke: P.glowColor, 'stroke-width': hPx * 0.05, opacity: num(0.8 * P.glow), filter: urlRef(`${id}-gl`), 'stroke-linejoin': 'round' }),
+      el('g', { filter: urlRef(`${id}-gl2`), opacity: num(0.8 * P.glow) }, ridges.map((x) => el('path', { d: polyPath(x.poly), fill: 'none', stroke: P.glowColor, 'stroke-width': hPx * 0.008, 'stroke-linejoin': 'round' }))),
+    ]));
+  }
   // 5. Rétro-éclairage des parties fines : liseré chaud à l'intérieur du bord (SURF-04), proportionnel à la translucidité.
   if (P.translucency > 0.02) out.push(el('g', { 'clip-path': urlRef(`${id}-clip`) }, [el('path', { d: polyPath(hull), fill: 'none', stroke: P.translucent, 'stroke-width': hPx * 0.035, opacity: num(0.22 * P.translucency), 'stroke-linejoin': 'round' })]));
   out.push(el('path', { d: polyPath(hull), fill: 'none', stroke: mix(P.shade, '#000000', anime ? 0.7 : 0.4), 'stroke-width': lw * (anime ? 1.2 : 0.7), 'stroke-linejoin': 'round', opacity: anime ? 1 : 0.65 }));
@@ -73,7 +105,7 @@ export function renderEarProjected(id: string, pe: ProjectedEar, model: EarModel
 }
 
 /** LOD : les micro-reliefs (sillons périphériques, incisure) ne sont dessinés qu'au-dessus d'un seuil de densité de détails. */
-const detailOn = (sid: string, d: number): boolean => (sid.startsWith('antihelix:groove') ? d >= 0.55 : sid === 'notch' ? d >= 0.35 : true);
+const detailOn = (sid: string, d: number): boolean => (sid.startsWith('antihelix:groove') ? d >= 0.55 : sid === 'notch' ? d >= 0.35 : sid === 'antihelix:junction' || sid === 'concha:wall' ? d >= 0.25 : true);
 
 /**
  * Croissants de lumière et d'ombre d'un volume, SANS filtre : un polygone décalé de `d` vers / contre la source ; la différence symétrique
@@ -90,8 +122,8 @@ function crescent(id: string, i: number, poly: Poly, lx: number, ly: number, d: 
 }
 
 /** Hélix : bande claire d'enroulement, croissant éclairé et ombre propre ; l'arête extérieure reste le contour du pavillon. */
-function helixLayer(id: string, i: number, poly: Poly, P: EarPaint, lx: number, ly: number, hPx: number, anime: boolean, defs: string[]): string {
-  return el('path', { d: polyPath(poly), fill: mix(P.base, P.lit, 0.25) }) + crescent(id, i, poly, lx, ly, hPx * 0.006, P.shade, anime ? P.highlight : P.lit, anime ? 0.95 : 0.8, false, defs);
+function helixLayer(id: string, i: number, poly: Poly, P: EarPaint, lx: number, ly: number, hPx: number, anime: boolean, defs: string[], co = 1): string {
+  return el('path', { d: polyPath(poly), fill: mix(P.base, P.lit, 0.25) }) + crescent(id, i, poly, lx, ly, hPx * 0.006, P.shade, anime ? P.highlight : P.lit, Math.min(1, (anime ? 0.95 : 0.8) * co), false, defs);
 }
 
 /** Lobule : chair sans cartilage, un seul reflet doux (pas de crête, pas de contour : la corde du polygone n'est PAS une arête). */
@@ -119,16 +151,16 @@ function extLayer(s: PlacedStructure, poly: Poly, P: EarPaint, hPx: number, anim
  * floutée, puis `feDiffuseLighting` en tire la luminance. Le plan plat renvoie `sin(élévation)` ; l'écart à cette valeur donne une ombre (négatif) ou un
  * éclat (positif), teintés des couleurs d'ombre/de lumière de la PEAU (pas de noir pur ni de blanc pur). Le résultat est découpé à la silhouette.
  */
-function reliefLighting(id: string, pe: ProjectedEar, model: EarModel, P: EarPaint, L: LightVector, hPx: number, defs: string[]): string {
+function reliefLighting(id: string, pe: ProjectedEar, model: EarModel, P: EarPaint, L: LightVector, hPx: number, defs: string[], sigMul = 1, kMul = 1): string {
   const b = box(pe.rim);
   const pad = hPx * 0.06;
   const { azimuth, elevation } = lightAngles(L);
   const flat = Math.sin((elevation * Math.PI) / 180);
-  const sig = Math.max(0.6, hPx * 0.006 * (0.5 + 1.2 * (1 - P.rough * 0.4)));
+  const sig = Math.max(0.6, hPx * 0.006 * (0.5 + 1.2 * (1 - P.rough * 0.4))) * sigMul;
   const col = (hex: string): [number, number, number] => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255) as [number, number, number];
   const [sr, sg, sb] = col(P.shade);
   const [hr, hg, hb] = col(P.highlight);
-  const k = 2.4;
+  const k = 2.4 * kMul;
   const M = (r: number, g: number, bl: number, a: string): string => `0 0 0 0 ${num(r)} 0 0 0 0 ${num(g)} 0 0 0 0 ${num(bl)} ${a}`;
   defs.push(el('filter', { id: `${id}-lit`, filterUnits: 'userSpaceOnUse', x: b.x0 - pad, y: b.y0 - pad, width: b.x1 - b.x0 + 2 * pad, height: b.y1 - b.y0 + 2 * pad, 'color-interpolation-filters': 'sRGB' }, [
     el('feGaussianBlur', { in: 'SourceAlpha', stdDeviation: sig, result: 'h' }),

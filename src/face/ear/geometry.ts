@@ -23,7 +23,7 @@ function earModelRaw(e: FaceEars, side: -1 | 1): EarModel {
   const r = { ...r0, flat };
   const seed = (e.seed ^ (side < 0 ? 0xa5a5 : 0x5a5a)) >>> 0;
   const { outline: o0, segments } = buildOutline(flat, e.style.angularity, e.style.asymmetry, seed);
-  const built = buildStructures(o0, flat, r, e.anchors.crusLevel, CTRL);
+  const built = buildStructures(o0, flat, r, e.anchors.crusLevel, CTRL, e.style.fidelity);
   // Normalisation : x ∈ [0, wr] (rapport largeur/hauteur de la famille, ± morph.width), y ∈ [0, 1].
   const b = box(o0);
   const wr = r.widthRatio * (1 + 0.35 * (flat.width ?? 0));

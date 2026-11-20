@@ -15,7 +15,10 @@ export function flattenMorph(m: FaceEars['morph']): FlatMorph {
 }
 
 /** Clés morphologiques (toutes les déviations du schéma, avec leur étendue pour l'asymétrie). */
-export const MORPH_KEYS: readonly string[] = Object.keys(flattenMorph({ pole: { height: 0, round: 0, lean: 0, tip: 0 }, posterior: { convexity: 0 }, width: 0, lobule: { length: 0, width: 0, attach: 0, sag: 0 }, tragus: { size: 0, projection: 0 }, antitragus: { size: 0, orientation: 0 }, notch: { depth: 0 }, helix: { thickness: 0, roll: 0 }, antihelix: { relief: 0, branchAngle: 0, upperLength: 0, lowerLength: 0 }, concha: { depth: 0, cymba: 0 }, scapha: { width: 0, depth: 0 }, crus: { thickness: 0 } } as never));
+/** Axes ajoutés après la première version : tirés d'un flux séparé et sans bruit d'asymétrie tant que `style.asymmetry` ≤ 0,25 (les oreilles existantes restent identiques). */
+export const NEW_MORPH_KEYS: readonly string[] = ['helix.darwin', 'helix.fold', 'lobule.cleft', 'lobule.stretch', 'tragus.tip', 'antihelix.curvature', 'concha.wall', 'crus.angle', 'crus.length', 'fossa.depth', 'fossa.width'];
+const BASE_KEYS: readonly string[] = Object.keys(flattenMorph({ pole: { height: 0, round: 0, lean: 0, tip: 0 }, posterior: { convexity: 0 }, width: 0, lobule: { length: 0, width: 0, attach: 0, sag: 0 }, tragus: { size: 0, projection: 0 }, antitragus: { size: 0, orientation: 0 }, notch: { depth: 0 }, helix: { thickness: 0, roll: 0 }, antihelix: { relief: 0, branchAngle: 0, upperLength: 0, lowerLength: 0 }, concha: { depth: 0, cymba: 0 }, scapha: { width: 0, depth: 0 }, crus: { thickness: 0 } } as never));
+export const MORPH_KEYS: readonly string[] = [...BASE_KEYS, ...NEW_MORPH_KEYS];
 
 /** Poids des familles : `blend` borné, le reste à la famille principale ; ordre fixe. */
 export function familyWeights(e: FaceEars): Partial<Record<FaceEars['family'], number>> {
@@ -50,8 +53,14 @@ export function resolveEar(e: FaceEars, side: -1 | 1): ResolvedEar {
   const free = (Object.keys(weights) as (keyof typeof weights)[]).some((f) => FAMILIES[f as keyof typeof FAMILIES].symmetry === 'free' && (weights[f] ?? 0) >= 0.5);
   const rnd = mulberry32((e.seed ^ (side < 0 ? 0x1e57 : 0x5eed)) >>> 0);
   const spread = e.style.asymmetry * (free ? 0.6 : 0.25);
-  for (const k of MORPH_KEYS) {
+  for (const k of BASE_KEYS) {
     const asym = (rnd() * 2 - 1) * spread;
+    flat[k] = (flat[k] ?? 0) + (user[k] ?? 0) + asym;
+  }
+  // Axes ajoutés : flux séparé ; bruit d'asymétrie seulement pour une asymétrie franche (> 0,25) → par défaut, la géométrie historique est inchangée.
+  const rnd2 = mulberry32((e.seed ^ (side < 0 ? 0x2f1e : 0x7c3b)) >>> 0);
+  for (const k of NEW_MORPH_KEYS) {
+    const asym = (rnd2() * 2 - 1) * spread * (e.style.asymmetry > 0.25 ? 1 : 0);
     flat[k] = (flat[k] ?? 0) + (user[k] ?? 0) + asym;
   }
   // Plages de famille : la plage du mélange est l'enveloppe des plages des familles pondérées ≥ 0,5 ; l'exagération élargit la marge.
@@ -66,6 +75,9 @@ export function resolveEar(e: FaceEars, side: -1 | 1): ResolvedEar {
     }
   }
   for (const k of MORPH_KEYS) flat[k] = clamp(flat[k] ?? 0, -1.5, 1.5);
+  // CONTRAINTE STRICTE de géométrie : sous −1,12 les points de contrôle du bas du lobule passent au-dessus de ceux du bord postérieur et le contour se croise
+  // (révélé par le compositeur : famille à lobule court + exagération + asymétrie). Le lobule « absent » (−1) reste possible ; la présence est gérée à part.
+  if ((flat['lobule.length'] ?? 0) < -1.12) { corr.push({ id: 'lobule-length-floor', param: 'morph.lobule.length', requested: flat['lobule.length'] ?? 0, applied: -1.12, reason: 'au-delà, le contour du lobule se croiserait', tier: 'strict' }); flat['lobule.length'] = -1.12; }
   const present = Object.fromEntries(STRUCTURES.map((s) => [s, presence(s, weights)])) as Record<StructureId, boolean>;
   // La longueur du lobule (−1 = absent) et sa présence sont liées : un lobule « absent » n'est pas dessiné.
   const matW = weights[e.family] ?? 1;

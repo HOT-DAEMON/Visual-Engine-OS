@@ -1,0 +1,452 @@
+{
+ "rows": [
+  {
+   "param": "morph.pole.height",
+   "face": 15313,
+   "three-quarter": 26311,
+   "profile": 23936,
+   "close-up": 28004
+  },
+  {
+   "param": "morph.pole.round",
+   "face": 3454,
+   "three-quarter": 7985,
+   "profile": 6156,
+   "close-up": 6471
+  },
+  {
+   "param": "morph.pole.lean",
+   "face": 3166,
+   "three-quarter": 6891,
+   "profile": 5048,
+   "close-up": 5509
+  },
+  {
+   "param": "morph.pole.tip",
+   "face": 13469,
+   "three-quarter": 21777,
+   "profile": 19171,
+   "close-up": 22369
+  },
+  {
+   "param": "morph.posterior.convexity",
+   "face": 7563,
+   "three-quarter": 14169,
+   "profile": 14076,
+   "close-up": 17547
+  },
+  {
+   "param": "morph.width",
+   "face": 18903,
+   "three-quarter": 30094,
+   "profile": 27528,
+   "close-up": 32110
+  },
+  {
+   "param": "morph.lobule.length",
+   "face": 14760,
+   "three-quarter": 26964,
+   "profile": 25715,
+   "close-up": 29488
+  },
+  {
+   "param": "morph.lobule.width",
+   "face": 10678,
+   "three-quarter": 5773,
+   "profile": 2281,
+   "close-up": 2375
+  },
+  {
+   "param": "morph.lobule.attach",
+   "face": 9483,
+   "three-quarter": 19944,
+   "profile": 1275,
+   "close-up": 1859
+  },
+  {
+   "param": "morph.lobule.sag",
+   "face": 8531,
+   "three-quarter": 3374,
+   "profile": 3250,
+   "close-up": 3657
+  },
+  {
+   "param": "morph.tragus.size",
+   "face": 548,
+   "three-quarter": 1606,
+   "profile": 1314,
+   "close-up": 1684
+  },
+  {
+   "param": "morph.tragus.projection",
+   "face": 5293,
+   "three-quarter": 10639,
+   "profile": 10518,
+   "close-up": 16592
+  },
+  {
+   "param": "morph.antitragus.size",
+   "face": 361,
+   "three-quarter": 839,
+   "profile": 782,
+   "close-up": 1293
+  },
+  {
+   "param": "morph.antitragus.orientation",
+   "face": 321,
+   "three-quarter": 643,
+   "profile": 532,
+   "close-up": 1070
+  },
+  {
+   "param": "morph.notch.depth",
+   "face": 2740,
+   "three-quarter": 4467,
+   "profile": 4457,
+   "close-up": 5359
+  },
+  {
+   "param": "morph.helix.thickness",
+   "face": 2917,
+   "three-quarter": 6785,
+   "profile": 5278,
+   "close-up": 6918
+  },
+  {
+   "param": "morph.helix.roll",
+   "face": 14606,
+   "three-quarter": 11236,
+   "profile": 11300,
+   "close-up": 7298
+  },
+  {
+   "param": "morph.antihelix.relief",
+   "face": 2460,
+   "three-quarter": 3070,
+   "profile": 3012,
+   "close-up": 4267
+  },
+  {
+   "param": "morph.antihelix.branchAngle",
+   "face": 983,
+   "three-quarter": 2275,
+   "profile": 2050,
+   "close-up": 3156
+  },
+  {
+   "param": "morph.antihelix.upperLength",
+   "face": 1075,
+   "three-quarter": 2200,
+   "profile": 1935,
+   "close-up": 2514
+  },
+  {
+   "param": "morph.antihelix.lowerLength",
+   "face": 512,
+   "three-quarter": 637,
+   "profile": 600,
+   "close-up": 907
+  },
+  {
+   "param": "morph.concha.depth",
+   "face": 679,
+   "three-quarter": 4967,
+   "profile": 4867,
+   "close-up": 4902
+  },
+  {
+   "param": "morph.concha.cymba",
+   "face": 144,
+   "three-quarter": 1339,
+   "profile": 1324,
+   "close-up": 1498
+  },
+  {
+   "param": "morph.scapha.width",
+   "face": 628,
+   "three-quarter": 2351,
+   "profile": 2122,
+   "close-up": 3262
+  },
+  {
+   "param": "morph.scapha.depth",
+   "face": 1587,
+   "three-quarter": 3477,
+   "profile": 2066,
+   "close-up": 2206
+  },
+  {
+   "param": "morph.crus.thickness",
+   "face": 267,
+   "three-quarter": 723,
+   "profile": 632,
+   "close-up": 541
+  },
+  {
+   "param": "attach.openingDeg",
+   "face": 24251,
+   "three-quarter": 19087,
+   "profile": 21679,
+   "close-up": 19707
+  },
+  {
+   "param": "attach.pitchDeg",
+   "face": 0,
+   "three-quarter": 28176,
+   "profile": 29009,
+   "close-up": 31975
+  },
+  {
+   "param": "attach.rotationDeg",
+   "face": 18931,
+   "three-quarter": 31707,
+   "profile": 28538,
+   "close-up": 33075
+  },
+  {
+   "param": "attach.scale",
+   "face": 4861,
+   "three-quarter": 4098,
+   "profile": 3,
+   "close-up": 2038
+  },
+  {
+   "param": "attach.insertion",
+   "face": 0,
+   "three-quarter": 0,
+   "profile": 0,
+   "close-up": 0
+  },
+  {
+   "param": "anchors.eye",
+   "face": 8299,
+   "three-quarter": 6746,
+   "profile": 0,
+   "close-up": 2970
+  },
+  {
+   "param": "anchors.mouth",
+   "face": 4856,
+   "three-quarter": 2459,
+   "profile": 0,
+   "close-up": 583
+  },
+  {
+   "param": "anchors.crusLevel",
+   "face": 8971,
+   "three-quarter": 10193,
+   "profile": 3178,
+   "close-up": 6759
+  },
+  {
+   "param": "style.exaggeration",
+   "face": 12543,
+   "three-quarter": 20559,
+   "profile": 18717,
+   "close-up": 21584
+  },
+  {
+   "param": "style.fidelity",
+   "face": 1038,
+   "three-quarter": 820,
+   "profile": 922,
+   "close-up": 705
+  },
+  {
+   "param": "style.angularity",
+   "face": 3984,
+   "three-quarter": 7016,
+   "profile": 7861,
+   "close-up": 6815
+  },
+  {
+   "param": "style.softness",
+   "face": 3242,
+   "three-quarter": 4662,
+   "profile": 3975,
+   "close-up": 9249
+  },
+  {
+   "param": "style.asymmetry",
+   "face": 10719,
+   "three-quarter": 17161,
+   "profile": 15442,
+   "close-up": 18176
+  },
+  {
+   "param": "style.detail",
+   "face": 1923,
+   "three-quarter": 3366,
+   "profile": 3039,
+   "close-up": 9002
+  },
+  {
+   "param": "style.look(realistic→anime)",
+   "face": 8902,
+   "three-quarter": 11438,
+   "profile": 10752,
+   "close-up": 14869
+  },
+  {
+   "param": "material.translucency",
+   "face": 11394,
+   "three-quarter": 16877,
+   "profile": 15038,
+   "close-up": 16118
+  },
+  {
+   "param": "material.roughness",
+   "face": 115,
+   "three-quarter": 529,
+   "profile": 357,
+   "close-up": 4284
+  },
+  {
+   "param": "material.glow",
+   "face": 23788,
+   "three-quarter": 29844,
+   "profile": 28783,
+   "close-up": 31001
+  },
+  {
+   "param": "material.kind(skin→scaly)",
+   "face": 23621,
+   "three-quarter": 44896,
+   "profile": 44208,
+   "close-up": 46095
+  },
+  {
+   "param": "material.kind(skin→ceramic)",
+   "face": 24033,
+   "three-quarter": 45360,
+   "profile": 44656,
+   "close-up": 46844
+  },
+  {
+   "param": "family(human→feline)",
+   "face": 27044,
+   "three-quarter": 54105,
+   "profile": 54474,
+   "close-up": 56497
+  },
+  {
+   "param": "family(human→elven)",
+   "face": 18829,
+   "three-quarter": 31540,
+   "profile": 28584,
+   "close-up": 33956
+  },
+  {
+   "param": "family(human→draconic)",
+   "face": 28899,
+   "three-quarter": 56326,
+   "profile": 55217,
+   "close-up": 58289
+  },
+  {
+   "param": "morph.helix.darwin",
+   "face": 10279,
+   "three-quarter": 17902,
+   "profile": 12411,
+   "close-up": 17918
+  },
+  {
+   "param": "morph.helix.fold",
+   "face": 2256,
+   "three-quarter": 5041,
+   "profile": 4936,
+   "close-up": 5399
+  },
+  {
+   "param": "morph.lobule.cleft",
+   "face": 8839,
+   "three-quarter": 10592,
+   "profile": 8877,
+   "close-up": 10300
+  },
+  {
+   "param": "morph.lobule.stretch",
+   "face": 13126,
+   "three-quarter": 23656,
+   "profile": 22688,
+   "close-up": 26134
+  },
+  {
+   "param": "morph.concha.wall",
+   "face": 711,
+   "three-quarter": 1792,
+   "profile": 1991,
+   "close-up": 2792
+  },
+  {
+   "param": "morph.fossa.depth",
+   "face": 464,
+   "three-quarter": 413,
+   "profile": 592,
+   "close-up": 329
+  },
+  {
+   "param": "morph.fossa.width",
+   "face": 710,
+   "three-quarter": 811,
+   "profile": 803,
+   "close-up": 1041
+  },
+  {
+   "param": "morph.crus.angle",
+   "face": 249,
+   "three-quarter": 1002,
+   "profile": 887,
+   "close-up": 992
+  },
+  {
+   "param": "morph.crus.length",
+   "face": 160,
+   "three-quarter": 447,
+   "profile": 454,
+   "close-up": 318
+  },
+  {
+   "param": "morph.tragus.tip",
+   "face": 438,
+   "three-quarter": 1125,
+   "profile": 886,
+   "close-up": 1195
+  },
+  {
+   "param": "morph.antihelix.curvature",
+   "face": 2334,
+   "three-quarter": 4157,
+   "profile": 4516,
+   "close-up": 6528
+  },
+  {
+   "param": "surface.pigmentation",
+   "face": 8742,
+   "three-quarter": 16895,
+   "profile": 18789,
+   "close-up": 18036
+  },
+  {
+   "param": "surface.folds",
+   "face": 375,
+   "three-quarter": 746,
+   "profile": 753,
+   "close-up": 793
+  },
+  {
+   "param": "surface.pores",
+   "face": 1737,
+   "three-quarter": 1783,
+   "profile": 1788,
+   "close-up": 1753
+  },
+  {
+   "param": "surface.vessels",
+   "face": 838,
+   "three-quarter": 1140,
+   "profile": 1234,
+   "close-up": 1170
+  }
+ ]
+}

@@ -1,0 +1,127 @@
+{
+ "seeds": [
+  11,
+  77,
+  1203
+ ],
+ "views": [
+  "face",
+  "three-quarter",
+  "profile",
+  "close-up"
+ ],
+ "rows": [
+  {
+   "param": "anchors.mouth",
+   "face": 4856,
+   "three-quarter": 2459,
+   "profile": 0,
+   "close-up": 583
+  },
+  {
+   "param": "anchors.crusLevel",
+   "face": 8971,
+   "three-quarter": 10193,
+   "profile": 3178,
+   "close-up": 6759
+  },
+  {
+   "param": "style.exaggeration",
+   "face": 12543,
+   "three-quarter": 20559,
+   "profile": 18717,
+   "close-up": 21584
+  },
+  {
+   "param": "style.fidelity",
+   "face": 1038,
+   "three-quarter": 820,
+   "profile": 922,
+   "close-up": 705
+  },
+  {
+   "param": "style.angularity",
+   "face": 3984,
+   "three-quarter": 7016,
+   "profile": 7861,
+   "close-up": 6815
+  },
+  {
+   "param": "style.softness",
+   "face": 3242,
+   "three-quarter": 4662,
+   "profile": 3975,
+   "close-up": 9249
+  },
+  {
+   "param": "style.asymmetry",
+   "face": 10719,
+   "three-quarter": 17161,
+   "profile": 15442,
+   "close-up": 18176
+  },
+  {
+   "param": "style.detail",
+   "face": 1923,
+   "three-quarter": 3366,
+   "profile": 3039,
+   "close-up": 9002
+  },
+  {
+   "param": "style.look(realistic→anime)",
+   "face": 8902,
+   "three-quarter": 11438,
+   "profile": 10752,
+   "close-up": 14869
+  },
+  {
+   "param": "material.translucency",
+   "face": 11394,
+   "three-quarter": 16877,
+   "profile": 15038,
+   "close-up": 16118
+  },
+  {
+   "param": "material.roughness",
+   "face": 115,
+   "three-quarter": 529,
+   "profile": 357,
+   "close-up": 4284
+  },
+  {
+   "param": "material.glow",
+   "face": 23788,
+   "three-quarter": 29844,
+   "profile": 28783,
+   "close-up": 31001
+  },
+  {
+   "param": "material.kind(skin→scaly)",
+   "face": 23621,
+   "three-quarter": 44896,
+   "profile": 44208,
+   "close-up": 46095
+  },
+  {
+   "param": "material.kind(skin→ceramic)",
+   "face": 24033,
+   "three-quarter": 45360,
+   "profile": 44656,
+   "close-up": 46844
+  },
+  {
+   "param": "family(human→feline)",
+   "face": 27044,
+   "three-quarter": 54105,
+   "profile": 54474,
+   "close-up": 56497
+  },
+  {
+   "param": "family(human→elven)",
+   "face": 18829,
+   "three-quarter": 31540,
+   "profile": 28584,
+   "close-up": 33956
+  }
+ ]
+}

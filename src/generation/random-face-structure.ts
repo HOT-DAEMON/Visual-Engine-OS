@@ -3,6 +3,7 @@ import type { FaceParamsInput } from '../schema';
 import { deepMerge } from './random-face-anatomy';
 import { maybe, range } from './random-eye-helpers';
 import { STYLIZATION_PROFILES, type StylizationProfileName } from '../face/stylize/profiles';
+import { composeEar, type EarCharacter } from '../face/ear/compose';
 
 /**
  * Tirage des axes du MOTEUR DE STRUCTURE (T1–T13) d'un visage aléatoire. Flux de tirage DÉRIVÉ de la seed (`seed ^ STRUCTURE_SALT`) :
@@ -18,7 +19,7 @@ export interface StructureOverride {
    * Tirage OPTIONNEL des familles B/C/stylisation (flux dérivé distinct : activer l'une ne déplace aucun autre tirage, et sans cette option
    * les visages structurés sont identiques seed pour seed). `deform` : articulation légère + une expression ; `stylization` : un profil nommé.
    */
-  readonly draw?: { readonly deform?: boolean; readonly stylization?: boolean; readonly ears?: boolean };
+  readonly draw?: { readonly deform?: boolean; readonly stylization?: boolean; readonly ears?: boolean | EarCharacter };
 }
 
 const DRAW_SALT = 0x9e3779b1;
@@ -85,6 +86,8 @@ export function drawStructure(seed: number, over: StructureOverride = {}): FaceP
     nose: { sidewall: { slope: r(0.3, 0.7), concavity: r(0.15, 0.55) }, domes: { prominence: r(0.3, 0.7), separation: r(0.15, 0.5) }, groove: { depth: r(0.3, 0.7), length: r(0.4, 0.8) }, base: { width: r(-0.3, 0.4), depth: r(0.3, 0.7) }, columella: { hang: r(-0.3, 0.4) }, philtrum: { depth: r(0.25, 0.6), width: r(0.35, 0.65), blend: r(0.3, 0.7) } },
   };
   const withDraw = deepMerge(deepMerge(drawn, over.draw?.deform ? drawDeform(seed) : undefined), over.draw?.stylization ? drawStylization(seed) : undefined);
-  const withEars = over.draw?.ears ? deepMerge(withDraw, drawEars(seed)) : withDraw;
+  const ec = over.draw?.ears;
+  // `true` : tirage historique (famille + déviations modérées) ; un caractère (« natural », « caricature », « fantasy ») : oreille complète du compositeur (docs/EAR-COMPOSER.md).
+  const withEars = ec ? deepMerge(withDraw, typeof ec === 'string' ? ({ ears: composeEar((seed ^ EAR_SALT) >>> 0, { character: ec }) } as FaceParamsInput) : drawEars(seed)) : withDraw;
   return deepMerge(withEars, over.patch);
 }

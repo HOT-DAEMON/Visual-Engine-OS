@@ -33,7 +33,8 @@ export function earPlacement(p: FaceParams, lm: FaceLandmarks, m: EarModel): { p
   const yCrus = (m.landmarks.crus as Vec).y;
   const mouthW = e.anchors.mouth * (m.resolved.present.lobule ? 1 : 0);
   const lineY = e.anchors.lobuleLine === 'mouth' ? lm.mouthY : lm.noseBaseY;
-  const hAligned = (lineY - lm.eyeY) / (1 - yCrus);
+  // `attach.scale` : échelle relative. Elle agrandit l'oreille À PARTIR de la racine de l'hélix (qui reste sur la ligne des yeux) : le lobule s'éloigne de la base du nez (oreilles grandes) ou la remonte (petites).
+  const hAligned = ((lineY - lm.eyeY) / (1 - yCrus)) * e.attach.scale;
   const hFree = 0.3 * lm.H * e.attach.scale;
   const hPx = R.limit('ear-height-range', 'ears.height', lerp(hFree, hAligned, mouthW), 0.2 * lm.H, 0.5 * lm.H, 'la hauteur de l’oreille reste entre 0,20 H et 0,50 H');
   const topAligned = lm.eyeY - yCrus * hPx;

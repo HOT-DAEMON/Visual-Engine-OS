@@ -1,0 +1,127 @@
+{
+ "seeds": [
+  11,
+  77,
+  1203
+ ],
+ "views": [
+  "face",
+  "three-quarter",
+  "profile",
+  "close-up"
+ ],
+ "rows": [
+  {
+   "param": "morph.pole.height",
+   "face": 15313,
+   "three-quarter": 26311,
+   "profile": 23936,
+   "close-up": 28004
+  },
+  {
+   "param": "morph.pole.round",
+   "face": 3454,
+   "three-quarter": 7985,
+   "profile": 6156,
+   "close-up": 6471
+  },
+  {
+   "param": "morph.pole.lean",
+   "face": 3166,
+   "three-quarter": 6891,
+   "profile": 5048,
+   "close-up": 5509
+  },
+  {
+   "param": "morph.pole.tip",
+   "face": 13469,
+   "three-quarter": 21777,
+   "profile": 19171,
+   "close-up": 22369
+  },
+  {
+   "param": "morph.posterior.convexity",
+   "face": 7563,
+   "three-quarter": 14169,
+   "profile": 14076,
+   "close-up": 17547
+  },
+  {
+   "param": "morph.width",
+   "face": 18903,
+   "three-quarter": 30094,
+   "profile": 27528,
+   "close-up": 32110
+  },
+  {
+   "param": "morph.lobule.length",
+   "face": 14760,
+   "three-quarter": 26964,
+   "profile": 25715,
+   "close-up": 29488
+  },
+  {
+   "param": "morph.lobule.width",
+   "face": 10678,
+   "three-quarter": 5773,
+   "profile": 2281,
+   "close-up": 2375
+  },
+  {
+   "param": "morph.lobule.attach",
+   "face": 9483,
+   "three-quarter": 19944,
+   "profile": 1275,
+   "close-up": 1859
+  },
+  {
+   "param": "morph.lobule.sag",
+   "face": 8531,
+   "three-quarter": 3374,
+   "profile": 3250,
+   "close-up": 3657
+  },
+  {
+   "param": "morph.tragus.size",
+   "face": 548,
+   "three-quarter": 1606,
+   "profile": 1314,
+   "close-up": 1684
+  },
+  {
+   "param": "morph.tragus.projection",
+   "face": 5293,
+   "three-quarter": 10639,
+   "profile": 10518,
+   "close-up": 16592
+  },
+  {
+   "param": "morph.antitragus.size",
+   "face": 361,
+   "three-quarter": 839,
+   "profile": 782,
+   "close-up": 1293
+  },
+  {
+   "param": "morph.antitragus.orientation",
+   "face": 321,
+   "three-quarter": 643,
+   "profile": 532,
+   "close-up": 1070
+  },
+  {
+   "param": "morph.notch.depth",
+   "face": 2740,
+   "three-quarter": 4467,
+   "profile": 4457,
+   "close-up": 5359
+  },
+  {
+   "param": "morph.helix.thickness",
+   "face": 2917,
+   "three-quarter": 6785,
+   "profile": 5278,
+   "close-up": 6918
+  }
+ ]
+}

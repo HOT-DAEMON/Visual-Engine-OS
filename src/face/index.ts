@@ -15,3 +15,4 @@ export { earGeometry, earEngine, type EarGeo } from './ears-geometry';
 export { headPoly, chinPoly, jawline } from './jaw/regions';
 export { facePerimeters, eyeBands, browGapPerEye, type FacePerimeters, type Perimeter, type PerimeterId, type EyeBands } from './perimeters';
 export { PERIMETER_LIMITS, PERIMETER_RATIOS, BROW_GAP } from './perimeters-limits';
+export { composeEar, type EarCharacter, type ComposeOptions, type FaceEarsInput } from './ear/compose';

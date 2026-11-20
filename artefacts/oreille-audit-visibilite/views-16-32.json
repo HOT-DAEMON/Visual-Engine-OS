@@ -1,0 +1,127 @@
+{
+ "seeds": [
+  11,
+  77,
+  1203
+ ],
+ "views": [
+  "face",
+  "three-quarter",
+  "profile",
+  "close-up"
+ ],
+ "rows": [
+  {
+   "param": "morph.helix.roll",
+   "face": 14606,
+   "three-quarter": 11236,
+   "profile": 11300,
+   "close-up": 7298
+  },
+  {
+   "param": "morph.antihelix.relief",
+   "face": 2460,
+   "three-quarter": 3070,
+   "profile": 3012,
+   "close-up": 4267
+  },
+  {
+   "param": "morph.antihelix.branchAngle",
+   "face": 983,
+   "three-quarter": 2275,
+   "profile": 2050,
+   "close-up": 3156
+  },
+  {
+   "param": "morph.antihelix.upperLength",
+   "face": 1075,
+   "three-quarter": 2200,
+   "profile": 1935,
+   "close-up": 2514
+  },
+  {
+   "param": "morph.antihelix.lowerLength",
+   "face": 512,
+   "three-quarter": 637,
+   "profile": 600,
+   "close-up": 907
+  },
+  {
+   "param": "morph.concha.depth",
+   "face": 679,
+   "three-quarter": 4967,
+   "profile": 4867,
+   "close-up": 4902
+  },
+  {
+   "param": "morph.concha.cymba",
+   "face": 144,
+   "three-quarter": 1339,
+   "profile": 1324,
+   "close-up": 1498
+  },
+  {
+   "param": "morph.scapha.width",
+   "face": 628,
+   "three-quarter": 2351,
+   "profile": 2122,
+   "close-up": 3262
+  },
+  {
+   "param": "morph.scapha.depth",
+   "face": 1587,
+   "three-quarter": 3477,
+   "profile": 2066,
+   "close-up": 2206
+  },
+  {
+   "param": "morph.crus.thickness",
+   "face": 267,
+   "three-quarter": 723,
+   "profile": 632,
+   "close-up": 541
+  },
+  {
+   "param": "attach.openingDeg",
+   "face": 24251,
+   "three-quarter": 19087,
+   "profile": 21679,
+   "close-up": 19707
+  },
+  {
+   "param": "attach.pitchDeg",
+   "face": 0,
+   "three-quarter": 28176,
+   "profile": 29009,
+   "close-up": 31975
+  },
+  {
+   "param": "attach.rotationDeg",
+   "face": 18931,
+   "three-quarter": 31707,
+   "profile": 28538,
+   "close-up": 33075
+  },
+  {
+   "param": "attach.scale",
+   "face": 4861,
+   "three-quarter": 4098,
+   "profile": 3,
+   "close-up": 2038
+  },
+  {
+   "param": "attach.insertion",
+   "face": 0,
+   "three-quarter": 0,
+   "profile": 0,
+   "close-up": 0
+  },
+  {
+   "param": "anchors.eye",
+   "face": 8299,
+   "three-quarter": 6746,
+   "profile": 0,
+   "close-up": 2970
+  }
+ ]
+}

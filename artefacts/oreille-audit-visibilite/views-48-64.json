@@ -1,0 +1,127 @@
+{
+ "seeds": [
+  11,
+  77,
+  1203
+ ],
+ "views": [
+  "face",
+  "three-quarter",
+  "profile",
+  "close-up"
+ ],
+ "rows": [
+  {
+   "param": "family(human→draconic)",
+   "face": 28899,
+   "three-quarter": 56326,
+   "profile": 55217,
+   "close-up": 58289
+  },
+  {
+   "param": "morph.helix.darwin",
+   "face": 10279,
+   "three-quarter": 17902,
+   "profile": 12411,
+   "close-up": 17918
+  },
+  {
+   "param": "morph.helix.fold",
+   "face": 2256,
+   "three-quarter": 5041,
+   "profile": 4936,
+   "close-up": 5399
+  },
+  {
+   "param": "morph.lobule.cleft",
+   "face": 8839,
+   "three-quarter": 10592,
+   "profile": 8877,
+   "close-up": 10300
+  },
+  {
+   "param": "morph.lobule.stretch",
+   "face": 13126,
+   "three-quarter": 23656,
+   "profile": 22688,
+   "close-up": 26134
+  },
+  {
+   "param": "morph.concha.wall",
+   "face": 711,
+   "three-quarter": 1792,
+   "profile": 1991,
+   "close-up": 2792
+  },
+  {
+   "param": "morph.fossa.depth",
+   "face": 464,
+   "three-quarter": 413,
+   "profile": 592,
+   "close-up": 329
+  },
+  {
+   "param": "morph.fossa.width",
+   "face": 710,
+   "three-quarter": 811,
+   "profile": 803,
+   "close-up": 1041
+  },
+  {
+   "param": "morph.crus.angle",
+   "face": 249,
+   "three-quarter": 1002,
+   "profile": 887,
+   "close-up": 992
+  },
+  {
+   "param": "morph.crus.length",
+   "face": 160,
+   "three-quarter": 447,
+   "profile": 454,
+   "close-up": 318
+  },
+  {
+   "param": "morph.tragus.tip",
+   "face": 438,
+   "three-quarter": 1125,
+   "profile": 886,
+   "close-up": 1195
+  },
+  {
+   "param": "morph.antihelix.curvature",
+   "face": 2334,
+   "three-quarter": 4157,
+   "profile": 4516,
+   "close-up": 6528
+  },
+  {
+   "param": "surface.pigmentation",
+   "face": 8742,
+   "three-quarter": 16895,
+   "profile": 18789,
+   "close-up": 18036
+  },
+  {
+   "param": "surface.folds",
+   "face": 375,
+   "three-quarter": 746,
+   "profile": 753,
+   "close-up": 793
+  },
+  {
+   "param": "surface.pores",
+   "face": 1737,
+   "three-quarter": 1783,
+   "profile": 1788,
+   "close-up": 1753
+  },
+  {
+   "param": "surface.vessels",
+   "face": 838,
+   "three-quarter": 1140,
+   "profile": 1234,
+   "close-up": 1170
+  }
+ ]
+}
