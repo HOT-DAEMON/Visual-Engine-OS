@@ -1,4 +1,5 @@
 import { project, type View } from './head';
+import { twistWidth, widthAt } from './width-program';
 import type { LockSpec, Sample } from './lock';
 import { clamp, smooth, type V2 } from './vec';
 
@@ -16,6 +17,10 @@ export interface Blade {
   /** Profondeur projetée (>0 vers la caméra) et facing (n·vue) des échantillons d'origine, ré-échantillonnés. */
   readonly facing: number[];
   readonly t: number[];
+  /** Profondeur projetée (grand = proche de la caméra) le long de l'axe : base de l'occlusion locale (`occlusion.ts`). */
+  readonly depth: number[];
+  /** Torsion du ruban (rad) le long de l'axe ; 0 sans programme de courbes. */
+  readonly twist: number[];
 }
 
 /** Interpolation Catmull-Rom (centripète simplifiée, uniforme) d'une polyligne à `n` points. */
@@ -46,20 +51,25 @@ export function makeBlade(L: LockSpec, samples: Sample[], view: View, ray: { x: 
   const proj = samples.map((s) => project(view, s.p));
   const facing = samples.map((s) => s.n.x * ray.x + s.n.y * ray.y + s.n.z * ray.z);
   const rs = resample(proj, N);
+  const lerpAt = (arr: readonly number[], k: number): number => { const j = k * (arr.length - 1); const i0 = Math.min(arr.length - 2, Math.floor(j)); return (arr[i0] as number) * (1 - (j - i0)) + (arr[i0 + 1] as number) * (j - i0); };
+  const twistArr = samples.map((s) => s.twist ?? 0);
+  const depthArr = proj.map((p) => p.d);
+  const twistAt = (t: number): number => lerpAt(twistArr, t);
   const spine = rs.map((r) => r.p);
   const half: number[] = []; const left: V2[] = []; const right: V2[] = [];
   for (let i = 0; i < N; i++) {
     const a = spine[Math.max(0, i - 1)] as V2; const b = spine[Math.min(N - 1, i + 1)] as V2;
     let dx = b.x - a.x; let dy = b.y - a.y; const l = Math.hypot(dx, dy) || 1; dx /= l; dy /= l;
     const t = (rs[i] as { k: number }).k;
-    const w = 0.5 * L.width * view.s * widthProfile(t, L.peak, L.taper);
+    const phi = twistAt(t);
+    const w = 0.5 * L.width * view.s * widthAt(L.widthProg, t, (u) => widthProfile(u, L.peak, L.taper)) * (L.program ? twistWidth(phi) : 1);
     half.push(w);
     const p = spine[i] as V2;
     left.push({ x: p.x - dy * w, y: p.y + dx * w });
     right.push({ x: p.x + dy * w, y: p.y - dx * w });
   }
   const f = rs.map((r) => { const j = r.k * (facing.length - 1); const i0 = Math.min(facing.length - 2, Math.floor(j)); return (facing[i0] as number) * (1 - (j - i0)) + (facing[i0 + 1] as number) * (j - i0); });
-  return { spine, half, left, right, facing: f, t: rs.map((r) => r.k) };
+  return { spine, half, left, right, facing: f, t: rs.map((r) => r.k), depth: rs.map((r) => lerpAt(depthArr, r.k)), twist: rs.map((r) => twistAt(r.k)) };
 }
 
 /** Chemin SVG lissé (Catmull-Rom → Bézier cubique) d'une polyligne, fermé ou non. */

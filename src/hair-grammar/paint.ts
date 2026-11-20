@@ -21,7 +21,7 @@ const f = (v: number): string => (Math.round(v * 100) / 100).toString();
 const pt = (p: V2): string => `${f(p.x)} ${f(p.y)}`;
 
 /** Remplissage d'après le ton relatif (−1 sombre … +1 clair). */
-function fillOf(tone: number, st: PaintStyle): string {
+export function fillOf(tone: number, st: PaintStyle): string {
   if (tone <= -0.6) return st.dark;
   if (tone < 0) return st.mid;
   return st.light;

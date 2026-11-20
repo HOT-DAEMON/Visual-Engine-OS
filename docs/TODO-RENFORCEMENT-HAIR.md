@@ -1,3 +1,5 @@
+> Audit ligne par ligne de ce TODO, avec l'état de chaque item et le reste à faire : voir `TODO-RENFORCEMENT-HAIR-STATUS.md`.
+
 # Résoudre Le problème majeur : 
 les deux moteurs capillaires sont-ils raccordés..: les deux systèmes coexistent, mais leur intégration dans une chaîne de génération unique n'est pas établie.Il faudrait un contrat d'interopérabilité explicite entre les deux systèmes.
 

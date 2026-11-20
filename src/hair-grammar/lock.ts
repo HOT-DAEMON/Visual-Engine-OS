@@ -1,6 +1,8 @@
+import { evalProgram, type CurveSegment } from './curve-program';
 import type { HeadSpec } from './head';
 import { onShell, shellNormal, shellPoint, shellTangents, toShell } from './shell';
 import { add, clamp, cross, dot, lerp, mul, norm, rad, smooth, sub, v3, type V3 } from './vec';
+import type { WidthOp } from './width-program';
 
 /**
  * MÈCHE (primitive unique de la grammaire). Une mèche est décrite dans le repère de la TÊTE, jamais en pixels :
@@ -39,9 +41,20 @@ export interface LockSpec {
   readonly layer: 'auto' | 'back' | 'front' | 'over';
   /** Famille (statistiques, vérification). */
   readonly family: string;
+  /** GRAMMAIRE DE COURBES (optionnelle) : si présent, remplace `bend`/`wave`/`flick` par un programme de segments (`curve-program.ts`). */
+  readonly program?: readonly CurveSegment[];
+  /** GRAMMAIRE DE LARGEUR (optionnelle) : renflements, étranglements, sections aplaties, changements de volume (`width-program.ts`). */
+  readonly widthProg?: readonly WidthOp[];
+  /** Mèche ÉMERGENTE : issue du volume de la mèche `id` à la position `t` de celle-ci (`emerge.ts`). */
+  readonly parent?: { readonly id: string; readonly t: number };
+  /** Groupe de TRESSAGE : les mèches d'un même groupe se croisent en alternance, résolue par la profondeur locale (`occlusion.ts`). Absent = ordre de la coiffure. */
+  readonly weave?: string;
+  /** Racine EXACTE en coordonnées de coque (y, azimut en radian) : prioritaire sur `root` (une mèche émergente part du point exact de sa mère). */
+  readonly shellRoot?: { readonly y: number; readonly az: number };
 }
 
-export interface Sample { readonly p: V3; readonly t: number; readonly n: V3 }
+/** Échantillon 3D d'une mèche : position, paramètre t, normale de coque ; `twist` = torsion du ruban autour de l'axe (rad), seulement avec un programme. */
+export interface Sample { readonly p: V3; readonly t: number; readonly n: V3; readonly twist?: number; /** Point de coque (y, azimut en radian) sous l'échantillon : permet de poser une mèche fille exactement dessus (`emerge.ts`). */ readonly shell: { readonly y: number; readonly az: number } }
 
 /** Rotation de `d` autour de l'axe `n` d'un angle `a` (Rodrigues). */
 function rotAbout(d: V3, n: V3, a: number): V3 {
@@ -54,7 +67,7 @@ export function walk(h: HeadSpec, L: LockSpec, steps = 28): Sample[] {
   const el = rad(L.root.el); const az = rad(L.root.az);
   // Racine : point de l'ellipsoïde (élévation, azimut) ramené à la coque.
   const root3 = v3(h.rx * Math.cos(el) * Math.sin(az), -h.ry * Math.sin(el), h.cz + h.rz * Math.cos(el) * Math.cos(az));
-  let { y, az: a } = toShell(h, root3);
+  let { y, az: a } = L.shellRoot ?? toShell(h, root3);
   const out: Sample[] = [];
   const ds = L.length / steps;
   // Cap de référence : `aim` projeté sur le plan tangent de la racine, puis transporté le long de la coque (plan tangent courant).
@@ -64,12 +77,14 @@ export function walk(h: HeadSpec, L: LockSpec, steps = 28): Sample[] {
     const n = shellNormal(h, y, a);
     const base = shellPoint(h, y, a);
     const off = lerp(L.lift0, L.lift1, t ** L.liftPow);
-    out.push({ p: add(base, mul(n, off)), t, n });
+    const st = L.program ? evalProgram(L.program, t) : null;
+    out.push(st ? { p: add(base, mul(n, off)), t, n, twist: st.twist, shell: { y, az: a } } : { p: add(base, mul(n, off)), t, n, shell: { y, az: a } });
     if (k === steps) break;
     const tg = shellTangents(h, y, a);
     ref = norm(sub(ref ?? L.aim, mul(n, dot(ref ?? L.aim, n))));
+    // Cap : programme de segments s'il existe (grammaire de courbes), sinon courbure + ondulation + retroussé (historique, inchangé).
     const flick = L.flick.amt * smooth((t - (1 - L.flick.len)) / Math.max(1e-6, L.flick.len));
-    const theta = L.bend * t + L.wave.amp * Math.sin(2 * Math.PI * (L.wave.freq * t + L.wave.phase)) + flick;
+    const theta = L.program ? evalProgram(L.program, t).theta : L.bend * t + L.wave.amp * Math.sin(2 * Math.PI * (L.wave.freq * t + L.wave.phase)) + flick;
     let d = rotAbout(ref, n, theta);
     // Gravité : mélange vers le bas du plan tangent, croissant (quadratique) vers la pointe.
     const g = L.gravity * t * t;

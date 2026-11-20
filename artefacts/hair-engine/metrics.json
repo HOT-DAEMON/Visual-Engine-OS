@@ -1,0 +1,301 @@
+{
+ "emergence": [
+  {
+   "gap": 0.004,
+   "angleDeg": 1.61,
+   "widthRatio": 0.021
+  },
+  {
+   "gap": 0.004,
+   "angleDeg": 0.87,
+   "widthRatio": 0.025
+  },
+  {
+   "gap": 0.004,
+   "angleDeg": 7.54,
+   "widthRatio": 0.049
+  }
+ ],
+ "occlusion": {
+  "tresse": {
+   "locks": 2,
+   "cut": 16,
+   "crossings": 1,
+   "emerges": 0,
+   "shadows": 4
+  },
+  "émergence": {
+   "locks": 4,
+   "cut": 0,
+   "crossings": 0,
+   "emerges": 3,
+   "shadows": 7
+  },
+  "générée": {
+   "locks": 50,
+   "cut": 0,
+   "crossings": 28,
+   "emerges": 0,
+   "shadows": 0
+  }
+ },
+ "composition": [
+  {
+   "cible": 0.35,
+   "mesure": 0.6005517968489277
+  },
+  {
+   "cible": 1.57,
+   "mesure": 1.541235932513926
+  },
+  {
+   "cible": 2.8,
+   "mesure": 2.629608991675294
+  },
+  {
+   "cible": -0.25,
+   "mesure": -0.21209693743306918
+  },
+  {
+   "cible": 0,
+   "mesure": 0.03699507577281609
+  },
+  {
+   "cible": 0.25,
+   "mesure": 0.22867700520201845
+  }
+ ],
+ "analyse": {
+  "masses": [
+   {
+    "f": "mass",
+    "part": 0.368,
+    "role": "dominant"
+   },
+   {
+    "f": "sweep",
+    "part": 0.237,
+    "role": "secondary"
+   },
+   {
+    "f": "farSide",
+    "part": 0.157,
+    "role": "secondary"
+   },
+   {
+    "f": "fringe",
+    "part": 0.12,
+    "role": "secondary"
+   },
+   {
+    "f": "nearSide",
+    "part": 0.118,
+    "role": "accent"
+   }
+  ],
+  "lecture": 1.541,
+  "cohérence": 0.777,
+  "équilibre": 0.037,
+  "négatif": 0.121,
+  "focaux": [
+   "whorl",
+   "tips",
+   "accent"
+  ],
+  "carry": 0.219
+ },
+ "vérification": {
+  "avant": {
+   "score": 5,
+   "défauts": [
+    "geometry:geom.self:farSide-2",
+    "geometry:geom.self:farSide-3",
+    "geometry:geom.self:farSide-4",
+    "geometry:geom.self:farSide-6",
+    "geometry:geom.self:nearSide-0"
+   ],
+   "ok": [
+    "geometry=false",
+    "anatomy=true",
+    "style=true"
+   ]
+  },
+  "après": {
+   "score": 0,
+   "défauts": []
+  },
+  "journal": [
+   {
+    "code": "geom.self",
+    "lock": "farSide-2",
+    "fix": "réduire la courbure et le retroussé",
+    "before": 5,
+    "after": 5,
+    "kept": false
+   },
+   {
+    "code": "geom.self",
+    "lock": "farSide-2",
+    "fix": "raccourcir ×0,8",
+    "before": 5,
+    "after": 4,
+    "kept": true
+   },
+   {
+    "code": "geom.self",
+    "lock": "farSide-3",
+    "fix": "réduire la courbure et le retroussé",
+    "before": 4,
+    "after": 4,
+    "kept": false
+   },
+   {
+    "code": "geom.self",
+    "lock": "farSide-3",
+    "fix": "raccourcir ×0,8",
+    "before": 4,
+    "after": 3,
+    "kept": true
+   },
+   {
+    "code": "geom.self",
+    "lock": "farSide-4",
+    "fix": "réduire la courbure et le retroussé",
+    "before": 3,
+    "after": 3,
+    "kept": false
+   },
+   {
+    "code": "geom.self",
+    "lock": "farSide-4",
+    "fix": "raccourcir ×0,8",
+    "before": 3,
+    "after": 2,
+    "kept": true
+   },
+   {
+    "code": "geom.self",
+    "lock": "farSide-6",
+    "fix": "réduire la courbure et le retroussé",
+    "before": 2,
+    "after": 2,
+    "kept": false
+   },
+   {
+    "code": "geom.self",
+    "lock": "farSide-6",
+    "fix": "raccourcir ×0,8",
+    "before": 2,
+    "after": 1,
+    "kept": true
+   },
+   {
+    "code": "geom.self",
+    "lock": "nearSide-0",
+    "fix": "réduire la courbure et le retroussé",
+    "before": 1,
+    "after": 1,
+    "kept": false
+   },
+   {
+    "code": "geom.self",
+    "lock": "nearSide-0",
+    "fix": "raccourcir ×0,8",
+    "before": 1,
+    "after": 1,
+    "kept": false
+   },
+   {
+    "code": "geom.self",
+    "lock": "nearSide-0",
+    "fix": "régénérer (tirage 1)",
+    "before": 1,
+    "after": 0,
+    "kept": true
+   }
+  ]
+ },
+ "intentions": {
+  "airy": {
+   "volume": 1.5197721439823442,
+   "sleek": 0.7231572113972993,
+   "weight": 0.8734793187347931,
+   "wind": 0.029252479248586538,
+   "scoreVerif": 2.25,
+   "défauts": [
+    "geom.self",
+    "anat.dome"
+   ]
+  },
+  "sleek": {
+   "volume": 1.359550789888007,
+   "sleek": 0.7906314317782409,
+   "weight": 0.8894422310756972,
+   "wind": 0.044611220668311934,
+   "scoreVerif": 1.25,
+   "défauts": [
+    "geom.self",
+    "geom.self"
+   ]
+  },
+  "voluminous": {
+   "volume": 1.8577194059681228,
+   "sleek": 0.6299270886222277,
+   "weight": 0.8581560283687943,
+   "wind": 0.011605200812645591,
+   "scoreVerif": 5,
+   "défauts": [
+    "geom.self",
+    "geom.self",
+    "geom.self",
+    "anat.eye"
+   ]
+  },
+  "windswept": {
+   "volume": 1.4371116880798989,
+   "sleek": 0.7779990507566477,
+   "weight": 0.8795045045045045,
+   "wind": 0.70895956692588,
+   "scoreVerif": 3.25,
+   "défauts": [
+    "geom.self",
+    "anat.dome",
+    "anat.balance"
+   ]
+  },
+  "heavy": {
+   "volume": 1.7026134148076828,
+   "sleek": 0.7839965117298688,
+   "weight": 0.9191564147627417,
+   "wind": 0.041133484369047554,
+   "scoreVerif": 13.5,
+   "défauts": [
+    "geom.self",
+    "geom.self",
+    "geom.self",
+    "geom.self",
+    "geom.self",
+    "geom.self",
+    "geom.self",
+    "geom.self",
+    "geom.self",
+    "geom.self",
+    "geom.self",
+    "geom.self",
+    "geom.self",
+    "anat.eye"
+   ]
+  }
+ },
+ "interop": {
+  "locks": 50,
+  "violations": 0,
+  "rangs": {
+   "mass": 16,
+   "main": 27,
+   "fine": 7,
+   "hairline": 0,
+   "plait": 0
+  }
+ }
+}
