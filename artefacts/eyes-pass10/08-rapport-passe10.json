@@ -1,0 +1,245 @@
+{
+ "distinctness3": {
+  "count": 100,
+  "minToExisting": 0.009595978594441707,
+  "minAmongNew": 0.01531802475171888,
+  "byStyle": {
+   "almond": 10,
+   "round": 10,
+   "sharp": 10,
+   "drooping": 9,
+   "chibi": 9,
+   "angular": 9,
+   "compressed": 9,
+   "rounded_rect": 9,
+   "triangle": 9,
+   "circle": 9,
+   "diamond_v2": 5,
+   "diamond": 2
+  },
+  "byFamily": {
+   "fire-halo": 19,
+   "lime-cyan": 12,
+   "prism-star": 28,
+   "emerald-facets": 14,
+   "naturel": 15,
+   "ice-star": 12
+  }
+ },
+ "verifyEyeErreurs": 0,
+ "avertissementsVerifyEye": {
+  "pupil-darker-than-iris": 33,
+  "lower-peak-max": 4,
+  "svg-weight": 45,
+  "iris-to-opening-width": 4,
+  "pupil-to-iris": 4,
+  "envelope-vs-reference-profile": 1
+ },
+ "echecsPixels": {},
+ "textureIris": {
+  "fire-halo": {
+   "n": 17,
+   "min": 17.76,
+   "median": 26.58
+  },
+  "lime-cyan": {
+   "n": 10,
+   "min": 9.7,
+   "median": 10.78
+  },
+  "prism-star": {
+   "n": 27,
+   "min": 17.4,
+   "median": 22.22
+  },
+  "emerald-facets": {
+   "n": 14,
+   "min": 11.63,
+   "median": 16.34
+  },
+  "naturel": {
+   "n": 14,
+   "min": 4.3,
+   "median": 8.41
+  },
+  "ice-star": {
+   "n": 12,
+   "min": 18.74,
+   "median": 23.63
+  }
+ },
+ "toneParite": {
+  "prism-star": {
+   "reference": {
+    "lumMean": 126.1,
+    "darkShare": 0.154,
+    "satPeaks": 0.783,
+    "vividBands": [
+     "#a59f54",
+     "#a59c59",
+     "#58c2b0"
+    ]
+   },
+   "moteur": {
+    "lumMean": 134.8,
+    "darkShare": 0.032,
+    "satPeaks": 0.44,
+    "vividBands": [
+     null,
+     "#a09c67",
+     "#6d9a7e"
+    ]
+   }
+  },
+  "emerald-facets": {
+   "reference": {
+    "lumMean": 128.8,
+    "darkShare": 0.101,
+    "satPeaks": 0.738,
+    "vividBands": [
+     "#45a249",
+     "#59c367",
+     "#45c091"
+    ]
+   },
+   "moteur": {
+    "lumMean": 147,
+    "darkShare": 0.002,
+    "satPeaks": 0.525,
+    "vividBands": [
+     "#4e9b62",
+     "#5bb779",
+     "#4fa770"
+    ]
+   }
+  },
+  "lime-cyan": {
+   "reference": {
+    "lumMean": 169.4,
+    "darkShare": 0.003,
+    "satPeaks": 0.786,
+    "vividBands": [
+     "#76918f",
+     "#adef5b",
+     "#d3ee46"
+    ]
+   },
+   "moteur": {
+    "lumMean": 157,
+    "darkShare": 0.02,
+    "satPeaks": 0.649,
+    "vividBands": [
+     "#69a990",
+     "#a5d35c",
+     "#8ea639"
+    ]
+   }
+  },
+  "fire-halo": {
+   "reference": {
+    "lumMean": 89.1,
+    "darkShare": 0.373,
+    "satPeaks": 0.72,
+    "vividBands": [
+     "#4896e4",
+     "#e66a3a",
+     "#6a4d7e"
+    ]
+   },
+   "moteur": {
+    "lumMean": 74.5,
+    "darkShare": 0.312,
+    "satPeaks": 0.407,
+    "vividBands": [
+     "#748daf",
+     "#c3785e",
+     "#4d3446"
+    ]
+   }
+  },
+  "ice-star": {
+   "reference": {
+    "lumMean": 103.3,
+    "darkShare": 0.297,
+    "satPeaks": 0.729,
+    "vividBands": [
+     "#6063bd",
+     "#4fbde2",
+     "#378ec5"
+    ]
+   },
+   "moteur": {
+    "lumMean": 98.8,
+    "darkShare": 0.063,
+    "satPeaks": 0.483,
+    "vividBands": [
+     "#7ba9cc",
+     "#62abc6",
+     "#415065"
+    ]
+   }
+  }
+ },
+ "lowerPeakReferences": {
+  "11": {
+   "peakRef": 0.45,
+   "peakSans": 0.6,
+   "peakAvec": 0.45,
+   "rmsLoSans": 0.0327,
+   "rmsLoAvec": 0.0099,
+   "rmsUpSans": 0.0071,
+   "rmsUpAvec": 0.0071,
+   "dAspectSans": -0.0001,
+   "dAspectAvec": -0.0001,
+   "dUpFAvec": 0
+  },
+  "04": {
+   "peakRef": 0.65,
+   "peakSans": 0.6,
+   "peakAvec": 0.65,
+   "rmsLoSans": 0.0133,
+   "rmsLoAvec": 0.0068,
+   "rmsUpSans": 0.0236,
+   "rmsUpAvec": 0.0236,
+   "dAspectSans": -0.0001,
+   "dAspectAvec": -0.0001,
+   "dUpFAvec": 0.0002
+  },
+  "07": {
+   "peakRef": 0.55,
+   "peakSans": 0.55,
+   "peakAvec": 0.55,
+   "rmsLoSans": 0.0245,
+   "rmsLoAvec": 0.0245,
+   "rmsUpSans": 0.014,
+   "rmsUpAvec": 0.014,
+   "dAspectSans": -0.0006,
+   "dAspectAvec": -0.0006,
+   "dUpFAvec": -0.0047
+  },
+  "03": {
+   "peakRef": 0.4,
+   "peakSans": 0.55,
+   "peakAvec": 0.4,
+   "rmsLoSans": 0.0507,
+   "rmsLoAvec": 0.0463,
+   "rmsUpSans": 0.0332,
+   "rmsUpAvec": 0.0332,
+   "dAspectSans": -0.006,
+   "dAspectAvec": -0.006,
+   "dUpFAvec": -0.0039
+  },
+  "05": {
+   "peakRef": 0.45,
+   "peakSans": 0.65,
+   "peakAvec": 0.45,
+   "rmsLoSans": 0.058,
+   "rmsLoAvec": 0.0191,
+   "rmsUpSans": 0.0179,
+   "rmsUpAvec": 0.0179,
+   "dAspectSans": -0.0063,
+   "dAspectAvec": -0.0063,
+   "dUpFAvec": 0.0049
+  }
+ }
+}

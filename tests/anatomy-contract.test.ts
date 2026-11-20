@@ -81,7 +81,9 @@ describe('relations géométrique / anatomique / visuelle', () => {
     // Mesuré le 4 nov. 2026 : 12 yeux sur 80 hors de l'orbite a priori (pire 1,364 en rapport LINÉAIRE ; 1,86 était son carré). Ce nombre ne doit pas dériver en silence.
     expect(eyes).toBe(80);
     // PASSE 8 (18 nov. 2026) : 14 — `sharp` et `drooping` livrent enfin la hauteur demandée (+33 %), deux yeux de plus dépassent l'orbite a priori ; la borne publiée (ci-dessous) reste respectée.
-    expect(outsidePrior).toBe(14);
+    // PASSE 10 : 17 — le contrat de hauteur ne s'appliquait pas aux yeux GAUCHES (`apexHeights` = 0 quand la corde va vers la gauche) : leurs sharp / drooping étaient ~25 % trop bas ;
+    // 3 yeux de plus dépassent donc l'orbite a priori. Les deux bornes qui comptent (a priori < 1,4 ; publiée ≤ 1) sont inchangées et vérifiées ci-dessous.
+    expect(outsidePrior).toBe(17);
     expect(worstPrior).toBeLessThan(1.4);
     // Après publication : aucun œil hors orbite, avec marge.
     expect(worstPublished).toBeLessThanOrEqual(1);

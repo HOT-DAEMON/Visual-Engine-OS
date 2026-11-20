@@ -14,18 +14,30 @@
    "limbe": {
     "cx": 364.4,
     "cy": 613.3,
-    "rx": 99.4,
-    "ry": 110.2,
+    "rx": 99.5,
+    "ry": 110.1,
     "angDeg": 5.9,
+    "fitA": 99.4,
+    "fitB": 110.2,
     "rayonsRetenus": 72,
-    "aspectHW": 1.108
+    "aspectHW": 1.106
    },
    "pupille": {
-    "cx": -0.056,
+    "cx": -0.054,
     "cy": -0.219,
     "rOverIris": 0.232,
     "aspectHW": 1.471,
-    "color": "#341b0e"
+    "color": "#341a0e"
+   },
+   "tone": {
+    "lumMean": 143.9,
+    "darkShare": 0.152,
+    "satPeaks": 0.634,
+    "vividBands": [
+     "#c54e1f",
+     "#ecbe60",
+     "#e8be65"
+    ]
    },
    "radial": [
     {
@@ -35,184 +47,192 @@
      "bright": "#e6904b",
      "lum": 104.9,
      "lumSpread": 26.3,
-     "sat": 0.817
+     "sat": 0.816
     },
     {
      "r": 0.125,
-     "color": "#af502c",
+     "color": "#ae502b",
      "dark": "#8d2d17",
-     "bright": "#d29e65",
-     "lum": 99.5,
-     "lumSpread": 32.3,
-     "sat": 0.77
+     "bright": "#d19c64",
+     "lum": 98.8,
+     "lumSpread": 32.1,
+     "sat": 0.772
     },
     {
      "r": 0.208,
      "color": "#e3b05d",
-     "dark": "#af6133",
-     "bright": "#fbdb77",
-     "lum": 175.0,
-     "lumSpread": 72.5,
+     "dark": "#af6234",
+     "bright": "#fadb77",
+     "lum": 175.4,
+     "lumSpread": 70.1,
      "sat": 0.603
     },
     {
      "r": 0.292,
      "color": "#f0c667",
-     "dark": "#d3a153",
+     "dark": "#d2a152",
      "bright": "#fcdd7a",
      "lum": 196.4,
-     "lumSpread": 20.1,
-     "sat": 0.571
+     "lumSpread": 19.9,
+     "sat": 0.572
     },
     {
      "r": 0.375,
      "color": "#deb765",
      "dark": "#aa7b3e",
      "bright": "#f9e58a",
-     "lum": 182.8,
-     "lumSpread": 66.7,
-     "sat": 0.56
+     "lum": 182.6,
+     "lumSpread": 66.0,
+     "sat": 0.559
     },
     {
      "r": 0.458,
-     "color": "#c7a55f",
-     "dark": "#85623d",
+     "color": "#c8a65f",
+     "dark": "#85633d",
      "bright": "#f9e488",
-     "lum": 164.8,
-     "lumSpread": 91.5,
+     "lum": 165.4,
+     "lumSpread": 91.4,
      "sat": 0.542
     },
     {
      "r": 0.542,
-     "color": "#86754b",
-     "dark": "#231c1a",
-     "bright": "#f9e488",
-     "lum": 119.4,
-     "lumSpread": 157.1,
-     "sat": 0.472
+     "color": "#87764b",
+     "dark": "#231d1a",
+     "bright": "#f9e589",
+     "lum": 119.8,
+     "lumSpread": 157.5,
+     "sat": 0.47
     },
     {
      "r": 0.625,
-     "color": "#887f59",
+     "color": "#877e58",
      "dark": "#1c1c24",
-     "bright": "#f8e78d",
-     "lum": 128.6,
-     "lumSpread": 159.9,
-     "sat": 0.494
+     "bright": "#f8e78c",
+     "lum": 127.8,
+     "lumSpread": 159.7,
+     "sat": 0.497
     },
     {
      "r": 0.708,
-     "color": "#989167",
-     "dark": "#2d313b",
-     "bright": "#fae78b",
-     "lum": 144.8,
-     "lumSpread": 128.4,
-     "sat": 0.533
+     "color": "#999267",
+     "dark": "#2e313b",
+     "bright": "#fae78c",
+     "lum": 145.3,
+     "lumSpread": 127.8,
+     "sat": 0.531
     },
     {
      "r": 0.792,
-     "color": "#999368",
-     "dark": "#2f333c",
-     "bright": "#f6dd85",
-     "lum": 144.9,
-     "lumSpread": 112.7,
+     "color": "#989368",
+     "dark": "#2d333b",
+     "bright": "#f6de86",
+     "lum": 144.7,
+     "lumSpread": 114.5,
      "sat": 0.538
     },
     {
      "r": 0.875,
-     "color": "#81765a",
-     "dark": "#1d1e26",
-     "bright": "#eccb7b",
-     "lum": 120.7,
-     "lumSpread": 108.3,
-     "sat": 0.541
+     "color": "#807458",
+     "dark": "#1b1d24",
+     "bright": "#ebc979",
+     "lum": 119.2,
+     "lumSpread": 109.8,
+     "sat": 0.546
     },
     {
      "r": 0.958,
-     "color": "#6f6767",
-     "dark": "#151118",
-     "bright": "#decfc5",
-     "lum": 109.9,
-     "lumSpread": 134.5,
-     "sat": 0.407
+     "color": "#706869",
+     "dark": "#151117",
+     "bright": "#dfcfc6",
+     "lum": 110.9,
+     "lumSpread": 136.6,
+     "sat": 0.404
     }
    ],
    "secteurs": [
     {
      "angleDeg": 0,
-     "color": "#2d465b"
+     "color": "#2d465b",
+     "vivid": "#3876a0"
     },
     {
      "angleDeg": 45,
-     "color": "#696f4e"
+     "color": "#686e4e",
+     "vivid": "#c59b4e"
     },
     {
      "angleDeg": 90,
-     "color": "#c7a158"
+     "color": "#c7a158",
+     "vivid": "#f0c463"
     },
     {
      "angleDeg": 135,
-     "color": "#f3d87d"
+     "color": "#f3d97e",
+     "vivid": "#f3ca65"
     },
     {
      "angleDeg": 180,
-     "color": "#f1db8e"
+     "color": "#f1db8e",
+     "vivid": "#f6cf6b"
     },
     {
      "angleDeg": 225,
-     "color": "#f3dd83"
+     "color": "#f3dd82",
+     "vivid": "#f4d26c"
     },
     {
      "angleDeg": 270,
-     "color": "#bc9954"
+     "color": "#bc9954",
+     "vivid": "#efbe5e"
     },
     {
      "angleDeg": 315,
-     "color": "#5c544a"
+     "color": "#5e554a",
+     "vivid": "#aa7f46"
     }
    ],
    "anneauLimbique": {
-    "luminanceMin": 108.4,
+    "luminanceMin": 107.0,
     "epaisseurOverRayon": 0.2
    },
    "reflets": [
     {
-     "dx": 0.006,
-     "dy": 0.651,
+     "dx": 0.005,
+     "dy": 0.65,
      "rOverIris": 0.332
     },
     {
-     "dx": -0.52,
-     "dy": -0.613,
+     "dx": -0.519,
+     "dy": -0.614,
      "rOverIris": 0.184
     },
     {
-     "dx": 0.441,
+     "dx": 0.44,
      "dy": 0.328,
      "rOverIris": 0.146
     },
     {
-     "dx": -0.407,
+     "dx": -0.406,
      "dy": 0.312,
      "rOverIris": 0.108
     },
     {
-     "dx": 0.405,
-     "dy": -0.656,
+     "dx": 0.404,
+     "dy": -0.657,
      "rOverIris": 0.103
     },
     {
-     "dx": 0.858,
-     "dy": 0.31,
-     "rOverIris": 0.093
+     "dx": 0.853,
+     "dy": 0.305,
+     "rOverIris": 0.09
     }
    ],
    "fibres": {
     "ecartTypeLuminance": [
-     42.89,
-     70.86,
-     80.25,
-     69.5
+     42.8,
+     71.32,
+     80.14,
+     69.24
     ]
    },
    "sclere": "#e2c7c4"
@@ -230,208 +250,228 @@
    "limbe": {
     "cx": 486.8,
     "cy": 464.5,
-    "rx": 82.5,
-    "ry": 89.5,
+    "rx": 88.4,
+    "ry": 83.7,
     "angDeg": 66.0,
+    "fitA": 82.5,
+    "fitB": 89.5,
     "rayonsRetenus": 72,
-    "aspectHW": 1.085
+    "aspectHW": 0.947
    },
    "pupille": {
-    "cx": -0.098,
-    "cy": 0.073,
+    "cx": -0.091,
+    "cy": 0.078,
     "rOverIris": 0.174,
     "aspectHW": 0.912,
     "color": "#221618"
    },
+   "tone": {
+    "lumMean": 102.6,
+    "darkShare": 0.257,
+    "satPeaks": 0.723,
+    "vividBands": [
+     "#76a7d7",
+     "#ea6b31",
+     "#f7935e"
+    ]
+   },
    "radial": [
     {
      "r": 0.042,
-     "color": "#412122",
-     "dark": "#422220",
-     "bright": "#412224",
-     "lum": 41.6,
-     "lumSpread": 6.9,
-     "sat": 0.513
+     "color": "#432223",
+     "dark": "#3e1f1e",
+     "bright": "#432426",
+     "lum": 43.1,
+     "lumSpread": 9.9,
+     "sat": 0.509
     },
     {
      "r": 0.125,
-     "color": "#727789",
-     "dark": "#492627",
-     "bright": "#8db6d9",
-     "lum": 116.4,
-     "lumSpread": 73.8,
-     "sat": 0.362
+     "color": "#707182",
+     "dark": "#4c292b",
+     "bright": "#8eb5d8",
+     "lum": 113.5,
+     "lumSpread": 70.5,
+     "sat": 0.355
     },
     {
      "r": 0.208,
-     "color": "#717f96",
-     "dark": "#472f31",
-     "bright": "#a0b9d1",
-     "lum": 129.3,
-     "lumSpread": 81.3,
-     "sat": 0.341
+     "color": "#75849a",
+     "dark": "#462d30",
+     "bright": "#a8bfd2",
+     "lum": 133.5,
+     "lumSpread": 80.9,
+     "sat": 0.338
     },
     {
      "r": 0.292,
-     "color": "#6e545e",
-     "dark": "#482120",
-     "bright": "#87a7cb",
-     "lum": 96.5,
-     "lumSpread": 63.8,
-     "sat": 0.489
+     "color": "#664f57",
+     "dark": "#49211f",
+     "bright": "#86a1c2",
+     "lum": 91.7,
+     "lumSpread": 60.3,
+     "sat": 0.485
     },
     {
      "r": 0.375,
-     "color": "#9b6158",
-     "dark": "#682d26",
-     "bright": "#b19d9d",
-     "lum": 117.2,
-     "lumSpread": 55.8,
-     "sat": 0.556
+     "color": "#9d5f57",
+     "dark": "#6d2e26",
+     "bright": "#ada0a6",
+     "lum": 115.7,
+     "lumSpread": 51.5,
+     "sat": 0.56
     },
     {
      "r": 0.458,
-     "color": "#ae6c5a",
-     "dark": "#7b3126",
-     "bright": "#d9a98c",
-     "lum": 127.2,
-     "lumSpread": 64.1,
-     "sat": 0.577
+     "color": "#ae6a57",
+     "dark": "#7a3025",
+     "bright": "#d1a790",
+     "lum": 125.4,
+     "lumSpread": 64.0,
+     "sat": 0.585
     },
     {
      "r": 0.542,
-     "color": "#a26350",
-     "dark": "#5b2d2e",
-     "bright": "#f39858",
-     "lum": 116.9,
-     "lumSpread": 73.2,
-     "sat": 0.55
+     "color": "#a46654",
+     "dark": "#652f2d",
+     "bright": "#f39856",
+     "lum": 119.7,
+     "lumSpread": 68.9,
+     "sat": 0.557
     },
     {
      "r": 0.625,
-     "color": "#9e5e46",
-     "dark": "#4a201f",
-     "bright": "#f9a162",
-     "lum": 111.2,
-     "lumSpread": 111.6,
-     "sat": 0.582
+     "color": "#a0604a",
+     "dark": "#542524",
+     "bright": "#f7a363",
+     "lum": 113.2,
+     "lumSpread": 104.4,
+     "sat": 0.569
     },
     {
      "r": 0.708,
-     "color": "#995b45",
-     "dark": "#3e1b1b",
-     "bright": "#faa368",
-     "lum": 107.1,
-     "lumSpread": 123.7,
-     "sat": 0.568
+     "color": "#965b45",
+     "dark": "#401c1b",
+     "bright": "#f9a568",
+     "lum": 106.5,
+     "lumSpread": 120.1,
+     "sat": 0.558
     },
     {
      "r": 0.792,
-     "color": "#8e553f",
-     "dark": "#341515",
-     "bright": "#faa56c",
-     "lum": 99.9,
-     "lumSpread": 135.1,
-     "sat": 0.564
+     "color": "#8c533e",
+     "dark": "#361717",
+     "bright": "#faa56d",
+     "lum": 97.9,
+     "lumSpread": 132.6,
+     "sat": 0.565
     },
     {
      "r": 0.875,
-     "color": "#8d523e",
-     "dark": "#341616",
-     "bright": "#f8a777",
-     "lum": 98.4,
-     "lumSpread": 135.9,
+     "color": "#854e3c",
+     "dark": "#321414",
+     "bright": "#f5a577",
+     "lum": 93.9,
+     "lumSpread": 137.3,
      "sat": 0.569
     },
     {
      "r": 0.958,
-     "color": "#915b4b",
+     "color": "#936051",
      "dark": "#331717",
-     "bright": "#ecb092",
-     "lum": 107.9,
-     "lumSpread": 140.3,
-     "sat": 0.535
+     "bright": "#ebad90",
+     "lum": 111.1,
+     "lumSpread": 133.0,
+     "sat": 0.491
     }
    ],
    "secteurs": [
     {
      "angleDeg": 0,
-     "color": "#4f414e"
+     "color": "#534857",
+     "vivid": "#638ec2"
     },
     {
      "angleDeg": 45,
-     "color": "#614242"
+     "color": "#604140",
+     "vivid": "#5d3231"
     },
     {
      "angleDeg": 90,
-     "color": "#865046"
+     "color": "#7f4a40",
+     "vivid": "#c16647"
     },
     {
      "angleDeg": 135,
-     "color": "#e87e51"
+     "color": "#e47b50",
+     "vivid": "#ef6735"
     },
     {
      "angleDeg": 180,
-     "color": "#f08b56"
+     "color": "#e98754",
+     "vivid": "#f4803f"
     },
     {
      "angleDeg": 225,
-     "color": "#e7975b"
+     "color": "#ea9a5e",
+     "vivid": "#f0883a"
     },
     {
      "angleDeg": 270,
-     "color": "#9d462f"
+     "color": "#9d432d",
+     "vivid": "#d95b30"
     },
     {
      "angleDeg": 315,
-     "color": "#503e4c"
+     "color": "#524150",
+     "vivid": "#714a52"
     }
    ],
    "anneauLimbique": {
-    "luminanceMin": 97.7,
+    "luminanceMin": 92.4,
     "epaisseurOverRayon": 0.25
    },
    "reflets": [
     {
-     "dx": -0.36,
-     "dy": 0.709,
-     "rOverIris": 0.161
+     "dx": -0.334,
+     "dy": 0.751,
+     "rOverIris": 0.158
     },
     {
-     "dx": 0.19,
-     "dy": -0.223,
+     "dx": 0.177,
+     "dy": -0.238,
      "rOverIris": 0.132
     },
     {
-     "dx": -0.256,
-     "dy": 0.429,
+     "dx": -0.76,
+     "dy": 0.592,
+     "rOverIris": 0.075
+    },
+    {
+     "dx": -0.239,
+     "dy": 0.459,
      "rOverIris": 0.063
     },
     {
-     "dx": -0.036,
-     "dy": 0.964,
-     "rOverIris": 0.061
+     "dx": 0.606,
+     "dy": 0.572,
+     "rOverIris": 0.052
     },
     {
-     "dx": -0.789,
-     "dy": 0.542,
-     "rOverIris": 0.058
-    },
-    {
-     "dx": 0.62,
-     "dy": 0.751,
-     "rOverIris": 0.057
+     "dx": 0.128,
+     "dy": 0.423,
+     "rOverIris": 0.046
     }
    ],
    "fibres": {
     "ecartTypeLuminance": [
-     38.13,
-     34.94,
-     52.13,
-     58.81
+     38.21,
+     34.5,
+     48.32,
+     57.79
     ]
    },
-   "sclere": "#eed2c7"
+   "sclere": "#edd1c6"
   },
   {
    "id": "06",
@@ -446,208 +486,228 @@
    "limbe": {
     "cx": 394.6,
     "cy": 398.9,
-    "rx": 156.7,
-    "ry": 172.4,
+    "rx": 170.7,
+    "ry": 158.5,
     "angDeg": 109.6,
+    "fitA": 156.7,
+    "fitB": 172.4,
     "rayonsRetenus": 72,
-    "aspectHW": 1.1
+    "aspectHW": 0.929
    },
    "pupille": {
-    "cx": 0.021,
-    "cy": -0.086,
-    "rOverIris": 0.101,
-    "aspectHW": 1.158,
-    "color": "#41170a"
+    "cx": 0.02,
+    "cy": -0.091,
+    "rOverIris": 0.1,
+    "aspectHW": 1.079,
+    "color": "#40170a"
+   },
+   "tone": {
+    "lumMean": 142.7,
+    "darkShare": 0.103,
+    "satPeaks": 0.871,
+    "vividBands": [
+     "#e79617",
+     "#edc81d",
+     "#d58723"
+    ]
    },
    "radial": [
     {
      "r": 0.042,
-     "color": "#a45114",
+     "color": "#a24f13",
      "dark": "#6c280b",
-     "bright": "#d87b19",
-     "lum": 98.3,
-     "lumSpread": 55.3,
-     "sat": 0.891
+     "bright": "#d67918",
+     "lum": 96.9,
+     "lumSpread": 54.0,
+     "sat": 0.894
     },
     {
      "r": 0.125,
-     "color": "#ca8323",
-     "dark": "#8a4219",
-     "bright": "#f3e14b",
-     "lum": 139.9,
-     "lumSpread": 67.2,
-     "sat": 0.835
+     "color": "#c77c1f",
+     "dark": "#8a4118",
+     "bright": "#f0cf3b",
+     "lum": 135.1,
+     "lumSpread": 56.8,
+     "sat": 0.851
     },
     {
      "r": 0.208,
-     "color": "#cb9d39",
-     "dark": "#853e1a",
-     "bright": "#f7f567",
-     "lum": 158.9,
-     "lumSpread": 115.6,
-     "sat": 0.743
+     "color": "#cea139",
+     "dark": "#89401b",
+     "bright": "#f8f564",
+     "lum": 162.4,
+     "lumSpread": 109.0,
+     "sat": 0.744
     },
     {
      "r": 0.292,
-     "color": "#d7a339",
-     "dark": "#a54f1a",
-     "bright": "#f6f066",
-     "lum": 165.5,
-     "lumSpread": 80.7,
-     "sat": 0.757
+     "color": "#d7a43b",
+     "dark": "#a34e1c",
+     "bright": "#f6f268",
+     "lum": 166.1,
+     "lumSpread": 84.1,
+     "sat": 0.75
     },
     {
      "r": 0.375,
-     "color": "#b87c23",
-     "dark": "#672512",
-     "bright": "#f4e436",
-     "lum": 132.7,
-     "lumSpread": 106.1,
-     "sat": 0.829
+     "color": "#b27121",
+     "dark": "#642111",
+     "bright": "#f1d634",
+     "lum": 124.9,
+     "lumSpread": 90.4,
+     "sat": 0.839
     },
     {
      "r": 0.458,
-     "color": "#c79d30",
-     "dark": "#652510",
-     "bright": "#faf95b",
-     "lum": 157.6,
-     "lumSpread": 123.6,
-     "sat": 0.784
+     "color": "#cda931",
+     "dark": "#6e2e13",
+     "bright": "#f9f755",
+     "lum": 166.3,
+     "lumSpread": 103.2,
+     "sat": 0.782
     },
     {
      "r": 0.542,
-     "color": "#deac39",
-     "dark": "#be6018",
-     "bright": "#f9fa6f",
-     "lum": 174.1,
-     "lumSpread": 90.8,
-     "sat": 0.763
+     "color": "#e0af3b",
+     "dark": "#bf6019",
+     "bright": "#f9fa70",
+     "lum": 176.0,
+     "lumSpread": 85.9,
+     "sat": 0.757
     },
     {
      "r": 0.625,
-     "color": "#d5a73a",
-     "dark": "#9c4d1c",
-     "bright": "#f9f769",
-     "lum": 168.8,
-     "lumSpread": 97.9,
-     "sat": 0.751
+     "color": "#d8a738",
+     "dark": "#a95319",
+     "bright": "#f9f665",
+     "lum": 169.3,
+     "lumSpread": 88.4,
+     "sat": 0.761
     },
     {
      "r": 0.708,
-     "color": "#c29133",
-     "dark": "#743315",
-     "bright": "#f3e65d",
-     "lum": 149.4,
-     "lumSpread": 104.7,
-     "sat": 0.764
+     "color": "#c38e32",
+     "dark": "#823a16",
+     "bright": "#f4e658",
+     "lum": 148.1,
+     "lumSpread": 93.4,
+     "sat": 0.77
     },
     {
      "r": 0.792,
-     "color": "#ae7129",
-     "dark": "#5c220e",
-     "bright": "#e5be4d",
-     "lum": 124.1,
-     "lumSpread": 88.1,
-     "sat": 0.793
+     "color": "#b37a2f",
+     "dark": "#692b12",
+     "bright": "#eacd56",
+     "lum": 130.7,
+     "lumSpread": 87.0,
+     "sat": 0.772
     },
     {
      "r": 0.875,
-     "color": "#915220",
-     "dark": "#4f1d0d",
-     "bright": "#d2963b",
-     "lum": 96.1,
-     "lumSpread": 58.6,
-     "sat": 0.811
+     "color": "#8a4a1d",
+     "dark": "#4d1c0c",
+     "bright": "#cc8a35",
+     "lum": 88.7,
+     "lumSpread": 61.0,
+     "sat": 0.819
     },
     {
      "r": 0.958,
-     "color": "#7a4927",
-     "dark": "#37130a",
-     "bright": "#d7a765",
-     "lum": 84.7,
-     "lumSpread": 69.7,
-     "sat": 0.746
+     "color": "#613219",
+     "dark": "#301109",
+     "bright": "#a46a37",
+     "lum": 62.9,
+     "lumSpread": 46.5,
+     "sat": 0.779
     }
    ],
    "secteurs": [
     {
      "angleDeg": 0,
-     "color": "#853f18"
+     "color": "#91491c",
+     "vivid": "#d17421"
     },
     {
      "angleDeg": 45,
-     "color": "#ae6e32"
+     "color": "#b47232",
+     "vivid": "#de8e25"
     },
     {
      "angleDeg": 90,
-     "color": "#c98a29"
+     "color": "#c88b2b",
+     "vivid": "#e19819"
     },
     {
      "angleDeg": 135,
-     "color": "#e3bc3e"
+     "color": "#e0b63c",
+     "vivid": "#ebbd1f"
     },
     {
      "angleDeg": 180,
-     "color": "#e6cd47"
+     "color": "#eedd4b",
+     "vivid": "#f3de1f"
     },
     {
      "angleDeg": 225,
-     "color": "#e4be39"
+     "color": "#e8c63d",
+     "vivid": "#efc51d"
     },
     {
      "angleDeg": 270,
-     "color": "#d7ab34"
+     "color": "#d2a132",
+     "vivid": "#e9b721"
     },
     {
      "angleDeg": 315,
-     "color": "#a05b21"
+     "color": "#a35e22",
+     "vivid": "#db9224"
     }
    ],
    "anneauLimbique": {
-    "luminanceMin": 84.9,
-    "epaisseurOverRayon": 0.2
+    "luminanceMin": 61.0,
+    "epaisseurOverRayon": 0.15
    },
    "reflets": [
     {
-     "dx": 0.031,
-     "dy": 0.662,
+     "dx": 0.028,
+     "dy": 0.72,
      "rOverIris": 0.104
     },
     {
-     "dx": 0.345,
-     "dy": 0.426,
+     "dx": 0.317,
+     "dy": 0.464,
      "rOverIris": 0.094
     },
     {
-     "dx": -0.368,
-     "dy": 0.372,
+     "dx": -0.338,
+     "dy": 0.404,
      "rOverIris": 0.085
     },
     {
-     "dx": 0.198,
-     "dy": -0.289,
+     "dx": 0.181,
+     "dy": -0.314,
      "rOverIris": 0.082
     },
     {
-     "dx": -0.207,
-     "dy": 0.598,
+     "dx": -0.19,
+     "dy": 0.65,
      "rOverIris": 0.036
     },
     {
-     "dx": -0.093,
-     "dy": 0.519,
+     "dx": -0.085,
+     "dy": 0.564,
      "rOverIris": 0.034
     }
    ],
    "fibres": {
     "ecartTypeLuminance": [
-     62.54,
-     51.48,
-     48.91,
-     57.03
+     53.37,
+     53.1,
+     45.8,
+     51.28
     ]
    },
-   "sclere": "#c5b29a"
+   "sclere": "#c2af9a"
   },
   {
    "id": "09",
@@ -662,208 +722,1582 @@
    "limbe": {
     "cx": 397.3,
     "cy": 385.0,
-    "rx": 165.8,
-    "ry": 175.7,
+    "rx": 174.5,
+    "ry": 167.0,
     "angDeg": 110.6,
+    "fitA": 165.8,
+    "fitB": 175.7,
     "rayonsRetenus": 72,
-    "aspectHW": 1.06
+    "aspectHW": 0.957
    },
    "pupille": {
-    "cx": 0.03,
-    "cy": -0.081,
+    "cx": 0.029,
+    "cy": -0.086,
     "rOverIris": 0.105,
     "aspectHW": 0.51,
     "color": "#0c1128"
    },
+   "tone": {
+    "lumMean": 126.8,
+    "darkShare": 0.12,
+    "satPeaks": 0.85,
+    "vividBands": [
+     "#237fd7",
+     "#2cabe4",
+     "#247ad7"
+    ]
+   },
    "radial": [
     {
      "r": 0.042,
-     "color": "#122a71",
+     "color": "#122970",
      "dark": "#0d1743",
-     "bright": "#1843a5",
-     "lum": 43.7,
-     "lumSpread": 26.6,
-     "sat": 0.835
+     "bright": "#1840a1",
+     "lum": 42.7,
+     "lumSpread": 25.2,
+     "sat": 0.834
     },
     {
      "r": 0.125,
-     "color": "#245daf",
-     "dark": "#102561",
-     "bright": "#3c9ede",
-     "lum": 84.9,
-     "lumSpread": 54.2,
-     "sat": 0.811
+     "color": "#235baf",
+     "dark": "#112665",
+     "bright": "#3b96dd",
+     "lum": 83.1,
+     "lumSpread": 49.6,
+     "sat": 0.814
     },
     {
      "r": 0.208,
-     "color": "#2b79bb",
-     "dark": "#142f6d",
-     "bright": "#42bfe6",
-     "lum": 105.2,
-     "lumSpread": 67.6,
+     "color": "#2c78bb",
+     "dark": "#15306f",
+     "bright": "#42bce5",
+     "lum": 104.7,
+     "lumSpread": 65.4,
      "sat": 0.788
     },
     {
      "r": 0.292,
-     "color": "#3b88b7",
-     "dark": "#192755",
-     "bright": "#6ee5ee",
-     "lum": 119.7,
-     "lumSpread": 99.9,
-     "sat": 0.685
+     "color": "#3a8aba",
+     "dark": "#192959",
+     "bright": "#6ae3ee",
+     "lum": 121.0,
+     "lumSpread": 92.6,
+     "sat": 0.694
     },
     {
      "r": 0.375,
-     "color": "#4593bb",
-     "dark": "#1c2c5d",
-     "bright": "#7deff1",
-     "lum": 130.0,
-     "lumSpread": 120.9,
-     "sat": 0.651
+     "color": "#4798bd",
+     "dark": "#1c2b5a",
+     "bright": "#7ef0f1",
+     "lum": 134.2,
+     "lumSpread": 120.3,
+     "sat": 0.64
     },
     {
      "r": 0.458,
-     "color": "#4ba9d4",
-     "dark": "#284f9d",
-     "bright": "#78edef",
-     "lum": 148.4,
-     "lumSpread": 96.3,
-     "sat": 0.663
+     "color": "#4ca9d2",
+     "dark": "#274993",
+     "bright": "#7ceeef",
+     "lum": 148.3,
+     "lumSpread": 98.3,
+     "sat": 0.653
     },
     {
      "r": 0.542,
-     "color": "#4ab3e2",
-     "dark": "#2a6dc5",
-     "bright": "#75ecf2",
-     "lum": 154.9,
-     "lumSpread": 64.2,
-     "sat": 0.687
+     "color": "#48b1df",
+     "dark": "#2b67be",
+     "bright": "#73edf2",
+     "lum": 153.3,
+     "lumSpread": 66.9,
+     "sat": 0.691
     },
     {
      "r": 0.625,
-     "color": "#45a9db",
-     "dark": "#1f60b8",
-     "bright": "#77e7f1",
-     "lum": 148.4,
-     "lumSpread": 57.0,
-     "sat": 0.703
+     "color": "#48acdd",
+     "dark": "#2168bf",
+     "bright": "#78e6f1",
+     "lum": 150.6,
+     "lumSpread": 52.5,
+     "sat": 0.693
     },
     {
      "r": 0.708,
-     "color": "#3f94d4",
-     "dark": "#1b51af",
-     "bright": "#6ed6ee",
-     "lum": 134.1,
-     "lumSpread": 57.8,
-     "sat": 0.724
+     "color": "#3d91d2",
+     "dark": "#1b4eac",
+     "bright": "#68d5ef",
+     "lum": 131.1,
+     "lumSpread": 58.3,
+     "sat": 0.733
     },
     {
      "r": 0.792,
-     "color": "#3679bf",
-     "dark": "#16327e",
-     "bright": "#65c7ec",
-     "lum": 112.0,
-     "lumSpread": 62.9,
-     "sat": 0.748
+     "color": "#397cbe",
+     "dark": "#16327f",
+     "bright": "#69c8ea",
+     "lum": 114.5,
+     "lumSpread": 65.8,
+     "sat": 0.734
     },
     {
      "r": 0.875,
-     "color": "#2a5ca7",
-     "dark": "#132563",
-     "bright": "#50a4df",
-     "lum": 86.7,
-     "lumSpread": 51.9,
-     "sat": 0.774
+     "color": "#285aa9",
+     "dark": "#15296c",
+     "bright": "#489cde",
+     "lum": 85.4,
+     "lumSpread": 44.7,
+     "sat": 0.783
     },
     {
      "r": 0.958,
-     "color": "#3d5f98",
-     "dark": "#131f4f",
-     "bright": "#96bfdb",
-     "lum": 92.1,
-     "lumSpread": 78.7,
-     "sat": 0.655
+     "color": "#30518c",
+     "dark": "#131c46",
+     "bright": "#71abdb",
+     "lum": 79.4,
+     "lumSpread": 58.8,
+     "sat": 0.697
     }
    ],
    "secteurs": [
     {
      "angleDeg": 0,
-     "color": "#295a9f"
+     "color": "#2a5da2",
+     "vivid": "#2f87da"
     },
     {
      "angleDeg": 45,
-     "color": "#4886c5"
+     "color": "#4c8bc8",
+     "vivid": "#3a8bd9"
     },
     {
      "angleDeg": 90,
-     "color": "#45a0d6"
+     "color": "#449dd3",
+     "vivid": "#2b9cdd"
     },
     {
      "angleDeg": 135,
-     "color": "#4ab7de"
+     "color": "#4ab4dd",
+     "vivid": "#22a5e2"
     },
     {
      "angleDeg": 180,
-     "color": "#44abde"
+     "color": "#4bb7e1",
+     "vivid": "#1996e3"
     },
     {
      "angleDeg": 225,
-     "color": "#4fb8e4"
+     "color": "#52bce5",
+     "vivid": "#209de5"
     },
     {
      "angleDeg": 270,
-     "color": "#47a9da"
+     "color": "#45a4d7",
+     "vivid": "#249ce1"
     },
     {
      "angleDeg": 315,
-     "color": "#337cc0"
+     "color": "#337cbf",
+     "vivid": "#2d9ce5"
     }
    ],
    "anneauLimbique": {
-    "luminanceMin": 85.9,
-    "epaisseurOverRayon": 0.2
+    "luminanceMin": 68.0,
+    "epaisseurOverRayon": 0.15
    },
    "reflets": [
     {
-     "dx": 0.081,
-     "dy": 0.441,
+     "dx": 0.077,
+     "dy": 0.464,
      "rOverIris": 0.169
     },
     {
-     "dx": -0.249,
-     "dy": 0.563,
+     "dx": -0.237,
+     "dy": 0.592,
      "rOverIris": 0.109
     },
     {
-     "dx": 0.6,
-     "dy": -0.362,
+     "dx": 0.57,
+     "dy": -0.381,
      "rOverIris": 0.103
     },
     {
-     "dx": 0.559,
-     "dy": 0.222,
+     "dx": 0.531,
+     "dy": 0.233,
      "rOverIris": 0.091
     },
     {
-     "dx": -0.512,
-     "dy": -0.151,
+     "dx": -0.486,
+     "dy": -0.158,
      "rOverIris": 0.067
     },
     {
-     "dx": 0.273,
-     "dy": -0.303,
+     "dx": 0.259,
+     "dy": -0.319,
      "rOverIris": 0.062
     }
    ],
    "fibres": {
     "ecartTypeLuminance": [
-     60.94,
-     42.71,
-     34.86,
-     32.05
+     62.18,
+     45.02,
+     34.21,
+     31.12
     ]
    },
-   "sclere": "#b5b8c0"
+   "sclere": "#b4b8c2"
+  },
+  {
+   "id": "04",
+   "file": "04.jpg",
+   "note": "prisme arc-en-ciel en bas, turquoise en haut à droite, collerette dorée, rayons croisés",
+   "annotation": {
+    "cx": 413,
+    "cy": 285,
+    "rx": 183,
+    "ry": 165
+   },
+   "limbe": {
+    "cx": 414.8,
+    "cy": 281.7,
+    "rx": 175.8,
+    "ry": 171.9,
+    "angDeg": 94.6,
+    "fitA": 171.9,
+    "fitB": 175.8,
+    "rayonsRetenus": 72,
+    "aspectHW": 0.978
+   },
+   "pupille": {
+    "cx": 0.014,
+    "cy": -0.006,
+    "rOverIris": 0.259,
+    "aspectHW": 0.99,
+    "color": "#332f23"
+   },
+   "tone": {
+    "lumMean": 126.1,
+    "darkShare": 0.154,
+    "satPeaks": 0.783,
+    "vividBands": [
+     "#a59f54",
+     "#a59c59",
+     "#58c2b0"
+    ]
+   },
+   "radial": [
+    {
+     "r": 0.042,
+     "color": "#b3b17a",
+     "dark": "#7a7a3d",
+     "bright": "#dedaad",
+     "lum": 178.6,
+     "lumSpread": 45.1,
+     "sat": 0.352
+    },
+    {
+     "r": 0.125,
+     "color": "#979667",
+     "dark": "#565627",
+     "bright": "#d5d3a6",
+     "lum": 148.7,
+     "lumSpread": 57.0,
+     "sat": 0.38
+    },
+    {
+     "r": 0.208,
+     "color": "#845c2d",
+     "dark": "#582e11",
+     "bright": "#c8a356",
+     "lum": 93.7,
+     "lumSpread": 42.6,
+     "sat": 0.691
+    },
+    {
+     "r": 0.292,
+     "color": "#906a32",
+     "dark": "#371e0c",
+     "bright": "#e6c469",
+     "lum": 111.3,
+     "lumSpread": 79.2,
+     "sat": 0.71
+    },
+    {
+     "r": 0.375,
+     "color": "#aa9651",
+     "dark": "#59330f",
+     "bright": "#deda87",
+     "lum": 150.5,
+     "lumSpread": 76.0,
+     "sat": 0.607
+    },
+    {
+     "r": 0.458,
+     "color": "#8a946e",
+     "dark": "#4a371c",
+     "bright": "#b6dfbe",
+     "lum": 144.6,
+     "lumSpread": 92.5,
+     "sat": 0.511
+    },
+    {
+     "r": 0.542,
+     "color": "#5b776a",
+     "dark": "#23322b",
+     "bright": "#9dc0aa",
+     "lum": 112.4,
+     "lumSpread": 76.4,
+     "sat": 0.513
+    },
+    {
+     "r": 0.625,
+     "color": "#569194",
+     "dark": "#203f4a",
+     "bright": "#99d4c9",
+     "lum": 130.6,
+     "lumSpread": 87.9,
+     "sat": 0.59
+    },
+    {
+     "r": 0.708,
+     "color": "#4d949c",
+     "dark": "#1b3b4b",
+     "bright": "#8fe3d7",
+     "lum": 130.9,
+     "lumSpread": 99.9,
+     "sat": 0.618
+    },
+    {
+     "r": 0.792,
+     "color": "#578791",
+     "dark": "#1b3347",
+     "bright": "#9adfc9",
+     "lum": 125.3,
+     "lumSpread": 104.4,
+     "sat": 0.6
+    },
+    {
+     "r": 0.875,
+     "color": "#4c6d6d",
+     "dark": "#0a1115",
+     "bright": "#9ad4b6",
+     "lum": 101.2,
+     "lumSpread": 123.7,
+     "sat": 0.619
+    },
+    {
+     "r": 0.958,
+     "color": "#374a43",
+     "dark": "#091010",
+     "bright": "#75a484",
+     "lum": 69.6,
+     "lumSpread": 63.7,
+     "sat": 0.57
+    }
+   ],
+   "secteurs": [
+    {
+     "angleDeg": 0,
+     "color": "#6f6365",
+     "vivid": "#c08243"
+    },
+    {
+     "angleDeg": 45,
+     "color": "#41665f",
+     "vivid": "#69a690"
+    },
+    {
+     "angleDeg": 90,
+     "color": "#419e85",
+     "vivid": "#35dab9"
+    },
+    {
+     "angleDeg": 135,
+     "color": "#58ceb7",
+     "vivid": "#1fe5d5"
+    },
+    {
+     "angleDeg": 180,
+     "color": "#99bd83",
+     "vivid": "#9ac97a"
+    },
+    {
+     "angleDeg": 225,
+     "color": "#d2938f",
+     "vivid": "#e89563"
+    },
+    {
+     "angleDeg": 270,
+     "color": "#638e93",
+     "vivid": "#40aca7"
+    },
+    {
+     "angleDeg": 315,
+     "color": "#5a5a51",
+     "vivid": "#ae8546"
+    }
+   ],
+   "anneauLimbique": {
+    "luminanceMin": 65.7,
+    "epaisseurOverRayon": 0.1
+   },
+   "reflets": [
+    {
+     "dx": -0.034,
+     "dy": 0.311,
+     "rOverIris": 0.274
+    },
+    {
+     "dx": -0.669,
+     "dy": -0.49,
+     "rOverIris": 0.145
+    },
+    {
+     "dx": -0.465,
+     "dy": 0.478,
+     "rOverIris": 0.136
+    },
+    {
+     "dx": 0.822,
+     "dy": 0.271,
+     "rOverIris": 0.127
+    },
+    {
+     "dx": 0.378,
+     "dy": 0.643,
+     "rOverIris": 0.097
+    },
+    {
+     "dx": 0.456,
+     "dy": 0.112,
+     "rOverIris": 0.095
+    }
+   ],
+   "fibres": {
+    "ecartTypeLuminance": [
+     48.09,
+     48.43,
+     46.27,
+     56.54
+    ]
+   },
+   "sclere": "#c5c2cd"
+  },
+  {
+   "id": "07",
+   "file": "07.jpg",
+   "note": "émeraude à facettes et bulles, collerette verte, pupille noire, double reflet en étoile",
+   "annotation": {
+    "cx": 307,
+    "cy": 288,
+    "rx": 140,
+    "ry": 122
+   },
+   "limbe": {
+    "cx": 307.1,
+    "cy": 285.4,
+    "rx": 140.2,
+    "ry": 130.5,
+    "angDeg": 107.7,
+    "fitA": 129.3,
+    "fitB": 141.3,
+    "rayonsRetenus": 72,
+    "aspectHW": 0.931
+   },
+   "pupille": {
+    "cx": -0.028,
+    "cy": -0.162,
+    "rOverIris": 0.145,
+    "aspectHW": 0.679,
+    "color": "#091d12"
+   },
+   "tone": {
+    "lumMean": 128.8,
+    "darkShare": 0.101,
+    "satPeaks": 0.738,
+    "vividBands": [
+     "#45a249",
+     "#59c367",
+     "#45c091"
+    ]
+   },
+   "radial": [
+    {
+     "r": 0.042,
+     "color": "#0c5b2b",
+     "dark": "#054323",
+     "bright": "#1a7636",
+     "lum": 62.4,
+     "lumSpread": 24.7,
+     "sat": 0.884
+    },
+    {
+     "r": 0.125,
+     "color": "#2f763a",
+     "dark": "#0b4627",
+     "bright": "#6a994c",
+     "lum": 90.7,
+     "lumSpread": 61.8,
+     "sat": 0.721
+    },
+    {
+     "r": 0.208,
+     "color": "#699b53",
+     "dark": "#124c2c",
+     "bright": "#d6ee8f",
+     "lum": 132.6,
+     "lumSpread": 130.2,
+     "sat": 0.625
+    },
+    {
+     "r": 0.292,
+     "color": "#76a560",
+     "dark": "#224c2d",
+     "bright": "#caed91",
+     "lum": 144.2,
+     "lumSpread": 123.5,
+     "sat": 0.492
+    },
+    {
+     "r": 0.375,
+     "color": "#6ca462",
+     "dark": "#134730",
+     "bright": "#b7e992",
+     "lum": 141.6,
+     "lumSpread": 117.8,
+     "sat": 0.52
+    },
+    {
+     "r": 0.458,
+     "color": "#5fac66",
+     "dark": "#176537",
+     "bright": "#afe690",
+     "lum": 142.8,
+     "lumSpread": 96.5,
+     "sat": 0.564
+    },
+    {
+     "r": 0.542,
+     "color": "#52a768",
+     "dark": "#0d6936",
+     "bright": "#9edf9b",
+     "lum": 136.5,
+     "lumSpread": 83.3,
+     "sat": 0.6
+    },
+    {
+     "r": 0.625,
+     "color": "#499d6c",
+     "dark": "#106340",
+     "bright": "#9edda5",
+     "lum": 128.6,
+     "lumSpread": 82.2,
+     "sat": 0.621
+    },
+    {
+     "r": 0.708,
+     "color": "#3f916a",
+     "dark": "#084536",
+     "bright": "#8adda8",
+     "lum": 118.4,
+     "lumSpread": 103.3,
+     "sat": 0.667
+    },
+    {
+     "r": 0.792,
+     "color": "#398966",
+     "dark": "#09352e",
+     "bright": "#84dea1",
+     "lum": 110.0,
+     "lumSpread": 94.5,
+     "sat": 0.67
+    },
+    {
+     "r": 0.875,
+     "color": "#3c795d",
+     "dark": "#09201d",
+     "bright": "#7ed398",
+     "lum": 100.6,
+     "lumSpread": 106.0,
+     "sat": 0.596
+    },
+    {
+     "r": 0.958,
+     "color": "#58725e",
+     "dark": "#0f2829",
+     "bright": "#b3c4a4",
+     "lum": 105.6,
+     "lumSpread": 105.0,
+     "sat": 0.424
+    }
+   ],
+   "secteurs": [
+    {
+     "angleDeg": 0,
+     "color": "#255b3f",
+     "vivid": "#398346"
+    },
+    {
+     "angleDeg": 45,
+     "color": "#82a06d",
+     "vivid": "#91b470"
+    },
+    {
+     "angleDeg": 90,
+     "color": "#3f9a5f",
+     "vivid": "#26ad6c"
+    },
+    {
+     "angleDeg": 135,
+     "color": "#77d08b",
+     "vivid": "#3ec88b"
+    },
+    {
+     "angleDeg": 180,
+     "color": "#96dd9b",
+     "vivid": "#6ddf95"
+    },
+    {
+     "angleDeg": 225,
+     "color": "#68d599",
+     "vivid": "#2ed99f"
+    },
+    {
+     "angleDeg": 270,
+     "color": "#3c9c65",
+     "vivid": "#35ae6d"
+    },
+    {
+     "angleDeg": 315,
+     "color": "#115c3d",
+     "vivid": "#188245"
+    }
+   ],
+   "anneauLimbique": {
+    "luminanceMin": 96.8,
+    "epaisseurOverRayon": 0.25
+   },
+   "reflets": [
+    {
+     "dx": 0.05,
+     "dy": 0.635,
+     "rOverIris": 0.229
+    },
+    {
+     "dx": -0.34,
+     "dy": 0.292,
+     "rOverIris": 0.159
+    },
+    {
+     "dx": 0.433,
+     "dy": -0.399,
+     "rOverIris": 0.146
+    },
+    {
+     "dx": 0.556,
+     "dy": 0.407,
+     "rOverIris": 0.085
+    },
+    {
+     "dx": 0.826,
+     "dy": 0.573,
+     "rOverIris": 0.046
+    },
+    {
+     "dx": 0.176,
+     "dy": 0.307,
+     "rOverIris": 0.045
+    }
+   ],
+   "fibres": {
+    "ecartTypeLuminance": [
+     57.21,
+     47.52,
+     50.8,
+     57.36
+    ]
+   },
+   "sclere": "#d4c8c0"
+  },
+  {
+   "id": "08a",
+   "file": "08.jpg",
+   "note": "vert citron / cyan, pupille bleue à point orange, œil gauche de la paire",
+   "annotation": {
+    "cx": 204,
+    "cy": 201,
+    "rx": 47,
+    "ry": 50
+   },
+   "limbe": {
+    "cx": 208.0,
+    "cy": 203.1,
+    "rx": 46.8,
+    "ry": 50.6,
+    "angDeg": 27.7,
+    "fitA": 45.3,
+    "fitB": 51.9,
+    "rayonsRetenus": 72,
+    "aspectHW": 1.08
+   },
+   "pupille": {
+    "cx": -0.042,
+    "cy": -0.166,
+    "rOverIris": 0.162,
+    "aspectHW": 1.062,
+    "color": "#1c4345"
+   },
+   "tone": {
+    "lumMean": 169.4,
+    "darkShare": 0.003,
+    "satPeaks": 0.786,
+    "vividBands": [
+     "#76918f",
+     "#adef5b",
+     "#d3ee46"
+    ]
+   },
+   "radial": [
+    {
+     "r": 0.042,
+     "color": "#ba714f",
+     "dark": "#6b5944",
+     "bright": "#eb8054",
+     "lum": 122.3,
+     "lumSpread": 38.9,
+     "sat": 0.532
+    },
+    {
+     "r": 0.125,
+     "color": "#72857c",
+     "dark": "#326269",
+     "bright": "#b5a283",
+     "lum": 123.6,
+     "lumSpread": 39.7,
+     "sat": 0.456
+    },
+    {
+     "r": 0.208,
+     "color": "#2891a9",
+     "dark": "#336a78",
+     "bright": "#1ab4c9",
+     "lum": 118.4,
+     "lumSpread": 32.0,
+     "sat": 0.741
+    },
+    {
+     "r": 0.292,
+     "color": "#25a7b1",
+     "dark": "#3a6d76",
+     "bright": "#1dd6cf",
+     "lum": 128.6,
+     "lumSpread": 38.7,
+     "sat": 0.776
+    },
+    {
+     "r": 0.375,
+     "color": "#3fb894",
+     "dark": "#2e8791",
+     "bright": "#6ae478",
+     "lum": 143.7,
+     "lumSpread": 42.3,
+     "sat": 0.7
+    },
+    {
+     "r": 0.458,
+     "color": "#66c673",
+     "dark": "#279f97",
+     "bright": "#caf448",
+     "lum": 160.0,
+     "lumSpread": 62.8,
+     "sat": 0.675
+    },
+    {
+     "r": 0.542,
+     "color": "#80d05b",
+     "dark": "#36a97d",
+     "bright": "#d5f543",
+     "lum": 170.0,
+     "lumSpread": 64.6,
+     "sat": 0.663
+    },
+    {
+     "r": 0.625,
+     "color": "#8dd34d",
+     "dark": "#4bb252",
+     "bright": "#defb41",
+     "lum": 174.0,
+     "lumSpread": 65.2,
+     "sat": 0.635
+    },
+    {
+     "r": 0.708,
+     "color": "#91cd4b",
+     "dark": "#4aa152",
+     "bright": "#e2fb3e",
+     "lum": 172.1,
+     "lumSpread": 79.2,
+     "sat": 0.63
+    },
+    {
+     "r": 0.792,
+     "color": "#94bd53",
+     "dark": "#497552",
+     "bright": "#e2f943",
+     "lum": 164.1,
+     "lumSpread": 89.4,
+     "sat": 0.555
+    },
+    {
+     "r": 0.875,
+     "color": "#8aa967",
+     "dark": "#3d6351",
+     "bright": "#d4da64",
+     "lum": 154.4,
+     "lumSpread": 69.3,
+     "sat": 0.471
+    },
+    {
+     "r": 0.958,
+     "color": "#769986",
+     "dark": "#386a4f",
+     "bright": "#a4b69f",
+     "lum": 145.1,
+     "lumSpread": 38.2,
+     "sat": 0.361
+    }
+   ],
+   "secteurs": [
+    {
+     "angleDeg": 0,
+     "color": "#5fac75",
+     "vivid": "#2ca9a5"
+    },
+    {
+     "angleDeg": 45,
+     "color": "#3d9a62",
+     "vivid": "#26a49a"
+    },
+    {
+     "angleDeg": 90,
+     "color": "#55a25e",
+     "vivid": "#3bba86"
+    },
+    {
+     "angleDeg": 135,
+     "color": "#7fdb61",
+     "vivid": "#6be485"
+    },
+    {
+     "angleDeg": 180,
+     "color": "#caf54b",
+     "vivid": "#defb40"
+    },
+    {
+     "angleDeg": 225,
+     "color": "#c3f44f",
+     "vivid": "#c8f64c"
+    },
+    {
+     "angleDeg": 270,
+     "color": "#89d35a",
+     "vivid": "#b8ee4c"
+    },
+    {
+     "angleDeg": 315,
+     "color": "#64af70",
+     "vivid": "#2fa6a0"
+    }
+   ],
+   "anneauLimbique": {
+    "luminanceMin": 142.4,
+    "epaisseurOverRayon": 0.15
+   },
+   "reflets": [
+    {
+     "dx": -0.497,
+     "dy": 0.798,
+     "rOverIris": 0.173
+    },
+    {
+     "dx": -0.825,
+     "dy": -0.034,
+     "rOverIris": 0.053
+    },
+    {
+     "dx": -0.96,
+     "dy": -0.039,
+     "rOverIris": 0.045
+    }
+   ],
+   "fibres": {
+    "ecartTypeLuminance": [
+     40.27
+    ]
+   },
+   "sclere": "#cbccc1"
+  },
+  {
+   "id": "08b",
+   "file": "08.jpg",
+   "note": "vert citron / cyan, œil droit de la paire (plus petit, en perspective)",
+   "annotation": {
+    "cx": 455,
+    "cy": 268,
+    "rx": 40,
+    "ry": 46
+   },
+   "limbe": {
+    "cx": 456.7,
+    "cy": 269.7,
+    "rx": 39.4,
+    "ry": 47.4,
+    "angDeg": 10.4,
+    "fitA": 39.1,
+    "fitB": 47.6,
+    "rayonsRetenus": 72,
+    "aspectHW": 1.202
+   },
+   "pupille": {
+    "cx": -0.168,
+    "cy": -0.112,
+    "rOverIris": 0.186,
+    "aspectHW": 1.059,
+    "color": "#1d3e39"
+   },
+   "tone": {
+    "lumMean": 142.1,
+    "darkShare": 0.0,
+    "satPeaks": 0.782,
+    "vividBands": [
+     "#508f9c",
+     "#25b4a4",
+     "#88c340"
+    ]
+   },
+   "radial": [
+    null,
+    {
+     "r": 0.125,
+     "color": "#3f7781",
+     "dark": "#405f5c",
+     "bright": "#3890a7",
+     "lum": 100.8,
+     "lumSpread": 19.5,
+     "sat": 0.704
+    },
+    {
+     "r": 0.208,
+     "color": "#3f8d94",
+     "dark": "#4f6b66",
+     "bright": "#2caabc",
+     "lum": 114.6,
+     "lumSpread": 18.2,
+     "sat": 0.722
+    },
+    {
+     "r": 0.292,
+     "color": "#349498",
+     "dark": "#3f6e6e",
+     "bright": "#3bb3b5",
+     "lum": 120.6,
+     "lumSpread": 26.7,
+     "sat": 0.679
+    },
+    {
+     "r": 0.375,
+     "color": "#359c8c",
+     "dark": "#2f726f",
+     "bright": "#36bf97",
+     "lum": 124.6,
+     "lumSpread": 30.4,
+     "sat": 0.691
+    },
+    {
+     "r": 0.458,
+     "color": "#41a579",
+     "dark": "#287576",
+     "bright": "#63cb67",
+     "lum": 130.0,
+     "lumSpread": 40.8,
+     "sat": 0.655
+    },
+    {
+     "r": 0.542,
+     "color": "#4cb36b",
+     "dark": "#239288",
+     "bright": "#7dd257",
+     "lum": 138.8,
+     "lumSpread": 36.4,
+     "sat": 0.664
+    },
+    {
+     "r": 0.625,
+     "color": "#52b655",
+     "dark": "#2f9d6b",
+     "bright": "#83d248",
+     "lum": 140.6,
+     "lumSpread": 31.1,
+     "sat": 0.646
+    },
+    {
+     "r": 0.708,
+     "color": "#5db14b",
+     "dark": "#3c9751",
+     "bright": "#99d146",
+     "lum": 139.4,
+     "lumSpread": 26.3,
+     "sat": 0.616
+    },
+    {
+     "r": 0.792,
+     "color": "#5ea74a",
+     "dark": "#3b7f59",
+     "bright": "#99cd41",
+     "lum": 133.4,
+     "lumSpread": 24.4,
+     "sat": 0.591
+    },
+    {
+     "r": 0.875,
+     "color": "#54944b",
+     "dark": "#366654",
+     "bright": "#83b847",
+     "lum": 119.3,
+     "lumSpread": 27.6,
+     "sat": 0.533
+    },
+    {
+     "r": 0.958,
+     "color": "#4b8261",
+     "dark": "#355234",
+     "bright": "#67a790",
+     "lum": 114.9,
+     "lumSpread": 33.0,
+     "sat": 0.48
+    }
+   ],
+   "secteurs": [
+    {
+     "angleDeg": 0,
+     "color": "#4aa067",
+     "vivid": "#2ca2a9"
+    },
+    {
+     "angleDeg": 45,
+     "color": "#3d9755",
+     "vivid": "#43ab5d"
+    },
+    {
+     "angleDeg": 90,
+     "color": "#479f5c",
+     "vivid": "#4cb458"
+    },
+    {
+     "angleDeg": 135,
+     "color": "#60b95d",
+     "vivid": "#44c681"
+    },
+    {
+     "angleDeg": 180,
+     "color": "#7bcd5a",
+     "vivid": "#75cc61"
+    },
+    {
+     "angleDeg": 225,
+     "color": "#69c563",
+     "vivid": "#aad740"
+    },
+    {
+     "angleDeg": 270,
+     "color": "#37a060",
+     "vivid": "#1fa28d"
+    },
+    {
+     "angleDeg": 315,
+     "color": "#389364",
+     "vivid": "#1f9a9b"
+    }
+   ],
+   "anneauLimbique": {
+    "luminanceMin": 112.0,
+    "epaisseurOverRayon": 0.15
+   },
+   "reflets": [],
+   "fibres": {
+    "ecartTypeLuminance": []
+   },
+   "sclere": "#8ea396"
+  },
+  {
+   "id": "10a",
+   "file": "10.jpg",
+   "note": "halo orange feu, pupille violette étoilée, rayons blancs",
+   "annotation": {
+    "cx": 358,
+    "cy": 368,
+    "rx": 126,
+    "ry": 108
+   },
+   "limbe": {
+    "cx": 357.6,
+    "cy": 368.8,
+    "rx": 129.1,
+    "ry": 101.3,
+    "angDeg": 75.7,
+    "fitA": 99.1,
+    "fitB": 130.9,
+    "rayonsRetenus": 72,
+    "aspectHW": 0.785
+   },
+   "pupille": {
+    "cx": 0.056,
+    "cy": 0.014,
+    "rOverIris": 0.044,
+    "aspectHW": 1.091,
+    "color": "#332345"
+   },
+   "tone": {
+    "lumMean": 89.1,
+    "darkShare": 0.373,
+    "satPeaks": 0.72,
+    "vividBands": [
+     "#4896e4",
+     "#e66a3a",
+     "#6a4d7e"
+    ]
+   },
+   "radial": [
+    {
+     "r": 0.042,
+     "color": "#586999",
+     "dark": "#373265",
+     "bright": "#8db9d7",
+     "lum": 114.2,
+     "lumSpread": 73.0,
+     "sat": 0.486
+    },
+    {
+     "r": 0.125,
+     "color": "#5b5c8b",
+     "dark": "#392657",
+     "bright": "#73a9d1",
+     "lum": 99.0,
+     "lumSpread": 66.0,
+     "sat": 0.545
+    },
+    {
+     "r": 0.208,
+     "color": "#886979",
+     "dark": "#432d60",
+     "bright": "#c8bb9a",
+     "lum": 117.9,
+     "lumSpread": 85.2,
+     "sat": 0.574
+    },
+    {
+     "r": 0.292,
+     "color": "#c5856b",
+     "dark": "#844556",
+     "bright": "#eec884",
+     "lum": 146.8,
+     "lumSpread": 74.1,
+     "sat": 0.577
+    },
+    {
+     "r": 0.375,
+     "color": "#a96255",
+     "dark": "#452239",
+     "bright": "#f4be79",
+     "lum": 117.4,
+     "lumSpread": 95.1,
+     "sat": 0.625
+    },
+    {
+     "r": 0.458,
+     "color": "#8b5141",
+     "dark": "#181225",
+     "bright": "#f6be75",
+     "lum": 98.6,
+     "lumSpread": 116.2,
+     "sat": 0.645
+    },
+    {
+     "r": 0.542,
+     "color": "#835e41",
+     "dark": "#120c17",
+     "bright": "#f9e184",
+     "lum": 103.0,
+     "lumSpread": 169.8,
+     "sat": 0.584
+    },
+    {
+     "r": 0.625,
+     "color": "#98634a",
+     "dark": "#160e16",
+     "bright": "#f6cd7f",
+     "lum": 113.8,
+     "lumSpread": 142.9,
+     "sat": 0.551
+    },
+    {
+     "r": 0.708,
+     "color": "#71404f",
+     "dark": "#180e1a",
+     "bright": "#d3857f",
+     "lum": 83.3,
+     "lumSpread": 82.7,
+     "sat": 0.569
+    },
+    {
+     "r": 0.792,
+     "color": "#583e60",
+     "dark": "#201121",
+     "bright": "#ab7aa3",
+     "lum": 76.6,
+     "lumSpread": 70.5,
+     "sat": 0.555
+    },
+    {
+     "r": 0.875,
+     "color": "#513e5b",
+     "dark": "#160e20",
+     "bright": "#b08ab0",
+     "lum": 73.5,
+     "lumSpread": 77.5,
+     "sat": 0.537
+    },
+    {
+     "r": 0.958,
+     "color": "#675263",
+     "dark": "#0c0b1d",
+     "bright": "#ceadb6",
+     "lum": 93.3,
+     "lumSpread": 134.5,
+     "sat": 0.477
+    }
+   ],
+   "secteurs": [
+    {
+     "angleDeg": 0,
+     "color": "#342b3b",
+     "vivid": "#564b74"
+    },
+    {
+     "angleDeg": 45,
+     "color": "#65322a",
+     "vivid": "#d17035"
+    },
+    {
+     "angleDeg": 90,
+     "color": "#8f6163",
+     "vivid": "#e67d47"
+    },
+    {
+     "angleDeg": 135,
+     "color": "#b1828c",
+     "vivid": "#eda662"
+    },
+    {
+     "angleDeg": 180,
+     "color": "#ca9299",
+     "vivid": "#f5b36d"
+    },
+    {
+     "angleDeg": 225,
+     "color": "#a46762",
+     "vivid": "#e95f36"
+    },
+    {
+     "angleDeg": 270,
+     "color": "#8e4639",
+     "vivid": "#d96033"
+    },
+    {
+     "angleDeg": 315,
+     "color": "#382331",
+     "vivid": "#7d4256"
+    }
+   ],
+   "anneauLimbique": {
+    "luminanceMin": 73.4,
+    "epaisseurOverRayon": 0.25
+   },
+   "reflets": [
+    {
+     "dx": 0.073,
+     "dy": 0.384,
+     "rOverIris": 0.272
+    },
+    {
+     "dx": 0.621,
+     "dy": 0.081,
+     "rOverIris": 0.095
+    },
+    {
+     "dx": 0.842,
+     "dy": 0.336,
+     "rOverIris": 0.088
+    },
+    {
+     "dx": -0.328,
+     "dy": 0.516,
+     "rOverIris": 0.084
+    },
+    {
+     "dx": 0.508,
+     "dy": -0.419,
+     "rOverIris": 0.072
+    },
+    {
+     "dx": -0.837,
+     "dy": 0.316,
+     "rOverIris": 0.069
+    }
+   ],
+   "fibres": {
+    "ecartTypeLuminance": [
+     62.66,
+     75.27,
+     72.71,
+     54.29
+    ]
+   },
+   "sclere": "#dabfb7"
+  },
+  {
+   "id": "10b",
+   "file": "10.jpg",
+   "note": "halo cyan givré, pupille marine, six pointes d'étoile",
+   "annotation": {
+    "cx": 366,
+    "cy": 791,
+    "rx": 120,
+    "ry": 123
+   },
+   "limbe": {
+    "cx": 366.2,
+    "cy": 788.6,
+    "rx": 117.8,
+    "ry": 118.1,
+    "angDeg": 39.4,
+    "fitA": 117.1,
+    "fitB": 118.8,
+    "rayonsRetenus": 72,
+    "aspectHW": 1.003
+   },
+   "pupille": {
+    "cx": -0.159,
+    "cy": 0.138,
+    "rOverIris": 0.116,
+    "aspectHW": 0.935,
+    "color": "#22253b"
+   },
+   "tone": {
+    "lumMean": 103.3,
+    "darkShare": 0.297,
+    "satPeaks": 0.729,
+    "vividBands": [
+     "#6063bd",
+     "#4fbde2",
+     "#378ec5"
+    ]
+   },
+   "radial": [
+    {
+     "r": 0.042,
+     "color": "#505690",
+     "dark": "#303760",
+     "bright": "#8188be",
+     "lum": 95.8,
+     "lumSpread": 56.0,
+     "sat": 0.47
+    },
+    {
+     "r": 0.125,
+     "color": "#585d94",
+     "dark": "#2f365e",
+     "bright": "#9f9fd9",
+     "lum": 101.4,
+     "lumSpread": 63.3,
+     "sat": 0.436
+    },
+    {
+     "r": 0.208,
+     "color": "#5a5f8b",
+     "dark": "#2e345d",
+     "bright": "#999dc6",
+     "lum": 102.4,
+     "lumSpread": 66.9,
+     "sat": 0.398
+    },
+    {
+     "r": 0.292,
+     "color": "#536391",
+     "dark": "#2a3260",
+     "bright": "#8fa7d2",
+     "lum": 100.8,
+     "lumSpread": 69.1,
+     "sat": 0.483
+    },
+    {
+     "r": 0.375,
+     "color": "#4d79a6",
+     "dark": "#1f2853",
+     "bright": "#7fd9ea",
+     "lum": 114.1,
+     "lumSpread": 92.3,
+     "sat": 0.592
+    },
+    {
+     "r": 0.458,
+     "color": "#2d4d6c",
+     "dark": "#0a1020",
+     "bright": "#6fd2e7",
+     "lum": 73.2,
+     "lumSpread": 82.1,
+     "sat": 0.631
+    },
+    {
+     "r": 0.542,
+     "color": "#2e556c",
+     "dark": "#080d1c",
+     "bright": "#71dcee",
+     "lum": 78.3,
+     "lumSpread": 114.4,
+     "sat": 0.629
+    },
+    {
+     "r": 0.625,
+     "color": "#3f7d8f",
+     "dark": "#070a16",
+     "bright": "#7fecf2",
+     "lum": 110.7,
+     "lumSpread": 173.3,
+     "sat": 0.602
+    },
+    {
+     "r": 0.708,
+     "color": "#3f7d9e",
+     "dark": "#091226",
+     "bright": "#71d5ea",
+     "lum": 111.9,
+     "lumSpread": 117.9,
+     "sat": 0.63
+    },
+    {
+     "r": 0.792,
+     "color": "#486d93",
+     "dark": "#1c274d",
+     "bright": "#81bdd7",
+     "lum": 104.8,
+     "lumSpread": 76.7,
+     "sat": 0.546
+    },
+    {
+     "r": 0.875,
+     "color": "#5e7697",
+     "dark": "#1a2c50",
+     "bright": "#b8b7c6",
+     "lum": 116.8,
+     "lumSpread": 81.4,
+     "sat": 0.5
+    },
+    {
+     "r": 0.958,
+     "color": "#576280",
+     "dark": "#132143",
+     "bright": "#a6a4b1",
+     "lum": 100.7,
+     "lumSpread": 85.7,
+     "sat": 0.52
+    }
+   ],
+   "secteurs": [
+    {
+     "angleDeg": 0,
+     "color": "#2a2c4f",
+     "vivid": "#4049a1"
+    },
+    {
+     "angleDeg": 45,
+     "color": "#294766",
+     "vivid": "#3695c2"
+    },
+    {
+     "angleDeg": 90,
+     "color": "#4c9cb5",
+     "vivid": "#38bee4"
+    },
+    {
+     "angleDeg": 135,
+     "color": "#5caac2",
+     "vivid": "#46daf2"
+    },
+    {
+     "angleDeg": 180,
+     "color": "#78a3bd",
+     "vivid": "#59cee8"
+    },
+    {
+     "angleDeg": 225,
+     "color": "#478cae",
+     "vivid": "#48c2e8"
+    },
+    {
+     "angleDeg": 270,
+     "color": "#3a80a9",
+     "vivid": "#27a7df"
+    },
+    {
+     "angleDeg": 315,
+     "color": "#24385d",
+     "vivid": "#3874ba"
+    }
+   ],
+   "anneauLimbique": {
+    "luminanceMin": 95.0,
+    "epaisseurOverRayon": 0.05
+   },
+   "reflets": [
+    {
+     "dx": -0.068,
+     "dy": 0.273,
+     "rOverIris": 0.336
+    },
+    {
+     "dx": 0.564,
+     "dy": 0.708,
+     "rOverIris": 0.145
+    },
+    {
+     "dx": 0.014,
+     "dy": -0.231,
+     "rOverIris": 0.139
+    },
+    {
+     "dx": 0.766,
+     "dy": -0.274,
+     "rOverIris": 0.136
+    },
+    {
+     "dx": -0.515,
+     "dy": -0.633,
+     "rOverIris": 0.093
+    },
+    {
+     "dx": 0.497,
+     "dy": -0.713,
+     "rOverIris": 0.093
+    }
+   ],
+   "fibres": {
+    "ecartTypeLuminance": [
+     62.27,
+     79.54,
+     82.43,
+     65.53
+    ]
+   },
+   "sclere": "#e0cec6"
   }
  ]
 }

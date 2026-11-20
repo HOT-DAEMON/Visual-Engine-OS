@@ -1,5 +1,6 @@
 import { EXTRA_EYE_COUNT, generateExtraEye } from './eye-gallery-ext';
 import { EXTRA2_COUNT, generateExtra2Eye } from './eye-gallery-ext2';
+import { EXTRA3_COUNT, generateExtra3Eye } from './eye-gallery-ext3';
 import { generateRandomEye } from './random-eye';
 import type { EyeInput } from './random-eye-helpers';
 
@@ -47,5 +48,16 @@ export function extended2Pair(i: number, expression?: EyeInput['expression']): {
   if (!Number.isInteger(i) || i < 0 || i >= EXTENDED2_IDENTITIES) throw new RangeError(`identité étendue 2 hors [0, ${EXTENDED2_IDENTITIES - 1}] : ${i}`);
   if (i < EXTENDED_IDENTITIES) return extendedPair(i, expression);
   const eye = generateExtra2Eye(i - EXTENDED_IDENTITIES, expression);
+  return { left: { ...eye, shape: { ...eye.shape, outerSide: 'left' } }, right: { ...eye, shape: { ...eye.shape, outerSide: 'right' } } };
+}
+
+/** Identités de la galerie ÉTENDUE 3 (passe 10) : les 248 précédentes (0–247) puis les 100 formes de `eye-gallery-ext3` (248–347). `'extended'` et `'extended2'` gardent leurs identités et leurs tirages. */
+export const EXTENDED3_IDENTITIES = EXTENDED2_IDENTITIES + EXTRA3_COUNT;
+
+/** Paire gauche / droite de l'identité `i` (0–347) ; mêmes règles de miroir que `extendedPair`. */
+export function extended3Pair(i: number, expression?: EyeInput['expression']): { left: EyeInput; right: EyeInput } {
+  if (!Number.isInteger(i) || i < 0 || i >= EXTENDED3_IDENTITIES) throw new RangeError(`identité étendue 3 hors [0, ${EXTENDED3_IDENTITIES - 1}] : ${i}`);
+  if (i < EXTENDED2_IDENTITIES) return extended2Pair(i, expression);
+  const eye = generateExtra3Eye(i - EXTENDED2_IDENTITIES, expression);
   return { left: { ...eye, shape: { ...eye.shape, outerSide: 'left' } }, right: { ...eye, shape: { ...eye.shape, outerSide: 'right' } } };
 }

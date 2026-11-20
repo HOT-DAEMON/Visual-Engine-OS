@@ -45,6 +45,7 @@ de la bouche n'est pas tirée) ; elles sont listées dans le test, pas ignorées
 | `mouth.width` ≈ 0,27 sans effet sur le visage par défaut | correction `mouth-inside-contour` : 45 → 38,6 px | rendue OBSERVABLE (`lm.corrections`) |
 | Bouche écrasée dans une mâchoire étroite (cas 01) | 45 → 12,6 px (28 %) | avertissement `contract-no-crushed-request` ; non corrigé |
 | Dents inférieures hors de la cavité avec `jawShift` | 82 % dedans (< 90 %), graine 931 | CORRIGÉ (`artefacts/regression/04-…`) |
+| Yeux GAUCHES `sharp` / `drooping` ~24 % trop bas (contrat de hauteur ignoré quand la corde va vers la gauche) | 33 cas sur 34 `changed` (RMS 3–15) | CORRIGÉ en passe 10 ; références régénérées (`docs/EYES-PASS-10.md` § 1) |
 | Mèche frôlant la bouche (graine 46), oreille couverte (graine 81) | `front-clear-mouth` 0,02/0,02 ; `ear-free-right` 0,13/0,12 | antérieurs à ce travail, cas 17 et 18 |
 
 ## Campagne de 100 visages (`scripts/campaign-100.ts`, `artefacts/campagne-100/`)

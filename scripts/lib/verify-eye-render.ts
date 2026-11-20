@@ -83,10 +83,14 @@ export function verifyEyeRender(input: Record<string, unknown>): EyeImageCheck[]
   // anatomie : pupille (centre) plus sombre que l'iris (anneau à 0,7 rayon, médiane de 4 directions, points dans l'ouverture)
   const ring = [[0.7, 0], [-0.7, 0], [0, 0.7], [0, -0.7]].map(([a, b]) => ({ x: c.x + ox + (a as number) * rx, y: c.y + oy + (b as number) * ry })).filter((p) => inside(poly, p.x, p.y)).map((p) => lum(px, p.x, p.y)).sort((a, b) => a - b);
   const irisL = ring.length ? (ring[Math.floor(ring.length / 2)] as number) : NaN;
-  // le reflet blanc couvre souvent le centre de la pupille : on mesure la pupille au plus sombre de 5 points (centre + 4 à 0,5 de son rayon)
+  // le reflet blanc couvre souvent le centre de la pupille : on mesure la pupille au plus sombre de 9 points (centre + 8 à 0,5 de son rayon : axes et diagonales)
   const pr = eye.pupil.size * rx * 0.5;
-  const pupilL = Math.min(...[[0, 0], [pr, 0], [-pr, 0], [0, pr], [0, -pr]].map(([a, b]) => lum(px, c.x + ox + (a as number), c.y + oy + (b as number))));
-  if (eye.pupil.visible && eye.pupil.shape === 'round' && Number.isFinite(irisL)) add('anatomy', 'pupil-darker-than-iris-pixels', pupilL <= irisL + 2, pupilL - irisL, 2, 'la pupille rendue est plus claire que l’iris');
+  const d = pr * Math.SQRT1_2;   // passe 10 : + 4 diagonales — une étoile de lumière à 4 branches (réfs 04, 10) couvre le centre ET les axes, pas les diagonales
+  const pupilL = Math.min(...[[0, 0], [pr, 0], [-pr, 0], [0, pr], [0, -pr], [d, d], [-d, d], [d, -d], [-d, -d]].map(([a, b]) => lum(px, c.x + ox + (a as number), c.y + oy + (b as number))));
+  // passe 10 : pupille OCCULTÉE par un éclat en étoile centré (réfs 04, 10a, 10b : la pupille est noyée dans l'étoile, aucun disque sombre n'est visible) -> la règle ne s'applique pas ;
+  // un éclat n'occulte que s'il est ancré à l'iris, centré dans la pupille et au moins aussi grand qu'elle. Une pupille claire SANS éclat échoue toujours (tests/eye-iris-photo2.test.ts).
+  const occluded = (eye.highlights?.list ?? []).some((h: { shape?: string; anchor?: string; x: number; y: number; size: number }) => h.shape === 'sparkle' && h.anchor === 'iris' && Math.hypot(h.x, h.y) <= eye.pupil.size && h.size >= eye.pupil.size);
+  if (eye.pupil.visible && eye.pupil.shape === 'round' && Number.isFinite(irisL) && !occluded) add('anatomy', 'pupil-darker-than-iris-pixels', pupilL <= irisL + 2, pupilL - irisL, 2, 'la pupille rendue est plus claire que l’iris');
   // sclère : point entre le limbe et le canthus interne (s'il est dans l'ouverture) ; références : luminance moyenne 150–180, 5ᵉ centile 60–73 (ombre de paupière)
   const s = g.s;
   const sc = dominantColor(eye.sclera.base); // sclère volontairement sombre (démon, alien…) : le ton clair n'est exigé que si la sclère SPÉCIFIÉE est claire
@@ -113,14 +117,15 @@ export function verifyEyeRender(input: Record<string, unknown>): EyeImageCheck[]
   //   geometry : `pupil-core-centred` — le cœur sombre de la pupille (pixels <= minimum + 22 dans le disque 0,45 de l'iris) est centré sur l'iris, au décalage `pupil.center` près (mesuré : 0,02–0,06 sur les 4 réfs) ;
   //   anatomy  : `specular-in-upper-iris` — tout reflet de réflexion primaire ancré à l'iris est dans la moitié HAUTE (y <= 0 ; mesuré : dy -0,66 à -0,15 sur les 4 réfs) ;
   //   style    : `iris-texture` — écart moyen de luminance entre deux points voisins (pas de 5°, 4 anneaux de 0,4 à 0,85) >= IRIS_TEXTURE_MIN : l'ombrage lisse varie lentement, les fibres et filigranes non (une première règle « p85 - p15 » mesurait l'ombrage du moteur : un iris gris uni donnait 49 > galerie min 23).
+  // passe 10 : `pupil-core-centred` ne s'applique qu'à une pupille ronde et non occultée (comme `pupil-darker-than-iris-pixels`) : une fente verticale coupée par un reflet (53) ou une pupille noyée dans une étoile (2, 41, 71) n'a pas de « cœur » compact ; `specular-in-upper-iris` et `iris-texture` restent appliquées partout
   if (eye.finish !== 'flat' && eye.pupil.visible) {
     const dark: { x: number; y: number }[] = []; let mn = 1e9;
     const samples: { x: number; y: number; v: number }[] = [];
-    for (let a = 0; a < 360; a += 10) for (let f = 0; f <= 0.45; f += 0.05) { const x = c.x + ox + Math.cos((a * Math.PI) / 180) * rx * f, y = c.y + oy + Math.sin((a * Math.PI) / 180) * ry * f; const v = lum(px, x, y); samples.push({ x, y, v }); if (v < mn) mn = v; }
+    for (let a = 0; a < 360; a += 10) for (let f = 0; f <= 0.45; f += 0.05) { const x = c.x + ox + Math.cos((a * Math.PI) / 180) * rx * f, y = c.y + oy + Math.sin((a * Math.PI) / 180) * ry * f; if (!inside(poly, x, y)) continue; const v = lum(px, x, y); samples.push({ x, y, v }); if (v < mn) mn = v; }   // passe 10 : points dans l'ouverture seulement (paupière et cils sombres ne sont pas la pupille)
     for (const q of samples) if (q.v <= mn + 22) dark.push(q);
     const cx = dark.reduce((t, q) => t + q.x, 0) / Math.max(dark.length, 1), cy = dark.reduce((t, q) => t + q.y, 0) / Math.max(dark.length, 1);
     const off = Math.hypot((cx - (c.x + ox)) / rx, (cy - (c.y + oy)) / ry), allowed = 0.2 + Math.hypot(eye.pupil.center.x, eye.pupil.center.y);
-    add('geometry', 'pupil-core-centred', off <= allowed, off, allowed, 'le cœur sombre de la pupille n’est pas centré sur l’iris (au décalage pupil.center près)');
+    if (eye.pupil.shape === 'round' && !occluded) add('geometry', 'pupil-core-centred', off <= allowed, off, allowed, 'le cœur sombre de la pupille n’est pas centré sur l’iris (au décalage pupil.center près)');
     const hlItems = (eye.highlights?.list ?? []) as readonly { kind: string; role: string; anchor: string; y: number }[];
     const lowSpec = hlItems.filter((h) => h.kind === 'reflection' && h.role === 'primary' && h.anchor === 'iris' && h.y > 0.05);
     if (hlItems.some((h) => h.anchor === 'iris')) add('anatomy', 'specular-in-upper-iris', lowSpec.length === 0, lowSpec.length, 0, 'un reflet primaire ancré à l’iris est dans sa moitié basse (références : toujours dans la moitié haute)');

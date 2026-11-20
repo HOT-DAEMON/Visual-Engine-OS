@@ -27,17 +27,19 @@ export const PHOTO_IRIS_MEASURES: Record<PhotoIrisFamily, {
   readonly specular: { readonly dx: number; readonly dy: number; readonly r: number };
   readonly dark: Tri; readonly bright: Tri; readonly top: string; readonly bottom: string;
 }> = {
-  'slit-sunburst': { ref: '03', pupilOverIris: 0.232, pupilAspectHW: 1.471, irisAspect: 1.108, specular: { dx: -0.52, dy: -0.613, r: 0.184 }, dark: ['#8d2d17', '#85623d', '#1d1e26'], bright: ['#d29e65', '#f9e488', '#eccb7b'], top: '#2d465b', bottom: '#f1db8e' },
-  'ember-sky': { ref: '05', pupilOverIris: 0.174, pupilAspectHW: null, irisAspect: null, specular: { dx: 0.19, dy: -0.223, r: 0.132 }, dark: ['#492627', '#7b3126', '#341616'], bright: ['#8db6d9', '#d9a98c', '#f8a777'], top: '#4f414e', bottom: '#f08b56' },
-  'gold-filigree': { ref: '06', pupilOverIris: 0.101, pupilAspectHW: 1.158, irisAspect: 1.1, specular: { dx: 0.198, dy: -0.289, r: 0.082 }, dark: ['#8a4219', '#652510', '#4f1d0d'], bright: ['#f3e14b', '#faf95b', '#d2963b'], top: '#853f18', bottom: '#e6cd47' },
-  'frost-fern': { ref: '09', pupilOverIris: 0.105, pupilAspectHW: null, irisAspect: 1.06, specular: { dx: 0.6, dy: -0.362, r: 0.103 }, dark: ['#102561', '#284f9d', '#132563'], bright: ['#3c9ede', '#78edef', '#50a4df'], top: '#295a9f', bottom: '#4fb8e4' },
+  'slit-sunburst': { ref: '03', pupilOverIris: 0.232, pupilAspectHW: 1.471, irisAspect: 1.106, specular: { dx: -0.519, dy: -0.614, r: 0.184 }, dark: ['#8d2d17', '#85633d', '#1b1d24'], bright: ['#d19c64', '#f9e488', '#ebc979'], top: '#2d465b', bottom: '#f1db8e' },
+  'ember-sky': { ref: '05', pupilOverIris: 0.174, pupilAspectHW: null, irisAspect: 0.947, specular: { dx: 0.177, dy: -0.238, r: 0.132 }, dark: ['#4c292b', '#7a3025', '#321414'], bright: ['#8eb5d8', '#d1a790', '#f5a577'], top: '#534857', bottom: '#e98754' },
+  'gold-filigree': { ref: '06', pupilOverIris: 0.1, pupilAspectHW: 1.079, irisAspect: 0.929, specular: { dx: 0.181, dy: -0.314, r: 0.082 }, dark: ['#8a4118', '#6e2e13', '#4d1c0c'], bright: ['#f0cf3b', '#f9f755', '#cc8a35'], top: '#91491c', bottom: '#eedd4b' },
+  'frost-fern': { ref: '09', pupilOverIris: 0.105, pupilAspectHW: null, irisAspect: 0.957, specular: { dx: 0.57, dy: -0.381, r: 0.103 }, dark: ['#112665', '#274993', '#15296c'], bright: ['#3b96dd', '#7ceeef', '#489cde'], top: '#2a5da2', bottom: '#4bb7e1' },
 };
 
 /** Pupille à aspect mesuré : `deform.squash` (< 0 = étirée, sx = 1 + 0,5·s, sy = 1 − s) et taille corrigée pour que le rayon d'aire équivalente reste le rayon mesuré. */
+export function pupilFromMeasure(overIris: number, aspectHW: number | null): { shape: 'round'; size: number; squash: number } {
+  const A = aspectHW ?? 1; const squash = (1 - A) / (1 + 0.5 * A);
+  return { shape: 'round', size: overIris / Math.sqrt((1 + squash * 0.5) * (1 - squash)), squash };
+}
 export function pupilFor(f: PhotoIrisFamily): { shape: 'round'; size: number; squash: number } {
-  const M = PHOTO_IRIS_MEASURES[f]; const A = M.pupilAspectHW ?? 1;
-  const squash = (1 - A) / (1 + 0.5 * A);
-  return { shape: 'round', size: M.pupilOverIris / Math.sqrt((1 + squash * 0.5) * (1 - squash)), squash };
+  const M = PHOTO_IRIS_MEASURES[f]; return pupilFromMeasure(M.pupilOverIris, M.pupilAspectHW);
 }
 
 type Layers = NonNullable<NonNullable<EyeInput['iris']>['layers']>;
@@ -49,6 +51,8 @@ export interface PhotoIris {
   readonly irisAspect: number | null; readonly limbalRing: number; readonly fibers: number;
   /** Lueur d'iris (`iris.glow`) : teinte de la famille, pas le bleu glacé par défaut du schéma (qui délavait les iris chauds). */
   readonly glow: { readonly color: string; readonly strength: number } | null;
+  /** Matériau de base de l'iris (dégradé radial : centre -> limbe) qui REMPLACE le matériau hérité de l'œil ; absent : celui de l'œil est gardé (familles de la passe 9). */
+  readonly base?: readonly { readonly offset: number; readonly color: string }[];
 }
 
 export function photoIrisFamily(f: PhotoIrisFamily, rnd: () => number): PhotoIris {

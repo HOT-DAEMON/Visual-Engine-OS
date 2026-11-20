@@ -23,7 +23,11 @@ export interface OpeningProfile {
 
 const r4 = (v: number): number => Math.round(v * 1e4) / 1e4;
 
-export function openingProfile(g: OpeningGeometry): OpeningProfile {
+export function openingProfile(g0: OpeningGeometry): OpeningProfile {
+  // CORRECTION (passe 10) : les descripteurs sont définis dans le repère d'un œil DROIT (corde vers +x, paupière haute vers −y). Un œil gauche (`s` = −1) était tourné de 180° :
+  // aspect 0, paupières permutées, et les règles d'enveloppe de verifyEye ne mesuraient rien de réel sur les yeux gauches des visages. Miroir horizontal en entrée.
+  const mir = (p: Vec): Vec => ({ x: -p.x, y: p.y });
+  const g: OpeningGeometry = g0.s === -1 ? { ...g0, pi: mir(g0.pi), po: mir(g0.po), u1: mir(g0.u1), u2: mir(g0.u2), l1: mir(g0.l1), l2: mir(g0.l2) } : g0;
   const N = 256;
   const up: Vec[] = Array.from({ length: N + 1 }, (_, i) => cubicAt(g.pi, g.u1, g.u2, g.po, i / N));
   const lo: Vec[] = Array.from({ length: N + 1 }, (_, i) => cubicAt(g.po, g.l1, g.l2, g.pi, i / N));

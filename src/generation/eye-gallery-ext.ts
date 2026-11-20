@@ -1,3 +1,4 @@
+import { LEGACY_EXISTING_VECTORS } from './eye-existing-vectors-legacy';
 import { mulberry32 } from '../core/prng';
 import { openingGeometry, openingProfile } from '../geometry/eye';
 import { irisRadii } from '../render/eye/helpers';
@@ -69,7 +70,11 @@ export const profileVector = (shape: ReturnType<typeof Shape.parse>, canthi: Ret
 };
 export const dist = (a: readonly number[], b: readonly number[]): number => Math.sqrt(a.reduce((s, x, i) => s + (x - (b[i] as number)) ** 2, 0) / a.length);
 
-export const existingVectors = (): number[][] =>
+/** Vecteurs des 48 yeux d'origine tels qu'ils ont servi aux galeries 1 et 2 (FIGÉS : voir eye-existing-vectors-legacy.ts, 16 sont issus d'une géométrie gauche inversée). */
+export const existingVectors = (): number[][] => LEGACY_EXISTING_VECTORS.map((v) => [...v]);
+
+/** Mêmes yeux avec la géométrie CORRIGÉE (passe 10) : les 16 yeux `left` ont leur vrai profil. Sert à la galerie 3 et aux mesures de distinction. */
+export const existingVectorsTrue = (): number[][] =>
   Array.from({ length: EXISTING_GALLERY_COUNT }, (_, i) => {
     const e = generateRandomEye(1000 + i * 101, { expression: { kind: 'neutral', intensity: 1 } });
     return profileVector(Shape.parse({ outerSide: 'right', ...e.shape }), Canthi.parse(e.canthi ?? {}));

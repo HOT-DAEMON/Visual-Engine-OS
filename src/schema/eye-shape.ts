@@ -7,6 +7,11 @@ export const Shape = z
     tiltDeg: z.number().min(-30).max(30).default(6),
     upperFraction: z.number().min(0.4).max(0.8).default(0.62),
     openness: z.number().min(0.05).max(1.2).default(1),
+    /**
+     * Position du creux de la paupière BASSE le long de l'axe des canthi (0 = canthus interne, 1 = externe), passe 10 : mesurée de 0,40 à 0,65 d'une référence à l'autre.
+     * Absent : forme historique (almond ≈ 0,55). La hauteur demandée est conservée (apex bas recalé) ; le canthus interne ne bouge pas.
+     */
+    lowerPeak: z.number().min(0.3).max(0.75).optional(),
     /** 'auto' : le coin externe est du côté opposé au centre de l'hôte (sur un hôte) ; 'right' hors hôte. */
     outerSide: z.enum(['left', 'right', 'auto']).default('right'),
     /**

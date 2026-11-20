@@ -75,7 +75,9 @@ describe("orbite publiée par l'œil (docs/ORBIT-PUBLISH.md)", () => {
       };
       const withPub = faceComponents(params, lm, g, orbits).components, without = faceComponents(params, lm, g).components;
       for (const [side, id] of [['left', 'orbitL'], ['right', 'orbitR']] as const) {
-        if (orbits[side].grown) { expect(area(withPub, id)).toBeGreaterThan(area(without, id)); checkedGrown++; }
+        // PASSE 10 : `grown` peut décrire une orbite qui se RECENTRE sans s'agrandir (growth = 1 : rx et ry de l'a priori suffisent) — cas rendu atteignable par les yeux gauches
+        // sharp / drooping enfin à la bonne hauteur. La surface ne grandit que si `growth` > 1 ; sinon elle est identique.
+        if (orbits[side].growth > 1 + 1e-9) { expect(area(withPub, id)).toBeGreaterThan(area(without, id)); checkedGrown++; }
         else { expect(area(withPub, id)).toBeCloseTo(area(without, id), 9); checkedSame++; }
       }
     }

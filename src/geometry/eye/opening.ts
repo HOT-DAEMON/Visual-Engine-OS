@@ -5,6 +5,7 @@ import { extendedStyle } from './opening-styles';
 import { ALMOND_REF, NEUTRAL_REF } from './opening-ref';
 import { cubicAt, cubicDeriv, norm, type Vec } from './primitives';
 import { enforceApexHeights } from './height-contract';
+import { placeLowerPeak } from './lower-peak';
 
 
 // ------------------------------------------------------------------ Fente palpébrale
@@ -108,6 +109,8 @@ export function openingGeometry(shape: EyeSpec['shape'], canthi: EyeSpec['canthi
   // Styles ajoutés (chibi, angular, circle, triangle, diamond, diamond_v2, rounded_rect).
   const ext = extendedStyle(style, { pi, po, u1, u2, l1, l2 }, { s, w, k, hUp, hLo, hEff, t, rIn, rOut });
   if (ext) ({ pi, po, u1, u2, l1, l2 } = ext);
+  // Position du creux de la paupière basse (opt-in, passe 10) : paramètre exposé `shape.lowerPeak`, consommé ici ; apex haut et bas conservés.
+  if (shape.lowerPeak !== undefined) ({ pi, po, u1, u2, l1, l2 } = placeLowerPeak({ pi, po, u1, u2, l1, l2 }, w, shape.lowerPeak));
 
   let minX = Infinity;
   let minY = Infinity;

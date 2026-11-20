@@ -3,7 +3,7 @@ import { Canthi } from '../schema/eye-canthi-fold';
 import { Shape } from '../schema/eye-shape';
 import { verifyEye } from '../verify/eye';
 import { STYLES, WIDTH, buildExtraEye, candidates, dist, existingVectors, extraEyeRecipes, profileVector, type Cand, type EyeRecipe } from './eye-gallery-ext';
-import { PHOTO_IRIS_FAMILIES, photoIrisFamily, type PhotoIrisFamily } from './eye-iris-families-photo';
+import { PHOTO_IRIS_FAMILIES, photoIrisFamily, type PhotoIris, type PhotoIrisFamily } from './eye-iris-families-photo';
 import type { EyeInput } from './random-eye-helpers';
 
 /**
@@ -22,25 +22,26 @@ const ROUNDISH = ['round', 'chibi', 'circle'];
 
 export interface Eye2Recipe extends EyeRecipe { readonly irisFamily: PhotoIrisFamily | null; }
 
-const vectorOf = (r: EyeRecipe): number[] =>
+export const vectorOf = (r: EyeRecipe): number[] =>
   profileVector(Shape.parse({ width: WIDTH, height: WIDTH * r.aspect, tiltDeg: r.tiltDeg, upperFraction: r.upperFraction, openness: r.openness, style: r.style }), Canthi.parse({ inner: { roundness: r.innerRoundness, caruncle: r.caruncle }, outer: { roundness: r.outerRoundness } }));
 
-let memo: Eye2Recipe[] | null = null;
-export function extra2Recipes(): readonly Eye2Recipe[] {
-  if (memo) return memo;
-  const taken: number[][] = [...existingVectors(), ...extraEyeRecipes().map(vectorOf)];
-  const pools = new Map<string, Cand[]>(STYLES.map((s, i) => [s, candidates(s, mulberry32((0x7e4a9c21 ^ Math.imul(i + 1, 0x9e3779b1)) >>> 0))]));
+/**
+ * Sélection de `count` formes d'enveloppe EN PLUS de `taken` (profils déjà occupés) : échantillonnage du plus éloigné par style (flux `streamSeed`), un style saturé
+ * (distance minimale < `minDist`) cède ses places, entrelacement final sans deux enveloppes identiques consécutives. Partagé par les galeries 2 et 3.
+ */
+export function selectRecipes(taken: number[][], streamSeed: number, count: number, minDist: number): Omit<EyeRecipe, 'index' | 'seed'>[] {
+  const pools = new Map<string, Cand[]>(STYLES.map((s, i) => [s, candidates(s, mulberry32((streamSeed ^ Math.imul(i + 1, 0x9e3779b1)) >>> 0))]));
   const saturated = new Set<string>();
   const picked: Omit<EyeRecipe, 'index' | 'seed'>[] = [];
-  while (picked.length < EXTRA2_COUNT) {
+  while (picked.length < count) {
     let placed = false;
     for (const s of STYLES) {
-      if (picked.length >= EXTRA2_COUNT) break;
+      if (picked.length >= count) break;
       if (saturated.has(s)) continue;
       const pool = pools.get(s) as Cand[];
       let best = -1; let bestD = -1;
       pool.forEach((c, k) => { const m = Math.min(...taken.map((t) => dist(c.d, t))); if (m > bestD) { bestD = m; best = k; } });
-      if (best < 0 || bestD < NEW2_MIN_DIST) { saturated.add(s); continue; }
+      if (best < 0 || bestD < minDist) { saturated.add(s); continue; }
       const c = pool.splice(best, 1)[0] as Cand; taken.push([...c.d]);
       const { d: _d, ...rest } = c; picked.push({ ...rest, nearest: bestD }); placed = true;
     }
@@ -55,7 +56,13 @@ export function extra2Recipes(): readonly Eye2Recipe[] {
     if (!pick) break;
     woven.push((left.get(pick) as Omit<EyeRecipe, 'index' | 'seed'>[]).shift() as Omit<EyeRecipe, 'index' | 'seed'>);
   }
-  const order = woven.length === picked.length ? woven : picked;
+  return woven.length === picked.length ? woven : picked;
+}
+
+let memo: Eye2Recipe[] | null = null;
+export function extra2Recipes(): readonly Eye2Recipe[] {
+  if (memo) return memo;
+  const order = selectRecipes([...existingVectors(), ...extraEyeRecipes().map(vectorOf)], 0x7e4a9c21, EXTRA2_COUNT, NEW2_MIN_DIST);
   memo = order.map((r, i) => {
     const seed = 9000 + i * 131; const rnd = mulberry32(seed ^ 0x3c6ef372);   // flux À PART : la famille d'iris ne décale aucun autre tirage
     const irisFamily = rnd() < PHOTO_SHARE ? (PHOTO_IRIS_FAMILIES[Math.floor(rnd() * PHOTO_IRIS_FAMILIES.length)] as PhotoIrisFamily) : null;
@@ -64,16 +71,20 @@ export function extra2Recipes(): readonly Eye2Recipe[] {
   return memo;
 }
 
-/** Remplace l'iris par la famille « photo » (couches, détail, lueur, limbe, fibres, pupille à aspect mesuré, reflets) ; le rayon est recalibré APRÈS (override appliqué avant la calibration). */
-export function applyPhotoIris(e: EyeInput, family: PhotoIrisFamily, style: string, seed: number, simple: boolean): EyeInput {
-  const p = photoIrisFamily(family, mulberry32(seed ^ 0x2545f491));
+/** Remplace l'iris par un iris « photo » déjà construit (couches, détail, lueur, limbe, fibres, pupille à aspect mesuré, reflets) ; le rayon est recalibré APRÈS (override appliqué avant la calibration). Partagé avec la galerie 3 (familles photo 2). */
+export function applyIrisPreset(e: EyeInput, p: PhotoIris, style: string, simple: boolean): EyeInput {
   const keepAspect = ROUNDISH.includes(style) || p.irisAspect === null;
   return {
     ...e, archetype: null, finish: 'shaded',   // dégradés, fibres et lueur : un fini `flat` (encre) les retirerait
-    iris: { ...e.iris, layers: p.layers, detail: p.detail, limbalRing: p.limbalRing, fibers: p.fibers, glow: p.glow, ...(keepAspect ? {} : { aspect: p.irisAspect }) },
+    iris: { ...e.iris, ...(p.base ? { material: { ...(e.iris as { material?: object } | undefined)?.material, base: { type: 'radial', stops: p.base } } } : {}), layers: p.layers, detail: p.detail, limbalRing: p.limbalRing, fibers: p.fibers, glow: p.glow, ...(keepAspect ? {} : { aspect: p.irisAspect }) },
     pupil: { ...e.pupil, shape: p.pupil.shape, size: p.pupil.size, deform: { ...(e.pupil?.deform ?? {}), squash: p.pupil.squash } },
     highlights: { list: simple ? p.highlights.slice(0, 2) : p.highlights },
   } as EyeInput;
+}
+
+/** Remplace l'iris par la famille « photo » (réfs 03, 05, 06, 09). */
+export function applyPhotoIris(e: EyeInput, family: PhotoIrisFamily, style: string, seed: number, simple: boolean): EyeInput {
+  return applyIrisPreset(e, photoIrisFamily(family, mulberry32(seed ^ 0x2545f491)), style, simple);
 }
 
 export function generateExtra2Eye(index: number, expression?: EyeInput['expression']): EyeInput {

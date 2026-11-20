@@ -12,7 +12,10 @@ const N = 96;
 
 /** Apex (écart maximal à la corde, ≥ 0) des deux paupières, dans le repère de la corde pi → po (unités du dessin). */
 export function apexHeights(c: Curves): { readonly up: number; readonly lo: number; readonly chord: number } {
-  const dx = c.po.x - c.pi.x; const dy = c.po.y - c.pi.y; const W = Math.hypot(dx, dy) || 1; const d = { x: dx / W, y: dy / W }; const n = { x: -d.y, y: d.x };
+  const dx = c.po.x - c.pi.x; const dy = c.po.y - c.pi.y; const W = Math.hypot(dx, dy) || 1; const d = { x: dx / W, y: dy / W };
+  // CORRECTION (passe 10) : la normale pointe toujours VERS LE BAS (n.y > 0), quel que soit le côté de l'œil. Avec n = (−dy, dx) seul, un œil gauche (corde orientée vers la gauche, dx < 0) avait n.y < 0 :
+  // les deux apex valaient 0, `enforceApexHeights` rendait les courbes inchangées et sharp / drooping n'avaient AUCUN contrat de hauteur côté gauche (−25 % de hauteur mesurés).
+  const sg = d.x >= 0 ? 1 : -1; const n = { x: -d.y * sg, y: d.x * sg };
   const off = (p: Vec): number => (p.x - c.pi.x) * n.x + (p.y - c.pi.y) * n.y;
   let up = 0; let lo = 0;
   for (let i = 0; i <= N; i++) { up = Math.max(up, -off(cubicAt(c.pi, c.u1, c.u2, c.po, i / N))); lo = Math.max(lo, off(cubicAt(c.po, c.l1, c.l2, c.pi, i / N))); }

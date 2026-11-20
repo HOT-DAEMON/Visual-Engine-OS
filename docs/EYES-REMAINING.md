@@ -115,5 +115,14 @@ Fait : liner épais effilé par famille de cils (`lids.liner`), dégagement de l
 - ✅ Iris des réfs 03 / 05 / 06 / 09 mesurés pixel par pixel (`extract_iris_photos.py`) ; 4 familles d'iris additives (`eye-iris-families-photo.ts`), constantes testées contre le JSON ; plancher `pupil.size` 0,12 → 0,08.
 - ✅ Seconde galerie : 100 yeux de plus (`eye-gallery-ext2.ts`, distance min 0,0129 aux 148 existants), `eyeSource: 'extended2'` (248 identités) ; 0 erreur `verifyEye`, 0 échec pixel.
 - ✅ Règles d'iris : `pupil-core-centred` (géométrie), `specular-in-upper-iris` (anatomie), `iris-texture` (style ; voile gris 3,3 < 8 ≤ familles 11,9–21,8).
-- 🟡 Almond : validé hors échantillon sur 03 / 05 (haut 0,033 / 0,018 ; bas 0,051 / 0,058 contre 0,013–0,033 en entraînement), `ALMOND_REF` inchangé. ⬜ Paramètre `lowerPeak` exposé (sommet bas 0,40–0,65 selon l'œil) puis refit.
-- 🟡 Texture d'iris moteur 12–22 contre 22–42 sur les références : couleurs et proportions atteintes, filigranes fins non. ⬜ Réfs 08 et 10 sans mesure d'iris ; aspect de pupille de 05 / 09 et limbe de 05 non fiables ; canthus externe de 03 incertain.
+- 🟡 Almond : validé hors échantillon sur 03 / 05 (haut 0,033 / 0,018 ; bas 0,051 / 0,058 contre 0,013–0,033 en entraînement), `ALMOND_REF` inchangé. ✅ Paramètre `lowerPeak` exposé en passe 10 (`EYES-PASS-10.md` § 6) ; ⬜ pas encore branché dans les galeries / visages.
+- 🟡 Texture d'iris moteur 12–22 contre 22–42 sur les références : couleurs et proportions atteintes, filigranes fins non. ✅ Réfs 04, 07, 08, 10 mesurées en passe 10 ; ⬜ 10a : limbe et pupille non mesurables ; aspect de pupille de 05 / 09 et limbe de 05 non fiables ; canthus externe de 03 incertain.
+
+## Passe 10 (détail : `EYES-PASS-10.md`)
+- ✅ Correction de la mesure de limbe de la passe 9 (axes de `fitEllipse` permutés pour 05 / 06 / 09 : aspect 1,10 → 0,929 pour 06) ; constantes des 4 familles régénérées.
+- ✅ Contrat de hauteur des yeux GAUCHES (`apexHeights`, `openingProfile`) : sharp / drooping étaient ~24 % trop bas à gauche ; `anatomy-contract` 14 → 17 yeux hors orbite a priori (bornes inchangées).
+- ✅ 5 familles d'iris additives (04, 07, 08, 10a, 10b, `eye-iris-families-photo2.ts`) avec matériau de base remplaçable ; luminance à ± 25 des références.
+- ✅ Galerie 3 : 100 yeux de plus (`eye-gallery-ext3.ts`, distance min 0,0096), `eyeSource: 'extended3'` (348 identités) ; 0 erreur `verifyEye`, 0 échec pixel.
+- ✅ Almond : `shape.lowerPeak` exposé et prouvé (erreur du profil bas 0,0358 → 0,0213, 05 hors échantillon 0,058 → 0,019).
+- ⬜ Saturation des pics d'iris (0,41–0,65 contre 0,72–0,79), part sombre de `ice-star`, prisme de 04, bulles de 07, six pointes de 10b.
+- ⬜ Brancher `lowerPeak` dans les galeries et `generateRandomFace` ; galerie 4 = nouvelles enveloppes (réfs 13 / 17), l'espace actuel est saturé.
