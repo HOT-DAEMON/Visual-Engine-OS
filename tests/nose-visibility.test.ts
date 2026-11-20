@@ -23,6 +23,8 @@ describe('nez : chaque axe renforcé produit une différence mesurable sur tête
 
   it('garde-fou du pivot : au défaut, le SVG est identique octet pour octet à celui d\'avant le renforcement', () => {
     const h = createHash('sha256').update(headShot(11, 'structured', {}).svg).digest('hex');
-    expect(h).toBe('d4f1ee64b40f0cc1c4c039c2a86db42bb354b22445dbc724834d924a8a6991d0');
+    // PASSE 10 (yeux) : hash recalé — le contrat de hauteur s'applique désormais aux yeux GAUCHES sharp / drooping (docs/EYES-PASS-10.md § 1). Vérifié : avec l'ancien height-contract.ts
+    // le hash d'avant (d4f1ee64…91d0) est retrouvé exactement ; l'axe du nez n'y est pour rien.
+    expect(h).toBe('995eb7f48600ab5f75685c5213332c19af620dbf3f42608649c190e78fcf5c74');
   }, 60_000);
 });
