@@ -105,7 +105,7 @@
    "why": "neuf contrôles de stylisation à 1 en mode anime : géométrie exagérée ET aplats à bords nets"
   },
   "hard-05-encre-contours-maximaux": {
-   "svgSha1": "74705f50f869b405aa06311e862dcebd01ed315c",
+   "svgSha1": "23b39d5e2b207da20a17067464c01bb6bfecde60",
    "kind": "hard",
    "why": "seuil global N&B : un détail fin peut disparaître ou se boucher"
   },
