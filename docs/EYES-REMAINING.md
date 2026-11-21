@@ -126,3 +126,13 @@ Fait : liner épais effilé par famille de cils (`lids.liner`), dégagement de l
 - ✅ Almond : `shape.lowerPeak` exposé et prouvé (erreur du profil bas 0,0358 → 0,0213, 05 hors échantillon 0,058 → 0,019).
 - ⬜ Saturation des pics d'iris (0,41–0,65 contre 0,72–0,79), part sombre de `ice-star`, prisme de 04, bulles de 07, six pointes de 10b.
 - ⬜ Brancher `lowerPeak` dans les galeries et `generateRandomFace` ; galerie 4 = nouvelles enveloppes (réfs 13 / 17), l'espace actuel est saturé.
+
+## Passe 11 (détail : `EYES-PASS-11.md`)
+- ✅ Saturation des pics d'iris (`iris.vibrance`, calibrée sur les 5 références) ; prisme arc-en-ciel de 04 ; bulles nettes de 07 ; six étoiles de 10b ; `lowerPeak` branché (galerie 4, `eyeLowerPeak`) ; galerie 4 : 100 yeux, enveloppes issues des réfs 13 / 17.
+- ⬜ **04 Iris — détail atomique** : fentes radiales sombres de 04, facettes taillées de 07 (les nôtres sont régulières), étoiles de 10b trop petites (taille 0,1 réglée à l'œil ; la référence en montre de bien plus grandes : non mesuré), anneau et braises de 10a ; haut de l'iris du prisme olive (référence turquoise).
+- ⬜ **04 Iris — part sombre** (`darkShare`) : prism 0,033 (réf. 0,154), emerald 0,012 (0,101), ice 0,196 (0,297), fire 0,32 (0,373) ; lumMean de lime 156 (169), fire 73 (89), ice 90 (103).
+- ⬜ `fire-halo` : vibrance 0,96, plus aucune marge ; saturer d'abord la couche d'anneau.
+- ⬜ **Galerie 4** : `almond` repose sur 7 ancres sans rondeur de canthus mesurée (tirage large) ; pas de `circle` ni de `diamond` (aucune silhouette 13 / 17) ; plafond d'aspect 0,8 (au-delà : sclère illisible) alors que les réfs vont à 1,17 (chibi / sprites) ; 12 yeux avertissent `lower-peak-min`, 13 `envelope-vs-reference-profile` (non bloquants).
+- ⬜ `verifyEye` : `pupil-darker-than-iris` 30 yeux, `svg-weight` 46 sur 100.
+- ⬜ Preuve visuelle par œil de la galerie 4 : planche 03 lue en vue d'ensemble, pas œil par œil.
+

@@ -64,6 +64,7 @@ export function bubbles(f: IrisFrame, pal: IrisPalette, rnd: Rnd, o: Bubbles, rh
     if (placed.some((p) => Math.hypot(p.x - c.x, p.y - c.y) < (p.r + r) * 1.05)) continue;
     placed.push({ x: c.x, y: c.y, r });
     const g = o.opacity;
+    if (o.crisp > 0) { out.push(crispBubble(c, r, pal, g, o.crisp)); continue; }
     out.push(el('circle', { cx: c.x, cy: c.y, r, fill: lighten(pal.light, 0.5), 'fill-opacity': 0.14 * g, stroke: '#ffffff', 'stroke-width': r * 0.16, 'stroke-opacity': 0.5 * g }));
     out.push(el('path', { d: `M${P({ x: c.x + r * 0.62, y: c.y - r * 0.5 })}A${r * 0.8} ${r * 0.8} 0 0 1 ${P({ x: c.x - r * 0.4, y: c.y + r * 0.7 })}`, fill: 'none', stroke: darken(pal.edge, 0.4), 'stroke-width': r * 0.2, 'stroke-opacity': 0.35 * g }));
     out.push(el('circle', { cx: c.x - r * 0.36, cy: c.y - r * 0.4, r: r * 0.2, fill: '#ffffff', 'fill-opacity': 0.9 * g }));
@@ -84,6 +85,51 @@ export function lightRays(f: IrisFrame, pal: IrisPalette, rnd: Rnd, count: numbe
     const apex = f.at(0.97, src + (rnd() - 0.5) * 0.35); const target = src + Math.PI + spread; const half = 0.02 + 0.045 * rnd();
     const reach = 0.78 + 0.2 * rnd();
     out.push(el('path', { d: `M${P(apex)}L${P(f.at(reach, target - half))}L${P(f.at(reach, target + half))}Z`, fill: col, 'fill-opacity': Math.min(0.6, (0.12 + 0.26 * rnd()) * (0.6 + contrast)) }));
+  }
+  return el('g', {}, out);
+}
+
+/**
+ * BULLE NETTE (réf. 07, `bubbles.crisp` > 0) : sphère de verre lue comme dans la référence — contour extérieur SOMBRE franc, liseré interne clair (épaisseur de la
+ * paroi), remplissage très léger plus clair vers le bas, CROISSANT CAUSTIQUE lumineux du côté opposé à la lumière (la sphère focalise la lumière : bas-droite), reflet
+ * spéculaire ponctuel et reflet secondaire minuscule. `k` (0–1) pilote la franchise du contour et l'intensité de la caustique.
+ */
+function crispBubble(c: { x: number; y: number }, r: number, pal: IrisPalette, g: number, k: number): string {
+  const at = (a: number, rr: number): string => P({ x: c.x + Math.cos(a) * rr, y: c.y + Math.sin(a) * rr });
+  const a0 = Math.PI * 0.12, a1 = Math.PI * 0.62; const rc = r * 0.74;
+  return el('g', {}, [
+    el('circle', { cx: c.x, cy: c.y, r, fill: lighten(pal.light, 0.55), 'fill-opacity': 0.12 * g * (0.5 + k) }),
+    el('circle', { cx: c.x, cy: c.y, r, fill: 'none', stroke: darken(pal.edge, 0.9), 'stroke-width': r * (0.16 + 0.16 * k), 'stroke-opacity': Math.min(1, 0.7 + 0.3 * k) * g }),
+    el('circle', { cx: c.x, cy: c.y, r: r * 0.86, fill: 'none', stroke: lighten(pal.light, 0.7), 'stroke-width': r * 0.08, 'stroke-opacity': 0.75 * g }),
+    el('path', { d: `M${at(a0, rc)}A${rc} ${rc} 0 0 1 ${at(a1, rc)}`, fill: 'none', stroke: '#ffffff', 'stroke-width': r * (0.16 + 0.14 * k), 'stroke-linecap': 'round', 'stroke-opacity': (0.35 + 0.5 * k) * g }),
+    el('circle', { cx: c.x - r * 0.36, cy: c.y - r * 0.38, r: r * 0.17, fill: '#ffffff', 'fill-opacity': 0.95 * g }),
+    el('circle', { cx: c.x + r * 0.42, cy: c.y + r * 0.36, r: r * 0.07, fill: '#ffffff', 'fill-opacity': 0.8 * g }),
+  ]);
+}
+
+type Rainbow = NonNullable<IrisDetail['rainbow']>;
+/**
+ * ARC-EN-CIEL PRISMATIQUE (réf. 04, `detail.rainbow`) : le spectre (`hueFrom` -> `hueTo`, rouge 0° -> violet 270°) parcouru sur l'ouverture angulaire du secteur ; deux couches
+ * (large et douce, puis étroite et vive) pour un fondu en profondeur, plus des STRIES radiales fines de dispersion, dont la teinte suit l'angle. Pas de dégradé conique
+ * en SVG : un quadrilatère par pas de 3°, recouvrement de 0,6° pour éviter les coutures.
+ */
+export function rainbow(f: IrisFrame, rnd: Rnd, o: Rainbow): string {
+  const out: string[] = []; const steps = Math.max(6, Math.round(o.span / 3)); const dA = (o.span / steps) * (Math.PI / 180);
+  const a0 = ((o.angleDeg - o.span / 2) * Math.PI) / 180 - Math.PI / 2;
+  // l'angle du moteur : 0° = haut, horaire -> f.at attend un angle trigonométrique (voir irisFrame) : on réutilise la même convention que `facets` (angle en radians).
+  // enveloppe douce : l'opacité monte puis retombe sur l'ouverture (pas de bord franc), le bord externe ondule (sommes de sinus à phases tirées par la graine)
+  const ph = [rnd() * 6.28, rnd() * 6.28, rnd() * 6.28];
+  const env = (i: number): number => Math.sin((Math.PI * (i + 0.5)) / steps) ** 0.8;
+  const wob = (i: number): number => 1 + 0.07 * (Math.sin(i * 0.55 + (ph[0] as number)) + 0.6 * Math.sin(i * 1.3 + (ph[1] as number)) + 0.3 * Math.sin(i * 2.9 + (ph[2] as number)));
+  const wedge = (i: number, r0: number, r1: number, op: number): void => {
+    const hue = o.hueFrom + ((o.hueTo - o.hueFrom) * (i + 0.5)) / steps; const aA = a0 + dA * i - 0.01; const aB = a0 + dA * (i + 1) + 0.01; const rr = Math.min(0.985, r1 * wob(i));
+    out.push(el('path', { d: `M${P(f.at(r0, aA))}L${P(f.at(rr, aA))}L${P(f.at(rr, aB))}L${P(f.at(r0, aB))}Z`, fill: spectral(hue), 'fill-opacity': op * env(i) }));
+  };
+  for (let i = 0; i < steps; i++) { wedge(i, o.inner, o.outer, 0.3 * o.opacity); wedge(i, o.inner + (o.outer - o.inner) * 0.3, o.outer - (o.outer - o.inner) * 0.12, 0.42 * o.opacity); wedge(i, o.inner + (o.outer - o.inner) * 0.55, o.outer - (o.outer - o.inner) * 0.2, 0.3 * o.opacity); }
+  for (let k = 0; k < o.streaks; k++) {
+    const t = (k + rnd() * 0.8) / Math.max(1, o.streaks); const a = a0 + dA * steps * Math.min(1, t); const hue = o.hueFrom + (o.hueTo - o.hueFrom) * Math.min(1, t);
+    const r0 = o.inner + (o.outer - o.inner) * (0.05 + 0.4 * rnd()); const r1 = o.inner + (o.outer - o.inner) * (0.6 + 0.4 * rnd());
+    out.push(el('path', { d: `M${P(f.at(r0, a))}L${P(f.at(r1, a))}`, fill: 'none', stroke: spectral(hue), 'stroke-width': f.rx * (0.006 + 0.01 * rnd()), 'stroke-opacity': Math.min(0.95, (0.35 + 0.5 * o.opacity) * (0.25 + 0.75 * Math.sin(Math.PI * Math.min(1, t)))), 'stroke-linecap': 'round' }));
   }
   return el('g', {}, out);
 }

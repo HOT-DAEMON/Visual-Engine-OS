@@ -6,6 +6,7 @@ import { irisCenter, irisRadii } from '../../src/render/eye/helpers';
 import { resolveEye } from '../../src/render/eye/eye';
 import { EyeSpec } from '../../src/schema';
 import { dominantColor } from '../../src/materials';
+import { irisTone } from './eye-iris-tone';
 
 /**
  * VÉRIFICATION DU RENDU D'UN ŒIL SUR L'IMAGE : les trois couches mesurées sur les PIXELS rastérisés (resvg), aux positions données par la géométrie — complète
@@ -20,6 +21,8 @@ const BG = [0xff, 0x00, 0xff] as const;
 export const IRIS_TEXTURE_MIN = 2;
 /** Seuil pour un iris détaillé (`iris.detail` présent) : mesuré sur la galerie 2, les 4 familles photo donnent 11,9 à 21,8 (minimum 11,9), les références 22,5 à 42,1 ; un voile gris uni 3,3. */
 export const IRIS_TEXTURE_DETAIL_MIN = 8;
+/** Passe 11 — saturation des pics d'un iris qui DEMANDE de la vibrance (`iris.vibrance` > 0) : références 04 / 07 / 08 / 10a / 10b : 0,72–0,79 ; plancher 0,62 (marge de l'antialiasing et de la peau). Sans vibrance, la règle ne s'applique pas (iris naturels : non mesurés). */
+export const IRIS_PEAK_SAT_MIN = 0.62;
 const W = 700, H = 460;
 const lum = (px: Uint8Array, x: number, y: number): number => { const i = (Math.round(y) * W + Math.round(x)) * 4; return 0.2126 * (px[i] as number) + 0.7152 * (px[i + 1] as number) + 0.0722 * (px[i + 2] as number); };
 const isBg = (px: Uint8Array, x: number, y: number): boolean => { const i = (Math.round(y) * W + Math.round(x)) * 4; return Math.abs((px[i] as number) - BG[0]) + Math.abs((px[i + 1] as number) - BG[1]) + Math.abs((px[i + 2] as number) - BG[2]) < 12; };
@@ -134,6 +137,8 @@ export function verifyEyeRender(input: Record<string, unknown>): EyeImageCheck[]
     for (const f of [0.4, 0.55, 0.7, 0.85]) { let prev: number | null = null; for (let k = 0; k <= 72; k++) { const a = (k * 5 * Math.PI) / 180; const x = c.x + ox + Math.cos(a) * rx * f, y = c.y + oy + Math.sin(a) * ry * f; if (!inside(poly, x, y)) { prev = null; continue; } const v = lum(px, x, y); if (prev !== null) { tex += Math.abs(v - prev); nt++; } prev = v; } }
     const texMin = eye.iris.detail ? IRIS_TEXTURE_DETAIL_MIN : IRIS_TEXTURE_MIN;   // un iris qui DEMANDE du détail (`iris.detail`) doit en montrer : seuil plus haut
     if (nt >= 40) add('style', 'iris-texture', tex / nt >= texMin, tex / nt, texMin, 'la texture de l’iris (écart de luminance entre points voisins) est sous le seuil : voile lisse, pas un iris détaillé');
+    // passe 11 : `style` — `iris-peak-saturation` : les 15 % de pixels les plus saturés de l'iris (même définition que l'extracteur des réfs) atteignent IRIS_PEAK_SAT_MIN ; seulement si l'œil demande de la vibrance
+    if ((eye.iris as { vibrance?: number }).vibrance && (eye.iris as { vibrance?: number }).vibrance! > 0) { const t = irisTone(input); if (Number.isFinite(t.satPeaks)) add('style', 'iris-peak-saturation', t.satPeaks >= IRIS_PEAK_SAT_MIN, t.satPeaks, IRIS_PEAK_SAT_MIN, 'les pics de saturation de l’iris sont délavés (références : 0,72–0,79) : fibres claires et voiles lavent les teintes'); }
   }
 
   // ---- RÈGLE « CILS » SUR LES PIXELS (audit des cils : la vérification d'image n'avait aucune règle de cils) ----

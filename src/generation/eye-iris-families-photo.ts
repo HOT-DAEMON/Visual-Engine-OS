@@ -53,6 +53,8 @@ export interface PhotoIris {
   readonly glow: { readonly color: string; readonly strength: number } | null;
   /** Matériau de base de l'iris (dégradé radial : centre -> limbe) qui REMPLACE le matériau hérité de l'œil ; absent : celui de l'œil est gardé (familles de la passe 9). */
   readonly base?: readonly { readonly offset: number; readonly color: string }[];
+  /** Saturation du disque d'iris (`iris.vibrance`, passe 11) ; absent : 0 (aucun filtre). */
+  readonly vibrance?: number;
 }
 
 export function photoIrisFamily(f: PhotoIrisFamily, rnd: () => number): PhotoIris {

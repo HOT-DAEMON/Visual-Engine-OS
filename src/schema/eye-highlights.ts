@@ -32,6 +32,8 @@ export const HighlightItem = z
     rotationDeg: z.number().min(-180).max(180).default(0),
     /** Pointes (star/sparkle) ou rapport intérieur (0,12–0,9). */
     inner: z.number().min(0.12).max(0.9).default(0.4),
+    /** Nombre de pointes (`star` / `sparkle`), 3 à 12 (passe 11). Absent : forme historique (5 pour `star`, 4 pour `sparkle`). Réf. 10b : étoiles à six pointes. */
+    points: z.number().int().min(3).max(12).optional(),
     /** null : couleur de la lumière de la scène. */
     color: Hex.nullable().default(null),
     opacity: Unit.default(1),

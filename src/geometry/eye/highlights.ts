@@ -30,8 +30,8 @@ export interface PlaceCtx {
 }
 
 const SHAPE_PROFILE = (h: HighlightItem): Vec[] => {
-  if (h.shape === 'star') return chaikin(vertices(5, h.inner), 1);
-  if (h.shape === 'sparkle') return vertices(4, Math.min(0.35, h.inner));
+  if (h.shape === 'star') return chaikin(vertices(h.points ?? 5, h.inner), 1);
+  if (h.shape === 'sparkle') return vertices(h.points ?? 4, Math.min(0.35, h.inner));
   if (h.shape === 'diamond') return vertices(4, null);
   if (h.shape === 'cross') return vertices(4, 0.5).map((p, i) => (i % 2 ? { x: p.x * 0.55, y: p.y * 0.55 } : p));
   return [];

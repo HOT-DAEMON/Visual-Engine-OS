@@ -48,6 +48,8 @@ export function photoIrisFamily2(f: Photo2IrisFamily, rnd: () => number): PhotoI
   const hl = (star: boolean, ...extra: Highlights): Highlights => [
     star ? ({ ...sparkle(M.specular.dx, M.specular.dy, M.specular.r * 1.5), role: 'primary' } as Highlights[number]) : ({ ...spec(1, M.specular.r * 1.25 + 0.02 * rnd()), role: 'primary' } as Highlights[number]),
     { ...spec(-0.7, M.specular.r * 0.6, 0.7), role: 'secondary', y: M.specular.dy + 0.05 } as Highlights[number], ...extra];
+  // 10b : SIX étoiles à six pointes en hexagone autour de la pupille (rayon 0,56 de l'iris, premier sommet à −90°) : l'étoile de la référence est répétée, pas unique.
+  const hexStars = (size: number): Highlights => Array.from({ length: 6 }, (_, k) => { const a = -Math.PI / 2 + (k * Math.PI) / 3; return { shape: 'sparkle', anchor: 'iris', x: Math.cos(a) * 0.56, y: Math.sin(a) * 0.56, size, points: 6, inner: 0.3, intensity: 0.9, confine: 'iris' } as Highlights[number]; });
   const stops = (a: string, b: string, c: string): readonly { offset: number; color: string }[] => [{ offset: 0, color: a }, { offset: 0.55, color: b }, { offset: 1, color: c }];
   switch (f) {
     case 'prism-star': // 04 : collerette dorée autour de la pupille, turquoise vif en haut à droite, orangé en bas à gauche, jaune-vert en bas (prisme), croix de lumière
@@ -61,7 +63,8 @@ export function photoIrisFamily2(f: Photo2IrisFamily, rnd: () => number): PhotoI
           { color: S[4] as string, mask: 'spot', angleDeg: 180, inner: 0.5, outer: 0.85, spotRadius: 0.28, feather: 0.6, opacity: 0.9, glow: 0.4 },
         ],
         highlights: hl(false, sparkle(0, 0, 0.2), sparkle(0.38, 0.12, 0.1)), pupil, irisAspect: M.irisAspect, limbalRing: 0.9, fibers: 120, glow: { color: '#ffe9a0', strength: 0.1 },
-        detail: { density: 1, contrast: 0.9, collarette: { radius: 0.4, irregularity: 0.7, opacity: 0.5 }, innerZone: { color: vC, strength: 0.4 }, crypts: 4, accent: { color: vC, reach: 0.5, spikes: 32, opacity: 0.6 }, facets: { count: 14, rings: 2, contrast: 0.6, dispersion: 0.5, rays: 6 }, limbal: { width: 0.14, strength: 0.8 }, topShade: 0.35, bottomGlow: { color: S[4] as string, strength: 0.5 }, pupilHalo: 0.1, sparkles: 12 } as Detail,
+        detail: { density: 1, contrast: 0.9, collarette: { radius: 0.4, irregularity: 0.7, opacity: 0.5 }, innerZone: { color: vC, strength: 0.4 }, crypts: 4, accent: { color: vC, reach: 0.5, spikes: 32, opacity: 0.6 }, facets: { count: 14, rings: 2, contrast: 0.6, dispersion: 0.5, rays: 6 }, rainbow: { angleDeg: 215, span: 150, inner: 0.3, outer: 0.97, hueFrom: 315, hueTo: 75, streaks: 30, opacity: 0.8 }, limbal: { width: 0.14, strength: 0.8 }, topShade: 0.35, bottomGlow: { color: S[4] as string, strength: 0.5 }, pupilHalo: 0.1, sparkles: 12 } as Detail,
+        vibrance: 0.23, // calibrée par bissection sur la saturation des pics mesurée (scripts/eye-refs/calibrate-vibrance.ts)
       };
     case 'emerald-facets': // 07 : gemme à facettes, vert franc partout, plus clair en bas, collerette claire à r = 0,46, bulles dans la moitié basse, limbe presque noir
       return {
@@ -73,7 +76,8 @@ export function photoIrisFamily2(f: Photo2IrisFamily, rnd: () => number): PhotoI
           { color: S[5] as string, mask: 'sector', angleDeg: 230, span: 70, inner: 0.3, outer: 0.9, feather: 0.5, opacity: 0.6, irregularity: 0.7 },
         ],
         highlights: hl(true, sparkle(0.55, -0.3, 0.1)), pupil, irisAspect: M.irisAspect, limbalRing: 0.85, fibers: 96, glow: { color: '#9af0b4', strength: 0.1 },
-        detail: { density: 0.9, contrast: 0.8, collarette: { radius: 0.46, irregularity: 0.5, opacity: 0.5 }, innerZone: { color: dC, strength: 0.5 }, crypts: 0, facets: { count: 18, rings: 3, contrast: 0.7, dispersion: 0.1, rays: 0 }, bubbles: { count: 10, size: 0.07, opacity: 0.8, zone: 'lower' }, limbal: { width: 0.2, strength: 0.9 }, topShade: 0.5, bottomGlow: { color: S[4] as string, strength: 0.5 }, pupilHalo: 0.1, sparkles: 6 } as Detail,
+        detail: { density: 0.9, contrast: 0.8, collarette: { radius: 0.46, irregularity: 0.5, opacity: 0.5 }, innerZone: { color: dC, strength: 0.5 }, crypts: 0, facets: { count: 18, rings: 3, contrast: 0.7, dispersion: 0.1, rays: 0 }, bubbles: { count: 18, size: 0.105, opacity: 0.95, zone: 'lower', crisp: 0.8 }, limbal: { width: 0.2, strength: 0.9 }, topShade: 0.5, bottomGlow: { color: S[4] as string, strength: 0.5 }, pupilHalo: 0.1, sparkles: 6 } as Detail,
+        vibrance: 0.35, // calibrée par bissection sur la saturation des pics mesurée (scripts/eye-refs/calibrate-vibrance.ts)
       };
     case 'lime-cyan': // 08 : style cel-shading, citron en bas, vert plus froid en haut, cyan autour d'une pupille bleue ; aspect tiré entre les deux yeux mesurés
       return {
@@ -85,6 +89,7 @@ export function photoIrisFamily2(f: Photo2IrisFamily, rnd: () => number): PhotoI
         ],
         highlights: hl(false, sparkle(-0.3, -0.35, 0.1)), pupil, irisAspect: LIME_CYAN_ASPECT_RANGE[0] + rnd() * (LIME_CYAN_ASPECT_RANGE[1] - LIME_CYAN_ASPECT_RANGE[0]), limbalRing: 0.8, fibers: 48, glow: { color: '#caf448', strength: 0.15 },
         detail: { density: 0.55, contrast: 0.6, collarette: { radius: 0.45, irregularity: 0.4, opacity: 0.5 }, innerZone: { color: dC, strength: 0.6 }, crypts: 2, limbal: { width: 0.18, strength: 0.7 }, topShade: 0.35, bottomGlow: { color: S[4] as string, strength: 0.5 }, pupilHalo: 0.3, sparkles: 4 } as Detail,
+        vibrance: 0.15, // calibrée par bissection sur la saturation des pics mesurée (scripts/eye-refs/calibrate-vibrance.ts)
       };
     case 'fire-halo': // 10a : fond violet presque noir, cœur bleu, anneau orange feu à r = 0,42, étoile à rayons blancs, braises
       return {
@@ -97,6 +102,7 @@ export function photoIrisFamily2(f: Photo2IrisFamily, rnd: () => number): PhotoI
         ],
         highlights: hl(true, sparkle(0, 0, 0.34), sparkle(-0.45, -0.2, 0.12)), pupil, irisAspect: M.irisAspect, limbalRing: 0.9, fibers: 64, glow: { color: vM, strength: 0.12 },
         detail: { density: 0.6, contrast: 0.85, collarette: { radius: 0.43, irregularity: 0.6, opacity: 0.4 }, innerZone: null, crypts: 0, accent: { color: vM, reach: 0.3, spikes: 24, opacity: 0.6 }, limbal: { width: 0.16, strength: 0.8 }, topShade: 0.3, bottomGlow: { color: vM, strength: 0.2 }, pupilHalo: 0.1, sparkles: 14 } as Detail,
+        vibrance: 0.96, // calibrée par bissection sur la saturation des pics mesurée (scripts/eye-refs/calibrate-vibrance.ts)
       };
     case 'ice-star': // 10b : marine presque noire, cœur violet-bleu, anneau cyan givré à r = 0,46, collerette pâle au limbe, étoile à six pointes, éclats de glace
       return {
@@ -105,11 +111,12 @@ export function photoIrisFamily2(f: Photo2IrisFamily, rnd: () => number): PhotoI
           { color: dM, mask: 'full', opacity: 0.9, feather: 0 },
           { color: vC, mask: 'ring', inner: 0.03, outer: 0.26, feather: 0.4, opacity: 0.75, glow: 0.4 },
           { color: vM, mask: 'ring', inner: 0.40, outer: 0.50, feather: 0.1, irregularity: 0.3, opacity: 1, glow: 0.6 },
-          { color: vL, mask: 'ring', inner: 0.55, outer: 0.75, feather: 0.5, irregularity: 0.8, opacity: 0.3 },
-          { color: bL, mask: 'ring', inner: 0.8, outer: 0.95, feather: 0.3, irregularity: 0.8, opacity: 0.5, glow: 0.3 },
+          { color: vL, mask: 'ring', inner: 0.58, outer: 0.7, feather: 0.2, irregularity: 0.8, opacity: 0.2 },      // passe 11 : anneaux resserrés et nets -> le fond marine reste sombre entre eux (part sombre 0,06 -> ~0,2 ; réf. 0,297)
+          { color: bL, mask: 'ring', inner: 0.86, outer: 0.95, feather: 0.15, irregularity: 0.8, opacity: 0.45 },
         ],
-        highlights: hl(true, sparkle(0, 0, 0.36), sparkle(0.5, -0.45, 0.12)), pupil, irisAspect: M.irisAspect, limbalRing: 0.85, fibers: 64, glow: { color: vM, strength: 0.12 },
+        highlights: hl(true, sparkle(0, 0, 0.36), ...hexStars(0.1)), pupil, irisAspect: M.irisAspect, limbalRing: 0.85, fibers: 64, glow: { color: vM, strength: 0.12 },
         detail: { density: 0.6, contrast: 0.8, collarette: { radius: 0.46, irregularity: 0.5, opacity: 0.4 }, innerZone: null, crypts: 0, accent: { color: vM, reach: 0.7, spikes: 6, opacity: 0.85 }, limbal: { width: 0.16, strength: 0.8 }, topShade: 0.3, bottomGlow: { color: vM, strength: 0.3 }, pupilHalo: 0.1, sparkles: 14 } as Detail,
+        vibrance: 0.61, // calibrée par bissection sur la saturation des pics mesurée (scripts/eye-refs/calibrate-vibrance.ts)
       };
   }
 }

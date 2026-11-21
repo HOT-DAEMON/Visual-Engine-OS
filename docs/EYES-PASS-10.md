@@ -63,9 +63,9 @@ Tenu et testé : luminance à ± 25, teinte de l'anneau vif à ≤ 40° (10a, 10
 - `ALMOND_REF` (huit facteurs) est inchangé ; le paramètre n'est PAS encore branché dans les galeries ni dans la génération de visages (§ 7).
 
 ## 7. Reste à faire (voir aussi `EYES-REMAINING.md`)
-- ⬜ Détail atomique : prisme arc-en-ciel et rayons de 04, bulles nettes et facettes de 07, six pointes d'étoile (10b), anneau et braises de 10a. Saturation des pics et part sombre : tableau § 3.
-- ⬜ Brancher `lowerPeak` : tirage dans la plage mesurée 0,40–0,65 dans les galeries et `generateRandomFace` (les profils de recette devront l'inclure pour que la distinction reste prouvée).
+- ✅ (passe 11, `EYES-PASS-11.md`) Saturation des pics, prisme arc-en-ciel (04), bulles nettes (07), six étoiles (10b). ⬜ Restent : rayons / fentes sombres de 04, facettes de 07, anneau et braises de 10a, part sombre.
+- ✅ (passe 11) `lowerPeak` branché : galerie 4 et `generateRandomFace({ eyeLowerPeak })` ; les profils de recette l'incluent. ⬜ Galeries 1–3 volontairement inchangées.
 - ⬜ 10a : aspect du limbe et pupille non mesurables (paupière, étoile). 08b ne sert qu'à l'aspect de `lime-cyan`.
-- ⬜ Galerie 3 : espace de formes saturé (`diamond`) ; une galerie 4 demande de nouvelles recettes d'enveloppe (réfs 13 / 17), pas un échantillonnage plus serré.
+- ✅ (passe 11) Galerie 4 : enveloppes tirées du domaine mesuré des réfs 13 / 17. ⬜ Voir `EYES-PASS-11.md` § 4 pour les limites.
 - ⬜ `verifyEye` avertit encore `pupil-darker-than-iris` (33 yeux, non bloquant : pupille noyée dans l'étoile) ; `svg-weight` 45.
 - ⬜ Les yeux gauches de `compressed` et des autres styles sans contrat de hauteur n'ont pas été re-mesurés séparément (le correctif ne touche que `sharp` et `drooping`).

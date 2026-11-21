@@ -60,6 +60,8 @@ export interface EyeRecipe {
   readonly nearest: number;
   /** Identifiant de la silhouette mesurée (réfs 13 / 15 / 17) dont la recette est ajustée ; absent pour les formes tirées par échantillonnage du plus éloigné. */
   readonly ref?: string;
+  /** Creux de la paupière basse (`shape.lowerPeak`, 0,3–0,75 ; mesuré 0,40–0,65). Absent : forme historique (galeries 1 à 3 : jamais renseigné). Galerie 4 (passe 11) : tiré dans la plage mesurée. */
+  readonly lowerPeak?: number;
 }
 
 export interface Cand extends Omit<EyeRecipe, 'index' | 'seed' | 'nearest'> { readonly d: readonly number[]; }
@@ -194,7 +196,7 @@ export function buildExtraEye(rc: EyeRecipe, attempt: number, override?: (e: Eye
     // 'alien' impose un rayon d'iris absolu (presets.ts) qui annulerait la calibration sur l'ouverture : écarté ici, les autres archétypes ne touchent pas au rayon.
     archetype: e.archetype === 'alien' ? null : e.archetype,
     gaze,
-    shape: { width: WIDTH, height: WIDTH * rc.aspect, tiltDeg: rc.tiltDeg, upperFraction: rc.upperFraction, openness: rc.openness, outerSide: 'right', style: rc.style },
+    shape: { width: WIDTH, height: WIDTH * rc.aspect, tiltDeg: rc.tiltDeg, upperFraction: rc.upperFraction, openness: rc.openness, outerSide: 'right', style: rc.style, ...(rc.lowerPeak === undefined ? {} : { lowerPeak: rc.lowerPeak }) },
     canthi: { inner: { roundness: rc.innerRoundness, caruncle: rc.caruncle }, outer: { roundness: rc.outerRoundness } },
     epicanthicFold: { amount: rc.foldAmount, reach: e.epicanthicFold?.reach ?? 0.6 },
     iris: { ...e.iris, radius: 0.4, aspect: ['round', 'chibi', 'circle'].includes(rc.style) ? Math.max(ROUND_IRIS_ASPECT[0], Math.min(ROUND_IRIS_ASPECT[1], e.iris?.aspect ?? 1)) : e.iris?.aspect, limbalRing: 0.6 + rnd() * 0.3, ...(fam ? { layers: fam.layers, ...(fam.detail ? { detail: fam.detail } : {}) } : {}) },

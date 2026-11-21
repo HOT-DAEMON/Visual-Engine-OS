@@ -1,0 +1,189 @@
+{
+ "distinctness4": {
+  "count": 100,
+  "minToExisting": 0.012656360512347947,
+  "minAmongNew": 0.011252627295296138,
+  "byStyle": {
+   "almond": 10,
+   "round": 10,
+   "sharp": 10,
+   "drooping": 10,
+   "chibi": 10,
+   "angular": 10,
+   "compressed": 10,
+   "rounded_rect": 10,
+   "triangle": 10,
+   "diamond_v2": 10
+  },
+  "lowerPeak": [
+   0.40109207985224204,
+   0.6491930574760773
+  ],
+  "aspect": [
+   0.41586385895413885,
+   0.8
+  ],
+  "tiltDeg": [
+   -14.420412230866093,
+   16.9296
+  ]
+ },
+ "verifyEyeErreurs": 0,
+ "avertissementsVerifyEye": {
+  "lower-peak-min": 12,
+  "canthus-opening-angle-inner-max": 2,
+  "envelope-vs-reference-profile": 13,
+  "pupil-darker-than-iris": 30,
+  "svg-weight": 46,
+  "iris-to-opening-width": 1,
+  "pupil-to-iris": 2,
+  "iris-over-opening-height-min": 2,
+  "upper-peak-max": 1,
+  "envelope-height-contract": 1
+ },
+ "echecsPixels": {},
+ "saturationPics": {
+  "prism-star": {
+   "reference": 0.783,
+   "avant": 0.624,
+   "apres": 0.783,
+   "vibrance": 0.23
+  },
+  "emerald-facets": {
+   "reference": 0.738,
+   "avant": 0.51,
+   "apres": 0.74,
+   "vibrance": 0.35
+  },
+  "lime-cyan": {
+   "reference": 0.786,
+   "avant": 0.649,
+   "apres": 0.789,
+   "vibrance": 0.15
+  },
+  "fire-halo": {
+   "reference": 0.72,
+   "avant": 0.407,
+   "apres": 0.713,
+   "vibrance": 0.96
+  },
+  "ice-star": {
+   "reference": 0.729,
+   "avant": 0.445,
+   "apres": 0.73,
+   "vibrance": 0.61
+  }
+ },
+ "toneParite": {
+  "prism-star": {
+   "reference": {
+    "lumMean": 126.1,
+    "darkShare": 0.154,
+    "satPeaks": 0.783,
+    "vividBands": [
+     "#a59f54",
+     "#a59c59",
+     "#58c2b0"
+    ]
+   },
+   "moteur": {
+    "lumMean": 133.4,
+    "darkShare": 0.033,
+    "satPeaks": 0.783,
+    "vividBands": [
+     null,
+     "#67a684",
+     "#34b288"
+    ]
+   }
+  },
+  "emerald-facets": {
+   "reference": {
+    "lumMean": 128.8,
+    "darkShare": 0.101,
+    "satPeaks": 0.738,
+    "vividBands": [
+     "#45a249",
+     "#59c367",
+     "#45c091"
+    ]
+   },
+   "moteur": {
+    "lumMean": 140.3,
+    "darkShare": 0.012,
+    "satPeaks": 0.74,
+    "vividBands": [
+     "#2ea64d",
+     "#3ac065",
+     "#2ab35e"
+    ]
+   }
+  },
+  "lime-cyan": {
+   "reference": {
+    "lumMean": 169.4,
+    "darkShare": 0.003,
+    "satPeaks": 0.786,
+    "vividBands": [
+     "#76918f",
+     "#adef5b",
+     "#d3ee46"
+    ]
+   },
+   "moteur": {
+    "lumMean": 156.5,
+    "darkShare": 0.02,
+    "satPeaks": 0.789,
+    "vividBands": [
+     "#5dac8d",
+     "#9dd743",
+     "#8bab20"
+    ]
+   }
+  },
+  "fire-halo": {
+   "reference": {
+    "lumMean": 89.1,
+    "darkShare": 0.373,
+    "satPeaks": 0.72,
+    "vividBands": [
+     "#4896e4",
+     "#e66a3a",
+     "#6a4d7e"
+    ]
+   },
+   "moteur": {
+    "lumMean": 73.3,
+    "darkShare": 0.32,
+    "satPeaks": 0.713,
+    "vividBands": [
+     "#5291e7",
+     "#fc5f25",
+     "#65295a"
+    ]
+   }
+  },
+  "ice-star": {
+   "reference": {
+    "lumMean": 103.3,
+    "darkShare": 0.297,
+    "satPeaks": 0.729,
+    "vividBands": [
+     "#6063bd",
+     "#4fbde2",
+     "#378ec5"
+    ]
+   },
+   "moteur": {
+    "lumMean": 89.9,
+    "darkShare": 0.196,
+    "satPeaks": 0.73,
+    "vividBands": [
+     "#54aff4",
+     "#33baed",
+     "#153b61"
+    ]
+   }
+  }
+ }
+}

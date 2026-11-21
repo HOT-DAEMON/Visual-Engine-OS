@@ -23,14 +23,14 @@ const ROUNDISH = ['round', 'chibi', 'circle'];
 export interface Eye2Recipe extends EyeRecipe { readonly irisFamily: PhotoIrisFamily | null; }
 
 export const vectorOf = (r: EyeRecipe): number[] =>
-  profileVector(Shape.parse({ width: WIDTH, height: WIDTH * r.aspect, tiltDeg: r.tiltDeg, upperFraction: r.upperFraction, openness: r.openness, style: r.style }), Canthi.parse({ inner: { roundness: r.innerRoundness, caruncle: r.caruncle }, outer: { roundness: r.outerRoundness } }));
+  profileVector(Shape.parse({ width: WIDTH, height: WIDTH * r.aspect, tiltDeg: r.tiltDeg, upperFraction: r.upperFraction, openness: r.openness, style: r.style, ...(r.lowerPeak === undefined ? {} : { lowerPeak: r.lowerPeak }) }), Canthi.parse({ inner: { roundness: r.innerRoundness, caruncle: r.caruncle }, outer: { roundness: r.outerRoundness } }));
 
 /**
  * Sélection de `count` formes d'enveloppe EN PLUS de `taken` (profils déjà occupés) : échantillonnage du plus éloigné par style (flux `streamSeed`), un style saturé
  * (distance minimale < `minDist`) cède ses places, entrelacement final sans deux enveloppes identiques consécutives. Partagé par les galeries 2 et 3.
  */
-export function selectRecipes(taken: number[][], streamSeed: number, count: number, minDist: number): Omit<EyeRecipe, 'index' | 'seed'>[] {
-  const pools = new Map<string, Cand[]>(STYLES.map((s, i) => [s, candidates(s, mulberry32((streamSeed ^ Math.imul(i + 1, 0x9e3779b1)) >>> 0))]));
+export function selectRecipes(taken: number[][], streamSeed: number, count: number, minDist: number, pool: (style: (typeof STYLES)[number], rnd: () => number) => Cand[] = candidates): Omit<EyeRecipe, 'index' | 'seed'>[] {
+  const pools = new Map<string, Cand[]>(STYLES.map((s, i) => [s, pool(s, mulberry32((streamSeed ^ Math.imul(i + 1, 0x9e3779b1)) >>> 0))]));
   const saturated = new Set<string>();
   const picked: Omit<EyeRecipe, 'index' | 'seed'>[] = [];
   while (picked.length < count) {
@@ -76,7 +76,7 @@ export function applyIrisPreset(e: EyeInput, p: PhotoIris, style: string, simple
   const keepAspect = ROUNDISH.includes(style) || p.irisAspect === null;
   return {
     ...e, archetype: null, finish: 'shaded',   // dégradés, fibres et lueur : un fini `flat` (encre) les retirerait
-    iris: { ...e.iris, ...(p.base ? { material: { ...(e.iris as { material?: object } | undefined)?.material, base: { type: 'radial', stops: p.base } } } : {}), layers: p.layers, detail: p.detail, limbalRing: p.limbalRing, fibers: p.fibers, glow: p.glow, ...(keepAspect ? {} : { aspect: p.irisAspect }) },
+    iris: { ...e.iris, ...(p.base ? { material: { ...(e.iris as { material?: object } | undefined)?.material, base: { type: 'radial', stops: p.base } } } : {}), layers: p.layers, detail: p.detail, limbalRing: p.limbalRing, fibers: p.fibers, glow: p.glow, ...(p.vibrance === undefined ? {} : { vibrance: p.vibrance }), ...(keepAspect ? {} : { aspect: p.irisAspect }) },
     pupil: { ...e.pupil, shape: p.pupil.shape, size: p.pupil.size, deform: { ...(e.pupil?.deform ?? {}), squash: p.pupil.squash } },
     highlights: { list: simple ? p.highlights.slice(0, 2) : p.highlights },
   } as EyeInput;

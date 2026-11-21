@@ -3,7 +3,8 @@ import { faceLandmarks, fitEyeToFace, PAIR_SCALE_MAX, type EyeFit, type EyeSide 
 import { FaceParams, type SceneInput } from '../schema';
 import { applyEyeAxes, type BrowLash, type EyelidFold } from './random-axes';
 import { LashFamilyId, applyLashFamily, lashFamilyForSeed } from './eye-lash-families';
-import { EXTENDED_IDENTITIES, EXTENDED2_IDENTITIES, EXTENDED3_IDENTITIES, extended2Pair, extended3Pair, extendedPair, galleryPair, GALLERY_IDENTITIES } from './eye-pool';
+import { LOWER_PEAK_RANGE } from './eye-gallery-ext4';
+import { EXTENDED_IDENTITIES, EXTENDED2_IDENTITIES, EXTENDED3_IDENTITIES, EXTENDED4_IDENTITIES, extended2Pair, extended3Pair, extended4Pair, extendedPair, galleryPair, GALLERY_IDENTITIES } from './eye-pool';
 import { generateRandomEye } from './random-eye';
 import { drawFaceParams, drawSkin, FACE_EXPRESSIONS, mouthFor, type ExpressionKind } from './random-face-helpers';
 import { drawFaceExtras, type ExtrasOverride } from './random-face-extras';
@@ -36,10 +37,12 @@ export interface RandomFaceOptions extends ExtrasOverride {
   /** Identifiant de l'hôte ; les yeux en dérivent (`<id>-eye-left`, …). Défaut : `face-<seed hex>`. */
   readonly id?: string;
   /** 'gallery' (défaut) : paire d'yeux d'une des 48 identités des galeries ; 'extended' : une des 148 (48 + les 100 formes de `eye-gallery-ext`, identité tirée dans un flux DÉRIVÉ : les autres tirages ne bougent pas) ; 'extended2' (passe 9) : une des 248 (les 148 + les 100 de eye-gallery-ext2, 4 familles d'iris photo) ; 'random' : œil tiré de la seed du visage. */
-  readonly eyeSource?: 'gallery' | 'random' | 'extended' | 'extended2' | 'extended3';
+  readonly eyeSource?: 'gallery' | 'random' | 'extended' | 'extended2' | 'extended3' | 'extended4';
+  /** Creux de la paupière basse (`shape.lowerPeak`, passe 11) imposé aux DEUX yeux : un nombre (0,3–0,75) l'impose ; 'auto' le tire dans la plage mesurée 0,40–0,65 (flux dérivé dédié : aucun autre tirage ne bouge). Absent : yeux de l'identité tels quels (les identités 'extended4' portent déjà le leur). */
+  readonly eyeLowerPeak?: number | 'auto';
   /** Famille de cils (réfs 12–16, voir eye-lash-families.ts) : un identifiant l'impose aux deux yeux ; 'auto' en tire une d'un flux dérivé dédié (les autres tirages ne bougent pas) ; absent ou null = cils de l'identité d'origine (visages d'avant inchangés). */
   readonly lashFamily?: LashFamilyId | 'auto' | null;
-  /** Identité de galerie imposée (0–47, 0–147 si eyeSource = 'extended', 0–247 si 'extended2', 0–347 si 'extended3') ; sinon tirée. Ignoré si eyeSource = 'random'. */
+  /** Identité de galerie imposée (0–47, 0–147 si eyeSource = 'extended', 0–247 si 'extended2', 0–347 si 'extended3', 0–447 si 'extended4') ; sinon tirée. Ignoré si eyeSource = 'random'. */
   readonly identity?: number;
   /** Expression imposée (yeux ET bouche) ; sinon tirée. */
   readonly expression?: { readonly kind: ExpressionKind; readonly intensity: number };
@@ -94,12 +97,12 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
   const id = options.id ?? `face-${(seed >>> 0).toString(16)}`;
   const expression = { kind, intensity };
   const source = options.eyeSource ?? 'gallery';
-  const gallery = source === 'gallery' || source === 'extended' || source === 'extended2' || source === 'extended3';
+  const gallery = source === 'gallery' || source === 'extended' || source === 'extended2' || source === 'extended3' || source === 'extended4';
   // 'extended2' (passe 9) : 248 identités (148 + les 100 de eye-gallery-ext2), même flux dérivé que 'extended' ; 'extended' et 'gallery' gardent leurs tirages.
   // 'extended3' (passe 10) : 348 identités (248 + les 100 de eye-gallery-ext3), même flux dérivé ; les autres sources gardent leurs tirages.
-  const identity = source === 'extended3' ? (options.identity ?? Math.floor(mulberry32((seed ^ 0x5eed1de9) >>> 0)() * EXTENDED3_IDENTITIES)) : source === 'extended2' ? (options.identity ?? Math.floor(mulberry32((seed ^ 0x5eed1de9) >>> 0)() * EXTENDED2_IDENTITIES)) : source === 'extended' ? (options.identity ?? Math.floor(mulberry32((seed ^ 0x5eed1de9) >>> 0)() * EXTENDED_IDENTITIES)) : gallery ? (options.identity ?? drawnIdentity) : null;
+  const identity = source === 'extended4' ? (options.identity ?? Math.floor(mulberry32((seed ^ 0x5eed1de9) >>> 0)() * EXTENDED4_IDENTITIES)) : source === 'extended3' ? (options.identity ?? Math.floor(mulberry32((seed ^ 0x5eed1de9) >>> 0)() * EXTENDED3_IDENTITIES)) : source === 'extended2' ? (options.identity ?? Math.floor(mulberry32((seed ^ 0x5eed1de9) >>> 0)() * EXTENDED2_IDENTITIES)) : source === 'extended' ? (options.identity ?? Math.floor(mulberry32((seed ^ 0x5eed1de9) >>> 0)() * EXTENDED_IDENTITIES)) : gallery ? (options.identity ?? drawnIdentity) : null;
   const pair0: Record<EyeSide, EyeInput> = gallery
-    ? source === 'extended3' ? extended3Pair(identity as number, expression) : source === 'extended2' ? extended2Pair(identity as number, expression) : source === 'extended' ? extendedPair(identity as number, expression) : galleryPair(identity as number, expression)
+    ? source === 'extended4' ? extended4Pair(identity as number, expression) : source === 'extended3' ? extended3Pair(identity as number, expression) : source === 'extended2' ? extended2Pair(identity as number, expression) : source === 'extended' ? extendedPair(identity as number, expression) : galleryPair(identity as number, expression)
     : (() => {
         const eye = generateRandomEye(seed, { expression });
         return { left: { ...eye, shape: { ...eye.shape, outerSide: 'left' } }, right: { ...eye, shape: { ...eye.shape, outerSide: 'right' } } };
@@ -107,7 +110,10 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
 
   const lashFam = options.lashFamily ? (options.lashFamily === 'auto' ? lashFamilyForSeed(seed) : options.lashFamily) : null;
   const withLashes = (e: EyeInput): EyeInput => (lashFam && e.kind === 'eye' ? (applyLashFamily(e as unknown as Record<string, unknown>, lashFam) as unknown as EyeInput) : e);
-  const pair: Record<EyeSide, EyeInput> = { left: withLashes(pair0.left), right: withLashes(pair0.right) };
+  // Creux de la paupière basse (passe 11) : même valeur pour les deux yeux (une paire a le même profil, miroir près).
+  const lp = options.eyeLowerPeak === undefined ? undefined : options.eyeLowerPeak === 'auto' ? LOWER_PEAK_RANGE[0] + mulberry32((seed ^ 0x10ae9ea4) >>> 0)() * (LOWER_PEAK_RANGE[1] - LOWER_PEAK_RANGE[0]) : options.eyeLowerPeak;
+  const withPeak = (e: EyeInput): EyeInput => (lp !== undefined && e.kind === 'eye' ? ({ ...e, shape: { ...e.shape, lowerPeak: lp } } as EyeInput) : e);
+  const pair: Record<EyeSide, EyeInput> = { left: withPeak(withLashes(pair0.left)), right: withPeak(withLashes(pair0.right)) };
 
   const sides: EyeSide[] = ['left', 'right'];
   const anchors = sides.map((side) => {

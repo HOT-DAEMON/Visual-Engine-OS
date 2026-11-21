@@ -29,6 +29,12 @@ export interface GlobeInner {
  * rotation 3D du globe, caroncule, ligne humide, ombre des paupières, vignettage, reflets « anime »,
  * et la peau du pli épicanthique qui recouvre le canthus interne.
  */
+/** Matrice 4x5 de saturation `k` (poids de luminance de la spécification SVG). `type="saturate"` est borné à 1 par resvg : seule la matrice explicite sature au-delà. */
+export function saturationMatrix(k: number): string {
+  const r = 0.213, g = 0.715, b = 0.072;
+  return [r + (1 - r) * k, g - g * k, b - b * k, 0, 0, r - r * k, g + (1 - g) * k, b - b * k, 0, 0, r - r * k, g - g * k, b + (1 - b) * k, 0, 0, 0, 0, 0, 1, 0].map((v) => num(v)).join(' ');
+}
+
 export function renderGlobeInner(
   eye: EyeSpec,
   g: OpeningGeometry,
@@ -104,6 +110,13 @@ export function renderGlobeInner(
   const fx = look ? compileEffects(`${id}-iris`, look.spec, look.iris, { x: c.x - irisRx - look.reach, y: c.y - irisRy - look.reach, w: 2 * (irisRx + look.reach), h: 2 * (irisRy + look.reach) }) : null;
   if (fx) defs.push(...fx.defs);
   const irisAttrs: Record<string, string> = fx?.filter ? { filter: fx.filter } : {};
+  // Vibrance (opt-in) : saturation du disque de l'iris, pupille et reflets exclus (la pupille est remise par-dessus, voir ci-dessous).
+  const vib = eye.iris.vibrance ?? 0;
+  if (vib > 0) {
+    const vid = `${id}-vib`; const pad = 2;
+    defs.push(el('filter', { id: vid, filterUnits: 'userSpaceOnUse', x: c.x - irisRx - pad, y: c.y - irisRy - pad, width: 2 * (irisRx + pad), height: 2 * (irisRy + pad), 'color-interpolation-filters': 'sRGB' }, [el('feColorMatrix', { type: 'matrix', values: saturationMatrix(1 + 1.6 * vib) })]));
+    irisGroup.splice(0, irisGroup.length - pupil.markup.length, el('g', { filter: urlRef(vid) }, irisGroup.slice(0, irisGroup.length - pupil.markup.length)));
+  }
   const irisNode = gazeT ? el('g', { transform: gazeT, ...irisAttrs }, irisGroup) : el('g', irisAttrs, irisGroup);
   inner.push(turnT ? el('g', { transform: turnT }, [irisNode]) : irisNode);
   inner.push(...micro.over);

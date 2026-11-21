@@ -103,6 +103,31 @@ export const IrisDetail = z
         size: z.number().min(0.03).max(0.2).default(0.08),
         opacity: Unit.default(0.8),
         zone: z.enum(['lower', 'all']).default('lower'),
+        /** Netteté (passe 11, opt-in, 0 = rendu historique) : bulle à CONTOUR SOMBRE net + liseré interne clair + croissant caustique (lumière focalisée du côté opposé au reflet) + reflet spéculaire ponctuel. Réf. 07. */
+        crisp: Unit.default(0),
+      })
+      .strict()
+      .optional(),
+    /**
+     * ARC-EN-CIEL PRISMATIQUE (passe 11, opt-in) : secteur d'iris traversé par le SPECTRE (rouge -> violet selon l'angle), avec des stries radiales fines
+     * (lumière dispersée par la cristallisation). Réf. 04 : magenta / violet en bas à gauche, jaune-vert en bas, turquoise en haut à droite.
+     * Dessiné au-dessus des facettes, sous la collerette. Absent : aucun.
+     */
+    rainbow: z
+      .object({
+        /** Centre du secteur (0° = haut, horaire). */
+        angleDeg: z.number().min(-360).max(360).default(225),
+        /** Ouverture angulaire (deg). */
+        span: z.number().min(20).max(360).default(120),
+        /** Rayons intérieur / extérieur du secteur, en fraction du rayon de l'iris. */
+        inner: z.number().min(0.1).max(0.9).default(0.35),
+        outer: z.number().min(0.3).max(0.99).default(0.95),
+        /** Teinte de départ et d'arrivée (deg, 0 = rouge, 270 = violet) : le spectre est parcouru de `hueFrom` à `hueTo` sur l'ouverture. */
+        hueFrom: z.number().min(0).max(360).default(300),
+        hueTo: z.number().min(0).max(360).default(60),
+        /** Stries radiales de dispersion (nombre) et opacité globale. */
+        streaks: z.number().int().min(0).max(80).default(24),
+        opacity: Unit.default(0.7),
       })
       .strict()
       .optional(),
@@ -132,6 +157,12 @@ export const Iris = z
     detail: IrisDetail.nullable().default(null),
     /** Couches de couleur à masques/gradients (EYE-04) — voir `eye-iris-layers.ts`. Vide : aucune (comportement historique). */
     layers: z.array(IrisLayer).max(8).default([]),
+    /**
+     * VIBRANCE (passe 11, opt-in, 0 = aucun filtre : rendu historique) : sature le disque de l'iris (couches, fibres, détail ; pas la pupille ni les reflets)
+     * par une matrice de couleur de saturation 1 + 1,6 × valeur. Réfs 04 / 07 / 08 / 10 : pics saturés à 0,72–0,79 contre 0,41–0,65 pour les couches
+     * superposées (fibres claires, voile de limbe) qui lavent les teintes.
+     */
+    vibrance: Unit.default(0),
   })
   .strict();
 
@@ -184,6 +215,6 @@ export const Highlights = z
     primary: Highlight.default({ size: 0.24, opacity: 1 }),
     secondary: Highlight.nullable().default({ size: 0.11, opacity: 0.75 }),
     /** Reflets détaillés (jusqu'à 6). Liste non vide : REMPLACE `primary`/`secondary` (voir `eye-highlights.ts`). */
-    list: z.array(HighlightItem).max(6).default([]),
+    list: z.array(HighlightItem).max(12).default([]),
   })
   .strict();
