@@ -1,0 +1,1478 @@
+{
+ "familles": {
+  "prism-star": {
+   "ref": "04",
+   "darkShare": {
+    "moteur": 0.172,
+    "reference": 0.154
+   },
+   "lumMean": {
+    "moteur": 112.3,
+    "reference": 126.1
+   },
+   "satPeaks": {
+    "moteur": 0.781,
+    "reference": 0.783
+   },
+   "fentes": {
+    "moteur": {
+     "raw": 191,
+     "persistent": [
+      {
+       "angDeg": 7.1,
+       "bands": 6,
+       "widthDeg": 4,
+       "depth": 93.5,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 29.2,
+       "bands": 4,
+       "widthDeg": 2.62,
+       "depth": 70.7,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 49.6,
+       "bands": 6,
+       "widthDeg": 3.58,
+       "depth": 70.5,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 86.2,
+       "bands": 6,
+       "widthDeg": 2.42,
+       "depth": 42.1,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 103.4,
+       "bands": 6,
+       "widthDeg": 2.08,
+       "depth": 59.6,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 109.8,
+       "bands": 6,
+       "widthDeg": 3.58,
+       "depth": 73,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 167.8,
+       "bands": 6,
+       "widthDeg": 2.17,
+       "depth": 64.5,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 179.9,
+       "bands": 3,
+       "widthDeg": 2.17,
+       "depth": 72.6,
+       "rhoMin": 0.35,
+       "rhoMax": 0.55
+      },
+      {
+       "angDeg": 184.9,
+       "bands": 4,
+       "widthDeg": 3.75,
+       "depth": 97.9,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 252.8,
+       "bands": 4,
+       "widthDeg": 2.67,
+       "depth": 52.7,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 268.8,
+       "bands": 5,
+       "widthDeg": 2.8,
+       "depth": 60.7,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 271.2,
+       "bands": 5,
+       "widthDeg": 2.11,
+       "depth": 60.5,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 286.2,
+       "bands": 3,
+       "widthDeg": 3,
+       "depth": 79.1,
+       "rhoMin": 0.35,
+       "rhoMax": 0.55
+      },
+      {
+       "angDeg": 307.9,
+       "bands": 6,
+       "widthDeg": 3.92,
+       "depth": 89.7,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 330.6,
+       "bands": 5,
+       "widthDeg": 2.67,
+       "depth": 89.2,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 345.8,
+       "bands": 6,
+       "widthDeg": 1.06,
+       "depth": 46.8,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 22.2,
+       "bands": 4,
+       "widthDeg": 1.29,
+       "depth": 52.5,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 39.3,
+       "bands": 5,
+       "widthDeg": 1.79,
+       "depth": 53.4,
+       "rhoMin": 0.45,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 99,
+       "bands": 4,
+       "widthDeg": 1.62,
+       "depth": 37.4,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 121.6,
+       "bands": 5,
+       "widthDeg": 2.8,
+       "depth": 61.6,
+       "rhoMin": 0.45,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 132.2,
+       "bands": 4,
+       "widthDeg": 1.75,
+       "depth": 89.5,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 191.4,
+       "bands": 4,
+       "widthDeg": 2.25,
+       "depth": 48.2,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 196.7,
+       "bands": 5,
+       "widthDeg": 2.08,
+       "depth": 65.7,
+       "rhoMin": 0.45,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 230.4,
+       "bands": 4,
+       "widthDeg": 2.38,
+       "depth": 72.9,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 297.7,
+       "bands": 4,
+       "widthDeg": 2.88,
+       "depth": 61.5,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 342.3,
+       "bands": 5,
+       "widthDeg": 1.67,
+       "depth": 49.4,
+       "rhoMin": 0.45,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 2.2,
+       "bands": 4,
+       "widthDeg": 1.62,
+       "depth": 67.1,
+       "rhoMin": 0.55,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 58.4,
+       "bands": 4,
+       "widthDeg": 3.5,
+       "depth": 63.9,
+       "rhoMin": 0.55,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 235.9,
+       "bands": 3,
+       "widthDeg": 3.67,
+       "depth": 76.3,
+       "rhoMin": 0.55,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 240.1,
+       "bands": 3,
+       "widthDeg": 2.67,
+       "depth": 52.5,
+       "rhoMin": 0.55,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 243.7,
+       "bands": 4,
+       "widthDeg": 2.12,
+       "depth": 34.5,
+       "rhoMin": 0.55,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 353.2,
+       "bands": 4,
+       "widthDeg": 2,
+       "depth": 62.9,
+       "rhoMin": 0.55,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 87.3,
+       "bands": 5,
+       "widthDeg": 2.5,
+       "depth": 45.9,
+       "rhoMin": 0.45,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 202.8,
+       "bands": 3,
+       "widthDeg": 4.17,
+       "depth": 75.1,
+       "rhoMin": 0.65,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 254.6,
+       "bands": 3,
+       "widthDeg": 2.75,
+       "depth": 50.5,
+       "rhoMin": 0.65,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 274.5,
+       "bands": 5,
+       "widthDeg": 1.36,
+       "depth": 47.9,
+       "rhoMin": 0.45,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 326,
+       "bands": 3,
+       "widthDeg": 1.75,
+       "depth": 31.3,
+       "rhoMin": 0.65,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 189.5,
+       "bands": 3,
+       "widthDeg": 3,
+       "depth": 75.9,
+       "rhoMin": 0.65,
+       "rhoMax": 0.85
+      }
+     ],
+     "persistentCount": 38,
+     "meanWidthDeg": 2.53,
+     "meanDepth": 63.1
+    },
+    "reference": {
+     "raw": 148,
+     "persistent": [
+      {
+       "angDeg": 144.5,
+       "bands": 6,
+       "widthDeg": 3.25,
+       "depth": 102.4,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 31.2,
+       "bands": 3,
+       "widthDeg": 1.83,
+       "depth": 56.5,
+       "rhoMin": 0.35,
+       "rhoMax": 0.55
+      },
+      {
+       "angDeg": 37.4,
+       "bands": 4,
+       "widthDeg": 2.38,
+       "depth": 68.6,
+       "rhoMin": 0.35,
+       "rhoMax": 0.65
+      },
+      {
+       "angDeg": 48.6,
+       "bands": 3,
+       "widthDeg": 1.5,
+       "depth": 40.4,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 56.5,
+       "bands": 3,
+       "widthDeg": 1.62,
+       "depth": 42.5,
+       "rhoMin": 0.35,
+       "rhoMax": 0.65
+      },
+      {
+       "angDeg": 69.6,
+       "bands": 5,
+       "widthDeg": 4.2,
+       "depth": 99.2,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 88.9,
+       "bands": 3,
+       "widthDeg": 2,
+       "depth": 109,
+       "rhoMin": 0.35,
+       "rhoMax": 0.55
+      },
+      {
+       "angDeg": 100.4,
+       "bands": 3,
+       "widthDeg": 3,
+       "depth": 123.5,
+       "rhoMin": 0.35,
+       "rhoMax": 0.55
+      },
+      {
+       "angDeg": 144.6,
+       "bands": 4,
+       "widthDeg": 1.62,
+       "depth": 42,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 206.4,
+       "bands": 4,
+       "widthDeg": 4.62,
+       "depth": 64.8,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 261.9,
+       "bands": 6,
+       "widthDeg": 4.33,
+       "depth": 129.5,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 279.6,
+       "bands": 6,
+       "widthDeg": 4.25,
+       "depth": 78,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 306.1,
+       "bands": 3,
+       "widthDeg": 2.67,
+       "depth": 40.6,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 313.3,
+       "bands": 3,
+       "widthDeg": 3.17,
+       "depth": 74.4,
+       "rhoMin": 0.35,
+       "rhoMax": 0.65
+      },
+      {
+       "angDeg": 334,
+       "bands": 4,
+       "widthDeg": 2.75,
+       "depth": 61.6,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 358.4,
+       "bands": 5,
+       "widthDeg": 2.8,
+       "depth": 97.3,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 20,
+       "bands": 3,
+       "widthDeg": 3.83,
+       "depth": 53.8,
+       "rhoMin": 0.35,
+       "rhoMax": 0.55
+      },
+      {
+       "angDeg": 176.7,
+       "bands": 4,
+       "widthDeg": 2.2,
+       "depth": 51.8,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 209.7,
+       "bands": 3,
+       "widthDeg": 2.67,
+       "depth": 50.3,
+       "rhoMin": 0.45,
+       "rhoMax": 0.65
+      },
+      {
+       "angDeg": 223.9,
+       "bands": 4,
+       "widthDeg": 2.7,
+       "depth": 60,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 284.1,
+       "bands": 3,
+       "widthDeg": 2.67,
+       "depth": 45.4,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 291.9,
+       "bands": 4,
+       "widthDeg": 1.2,
+       "depth": 42.7,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 297.2,
+       "bands": 3,
+       "widthDeg": 1.5,
+       "depth": 36.7,
+       "rhoMin": 0.45,
+       "rhoMax": 0.65
+      },
+      {
+       "angDeg": 120.2,
+       "bands": 4,
+       "widthDeg": 3.5,
+       "depth": 44.4,
+       "rhoMin": 0.55,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 134.8,
+       "bands": 3,
+       "widthDeg": 2.67,
+       "depth": 50.8,
+       "rhoMin": 0.45,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 149.4,
+       "bands": 3,
+       "widthDeg": 2.17,
+       "depth": 43.6,
+       "rhoMin": 0.55,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 309.9,
+       "bands": 4,
+       "widthDeg": 2.6,
+       "depth": 74.5,
+       "rhoMin": 0.55,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 39.5,
+       "bands": 4,
+       "widthDeg": 2.62,
+       "depth": 81.4,
+       "rhoMin": 0.45,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 161.5,
+       "bands": 3,
+       "widthDeg": 3.5,
+       "depth": 57.1,
+       "rhoMin": 0.65,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 337.5,
+       "bands": 3,
+       "widthDeg": 2.83,
+       "depth": 37.6,
+       "rhoMin": 0.65,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 246.9,
+       "bands": 3,
+       "widthDeg": 3,
+       "depth": 43.5,
+       "rhoMin": 0.65,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 174.5,
+       "bands": 3,
+       "widthDeg": 3,
+       "depth": 70,
+       "rhoMin": 0.55,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 289.6,
+       "bands": 4,
+       "widthDeg": 2.1,
+       "depth": 45.2,
+       "rhoMin": 0.55,
+       "rhoMax": 0.85
+      }
+     ],
+     "persistentCount": 33,
+     "meanWidthDeg": 2.75,
+     "meanDepth": 64.2
+    }
+   },
+   "cellules": {
+    "moteur": {
+     "count": 180,
+     "areaMedian": 0.00057,
+     "areaP10": 0.00009,
+     "areaP90": 0.00555,
+     "areaCV": 2.453,
+     "elongationMedian": 4.45,
+     "solidityMedian": 0.709
+    },
+    "reference": {
+     "count": 167,
+     "areaMedian": 0.00047,
+     "areaP10": 0.00016,
+     "areaP90": 0.00428,
+     "areaCV": 2.881,
+     "elongationMedian": 2.36,
+     "solidityMedian": 0.623
+    }
+   },
+   "etoilesTop4": {
+    "moteur": [
+     0.53,
+     0.366,
+     0.3,
+     0.267
+    ],
+    "reference": [
+     0.57,
+     0.402,
+     0.331,
+     0.329
+    ]
+   },
+   "regles": [
+    "slits-radial:ok 1/0.5",
+    "iris-dark-share-plausible:ok 0.152/0.6",
+    "atomic-edge-density:ok 29.513/12"
+   ]
+  },
+  "emerald-facets": {
+   "ref": "07",
+   "darkShare": {
+    "moteur": 0.133,
+    "reference": 0.101
+   },
+   "lumMean": {
+    "moteur": 108.3,
+    "reference": 128.8
+   },
+   "satPeaks": {
+    "moteur": 0.74,
+    "reference": 0.738
+   },
+   "fentes": {
+    "moteur": {
+     "raw": 76,
+     "persistent": [
+      {
+       "angDeg": 21.3,
+       "bands": 3,
+       "widthDeg": 3.83,
+       "depth": 36.4,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 43.4,
+       "bands": 3,
+       "widthDeg": 2.67,
+       "depth": 54.2,
+       "rhoMin": 0.35,
+       "rhoMax": 0.65
+      },
+      {
+       "angDeg": 60,
+       "bands": 3,
+       "widthDeg": 3.83,
+       "depth": 56,
+       "rhoMin": 0.35,
+       "rhoMax": 0.55
+      },
+      {
+       "angDeg": 85.6,
+       "bands": 3,
+       "widthDeg": 4.33,
+       "depth": 68.1,
+       "rhoMin": 0.35,
+       "rhoMax": 0.55
+      },
+      {
+       "angDeg": 122.6,
+       "bands": 3,
+       "widthDeg": 4,
+       "depth": 76,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 140,
+       "bands": 3,
+       "widthDeg": 3.5,
+       "depth": 50.7,
+       "rhoMin": 0.35,
+       "rhoMax": 0.55
+      },
+      {
+       "angDeg": 18.9,
+       "bands": 3,
+       "widthDeg": 4,
+       "depth": 75.5,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 35.3,
+       "bands": 3,
+       "widthDeg": 1.83,
+       "depth": 49.7,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 128.5,
+       "bands": 3,
+       "widthDeg": 1.75,
+       "depth": 49.4,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 80.6,
+       "bands": 3,
+       "widthDeg": 1.67,
+       "depth": 46,
+       "rhoMin": 0.55,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 89.3,
+       "bands": 3,
+       "widthDeg": 2.83,
+       "depth": 67.3,
+       "rhoMin": 0.45,
+       "rhoMax": 0.65
+      },
+      {
+       "angDeg": 107,
+       "bands": 3,
+       "widthDeg": 2.83,
+       "depth": 69,
+       "rhoMin": 0.55,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 200.6,
+       "bands": 3,
+       "widthDeg": 1.67,
+       "depth": 30.6,
+       "rhoMin": 0.55,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 56.5,
+       "bands": 3,
+       "widthDeg": 2.17,
+       "depth": 70.2,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 63.6,
+       "bands": 3,
+       "widthDeg": 2.67,
+       "depth": 52.9,
+       "rhoMin": 0.55,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 164.8,
+       "bands": 3,
+       "widthDeg": 3.5,
+       "depth": 49.9,
+       "rhoMin": 0.35,
+       "rhoMax": 0.65
+      },
+      {
+       "angDeg": 143.5,
+       "bands": 3,
+       "widthDeg": 3.67,
+       "depth": 64.3,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      }
+     ],
+     "persistentCount": 17,
+     "meanWidthDeg": 2.99,
+     "meanDepth": 56.8
+    },
+    "reference": null
+   },
+   "cellules": {
+    "moteur": {
+     "count": 70,
+     "areaMedian": 0.00095,
+     "areaP10": 0.0001,
+     "areaP90": 0.00693,
+     "areaCV": 1.95,
+     "elongationMedian": 1.83,
+     "solidityMedian": 0.731
+    },
+    "reference": {
+     "count": 105,
+     "areaMedian": 0.00101,
+     "areaP10": 0.00024,
+     "areaP90": 0.00548,
+     "areaCV": 1.773,
+     "elongationMedian": 2,
+     "solidityMedian": 0.697
+    }
+   },
+   "etoilesTop4": {
+    "moteur": [
+     0.542,
+     0.478,
+     0.081,
+     0.067
+    ],
+    "reference": [
+     0.666,
+     0.583,
+     0.228,
+     0.151
+    ]
+   },
+   "regles": [
+    "iris-dark-share-plausible:ok 0.131/0.6",
+    "atomic-edge-density:ok 20.993/12"
+   ]
+  },
+  "lime-cyan": {
+   "ref": "08a",
+   "darkShare": {
+    "moteur": 0.02,
+    "reference": 0.003
+   },
+   "lumMean": {
+    "moteur": 156.5,
+    "reference": 169.4
+   },
+   "satPeaks": {
+    "moteur": 0.789,
+    "reference": 0.786
+   },
+   "fentes": {
+    "moteur": {
+     "raw": 35,
+     "persistent": [
+      {
+       "angDeg": 110.4,
+       "bands": 3,
+       "widthDeg": 1.75,
+       "depth": 32,
+       "rhoMin": 0.45,
+       "rhoMax": 0.85
+      }
+     ],
+     "persistentCount": 1,
+     "meanWidthDeg": 1.75,
+     "meanDepth": 32
+    },
+    "reference": null
+   },
+   "cellules": {
+    "moteur": {
+     "count": 37,
+     "areaMedian": 0.0011,
+     "areaP10": 0.00019,
+     "areaP90": 0.00895,
+     "areaCV": 1.666,
+     "elongationMedian": 3.09,
+     "solidityMedian": 0.843
+    },
+    "reference": {
+     "count": 5,
+     "areaMedian": 0.00524,
+     "areaP10": 0.00215,
+     "areaP90": 0.01656,
+     "areaCV": 0.948,
+     "elongationMedian": 4.95,
+     "solidityMedian": 0.637
+    }
+   },
+   "etoilesTop4": {
+    "moteur": [
+     1.466,
+     0.127,
+     0.121,
+     0.099
+    ],
+    "reference": null
+   },
+   "regles": []
+  },
+  "fire-halo": {
+   "ref": "10a",
+   "darkShare": {
+    "moteur": 0.39,
+    "reference": 0.373
+   },
+   "lumMean": {
+    "moteur": 69.9,
+    "reference": 89.1
+   },
+   "satPeaks": {
+    "moteur": 0.711,
+    "reference": 0.72
+   },
+   "fentes": {
+    "moteur": {
+     "raw": 217,
+     "persistent": [
+      {
+       "angDeg": 31.1,
+       "bands": 4,
+       "widthDeg": 2,
+       "depth": 37.5,
+       "rhoMin": 0.35,
+       "rhoMax": 0.65
+      },
+      {
+       "angDeg": 54.5,
+       "bands": 4,
+       "widthDeg": 2.5,
+       "depth": 31.7,
+       "rhoMin": 0.35,
+       "rhoMax": 0.65
+      },
+      {
+       "angDeg": 62.7,
+       "bands": 5,
+       "widthDeg": 1.86,
+       "depth": 27.1,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 75.5,
+       "bands": 3,
+       "widthDeg": 1.17,
+       "depth": 27.8,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 98.8,
+       "bands": 3,
+       "widthDeg": 1,
+       "depth": 23,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 101.1,
+       "bands": 3,
+       "widthDeg": 1.33,
+       "depth": 27,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 113,
+       "bands": 5,
+       "widthDeg": 2.71,
+       "depth": 37.6,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 114.9,
+       "bands": 6,
+       "widthDeg": 1.67,
+       "depth": 27.9,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 139.8,
+       "bands": 3,
+       "widthDeg": 1.38,
+       "depth": 28,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 153.3,
+       "bands": 4,
+       "widthDeg": 3.6,
+       "depth": 34.9,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 189.5,
+       "bands": 3,
+       "widthDeg": 2.5,
+       "depth": 36.9,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 202.6,
+       "bands": 3,
+       "widthDeg": 1.75,
+       "depth": 28.8,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 206.8,
+       "bands": 4,
+       "widthDeg": 2.1,
+       "depth": 34.5,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 221.3,
+       "bands": 3,
+       "widthDeg": 2,
+       "depth": 26.5,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 227.7,
+       "bands": 6,
+       "widthDeg": 2.5,
+       "depth": 41.6,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 239.2,
+       "bands": 4,
+       "widthDeg": 4.12,
+       "depth": 46.6,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 252.1,
+       "bands": 4,
+       "widthDeg": 2.3,
+       "depth": 31.1,
+       "rhoMin": 0.35,
+       "rhoMax": 0.65
+      },
+      {
+       "angDeg": 259.6,
+       "bands": 5,
+       "widthDeg": 2.2,
+       "depth": 31.1,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 276.5,
+       "bands": 5,
+       "widthDeg": 3.5,
+       "depth": 29.8,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 284.6,
+       "bands": 4,
+       "widthDeg": 1.25,
+       "depth": 23,
+       "rhoMin": 0.35,
+       "rhoMax": 0.65
+      },
+      {
+       "angDeg": 305.3,
+       "bands": 5,
+       "widthDeg": 1.31,
+       "depth": 33.2,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 322.6,
+       "bands": 3,
+       "widthDeg": 1.5,
+       "depth": 29.4,
+       "rhoMin": 0.35,
+       "rhoMax": 0.55
+      },
+      {
+       "angDeg": 334.7,
+       "bands": 5,
+       "widthDeg": 1.55,
+       "depth": 32.5,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 336.1,
+       "bands": 5,
+       "widthDeg": 1.2,
+       "depth": 30.9,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 353.1,
+       "bands": 4,
+       "widthDeg": 2.38,
+       "depth": 32,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 12.8,
+       "bands": 4,
+       "widthDeg": 1.9,
+       "depth": 22.9,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 14.1,
+       "bands": 4,
+       "widthDeg": 1.92,
+       "depth": 21.4,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 42.4,
+       "bands": 4,
+       "widthDeg": 1.2,
+       "depth": 24.7,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 69.3,
+       "bands": 3,
+       "widthDeg": 2.17,
+       "depth": 25.7,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 83.3,
+       "bands": 3,
+       "widthDeg": 2.12,
+       "depth": 35,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 126.8,
+       "bands": 4,
+       "widthDeg": 1.75,
+       "depth": 37.7,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 144.8,
+       "bands": 3,
+       "widthDeg": 4,
+       "depth": 34.4,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 179.2,
+       "bands": 3,
+       "widthDeg": 0.9,
+       "depth": 23.7,
+       "rhoMin": 0.45,
+       "rhoMax": 0.65
+      },
+      {
+       "angDeg": 310.1,
+       "bands": 3,
+       "widthDeg": 3.67,
+       "depth": 54.1,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 328.7,
+       "bands": 3,
+       "widthDeg": 2.5,
+       "depth": 56,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 342.5,
+       "bands": 4,
+       "widthDeg": 2,
+       "depth": 27.7,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 215.4,
+       "bands": 3,
+       "widthDeg": 1.8,
+       "depth": 24.8,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 49.6,
+       "bands": 3,
+       "widthDeg": 1,
+       "depth": 27.5,
+       "rhoMin": 0.55,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 89.3,
+       "bands": 3,
+       "widthDeg": 1,
+       "depth": 26,
+       "rhoMin": 0.55,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 197.2,
+       "bands": 3,
+       "widthDeg": 1.38,
+       "depth": 28.5,
+       "rhoMin": 0.55,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 264.8,
+       "bands": 3,
+       "widthDeg": 1.17,
+       "depth": 23.9,
+       "rhoMin": 0.55,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 298.9,
+       "bands": 3,
+       "widthDeg": 2.62,
+       "depth": 24.1,
+       "rhoMin": 0.55,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 209.5,
+       "bands": 3,
+       "widthDeg": 1,
+       "depth": 25.6,
+       "rhoMin": 0.55,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 249,
+       "bands": 4,
+       "widthDeg": 1.7,
+       "depth": 24.5,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 254.2,
+       "bands": 3,
+       "widthDeg": 1.25,
+       "depth": 31.9,
+       "rhoMin": 0.55,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 274.5,
+       "bands": 3,
+       "widthDeg": 3.5,
+       "depth": 30,
+       "rhoMin": 0.45,
+       "rhoMax": 0.65
+      },
+      {
+       "angDeg": 43.3,
+       "bands": 4,
+       "widthDeg": 1.1,
+       "depth": 25,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      }
+     ],
+     "persistentCount": 47,
+     "meanWidthDeg": 1.98,
+     "meanDepth": 30.8
+    },
+    "reference": null
+   },
+   "cellules": {
+    "moteur": {
+     "count": 226,
+     "areaMedian": 0.00047,
+     "areaP10": 0.00007,
+     "areaP90": 0.00452,
+     "areaCV": 2.726,
+     "elongationMedian": 4.75,
+     "solidityMedian": 0.678
+    },
+    "reference": {
+     "count": 44,
+     "areaMedian": 0.00124,
+     "areaP10": 0.00037,
+     "areaP90": 0.02344,
+     "areaCV": 2.025,
+     "elongationMedian": 2.03,
+     "solidityMedian": 0.759
+    }
+   },
+   "etoilesTop4": {
+    "moteur": [
+     0.702,
+     0.362,
+     0.294,
+     0.255
+    ],
+    "reference": [
+     0.8,
+     0.654,
+     0.364,
+     0.304
+    ]
+   },
+   "regles": [
+    "iris-dark-share-plausible:ok 0.292/0.6",
+    "atomic-edge-density:ok 26.078/12"
+   ]
+  },
+  "ice-star": {
+   "ref": "10b",
+   "darkShare": {
+    "moteur": 0.28,
+    "reference": 0.297
+   },
+   "lumMean": {
+    "moteur": 80.6,
+    "reference": 103.3
+   },
+   "satPeaks": {
+    "moteur": 0.729,
+    "reference": 0.729
+   },
+   "fentes": {
+    "moteur": {
+     "raw": 65,
+     "persistent": [
+      {
+       "angDeg": 21.4,
+       "bands": 3,
+       "widthDeg": 1.33,
+       "depth": 20.3,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 73.7,
+       "bands": 4,
+       "widthDeg": 3.38,
+       "depth": 25.3,
+       "rhoMin": 0.35,
+       "rhoMax": 0.85
+      },
+      {
+       "angDeg": 125.3,
+       "bands": 3,
+       "widthDeg": 2.17,
+       "depth": 24.4,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 149.3,
+       "bands": 4,
+       "widthDeg": 2.38,
+       "depth": 30.5,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 187.6,
+       "bands": 3,
+       "widthDeg": 3.33,
+       "depth": 33.5,
+       "rhoMin": 0.35,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 95.6,
+       "bands": 3,
+       "widthDeg": 3.67,
+       "depth": 37.6,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 133.3,
+       "bands": 3,
+       "widthDeg": 3.67,
+       "depth": 29.2,
+       "rhoMin": 0.45,
+       "rhoMax": 0.75
+      },
+      {
+       "angDeg": 56.5,
+       "bands": 3,
+       "widthDeg": 4.17,
+       "depth": 30.9,
+       "rhoMin": 0.55,
+       "rhoMax": 0.75
+      }
+     ],
+     "persistentCount": 8,
+     "meanWidthDeg": 3.01,
+     "meanDepth": 29
+    },
+    "reference": null
+   },
+   "cellules": {
+    "moteur": {
+     "count": 65,
+     "areaMedian": 0.00071,
+     "areaP10": 0.00016,
+     "areaP90": 0.00953,
+     "areaCV": 1.719,
+     "elongationMedian": 6.1,
+     "solidityMedian": 0.521
+    },
+    "reference": {
+     "count": 31,
+     "areaMedian": 0.00117,
+     "areaP10": 0.00034,
+     "areaP90": 0.00661,
+     "areaCV": 1.711,
+     "elongationMedian": 2.62,
+     "solidityMedian": 0.625
+    }
+   },
+   "etoilesTop4": {
+    "moteur": [
+     1.004,
+     0.308,
+     0.277,
+     0.247
+    ],
+    "reference": [
+     0.828,
+     0.808,
+     0.393,
+     0.392
+    ]
+   },
+   "regles": [
+    "arcs-concentric:ok 0.03/0.06",
+    "iris-dark-share-plausible:ok 0.21/0.6",
+    "atomic-edge-density:ok 25.588/12"
+   ]
+  }
+ },
+ "echecsPixelsGalerie4": {}
+}

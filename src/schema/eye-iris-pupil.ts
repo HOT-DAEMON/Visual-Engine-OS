@@ -89,6 +89,8 @@ export const IrisDetail = z
         dispersion: Unit.default(0),
         /** Rayons de lumière (opt-in, 0 = aucun) : nombre de faisceaux fins issus du bord haut-gauche de l'iris (côté de la lumière) qui traversent l'iris ; largeur et opacité tirées par une graine dédiée. */
         rays: z.number().int().min(0).max(12).default(0),
+        /** Taille de gemme (passe 12, opt-in, 0 = couronnes régulières historiques) : facettes TAILLÉES = diagramme de puissance (Laguerre-Voronoï) de `count × rings` graines dont les rayons suivent une loi log-normale d'écart `0,5 + 0,6 × valeur` ; arêtes franches, table lumineuse sur une facette sur trois, biseau côté lumière. Réf. 07 : cellules très inégales (CV des aires 1,77). */
+        cut: Unit.default(0),
       })
       .strict()
       .optional(),
@@ -128,6 +130,66 @@ export const IrisDetail = z
         /** Stries radiales de dispersion (nombre) et opacité globale. */
         streaks: z.number().int().min(0).max(80).default(24),
         opacity: Unit.default(0.7),
+      })
+      .strict()
+      .optional(),
+    /**
+     * VIDES SOMBRES (passe 12, opt-in) : anneaux de noir profond dessinés APRÈS les fibres, facettes et flammes (les couches de couleur sont recouvertes par les fibres claires : mesuré,
+     * part sombre de l'émeraude 0,011 pour 0,101 de référence malgré deux couches sombres). Chaque vide : fondu doux sur 15 % de sa largeur de chaque côté. Réf. 07 / 10a / 10b.
+     */
+    voids: z
+      .array(z.object({ inner: z.number().min(0).max(0.95), outer: z.number().min(0.05).max(1), strength: Unit.default(0.8) }).strict())
+      .max(3)
+      .optional(),
+    /**
+     * FENTES RADIALES SOMBRES (passe 12, opt-in ; réf. 04 : ≈ 33 fentes persistantes de 2,75°, profondeur de luminance ≈ 64) : fuseaux sombres effilés de la pupille vers le limbe, à angles tirés par la graine.
+     * `long` fentes pleine longueur et plus larges (la croix de la réf. 04) s'ajoutent aux `count` fentes courtes. Dessinées au-dessus des couleurs et des facettes, sous la collerette.
+     */
+    slits: z
+      .object({
+        count: z.number().int().min(4).max(64).default(32),
+        long: z.number().int().min(0).max(8).default(0),
+        /** Largeur angulaire au pied de la fente (deg). */
+        widthDeg: z.number().min(0.5).max(8).default(2.8),
+        /** Opacité du noir (0–1). */
+        depth: Unit.default(0.8),
+        /** Rayons de départ / d'arrivée (fraction du rayon de l'iris). */
+        inner: z.number().min(0.1).max(0.9).default(0.3),
+        outer: z.number().min(0.3).max(0.99).default(0.92),
+        /** Effilement : 0 = largeur constante, 1 = pointe au bout externe. */
+        taper: Unit.default(0.6),
+      })
+      .strict()
+      .optional(),
+    /**
+     * ANNEAU À ARCS (passe 12, opt-in ; réf. 10b : anneau cyan segmenté en ≈ 9 tirets à r ≈ 0,7, réf. 10a : anneau feu) : `count` arcs lumineux sur le cercle `ringRho`, de largeur `width` (fraction du rayon),
+     * `duty` = part remplie de chaque secteur ; un halo large et doux double le trait.
+     */
+    arcs: z
+      .object({
+        ringRho: z.number().min(0.15).max(0.95).default(0.7),
+        width: z.number().min(0.01).max(0.2).default(0.05),
+        count: z.number().int().min(3).max(48).default(9),
+        duty: z.number().min(0.2).max(1).default(0.6),
+        color: Hex.nullable().default(null),
+        opacity: Unit.default(0.85),
+      })
+      .strict()
+      .optional(),
+    /**
+     * BRAISES (passe 12, opt-in ; réf. 10a, 04) : étincelles brillantes tirées autour de `ringRho` (écart `spread`), allongées dans le sens radial (`streak`), avec halo.
+     * `color` null : version éclaircie de la palette.
+     */
+    embers: z
+      .object({
+        count: z.number().int().min(4).max(160).default(40),
+        ringRho: z.number().min(0.1).max(0.95).default(0.45),
+        spread: z.number().min(0.02).max(0.5).default(0.2),
+        /** Rayon d'une braise, en fraction du rayon horizontal de l'iris. */
+        size: z.number().min(0.004).max(0.06).default(0.014),
+        streak: Unit.default(0.5),
+        opacity: Unit.default(0.85),
+        color: Hex.nullable().default(null),
       })
       .strict()
       .optional(),

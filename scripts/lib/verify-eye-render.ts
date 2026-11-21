@@ -7,6 +7,7 @@ import { resolveEye } from '../../src/render/eye/eye';
 import { EyeSpec } from '../../src/schema';
 import { dominantColor } from '../../src/materials';
 import { irisTone } from './eye-iris-tone';
+import { verifyIrisAtoms } from './verify-eye-atoms';
 
 /**
  * VÉRIFICATION DU RENDU D'UN ŒIL SUR L'IMAGE : les trois couches mesurées sur les PIXELS rastérisés (resvg), aux positions données par la géométrie — complète
@@ -163,5 +164,8 @@ export function verifyEyeRender(input: Record<string, unknown>): EyeImageCheck[]
     if (samples.length >= 6) add('style', 'lash-ink-flat', sdl <= 12, sdl, 12, 'l’encre des cils n’est pas un aplat franc (écart-type de luminance sur la ligne médiane)');
     void tested;
   }
+  // passe 12 : détail atomique d'iris (fentes, arcs, vides, facettes taillées) — règles dans verify-eye-atoms.ts, seulement pour les yeux qui le demandent
+  const rgbAt = (x: number, y: number): readonly [number, number, number] => { const i = (Math.round(y) * W + Math.round(x)) * 4; return [px[i] as number, px[i + 1] as number, px[i + 2] as number]; };
+  out.push(...verifyIrisAtoms({ eye: eye as never, lumAt: (x, y) => lum(px, x, y), rgbAt, inOpening: (x, y) => inside(poly, x, y), cx: c.x + ox, cy: c.y + oy, rx, ry }));
   return out;
 }

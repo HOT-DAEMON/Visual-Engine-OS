@@ -136,3 +136,16 @@ Fait : liner épais effilé par famille de cils (`lids.liner`), dégagement de l
 - ⬜ `verifyEye` : `pupil-darker-than-iris` 30 yeux, `svg-weight` 46 sur 100.
 - ⬜ Preuve visuelle par œil de la galerie 4 : planche 03 lue en vue d'ensemble, pas œil par œil.
 
+
+## Passe 12 (détail : `EYES-PASS-12.md`)
+- ✅ **04 Iris — détail atomique** : fentes radiales (04), facettes taillées (07), arcs (10b), braises (10a), vides sombres ; part sombre dans ± 0,04 des 4 références ; couche de vérification (géométrie / anatomie / style) ; preuves : `artefacts/eyes-pass12/`.
+- ⬜ **Étoiles** : plates et blanches, sans rayonnement ni teinte ; étoiles de l'anneau de 10b 0,31 R (réf. 0,39), second flare de 10a 0,36 R (réf. 0,65), flares de 07 0,54 / 0,48 R (réf. 0,67 / 0,58). Le détecteur fusionne encore les arcs blancs et le grand flare central (Feret 1,0 R sur ice).
+- ⬜ **Fentes** : mesurées sur 04 seulement ; ice (8 fentes courtes mesurées sur le moteur) et fire n'ont pas de référence de fentes. Les fentes sont droites (celles de 04 sont légèrement courbes).
+- ⬜ **Facettes de 07** : 70 cellules mesurées contre 105 ; pas de facettes triangulaires étroites ni de grain turquoise du haut de l'iris (« poussière » de 04 / 07).
+- ⬜ **Anneau** : la métrique `ring` est indicative ; l'anneau de 10a est un halo large avec rayons, le moteur le rend en anneau resserré. Les « tirets » de 10a ne sont pas mesurés de façon fiable (3).
+- ⬜ **Luminance moyenne** : fire 70 (89), ice 81 (103), prism 112 (126), emerald 108 (129) : tous dans ± 25 (test), mais sous les références ; la couleur dans les zones lumineuses reste plus plate.
+- ⬜ `lime-cyan` (08a) : aucun détail atomique ajouté ; cellules 37 mesurées contre 5 en référence (fibres trop contrastées).
+- ⬜ Les `cellules` mesurées sur fire (226 contre 44) et ice (65 contre 31) sont trop nombreuses (fibres, braises) : non retenues comme critère.
+- ⬜ Haut de l'iris du prisme olive (réf. turquoise) : inchangé.
+- ⬜ `tests/eye-gallery-ext3` : empreintes `sha1` périmées avant la passe 12 (voir `EYES-PASS-12.md` § 6).
+- ⬜ Les points ouverts de la passe 11 non traités ici restent valables : galerie 4 (enveloppes, `circle` / `diamond`), `verifyEye` (`pupil-darker-than-iris` 30 yeux, `svg-weight`), preuve visuelle œil par œil.

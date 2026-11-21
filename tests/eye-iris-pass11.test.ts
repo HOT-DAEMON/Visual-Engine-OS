@@ -66,8 +66,8 @@ describe('points (reflets star / sparkle) et étoile à six pointes (réf. 10b)'
   });
   it('ice-star : six étoiles à six pointes en hexagone autour de la pupille, chacune VISIBLE sur l’image (la retirer seule change les pixels)', () => {
     const e = eyeOf('ice-star'); const stars = e.highlights.list.filter((h: any) => h.points === 6); expect(stars).toHaveLength(6);
-    const angs = stars.map((h: any) => Math.round((Math.atan2(h.y, h.x) * 180) / Math.PI)).sort((a: number, b: number) => a - b); expect(angs).toEqual([-150, -90, -30, 30, 90, 150]);
-    for (const h of stars) expect(Math.hypot(h.x, h.y)).toBeCloseTo(0.56, 2);
+    const angs = stars.map((h: any) => Math.round((Math.atan2(h.y / 0.8, h.x) * 180) / Math.PI)).sort((a: number, b: number) => a - b); expect(angs).toEqual([-150, -90, -30, 30, 90, 150]);
+    for (const h of stars) expect(Math.hypot(h.x, h.y / 0.8)).toBeCloseTo(0.7, 2);   // passe 12 : 0,56 -> 0,70 (les étoiles de la réf. 10b sont sur l'anneau, rayon polaire mesuré 0,57–0,82, anneau 0,707)
     const on = render(e).px;   // chaque étoile, retirée seule, change l'image : aucune n'est cachée ni rognée à néant
     stars.forEach((_h: unknown, k: number) => {
       const off = render(eyeOf('ice-star', (x) => { let n = -1; x.highlights.list = x.highlights.list.filter((h: any) => h.points !== 6 || ++n !== k); })).px; let d = 0;

@@ -3,11 +3,12 @@ import { el } from '../../core/svg';
 import type { z } from 'zod';
 import type { IrisDetail as IrisDetailSchema } from '../../schema/eye-iris-pupil';
 import { P } from './helpers';
+import { cutFacets } from './iris-atoms';
 import type { IrisFrame, IrisPalette } from './iris-strands';
 
 type Rnd = () => number;
 /** Teinte spectrale (rouge 0° -> violet 270°) en hex, saturation et clarté fixes : couleur d'un liseré de dispersion. */
-function spectral(deg: number): string {
+export function spectral(deg: number): string {
   const h = (((deg % 360) + 360) % 360) / 60; const c = 0.85; const x = c * (1 - Math.abs((h % 2) - 1)); const m = 0.12;
   const [r, g, b] = h < 1 ? [c, x, 0] : h < 2 ? [x, c, 0] : h < 3 ? [0, c, x] : h < 4 ? [0, x, c] : h < 5 ? [x, 0, c] : [c, 0, x];
   return `#${[r, g, b].map((v) => Math.round((v + m) * 255).toString(16).padStart(2, '0')).join('')}`;
@@ -23,6 +24,7 @@ const TAU = Math.PI * 2;
  * (la lumière vient du haut-gauche, comme les reflets par défaut). `contrast` pilote l'écart de ton et l'opacité du biseau.
  */
 export function facets(f: IrisFrame, pal: IrisPalette, rnd: Rnd, o: Facets, rhoFrom: number): string {
+  if (o.cut > 0) return cutFacets(f, pal, rnd, o, rhoFrom, spectral);   // passe 12 : facettes taillées (diagramme de puissance), opt-in
   const out: string[] = [];
   const band = (0.96 - rhoFrom) / o.rings;
   for (let k = 0; k < o.rings; k++) {

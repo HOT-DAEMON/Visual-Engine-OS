@@ -4,6 +4,7 @@ import { el, urlRef } from '../../core/svg';
 import type { Vec } from '../../geometry/eye';
 import { gradientStop as stop } from '../../materials';
 import type { EyeSpec } from '../../schema';
+import { arcs, embers, slits } from './iris-atoms';
 import { bubbles, facets, lightRays, rainbow } from './iris-crystal';
 import { collarette, crypts, flames, irisFrame, irisPalette, sparkles, stromaFibers } from './iris-strands';
 
@@ -73,8 +74,17 @@ export function renderIrisDetail(eye: EyeSpec, c: Vec, rx: number, ry: number, i
       flames(f, rnd, a.spikes, rhoP, rhoP + (rhoTo - rhoP) * 0.55, 0.5, urlRef(`${id}-fl2`)),
     );
   }
+  // 6b. Passe 12 (opt-in, graines propres) : fentes radiales sombres, anneau à arcs ; les braises viennent avec les scintillements (11b).
+  if (d.slits) layers.push(slits(f, pal, mulberry32((eye.seed ^ 0x6a09e667) >>> 0), d.slits));
+  if (d.arcs) layers.push(arcs(f, pal, mulberry32((eye.seed ^ 0xbb67ae85) >>> 0), d.arcs));
   // 7. Collerette.
   if (d.collarette) layers.push(collarette(f, pal, rnd, rhoC, d.collarette.irregularity, d.collarette.opacity));
+  // 7b. Vides sombres (passe 12, opt-in) : noir profond par-dessus fibres, facettes et collerette, sous le limbe.
+  d.voids?.forEach((v, k) => {
+    const w = (v.outer - v.inner) * 0.15; const col = darken(pal.edge, 0.95);
+    defs.push(radial(`${id}-vd${k}`, [stop(rhoOf(v.inner - w), col, 0), stop(rhoOf(v.inner + w), col, 0.95 * v.strength), stop(rhoOf(v.outer - w), col, 0.95 * v.strength), stop(rhoOf(v.outer + w), col, 0)]));
+    layers.push(el('ellipse', { ...whole, fill: urlRef(`${id}-vd${k}`) }));
+  });
   // 8. Assombrissement limbique (progressif, puis liseré net au bord).
   if (d.limbal.strength > 0) {
     const w = d.limbal.width;
@@ -97,6 +107,8 @@ export function renderIrisDetail(eye: EyeSpec, c: Vec, rx: number, ry: number, i
   }
   // 11. Scintillements.
   if (d.sparkles > 0) layers.push(sparkles(f, rnd, d.sparkles));
+  // 11b. Braises (passe 12, opt-in).
+  if (d.embers) layers.push(embers(f, pal, mulberry32((eye.seed ^ 0x3c6ef372) >>> 0), d.embers));
   // 12. Bulles (cristal, eau, givre) : au-dessus de tout le détail, sous la pupille.
   if (d.bubbles) layers.push(bubbles(f, pal, mulberry32((eye.seed ^ 0x2c1b3c6d) >>> 0), d.bubbles, rhoP));
 
