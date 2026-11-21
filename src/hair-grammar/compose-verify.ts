@@ -1,25 +1,35 @@
+import { joinGap } from './branch';
 import { emergenceContinuity } from './emerge';
 import { analyzeComposition, type Composition } from './compose';
-import { facing, landmarks, project, type HeadSpec, type View } from './head';
+import { landmarks, project, type HeadSpec, type View } from './head';
+import { allowedCrossings, coversEye, coversFace, spineCrossings, visibleMarks, type Defect } from './lock-check';
 import type { LockSpec } from './lock';
 import { paintLock, type PaintedLock } from './paint';
-import { bladeOutline } from './blade';
-import { inPoly } from '../face/poly';
 import type { Check, Report } from './verify';
+import { headOutline, misLayeredLocks, visibility, type Visibility } from './visibility';
 import { v3, type V2 } from './vec';
+
+export type { Defect };
 
 /**
  * COUCHE DE VÉRIFICATION DU RENDU — trois couches indépendantes (géométrie · anatomie · style) qui, en plus des mesures de `verify.ts`,
  * LOCALISENT chaque défaut : quelle mèche, quelle famille, quelle gravité. Cette localisation nourrit le cycle de réparation (`repair.ts`).
  * Les seuils sont des garde-fous calibrés sur les coiffures de la grammaire, pas des preuves de ressemblance.
  */
-export interface Defect { readonly code: string; readonly layer: Report['layer']; readonly lock?: string; readonly family?: string; readonly severity: number; readonly detail: string }
-export interface Verdict { readonly reports: Report[]; readonly defects: Defect[]; readonly ok: boolean; readonly score: number; readonly composition: Composition }
+export interface Verdict { readonly reports: Report[]; readonly defects: Defect[]; readonly ok: boolean; readonly score: number; readonly composition: Composition; /** Visibilité par ordre de peinture (seulement si `opts.visibility`). */ readonly visibility?: Visibility }
 
 const chk = (name: string, value: number, min: number, max: number): Check => ({ name, value, min, max, ok: Number.isFinite(value) && value >= min && value <= max });
-const segHit = (a: V2, b: V2, c: V2, d: V2): boolean => { const o = (p: V2, q: V2, r: V2): number => (q.x - p.x) * (r.y - p.y) - (q.y - p.y) * (r.x - p.x); return o(a, b, c) * o(a, b, d) < 0 && o(c, d, a) * o(c, d, b) < 0; };
 
-export function verifyComposed(h: HeadSpec, specs: readonly LockSpec[], view: View, painted: readonly PaintedLock[] = specs.map((L) => paintLock(h, L, view)), comp: Composition = analyzeComposition(h, specs, view, painted)): Verdict {
+/**
+ * Options de vérification dérivées de l'INTENTION. Un vent fort (`wind`, 0–1) impose une coiffure asymétrique et une calotte en partie découverte :
+ * les seuils d'équilibre G/D et de calotte, justes sans vent, y seraient de faux défauts qu'aucune mèche ne peut corriger sans détruire l'intention.
+ * Relâchement borné et proportionnel au vent ; sans vent, les seuils sont ceux d'origine (0,4 et 0,7).
+ */
+export interface VerifyOpts { readonly wind?: number; /** Mesure aussi la part visible de chaque lame (trame d'ordre de peinture, ≈ 15 ms) et la rapporte dans `Verdict.visibility`. */ readonly visibility?: boolean }
+export const balanceLimit = (wind = 0): number => 0.4 + 0.35 * Math.min(1, Math.max(0, wind));
+export const domeLimit = (wind = 0): number => 0.7 - 0.25 * Math.min(1, Math.max(0, wind));
+
+export function verifyComposed(h: HeadSpec, specs: readonly LockSpec[], view: View, painted: readonly PaintedLock[] = specs.map((L) => paintLock(h, L, view)), comp: Composition = analyzeComposition(h, specs, view, painted), opts: VerifyOpts = {}): Verdict {
   const D: Defect[] = []; const G: Check[] = []; const A: Check[] = []; const S: Check[] = [];
   const byId = new Map(specs.map((s) => [s.id, s]));
   // ── Géométrie : finitude, lames dégénérées, auto-intersection de l'axe, continuité d'émergence.
@@ -29,27 +39,34 @@ export function verifyComposed(h: HeadSpec, specs: readonly LockSpec[], view: Vi
     if (pts.some((q) => !Number.isFinite(q.x) || !Number.isFinite(q.y))) { bad++; D.push({ code: 'geom.finite', layer: 'geometry', lock: p.spec.id, family: p.spec.family, severity: 3, detail: 'point non fini' }); return; }
     const first = p.blade.spine[0] as V2; const last = p.blade.spine.at(-1) as V2;
     if (Math.hypot(last.x - first.x, last.y - first.y) < 0.05 * view.s) { deg++; D.push({ code: 'geom.degenerate', layer: 'geometry', lock: p.spec.id, family: p.spec.family, severity: 2, detail: 'axe plus court que 5 % de la hauteur de tête' }); }
-    let x = 0; const sp = p.blade.spine; for (let i = 0; i < sp.length - 1; i++) for (let j = i + 2; j < sp.length - 1; j++) if (segHit(sp[i] as V2, sp[i + 1] as V2, sp[j] as V2, sp[j + 1] as V2)) x++;
-    if (x > 0 && !p.spec.program) { selfX++; D.push({ code: 'geom.self', layer: 'geometry', lock: p.spec.id, family: p.spec.family, severity: p.layer === 'back' ? 0.25 : 1, detail: `${x} auto-intersection(s) de l'axe` }); }
+    const x = spineCrossings(p.blade.spine);
+    if (x > allowedCrossings(p.spec)) { selfX++; D.push({ code: 'geom.self', layer: 'geometry', lock: p.spec.id, family: p.spec.family, severity: p.layer === 'back' ? 0.25 : 1, detail: `${x} auto-intersection(s) de l'axe` }); }
     const par = p.spec.parent && byId.get(p.spec.parent.id);
     if (par) { const c = emergenceContinuity(h, par, p.spec); if (c.gap > 0.01 || c.angleDeg > 12 || c.widthRatio > 0.5) { emBad++; D.push({ code: 'geom.emerge', layer: 'geometry', lock: p.spec.id, family: p.spec.family, severity: 2, detail: `jonction : écart ${c.gap.toFixed(3)}, angle ${c.angleDeg.toFixed(0)}°, largeur ${c.widthRatio.toFixed(2)}` }); } }
   });
-  G.push(chk('mèches non finies', bad, 0, 0), chk('lames dégénérées', deg, 0, 0), chk('axes qui se coupent (sans programme)', selfX, 0, 0), chk('émergences discontinues', emBad, 0, 0));
+  // Cohérence d'étagement : une mèche peinte AU-DESSUS du visage alors qu'elle est derrière le crâne (voir `visibility.ts`).
+  const mis = misLayeredLocks(painted, headOutline(h, view));
+  for (const i of mis) { const p = painted[i] as PaintedLock; D.push({ code: 'geom.layer', layer: 'geometry', lock: p.spec.id, family: p.spec.family, severity: 1, detail: 'peinte devant le visage alors qu\'elle est derrière le crâne' }); }
+  // Jonctions : la pointe d'une mèche qui en REJOINT une autre doit arriver sur elle (écart ≤ 0,02 H).
+  let joinBad = 0;
+  for (const p of painted) { const tg = p.spec.join && byId.get(p.spec.join.id); if (!tg || !p.spec.join) continue; const gap = joinGap(h, p.spec, tg, p.spec.join.t); if (gap > 0.02) { joinBad++; D.push({ code: 'geom.join', layer: 'geometry', lock: p.spec.id, family: p.spec.family, severity: 1, detail: `la pointe manque sa cible de ${gap.toFixed(3)} H` }); } }
+  G.push(chk('jonctions manquées (pointe ≠ cible)', joinBad, 0, 0));
+  G.push(chk('mèches non finies', bad, 0, 0), chk('lames dégénérées', deg, 0, 0), chk('axes qui se coupent (sans programme)', selfX, 0, 0), chk('émergences discontinues', emBad, 0, 0), chk('mèches peintes devant alors qu\'elles sont derrière', mis.length, 0, 0));
+  const vis = opts.visibility ? visibility(h, view, painted) : undefined;
+  if (vis) { const front = painted.filter((p) => p.layer !== 'back').length; const burFront = vis.buried.filter((i) => (painted[i] as PaintedLock).layer !== 'back'); G.push(chk('part des mèches de devant entièrement enfouies', front ? burFront.length / front : 0, 0, 0.3)); }
   // ── Anatomie : yeux, nez et bouche non recouverts, calotte couverte, proportions, équilibre.
   // Seuls les repères VISIBLES comptent : au-delà de ≈ 55° de lacet l'œil lointain est caché par la tête (mesuré : sans ce filtre, `anat.eye` passait de
   // 0,75 à 2 défauts par coiffure entre 0° et 75°, presque tous sur un œil que personne ne voit).
-  const SEEN = 0.2;
-  const lm = landmarks(h); const eyes = [lm.eyeR, lm.eyeL].filter((e) => facing(h, view, e) > SEEN).map((e) => project(view, e) as V2);
+  const lm = landmarks(h); const marks = visibleMarks(h, view);
   let eyeHit = 0;
-  for (const e of eyes) { const cov = painted.filter((p) => p.spec.family !== 'back' && inPoly(bladeOutline(p.blade), e.x, e.y)); if (cov.length) { eyeHit++; for (const w of cov) D.push({ code: 'anat.eye', layer: 'anatomy', lock: w.spec.id, family: w.spec.family, severity: 2, detail: 'recouvre le centre d\'un œil' }); } }
+  for (const e of marks.eyes) { const cov = painted.filter((p) => coversEye(p, e)); if (cov.length) { eyeHit++; for (const w of cov) D.push({ code: 'anat.eye', layer: 'anatomy', lock: w.spec.id, family: w.spec.family, severity: 2, detail: 'recouvre le centre d\'un œil' }); } }
   A.push(chk('yeux recouverts', eyeHit, 0, 0));
   // UN défaut par mèche qui recouvre le repère (et non seulement la dernière) : sinon, quand deux mèches le couvrent, corriger l'une ne baisse pas le score
   // et le cycle de réparation, qui exige une baisse stricte, abandonne sans jamais essayer l'autre (observé à ±75°).
   // Nez et bouche : une mèche de devant qui recouvre le bout du nez ou le centre de la bouche est une erreur d'anatomie (une frange couvre le front, pas le visage).
   let faceHit = 0;
-  for (const [name, mark] of [['le bout du nez', lm.noseTip], ['la bouche', lm.mouth]] as const) {
-    if (facing(h, view, mark) <= SEEN) continue;
-    const q = project(view, mark) as V2; const cov = painted.filter((p) => p.layer !== 'back' && inPoly(bladeOutline(p.blade), q.x, q.y));
+  for (const { name, q } of marks.face) {
+    const cov = painted.filter((p) => coversFace(p, q));
     if (cov.length) { faceHit++; for (const w of cov) D.push({ code: 'anat.face', layer: 'anatomy', lock: w.spec.id, family: w.spec.family, severity: 2, detail: `recouvre ${name}` }); }
   }
   A.push(chk('nez / bouche recouverts', faceHit, 0, 0));
@@ -57,12 +74,13 @@ export function verifyComposed(h: HeadSpec, specs: readonly LockSpec[], view: Vi
   const g = comp.grid;
   for (let y = 0; y < g.ny; y++) for (let x = 0; x < g.nx; x++) { const px = (x + 0.5) * g.cell; const py = (y + 0.5) * g.cell; if (py > eyeY - 0.12 * view.s) continue; if (((px - c0.x) / rx) ** 2 + ((py - c0.y) / ry) ** 2 > 0.8) continue; dome++; if (g.data[y * g.nx + x]) domeCov++; }
   const domeRatio = dome ? domeCov / dome : 1;
-  if (domeRatio < 0.7) D.push({ code: 'anat.dome', layer: 'anatomy', severity: 2, detail: `calotte couverte à ${(domeRatio * 100).toFixed(0)} %` });
-  A.push(chk('calotte couverte', domeRatio, 0.7, 1));
+  const dLim = domeLimit(opts.wind); const bLim = balanceLimit(opts.wind);
+  if (domeRatio < dLim) D.push({ code: 'anat.dome', layer: 'anatomy', severity: 2, detail: `calotte couverte à ${(domeRatio * 100).toFixed(0)} %` });
+  A.push(chk('calotte couverte', domeRatio, dLim, 1));
   let x0 = Infinity; let x1 = -Infinity; let y0 = Infinity; for (const p of painted) for (const q of [...p.blade.left, ...p.blade.right]) { x0 = Math.min(x0, q.x); x1 = Math.max(x1, q.x); y0 = Math.min(y0, q.y); }
   A.push(chk('largeur cheveux / largeur tête', (x1 - x0) / (2 * rx), 0.9, 2.6), chk('hauteur du volume au-dessus du crâne (H)', (c0.y - ry - y0) / view.s, -0.1, 0.5));
-  if (Math.abs(comp.balance.moment) > 0.4) D.push({ code: 'anat.balance', layer: 'anatomy', severity: 1, detail: `moment G/D ${comp.balance.moment.toFixed(2)}` });
-  A.push(chk('équilibre G/D (moment)', comp.balance.moment, -0.4, 0.4));
+  if (Math.abs(comp.balance.moment) > bLim) D.push({ code: 'anat.balance', layer: 'anatomy', severity: 1, detail: `moment G/D ${comp.balance.moment.toFixed(2)}` });
+  A.push(chk('équilibre G/D (moment)', comp.balance.moment, -bLim, bLim));
   // ── Style : lisibilité de la direction, hiérarchie, espaces négatifs intentionnels, variété, croisements.
   S.push(chk('cohérence de lecture', comp.reading.coherence, 0.3, 1), chk('part de la masse dominante', comp.hierarchy.dominantShare, 0.25, 0.8), chk('rapport dominante / seconde', comp.hierarchy.ratio, 1.15, 50));
   if (comp.reading.coherence < 0.3) D.push({ code: 'style.coherence', layer: 'style', severity: 1, detail: 'direction de lecture illisible' });
@@ -73,5 +91,5 @@ export function verifyComposed(h: HeadSpec, specs: readonly LockSpec[], view: Vi
   S.push(chk('variété des largeurs (CV)', cv, 0.1, 0.9));
   const crossPer = comp.relations.filter((e) => e.kind === 'cross').reduce((a, e) => a + e.weight, 0) / Math.max(1, painted.length); S.push(chk('croisements francs par mèche', crossPer, 0, 3));
   const reports: Report[] = [{ layer: 'geometry', checks: G, ok: G.every((c) => c.ok) }, { layer: 'anatomy', checks: A, ok: A.every((c) => c.ok) }, { layer: 'style', checks: S, ok: S.every((c) => c.ok) }];
-  return { reports, defects: D, ok: reports.every((r) => r.ok), score: D.reduce((s, d) => s + d.severity, 0), composition: comp };
+  return { reports, defects: D, ok: reports.every((r) => r.ok), score: D.reduce((s, d) => s + d.severity, 0), composition: comp, ...(vis ? { visibility: vis } : {}) };
 }

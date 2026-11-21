@@ -76,7 +76,7 @@ describe('vérification par vue : seuls les repères VISIBLES comptent (yaw en D
     const a = facing(H, viewAt(70), lm.eyeR); const b = facing(H, viewAt(70), lm.eyeL); expect(Math.max(a, b)).toBeGreaterThan(0.3); expect(Math.min(a, b)).toBeLessThan(0);
   });
   it('le yaw est en degrés : 30 déplace nettement le nez dans l\'image, 0,3 à peine', () => {
-    const x = (y: number): number => project(viewAt(y), lm.noseTip).x;
+    const x = (y: number): number => project({ ...viewAt(30), yaw: y }, lm.noseTip).x; // vue brute : viewAt refuse justement les radians
     expect(Math.abs(x(30) - x(0))).toBeGreaterThan(10); expect(Math.abs(x(0.3) - x(0))).toBeLessThan(0.5);
   });
   it('de face : une mèche posée sur un œil est détectée (les deux yeux)', () => {

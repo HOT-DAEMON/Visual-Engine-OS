@@ -1,6 +1,7 @@
 # Moteur capillaire — passe 2 : bilan et reste à faire par composant
 
 Preuves : `artefacts/hair-engine-pass2/` (régénérées par `npx tsx scripts/hair-grammar/artefacts-pass2.ts`, déterministe) — 5 planches + `metrics.json`.
+**Mis à jour par la passe 3** : voir `HAIR-PASS3.md` (soldé) et `HAIR-PASS3-REMAINING.md` (reste). Ce fichier est l'état à la fin de la passe 2.
 Détails : `HAIR-GEOM-BRIDGE.md` · `HAIR-WEAVE.md` · `HAIR-FACE-INTENT.md`. Audit ligne par ligne : `TODO-RENFORCEMENT-HAIR-STATUS.md`.
 
 ## Fait dans cette passe (constats n° 1, 2 (en partie), 3, 5 de l'audit)

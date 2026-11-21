@@ -20,7 +20,7 @@ import { viewAt } from '../scripts/hair-grammar/engine-kit';
  * PONT « une seule apparence » (docs/HAIR-GEOM-BRIDGE.md) : la géométrie locale du moteur de grammaire (`HairLock.geom`) est LUE par le rendu
  * principal. On rend de vraies `HairLock` (venues de la grammaire) avec `lockMarkup` — ce que l'ancien contrat ne faisait pas.
  */
-const V = viewAt(0.3); const lm = landmarks(DEFAULT_HEAD); const eR = project(V, lm.eyeR); const eL = project(V, lm.eyeL); const headW = 2 * DEFAULT_HEAD.rx * V.s;
+const V = viewAt(17); const lm = landmarks(DEFAULT_HEAD); const eR = project(V, lm.eyeR); const eL = project(V, lm.eyeL); const headW = 2 * DEFAULT_HEAD.rx * V.s;
 const frame = frameFromEyes(eR, eL, eR, eL);
 const pro = paintHairPro(DEFAULT_HEAD, generate(TOUSLED, 1), V);
 const locks = grammarToHairLocks(pro.locks, { frame, head: DEFAULT_HEAD, headW });

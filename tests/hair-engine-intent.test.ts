@@ -12,7 +12,7 @@ import { v3 } from '../src/hair-grammar/vec';
 import { analyzeComposition } from '../src/hair-grammar/compose';
 import { ROI, viewAt } from '../scripts/hair-grammar/engine-kit';
 
-const V = viewAt(0.5);
+const V = viewAt(29);
 const mean = (I: Intent, k: 'volume' | 'sleek' | 'weight' | 'wind'): number => {
   let s = 0; for (const seed of [1, 2, 3]) { const { profile, composition } = applyIntent(TOUSLED, I); const r = composeHair(profile, composition, seed, V, 3); s += measureIntent(profile, r.specs, V, r.composition, I.windDir ?? 0)[k]; } return s / 3;
 };

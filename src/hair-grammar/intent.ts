@@ -15,7 +15,15 @@ import { add, clamp, mul, norm, v3, type V2 } from './vec';
  *   weight  −1 aérienne … +1 lourde      → nombre, largeur, longueur, gravité ; mesure : part de l'enveloppe couverte (↑)
  *   wind    0 … 1, vers `windDir` (rad)  → balayage du champ + lecture imposée ; mesure : projection du vecteur de lecture sur `windDir` (une coiffure qui retombe n'est pas balayée, même cohérente)
  */
-export interface Intent { readonly volume?: number; readonly sleek?: number; readonly weight?: number; readonly wind?: number; readonly windDir?: number }
+export interface Intent {
+  readonly volume?: number; readonly sleek?: number; readonly weight?: number; readonly wind?: number; readonly windDir?: number;
+  /** Frange −1 (dégagée) … +1 (épaisse et longue) : nombre et longueur de la famille `fringe` ; mesure : part du front couverte (`part.ts`, `measureArt`). */
+  readonly fringe?: number;
+  /** Pointes libres 0…1 : part des mèches qui s'effilent en fines mèches détachées (`branch.ts`, `fray`) ; mesure : filles fines par mèche racine. */
+  readonly tips?: number;
+  /** Raie : position latérale (−0,7…0,7 × demi-largeur de tête) ; absente = pas de raie (`part.ts`, `applyPart`) ; mesure : netteté du sillon de la calotte. */
+  readonly part?: number;
+}
 export const PRESETS = {
   airy: { weight: -0.8, volume: 0.2, sleek: 0.3 }, sleek: { sleek: 1, volume: -0.3 }, voluminous: { volume: 1, weight: 0.3 },
   windswept: { wind: 0.9, windDir: 0, sleek: 0.2 }, heavy: { weight: 0.9, volume: 0.4, sleek: 0.5 },
@@ -27,10 +35,10 @@ const shift = (r: Range, d: number): Range => ({ lo: r.lo + d, hi: r.hi + d });
 const asDir = (a: number): ReturnType<typeof v3> => v3(Math.cos(a), 0, 0.0);
 
 export function applyIntent(P: HairProfile, I: Intent): { profile: HairProfile; composition: CompositionSpec } {
-  const vol = clamp(I.volume ?? 0, -1, 1); const sl = clamp(I.sleek ?? 0, 0, 1); const wt = clamp(I.weight ?? 0, -1, 1); const wd = clamp(I.wind ?? 0, 0, 1);
+  const vol = clamp(I.volume ?? 0, -1, 1); const sl = clamp(I.sleek ?? 0, 0, 1); const wt = clamp(I.weight ?? 0, -1, 1); const wd = clamp(I.wind ?? 0, 0, 1); const fr = clamp(I.fringe ?? 0, -1, 1);
   const families = P.families.map((F): FamilySpec => ({
-    ...F, ...(F.aim ? { aim: norm(add(F.aim, mul(asDir(I.windDir ?? 0), 1.5 * wd))) } : {}), count: Math.max(1, Math.round(F.count * (1 + 0.5 * wt))), fan: F.fan * (1 - 0.7 * sl),
-    length: sc(F.length, 1 + 0.15 * wt), width: sc(F.width, (1 + 0.45 * vol) * (1 + 0.3 * wt)),
+    ...F, ...(F.aim ? { aim: norm(add(F.aim, mul(asDir(I.windDir ?? 0), 1.5 * wd))) } : {}), count: Math.max(1, Math.round(F.count * (1 + 0.5 * wt) * (F.id === 'fringe' ? 1 + 0.6 * fr : 1))), fan: F.fan * (1 - 0.7 * sl),
+    length: sc(F.length, (1 + 0.15 * wt) * (F.id === 'fringe' ? 1 + 0.35 * fr : 1)), width: sc(F.width, (1 + 0.45 * vol) * (1 + 0.3 * wt)),
     lift0: sc(F.lift0, 1 + 0.7 * vol), lift1: sc(F.lift1, 1 + 0.7 * vol), gravity: shift(F.gravity, 0.2 * wt),
     waveAmp: sc(F.waveAmp, 1 - 0.85 * sl), flickAmt: sc(F.flickAmt, 1 - 0.9 * sl), bend: sc(F.bend, 1 - 0.4 * sl),
   }));

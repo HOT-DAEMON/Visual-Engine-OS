@@ -78,7 +78,7 @@ const emergeScene = (): { mother: LockSpec; kids: LockSpec[]; scene: LockSpec[] 
 }
 // 05/06 · composition : mesures, pilotage, surcouche d'analyse.
 {
-  const v = viewAt(0.5); const arrow = (c: ReturnType<typeof analyzeComposition>, at: V2, col: string): string => `<g stroke="${col}" stroke-width="1.6" fill="none"><line x1="${at.x}" y1="${at.y}" x2="${at.x + Math.cos(c.reading.angle) * 38}" y2="${at.y + Math.sin(c.reading.angle) * 38}"/><circle cx="${at.x}" cy="${at.y}" r="2.5" fill="${col}"/></g>`;
+  const v = viewAt(29); const arrow = (c: ReturnType<typeof analyzeComposition>, at: V2, col: string): string => `<g stroke="${col}" stroke-width="1.6" fill="none"><line x1="${at.x}" y1="${at.y}" x2="${at.x + Math.cos(c.reading.angle) * 38}" y2="${at.y + Math.sin(c.reading.angle) * 38}"/><circle cx="${at.x}" cy="${at.y}" r="2.5" fill="${col}"/></g>`;
   const c0 = project(v, v3(0, 0, H.cz)); const rows: Panel[] = []; const jr: unknown[] = [];
   for (const t of [0.35, 1.57, 2.8]) { const r = composeHair(TOUSLED, { reading: t }, 1, v, 6); rows.push({ label: `lecture visée ${(t * 57.3).toFixed(0)}° → mesurée ${(r.composition.reading.angle * 57.3).toFixed(0)}°`, content: headContent(paintHairPro(H, r.specs, v), v, { over: arrow(r.composition, { x: c0.x, y: c0.y - 55 }, '#d33') }) }); jr.push({ cible: t, mesure: r.composition.reading.angle }); }
   for (const b of [-0.25, 0, 0.25]) { const r = composeHair(TOUSLED, { balance: b }, 1, v, 6); rows.push({ label: `équilibre visé ${b} → mesuré ${f2(r.composition.balance.moment)}`, content: headContent(paintHairPro(H, r.specs, v), v, { over: `<line x1="${c0.x}" y1="4" x2="${c0.x}" y2="146" stroke="#06c" stroke-dasharray="3 3" stroke-width=".8"/><line x1="${c0.x + b * H.rx * v.s}" y1="10" x2="${c0.x + b * H.rx * v.s}" y2="140" stroke="#d33" stroke-width="1.2"/>` }) }); jr.push({ cible: b, mesure: r.composition.balance.moment }); }
@@ -100,7 +100,7 @@ const emergeScene = (): { mother: LockSpec; kids: LockSpec[]; scene: LockSpec[] 
 }
 // 08 · vérification trois couches + cycle de réparation.
 {
-  const v = viewAt(0.5); const specs = generate(TOUSLED, 1); const ver = verifyComposed(H, specs, v); const rep = repairCycle(TOUSLED, specs, v, 1, 12);
+  const v = viewAt(29); const specs = generate(TOUSLED, 1); const ver = verifyComposed(H, specs, v); const rep = repairCycle(TOUSLED, specs, v, 1, 12);
   const mark = (vd: typeof ver): string => vd.defects.map((d) => { const p = d.lock ? paintHair(H, specs.filter((s) => s.id === d.lock), v).locks[0] : undefined; const q = p?.blade.spine[Math.floor(p.blade.spine.length / 2)]; return q ? `<circle cx="${q.x}" cy="${q.y}" r="${3 + 3 * d.severity}" fill="none" stroke="${d.layer === 'geometry' ? '#d00' : d.layer === 'anatomy' ? '#e80' : '#06c'}" stroke-width="1.4"/>` : ''; }).join('');
   const markR = rep.verdict.defects.map((d) => { const p = d.lock ? paintHair(H, rep.specs.filter((s) => s.id === d.lock), v).locks[0] : undefined; const q = p?.blade.spine[Math.floor(p.blade.spine.length / 2)]; return q ? `<circle cx="${q.x}" cy="${q.y}" r="${3 + 3 * d.severity}" fill="none" stroke="#d00" stroke-width="1.4"/>` : ''; }).join('');
   metrics['vérification'] = { avant: { score: ver.score, défauts: ver.defects.map((d) => `${d.layer}:${d.code}:${d.lock ?? '-'}`), ok: ver.reports.map((r) => `${r.layer}=${r.ok}`) }, après: { score: rep.verdict.score, défauts: rep.verdict.defects.map((d) => `${d.layer}:${d.code}:${d.lock ?? '-'}`) }, journal: rep.journal };
@@ -108,25 +108,25 @@ const emergeScene = (): { mother: LockSpec; kids: LockSpec[]; scene: LockSpec[] 
 }
 // 09 · intentions artistiques (tête entière) + mesures.
 {
-  const v = viewAt(0.5); const names = Object.keys(PRESETS) as PresetName[]; const mj: Record<string, unknown> = {}; const wdir = (n: PresetName): number => { const p: Intent = PRESETS[n]; return p.windDir ?? 0; };
+  const v = viewAt(29); const names = Object.keys(PRESETS) as PresetName[]; const mj: Record<string, unknown> = {}; const wdir = (n: PresetName): number => { const p: Intent = PRESETS[n]; return p.windDir ?? 0; };
   const P: Panel[] = [{ label: 'référence (profil 01, sans intention)', content: pro(composeHair(TOUSLED, {}, 2, v, 3).specs, v) }];
   for (const n of names) { const { profile, composition } = applyIntent(TOUSLED, PRESETS[n]); const r = composeHair(profile, composition, 2, v, 3); const m = measureIntent(profile, r.specs, v, r.composition, wdir(n)); const vd = verifyComposed(profile.head, r.specs, v); mj[n] = { ...m, scoreVerif: vd.score, défauts: vd.defects.map((d) => d.code) }; P.push({ label: `${n} — vol ${f2(m.volume)} · lisse ${f2(m.sleek)} · poids ${f2(m.weight)} · vent ${f2(m.wind)} · verif ${vd.score}`, content: pro(r.specs, v, profile.head) }); }
   metrics['intentions'] = mj; board('09-intentions', P, 3, 'Intentions artistiques : un mot → profil + composition, mesurable');
 }
 // 10 · variation par niveaux : ligne = niveau, colonne = graine alternative.
 {
-  const v = viewAt(0.5); const s0 = seedsFrom(3); const P: Panel[] = [{ label: 'base (7 graines de niveau)', content: pro(generateLevels(TOUSLED, s0), v) }];
+  const v = viewAt(29); const s0 = seedsFrom(3); const P: Panel[] = [{ label: 'base (7 graines de niveau)', content: pro(generateLevels(TOUSLED, s0), v) }];
   for (const lv of LEVELS) for (const k of [1, 2]) P.push({ label: `${lv} : graine #${k}`, content: pro(generateLevels(TOUSLED, { ...s0, [lv as Level]: s0[lv] + 7919 * k }), v) });
   board('10-variation-niveaux', P, 3, 'Variation par niveaux : un seul niveau change à la fois');
 }
 // 11 · tête entière sous plusieurs vues.
 {
-  const specs = composeHair(TOUSLED, { reading: 1.4, balance: 0.05 }, 4, viewAt(0.5), 4).specs;
+  const specs = composeHair(TOUSLED, { reading: 1.4, balance: 0.05 }, 4, viewAt(29), 4).specs;
   board('11-tete-entiere-vues', [-60, -45, -25, 0, 15, 30].map((y) => ({ label: `lacet ${y}°`, content: pro(specs, viewAt(y)) })), 3, 'Toute la tête, une coiffure composée, lacets −60° … +30° (au-delà de +30° : non validé, voir docs)');
 }
 // 12 · contrat d'interopérabilité : mèches de la grammaire → HairLock (polygone + axe) dans le repère du moteur principal.
 {
-  const v = viewAt(0.3); const lm = landmarks(H); const eR = project(v, lm.eyeR); const eL = project(v, lm.eyeL); const painted = paintHairPro(H, generate(TOUSLED, 1), v);
+  const v = viewAt(17); const lm = landmarks(H); const eR = project(v, lm.eyeR); const eL = project(v, lm.eyeL); const painted = paintHairPro(H, generate(TOUSLED, 1), v);
   const locks = grammarToHairLocks(painted.locks, { frame: frameFromEyes(eR, eL, eR, eL), head: H, headW: 2 * H.rx * v.s }); const issues = checkHairLockContract(locks, 2 * H.rx * v.s);
   const col: Record<string, string> = { mass: '#c33', main: '#e80', fine: '#27a', hairline: '#999', plait: '#0a0' };
   const over = locks.map((l) => `<path d="M${l.poly.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join('L')}Z" fill="${col[l.rank] ?? '#000'}" fill-opacity=".18" stroke="${col[l.rank] ?? '#000'}" stroke-width=".5"/>`).join('');

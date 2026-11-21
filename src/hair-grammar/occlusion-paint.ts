@@ -38,7 +38,7 @@ export function paintHairResolved(h: HeadSpec, specs: readonly LockSpec[], view:
 
 /** Même rendu à partir de mèches DÉJÀ peintes (tests : lames fabriquées à la main, profondeurs contrôlées). */
 export function renderResolved(locks: readonly PaintedLock[], st: PaintStyle = INK, mode: 'weave' | 'all' = 'weave', known?: Relation[]): ResolvedPainting {
-  const relations = known ?? relationsOf(locks); const resolved = resolveOrder(locks, relations, mode);
+  const relations = known ?? relationsOf(locks, mode === 'all'); const resolved = resolveOrder(locks, relations, mode);
   const extra = new Map<Item, string[]>(); let shadows = 0;
   const itemAt = (lock: number, t: number): Item | undefined => { const N = (locks[lock] as PaintedLock).blade.spine.length; const k = Math.round(t * (N - 1)); return resolved.order.find((it) => it.lock === lock && it.i0 <= k && it.i1 >= k); };
   relations.forEach((r, ri) => r.intervals.forEach((iv, ii) => {

@@ -7,7 +7,7 @@ import { TOUSLED } from '../src/hair-grammar/profiles/tousled';
 import { viewAt } from '../scripts/hair-grammar/engine-kit';
 import type { HairLock } from '../src/face/hair/types';
 
-const V = viewAt(0.3); const lm = landmarks(DEFAULT_HEAD); const eR = project(V, lm.eyeR); const eL = project(V, lm.eyeL);
+const V = viewAt(17); const lm = landmarks(DEFAULT_HEAD); const eR = project(V, lm.eyeR); const eL = project(V, lm.eyeL);
 const painted = paintHair(DEFAULT_HEAD, generate(TOUSLED, 1), V).locks;
 const headW = 2 * DEFAULT_HEAD.rx * V.s;
 

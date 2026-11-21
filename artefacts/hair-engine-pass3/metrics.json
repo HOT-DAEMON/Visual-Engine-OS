@@ -1,0 +1,490 @@
+{
+  "heavyVolume": [
+    {
+      "yaw": -75,
+      "before": 24,
+      "after": 0,
+      "defectsBefore": {
+        "anat.eye": 12
+      },
+      "defectsAfter": {},
+      "localFixes": 12,
+      "fold3dRaw": 0
+    },
+    {
+      "yaw": -45,
+      "before": 8,
+      "after": 0,
+      "defectsBefore": {
+        "geom.layer": 2,
+        "anat.eye": 3
+      },
+      "defectsAfter": {},
+      "localFixes": 3,
+      "fold3dRaw": 0
+    },
+    {
+      "yaw": -30,
+      "before": 14,
+      "after": 0,
+      "defectsBefore": {
+        "geom.layer": 2,
+        "anat.eye": 6
+      },
+      "defectsAfter": {},
+      "localFixes": 6,
+      "fold3dRaw": 0
+    },
+    {
+      "yaw": 0,
+      "before": 12,
+      "after": 0,
+      "defectsBefore": {
+        "anat.eye": 6
+      },
+      "defectsAfter": {},
+      "localFixes": 6,
+      "fold3dRaw": 0
+    },
+    {
+      "yaw": 30,
+      "before": 28,
+      "after": 0,
+      "defectsBefore": {
+        "anat.eye": 14
+      },
+      "defectsAfter": {},
+      "localFixes": 14,
+      "fold3dRaw": 0
+    },
+    {
+      "yaw": 60,
+      "before": 16.5,
+      "after": 0,
+      "defectsBefore": {
+        "geom.self": 2,
+        "anat.eye": 8
+      },
+      "defectsAfter": {},
+      "localFixes": 10,
+      "fold3dRaw": 0
+    },
+    {
+      "yaw": 75,
+      "before": 14,
+      "after": 0,
+      "defectsBefore": {
+        "anat.eye": 7
+      },
+      "defectsAfter": {},
+      "localFixes": 7,
+      "fold3dRaw": 0
+    }
+  ],
+  "branch": {
+    "split2": 2,
+    "split3": 3,
+    "fray": 4,
+    "joinGap": 0.000052504753612588685,
+    "loopLen": 0.9751581928110682
+  },
+  "visibility": {
+    "yaw": 29,
+    "locks": 50,
+    "buriedFront": 2,
+    "front": 32,
+    "meanVisible": 0.2814935522515173,
+    "misLayeredBefore": 1,
+    "misLayeredAfter": 0
+  },
+  "volumeDepth": [
+    {
+      "name": "base",
+      "yaw": 0,
+      "planCut": 475,
+      "volumeCut": 168,
+      "planCrossings": 34,
+      "volumeCrossings": 9,
+      "planFlip8": 0.058823529411764705,
+      "volumeFlip8": 0
+    },
+    {
+      "name": "base",
+      "yaw": 29,
+      "planCut": 398,
+      "volumeCut": 101,
+      "planCrossings": 28,
+      "volumeCrossings": 6,
+      "planFlip8": 0.10714285714285714,
+      "volumeFlip8": 0.16666666666666666
+    },
+    {
+      "name": "lourd",
+      "yaw": 0,
+      "planCut": 969,
+      "volumeCut": 280,
+      "planCrossings": 85,
+      "volumeCrossings": 20,
+      "planFlip8": 0.011764705882352941,
+      "volumeFlip8": 0.1
+    },
+    {
+      "name": "lourd",
+      "yaw": 29,
+      "planCut": 923,
+      "volumeCut": 281,
+      "planCrossings": 88,
+      "volumeCrossings": 15,
+      "planFlip8": 0.11363636363636363,
+      "volumeFlip8": 0
+    }
+  ],
+  "light": [
+    {
+      "azimuth": 300,
+      "meanExposure": 0.7968685802027166
+    },
+    {
+      "azimuth": 0,
+      "meanExposure": 0.748731766487167
+    },
+    {
+      "azimuth": 60,
+      "meanExposure": 0.6437593526684856
+    },
+    {
+      "azimuth": 180,
+      "meanExposure": 0.6350605662808976
+    }
+  ],
+  "referenceFit": [
+    {
+      "truth": {
+        "volume": -0.6,
+        "weight": 0.6
+      },
+      "fitted": {
+        "volume": -0.5375145491986739,
+        "weight": 0.5528466046416426
+      },
+      "steps": [
+        {
+          "iter": 0,
+          "errWidth": 0.01014713343480489,
+          "errNegative": 0.022879007553258654
+        },
+        {
+          "iter": 1,
+          "errWidth": 0,
+          "errNegative": 0.001242250191632363
+        },
+        {
+          "iter": 2,
+          "errWidth": 0,
+          "errNegative": -0.0004569851524627855
+        },
+        {
+          "iter": 3,
+          "errWidth": 0,
+          "errNegative": -0.0013066028245103667
+        },
+        {
+          "iter": 4,
+          "errWidth": 0.01014713343480489,
+          "errNegative": 0.010094975866787953
+        }
+      ],
+      "score": 0,
+      "target": {
+        "widthRatio": 1.319127346524607,
+        "heightRatio": 0.1288936340141074,
+        "moment": -0.005178078391356453,
+        "axis": 1.9538659082084835,
+        "coherence": 0.23463591967560693,
+        "negative": 0.09300095877277086,
+        "coverage": 0.36512820512820515
+      },
+      "final": {
+        "widthRatio": 1.308980213089802,
+        "heightRatio": 0.3671306798747387,
+        "moment": -0.03581239969378953,
+        "axis": 2.0948976924944818,
+        "coherence": 0.2846690955560646,
+        "negative": 0.07603890362511052,
+        "coverage": 0.4031196581196581
+      },
+      "regions": [
+        {
+          "share": 0.22774133083411435,
+          "axis": 2.317669824991638,
+          "coherence": 0.4931445772755615
+        },
+        {
+          "share": 0.22211808809746955,
+          "axis": 1.690717920615733,
+          "coherence": 0.3649638966568509
+        },
+        {
+          "share": 0.20524835988753515,
+          "axis": 0.7669213366783546,
+          "coherence": 0.2748256254773363
+        },
+        {
+          "share": 0.18603561387066542,
+          "axis": 1.3606409571768245,
+          "coherence": 0.26080831019804457
+        },
+        {
+          "share": 0.15885660731021556,
+          "axis": 2.197756680703522,
+          "coherence": 0.4055900948258721
+        }
+      ],
+      "fringe": 0.9992630803242447,
+      "part": {
+        "u": -0.547945205479452,
+        "clarity": 0
+      }
+    },
+    {
+      "truth": {
+        "volume": 0.8,
+        "weight": -0.5
+      },
+      "fitted": {
+        "volume": 0.6622347569164655,
+        "weight": 0.21174453865814585
+      },
+      "steps": [
+        {
+          "iter": 0,
+          "errWidth": 0.08117706747843734,
+          "errNegative": 0.033030917397918316
+        },
+        {
+          "iter": 1,
+          "errWidth": 0.050735667174023336,
+          "errNegative": -0.01136894943351624
+        },
+        {
+          "iter": 2,
+          "errWidth": 0.050735667174023336,
+          "errNegative": 0.021546411068051163
+        },
+        {
+          "iter": 3,
+          "errWidth": 0.020294266869609334,
+          "errNegative": -0.003795605965360535
+        },
+        {
+          "iter": 4,
+          "errWidth": 0.030441400304414,
+          "errNegative": 0.005999345790608415
+        }
+      ],
+      "score": 0,
+      "target": {
+        "widthRatio": 1.5728056823947236,
+        "heightRatio": 0.27779178767700197,
+        "moment": 0.00651803212075643,
+        "axis": 1.9166117901390654,
+        "coherence": 0.14016545469718728,
+        "negative": 0.09946848899012908,
+        "coverage": 0.4593162393162393
+      },
+      "final": {
+        "widthRatio": 1.5423642820903096,
+        "heightRatio": 0.40683685418484394,
+        "moment": -0.035572061267287354,
+        "axis": 2.0217727141291815,
+        "coherence": 0.18984528329679898,
+        "negative": 0.09343434343434344,
+        "coverage": 0.5544444444444444
+      },
+      "regions": [
+        {
+          "share": 0.24877497173011684,
+          "axis": 2.439846138193322,
+          "coherence": 0.21208552295718286
+        },
+        {
+          "share": 0.22955145118733508,
+          "axis": 2.3301589190937597,
+          "coherence": 0.547366132582088
+        },
+        {
+          "share": 0.21183565774594798,
+          "axis": 0.8178324246286667,
+          "coherence": 0.5672512118840067
+        },
+        {
+          "share": 0.1552958914436487,
+          "axis": 1.5438276288486454,
+          "coherence": 0.2769377487560833
+        },
+        {
+          "share": 0.15454202789295138,
+          "axis": 1.4810727113522488,
+          "coherence": 0.3611939784803645
+        }
+      ],
+      "fringe": 0.9115696389093588,
+      "part": {
+        "u": 0.5073566717402334,
+        "clarity": 0.12962962962962965
+      }
+    }
+  ],
+  "art": [
+    {
+      "name": "frange −1",
+      "fringe": 0.45983787767133383,
+      "part": {
+        "u": -0.20294266869609337,
+        "clarity": 0.5471698113207548
+      },
+      "tips": 0,
+      "gloss": 0,
+      "score": 2
+    },
+    {
+      "name": "frange 0",
+      "fringe": 0.7715549005158437,
+      "part": {
+        "u": -0.020294266869609334,
+        "clarity": 0.03703703703703709
+      },
+      "tips": 0,
+      "gloss": 0,
+      "score": 0
+    },
+    {
+      "name": "frange +1",
+      "fringe": 0.9646278555637435,
+      "part": {
+        "u": -0.547945205479452,
+        "clarity": 0
+      },
+      "tips": 0,
+      "gloss": 0,
+      "score": 0
+    },
+    {
+      "name": "raie −0,4",
+      "fringe": 0.17538688282977155,
+      "part": {
+        "u": -0.547945205479452,
+        "clarity": 1
+      },
+      "tips": 0,
+      "gloss": 0,
+      "score": 2
+    },
+    {
+      "name": "raie 0",
+      "fringe": 0.5254237288135594,
+      "part": {
+        "u": 0.06088280060882801,
+        "clarity": 1
+      },
+      "tips": 0,
+      "gloss": 0,
+      "score": 2
+    },
+    {
+      "name": "raie +0,4",
+      "fringe": 0.7479734708916728,
+      "part": {
+        "u": 0.547945205479452,
+        "clarity": 1
+      },
+      "tips": 0,
+      "gloss": 0,
+      "score": 0
+    },
+    {
+      "name": "pointes 0",
+      "fringe": 0.7715549005158437,
+      "part": {
+        "u": -0.020294266869609334,
+        "clarity": 0.03703703703703709
+      },
+      "tips": 0,
+      "gloss": 0,
+      "score": 0
+    },
+    {
+      "name": "pointes 0,5",
+      "fringe": 0.7885040530582167,
+      "part": {
+        "u": -0.020294266869609334,
+        "clarity": 0.03703703703703709
+      },
+      "tips": 0.68,
+      "gloss": 0,
+      "score": 0
+    },
+    {
+      "name": "pointes 1",
+      "fringe": 0.8356669123065585,
+      "part": {
+        "u": -0.020294266869609334,
+        "clarity": 0.03703703703703709
+      },
+      "tips": 2.24,
+      "gloss": 0,
+      "score": 0
+    }
+  ],
+  "fullHead": [
+    {
+      "yaw": -60,
+      "before": 6,
+      "after": 0,
+      "failingChecks": "g:0 a:0 s:1",
+      "locks": 113
+    },
+    {
+      "yaw": -30,
+      "before": 7,
+      "after": 0,
+      "failingChecks": "g:0 a:0 s:1",
+      "locks": 113
+    },
+    {
+      "yaw": 0,
+      "before": 2,
+      "after": 0,
+      "failingChecks": "g:0 a:0 s:1",
+      "locks": 113
+    },
+    {
+      "yaw": 30,
+      "before": 4,
+      "after": 2,
+      "failingChecks": "g:0 a:1 s:1",
+      "locks": 113
+    },
+    {
+      "yaw": 60,
+      "before": 10.25,
+      "after": 0,
+      "failingChecks": "g:0 a:0 s:1",
+      "locks": 113
+    }
+  ],
+  "shellFold3d": {
+    "locks": 600,
+    "folds": 0,
+    "perHundred": 0
+  },
+  "observeBase": {
+    "widthRatio": 1.4916286149162863,
+    "heightRatio": 0.20811338848478736,
+    "moment": -0.011881133058101364,
+    "axis": 1.7885735167502574,
+    "coherence": 0.19268795845655876,
+    "negative": 0.18027961736571008,
+    "coverage": 0.427008547008547
+  }
+}

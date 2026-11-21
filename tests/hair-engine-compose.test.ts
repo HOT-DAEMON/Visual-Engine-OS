@@ -12,7 +12,7 @@ import type { LockSpec } from '../src/hair-grammar/lock';
 import { v3 } from '../src/hair-grammar/vec';
 import { viewAt } from '../scripts/hair-grammar/engine-kit';
 
-const V = viewAt(0.5);
+const V = viewAt(29);
 const wrap = (a: number): number => Math.atan2(Math.sin(a), Math.cos(a));
 
 describe('analyse de composition : sept mesures', () => {

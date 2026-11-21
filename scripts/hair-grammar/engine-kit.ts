@@ -12,7 +12,14 @@ import { DEFAULT_HEAD, type HeadSpec, type View } from '../../src/hair-grammar/h
 export const ROI = { w: 156, h: 150 };
 
 /** Vue de la ROI pour un lacet donné (même échelle et même centre que la vue 01). */
-export const viewAt = (yaw: number, pitch = 2.7): View => ({ yaw, pitch, s: 109.5, tx: 78, ty: 91.2 });
+/**
+ * Vue de test. Le lacet est en DEGRÉS (`head.ts` : `rad(v.yaw)`). Un lacet fractionnaire entre 0 et 1 exclu (0,3 ; 0,5…) est presque sûrement un RADIAN passé
+ * par erreur — les premiers tests de la passe 2 l'ont fait et se sont retrouvés à 0,3° / 0,5° (quasi frontal) sans que rien ne le signale : on refuse.
+ */
+export const viewAt = (yaw: number, pitch = 2.7): View => {
+  if (yaw !== 0 && Math.abs(yaw) < 1) throw new Error(`viewAt : le lacet est en degrés (reçu ${yaw} — un radian ? ${((yaw * 180) / Math.PI).toFixed(0)}°)`);
+  return { yaw, pitch, s: 109.5, tx: 78, ty: 91.2 };
+};
 
 export interface HeadOpts { readonly head?: HeadSpec; readonly under?: string; readonly over?: string; readonly face?: boolean }
 

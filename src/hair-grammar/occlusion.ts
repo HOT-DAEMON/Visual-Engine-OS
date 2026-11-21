@@ -35,7 +35,7 @@ export const SPAN_MIN = 0.03;
  * `paired` : A et B sont deux brins d'un MÊME entrelacs (`weave`), paramétrés de la même façon — le point de B qui correspond à l'échantillon k de A
  * est alors l'échantillon k de B (même position dans la tresse), et non le point le plus proche, qui forme un plateau là où les brins se croisent.
  */
-function runs(A: Blade, gB: Geo, B: Blade, paired = false): Interval[] {
+function runs(A: Blade, gB: Geo, B: Blade, paired = false, volume = false): Interval[] {
   const n = A.spine.length; const cover: boolean[] = [];
   for (let k = 0; k < n; k++) cover.push(inside(gB, A.spine[k] as V2) || inside(gB, A.left[k] as V2) || inside(gB, A.right[k] as V2));
   const out: Interval[] = []; let k = 0;
@@ -47,16 +47,19 @@ function runs(A: Blade, gB: Geo, B: Blade, paired = false): Interval[] {
     // extrémités : deux brins entrelacés, presque parallèles, voient leurs extrémités tomber sur le même point de l'autre — étendue nulle,
     // croisement franc jugé « faible »). Mesuré sur `weaveStrands` : étendue des extrémités 0 → 0,18.
     let s0 = k; let prev = 0; const nr = new Map<number, number>();
+    // PROFONDEUR DE VOLUME : en mode `all`, chaque mèche est une dalle d'épaisseur `thick` ; deux dalles qui se pénètrent n'ont pas d'ordre de profondeur fiable (l'ordre
+    // de la coiffure fait foi). `slab` = demi-somme des épaisseurs au couple d'échantillons (nulle hors mode volume et pour deux brins d'un même entrelacs).
+    const slab = (ia: number, ib: number): number => (volume && !paired ? (((A.thick?.[ia] ?? 0) + (B.thick?.[ib] ?? 0)) / 2) : 0);
     const near = (kk: number): number => { if (paired) return Math.min(kk, B.spine.length - 1); const c = nr.get(kk); if (c !== undefined) return c; let bi = 0; let bd = Infinity; const p = A.spine[kk] as V2; for (let m = 0; m < B.spine.length; m++) { const q = B.spine[m] as V2; const d = (p.x - q.x) ** 2 + (p.y - q.y) ** 2; if (d < bd) { bd = d; bi = m; } } nr.set(kk, bi); return bi; };
     const flush = (from: number, to: number, sign: number): void => {
       if (to < from || sign === 0) return;
       let lo = Infinity; let hi = -Infinity; for (let j = from; j <= to; j++) { const m = near(j); if (m < lo) lo = m; if (m > hi) hi = m; }
-      const gap = Math.abs((A.depth[Math.floor((from + to) / 2)] as number) - (B.depth[near(Math.floor((from + to) / 2))] as number));
+      const mid = Math.floor((from + to) / 2); const gap = Math.max(0, Math.abs((A.depth[mid] as number) - (B.depth[near(mid)] as number)) - slab(mid, near(mid)));
       out.push({ a0: from / (n - 1), a1: to / (n - 1), b0: lo / (B.spine.length - 1), b1: hi / (B.spine.length - 1), front: sign > 0 ? 'a' : 'b', gap });
     };
     for (let j = k; j <= e; j++) {
       const d = (A.depth[j] as number) - (B.depth[near(j)] as number);
-      const sg = Math.abs(d) < EPS ? prev : Math.sign(d);
+      const sg = Math.abs(d) - slab(j, near(j)) < EPS ? prev : Math.sign(d);
       if (prev !== 0 && sg !== prev) { flush(s0, j - 1, prev); s0 = j; }
       prev = sg;
     }
@@ -66,7 +69,7 @@ function runs(A: Blade, gB: Geo, B: Blade, paired = false): Interval[] {
 }
 
 /** Toutes les relations de recouvrement d'un ensemble de mèches peintes. */
-export function relationsOf(locks: readonly PaintedLock[]): Relation[] {
+export function relationsOf(locks: readonly PaintedLock[], volume = false): Relation[] {
   const G = locks.map((l) => geoOf(l.blade)); const out: Relation[] = [];
   for (let i = 0; i < locks.length; i++) for (let j = i + 1; j < locks.length; j++) {
     const a = G[i] as Geo; const b = G[j] as Geo;
@@ -74,7 +77,7 @@ export function relationsOf(locks: readonly PaintedLock[]): Relation[] {
     const A = locks[i] as PaintedLock; const B = locks[j] as PaintedLock;
     const swap = (r: Interval): Interval => ({ a0: r.b0, a1: r.b1, b0: r.a0, b1: r.a1, front: r.front === 'a' ? 'b' : 'a', gap: r.gap });
     const paired = A.spec.weave !== undefined && A.spec.weave === B.spec.weave;
-    const iv = [...runs(A.blade, b, B.blade, paired), ...runs(B.blade, a, A.blade, paired).map(swap)];
+    const iv = [...runs(A.blade, b, B.blade, paired, volume), ...runs(B.blade, a, A.blade, paired, volume).map(swap)];
     if (!iv.length) continue;
     const strong = iv.filter((r) => r.gap >= GAP_MIN && Math.min(r.a1 - r.a0, r.b1 - r.b0) >= SPAN_MIN);
     const fronts = new Set(strong.map((r) => r.front));

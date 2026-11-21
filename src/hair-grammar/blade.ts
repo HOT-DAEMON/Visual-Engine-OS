@@ -21,7 +21,12 @@ export interface Blade {
   readonly depth: number[];
   /** Torsion du ruban (rad) le long de l'axe ; 0 sans programme de courbes. */
   readonly twist: number[];
+  /** ÉPAISSEUR de la mèche en profondeur (unités H, même unité que `depth`) : `RIBBON_K` × largeur locale. Une mèche est une dalle [depth ± thick/2], pas un plan (`occlusion.ts`, mode `all`). */
+  readonly thick?: number[];
 }
+
+/** Épaisseur d'un ruban de cheveux rapportée à sa largeur (mèche plate : un quart à un tiers de la largeur). */
+export const RIBBON_K = 0.3;
 
 /** Interpolation Catmull-Rom (centripète simplifiée, uniforme) d'une polyligne à `n` points. */
 export function resample(pts: V2[], n: number): { p: V2; k: number }[] {
@@ -69,7 +74,7 @@ export function makeBlade(L: LockSpec, samples: Sample[], view: View, ray: { x: 
     right.push({ x: p.x + dy * w, y: p.y - dx * w });
   }
   const f = rs.map((r) => { const j = r.k * (facing.length - 1); const i0 = Math.min(facing.length - 2, Math.floor(j)); return (facing[i0] as number) * (1 - (j - i0)) + (facing[i0 + 1] as number) * (j - i0); });
-  return { spine, half, left, right, facing: f, t: rs.map((r) => r.k), depth: rs.map((r) => lerpAt(depthArr, r.k)), twist: rs.map((r) => twistAt(r.k)) };
+  return { spine, half, left, right, facing: f, t: rs.map((r) => r.k), depth: rs.map((r) => lerpAt(depthArr, r.k)), twist: rs.map((r) => twistAt(r.k)), thick: half.map((w) => (RIBBON_K * 2 * w) / view.s) };
 }
 
 /** Chemin SVG lissé (Catmull-Rom → Bézier cubique) d'une polyligne, fermé ou non. */

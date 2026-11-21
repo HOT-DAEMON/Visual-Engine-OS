@@ -72,6 +72,11 @@ export interface HairLockGeom {
   readonly backface: readonly boolean[];
   /** Occlusion locale 0–1 : 1 sous une mèche de devant (reflet atténué). */
   readonly occlusion: readonly number[];
+  /**
+   * Exposition 3D à la lumière (0–1) : normale 3D du ruban · lumière COMMUNE (`LightVector` de l'hôte passé par `lightFromVector`, voir `hair-grammar/light-bridge.ts`).
+   * Seule grandeur de cette interface qui dépend de la lumière — et de la MÊME que `LockStyle.ld`, jamais d'une seconde lumière. Absente : gain de reflet neutre.
+   */
+  readonly exposure?: readonly number[];
 }
 
 /** Masse de sous-couche visible d'un étage : silhouette, ton relatif et décalage de teinte (degrés). */

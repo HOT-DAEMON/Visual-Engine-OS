@@ -1,7 +1,9 @@
 import { verifyComposed, type Verdict } from './compose-verify';
+import { branchHair } from './branch';
 import { generate, type HairProfile } from './grammar';
 import type { View } from './head';
 import { applyIntent, type Intent } from './intent';
+import { applyPart } from './part';
 import type { LockSpec } from './lock';
 import { repairCycle, type Attempt } from './repair';
 
@@ -15,8 +17,13 @@ export interface IntendedHair { readonly profile: HairProfile; readonly specs: L
 
 export function generateIntended(P: HairProfile, I: Intent, view: View, seed = 1, repair = true): IntendedHair {
   const { profile } = applyIntent(P, I);
-  const specs0 = generate(profile, seed); const initial = verifyComposed(profile.head, specs0, view);
+  const opts = { wind: I.wind ?? 0 };
+  // Post-passes d'art direction : raie d'abord (elle déplace des racines), puis pointes libres (filles posées sur les mèches définitives).
+  let specs0 = generate(profile, seed);
+  if (I.part !== undefined) specs0 = applyPart(profile.head, specs0, I.part * profile.head.rx);
+  if (I.tips) specs0 = branchHair(profile, specs0, { fray: { prob: Math.min(1, 0.8 * I.tips), n: [2, 2 + Math.round(2 * I.tips)] } }, seed);
+  const initial = verifyComposed(profile.head, specs0, view, undefined, undefined, opts);
   if (!repair) return { profile, specs: specs0, initial, verdict: initial, journal: [] };
-  const r = repairCycle(profile, specs0, view, seed);
+  const r = repairCycle(profile, specs0, view, seed, 12, opts);
   return { profile, specs: r.specs, initial, verdict: r.verdict, journal: r.journal };
 }

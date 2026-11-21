@@ -39,7 +39,7 @@ export type PaintedWithGeom = PaintedLock & { readonly geom?: LockGeom };
 
 /** Géométrie locale du moteur de grammaire → `HairLockGeom` du moteur principal, dans son repère (largeur × échelle k de la similitude ; le reste est sans unité). */
 export function toHairLockGeom(g: LockGeom, k: number): HairLockGeom {
-  return { width: g.width.map((w) => w * k), twist: [...g.twist], backface: [...g.backface], occlusion: [...g.occlusion] };
+  return { width: g.width.map((w) => w * k), twist: [...g.twist], backface: [...g.backface], occlusion: [...g.occlusion], exposure: [...g.exposure] };
 }
 
 export function grammarToHairLocks(painted: readonly PaintedWithGeom[], o: InteropOpts): HairLock[] {

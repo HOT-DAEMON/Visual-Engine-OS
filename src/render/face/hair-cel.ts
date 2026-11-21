@@ -22,7 +22,7 @@ export interface CelBands {
  *  - REFLET : bande centrée en λ = 0,35·d, de demi-largeur `band`·0,5, sur u ∈ [0,12 ; 0,78], effilée aux deux bouts.
  *  - OMBRE PROPRE : toute la largeur sur le premier quart (u ≤ 0,26), bord bas irrégulier.
  * Les polygones sont ensuite ROGNÉS par le contour réel de la mèche (clip-path) : aucune bande ne peut en sortir.
- * Avec `l.geom` (mèche du moteur de grammaire) : la demi-largeur est CELLE DE LA LAME, le reflet est étranglé par |cos φ|^1,2 (ruban torsadé
+ * Avec `l.geom` (mèche du moteur de grammaire) : la demi-largeur est CELLE DE LA LAME (et, si `geom.exposure` est fourni, le reflet suit l'exposition 3D à la lumière commune), le reflet est étranglé par |cos φ|^1,2 (ruban torsadé
  * = reflet cassé, ruban plat = continu), atténué de 60 % sous un recouvrement, et la lumière s'inverse sur le dessous du ruban.
  */
 export function celBands(l: HairLock, ld: Vec, band: number, wantCore: boolean, span: readonly [number, number] = [0.12, 0.78]): CelBands {
@@ -35,7 +35,10 @@ export function celBands(l: HairLock, ld: Vec, band: number, wantCore: boolean, 
   const g = l.geom && l.geom.width.length === n && l.geom.twist.length === n && l.geom.backface.length === n && l.geom.occlusion.length === n ? l.geom : undefined;
   const hw = (i: number): number => (g ? Math.max(0.03 * (l.w0 as number), (g.width[i] as number) / 2) : halfWidth(i / (n - 1), l.w0 as number, l.sharp ?? 0.5, profile, l.power ?? 1, l.rootW));
   /** Reflet d'un ruban torsadé : étranglé quand il est vu par la tranche, atténué sous un recouvrement. */
-  const gloss = (i: number): number => (g ? Math.abs(Math.cos(g.twist[i] as number)) ** 1.2 * (1 - 0.6 * (g.occlusion[i] as number)) : 1);
+  const ex = g?.exposure && g.exposure.length === n ? g.exposure : undefined;
+  /** Gain de l'exposition 3D (lumière commune) : 0,35 dans l'ombre, 1,25 en pleine lumière ; neutre (1) sans exposition. */
+  const lit = (i: number): number => (ex ? 0.35 + 0.9 * clamp(ex[i] as number, 0, 1) ** 1.5 : 1);
+  const gloss = (i: number): number => (g ? Math.abs(Math.cos(g.twist[i] as number)) ** 1.2 * (1 - 0.6 * (g.occlusion[i] as number)) * lit(i) : 1);
   const at = (i: number, lam: number): Vec => {
     const q = nn[i] as Vec;
     const w = hw(i) * lam;

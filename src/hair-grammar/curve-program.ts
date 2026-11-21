@@ -30,7 +30,13 @@ export type CurveSegment =
    * oscille en phase (`lift` : les brins de phases différentes passent tour à tour devant et derrière). Deux brins de phases φ et φ+½ se
    * croisent à chaque demi-période, avec l'alternance de profondeur que `occlusion.ts` sait lire. Voir `weave.ts` pour poser un groupe de brins.
    */
-  | { readonly kind: 'weave'; readonly len: number; readonly amp: number; readonly freq: number; readonly phase: number; readonly lift?: number };
+  | { readonly kind: 'weave'; readonly len: number; readonly amp: number; readonly freq: number; readonly phase: number; readonly lift?: number }
+  /**
+   * BOUCLE / ENROULEMENT : le cap tourne de `turns` tours complets (signe de `dir`) avec une vitesse de rotation lisse (smoothstep : courbure nulle aux deux
+   * bouts, donc raccord C¹ avec le segment voisin). Le cap net du segment est `dir·turns·2π` : après la boucle la mèche repart dans sa direction
+   * d'origine (turns entier). Rayon minimal = len/(3π·turns) en unités de longueur de mèche ; voir `loopProgram` (branch.ts) pour le dimensionner.
+   */
+  | { readonly kind: 'loop'; readonly len: number; readonly turns?: number; readonly dir?: 1 | -1 };
 
 /** `lift` : décollement ajouté (unités H) par le segment courant — nul hors entrelacs ; il s'annule aux deux bouts du segment (pas de saut de profondeur). */
 export interface ProgramState { readonly theta: number; readonly twist: number; readonly seg: number; readonly u: number; readonly lift: number }
@@ -49,6 +55,7 @@ export function segTheta(s: CurveSegment, u: number): number {
     case 'accelerate': return s.angle * u ** (s.power ?? 2.4);
     case 'tipFlip': return s.angle * smooth(u);
     case 'weave': return s.amp * (Math.cos(2 * Math.PI * (s.freq * u + s.phase)) - Math.cos(2 * Math.PI * s.phase));
+    case 'loop': return (s.dir ?? 1) * (s.turns ?? 1) * 2 * Math.PI * smooth(u);
   }
 }
 

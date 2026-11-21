@@ -49,7 +49,7 @@ export function paintLockPro(h: HeadSpec, L: LockSpec, view: View, st: ProStyle 
 
 /** Coiffure complète en finition pilotée par la géométrie locale, occlusion locale incluse (mèches émergentes et groupes de tressage). */
 export function paintHairPro(h: HeadSpec, specs: readonly LockSpec[], view: View, st: ProStyle = INK_PRO, light: Light = LIGHT, mode: 'weave' | 'all' = 'weave'): ResolvedPainting & { readonly geoms: LockGeom[] } {
-  const pre = specs.map((L) => paintLockPro(h, L, view, st, light)); const rel = relationsOf(pre);
+  const pre = specs.map((L) => paintLockPro(h, L, view, st, light)); const rel = relationsOf(pre, mode === 'all');
   const fin = specs.map((L, i) => paintLockPro(h, L, view, st, light, occlusionProfile(i, pre[i]?.geom.n ?? 40, rel)));
   return { ...renderResolved(fin, st, mode, rel), geoms: fin.map((p) => p.geom) };
 }
