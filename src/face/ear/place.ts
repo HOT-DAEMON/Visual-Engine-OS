@@ -27,6 +27,12 @@ export interface EarAlignment {
  *   - la hauteur en découle : h = (ligne du lobule − yeux) / (1 − niveau de la racine) ; sans lobule (félin, équidé…) ou à ancrage libre : h = 0,30 H × échelle.
  * Les ancrages se MÉLANGENT (0 = libre, 1 = exact). La hauteur reste dans [0,20 H ; 0,50 H] (contrainte stricte enregistrée, jamais silencieuse).
  */
+/** Part de la pente du contour de la tête suivie par la surface d'accrochage (1 = tout le contour, 0 = verticale). */
+export const EAR_LEAN = 0.5;
+/** Largeur frontale minimale lisible (en hauteurs d'oreille) et angle d'écartement minimal du canon (°). */
+export const FRONT_MIN = 0.26;
+export const CANON_MIN_DEG = 21;
+
 export function earPlacement(p: FaceParams, lm: FaceLandmarks, m: EarModel): { pl: EarPlacement; align: EarAlignment } {
   const e = p.ears;
   const R = new Resolver();
@@ -42,8 +48,25 @@ export function earPlacement(p: FaceParams, lm: FaceLandmarks, m: EarModel): { p
   const topY = lerp(topFree, topAligned, e.anchors.eye);
   const yMax = lm.outline.bottomY - 0.02 * lm.H;
   const sink = e.attach.insertion * 0.04 * hPx;
-  const skullX = (y: number): number => Math.max(0, halfWidthAt(lm.outline, clamp(y, -lm.H / 2 + 0.02 * lm.H, yMax)) - sink);
-  const pl: EarPlacement = { side: m.side, hPx, topY, skullX, openingDeg: e.attach.openingDeg, pitchDeg: e.attach.pitchDeg, rotationDeg: e.attach.rotationDeg, pivotV: yCrus };
+  // Surface d'accrochage : le contour de la tête RENTRE vite sous l'oreille (mâchoire), alors que le plan du pavillon est quasi vertical (la racine de l'hélix suit l'os temporal, pas la mâchoire).
+  // On n'en suit donc que la moitié de la pente (`EAR_LEAN`) : l'oreille ne s'incline plus en « trait » oblique ; l'écart qui s'ouvre vers le lobule est comblé par la jupe de racine (`project.ts`).
+  const yA = topY, yB = topY + hPx;
+  const hwA = halfWidthAt(lm.outline, clamp(yA, -lm.H / 2 + 0.02 * lm.H, yMax)), hwB = halfWidthAt(lm.outline, clamp(yB, -lm.H / 2 + 0.02 * lm.H, yMax));
+  // Pente suivie : au moins `EAR_LEAN`, davantage si la mâchoire fuit fort (l'écart du lobule à la joue reste ≤ 15 % de la hauteur d'oreille).
+  const drop = hwA - hwB;
+  const lean = drop > 0 ? clamp(1 - (0.15 * hPx) / drop, EAR_LEAN, 1) : EAR_LEAN;
+  const skullX = (y: number): number => {
+    const yy = clamp(y, -lm.H / 2 + 0.02 * lm.H, yMax);
+    const t = clamp((yy - yA) / (yB - yA || 1), 0, 1);
+    return Math.max(0, hwA + (hwB - hwA) * t * lean - sink);
+  };
+  // LISIBILITÉ FRONTALE : de face, la largeur visible du pavillon ≈ L·sin α + épaisseur·cos α (en hauteurs d'oreille). Sous ≈ 0,26 H l'oreille n'est plus qu'un trait (cas réel : angle d'écartement
+  // 16–17° sur un pavillon étroit) ; l'anatomie donne 21°–38° (écart auriculo-céphalique). Plancher PRÉFÉRENTIEL : l'exagération artistique l'assouplit, la correction est journalisée.
+  const T = m.thickness * (m.structures.find((x) => x.id === 'helix')?.relief ?? 0.9);
+  const target = FRONT_MIN * (1 - 0.6 * p.ears.style.exaggeration);
+  const aMin = (Math.asin(clamp((target - T * 0.5) / Math.max(0.2, m.widthRatio), 0, 0.99)) * 180) / Math.PI;
+  const opening = R.limit('ear-frontal-readable', 'ears.attach.openingDeg', e.attach.openingDeg, Math.max(CANON_MIN_DEG * (1 - 0.5 * p.ears.style.exaggeration), aMin), 60, 'de face, l’oreille ne doit pas se réduire à un trait : angle d’écartement relevé (canon 21°–38°)');
+  const pl: EarPlacement = { side: m.side, hPx, topY, skullX, openingDeg: opening, pitchDeg: e.attach.pitchDeg, rotationDeg: e.attach.rotationDeg, pivotV: yCrus, headX: (y: number): number => halfWidthAt(lm.outline, clamp(y, -lm.H / 2 + 0.02 * lm.H, yMax)) };
   const lobeY = topY + (m.landmarks.lobuleBottom as Vec).y * hPx;
   return { pl, align: { crusToEyeLine: topY + yCrus * hPx - lm.eyeY, lobuleToLine: lobeY - lineY, lobuleLineY: lineY, corrections: R.applied } };
 }

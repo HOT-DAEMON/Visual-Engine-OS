@@ -1,0 +1,92 @@
+{
+ "seeds": [
+  11,
+  77,
+  1203
+ ],
+ "views": [
+  "face",
+  "three-quarter",
+  "profile",
+  "close-up"
+ ],
+ "rows": [
+  {
+   "param": "morph.helix.torsion",
+   "face": 2024,
+   "three-quarter": 5803,
+   "profile": 4371,
+   "close-up": 5560
+  },
+  {
+   "param": "morph.helix.continuity",
+   "face": 573,
+   "three-quarter": 1596,
+   "profile": 1325,
+   "close-up": 1591
+  },
+  {
+   "param": "morph.scapha.curvature",
+   "face": 67,
+   "three-quarter": 904,
+   "profile": 971,
+   "close-up": 1003
+  },
+  {
+   "param": "morph.scapha.gradient",
+   "face": 301,
+   "three-quarter": 2681,
+   "profile": 1725,
+   "close-up": 2213
+  },
+  {
+   "param": "morph.fossa.tilt",
+   "face": 530,
+   "three-quarter": 929,
+   "profile": 866,
+   "close-up": 1194
+  },
+  {
+   "param": "morph.fossa.curvature",
+   "face": 466,
+   "three-quarter": 283,
+   "profile": 322,
+   "close-up": 244
+  },
+  {
+   "param": "morph.concha.volume",
+   "face": 931,
+   "three-quarter": 6251,
+   "profile": 5626,
+   "close-up": 6367
+  },
+  {
+   "param": "morph.concha.tilt",
+   "face": 1506,
+   "three-quarter": 6420,
+   "profile": 5782,
+   "close-up": 6339
+  },
+  {
+   "param": "morph.concha.transition",
+   "face": 702,
+   "three-quarter": 1677,
+   "profile": 1787,
+   "close-up": 1868
+  },
+  {
+   "param": "morph.tragus.thickness",
+   "face": 613,
+   "three-quarter": 591,
+   "profile": 589,
+   "close-up": 660
+  },
+  {
+   "param": "morph.lobule.volume",
+   "face": 876,
+   "three-quarter": 1615,
+   "profile": 1557,
+   "close-up": 1977
+  }
+ ]
+}

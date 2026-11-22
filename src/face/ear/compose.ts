@@ -44,7 +44,7 @@ export function composeEar(seed: number, o: ComposeOptions = {}): z.output<typeo
   const gp = G('pole'), gl = G('lobule'), gt = G('tragus', 0.8), ga = G('antihelix', 0.8), gc = G('concha', 0.8), gh = G('helix'), gs = G('scapha', 0.8), gx = G('misc');
   const rr = stream(seed, 'rare');
   const on = (p: number): number => (rr() < Math.min(0.9, p * rare) ? round(between(rr, 0.35, 0.95)) : 0);
-  const morph = {
+  const morph0 = {
     pole: { height: gp(), round: gp(), lean: round(gp() * 0.7), tip: family === 'human' ? round(gp() * 0.35) : gp() },
     posterior: { convexity: gx() },
     width: round(gx() * 0.8),
@@ -59,6 +59,19 @@ export function composeEar(seed: number, o: ComposeOptions = {}): z.output<typeo
     crus: { thickness: gs(), angle: gs(), length: gs() },
     fossa: { depth: ga(), width: ga() },
   };
+  // ── Passe 4 (EAR-01…07 restants) : flux PROPRES (`pass4`, `rare4`) → les tirages historiques ne bougent pas. Couplage anatomique simple : un lobule long est aussi plus charnu.
+  const g4 = G('pass4', 0.8), r4 = stream(seed, 'rare4');
+  const nick = (p: number): number => (r4() < Math.min(0.9, p * rare) ? -round(between(r4, 0.4, 0.9)) : 0);
+  const v4 = { tors: g4(), cont: round(g4() * 0.5), scc: g4(), scg: g4(), ft: g4(), fc: g4(), cv: g4(), ct: round(g4() * 0.8), ctr: g4(), th: g4(), lv: g4() };
+  const morph = {
+    ...morph0,
+    helix: { ...morph0.helix, torsion: v4.tors, continuity: nick(0.04) || v4.cont },
+    scapha: { ...morph0.scapha, curvature: v4.scc, gradient: v4.scg },
+    fossa: { ...morph0.fossa, tilt: v4.ft, curvature: v4.fc },
+    concha: { ...morph0.concha, volume: v4.cv, tilt: v4.ct, transition: v4.ctr },
+    tragus: { ...morph0.tragus, thickness: v4.th },
+    lobule: { ...morph0.lobule, volume: round(clampS(0.4 * morph0.lobule.length + v4.lv * 0.8)) },
+  };
   // ── Grammaire artistique.
   const rs = stream(seed, 'style');
   const style = {
@@ -72,7 +85,7 @@ export function composeEar(seed: number, o: ComposeOptions = {}): z.output<typeo
   };
   // ── Attache.
   const rt = stream(seed, 'attach');
-  const attach = { openingDeg: round(between(rt, ch === 'natural' ? 16 : 10, ch === 'natural' ? 34 : 48)), pitchDeg: round(between(rt, -8, 8)), rotationDeg: round(between(rt, -9, 9)), scale: round(between(rt, 0.88, 1.2)), insertion: round(rt()) };
+  const attach = { openingDeg: round(between(rt, ch === 'natural' ? 21 : 14, ch === 'natural' ? 36 : 48)), pitchDeg: round(between(rt, -8, 8)), rotationDeg: round(between(rt, -9, 9)), scale: round(between(rt, 0.88, 1.2)), insertion: round(rt()) };
   // ── Matériau et extensions (compatibles avec la famille et le mélange).
   const rm = stream(seed, 'material');
   const fams = [family, ...(Object.keys(blend) as EarFamily[])];

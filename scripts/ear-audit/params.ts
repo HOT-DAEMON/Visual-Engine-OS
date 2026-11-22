@@ -17,5 +17,8 @@ export const PARAMS: P[] = [
   // Axes ajoutés après le premier audit (Darwin, hélix replié, lobule fendu/étiré, rebord de conque, fosse, crus, pointe du tragus, courbure de l'anthélix) et détails SURF-05.
   ['morph.helix.darwin', 0, 0.9], ['morph.helix.fold', 0, 0.9], ['morph.lobule.cleft', 0, 0.9], ['morph.lobule.stretch', 0, 0.9], ['morph.concha.wall', 0, 0.9],
   S('fossa.depth'), S('fossa.width'), S('crus.angle'), S('crus.length'), S('tragus.tip'), S('antihelix.curvature'),
+  // Passe 4 : axes EAR-01…07 restants (torsion/continuité de l'hélix, courbure/dégradé de la scapha, orientation/courbure de la fosse, volume/inclinaison/transition de la conque, épaisseur du tragus, volume du lobule).
+  S('helix.torsion'), S('helix.continuity'), S('scapha.curvature'), S('scapha.gradient'), S('fossa.tilt'), S('fossa.curvature'),
+  S('concha.volume'), S('concha.tilt'), S('concha.transition'), S('tragus.thickness'), S('lobule.volume'),
   ['surface.pigmentation', 0, 0.9, { 'style.detail': 0.9 }], ['surface.folds', 0, 0.9, { 'style.detail': 0.9 }], ['surface.pores', 0, 0.9, { 'style.detail': 0.9 }], ['surface.vessels', 0, 0.9, { 'style.detail': 0.9 }], ['surface.hair', 0, 0.9, { 'style.detail': 0.9 }],
 ];

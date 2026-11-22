@@ -2,7 +2,7 @@ import { resolveAppearance } from '../../../appearance';
 import { el, num, urlRef } from '../../../core/svg';
 import type { Vec } from '../../../geometry/eye/primitives';
 import { earGeometry, type FaceLandmarks } from '../../../face';
-import { projectEar, VIEW_YAW, type ViewName } from '../../../face/ear/project';
+import { projectEar, VIEW_YAW, type ProjectedEar, type ViewName } from '../../../face/ear/project';
 import { lightVector, type LightVector } from '../../../lighting/light';
 import type { FaceParams } from '../../../schema';
 import { earJewelry } from './jewelry';
@@ -25,6 +25,21 @@ export interface EarViewOptions {
  * la vue. Le fond est un morceau de la tête (peau, ombre de la joue en avant de l'oreille) : ce n'est pas un second visage, juste le support de lecture.
  * L'oreille gauche se montre avec un lacet négatif (la caméra passe de l'autre côté).
  */
+/** Cadrage d'une planche : l'oreille projetée, sa hauteur (px d'hôte), son centre et l'échelle plan → planche ; `map` donne la position d'un point projeté dans l'image rendue. Partagé avec la vérification du rendu. */
+export function earViewFrame(p: FaceParams, lm: FaceLandmarks, o: EarViewOptions): { pe: ProjectedEar; hPx: number; c: Vec; k: number; map: (v: Vec) => Vec } | null {
+  const side = o.side ?? 1;
+  const g = earGeometry(p, lm).find((e) => e.side === side);
+  if (!g || !g.model || !g.placement) return null;
+  // Planche d'oreille seule : aucune joue à relier, donc pas de jupe de racine (elle n'existe que sur une tête entière).
+  const plSheet = { ...g.placement } as { headX?: unknown };
+  delete plSheet.headX;
+  const pe = projectEar(g.model, plSheet as typeof g.placement, VIEW_YAW[o.view] * side, o.view);
+  const hPx = g.placement.hPx;
+  const c = { x: (pe.bbox.x0 + pe.bbox.x1) / 2, y: (pe.bbox.y0 + pe.bbox.y1) / 2 };
+  const k = ((o.height * 0.78) / hPx) * (o.zoom ?? 1);
+  return { pe, hPx, c, k, map: (v: Vec) => ({ x: o.width / 2 + (v.x - c.x) * k, y: o.height / 2 + (v.y - c.y) * k }) };
+}
+
 export function earViewSvg(p: FaceParams, lm: FaceLandmarks, o: EarViewOptions): string {
   const side = o.side ?? 1;
   const g = earGeometry(p, lm).find((e) => e.side === side);
@@ -32,10 +47,10 @@ export function earViewSvg(p: FaceParams, lm: FaceLandmarks, o: EarViewOptions):
   const ra = resolveAppearance(o.skin, p.skin);
   const yaw = VIEW_YAW[o.view] * side;
   const L = o.light ?? (o.view === 'close-up' ? lightVector({ azimuthDeg: side > 0 ? 300 : 60, elevationDeg: 32, color: '#ffffff', intensity: 1 }) : lightVector({ azimuthDeg: 330, elevationDeg: 55, color: '#ffffff', intensity: 1 }));
-  const pe = projectEar(g.model, g.placement, yaw, o.view);
-  const hPx = g.placement.hPx;
-  const c = { x: (pe.bbox.x0 + pe.bbox.x1) / 2, y: (pe.bbox.y0 + pe.bbox.y1) / 2 };
-  const k = ((o.height * 0.78) / hPx) * (o.zoom ?? 1);
+  // Planche d'oreille seule : aucune joue à relier, donc pas de jupe de racine (elle n'existe que sur une tête entière).
+  const fr = earViewFrame(p, lm, o);
+  if (!fr) return el('svg', { xmlns: 'http://www.w3.org/2000/svg', width: o.width, height: o.height, viewBox: `0 0 ${o.width} ${o.height}` });
+  const { pe, hPx, c, k } = fr;
   const defs: string[] = [];
   const earUp = renderEarProjected(`v-${o.view}`, pe, g.model, p.ears, o.skin, ra, L, hPx);
   defs.push(...earUp.defs);

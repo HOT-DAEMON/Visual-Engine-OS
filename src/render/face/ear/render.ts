@@ -36,6 +36,9 @@ export function renderEarProjected(id: string, pe: ProjectedEar, model: EarModel
   const ln = Math.hypot(ld.x, ld.y) || 1;
   const lx = ld.x / ln, ly = ld.y / ln;
   const hull = pe.rim;
+  // 0. Jupe de racine : la peau qui attache le pavillon à la joue (ton d'ombre de la peau, bord fondu) — sans elle, le bas de l'oreille flotte à côté de la mâchoire.
+  if (!anime) defs.push(el('filter', { id: `${id}-root`, x: '-20%', y: '-20%', width: '140%', height: '140%' }, [el('feGaussianBlur', { stdDeviation: num(hPx * 0.008) })]));
+  if (pe.root.length > 2) out.push(el('path', { d: polyPath(pe.root), fill: mix(P.base, P.shade, anime ? 0.4 : 0.26), stroke: mix(P.base, P.shade, anime ? 0.4 : 0.26), 'stroke-width': lw * 1.5, 'stroke-linejoin': 'round', ...(anime ? {} : { filter: urlRef(`${id}-root`) }) }));
   // 1. Flanc (plaque) et face externe.
   out.push(el('path', { d: polyPath(pe.plate), fill: P.shade, stroke: P.shade, 'stroke-width': lw, 'stroke-linejoin': 'round' }));
   out.push(el('path', { d: polyPath(hull), fill: P.base, stroke: mix(P.shade, '#000000', 0.45), 'stroke-width': lw * 1.4, 'stroke-linejoin': 'round' }));
@@ -53,16 +56,27 @@ export function renderEarProjected(id: string, pe: ProjectedEar, model: EarModel
     if (s.id === 'helix') { body.push(helixLayer(id, k++, poly, P, lx, ly, hPx * dk, anime, defs, co)); k += 2; continue; }
     if (s.kind === 'ext') { (s.ext === 'ornamental_growth' ? outside : body).push(extLayer(s, poly, P, hPx, anime)); continue; }
     if (s.id !== 'canal' && !detailOn(String(s.id), detail)) continue;
-    if (s.id === 'lobule') { body.push(lobuleLayer(id, k++, poly, P, lx, ly, hPx, defs)); continue; }
+    if (s.id === 'lobule') { body.push(lobuleLayer(id, k++, poly, P, lx, ly, hPx, defs, s.relief)); continue; }
+    if (s.strength !== undefined) {
+      // Surimpression (dégradé de scapha, pont de conque) : voile sombre doux posé sur la structure déjà dessinée ; la bordure se fond (flou) au lieu d'un palier net.
+      defs.push(el('filter', { id: `${id}-ov${k}`, x: '-10%', y: '-10%', width: '120%', height: '120%' }, [el('feGaussianBlur', { stdDeviation: num(hPx * (s.id === 'concha:bridge' ? 0.011 : 0.0045)) })]));
+      body.push(el('path', { d: polyPath(poly), fill: mix(P.base, mix(P.shade, '#1a0d0d', 0.5), s.id === 'concha:bridge' ? 0.55 : 0.8), opacity: num(s.id === 'concha:bridge' ? 0.15 + 0.4 * s.strength : Math.min(0.85, 0.2 + 0.6 * s.strength)), ...(anime ? {} : { filter: urlRef(`${id}-ov${k++}`) }) }));
+      continue;
+    }
     if (s.relief < 0) {
       // Cavité : fond sombre (d'autant plus que le relief est négatif) ; la paroi qui regarde la source est dans l'ombre, la paroi opposée reçoit la lumière.
       const dark = s.id === 'canal' ? 0.92 : Math.min(0.85, 0.38 + 0.4 * -s.relief);
-      body.push(el('path', { d: polyPath(poly), fill: mix(P.base, mix(P.shade, '#1a0d0d', 0.5), dark), opacity: anime ? 1 : 0.94 }));
+      const deep = mix(P.base, mix(P.shade, '#1a0d0d', 0.5), dark);
+      // Fond en dégradé (EAR-05E) : le centre est le plus profond, le bord remonte vers le ton de la peau. Un aplat uniforme se lit comme un disque peint, pas comme un creux.
+      const fill = s.id === 'canal' || anime ? deep : cavityGradient(id, k++, poly, deep, mix(P.base, deep, 0.38), defs);
+      body.push(el('path', { d: polyPath(poly), fill, opacity: anime ? 1 : 0.94 }));
       if (s.id !== 'canal') body.push(crescent(id, k++, poly, lx, ly, hPx * (0.004 + 0.003 * -s.relief) * dk, P.shade, anime ? P.highlight : P.lit, (anime ? 0.9 : 0.55) * co, true, defs));
     } else {
       // Relief : base, croissant éclairé côté source, croissant d'ombre propre du côté opposé (volume lisible sans trait de contour).
       body.push(el('path', { d: polyPath(poly), fill: mix(P.base, P.lit, Math.min(0.5, 0.14 * s.relief)) }));
-      body.push(crescent(id, k++, poly, lx, ly, hPx * (0.005 + 0.004 * s.relief) * dk, P.shade, anime ? P.highlight : P.lit, Math.min(1, (anime ? 0.95 : 0.8) * co), false, defs));
+      // Décalage : au moins l'ancien (fin liseré) ; pour une crête épaisse (anthélix) proportionnel à SA demi-épaisseur → renflement arrondi, pas un trait.
+      const dOff = Math.max(hPx * (0.005 + 0.004 * s.relief) * dk, anime ? 0 : 0.5 * halfThickness(poly) * dk);
+      body.push(crescent(id, k++, poly, lx, ly, dOff, P.shade, anime ? P.highlight : P.lit, Math.min(1, (anime ? 0.95 : 0.8) * co), false, defs, anime ? 0 : dOff * 0.5));
     }
   }
   if (soft > 0.02) defs.push(el('filter', { id: `${id}-soft`, x: '-5%', y: '-5%', width: '110%', height: '110%' }, [el('feGaussianBlur', { stdDeviation: num(hPx * 0.0028 * soft * 2) })]));
@@ -111,14 +125,31 @@ const detailOn = (sid: string, d: number): boolean => (sid.startsWith('antihelix
  * Croissants de lumière et d'ombre d'un volume, SANS filtre : un polygone décalé de `d` vers / contre la source ; la différence symétrique
  * (`evenodd`) avec l'original, découpée à l'original, est exactement le croissant. Relief : lumière côté source, ombre côté opposé ; cavité : l'inverse.
  */
-function crescent(id: string, i: number, poly: Poly, lx: number, ly: number, d: number, shade: string, lit: string, op: number, hollow: boolean, defs: string[]): string {
+function crescent(id: string, i: number, poly: Poly, lx: number, ly: number, d: number, shade: string, lit: string, op: number, hollow: boolean, defs: string[], blur = 0): string {
   defs.push(el('clipPath', { id: `${id}-e${i}` }, [el('path', { d: polyPath(poly) })]));
+  if (blur > 0.05) defs.push(el('filter', { id: `${id}-eb${i}`, x: '-20%', y: '-20%', width: '140%', height: '140%' }, [el('feGaussianBlur', { stdDeviation: num(blur) })]));
   const toward = (sg: number): string => polyPath(poly, shift(poly, sg * lx * d, sg * ly * d));
   const litSg = hollow ? 1 : -1;
-  return el('g', { 'clip-path': urlRef(`${id}-e${i}`) }, [
+  const inner = [
     el('path', { d: toward(-litSg), 'fill-rule': 'evenodd', fill: shade, opacity: num(op * 0.75) }),
     el('path', { d: toward(litSg), 'fill-rule': 'evenodd', fill: lit, opacity: num(op) }),
-  ]);
+  ];
+  return el('g', { 'clip-path': urlRef(`${id}-e${i}`) }, blur > 0.05 ? [el('g', { filter: urlRef(`${id}-eb${i}`) }, inner)] : inner);
+}
+
+/** Demi-épaisseur d'une bande (2 × aire / périmètre) : l'échelle propre d'un ruban, indépendante de sa longueur. */
+function halfThickness(poly: Poly): number {
+  let a = 0, per = 0;
+  for (let i = 0; i < poly.length; i++) { const p = poly[i] as Vec, q = poly[(i + 1) % poly.length] as Vec; a += p.x * q.y - q.x * p.y; per += Math.hypot(q.x - p.x, q.y - p.y); }
+  return per > 0 ? Math.abs(a) / per : 0;
+}
+
+/** Dégradé radial d'une cavité : `deep` au centre de gravité, `rim` au bord le plus éloigné. */
+function cavityGradient(id: string, i: number, poly: Poly, deep: string, rim: string, defs: string[]): string {
+  const c = centroid(poly);
+  const r = Math.max(...poly.map((q) => Math.hypot(q.x - c.x, q.y - c.y))) || 1;
+  defs.push(el('radialGradient', { id: `${id}-cg${i}`, cx: num(c.x), cy: num(c.y), r: num(r), gradientUnits: 'userSpaceOnUse' }, [el('stop', { offset: 0.1, 'stop-color': deep }), el('stop', { offset: 1, 'stop-color': rim })]));
+  return urlRef(`${id}-cg${i}`);
 }
 
 /** Hélix : bande claire d'enroulement, croissant éclairé et ombre propre ; l'arête extérieure reste le contour du pavillon. */
@@ -127,10 +158,13 @@ function helixLayer(id: string, i: number, poly: Poly, P: EarPaint, lx: number, 
 }
 
 /** Lobule : chair sans cartilage, un seul reflet doux (pas de crête, pas de contour : la corde du polygone n'est PAS une arête). */
-function lobuleLayer(id: string, i: number, poly: Poly, P: EarPaint, lx: number, ly: number, hPx: number, defs: string[]): string {
+function lobuleLayer(id: string, i: number, poly: Poly, P: EarPaint, lx: number, ly: number, hPx: number, defs: string[], relief = 0.25): string {
   const c = centroid(poly);
-  defs.push(el('radialGradient', { id: `${id}-lob${i}`, cx: num(c.x - lx * hPx * 0.02), cy: num(c.y - ly * hPx * 0.02), r: num(hPx * 0.1), gradientUnits: 'userSpaceOnUse' }, [el('stop', { offset: 0, 'stop-color': P.lit, 'stop-opacity': 0.55 }), el('stop', { offset: 1, 'stop-color': P.lit, 'stop-opacity': 0 })]));
-  return el('path', { d: polyPath(poly), fill: urlRef(`${id}-lob${i}`) });
+  // EAR-07 volume : le relief du lobule (0,25 au défaut) règle le rayon et la force du reflet ET l'ombre portée du côté opposé à la lumière (un lobule charnu est rond, un lobule mince est plat).
+  const v = Math.max(0, relief / 0.25);
+  defs.push(el('radialGradient', { id: `${id}-lob${i}`, cx: num(c.x - lx * hPx * 0.02 * v), cy: num(c.y - ly * hPx * 0.02 * v), r: num(hPx * 0.1 * Math.sqrt(v)), gradientUnits: 'userSpaceOnUse' }, [el('stop', { offset: 0, 'stop-color': P.lit, 'stop-opacity': Math.min(0.95, 0.55 * v) }), el('stop', { offset: 1, 'stop-color': P.lit, 'stop-opacity': 0 })]));
+  defs.push(el('radialGradient', { id: `${id}-lobs${i}`, cx: num(c.x + lx * hPx * 0.03 * v), cy: num(c.y + ly * hPx * 0.03 * v + hPx * 0.03), r: num(hPx * 0.075 * Math.sqrt(v)), gradientUnits: 'userSpaceOnUse' }, [el('stop', { offset: 0, 'stop-color': P.shade, 'stop-opacity': Math.min(0.7, 0.3 * v) }), el('stop', { offset: 1, 'stop-color': P.shade, 'stop-opacity': 0 })]));
+  return el('path', { d: polyPath(poly), fill: urlRef(`${id}-lobs${i}`) }) + el('path', { d: polyPath(poly), fill: urlRef(`${id}-lob${i}`) });
 }
 
 /** Extensions : crête (ton d'ombre + liseré), membrane (translucide), excroissance (pointe), canal bioluminescent (émissif, flou). */

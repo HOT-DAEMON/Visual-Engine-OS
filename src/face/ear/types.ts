@@ -52,6 +52,8 @@ export interface PlacedStructure {
   readonly poly: Poly;
   readonly relief: number;
   readonly ext?: EarExtensionKind;
+  /** Cavité-surimpression (dégradé de scapha, pont de conque) : dessinée APRÈS la cavité qu'elle recouvre ; `strength` ∈ [0, 1] règle l'opacité du voile sombre. */
+  readonly strength?: number;
 }
 
 /** Point d'attache d'un bijou (plan) : position, orientation de pose (degrés), compatibilité avec la forme de l'oreille. */

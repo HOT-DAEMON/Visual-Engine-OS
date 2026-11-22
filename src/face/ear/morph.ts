@@ -16,7 +16,7 @@ export function flattenMorph(m: FaceEars['morph']): FlatMorph {
 
 /** Clés morphologiques (toutes les déviations du schéma, avec leur étendue pour l'asymétrie). */
 /** Axes ajoutés après la première version : tirés d'un flux séparé et sans bruit d'asymétrie tant que `style.asymmetry` ≤ 0,25 (les oreilles existantes restent identiques). */
-export const NEW_MORPH_KEYS: readonly string[] = ['helix.darwin', 'helix.fold', 'lobule.cleft', 'lobule.stretch', 'tragus.tip', 'antihelix.curvature', 'concha.wall', 'crus.angle', 'crus.length', 'fossa.depth', 'fossa.width'];
+export const NEW_MORPH_KEYS: readonly string[] = ['helix.darwin', 'helix.fold', 'lobule.cleft', 'lobule.stretch', 'tragus.tip', 'antihelix.curvature', 'concha.wall', 'crus.angle', 'crus.length', 'fossa.depth', 'fossa.width', 'helix.torsion', 'helix.continuity', 'scapha.curvature', 'scapha.gradient', 'fossa.tilt', 'fossa.curvature', 'concha.volume', 'concha.tilt', 'concha.transition', 'tragus.thickness', 'lobule.volume'];
 const BASE_KEYS: readonly string[] = Object.keys(flattenMorph({ pole: { height: 0, round: 0, lean: 0, tip: 0 }, posterior: { convexity: 0 }, width: 0, lobule: { length: 0, width: 0, attach: 0, sag: 0 }, tragus: { size: 0, projection: 0 }, antitragus: { size: 0, orientation: 0 }, notch: { depth: 0 }, helix: { thickness: 0, roll: 0 }, antihelix: { relief: 0, branchAngle: 0, upperLength: 0, lowerLength: 0 }, concha: { depth: 0, cymba: 0 }, scapha: { width: 0, depth: 0 }, crus: { thickness: 0 } } as never));
 export const MORPH_KEYS: readonly string[] = [...BASE_KEYS, ...NEW_MORPH_KEYS];
 

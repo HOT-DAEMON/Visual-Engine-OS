@@ -20,7 +20,7 @@ export function setPath(o: Record<string, unknown>, path: string, v: unknown): v
 }
 
 /** Tête d'une graine, oreilles `morphology`, édition d'UN chemin de `face.ears`. `hair` conserve les cheveux ; `scale` zoome ; `top` cadre sur les oreilles. */
-export function headShot(seed: number, edit: Record<string, unknown> = {}, opts: { hair?: boolean; scale?: number; ears?: object } = {}): Shot {
+export function headShot(seed: number, edit: Record<string, unknown> = {}, opts: { hair?: boolean; scale?: number; ears?: object; noEars?: boolean } = {}): Shot {
   const SC = opts.scale ?? SCALE;
   const probe = generateRandomFace(seed, { id: 'f0', hairEngine: 'classic' });
   const lm = faceLandmarks(probe.params, probe.width, probe.height);
@@ -30,9 +30,9 @@ export function headShot(seed: number, edit: Record<string, unknown> = {}, opts:
   const face = { ...host.face, anatomyEngine: 'structured' } as Record<string, unknown>;
   if (!opts.hair) {
     face.hair = { ...(face.hair as object), style: 'bald' };
-    face.facialHair = { ...(face.facialHair as object), beard: 'none', mustache: 'none' };
+    face.facialHair = { ...(face.facialHair as object), beard: 'none', mustache: 'none', sideburns: 'none' };
   }
-  face.ears = JSON.parse(JSON.stringify({ ...(opts.ears ?? (face.ears as object)), visible: true, engine: 'morphology' }));
+  face.ears = JSON.parse(JSON.stringify({ ...(opts.ears ?? (face.ears as object)), visible: !opts.noEars, engine: 'morphology' }));
   for (const [p, v] of Object.entries(edit)) setPath(face.ears as Record<string, unknown>, p, v);
   host.face = face;
   const r = compileScene({ width: W, height: H, background: '#ffffff', objects: F.objects } as never);

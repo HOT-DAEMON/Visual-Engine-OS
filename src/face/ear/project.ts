@@ -24,6 +24,8 @@ export interface EarPlacement {
   readonly topY: number;
   /** Abscisse (px, ≥ 0) de la surface du crâne à l'ordonnée y : l'oreille y est attachée par son bord antérieur. */
   readonly skullX: (y: number) => number;
+  /** Demi-largeur RÉELLE du contour de la tête à l'ordonnée y (px) : sert à la jupe de racine (la surface d'accrochage `skullX` est plus verticale que ce contour). */
+  readonly headX?: (y: number) => number;
   readonly openingDeg: number;
   readonly pitchDeg: number;
   readonly rotationDeg: number;
@@ -69,6 +71,8 @@ export interface ProjectedEar {
   /** Contour à la plaque (h = 0) et au bord de l'hélix (h = relief de l'hélix) : la silhouette est leur réunion. */
   readonly plate: Poly;
   readonly rim: Poly;
+  /** Jupe de racine : peau qui relie le bord antérieur du pavillon (tragus → lobule) à la surface du crâne ; cachée derrière la tête là où elle est jointive, visible là où le contour de la tête s'écarte. */
+  readonly root: Poly;
   /** Structures projetées, triées du plus bas au plus haut relief (ordre de dessin). */
   readonly structures: { readonly s: PlacedStructure; readonly poly: Poly }[];
   /** Enveloppe de la silhouette (boîte) et surface projetée par rapport à la surface du plan (compression apparente en x). */
@@ -88,6 +92,19 @@ export function projectEar(m: EarModel, pl: EarPlacement, yawDeg: number, view: 
   const plate = m.outline.map((q) => P(q, 0));
   const rim = m.outline.map((q) => P(q, rimH));
   const structures = [...m.structures].sort((a, b) => a.relief - b.relief).map((s) => ({ s, poly: s.poly.map((q) => P(q, s.relief)) }));
+  // Jupe de racine : la chaîne antérieure du contour (C06 jonction lobule-joue, C05 tragus + incisure, C04 bord antérieur) reliée aux points du crâne de MÊME hauteur, enfoncés de 0,12 H sous la surface.
+  const ant = m.segments.filter((sg) => sg.id === 'C06' || sg.id === 'C05' || sg.id === 'C04');
+  const chain = ant.flatMap((sg) => Array.from({ length: sg.to - sg.from + 1 }, (_, k) => (sg.from + k) % m.outline.length));
+  const hx = pl.headX;
+  const rootPl: EarPlacement = hx ? { ...pl, skullX: (y: number) => Math.max(0, hx(y) - 0.04 * pl.hPx) } : pl;
+  // La jupe se referme en pointe à la jonction lobule-joue (30 % de la chaîne) : pas de bord horizontal coupé net.
+  const rootPts = chain.map((i, k) => {
+    const q = m.outline[i] as Vec, r = projectPoint(rootPl, { x: hx ? 0 : -0.12, y: q.y }, 0, yawDeg, pivot), pp = plate[i] as Vec;
+    const w = Math.max(0, 1 - k / Math.max(1, 0.3 * chain.length)) ** 1.5;
+    return { x: r.x + (pp.x - r.x) * w, y: r.y + (pp.y - r.y) * w };
+  });
+  // Sans tête hôte (planches d'oreille seule), il n'y a pas de joue à relier : pas de jupe.
+  const root: Poly = hx ? [...chain.map((i) => plate[i] as Vec), ...rootPts.reverse()] : [];
   const b = box([...plate, ...rim]);
   // Compression horizontale PURE : mesurée avec une surface du crâne plane (la courbure du contour du visage décalerait la boîte d'un facteur étranger à la vue).
   const flat = { ...pl, skullX: () => 0 };
@@ -99,6 +116,7 @@ export function projectEar(m: EarModel, pl: EarPlacement, yawDeg: number, view: 
     visible: faceVisible(pl, yawDeg),
     plate,
     rim,
+    root,
     structures,
     bbox: b,
     xScale: (fb.x1 - fb.x0) / planeW,
