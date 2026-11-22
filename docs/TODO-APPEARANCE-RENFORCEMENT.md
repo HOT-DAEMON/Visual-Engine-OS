@@ -185,3 +185,32 @@ Le moteur doit donc proposer deux niveaux :
 Ombre calculée : résultat de la géométrie et de la lumière.
 Ombre artistique : résultat modifiable par la direction artistique, avec des contraintes de cohérence.
 Il ne faut pas confondre les deux.
+## Un système de normales et de relief beaucoup plus général
+Le ReliefField possède déjà :- depth;- nx;- ny;- nz;- region
+C'est une base très intéressante.
+Mais il faut transformer ce concept en représentation commune à tous les composants atomiques du projet.
+Chaque surface devrait pouvoir fournir :
+- Position 3D (Utilisé:Localisation)
+- Profondeur (Utilité:Occlusion)
+- Normale (Utilité: Orientation lumineuse)
+- Tangente(Utilité: Orientation des détails)
+- Bitangente (Utilité:Repère de surface)
+- Courbure (Utilité: Réponse aux variations lumineuses)
+- Épaisseur (UTilité:Transmission et pénétration)
+- Matériau(Utilité: Réponse optique)
+- Masque (Utilité: Délimitation)
+- Identifiant anatomique (Utilité: 	Relations entre composants)
+- Parent/enfants (Utilité: Relations structurelles)
+- Visibilité caméra (Utilité: Calculs spécifiques au cadrage)
+Il faut surtout que les normales soient disponibles à plusieurs niveaux :
+- Normale globale de la forme.
+- Normale locale de chaque région.
+- Normale des détails.
+- Normale de la déformation.
+- Normale de la surface après animation.
+Cela permettrait d'éclairer une épaule, une oreille, un nez, une paupière, une mèche ou un muscle avec le même système fondamental.
+## Un système de matériaux optiques spécialisé
+Ton moteur possède déjà MaterialDescriptor, roughness, metallic, clearcoat, opacity et plusieurs effets.
+
+Mais il faut enrichir considérablement la réponse optique des matériaux.
+
