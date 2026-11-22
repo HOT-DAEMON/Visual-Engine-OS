@@ -104,3 +104,84 @@ Je recommande un modèle lumineux oculaire indépendant, mais connecté au Light
 Un œil doit être capable de recevoir une lumière générale, une lumière spécifique de cornée, un reflet de fenêtre, une ombre de paupière et une émission propre à l'iris.
 # Le problème de l'intégration : ce que les fichiers révèlent
 J'ai consulté docs/PIPELINE-RELIEF.md et docs/LIGHT-VISIBLE-06-REMAINING.md.Et je tiens à souligner que ta documentation technique est assez honnête sur les limites rencontrées.Elle révèle plusieurs problèmes qui ne sont pas de simples fonctionnalités manquantes.
+# Le relief de la tête est déjà branché, mais pas universellement
+Le type head_lit permet de brancher le moteur de relief sur un hôte de type face.Dans src/render/head-lit.ts, l'éclairage est placé dans le champ top du rendu.
+Cela permet de poser la couche lumineuse après les autres composants du visage.Mais cette méthode possède une faiblesse :
+La couche d'éclairage est appliquée à tout ce qui se trouve dessous dans le SVG, pas uniquement aux pixels appartenant à la tête.Si un autre objet chevauche le visage, il peut lui aussi être affecté.
+Il manque donc un système universel de masques d'appartenance, de profondeur et de composition.
+Il faudrait que chaque pixel sache :- À quel objet il appartient;- À quel composant anatomique il appartient;- Quelle est sa profondeur;- Quelle surface le masque.
+- Quelle lumière il reçoit;- Quelle ombre il projette;- Quelle matière il représente.
+Ce serait l'équivalent d'un G-buffer adapté à ton moteur artistique.
+# La lumière du corps et celle de la tête ne sont pas encore parfaitement unifiées
+Tu as déjà construit litFigure() dans src/relief/figure.ts.Cette fonction permet de faire travailler la tête et le corps avec le même LightModel.C'est une excellente direction.
+Mais la documentation révèle encore :
+- La projection de l'ombre de la tête sur la poitrine reste insuffisante.
+- La tête ne projette son ombre que sur une partie du cou dans les configurations testées.
+- Le raccord entre tête, cou et corps n'est pas complètement vérifié.
+- La tête tournée ne reçoit pas encore systématiquement le même traitement que le corps dans toutes les configurations.
+Il faut donc dépasser le simple partage d'une direction lumineuse.Il faut un espace spatial commun pour la tête, le cou, le torse, les épaules, les bras, les mains et les jambes.Une ombre doit pouvoir traverser plusieurs composants et continuer à respecter les distances, les occlusions et les orientations.
+# Un véritable système de sources lumineuses multidimensionnel
+Le moteur doit pouvoir gérer simultanément plusieurs sources.
+Chaque source devrait être un objet indépendant possédant un contrat commun :
+## Exemple de contrat architectural proposé 
+interface LightSource {
+  id: string;
+  type:
+    | "directional"
+    | "point"
+    | "spot"
+    | "area"
+    | "environment"
+    | "emissive"
+    | "volumetric"
+    | "projected";
+  transform: {
+    position: Vec3;rotation: Quaternion;scale: Vec3;
+  };
+  color: Color;intensity: number;temperatureK?: number;attenuation: AttenuationModel;shadow: ShadowSettings;influence: InfluenceSettings;
+  animation?: LightAnimation;
+}
+Il faut ensuite prévoir les comportements particuliers de chaque source.
+Par exemple :
+- Une flamme vacille.
+- Une explosion éclaire brutalement puis décroît.
+- Un éclair illumine brièvement tout un environnement.
+- Une lampe torche suit une trajectoire.
+- Une lumière magique pulse selon un rythme.
+- Une fenêtre projette un rectangle lumineux sur le sol.
+- Une source volumétrique crée des faisceaux visibles dans la poussière.
+
+# Une véritable bibliothèque de comportements d'ombre
+Il faut que le moteur puisse aller plus loin que les simples ombres portées.Il faut dissequer chaque famille et les traiter a fond et avec la plus grande attention..Les tests doivent montré visuellement tout ses familles 
+Il faut prévoir au minimum :
+## Famille d'Ombre propre
+Comportement a prévoir (Suit la courbure et l'orientation de la surface)
+## Famille d'Ombre portée
+Comportement a prévoir (Projection d'un composant sur un autre)
+## Famille d'Ombre de contact
+Comportement à prévoir (Assombrissement au voisinage d'un contact)
+## Famille d'Auto-ombrage
+Comportement à prévoir(Une partie d'un objet ombre une autre partie)
+## Famille d'Ombre ambiante
+Comportement à prévoir (Occlusion des lumières indirectes)
+## Famille d'Ombre douce
+Comportement à prévoir (Pénombre graduelle)
+## Famille d'Ombre dure
+Comportement à prévoir (Bord net et contrôlé)
+## Famille d'Ombre translucide
+Comportement à prévoir (Lumière partiellement transmise)
+## Famille d'Ombre coloré
+Comportement à prévoir (Ombre influencée par la lumière et le matériau)
+## Famille d'Ombre volumétrique
+Comportement à prévoir (Faisceau ou volume traversé par une lumière)
+## Famille d'Ombre animée
+Comportement à prévoir (Évolution temporelle cohérente)
+## Famille d'Ombre stylisée
+Comportement à prévoir (Forme dessinée ou sculptée par la direction artistique)
+Mais il faut aussi prévoir les caractéristiques géométriques des ombres :- Longueur;- Largeur;- Orientation;- Déformation;- Étirement perspectif;- Intensité;- Opacité;- Netteté;- Pénombre;- Contour;- Couleur;- Multiplicité;- Découpage;- Projection sur des surfaces irrégulières.
+
+Une ombre peut même être volontairement déformée pour renforcer la composition dramatique d'une scène.
+Le moteur doit donc proposer deux niveaux :
+Ombre calculée : résultat de la géométrie et de la lumière.
+Ombre artistique : résultat modifiable par la direction artistique, avec des contraintes de cohérence.
+Il ne faut pas confondre les deux.
