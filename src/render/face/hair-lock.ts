@@ -6,6 +6,7 @@ import type { HairLock } from '../../face/hair';
 import { smoothstep } from '../../face/hair/noise';
 import { gradientStop } from '../../materials';
 import { celBands } from './hair-cel';
+import { shadowReach, type Light3 } from './hair-light';
 import { smoothPath } from './hair-detail';
 import { polyPath } from './path';
 
@@ -14,6 +15,8 @@ export interface LockStyle {
   readonly id: string;
   readonly ra: ResolvedAppearance;
   readonly ld: { x: number; y: number };
+  /** Lumière 3D complète (vers la source) : élévation de l'ombre portée et exposition des pièces rondes. Absente : comportement 2D d'origine. */
+  readonly light?: Light3;
   readonly W: number;
   /** Rendu « encre » : noir franc, bande blanche continue, contour noir épais. */
   readonly ink?: string;
@@ -28,7 +31,7 @@ function inkMarkup(l: HairLock, k: number, st: LockStyle, d: string): { defs: st
   const big = l.rank === 'mass' || l.rank === 'main' || l.rank === 'plait';
   const out: string[] = [el('path', { d, fill: ink, stroke: ink, 'stroke-width': W * (big ? 0.0042 : 0.0022), 'stroke-linejoin': 'round' })];
   const defs: string[] = [];
-  const bands = big && l.layer !== 'back' ? celBands(l, ld, 0.75, false, [0.05, 0.9]) : null;
+  const bands = big && l.layer !== 'back' ? celBands(l, ld, 0.75, false, [0.05, 0.9], st.light) : null;
   if (bands?.highlight) {
     const cid = `${id}-c${k}`;
     defs.push(el('clipPath', { id: cid }, [el('path', { d })]));
@@ -70,7 +73,7 @@ export function lockMarkup(l: HairLock, k: number, st: LockStyle, depth: number,
   const rankBig = l.rank === 'mass' || l.rank === 'main' || l.rank === 'plait';
 
   if (cast && spec.shading.castShadow > 0.02 && rankBig && l.layer !== 'back') {
-    const o = W * 0.0085;
+    const o = W * 0.0085 * shadowReach(st.light);
     out.push(el('path', { d, transform: `translate(${-ld.x * o} ${-ld.y * o})`, fill: ra.shadow, opacity: 0.55 * spec.shading.castShadow }));
   }
   if ((l.edgeFade ?? 0) > 0.02) out.push(el('path', { d, fill: 'none', stroke: colorAt(0.5), 'stroke-width': Math.max(W * 0.003, (l.w0 ?? W * 0.02) * 0.3), 'stroke-linejoin': 'round', opacity: 0.22 * (l.edgeFade ?? 0) }));
@@ -93,7 +96,7 @@ export function lockMarkup(l: HairLock, k: number, st: LockStyle, depth: number,
 
   if (cel && rankBig && sp && l.layer !== 'back') {
     const tones = ra.cel(dark(ra.tone(l.tone, ra.ramp(0.4))));
-    const bands = celBands(l, ld, spec.shading.highlightBand, spec.shading.bands === 3);
+    const bands = celBands(l, ld, spec.shading.highlightBand, spec.shading.bands === 3, undefined, st.light);
     const cid = `${id}-c${k}`;
     defs.push(el('clipPath', { id: cid }, [el('path', { d })]));
     const g: string[] = [];
@@ -105,7 +108,7 @@ export function lockMarkup(l: HairLock, k: number, st: LockStyle, depth: number,
   // Hors cel, une mèche qui PORTE sa géométrie locale (moteur de grammaire) reçoit SON reflet : une bande qui suit son axe, étranglée par la
   // torsion et atténuée sous un recouvrement — à la place de la tache globale de `hairGloss` (qui s'efface d'autant : `localGlossShare`).
   if (!cel && rankBig && sp && l.layer !== 'back' && l.geom) {
-    const band = celBands(l, ld, 0.35 + 0.6 * spec.reflection.size, false).highlight;
+    const band = celBands(l, ld, 0.35 + 0.6 * spec.reflection.size, false, undefined, st.light).highlight;
     if (band) {
       const cid = `${id}-c${k}`;
       defs.push(el('clipPath', { id: cid }, [el('path', { d })]));

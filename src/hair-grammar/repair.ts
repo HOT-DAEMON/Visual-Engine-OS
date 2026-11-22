@@ -1,7 +1,9 @@
 import { analyzeComposition } from './compose';
-import { verifyComposed, type Defect, type Verdict, type VerifyOpts } from './compose-verify';
+import { domeLimit, verifyComposed, type Defect, type Verdict, type VerifyOpts } from './compose-verify';
 import { joinLocks } from './branch';
+import { domeMask, domeRatio } from './dome';
 import { emergeFrom } from './emerge';
+import { proposeDomeFill } from './repair-dome';
 import { sampleLock, type HairProfile } from './grammar';
 import { viewRayInHead, type View } from './head';
 import { rotAbout, type LockSpec } from './lock';
@@ -44,6 +46,10 @@ const FIXES: Record<string, Fix[]> = {
   'style.coherence': [{ name: 'aligner le cap sur la lecture', apply: (L, c) => { const r = analyzeComposition(c.P.head, c.specs, c.view).reading.angle; return { ...L, aim: norm(rotZ(L.aim, clamp(r * 0.2, -0.5, 0.5))) }; } }],
 };
 
+/** Nombre maximal de mèches ajoutées pour combler la calotte (phase 3). */
+const MAX_DOME_FILLS = 6;
+/** Marge visée au-dessus du seuil de calotte une fois la phase 3 déclenchée (couverture, 0–1). */
+const DOME_MARGIN = 0.1;
 /** Codes de défaut que le solveur local sait résoudre (ils ne dépendent que de la mèche). */
 const LOCAL = new Set(['geom.self', 'anat.eye', 'anat.face']);
 
@@ -90,6 +96,19 @@ export function repairCycle(P: HairProfile, specs0: readonly LockSpec[], view: V
     const kept = v2.score < verdict.score;
     journal.push({ code: d.code, ...(d.lock ? { lock: d.lock } : {}), fix: (fixes[fi] as Fix).name, before: verdict.score, after: v2.score, kept, scope: 'global' });
     if (kept) { specs = trial; verdict = v2; }
+  }
+  // ── Phase 3 : calotte. `anat.dome` est un défaut GLOBAL (aucune mèche fautive, il en manque une) : la boucle ci-dessus l'ignore. On ajoute des mèches de la famille
+  // dominante dans la plus grande zone nue (`repair-dome.ts`). Un ajout est gardé seulement si le score ne monte pas ET que la couverture progresse ; au premier refus on s'arrête.
+  // Le défaut déclenche la phase ; une fois déclenchée, elle vise le seuil + `DOME_MARGIN` : le seuil détecte une panne, il n'est pas l'objectif de dessin (une zone nue juste sous le seuil
+  // laisserait, en image, la moitié du front à nu). Le seuil lui-même n'est pas modifié.
+  const domeOf = (v: Verdict): number => domeRatio(domeMask(P.head, view, v.composition.grid), v.composition.grid);
+  const fam = verdict.composition.masses[0]?.family; const target = domeLimit(opts.wind) + DOME_MARGIN; const triggered = verdict.defects.some((x) => x.code === 'anat.dome');
+  for (let k = 0; fam && triggered && k < MAX_DOME_FILLS && domeOf(verdict) < target; k++) {
+    const prop = proposeDomeFill(P, specs, view, verdict.composition.grid, fam, seed, k, opts.part); if (!prop) break;
+    const trial = [...specs, prop.spec]; const v3d = verifyComposed(P.head, trial, view, undefined, undefined, opts);
+    const kept = v3d.score <= verdict.score && domeOf(v3d) > domeOf(verdict) + 0.005;
+    journal.push({ code: 'anat.dome', lock: prop.spec.id, fix: `ajouter une mèche « ${fam} » (racine ${prop.root.el.toFixed(0)}°/${prop.root.az.toFixed(0)}°, cap latéral ${prop.lat}, +${prop.gain} cellules, couloir ${prop.corridor})`, before: verdict.score, after: v3d.score, kept, scope: 'global', tried: prop.tried });
+    if (!kept) break; specs = trial; verdict = v3d;
   }
   return { specs, verdict, journal };
 }

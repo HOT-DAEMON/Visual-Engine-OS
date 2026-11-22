@@ -17,7 +17,7 @@ export interface IntendedHair { readonly profile: HairProfile; readonly specs: L
 
 export function generateIntended(P: HairProfile, I: Intent, view: View, seed = 1, repair = true): IntendedHair {
   const { profile } = applyIntent(P, I);
-  const opts = { wind: I.wind ?? 0 };
+  const opts = { wind: I.wind ?? 0, ...(I.part !== undefined ? { part: I.part * profile.head.rx } : {}) };
   // Post-passes d'art direction : raie d'abord (elle déplace des racines), puis pointes libres (filles posées sur les mèches définitives).
   let specs0 = generate(profile, seed);
   if (I.part !== undefined) specs0 = applyPart(profile.head, specs0, I.part * profile.head.rx);

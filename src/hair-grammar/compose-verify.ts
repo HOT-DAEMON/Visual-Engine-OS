@@ -1,7 +1,8 @@
 import { joinGap } from './branch';
+import { domeMask, domeRatio } from './dome';
 import { emergenceContinuity } from './emerge';
 import { analyzeComposition, type Composition } from './compose';
-import { landmarks, project, type HeadSpec, type View } from './head';
+import { project, type HeadSpec, type View } from './head';
 import { allowedCrossings, coversEye, coversFace, spineCrossings, visibleMarks, type Defect } from './lock-check';
 import type { LockSpec } from './lock';
 import { paintLock, type PaintedLock } from './paint';
@@ -25,7 +26,13 @@ const chk = (name: string, value: number, min: number, max: number): Check => ({
  * les seuils d'équilibre G/D et de calotte, justes sans vent, y seraient de faux défauts qu'aucune mèche ne peut corriger sans détruire l'intention.
  * Relâchement borné et proportionnel au vent ; sans vent, les seuils sont ceux d'origine (0,4 et 0,7).
  */
-export interface VerifyOpts { readonly wind?: number; /** Mesure aussi la part visible de chaque lame (trame d'ordre de peinture, ≈ 15 ms) et la rapporte dans `Verdict.visibility`. */ readonly visibility?: boolean }
+export interface VerifyOpts {
+  readonly wind?: number;
+  /** Mesure aussi la part visible de chaque lame (trame d'ordre de peinture, ≈ 15 ms) et la rapporte dans `Verdict.visibility`. */
+  readonly visibility?: boolean;
+  /** Raie demandée (position latérale, unités H, repère de tête). Aucun seuil n'en dépend : seul le remplissage de calotte (`repair-dome.ts`) garde son couloir libre. */
+  readonly part?: number;
+}
 export const balanceLimit = (wind = 0): number => 0.4 + 0.35 * Math.min(1, Math.max(0, wind));
 export const domeLimit = (wind = 0): number => 0.7 - 0.25 * Math.min(1, Math.max(0, wind));
 
@@ -57,7 +64,7 @@ export function verifyComposed(h: HeadSpec, specs: readonly LockSpec[], view: Vi
   // ── Anatomie : yeux, nez et bouche non recouverts, calotte couverte, proportions, équilibre.
   // Seuls les repères VISIBLES comptent : au-delà de ≈ 55° de lacet l'œil lointain est caché par la tête (mesuré : sans ce filtre, `anat.eye` passait de
   // 0,75 à 2 défauts par coiffure entre 0° et 75°, presque tous sur un œil que personne ne voit).
-  const lm = landmarks(h); const marks = visibleMarks(h, view);
+  const marks = visibleMarks(h, view);
   let eyeHit = 0;
   for (const e of marks.eyes) { const cov = painted.filter((p) => coversEye(p, e)); if (cov.length) { eyeHit++; for (const w of cov) D.push({ code: 'anat.eye', layer: 'anatomy', lock: w.spec.id, family: w.spec.family, severity: 2, detail: 'recouvre le centre d\'un œil' }); } }
   A.push(chk('yeux recouverts', eyeHit, 0, 0));
@@ -70,13 +77,11 @@ export function verifyComposed(h: HeadSpec, specs: readonly LockSpec[], view: Vi
     if (cov.length) { faceHit++; for (const w of cov) D.push({ code: 'anat.face', layer: 'anatomy', lock: w.spec.id, family: w.spec.family, severity: 2, detail: `recouvre ${name}` }); }
   }
   A.push(chk('nez / bouche recouverts', faceHit, 0, 0));
-  const c0 = project(view, v3(0, 0, h.cz)); const rx = h.rx * view.s; const ry = h.ry * view.s; const eyeY = project(view, lm.eyeR).y; let dome = 0; let domeCov = 0;
-  const g = comp.grid;
-  for (let y = 0; y < g.ny; y++) for (let x = 0; x < g.nx; x++) { const px = (x + 0.5) * g.cell; const py = (y + 0.5) * g.cell; if (py > eyeY - 0.12 * view.s) continue; if (((px - c0.x) / rx) ** 2 + ((py - c0.y) / ry) ** 2 > 0.8) continue; dome++; if (g.data[y * g.nx + x]) domeCov++; }
-  const domeRatio = dome ? domeCov / dome : 1;
+  const c0 = project(view, v3(0, 0, h.cz)); const rx = h.rx * view.s; const ry = h.ry * view.s;
+  const dRatio = domeRatio(domeMask(h, view, comp.grid), comp.grid); // même région que le remplissage de calotte (`dome.ts`)
   const dLim = domeLimit(opts.wind); const bLim = balanceLimit(opts.wind);
-  if (domeRatio < dLim) D.push({ code: 'anat.dome', layer: 'anatomy', severity: 2, detail: `calotte couverte à ${(domeRatio * 100).toFixed(0)} %` });
-  A.push(chk('calotte couverte', domeRatio, dLim, 1));
+  if (dRatio < dLim) D.push({ code: 'anat.dome', layer: 'anatomy', severity: 2, detail: `calotte couverte à ${(dRatio * 100).toFixed(0)} %` });
+  A.push(chk('calotte couverte', dRatio, dLim, 1));
   let x0 = Infinity; let x1 = -Infinity; let y0 = Infinity; for (const p of painted) for (const q of [...p.blade.left, ...p.blade.right]) { x0 = Math.min(x0, q.x); x1 = Math.max(x1, q.x); y0 = Math.min(y0, q.y); }
   A.push(chk('largeur cheveux / largeur tête', (x1 - x0) / (2 * rx), 0.9, 2.6), chk('hauteur du volume au-dessus du crâne (H)', (c0.y - ry - y0) / view.s, -0.1, 0.5));
   if (Math.abs(comp.balance.moment) > bLim) D.push({ code: 'anat.balance', layer: 'anatomy', severity: 1, detail: `moment G/D ${comp.balance.moment.toFixed(2)}` });
@@ -87,8 +92,15 @@ export function verifyComposed(h: HeadSpec, specs: readonly LockSpec[], view: Vi
   if (comp.hierarchy.dominantShare < 0.25) D.push({ code: 'style.hierarchy', layer: 'style', severity: 1, detail: 'aucune masse ne domine' });
   const small = comp.negative.gaps.filter((b) => b.cells < 4); S.push(chk('trous parasites (part des espaces négatifs)', comp.negative.speckle, 0, 0.85));
   if (comp.negative.speckle > 0.85 && small[0]) { let best: PaintedLock | null = null; let bd = Infinity; for (const p of painted) { const t = p.blade.spine.at(-1) as V2; const d = Math.hypot(t.x - (small[0] as { cx: number }).cx, t.y - (small[0] as { cy: number }).cy); if (d < bd) { bd = d; best = p; } } D.push({ code: 'style.speckle', layer: 'style', ...(best ? { lock: best.spec.id, family: best.spec.family } : {}), severity: 1, detail: 'trop de petits trous' }); }
-  const widths = painted.map((p) => p.spec.width); const mw = widths.reduce((a, b) => a + b, 0) / Math.max(1, widths.length); const cv = Math.sqrt(widths.reduce((a, b) => a + (b - mw) ** 2, 0) / Math.max(1, widths.length)) / Math.max(1e-9, mw);
-  S.push(chk('variété des largeurs (CV)', cv, 0.1, 0.9));
+  // Variété des largeurs : mesurée sur les mèches RACINES (sans mère). Une fille (fourche ×0,52–0,66, jonction ×0,35, pointe libre ×0,16) n'a pas une largeur
+  // CHOISIE : elle est fixée par celle de sa mère. Mesurées avec les racines, les 53 pointes libres de `tips: 0,5` faisaient passer le CV de 0,50 à 0,94 (graine 2,
+  // mesuré par ablation : tips seul 0,92, sans tips 0,50) alors que la variété de dessin, elle, n'avait pas changé. Seuils INCHANGÉS (0,1 – 0,9) : sans filles,
+  // la population est la même qu'avant (0,49 → 0,49). Les filles ont leur propre contrôle ci-dessous.
+  const cvOf = (ws: readonly number[]): number => { const m = ws.reduce((a, b) => a + b, 0) / Math.max(1, ws.length); return Math.sqrt(ws.reduce((a, b) => a + (b - m) ** 2, 0) / Math.max(1, ws.length)) / Math.max(1e-9, m); };
+  S.push(chk('variété des largeurs (CV, mèches racines)', cvOf(painted.filter((p) => !p.spec.parent).map((p) => p.spec.width)), 0.1, 0.9));
+  // Une fille ne peut pas être plus large que sa mère (limite physique, non ajustée) : sinon elle n'ÉMERGE pas de son volume.
+  let kidWide = 0; for (const p of painted) { const m = p.spec.parent && byId.get(p.spec.parent.id); if (m) kidWide = Math.max(kidWide, p.spec.width / Math.max(1e-9, m.width)); }
+  S.push(chk('filles plus fines que leur mère (largeur / mère, max)', kidWide, 0, 1));
   const crossPer = comp.relations.filter((e) => e.kind === 'cross').reduce((a, e) => a + e.weight, 0) / Math.max(1, painted.length); S.push(chk('croisements francs par mèche', crossPer, 0, 3));
   const reports: Report[] = [{ layer: 'geometry', checks: G, ok: G.every((c) => c.ok) }, { layer: 'anatomy', checks: A, ok: A.every((c) => c.ok) }, { layer: 'style', checks: S, ok: S.every((c) => c.ok) }];
   return { reports, defects: D, ok: reports.every((r) => r.ok), score: D.reduce((s, d) => s + d.severity, 0), composition: comp, ...(vis ? { visibility: vis } : {}) };

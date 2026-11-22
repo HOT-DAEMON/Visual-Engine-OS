@@ -1,0 +1,733 @@
+{
+  "fullHead": [
+    {
+      "yaw": -60,
+      "scoreRaw": 6,
+      "scoreRepaired": 0,
+      "domeRaw": 1,
+      "domeRepaired": 1,
+      "domeLimit": 0.7,
+      "addedLocks": 0,
+      "failingRaw": "g:0 a:1 s:0",
+      "failingRepaired": "g:0 a:0 s:0"
+    },
+    {
+      "yaw": -30,
+      "scoreRaw": 7,
+      "scoreRepaired": 0,
+      "domeRaw": 1,
+      "domeRepaired": 1,
+      "domeLimit": 0.7,
+      "addedLocks": 0,
+      "failingRaw": "g:1 a:1 s:0",
+      "failingRepaired": "g:0 a:0 s:0"
+    },
+    {
+      "yaw": 0,
+      "scoreRaw": 2,
+      "scoreRepaired": 0,
+      "domeRaw": 0.9214876033057852,
+      "domeRepaired": 0.9214876033057852,
+      "domeLimit": 0.7,
+      "addedLocks": 0,
+      "failingRaw": "g:0 a:1 s:0",
+      "failingRepaired": "g:0 a:0 s:0"
+    },
+    {
+      "yaw": 30,
+      "scoreRaw": 4,
+      "scoreRepaired": 0,
+      "domeRaw": 0.6300813008130082,
+      "domeRepaired": 0.8211382113821138,
+      "domeLimit": 0.7,
+      "addedLocks": 1,
+      "failingRaw": "g:0 a:2 s:0",
+      "failingRepaired": "g:0 a:0 s:0"
+    },
+    {
+      "yaw": 60,
+      "scoreRaw": 10.25,
+      "scoreRepaired": 0,
+      "domeRaw": 1,
+      "domeRepaired": 1,
+      "domeLimit": 0.7,
+      "addedLocks": 0,
+      "failingRaw": "g:1 a:1 s:0",
+      "failingRepaired": "g:0 a:0 s:0"
+    }
+  ],
+  "part": [
+    {
+      "part": -0.3,
+      "seed": 1,
+      "domeRaw": 0.3677685950413223,
+      "domeRepaired": 0.8429752066115702,
+      "addedLocks": 2,
+      "clarityRaw": 1,
+      "clarityRepaired": 0.9074074074074074,
+      "uRaw": -0.46676813800101474,
+      "uRepaired": -0.30441400304414,
+      "corridorCellsCoveredAfterRepair": 0
+    },
+    {
+      "part": -0.3,
+      "seed": 4,
+      "domeRaw": 0.5826446280991735,
+      "domeRepaired": 0.8016528925619835,
+      "addedLocks": 1,
+      "clarityRaw": 1,
+      "clarityRepaired": 0.6851851851851851,
+      "uRaw": -0.14205986808726534,
+      "uRepaired": -0.20294266869609337,
+      "corridorCellsCoveredAfterRepair": 8
+    },
+    {
+      "part": 0,
+      "seed": 2,
+      "domeRaw": 0.6983471074380165,
+      "domeRepaired": 0.8471074380165289,
+      "addedLocks": 1,
+      "clarityRaw": 1,
+      "clarityRepaired": 0.7777777777777778,
+      "uRaw": 0.04058853373921867,
+      "uRepaired": 0.020294266869609334,
+      "corridorCellsCoveredAfterRepair": 1
+    },
+    {
+      "part": 0.4,
+      "seed": 3,
+      "domeRaw": 0.9256198347107438,
+      "domeRepaired": 0.8636363636363636,
+      "addedLocks": 0,
+      "clarityRaw": 0.8148148148148149,
+      "clarityRepaired": 0.8888888888888888,
+      "uRaw": 0.36529680365296807,
+      "uRepaired": 0.547945205479452,
+      "corridorCellsCoveredAfterRepair": 4
+    }
+  ],
+  "depthStability": {
+    "cases": 48,
+    "plan": {
+      "segLength": 971.7083333333331,
+      "segRate": 0.03233137515543931,
+      "flippedPairs": 202
+    },
+    "volume": {
+      "segLength": 191.375,
+      "segRate": 0.028739386022207714,
+      "flippedPairs": 50
+    },
+    "casesWhereVolumeFlipsMorePairs": 3,
+    "per": [
+      {
+        "name": "base",
+        "yaw": 0,
+        "seed": 1,
+        "planPairs": 34,
+        "planFlipped": 2,
+        "volPairs": 9,
+        "volFlipped": 0,
+        "planSegRate": 0.01182033096926714,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": 0,
+        "seed": 2,
+        "planPairs": 22,
+        "planFlipped": 2,
+        "volPairs": 9,
+        "volFlipped": 0,
+        "planSegRate": 0.029411764705882353,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": 0,
+        "seed": 3,
+        "planPairs": 27,
+        "planFlipped": 3,
+        "volPairs": 6,
+        "volFlipped": 0,
+        "planSegRate": 0.041666666666666664,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": 0,
+        "seed": 4,
+        "planPairs": 21,
+        "planFlipped": 2,
+        "volPairs": 7,
+        "volFlipped": 1,
+        "planSegRate": 0.013333333333333334,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": 0,
+        "seed": 5,
+        "planPairs": 36,
+        "planFlipped": 2,
+        "volPairs": 16,
+        "volFlipped": 2,
+        "planSegRate": 0.02056555269922879,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": 0,
+        "seed": 6,
+        "planPairs": 45,
+        "planFlipped": 1,
+        "volPairs": 15,
+        "volFlipped": 0,
+        "planSegRate": 0.011194029850746268,
+        "volSegRate": 0.0273972602739726
+      },
+      {
+        "name": "base",
+        "yaw": 29,
+        "seed": 1,
+        "planPairs": 28,
+        "planFlipped": 3,
+        "volPairs": 6,
+        "volFlipped": 1,
+        "planSegRate": 0.04044117647058824,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": 29,
+        "seed": 2,
+        "planPairs": 17,
+        "planFlipped": 4,
+        "volPairs": 5,
+        "volFlipped": 1,
+        "planSegRate": 0.10738255033557047,
+        "volSegRate": 0.3
+      },
+      {
+        "name": "base",
+        "yaw": 29,
+        "seed": 3,
+        "planPairs": 17,
+        "planFlipped": 0,
+        "volPairs": 3,
+        "volFlipped": 0,
+        "planSegRate": 0.09090909090909091,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": 29,
+        "seed": 4,
+        "planPairs": 28,
+        "planFlipped": 4,
+        "volPairs": 7,
+        "volFlipped": 1,
+        "planSegRate": 0.09282700421940929,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": 29,
+        "seed": 5,
+        "planPairs": 22,
+        "planFlipped": 0,
+        "volPairs": 8,
+        "volFlipped": 1,
+        "planSegRate": 0.0072992700729927005,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": 29,
+        "seed": 6,
+        "planPairs": 38,
+        "planFlipped": 5,
+        "volPairs": 6,
+        "volFlipped": 0,
+        "planSegRate": 0.05448717948717949,
+        "volSegRate": 0.08
+      },
+      {
+        "name": "base",
+        "yaw": -29,
+        "seed": 1,
+        "planPairs": 29,
+        "planFlipped": 3,
+        "volPairs": 9,
+        "volFlipped": 0,
+        "planSegRate": 0.002564102564102564,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": -29,
+        "seed": 2,
+        "planPairs": 31,
+        "planFlipped": 2,
+        "volPairs": 13,
+        "volFlipped": 0,
+        "planSegRate": 0,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": -29,
+        "seed": 3,
+        "planPairs": 30,
+        "planFlipped": 3,
+        "volPairs": 12,
+        "volFlipped": 0,
+        "planSegRate": 0.015706806282722512,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": -29,
+        "seed": 4,
+        "planPairs": 24,
+        "planFlipped": 0,
+        "volPairs": 6,
+        "volFlipped": 0,
+        "planSegRate": 0.0029850746268656717,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": -29,
+        "seed": 5,
+        "planPairs": 38,
+        "planFlipped": 1,
+        "volPairs": 12,
+        "volFlipped": 2,
+        "planSegRate": 0.001851851851851852,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": -29,
+        "seed": 6,
+        "planPairs": 44,
+        "planFlipped": 4,
+        "volPairs": 16,
+        "volFlipped": 3,
+        "planSegRate": 0.0032414910858995136,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": 50,
+        "seed": 1,
+        "planPairs": 23,
+        "planFlipped": 3,
+        "volPairs": 3,
+        "volFlipped": 0,
+        "planSegRate": 0.06542056074766354,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": 50,
+        "seed": 2,
+        "planPairs": 27,
+        "planFlipped": 4,
+        "volPairs": 5,
+        "volFlipped": 0,
+        "planSegRate": 0.1336405529953917,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": 50,
+        "seed": 3,
+        "planPairs": 19,
+        "planFlipped": 3,
+        "volPairs": 6,
+        "volFlipped": 3,
+        "planSegRate": 0.15671641791044777,
+        "volSegRate": 0.627906976744186
+      },
+      {
+        "name": "base",
+        "yaw": 50,
+        "seed": 4,
+        "planPairs": 14,
+        "planFlipped": 0,
+        "volPairs": 3,
+        "volFlipped": 0,
+        "planSegRate": 0.025423728813559324,
+        "volSegRate": 0
+      },
+      {
+        "name": "base",
+        "yaw": 50,
+        "seed": 5,
+        "planPairs": 19,
+        "planFlipped": 2,
+        "volPairs": 5,
+        "volFlipped": 1,
+        "planSegRate": 0.09782608695652174,
+        "volSegRate": 0.038461538461538464
+      },
+      {
+        "name": "base",
+        "yaw": 50,
+        "seed": 6,
+        "planPairs": 25,
+        "planFlipped": 1,
+        "volPairs": 6,
+        "volFlipped": 1,
+        "planSegRate": 0.0547945205479452,
+        "volSegRate": 0.025
+      },
+      {
+        "name": "lourd",
+        "yaw": 0,
+        "seed": 1,
+        "planPairs": 85,
+        "planFlipped": 1,
+        "volPairs": 20,
+        "volFlipped": 2,
+        "planSegRate": 0.005877413937867338,
+        "volSegRate": 0
+      },
+      {
+        "name": "lourd",
+        "yaw": 0,
+        "seed": 2,
+        "planPairs": 72,
+        "planFlipped": 8,
+        "volPairs": 15,
+        "volFlipped": 0,
+        "planSegRate": 0.033578174186778595,
+        "volSegRate": 0.005988023952095809
+      },
+      {
+        "name": "lourd",
+        "yaw": 0,
+        "seed": 3,
+        "planPairs": 64,
+        "planFlipped": 9,
+        "volPairs": 9,
+        "volFlipped": 1,
+        "planSegRate": 0.048239895697522815,
+        "volSegRate": 0.09090909090909091
+      },
+      {
+        "name": "lourd",
+        "yaw": 0,
+        "seed": 4,
+        "planPairs": 60,
+        "planFlipped": 7,
+        "volPairs": 4,
+        "volFlipped": 0,
+        "planSegRate": 0.028606965174129355,
+        "volSegRate": 0
+      },
+      {
+        "name": "lourd",
+        "yaw": 0,
+        "seed": 5,
+        "planPairs": 76,
+        "planFlipped": 5,
+        "volPairs": 18,
+        "volFlipped": 1,
+        "planSegRate": 0.023138832997987926,
+        "volSegRate": 0.011583011583011582
+      },
+      {
+        "name": "lourd",
+        "yaw": 0,
+        "seed": 6,
+        "planPairs": 60,
+        "planFlipped": 2,
+        "volPairs": 11,
+        "volFlipped": 0,
+        "planSegRate": 0.013636363636363636,
+        "volSegRate": 0.11538461538461539
+      },
+      {
+        "name": "lourd",
+        "yaw": 29,
+        "seed": 1,
+        "planPairs": 88,
+        "planFlipped": 10,
+        "volPairs": 15,
+        "volFlipped": 0,
+        "planSegRate": 0.04960835509138381,
+        "volSegRate": 0
+      },
+      {
+        "name": "lourd",
+        "yaw": 29,
+        "seed": 2,
+        "planPairs": 79,
+        "planFlipped": 10,
+        "volPairs": 8,
+        "volFlipped": 0,
+        "planSegRate": 0.047106325706594884,
+        "volSegRate": 0.04878048780487805
+      },
+      {
+        "name": "lourd",
+        "yaw": 29,
+        "seed": 3,
+        "planPairs": 67,
+        "planFlipped": 7,
+        "volPairs": 16,
+        "volFlipped": 0,
+        "planSegRate": 0.041176470588235294,
+        "volSegRate": 0
+      },
+      {
+        "name": "lourd",
+        "yaw": 29,
+        "seed": 4,
+        "planPairs": 55,
+        "planFlipped": 6,
+        "volPairs": 9,
+        "volFlipped": 0,
+        "planSegRate": 0.0962962962962963,
+        "volSegRate": 0
+      },
+      {
+        "name": "lourd",
+        "yaw": 29,
+        "seed": 5,
+        "planPairs": 56,
+        "planFlipped": 5,
+        "volPairs": 13,
+        "volFlipped": 1,
+        "planSegRate": 0.017857142857142856,
+        "volSegRate": 0.08333333333333333
+      },
+      {
+        "name": "lourd",
+        "yaw": 29,
+        "seed": 6,
+        "planPairs": 49,
+        "planFlipped": 8,
+        "volPairs": 4,
+        "volFlipped": 0,
+        "planSegRate": 0.07731958762886598,
+        "volSegRate": 0
+      },
+      {
+        "name": "lourd",
+        "yaw": -29,
+        "seed": 1,
+        "planPairs": 68,
+        "planFlipped": 9,
+        "volPairs": 21,
+        "volFlipped": 2,
+        "planSegRate": 0.0046210720887245845,
+        "volSegRate": 0
+      },
+      {
+        "name": "lourd",
+        "yaw": -29,
+        "seed": 2,
+        "planPairs": 74,
+        "planFlipped": 4,
+        "volPairs": 21,
+        "volFlipped": 3,
+        "planSegRate": 0.0018535681186283596,
+        "volSegRate": 0
+      },
+      {
+        "name": "lourd",
+        "yaw": -29,
+        "seed": 3,
+        "planPairs": 59,
+        "planFlipped": 6,
+        "volPairs": 11,
+        "volFlipped": 2,
+        "planSegRate": 0.009280742459396751,
+        "volSegRate": 0
+      },
+      {
+        "name": "lourd",
+        "yaw": -29,
+        "seed": 4,
+        "planPairs": 60,
+        "planFlipped": 8,
+        "volPairs": 1,
+        "volFlipped": 0,
+        "planSegRate": 0.011441647597254004,
+        "volSegRate": 0
+      },
+      {
+        "name": "lourd",
+        "yaw": -29,
+        "seed": 5,
+        "planPairs": 60,
+        "planFlipped": 5,
+        "volPairs": 13,
+        "volFlipped": 3,
+        "planSegRate": 0.0032751091703056767,
+        "volSegRate": 0
+      },
+      {
+        "name": "lourd",
+        "yaw": -29,
+        "seed": 6,
+        "planPairs": 68,
+        "planFlipped": 4,
+        "volPairs": 10,
+        "volFlipped": 1,
+        "planSegRate": 0.008928571428571428,
+        "volSegRate": 0
+      },
+      {
+        "name": "lourd",
+        "yaw": 50,
+        "seed": 1,
+        "planPairs": 44,
+        "planFlipped": 2,
+        "volPairs": 18,
+        "volFlipped": 0,
+        "planSegRate": 0.17972350230414746,
+        "volSegRate": 0.08695652173913043
+      },
+      {
+        "name": "lourd",
+        "yaw": 50,
+        "seed": 2,
+        "planPairs": 62,
+        "planFlipped": 7,
+        "volPairs": 11,
+        "volFlipped": 2,
+        "planSegRate": 0.08144796380090498,
+        "volSegRate": 0.22857142857142856
+      },
+      {
+        "name": "lourd",
+        "yaw": 50,
+        "seed": 3,
+        "planPairs": 60,
+        "planFlipped": 9,
+        "volPairs": 14,
+        "volFlipped": 3,
+        "planSegRate": 0.07610619469026549,
+        "volSegRate": 0.11428571428571428
+      },
+      {
+        "name": "lourd",
+        "yaw": 50,
+        "seed": 4,
+        "planPairs": 44,
+        "planFlipped": 4,
+        "volPairs": 19,
+        "volFlipped": 4,
+        "planSegRate": 0.1485148514851485,
+        "volSegRate": 0.0967741935483871
+      },
+      {
+        "name": "lourd",
+        "yaw": 50,
+        "seed": 5,
+        "planPairs": 49,
+        "planFlipped": 7,
+        "volPairs": 12,
+        "volFlipped": 6,
+        "planSegRate": 0.08888888888888889,
+        "volSegRate": 0.14457831325301204
+      },
+      {
+        "name": "lourd",
+        "yaw": 50,
+        "seed": 6,
+        "planPairs": 30,
+        "planFlipped": 5,
+        "volPairs": 8,
+        "volFlipped": 2,
+        "planSegRate": 0.11258278145695365,
+        "volSegRate": 0.3958333333333333
+      }
+    ]
+  },
+  "light3d": [
+    {
+      "elevation": 20,
+      "shadowReach": 2.2
+    },
+    {
+      "elevation": 55,
+      "shadowReach": 1
+    },
+    {
+      "elevation": 85,
+      "shadowReach": 0.45
+    }
+  ],
+  "strands": [
+    {
+      "name": "base",
+      "seed": 1,
+      "locks": 50,
+      "components": 32,
+      "coverage": 0.7967707212055974,
+      "widthMean": 0.1735732702464875,
+      "widthCv": 0.3997782305425204,
+      "lengthMean": 0.4945468238553528
+    },
+    {
+      "name": "lourd",
+      "seed": 2,
+      "locks": 72,
+      "components": 45,
+      "coverage": 0.8226960607155764,
+      "widthMean": 0.183082452819004,
+      "widthCv": 0.4684182350594137,
+      "lengthMean": 0.5233414724812645
+    }
+  ],
+  "finalHeads": [
+    {
+      "seed": 1,
+      "yaw": 0,
+      "locks": 97,
+      "score": 0,
+      "failing": []
+    },
+    {
+      "seed": 1,
+      "yaw": 30,
+      "locks": 97,
+      "score": 0,
+      "failing": []
+    },
+    {
+      "seed": 3,
+      "yaw": 0,
+      "locks": 105,
+      "score": 0,
+      "failing": []
+    },
+    {
+      "seed": 3,
+      "yaw": 30,
+      "locks": 105,
+      "score": 0,
+      "failing": []
+    },
+    {
+      "seed": 5,
+      "yaw": 0,
+      "locks": 103,
+      "score": 0,
+      "failing": []
+    },
+    {
+      "seed": 5,
+      "yaw": 30,
+      "locks": 103,
+      "score": 0,
+      "failing": []
+    }
+  ]
+}

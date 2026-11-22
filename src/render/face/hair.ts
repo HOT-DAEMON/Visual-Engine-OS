@@ -55,7 +55,7 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
   const h = p.hair;
   const ra: ResolvedAppearance = hairAppearance(h);
   const ink = h.sim.enabled && h.sim.ink ? '#08080c' : undefined;
-  const st: LockStyle = { id: `${id}-hl`, ra, ld: direction2D(L), W: lm.W, ink };
+  const st: LockStyle = { id: `${id}-hl`, ra, ld: direction2D(L), light: L, W: lm.W, ink };
   const shellColor = shellColorOf(ra), rootColor = rootColorOf(ra, h);
   const defs: string[] = [];
   let k = 0;
