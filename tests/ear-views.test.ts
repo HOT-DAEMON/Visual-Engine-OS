@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { generateRandomFace } from '../src';
 import { earGeometry } from '../src/face';
-import { projectEar, VIEW_YAW, faceVisible, type ViewName } from '../src/face/ear/project';
+import { projectEar, attachShear, anteriorEdge, VIEW_YAW, faceVisible, type ViewName } from '../src/face/ear/project';
 import { faceLandmarks } from '../src/face/landmarks';
 import { FaceParams } from '../src/schema';
 import { earVisibility } from '../src/face/ear/visibility';
@@ -97,7 +97,7 @@ describe('quatre vues d\'un même modèle', () => {
   it('l\'échelle relative et la rotation locale déplacent l\'oreille sans casser l\'attache au crâne', () => {
     const e = ears(S({ ears: { attach: { rotationDeg: 12, pitchDeg: 8 } } }))[1]!;
     const crus = e.front!.landmarks.crus!;
-    expect(Math.abs(crus.x)).toBeCloseTo(e.placement!.skullX(crus.y) + Math.sin((e.placement!.openingDeg * Math.PI) / 180) * e.model!.landmarks.crus!.x * e.placement!.hPx, 9);
+    expect(Math.abs(crus.x)).toBeCloseTo(e.placement!.skullX(crus.y) + Math.sin((e.placement!.openingDeg * Math.PI) / 180) * e.model!.landmarks.crus!.x * e.placement!.hPx + attachShear(e.placement!, crus.y, e.model!.landmarks.crus!.x, anteriorEdge(e.model!)(e.model!.landmarks.crus!.y)), 9);
   });
 });
 

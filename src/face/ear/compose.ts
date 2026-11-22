@@ -85,7 +85,7 @@ export function composeEar(seed: number, o: ComposeOptions = {}): z.output<typeo
   };
   // ── Attache.
   const rt = stream(seed, 'attach');
-  const attach = { openingDeg: round(between(rt, ch === 'natural' ? 21 : 14, ch === 'natural' ? 36 : 48)), pitchDeg: round(between(rt, -8, 8)), rotationDeg: round(between(rt, -9, 9)), scale: round(between(rt, 0.88, 1.2)), insertion: round(rt()) };
+  const attach = { openingDeg: round(between(rt, ch === 'natural' ? 27 : 14, ch === 'natural' ? 40 : 48)), pitchDeg: round(between(rt, -8, 8)), rotationDeg: round(between(rt, -9, 9)), scale: round(between(rt, 0.88, 1.2)), insertion: round(rt()) };
   // ── Matériau et extensions (compatibles avec la famille et le mélange).
   const rm = stream(seed, 'material');
   const fams = [family, ...(Object.keys(blend) as EarFamily[])];

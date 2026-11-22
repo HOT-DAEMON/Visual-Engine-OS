@@ -2,7 +2,7 @@ import { resolveAppearance } from '../appearance';
 import { parseHex } from '../core/color';
 import { earGeometry, earEngine, type EarGeo, type FaceLandmarks } from '../face';
 import { FAMILIES } from '../face/ear/families';
-import { projectEar, VIEW_YAW, type ViewName } from '../face/ear/project';
+import { projectEar, attachShear, anteriorEdge, VIEW_YAW, type ViewName } from '../face/ear/project';
 import type { StructureId } from '../face/ear/types';
 import { polyArea, inPoly, type Poly } from '../face/poly';
 import { renderEars } from '../render/face/ears';
@@ -81,7 +81,15 @@ export function earGeometryChecks(e: EarGeo): Check[] {
   // (sin α · u · H, u = position de la racine dans le plan). Vrai pour toute rotation, tout tangage.
   const crus = proj[0]!.landmarks.crus as { x: number; y: number };
   const uCrus = (m.landmarks.crus as { x: number }).x;
-  o.push(check('geometry', `ear-attached-${s}`, '==', Math.abs(crus.x), pl.skullX(crus.y) + Math.sin((pl.openingDeg * Math.PI) / 180) * uCrus * pl.hPx, `la racine de l'hélix ${s} n'est pas sur la surface du crâne`, 'error', 1e-6));
+  o.push(check('geometry', `ear-attached-${s}`, '==', Math.abs(crus.x), pl.skullX(crus.y) + Math.sin((pl.openingDeg * Math.PI) / 180) * uCrus * pl.hPx + attachShear(pl, crus.y, uCrus, anteriorEdge(m)((m.landmarks.crus as { y: number }).y)), `la racine de l'hélix ${s} n'est pas sur la surface du crâne`, 'error', 1e-6));
+  // Passe 5 : le bord antérieur (jonction lobule-joue, tragus, bord antérieur) touche la tête sur toute sa longueur, SANS bande de peau intermédiaire. Écart mesuré de face, en fraction de la hauteur d'oreille.
+  if (pl.headX) {
+    const hx = pl.headX;
+    const ant = m.segments.filter((sg) => sg.id === 'C06' || sg.id === 'C05' || sg.id === 'C04');
+    let gap = 0;
+    for (const sg of ant) for (let k = sg.from; k <= sg.to; k++) { const q = proj[0]!.plate[k % m.outline.length] as { x: number; y: number }; gap = Math.max(gap, Math.abs(q.x) - hx(q.y)); }
+    o.push(check('geometry', `ear-anterior-touches-head-${s}`, '<=', gap / pl.hPx, 0.06, `le bord antérieur de l'oreille ${s} est décollé de la tête de ${((gap / pl.hPx) * 100).toFixed(1)} % de sa hauteur`));
+  }
   return o;
 }
 
@@ -109,6 +117,24 @@ export function earAnatomyChecks(p: FaceParams, lm: FaceLandmarks, e: EarGeo): C
   const chain = [['cymba', cy('cymba')], ['crus', crusY], ['cavum', cy('cavum')], ['lobuleBottom', m.landmarks.lobuleBottom!.y]] as const;
   const broken = chain.filter((c, i) => i > 0 && Number.isFinite(c[1]) && Number.isFinite(chain[i - 1]![1]) && c[1] <= chain[i - 1]![1]);
   o.push(check('anatomy', `ear-vertical-order-${s}`, '<=', broken.length, 0, `ordre vertical brisé (${s}) : cymba < racine de l'hélix < cavum < bas du lobule`));
+  // Passe 5 — proportions du pavillon (références `references/orreil`) : la conque (cavum + cymba) occupe une part franche de l'aire, et aucune grande zone de peau lisse ne sépare l'hélix du lobule.
+  if (m.resolved.present.cavum !== false) {
+    const area = Math.abs(polyArea(m.outline));
+    const conch = ['cavum', 'cymba'].reduce((t, id) => { const x = m.structures.find((q) => q.id === id); return t + (x ? Math.abs(polyArea(x.poly)) : 0); }, 0);
+    o.push(check('anatomy', `ear-concha-share-${s}`, '>=', conch / area, 0.2, `la conque de l'oreille ${s} est trop petite (${((conch / area) * 100).toFixed(0)} % de l'aire, plancher 20 %) : la région hélix → lobule paraît trop vaste`, 'warn'));
+    // Part de l'aire du pavillon NON couverte par une structure (hors lobule, qui est une masse molle) : échantillonnage sur grille.
+    const covers = m.structures.filter((x) => x.kind !== 'ext' && x.id !== 'lobule' && !String(x.id).startsWith('scapha:'));
+    const xs = m.outline.map((q) => q.x), ys = m.outline.map((q) => q.y);
+    const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    let inside = 0, bare = 0;
+    for (let i = 0; i < 40; i++) for (let j = 0; j < 60; j++) {
+      const qx = x0 + ((i + 0.5) / 40) * (x1 - x0), qy = y0 + ((j + 0.5) / 60) * (y1 - y0);
+      if (!inPoly(m.outline, qx, qy)) continue;
+      inside++;
+      if (!covers.some((c) => inPoly(c.poly, qx, qy))) bare++;
+    }
+    o.push(check('anatomy', `ear-bare-share-${s}`, '<=', inside ? bare / inside : 0, 0.5, `trop de peau lisse dans le pavillon ${s} (${inside ? Math.round((bare / inside) * 100) : 0} % de l'aire sans structure) : l'oreille manque de relief anatomique`, 'warn'));
+  }
   if (m.resolved.present.tragus && m.resolved.present.antitragus) o.push(check('anatomy', `ear-tragus-before-antitragus-${s}`, '<=', m.landmarks.tragus!.x, m.landmarks.antitragus!.x, `le tragus doit être en avant de l'antitragus (${s})`));
   // Alignements sur les repères du visage (demandés) : racine de l'hélix sur la ligne des yeux ; bas du lobule sur la ligne de la bouche.
   const a = e.align!;

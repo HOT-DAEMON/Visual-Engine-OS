@@ -39,12 +39,12 @@ export function buildStructures(outline: Poly, m: FlatMorph, r: ResolvedEar, vf:
   // ── Hélix (EAR-01) : bande intérieure du contour, de la racine au lobule ; épaisseur variable (fusion progressive avec le lobule).
   const end = r.present.lobule ? ctrlIdx.lobuleStart * OUTLINE_N : ctrlIdx.bottom * OUTLINE_N;
   const idx = span(outline.length, 0, end);
-  const tH0 = 0.075 + 0.03 * g('helix.thickness');
+  const tH0 = 0.082 + 0.03 * g('helix.thickness');
   const tors = g('helix.torsion'), cont = g('helix.continuity');
   const NICK_S = 0.58;
   const wH = idx.map((_, k) => {
     const s = k / (idx.length - 1);
-    const w0 = tH0 * smooth(s / 0.15) * (1 - 0.65 * smooth((s - 0.7) / 0.3)) * (1 + 2.4 * fold * smooth((s - 0.06) / 0.14) * (1 - smooth((s - 0.42) / 0.16)));
+    const w0 = tH0 * smooth(s / 0.15) * (1 - 0.3 * smooth((s - 0.7) / 0.3)) * (1 + 2.4 * fold * smooth((s - 0.06) / 0.14) * (1 - smooth((s - 0.42) / 0.16)));
     // EAR-01 torsion : le rebord se tord le long de sa course (épais en haut / fin en bas, ou l'inverse) ; continuité > 0 : épaisseur régularisée, < 0 : le rebord se rompt (entaille à 58 %).
     const twisted = w0 * (1 + 0.6 * tors * Math.cos(Math.PI * Math.min(1, s * 1.25)));
     const even = cont > 0 ? twisted + (tH0 * 0.85 * smooth(s / 0.15) * (1 - 0.5 * smooth((s - 0.75) / 0.25)) - twisted) * 0.7 * cont : twisted;
@@ -54,7 +54,7 @@ export function buildStructures(outline: Poly, m: FlatMorph, r: ResolvedEar, vf:
   const rel = g('antihelix.relief');
   const wB = 0.072 + 0.018 * rel;
   const crv = g('antihelix.curvature');
-  const A0 = pt(0.52, 0.69), A1 = pt(0.625 + 0.07 * crv, 0.56), B = pt(0.64 + 0.025 * crv, 0.385);
+  const A0 = pt(0.56, 0.745), A1 = pt(0.655 + 0.07 * crv, 0.585), B = pt(0.665 + 0.025 * crv, 0.385);
   const sep = 62 + 24 * g('antihelix.branchAngle');
   const aU = sep * 0.35, aL = -sep * 0.65;
   const U = at(B, dir(aU), 0.26 * (1 + 0.45 * g('antihelix.upperLength')));
@@ -71,7 +71,7 @@ export function buildStructures(outline: Poly, m: FlatMorph, r: ResolvedEar, vf:
   const sRoom = sIdx.map((i) => Math.min(...anti.map((q) => dist(q, outline[i] as Vec))) - wB - (wH[idx.indexOf(i)] as number));
   const tS0 = 0.1 + 0.055 * g('scapha.width');
   const scurv = g('scapha.curvature');
-  const sProf = sIdx.map((_, k) => { const u = (k + 1) / (sIdx.length + 1); return Math.sin(Math.PI * u ** (scurv >= 0 ? 1 + 1.6 * scurv : 1 / (1 - 1.6 * scurv))) ** 0.6 * (1 + 0.55 * scurv * (1 - 2 * u)); });
+  const sProf = sIdx.map((_, k) => { const u = (k + 1) / (sIdx.length + 1); return Math.sin(Math.PI * u ** (scurv >= 0 ? 1 + 2.6 * scurv : 1 / (1 - 2.6 * scurv))) ** 0.6 * (1 + 0.9 * scurv * (1 - 2 * u)); });
   const sW = sIdx.map((_, k) => Math.max(0.008, Math.min(tS0 * (sProf[k] as number), 0.85 * (sRoom[k] as number))));
   const meanW = sW.reduce((a, b) => a + b, 0) / sW.length, meanReq = (tS0 * sProf.reduce((a, b) => a + b, 0)) / sProf.length;
   const tS = meanW;
@@ -85,6 +85,13 @@ export function buildStructures(outline: Poly, m: FlatMorph, r: ResolvedEar, vf:
     const mid = sIdx.map((i, k) => hw(i) + (sW[k] as number) * 0.5), out2 = sIdx.map((i, k) => hw(i) + (sW[k] as number)), inn = sIdx.map((i) => hw(i));
     // Surimpression : relief juste au-dessus de la scapha (ordre de dessin : après elle), force portée par `strength`.
     out.push({ id: 'scapha:shade', kind: 'cavity', poly: sgr > 0 ? band(outline, sIdx, mid, out2) : band(outline, sIdx, inn, mid), relief: -0.3 - 0.3 * g('scapha.depth') + 0.004, strength: Math.min(1, Math.abs(sgr)) });
+  }
+  // EAR-03 courbure (passe 5) : en plus de la largeur, la gouttière est creusée davantage sur sa moitié haute (courbure > 0 : le creux s'enfonce vers la racine) ou basse (< 0 : vers le lobule) → la position du creux le plus profond se lit à l'échelle de la tête.
+  if (Math.abs(scurv) > 0.05) {
+    const half = Math.floor(sIdx.length / 2);
+    const sub = scurv > 0 ? sIdx.slice(0, half + 1) : sIdx.slice(half);
+    const off = scurv > 0 ? 0 : half;
+    out.push({ id: 'scapha:curve-shade', kind: 'cavity', poly: band(outline, sub, sub.map((i) => wH[idx.indexOf(i)] as number), sub.map((i, k) => (wH[idx.indexOf(i)] as number) + (sW[k + off] as number))), relief: -0.3 - 0.3 * g('scapha.depth') + 0.004, strength: Math.min(1, 0.55 + 0.6 * Math.abs(scurv)) });
   }
   // EAR-01 : l'entaille du rebord (continuité < 0) est un creux transversal réel, pas seulement un amincissement.
   if (cont < -0.05) {
@@ -128,13 +135,13 @@ export function buildStructures(outline: Poly, m: FlatMorph, r: ResolvedEar, vf:
   // EAR-05 transition > 0 : pont — le crus est recouvert d'un creux continu, la cymba et le cavum ne forment plus qu'une cuvette.
   if (ctran > 0.08) out.push({ id: 'concha:bridge', kind: 'cavity', poly: cxc(ribbon(crus, crus.map(() => 0.012 + 0.05 * ctran))), relief: Math.max(0.08, 0.55 * (1 - 0.8 * ctran)) + 0.004, strength: Math.min(1, ctran) });
   const cym = Math.max(0.006, 0.05 * (1 + 1.25 * g('concha.cymba')));
-  S('cymba', 'cavity', cxc(blobOf([pt(0.12, vf - cym), pt(0.32, vf - cym - 0.005), pt(0.52, vf - cym * 0.6), pt(0.54, vf + 0.005), pt(0.22, vf - 0.005), pt(0.12, vf - 0.01)])), -0.5 * (0.5 + 0.5 * ff));
+  S('cymba', 'cavity', cxc(blobOf([pt(0.12, vf - cym), pt(0.32, vf - cym - 0.005), pt(0.56, vf - cym * 0.6), pt(0.58, vf + 0.005), pt(0.22, vf - 0.005), pt(0.12, vf - 0.01)])), -0.5 * (0.5 + 0.5 * ff));
   // Épaisseur de paroi (strict) : profondeur de la conque ≤ épaisseur − paroi minimale.
   const dReq = 0.032 * (1 + 0.6 * g('concha.depth') + 0.4 * cvol);
   const dMax = thickness - 0.012;
   const depth = Math.min(dReq, dMax);
   if (depth < dReq - 1e-9) corr.push({ id: 'concha-wall', param: 'concha.depth', requested: dReq, applied: depth, reason: 'la profondeur de la conque garde une paroi minimale (la cavité ne traverse pas le pavillon)', tier: 'strict' });
-  const cav = cxf(blobOf([pt(0.09, vf + 0.05), pt(0.32, vf + 0.05), pt(0.5, vf + 0.08), pt(0.58, 0.5), pt(0.54, 0.62), pt(0.4, 0.67), pt(0.2, 0.655), pt(0.08, 0.585)]));
+  const cav = cxf(blobOf([pt(0.09, vf + 0.05), pt(0.32, vf + 0.05), pt(0.52, vf + 0.08), pt(0.61, 0.5), pt(0.595, 0.65), pt(0.46, 0.745), pt(0.25, 0.735), pt(0.085, 0.625)]));
   const wall = g('concha.wall');
   S('cavum', 'cavity', cav, -(depth / thickness) * 0.95 * (1 + 0.35 * Math.min(0, wall)));
   // 05C–05E : rebord de conque (arête qui borde le cavum et masque une part du fond) et paroi postérieure ombrée, distincts de la cavité.
@@ -157,7 +164,11 @@ export function buildStructures(outline: Poly, m: FlatMorph, r: ResolvedEar, vf:
     S('tragus', 'blob', tp, Math.max(0.2, 0.7 * (1 + 0.45 * th)));
   }
   const as = 1 + 0.6 * g('antitragus.size');
-  if (r.present.antitragus) S('antitragus', 'blob', ellipse(pt(0.4, 0.695), 0.1 * as, 0.052 * as, 20 + 65 * g('antitragus.orientation')), 0.55);
+  // Antitragus : au plus bas de la conque (0,42 ; 0,75) ; sur une oreille étroite ou pointue, le contour rentre plus tôt → on le remonte et le décale vers l'arrière jusqu'à ce qu'il reste dans le pavillon (comme l'incisure).
+  let atC = pt(0.42, 0.75);
+  const atE = (c: Vec): Poly => ellipse(c, 0.1 * as, 0.052 * as, 20 + 65 * g('antitragus.orientation'));
+  for (let i = 0; i < 12 && insideShare(atE(atC), outline) < 0.8; i++) atC = pt(atC.x + 0.012, atC.y - 0.01);
+  if (r.present.antitragus) S('antitragus', 'blob', atE(atC), 0.55);
   {
     // L'incisure suit le bord antérieur : si ce bord recule (oreille étroite, conque creuse), on la décale vers le centre jusqu'à ce qu'elle reste dans le pavillon.
     let nx = 0.13; const nry = 0.03 * (1 + g('notch.depth'));
@@ -210,7 +221,7 @@ export function buildStructures(outline: Poly, m: FlatMorph, r: ResolvedEar, vf:
   }
   // Toute structure construite reste DANS le pavillon (invariant géométrique ; seules les extensions saillantes peuvent sortir).
   for (const s of out) if (s.kind !== 'ext' && s.id !== 'helix' && s.id !== 'lobule' && s.kind !== 'band' && insideShare(s.poly, outline) < 0.55 && !String(s.id).startsWith('antihelix:groove')) corr.push({ id: `inside:${s.id}`, param: String(s.id), requested: insideShare(s.poly, outline), applied: insideShare(s.poly, outline), reason: 'structure partiellement hors du pavillon', tier: 'preference' });
-  const landmarks: Record<string, Vec> = { crus: pt(0.02, vf), lobuleBottom: lowest(outline, ctrlIdx.lobuleStart * OUTLINE_N, ctrlIdx.lobuleEnd * OUTLINE_N, outline[ctrlIdx.bottom * OUTLINE_N] as Vec, g('lobule.cleft') > 0.02), top: outline[ctrlIdx.peak * OUTLINE_N] as Vec, tragus, canal, junction: B, upperEnd: U, lowerEnd: Lw, antitragus: pt(0.4, 0.695) };
+  const landmarks: Record<string, Vec> = { crus: pt(0.02, vf), lobuleBottom: lowest(outline, ctrlIdx.lobuleStart * OUTLINE_N, ctrlIdx.lobuleEnd * OUTLINE_N, outline[ctrlIdx.bottom * OUTLINE_N] as Vec, g('lobule.cleft') > 0.02), top: outline[ctrlIdx.peak * OUTLINE_N] as Vec, tragus, canal, junction: B, upperEnd: U, lowerEnd: Lw, antitragus: atC };
   const lobeC = pt((outline[ctrlIdx.bottom * OUTLINE_N] as Vec).x, (outline[ctrlIdx.bottom * OUTLINE_N] as Vec).y - 0.07);
   const hx = outline[idx[Math.round(idx.length * 0.12)] as number] as Vec;
   const anchors: PiercingAnchor[] = [

@@ -36,9 +36,6 @@ export function renderEarProjected(id: string, pe: ProjectedEar, model: EarModel
   const ln = Math.hypot(ld.x, ld.y) || 1;
   const lx = ld.x / ln, ly = ld.y / ln;
   const hull = pe.rim;
-  // 0. Jupe de racine : la peau qui attache le pavillon à la joue (ton d'ombre de la peau, bord fondu) — sans elle, le bas de l'oreille flotte à côté de la mâchoire.
-  if (!anime) defs.push(el('filter', { id: `${id}-root`, x: '-20%', y: '-20%', width: '140%', height: '140%' }, [el('feGaussianBlur', { stdDeviation: num(hPx * 0.008) })]));
-  if (pe.root.length > 2) out.push(el('path', { d: polyPath(pe.root), fill: mix(P.base, P.shade, anime ? 0.4 : 0.26), stroke: mix(P.base, P.shade, anime ? 0.4 : 0.26), 'stroke-width': lw * 1.5, 'stroke-linejoin': 'round', ...(anime ? {} : { filter: urlRef(`${id}-root`) }) }));
   // 1. Flanc (plaque) et face externe.
   out.push(el('path', { d: polyPath(pe.plate), fill: P.shade, stroke: P.shade, 'stroke-width': lw, 'stroke-linejoin': 'round' }));
   out.push(el('path', { d: polyPath(hull), fill: P.base, stroke: mix(P.shade, '#000000', 0.45), 'stroke-width': lw * 1.4, 'stroke-linejoin': 'round' }));

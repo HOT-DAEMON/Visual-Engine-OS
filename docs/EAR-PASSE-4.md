@@ -20,7 +20,7 @@ Mesure sur l'oreille par défaut (aire du polygone / aire du contour) : cavum 15
 ## 2. Oreille mal attachée / oreille en trait
 
 - **Pente d'accrochage** (`place.ts`) : le contour de la tête rentre vite sous l'oreille (mâchoire) alors que le pavillon est quasi vertical. L'oreille suit au moins `EAR_LEAN = 0,5` de la pente, davantage si la mâchoire fuit fort (l'écart du lobule reste ≤ 15 % de H). Moins d'inclinaison oblique « en trait ».
-- **Jupe de racine** (`project.ts`, `render.ts`) : peau reliant la chaîne antérieure du contour (C06, C05, C04) au contour réel de la tête, refermée en pointe à la jonction lobule-joue, ton proche de la peau, bord adouci. Absente des planches d'oreille seule (pas de joue).
+- **Jupe de racine** — *supprimée en passe 5 (elle se lisait comme une peau séparant l'oreille de la tête ; remplacée par un cisaillement d'attache, `docs/EAR-PASSE-5.md`)* (`project.ts`, `render.ts`) : peau reliant la chaîne antérieure du contour (C06, C05, C04) au contour réel de la tête, refermée en pointe à la jonction lobule-joue, ton proche de la peau, bord adouci. Absente des planches d'oreille seule (pas de joue).
 - **Lisibilité frontale** : largeur frontale ≈ `L·sin α + épaisseur·cos α`. Plancher préférentiel `FRONT_MIN = 0,26 H` et angle d'écartement minimal 21° (canon du dépôt, assoupli par `style.exaggeration`). Correction journalisée `ear-frontal-readable`. Le compositeur « natural » tire maintenant 21°–36° (avant : 16°–34°).
 - Mesures (150 têtes, « natural ») : largeur/hauteur frontale minimale 0,21 → 0,26 ; médiane 0,41 → 0,32 (moins d'inclinaison). Les changements ultérieurs (pente adaptative, plage de tirage) n'ont pas été re-mesurés.
 

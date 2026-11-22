@@ -85,42 +85,42 @@
    "why": "tirage aléatoire structuré à graine fixe"
   },
   "hard-01-machoire-etroite-menton-pointu": {
-   "svgSha1": "8e14f8e7ba64112533fd7adc9f64af80a276e7ec",
+   "svgSha1": "0d0b6e89c81ae67323eb8c4a0d476da873545a58",
    "kind": "hard",
    "why": "mâchoire minimale + convergence maximale : risque de bas de visage « en entonnoir » (déjà observé)"
   },
   "hard-02-machoire-carree-massive": {
-   "svgSha1": "3ba7aaf9ade00c0e887d9a00ce58f6b258313089",
+   "svgSha1": "8aef2a581fe47280f961c48b13524b325e4269a5",
    "kind": "hard",
    "why": "os maximal + masséter + graisse : les quatre contributions de largeur s'additionnent, le contour doit rester lisible"
   },
   "hard-03-bouche-ouverte-articulee": {
-   "svgSha1": "04716be3338fabcaa60264d94395b6045f828171",
+   "svgSha1": "b5582a6b76b5b84be21e4f10f5b214318af656ba",
    "kind": "hard",
    "why": "ouverture maximale + translation et avancée de la mandibule : lèvre inférieure, dents et menton doivent suivre ensemble"
   },
   "hard-04-anime-stylisation-maximale": {
-   "svgSha1": "bbc62a1d38cb3460e0e3d43c8ecfcb2b4a79c7d2",
+   "svgSha1": "9b2776d00cc622aa937cadbbc40df4f570f8ad10",
    "kind": "hard",
    "why": "neuf contrôles de stylisation à 1 en mode anime : géométrie exagérée ET aplats à bords nets"
   },
   "hard-05-encre-contours-maximaux": {
-   "svgSha1": "8ff8834cb50b1e0d4198341d4bbf5873150dc45a",
+   "svgSha1": "ccf62d37ea296bafb59f213348926757c869f683",
    "kind": "hard",
    "why": "seuil global N&B : un détail fin peut disparaître ou se boucher"
   },
   "hard-06-expression-caricaturale": {
-   "svgSha1": "a2472f093c7398c395a38af26cc1bea25143a843",
+   "svgSha1": "477ed21e8db5ab493eb2ee8b7fa9e8afc3bc6e42",
    "kind": "hard",
    "why": "colère + grimace + caricature maximales : trois déplacements qui se combinent sans s'écraser"
   },
   "hard-07-lumiere-rasante": {
-   "svgSha1": "2d91113fc98c7a7770534e1c6b063289db74f0b0",
+   "svgSha1": "18835c3ac87665a1efd8c4131b51b7ca762fd8f0",
    "kind": "hard",
    "why": "élévation 10° (minimum du schéma) : ombres longues, le nez et les orbites portent de grandes ombres"
   },
   "hard-08-contre-jour-faible": {
-   "svgSha1": "4d108f6dcea4e4fdb027edf49741482f8f69d12d",
+   "svgSha1": "495358e4e9c45e564b3ea8c89b1b8f481db5f38e",
    "kind": "hard",
    "why": "intensité 0,25 depuis l'arrière : rien ne doit disparaître ni virer au noir plat"
   },
@@ -135,12 +135,12 @@
    "why": "nez court et étroit, narines nulles : les régions deviennent minuscules (précision numérique)"
   },
   "hard-11-bouche-minuscule": {
-   "svgSha1": "73d8bd7ae006b15e195cc53047734095cc5d4cb0",
+   "svgSha1": "1fe23020bd1d6faea03db8148b0766ef5a61c73d",
    "kind": "hard",
    "why": "bouche à sa largeur minimale et réduite par la stylisation : commissures, plis et philtrum se rapprochent"
   },
   "hard-12-bouche-immense": {
-   "svgSha1": "4cc3ab33dbbee6a3cb3986883ba76e67bc623dba",
+   "svgSha1": "a41a6700fda218765886ddc737d6d747a450bccc",
    "kind": "hard",
    "why": "bouche à sa largeur maximale et agrandie par la stylisation : doit rester bornée par le contour"
   },
@@ -150,27 +150,27 @@
    "why": "menton haut et projeté au maximum sous une lèvre mince"
   },
   "hard-14-cou-tendu-incline": {
-   "svgSha1": "c29880581bffc5f3bd1b9eda359f10f179bb77f9",
+   "svgSha1": "16e867dcdea51b45223dc096e5b0549f0e5609a6",
    "kind": "hard",
    "why": "angle cervico-mentonnier minimal, platysma et muscles maximaux, tête inclinée à 30°"
   },
   "hard-15-ouverture-plus-colere-plus-serrage": {
-   "svgSha1": "41b697014b26d481b91047882bd94ce1b5118cf6",
+   "svgSha1": "e4196c6ed81f95607752417940f4b2dff3417392",
    "kind": "hard",
    "why": "bouche ouverte + colère + mâchoires serrées : tout agit sur le masséter et la lèvre"
   },
   "hard-16-tete-etroite-yeux-ecartes": {
-   "svgSha1": "be6c69839e0b388addf57f115473f3da8c702181",
+   "svgSha1": "c0cf178c7f12dec6e2b0d73c09fe7c6a064bc79c",
    "kind": "hard",
    "why": "yeux écartés au maximum sur une tête étroite : orbites et nez se rapprochent des bords du contour"
   },
   "hard-17-cheveux-sur-la-bouche-graine-46": {
-   "svgSha1": "1cd7497da3c50e8c02abd67b0fa9675b24a0a7f7",
+   "svgSha1": "374b37d1313f42573fd774bc7236d0cf5771e54a",
    "kind": "hard",
    "why": "campagne : une mèche avant frôle la bouche (front-clear-mouth 0,02 / 0,02) ; défaut du moteur de cheveux, à corriger sans retirer ce cas"
   },
   "hard-18-oreille-couverte-graine-81": {
-   "svgSha1": "7e268487039544aa3d3e5edfec865e90c2687ebf",
+   "svgSha1": "f16920bf3c1188fec31c7d69acffb3fe36c4555a",
    "kind": "hard",
    "why": "campagne : l'oreille droite est trop couverte (ear-free-right 0,13 / 0,12) ; défaut du moteur de cheveux, à corriger sans retirer ce cas"
   }

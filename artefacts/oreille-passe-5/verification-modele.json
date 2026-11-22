@@ -1,0 +1,22 @@
+{
+ "natural": {
+  "n": 1350,
+  "fail": 0,
+  "ids": []
+ },
+ "caricature": {
+  "n": 1350,
+  "fail": 1,
+  "ids": [
+   "warn:ear-outline-turn"
+  ]
+ },
+ "fantasy": {
+  "n": 1297,
+  "fail": 5,
+  "ids": [
+   "warn:ear-outline-turn",
+   "warn:ear-concha-share"
+  ]
+ }
+}

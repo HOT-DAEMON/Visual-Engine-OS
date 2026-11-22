@@ -30,7 +30,7 @@ export function earViewFrame(p: FaceParams, lm: FaceLandmarks, o: EarViewOptions
   const side = o.side ?? 1;
   const g = earGeometry(p, lm).find((e) => e.side === side);
   if (!g || !g.model || !g.placement) return null;
-  // Planche d'oreille seule : aucune joue à relier, donc pas de jupe de racine (elle n'existe que sur une tête entière).
+  // Planche d'oreille seule : aucune joue à relier, donc pas de cisaillement d'attache (il n'existe que sur une tête entière).
   const plSheet = { ...g.placement } as { headX?: unknown };
   delete plSheet.headX;
   const pe = projectEar(g.model, plSheet as typeof g.placement, VIEW_YAW[o.view] * side, o.view);
@@ -47,7 +47,7 @@ export function earViewSvg(p: FaceParams, lm: FaceLandmarks, o: EarViewOptions):
   const ra = resolveAppearance(o.skin, p.skin);
   const yaw = VIEW_YAW[o.view] * side;
   const L = o.light ?? (o.view === 'close-up' ? lightVector({ azimuthDeg: side > 0 ? 300 : 60, elevationDeg: 32, color: '#ffffff', intensity: 1 }) : lightVector({ azimuthDeg: 330, elevationDeg: 55, color: '#ffffff', intensity: 1 }));
-  // Planche d'oreille seule : aucune joue à relier, donc pas de jupe de racine (elle n'existe que sur une tête entière).
+  // Planche d'oreille seule : aucune joue à relier, donc pas de cisaillement d'attache (il n'existe que sur une tête entière).
   const fr = earViewFrame(p, lm, o);
   if (!fr) return el('svg', { xmlns: 'http://www.w3.org/2000/svg', width: o.width, height: o.height, viewBox: `0 0 ${o.width} ${o.height}` });
   const { pe, hPx, c, k } = fr;

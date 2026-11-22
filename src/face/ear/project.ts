@@ -71,8 +71,6 @@ export interface ProjectedEar {
   /** Contour à la plaque (h = 0) et au bord de l'hélix (h = relief de l'hélix) : la silhouette est leur réunion. */
   readonly plate: Poly;
   readonly rim: Poly;
-  /** Jupe de racine : peau qui relie le bord antérieur du pavillon (tragus → lobule) à la surface du crâne ; cachée derrière la tête là où elle est jointive, visible là où le contour de la tête s'écarte. */
-  readonly root: Poly;
   /** Structures projetées, triées du plus bas au plus haut relief (ordre de dessin). */
   readonly structures: { readonly s: PlacedStructure; readonly poly: Poly }[];
   /** Enveloppe de la silhouette (boîte) et surface projetée par rapport à la surface du plan (compression apparente en x). */
@@ -83,28 +81,52 @@ export interface ProjectedEar {
   readonly landmarks: Readonly<Record<string, Vec>>;
 }
 
+/**
+ * ATTACHE PAR CISAILLEMENT (passe 5, remplace la « jupe de racine »). Le bord antérieur du pavillon (crus de l'hélix, tragus, jonction lobule-joue) EST la ligne d'attache : il touche la tête sur toute sa longueur.
+ * Le plan du pavillon reste quasi vertical (`EAR_LEAN`), alors que le contour de la tête rentre sous l'oreille (mâchoire) ; au lieu de combler l'écart par une bande de peau (qui se lit comme une peau
+ * séparant l'oreille de la tête), on cisaille le pavillon dans le plan latéral : le déplacement vaut l'écart mesuré entre la surface d'accrochage et le contour réel de la tête (moins un léger recouvrement),
+ * il est maximal sur le bord antérieur (u = 0) et s'éteint vers l'arrière (u ≈ 0,45) : le rebord de l'hélix et le lobule, eux, restent libres. Seule la composante latérale X bouge (la hauteur de chaque repère
+ * reste identique dans toutes les vues ; de profil, le cisaillement est invisible par construction).
+ */
+export const ATTACH_OVERLAP = 0.012;
+export const ATTACH_REACH = 0.3;
+/** Abscisse canonique du bord antérieur à la hauteur v (chaîne C06 → C05 → C04 du contour) : le cisaillement se mesure à partir de CE bord, pas de u = 0 (la jonction lobule-joue est en retrait du crus). */
+const edgeCache = new WeakMap<EarModel, (v: number) => number>();
+export function anteriorEdge(m: EarModel): (v: number) => number {
+  const hit = edgeCache.get(m);
+  if (hit) return hit;
+  const pts = m.segments.filter((sg) => sg.id === 'C06' || sg.id === 'C05' || sg.id === 'C04').flatMap((sg) => Array.from({ length: sg.to - sg.from + 1 }, (_, k) => m.outline[(sg.from + k) % m.outline.length] as Vec));
+  const f = (v: number): number => { let best = 0, bd = Infinity; for (const q of pts) { const d = Math.abs(q.y - v); if (d < bd) { bd = d; best = q.x; } } return bd < 0.06 ? Math.max(0, best) : 0; };
+  edgeCache.set(m, f);
+  return f;
+}
+export function attachShear(pl: EarPlacement, y: number, u: number, uEdge = 0): number {
+  const hx = pl.headX;
+  if (!hx) return 0;
+  // Le bord antérieur est à `uEdge` du plan : il est déjà écarté de sin α · uEdge · H de la surface d'accrochage, c'est CE point qui doit toucher la tête.
+  const gap = pl.skullX(y) + Math.sin((pl.openingDeg * Math.PI) / 180) * uEdge * pl.hPx - (hx(y) - ATTACH_OVERLAP * pl.hPx);
+  const s = Math.max(0, u - uEdge) / ATTACH_REACH;
+  const k = Math.max(0, 1 - s);
+  return -Math.min(0.3 * pl.hPx, Math.max(0, gap)) * k * k;
+}
+
+/** Point (u, v, h) du plan → hôte (px) avec l'attache cisaillée. */
+export function projectPlaced(m: EarModel, pl: EarPlacement, q: Vec, h: number, yawDeg: number, pivot: Vec): Vec {
+  const { X, y, Z } = placeEarPoint(pl, q, h, pivot);
+  const Xs = X + pl.side * attachShear(pl, y, q.x, anteriorEdge(m)(q.y));
+  const f = (yawDeg * Math.PI) / 180;
+  return { x: Xs * Math.cos(f) - Z * Math.sin(f), y };
+}
+
 export function projectEar(m: EarModel, pl: EarPlacement, yawDeg: number, view: ViewName | 'custom' = 'custom'): ProjectedEar {
   const T = m.thickness * pl.hPx;
   const pivot = m.landmarks.crus as Vec;
-  const P = (q: Vec, rel: number): Vec => projectPoint(pl, q, rel * T, yawDeg, pivot);
+  const P = (q: Vec, rel: number): Vec => projectPlaced(m, pl, q, rel * T, yawDeg, pivot);
   const helix = m.structures.find((s) => s.id === 'helix');
   const rimH = helix ? helix.relief : 0.9;
   const plate = m.outline.map((q) => P(q, 0));
   const rim = m.outline.map((q) => P(q, rimH));
   const structures = [...m.structures].sort((a, b) => a.relief - b.relief).map((s) => ({ s, poly: s.poly.map((q) => P(q, s.relief)) }));
-  // Jupe de racine : la chaîne antérieure du contour (C06 jonction lobule-joue, C05 tragus + incisure, C04 bord antérieur) reliée aux points du crâne de MÊME hauteur, enfoncés de 0,12 H sous la surface.
-  const ant = m.segments.filter((sg) => sg.id === 'C06' || sg.id === 'C05' || sg.id === 'C04');
-  const chain = ant.flatMap((sg) => Array.from({ length: sg.to - sg.from + 1 }, (_, k) => (sg.from + k) % m.outline.length));
-  const hx = pl.headX;
-  const rootPl: EarPlacement = hx ? { ...pl, skullX: (y: number) => Math.max(0, hx(y) - 0.04 * pl.hPx) } : pl;
-  // La jupe se referme en pointe à la jonction lobule-joue (30 % de la chaîne) : pas de bord horizontal coupé net.
-  const rootPts = chain.map((i, k) => {
-    const q = m.outline[i] as Vec, r = projectPoint(rootPl, { x: hx ? 0 : -0.12, y: q.y }, 0, yawDeg, pivot), pp = plate[i] as Vec;
-    const w = Math.max(0, 1 - k / Math.max(1, 0.3 * chain.length)) ** 1.5;
-    return { x: r.x + (pp.x - r.x) * w, y: r.y + (pp.y - r.y) * w };
-  });
-  // Sans tête hôte (planches d'oreille seule), il n'y a pas de joue à relier : pas de jupe.
-  const root: Poly = hx ? [...chain.map((i) => plate[i] as Vec), ...rootPts.reverse()] : [];
   const b = box([...plate, ...rim]);
   // Compression horizontale PURE : mesurée avec une surface du crâne plane (la courbure du contour du visage décalerait la boîte d'un facteur étranger à la vue).
   const flat = { ...pl, skullX: () => 0 };
@@ -116,7 +138,6 @@ export function projectEar(m: EarModel, pl: EarPlacement, yawDeg: number, view: 
     visible: faceVisible(pl, yawDeg),
     plate,
     rim,
-    root,
     structures,
     bbox: b,
     xScale: (fb.x1 - fb.x0) / planeW,

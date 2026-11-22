@@ -100,14 +100,14 @@ export function earRenderChecks(inp: EarRenderInput): Check[] {
     // GÉOMÉTRIE — l'oreille tient à la tête : part de lignes décollées.
     const main1 = { ...m, mask: Uint8Array.from(m.mask, (v, i) => (v && label[i] === main ? 1 : 0)) };
     const det = detachedShare(inp.without, main1, b.side, hPx);
-    o.push(check('geometry', `ear-render-attached-${s}`, '<=', det, 0.15, `l'oreille ${s} est décollée de la tête sur ${(det * 100).toFixed(0)} % de sa hauteur (jupe de racine absente ou trop courte)`));
+    o.push(check('geometry', `ear-render-attached-${s}`, '<=', det, 0.15, `l'oreille ${s} est décollée de la tête sur ${(det * 100).toFixed(0)} % de sa hauteur (attache cisaillée insuffisante)`));
     // GÉOMÉTRIE — dimensions rendues = dimensions du modèle (l'image dit la même chose que la géométrie), l'occlusion par la joue en retire une part.
     const exp = inp.expected.find((e) => e.side === b.side);
     if (exp) {
       o.push(check('geometry', `ear-render-height-${s}`, '<=', Math.abs(hPx - exp.heightPx) / exp.heightPx, 0.2, `la hauteur rendue de l'oreille ${s} s'écarte du modèle`));
     }
     // ANATOMIE — l'oreille ne se réduit pas à un trait (largeur/hauteur rendues).
-    o.push(check('anatomy', `ear-render-not-a-stroke-${s}`, '>=', wPx / hPx, 0.17 * (1 - 0.6 * inp.exaggeration), `l'oreille ${s} est rendue comme un trait (largeur/hauteur ${(wPx / hPx).toFixed(2)})`));
+    o.push(check('anatomy', `ear-render-not-a-stroke-${s}`, '>=', wPx / hPx, 0.2 * (1 - 0.6 * inp.exaggeration), `l'oreille ${s} est rendue comme un trait (largeur/hauteur ${(wPx / hPx).toFixed(2)})`));
     // ANATOMIE — la structure interne se lit : part de pixels de l'oreille dont le voisinage (5 × 5) a un écart de luminance non nul.
     let tex = 0, tot = 0;
     for (let y = 2; y < m.h - 2; y++) for (let x = 2; x < m.w - 2; x++) {
