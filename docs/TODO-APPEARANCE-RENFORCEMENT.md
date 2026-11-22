@@ -1,4 +1,6 @@
 # RENFORCEMENT DU MOTEUR D'APPARENCE QUI EXISTE DEJA
+# IMPORTANT
+Il faut disséquer chaque phrases ou fonctionnalité demandé pour les traiter avec la plus grande rigeur possible..
 Dans src/lighting/rig.ts, tu as notamment :- softness();- rigOf();- falloff();- intensityFor();- kelvinRgb();- applyTemperature(); le moteur prends donc déjà en compte la taille apparente de la source, sa distance et sa température de couleur.Mais il y a une limite : le modèle de distance reste une approximation. Il ne calcule pas réellement la distribution spatiale d'une source lumineuse ni son atténuation physique sur chaque surface.
 Il faut vérifier si la remarque est pertinente, puis implémenter réellement la distribution spatiale d'une source lumineuse ni son atténuation physique sur chaque surface
 # PROBLEMES ARCHITECTURAL IMPORTANT
@@ -31,5 +33,34 @@ Ceci doit être véritablement consommé par tous les composants du moteur..
 Lumière réfléchie par l'environnement et renvoyée sur les personnages et les objets.
 Ceci doit être véritablement consommé par tous les composants du moteur..
 
-Il faudrait aussi prévoir :- Directional Light;- Point Light;- Spot Light;- Area Light;- Ambient Light;- Emissive Light;- Volumetric Light;- Environment Light.
-- Projected Light.
+Il faudrait aussi prévoir :- Directional Light;- Point Light;- Spot Light;- Area Light;- Ambient Light;- Emissive Light;- Volumetric Light;- Environment Light.- Projected Light.
+
+Chaque source devrait avoir son propre identifiant, son volume d'influence, sa couleur, son intensité, sa position, son orientation, ses paramètres d'ombre et son comportement temporel.
+## Attention : une lumière émissive dessinée sur un objet n'est pas automatiquement une source qui éclaire les objets voisins. Cette distinction doit être explicite dans l'architecture.
+Les tests doivent prouver visuellement le fonctionnement de tous ses fonctionnalités, et presenté les variations a l'extreme...Puis challenger les angles les plus sous-estimé pour prouver l'efficacité du moteur..
+
+## Il manque une véritable gestion des interactions entre sources
+Une surface doit pouvoir recevoir plusieurs contributions simultanément.
+
+Par exemple : L_{{final}} = L_{{direct}}+ L_{{indirect}}+ L_{{émission}}+ L_{{atmosphère}}
+
+Cette expression est une représentation conceptuelle : le calcul réel doit tenir compte des matériaux, des occlusions, des réponses spectrales approximées et du domaine colorimétrique.
+Le moteur devrait notamment pouvoir produire :- Une joue éclairée en orange par une explosion;- Une ombre bleue provenant de l'environnement;- Un reflet blanc provenant d'une fenêtre;- Une lumière rouge provenant d'une enseigne;- Une ombre de la frange sur le front;- Une ombre du nez sur la joue;- Un rebond lumineux provenant du vêtement.
+Et tout cela sans que les contributions se détruisent mutuellement.
+Il faut donc une véritable stratégie de composition des lumières, avec gestion des priorités artistiques et des limites d'énergie.
+## Les ombres portées ne sont pas encore universelles
+Le fichier src/relief/cast.ts utilise une technique intéressante : le screen-space ray marching.
+Le principe est le suivant :
+1. On prend un pixel de la surface.
+2. On avance dans la direction de la lumière.
+3. On examine les profondeurs rencontrées.
+4. Si un obstacle intercepte le rayon, le pixel reçoit une ombre.
+5. On calcule une pénombre qui augmente avec la distance.
+C'est une bonne base pour le visage.
+Mais regarde les limites :
+Le calcul se fait sur un champ de profondeur 2D.
+Les ombres sont limitées à une distance reach.
+Les sources lumineuses ne sont pas échantillonnées individuellement pour calculer leur pénombre.
+Le calcul ne couvre pas automatiquement tous les objets de la scène.
+Les surfaces qui sortent du champ de profondeur ne peuvent pas jouer correctement leur rôle d'occulteur.
+Les ombres de géométries complexes nécessitent un système de profondeur plus général.
