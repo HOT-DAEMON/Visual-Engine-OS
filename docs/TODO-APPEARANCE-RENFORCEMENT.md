@@ -41,9 +41,7 @@ Les tests doivent prouver visuellement le fonctionnement de tous ses fonctionnal
 
 ## Il manque une véritable gestion des interactions entre sources
 Une surface doit pouvoir recevoir plusieurs contributions simultanément.
-
 Par exemple : L_{{final}} = L_{{direct}}+ L_{{indirect}}+ L_{{émission}}+ L_{{atmosphère}}
-
 Cette expression est une représentation conceptuelle : le calcul réel doit tenir compte des matériaux, des occlusions, des réponses spectrales approximées et du domaine colorimétrique.
 Le moteur devrait notamment pouvoir produire :- Une joue éclairée en orange par une explosion;- Une ombre bleue provenant de l'environnement;- Un reflet blanc provenant d'une fenêtre;- Une lumière rouge provenant d'une enseigne;- Une ombre de la frange sur le front;- Une ombre du nez sur la joue;- Un rebond lumineux provenant du vêtement.
 Et tout cela sans que les contributions se détruisent mutuellement.
@@ -58,9 +56,51 @@ Le principe est le suivant :
 5. On calcule une pénombre qui augmente avec la distance.
 C'est une bonne base pour le visage.
 Mais regarde les limites :
-Le calcul se fait sur un champ de profondeur 2D.
-Les ombres sont limitées à une distance reach.
-Les sources lumineuses ne sont pas échantillonnées individuellement pour calculer leur pénombre.
-Le calcul ne couvre pas automatiquement tous les objets de la scène.
-Les surfaces qui sortent du champ de profondeur ne peuvent pas jouer correctement leur rôle d'occulteur.
-Les ombres de géométries complexes nécessitent un système de profondeur plus général.
+Le calcul se fait sur un champ de profondeur 2D;Les ombres sont limitées à une distance reach;Les sources lumineuses ne sont pas échantillonnées individuellement pour calculer leur pénombre;Le calcul ne couvre pas automatiquement tous les objets de la scène;Les surfaces qui sortent du champ de profondeur ne peuvent pas jouer correctement leur rôle d'occulteur;Les ombres de géométries complexes nécessitent un système de profondeur plus général.
+Il y a également un détail technique à corriger : CastOpts expose steps, mais castShadow() ne l'utilise pas actuellement. Le nombre d'échantillons est déterminé par la construction du tableau ts, puis steps est explicitement ignoré.
+Ce n'est pas nécessairement une erreur visuelle, mais c'est une incohérence entre le contrat et l'implémentation.
+## Il faut plutôt faire évoluer ray marching vers une veritable architecture sophistiquée d'ombres à plusieurs niveaux :
+### Système de Contact shadows	
+Utilisation : Petits contacts entre composants
+### Systeme de Screen-space shadows	
+Utilisation: Ombres locales rapides
+### Systeme de Geometry shadows	
+Utilisation: Ombres provenant de géométries 3D
+### Systeme de Cast shadows	
+Utilisation: Ombres portées directionnelles
+### Systeme de Soft shadows	
+Utilisation : Pénombres calculées à partir de sources étendues
+### Systeme de Self-shadowing
+Utilisation: Ombres entre les parties d'un même objet
+### Systeme de Volumetric shadows	
+Utilisation : Ombres dans la fumée, la poussière et les volumes
+# IMPORTANT 
+Il faut pouvoir combiner ces méthodes selon la qualité demandée et la complexité de la scène.
+# Le moteur ne traite pas encore correctement les ombres des cheveux
+C'est un point particulièrement important pour ton projet.
+Dans src/render/face/hair.ts, On a déjà :- Des mèches séparées;- Des couches arrière et avant; - Des couches passant devant les yeux;- Des reflets;- Des effets d'apparence;- Des ombres des mèches sur la peau.
+C'est très bien.
+Mais l'ombre des cheveux sur la peau est actuellement construite à partir de silhouettes skinShadows, avec un décalage bas-droite et un flou.
+Ce n'est pas encore une véritable projection de l'ombre selon la géométrie, la direction de la lumière et la distance entre les mèches et le visage.
+Il faudrait que chaque mèche puisse fournir :- Sa géométrie;- Sa profondeur;- Son orientation;- Sa normale approximative;- Son épaisseur;- Sa transparence;- Sa distance par rapport à la peau;- Son appartenance à une masse capillaire;- Sa capacité à bloquer, transmettre ou diffuser la lumière.
+Ensuite, il faut calculer : Mèche → ombre sur front → ombre sur paupière → ombre sur iris → ombre sur joue → interaction avec les autres mèches.
+
+Il faut également prévoir l'opération inverse :La lumière qui traverse une chevelure partiellement transparente doit pouvoir atteindre certaines parties du visage.
+Ce n'est pas une simple question esthétique. C'est une question de relations spatiales entre composants atomiques.
+# Les yeux ne possèdent pas encore leur propre modèle optique complet
+La documentation docs/LIGHT-VISIBLE-06-REMAINING.md reconnaît explicitement cette limite.
+L'orbite est représentée dans le champ de relief, mais pas le globe oculaire comme véritable surface indépendante.
+Les yeux reçoivent le multiplicateur lumineux général du visage, mais il manque notamment :
+- L'ombre portée de la paupière supérieure sur le globe.
+- La courbure indépendante de la cornée.
+- La réfraction de la lumière à travers la cornée.
+- Les reflets d'environnement.
+- La réflexion de la source lumineuse sur la cornée.
+- La diffusion et la profondeur de l'iris.
+- Les interactions entre les multiples iris que tu souhaites pouvoir placer dans une même enveloppe palpébrale.
+- La transparence et l'humidité de la surface oculaire.
+Je recommande un modèle lumineux oculaire indépendant, mais connecté au Lighting Core.
+
+Un œil doit être capable de recevoir une lumière générale, une lumière spécifique de cornée, un reflet de fenêtre, une ombre de paupière et une émission propre à l'iris.
+# Le problème de l'intégration : ce que les fichiers révèlent
+J'ai consulté docs/PIPELINE-RELIEF.md et docs/LIGHT-VISIBLE-06-REMAINING.md.Et je tiens à souligner que ta documentation technique est assez honnête sur les limites rencontrées.Elle révèle plusieurs problèmes qui ne sont pas de simples fonctionnalités manquantes.
