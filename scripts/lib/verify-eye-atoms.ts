@@ -16,7 +16,14 @@ export interface AtomCtx {
   readonly cx: number; readonly cy: number; readonly rx: number; readonly ry: number;
 }
 export const ATOM_EDGE_MIN = 12;
+/** Seuil du gradient pour un iris dont le détail atomique est LÉGER (arcs et braises seuls, sans fentes, vides ni facettes taillées : cel-shading de la réf. 08, passe 13). Iris dépouillé : 6,3–6,6 ; lime-cyan en galeries 3 et 4 : 9,3–14,8. 9 = dépouillé + 2,4 : le détail doit se voir sans exiger le gradient d'un iris à fentes. */
+export const ATOM_EDGE_MIN_LIGHT = 9;
 export const ATOM_DARK_MAX = 0.6;
+/** Luminance moyenne de l'iris (hors pupille et reflets) : références 89–169 (10a … 08a) ; marge d'environ 30 de chaque côté (passe 13 : le moteur était de 14 à 22 SOUS ses références). */
+export const ATOM_LUM_MIN = 60;
+export const ATOM_LUM_MAX = 200;
+/** Part de pixels blancs purs (canal minimum > 235) du disque d'iris, reflets compris : références 0 à 0,108 (04 : 0,108 ; 10b : 0,092) ; plafond à ~ 2 × la plus haute. Les étoiles sont du blanc rayonnant et teinté, pas un iris couvert d'aplats blancs (passe 13). */
+export const ATOM_WHITE_MAX = 0.2;
 export const ARC_RADIUS_SD_MAX = 0.06;
 export const SLIT_RING_MIN = 3;
 const DEG = Math.PI / 180;
@@ -58,14 +65,17 @@ export function verifyIrisAtoms(c: AtomCtx): EyeImageCheck[] {
     add('geometry', 'arcs-concentric', rhos.length < 30 || sd <= ARC_RADIUS_SD_MAX, sd, ARC_RADIUS_SD_MAX, 'les arcs lumineux ne sont pas portés par un cercle concentrique à l’iris');
   }
   // anatomie + style : un seul balayage du disque 0,12–0,9
-  let n = 0, dark = 0, grad = 0, ng = 0;
+  let n = 0, dark = 0, grad = 0, ng = 0, lumSum = 0, nAll = 0, white = 0;
   for (let k = 0; k < 90; k++) for (let r = Math.max(0.12, c.eye.pupil.size * 1.05); r <= 0.9; r += 0.03) {
     const a = (k * 4) * DEG; const x = c.cx + Math.cos(a) * c.rx * r, y = c.cy + Math.sin(a) * c.ry * r; if (!c.inOpening(x, y)) continue;
-    const [R, G, B] = c.rgbAt(x, y); const mx = Math.max(R, G, B), mn = Math.min(R, G, B); if (mx / 255 > 0.93 && (mx === 0 ? 0 : (mx - mn) / mx) < 0.35) continue;
-    n++; if (0.2126 * R + 0.7152 * G + 0.0722 * B < 50) dark++;
+    const [R, G, B] = c.rgbAt(x, y); const mx = Math.max(R, G, B), mn = Math.min(R, G, B); nAll++; if (mn > 235) white++; if (mx / 255 > 0.93 && (mx === 0 ? 0 : (mx - mn) / mx) < 0.35) continue;
+    n++; const lum = 0.2126 * R + 0.7152 * G + 0.0722 * B; lumSum += lum; if (lum < 50) dark++;
     const g = Math.abs(c.lumAt(x + 1, y) - c.lumAt(x - 1, y)) / 2 + Math.abs(c.lumAt(x, y + 1) - c.lumAt(x, y - 1)) / 2; grad += g; ng++;
   }
+  if (n >= 60) add('style', 'iris-luminance-plausible', lumSum / n >= ATOM_LUM_MIN && lumSum / n <= ATOM_LUM_MAX, lumSum / n, ATOM_LUM_MIN, 'la luminance moyenne de l’iris sort de la plage des références (89–169, marge comprise) : iris trop sombre ou délavé');
+  if (nAll >= 60) add('style', 'iris-white-share-plausible', white / nAll <= ATOM_WHITE_MAX, white / nAll, ATOM_WHITE_MAX, 'trop de blanc pur dans l’iris : les reflets étoilés couvrent l’iris en aplats blancs au lieu de rayonner (références : 0 à 0,108)');
   if (n >= 60) add('anatomy', 'iris-dark-share-plausible', dark / n <= ATOM_DARK_MAX, dark / n, ATOM_DARK_MAX, 'l’iris est presque entièrement noir (part de pixels sombres hors pupille et reflets au-delà de la plage des références)');
-  if (ng >= 60) add('style', 'atomic-edge-density', grad / ng >= ATOM_EDGE_MIN, grad / ng, ATOM_EDGE_MIN, 'le détail atomique demandé n’apparaît pas à l’image : gradient de luminance de l’iris sous le seuil');
+  const edgeMin = d!.slits || (d!.voids && d!.voids.length) || (d!.facets && d!.facets.cut > 0) ? ATOM_EDGE_MIN : ATOM_EDGE_MIN_LIGHT;
+  if (ng >= 60) add('style', 'atomic-edge-density', grad / ng >= edgeMin, grad / ng, edgeMin, 'le détail atomique demandé n’apparaît pas à l’image : gradient de luminance de l’iris sous le seuil');
   return out;
 }

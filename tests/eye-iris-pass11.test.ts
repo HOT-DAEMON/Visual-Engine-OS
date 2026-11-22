@@ -25,12 +25,12 @@ describe('vibrance : saturation des pics d’iris (réfs 04 / 07 / 08 / 10)', ()
     }
   }, 60000);
   it('vibrance = 0 : aucun filtre émis (rendu historique) ; > 0 : une matrice de saturation explicite (resvg borne type="saturate" à 1)', () => {
-    expect(render(eyeOf('lime-cyan', (e) => { e.iris.vibrance = 0; })).svg).not.toContain('-vib');
+    expect(render(eyeOf('lime-cyan', (e) => { e.iris.vibrance = 0; e.iris.lift = 0; })).svg).not.toContain('-vib');   // passe 13 : le filtre `-vib` porte aussi `iris.lift` ; il disparaît quand les deux valent 0
     const s = render(eyeOf('lime-cyan', (e) => { e.iris.vibrance = 0.5; })).svg; expect(s).toContain('-vib'); expect(s).toMatch(/feColorMatrix type="matrix"/); expect(s).not.toMatch(/type="saturate"/);
   });
-  it('règle pixel `iris-peak-saturation` : passe pour les 5 familles ; ÉCHOUE si on coupe la vibrance d’un iris qui en demande (contre-exemple : fire-halo délavé)', () => {
+  it('règle pixel `iris-peak-saturation` : passe pour les 5 familles ; ÉCHOUE si on coupe la vibrance d’un iris qui en demande (contre-exemple : ice-star délavé ; fire-halo tire désormais sa saturation de l’anneau, passe 13)', () => {
     for (const f of PHOTO2_IRIS_FAMILIES) expect(verifyEyeRender(eyeOf(f)).filter((c) => !c.ok).map((c) => c.id), f).toEqual([]);
-    const washed = eyeOf('fire-halo', (e) => { e.iris.vibrance = 0.02; }); const r = verifyEyeRender(washed).find((c) => c.id === 'iris-peak-saturation'); expect(r?.ok).toBe(false); expect(r!.value).toBeLessThan(IRIS_PEAK_SAT_MIN);
+    const washed = eyeOf('ice-star', (e) => { e.iris.vibrance = 0.02; }); const r = verifyEyeRender(washed).find((c) => c.id === 'iris-peak-saturation'); expect(r?.ok).toBe(false); expect(r!.value).toBeLessThan(IRIS_PEAK_SAT_MIN);
   }, 60000);
 });
 

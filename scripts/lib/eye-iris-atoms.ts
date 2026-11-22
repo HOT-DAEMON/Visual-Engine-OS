@@ -15,7 +15,7 @@ import { EyeSpec } from '../../src/schema';
  */
 export interface AtomMetrics {
   readonly darkByBand: { rho: number[]; darkShare: number; lum: number | null }[];
-  readonly slits: { persistentCount: number; meanWidthDeg: number | null; meanDepth: number | null };
+  readonly slits: { persistentCount: number; meanWidthDeg: number | null; meanDepth: number | null; meanDriftPerRho?: number | null };
   readonly cells: { count: number; areaMedian: number; areaCV: number; areaP10: number; areaP90: number; elongationMedian: number | null; solidityMedian: number | null };
   readonly stars: { count: number; top: { feretOverR: number; rho: number }[]; feretTop6Mean: number | null };
   readonly ring: { ringRho: number; ringWidthRho: number; angularDashes: number };

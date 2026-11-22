@@ -23,8 +23,10 @@ export function slits(f: IrisFrame, pal: IrisPalette, rnd: Rnd, o: NonNullable<I
   const used: number[] = [];
   const free = (a: number, gap: number): boolean => used.every((u) => Math.abs(((a - u + Math.PI) % TAU + TAU) % TAU - Math.PI) > gap);
   const spindle = (a: number, r0: number, r1: number, wDeg: number, op: number): void => {
-    const w0 = (wDeg * DEG) / 2; const w1 = w0 * (1 - o.taper);
-    const pts = [f.at(r0, a - w0), f.at(r1, a - w1), f.at(r1, a + w1), f.at(r0, a + w0)];
+    const w0 = (wDeg * DEG) / 2; const N = o.curve === 0 ? 1 : 4;       // droite : 1 segment (SVG historique) ; courbe : 4 segments, dérive `curve` ° par unité de rayon
+    const at = (t: number, side: number): { x: number; y: number } => { const r = r0 + (r1 - r0) * t; return f.at(r, a + side * w0 * (1 - o.taper * t) + o.curve * DEG * (r - r0)); };
+    const left = Array.from({ length: N + 1 }, (_, k) => at(k / N, -1)); const right = Array.from({ length: N + 1 }, (_, k) => at(1 - k / N, 1));
+    const pts = [left[0]!, ...left.slice(1), ...right.slice(0, N), right[N]!];
     out.push(el('path', { d: `M${pts.map(P).join('L')}Z`, fill: ink, 'fill-opacity': Math.min(1, op) }));
   };
   for (let i = 0; i < o.long; i++) {

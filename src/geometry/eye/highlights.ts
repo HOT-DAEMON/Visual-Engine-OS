@@ -29,9 +29,21 @@ export interface PlaceCtx {
   readonly bbox: { readonly x: number; readonly y: number; readonly w: number; readonly h: number };
 }
 
+/** Empreinte déterministe [0 ; 1[ d'un reflet (position, taille, nombre de pointes) et d'un indice : le `jitter` ne tire pas de hasard au rendu. */
+export const highlightHash = (h: HighlightItem, i: number): number => {
+  const v = Math.sin((h.x * 12.9898 + h.y * 78.233 + h.size * 37.719 + (h.points ?? 4) * 4.1414 + i * 19.19) * 1.7) * 43758.5453;
+  return v - Math.floor(v);
+};
+/** Facteur de longueur de l'aiguille de la pointe `k` (sur `n`) : la première est la plus longue, les opposées plus courtes, ± `jitter` (réf. 10a : une lame verticale longue, des lames latérales courtes). */
+export const rayFactor = (h: HighlightItem, k: number, n: number): number => {
+  const base = [1, 0.6, 0.82, 0.6][k % 4] as number * (n > 4 ? 0.9 : 1);
+  return Math.max(0.2, base * (1 + h.jitter * (highlightHash(h, 100 + k) - 0.5) * 1.2));
+};
+
 const SHAPE_PROFILE = (h: HighlightItem): Vec[] => {
+  const lobes = (pts: Vec[], step: number): Vec[] => (h.jitter > 0 ? pts.map((p, i) => { const s = i % step === 0 ? 1 + h.jitter * (highlightHash(h, i) - 0.5) * 0.9 : 1; return { x: p.x * s, y: p.y * s }; }) : pts);
   if (h.shape === 'star') return chaikin(vertices(h.points ?? 5, h.inner), 1);
-  if (h.shape === 'sparkle') return vertices(h.points ?? 4, Math.min(0.35, h.inner));
+  if (h.shape === 'sparkle') return lobes(vertices(h.points ?? 4, Math.min(0.35, h.inner)), 2);
   if (h.shape === 'diamond') return vertices(4, null);
   if (h.shape === 'cross') return vertices(4, 0.5).map((p, i) => (i % 2 ? { x: p.x * 0.55, y: p.y * 0.55 } : p));
   return [];

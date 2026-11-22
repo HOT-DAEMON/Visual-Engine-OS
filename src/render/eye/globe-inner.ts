@@ -35,6 +35,9 @@ export function saturationMatrix(k: number): string {
   return [r + (1 - r) * k, g - g * k, b - b * k, 0, 0, r - r * k, g + (1 - g) * k, b - b * k, 0, 0, r - r * k, g - g * k, b + (1 - b) * k, 0, 0, 0, 0, 0, 1, 0].map((v) => num(v)).join(' ');
 }
 
+/** Courbe de la luminosité des demi-teintes (`iris.lift`) : identité sous 0,35 (les noirs de l'iris ne bougent pas : la part sombre est mesurée à L < 50 / 255) et en 1 (les blancs), bosse sinusoïdale entre les deux, 9 points. */
+export const liftTable = (lift: number): string => Array.from({ length: 9 }, (_, i) => { const x = i / 8; const t = Math.min(1, Math.max(0, (x - 0.35) / 0.65)); return Math.min(1, x + 0.4 * lift * Math.sin(Math.PI * t)).toFixed(4); }).join(' ');
+
 export function renderGlobeInner(
   eye: EyeSpec,
   g: OpeningGeometry,
@@ -110,11 +113,13 @@ export function renderGlobeInner(
   const fx = look ? compileEffects(`${id}-iris`, look.spec, look.iris, { x: c.x - irisRx - look.reach, y: c.y - irisRy - look.reach, w: 2 * (irisRx + look.reach), h: 2 * (irisRy + look.reach) }) : null;
   if (fx) defs.push(...fx.defs);
   const irisAttrs: Record<string, string> = fx?.filter ? { filter: fx.filter } : {};
-  // Vibrance (opt-in) : saturation du disque de l'iris, pupille et reflets exclus (la pupille est remise par-dessus, voir ci-dessous).
-  const vib = eye.iris.vibrance ?? 0;
-  if (vib > 0) {
-    const vid = `${id}-vib`; const pad = 2;
-    defs.push(el('filter', { id: vid, filterUnits: 'userSpaceOnUse', x: c.x - irisRx - pad, y: c.y - irisRy - pad, width: 2 * (irisRx + pad), height: 2 * (irisRy + pad), 'color-interpolation-filters': 'sRGB' }, [el('feColorMatrix', { type: 'matrix', values: saturationMatrix(1 + 1.6 * vib) })]));
+  // Vibrance et luminosité des demi-teintes (opt-in, un seul filtre) : saturation puis gamma du disque de l'iris, pupille et reflets exclus (la pupille est remise par-dessus, voir ci-dessous).
+  const vib = eye.iris.vibrance ?? 0; const lift = eye.iris.lift ?? 0;
+  if (vib > 0 || lift > 0) {
+    const vid = `${id}-vib`; const pad = 2; const prims: string[] = [];
+    if (vib > 0) prims.push(el('feColorMatrix', { type: 'matrix', values: saturationMatrix(1 + 1.6 * vib), result: 'sat' }));
+    if (lift > 0) { const tv = liftTable(lift); const fn = { type: 'table', tableValues: tv }; prims.push(el('feComponentTransfer', {}, [el('feFuncR', fn), el('feFuncG', fn), el('feFuncB', fn)])); }
+    defs.push(el('filter', { id: vid, filterUnits: 'userSpaceOnUse', x: c.x - irisRx - pad, y: c.y - irisRy - pad, width: 2 * (irisRx + pad), height: 2 * (irisRy + pad), 'color-interpolation-filters': 'sRGB' }, prims));
     irisGroup.splice(0, irisGroup.length - pupil.markup.length, el('g', { filter: urlRef(vid) }, irisGroup.slice(0, irisGroup.length - pupil.markup.length)));
   }
   const irisNode = gazeT ? el('g', { transform: gazeT, ...irisAttrs }, irisGroup) : el('g', irisAttrs, irisGroup);

@@ -4,6 +4,7 @@ import type { EyeSpec } from '../../schema';
 import { el, urlRef } from '../../core/svg';
 import { polygonPath, smoothClosed } from './helpers';
 import { isFlat } from './flat-finish';
+import { rayMarkup } from './highlight-rays';
 
 /**
  * OPT-01/04 — Peinture des reflets détaillés (placement et règle d'occlusion : geometry/eye/highlights.ts).
@@ -36,12 +37,21 @@ export function renderHighlights(eye: EyeSpec, g: OpeningGeometry, c: Vec, local
     const { item } = p;
     const color = item.color ?? lightColor;
     const out: string[] = [];
+    // Teinte (passe 13) : l'aura prend la teinte ; le corps et les aiguilles vont du cœur (`color`) vers la teinte (dégradé radial) ; fini flat : teinte pleine, pas de dégradé.
+    const reach = Math.max(p.rx, p.ry) * (1 + item.rays * 0.9); let fill = color;
+    if (item.tint && !flat) {
+      const rid = `${id}-hl${i}-tint`;
+      defs.push(el('radialGradient', { id: rid, gradientUnits: 'userSpaceOnUse', cx: p.cx, cy: p.cy, r: reach }, [el('stop', { offset: 0.25, 'stop-color': color }), el('stop', { offset: 1, 'stop-color': item.tint })]));
+      fill = urlRef(rid);
+    }
+    const auraColor = item.tint ?? color;
     if (item.intensity > 0 && !flat) {
       const gid = `${id}-hl${i}-glow`;
       defs.push(el('filter', { id: gid, x: '-100%', y: '-100%', width: '300%', height: '300%' }, [el('feGaussianBlur', { stdDeviation: Math.max(p.rx, p.ry) * (0.45 + 0.5 * item.intensity) })]));
-      out.push(shapeMarkup({ ...p, rx: p.rx * 1.35, ry: p.ry * 1.35, outline: p.outline.map((v) => ({ x: v.x * 1.35, y: v.y * 1.35 })) }, { fill: color, 'fill-opacity': Math.min(1, item.opacity * item.intensity * 0.8), filter: urlRef(gid) }));
+      out.push(shapeMarkup({ ...p, rx: p.rx * 1.35, ry: p.ry * 1.35, outline: p.outline.map((v) => ({ x: v.x * 1.35, y: v.y * 1.35 })) }, { fill: auraColor, 'fill-opacity': Math.min(1, item.opacity * item.intensity * 0.8), filter: urlRef(gid) }));
     }
-    const attrs: Record<string, string | number> = { fill: color, 'fill-opacity': item.opacity };
+    out.push(...rayMarkup(p, fill));
+    const attrs: Record<string, string | number> = { fill, 'fill-opacity': item.opacity };
     if (item.softness > 0 && !flat) {
       const sid = `${id}-hl${i}-soft`;
       defs.push(el('filter', { id: sid, x: '-50%', y: '-50%', width: '200%', height: '200%' }, [el('feGaussianBlur', { stdDeviation: item.softness * 0.35 * Math.min(p.rx, p.ry) })]));

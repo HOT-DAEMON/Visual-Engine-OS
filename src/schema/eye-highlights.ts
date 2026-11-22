@@ -36,6 +36,12 @@ export const HighlightItem = z
     points: z.number().int().min(3).max(12).optional(),
     /** null : couleur de la lumière de la scène. */
     color: Hex.nullable().default(null),
+    /** Teinte des pointes et de l'aura (passe 13) : le cœur reste `color`, le dégradé radial va vers `tint` (réf. 10a : cœur blanc, pointes orangées ; 10b : bleu glacé). null : aucune teinte (rendu historique). */
+    tint: Hex.nullable().default(null),
+    /** Aiguilles de rayonnement (passe 13), `sparkle` / `star` : longueur des pointes AU-DELÀ du corps, en rayons du corps (réf. : fines lames effilées de 1 à 3 rayons). 0 : aucune (rendu historique). */
+    rays: z.number().min(0).max(4).default(0),
+    /** Irrégularité organique (passe 13) : écart des rayons des lobes du corps et des longueurs d'aiguilles, déterministe (empreinte de la position et de la taille). 0 : étoile régulière. */
+    jitter: Unit.default(0),
     opacity: Unit.default(1),
     /** Douceur des bords (flou), en fraction de la taille. */
     softness: Unit.default(0),

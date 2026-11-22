@@ -52,8 +52,9 @@ describe('OPT-01/04 — système de reflets', () => {
     }
   });
 
-  it('le schéma limite la liste à 6 reflets et valide la forme', () => {
-    expect(EyeSpec.safeParse({ kind: 'eye', id: 'e', highlights: { list: Array.from({ length: 7 }, () => ({})) } }).success).toBe(false);
+  it('le schéma limite la liste à 12 reflets et valide la forme', () => {
+    expect(EyeSpec.safeParse({ kind: 'eye', id: 'e', highlights: { list: Array.from({ length: 13 }, () => ({})) } }).success).toBe(false);
+    expect(EyeSpec.safeParse({ kind: 'eye', id: 'e', highlights: { list: Array.from({ length: 12 }, () => ({})) } }).success).toBe(true);
     expect(EyeSpec.safeParse({ kind: 'eye', id: 'e', highlights: { list: [{ shape: 'blob' }] } }).success).toBe(false);
   });
 });

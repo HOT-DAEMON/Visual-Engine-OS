@@ -149,3 +149,13 @@ Fait : liner épais effilé par famille de cils (`lids.liner`), dégagement de l
 - ⬜ Haut de l'iris du prisme olive (réf. turquoise) : inchangé.
 - ⬜ `tests/eye-gallery-ext3` : empreintes `sha1` périmées avant la passe 12 (voir `EYES-PASS-12.md` § 6).
 - ⬜ Les points ouverts de la passe 11 non traités ici restent valables : galerie 4 (enveloppes, `circle` / `diamond`), `verifyEye` (`pupil-darker-than-iris` 30 yeux, `svg-weight`), preuve visuelle œil par œil.
+
+## Passe 13 (détail : `EYES-PASS-13.md`)
+- **Fait** : étoiles rayonnantes et teintées (`rays`, `tint`, `jitter`), détecteur d'étoiles à bassins versants, `iris.lift` (luminance à ± 10 des 5 références), `slits.curve`, fentes mesurées sur toutes les références, cellules de ice (65 → 41 pour 31) et de fire (200 → 60 pour 44), détail atomique de lime-cyan, règles `iris-luminance-plausible` et `iris-white-share-plausible`.
+- **Cellules** : lime-cyan 52 pour 5 (la réf. 08 est faite de grands aplats ; la règle de gradient demande des arêtes — tension non résolue, seuil léger 9 à valider) ; fire 60 pour 44 ; prism 200 pour 167 ; emerald 54 pour 105 (trop peu).
+- **Fentes** : emerald 19 pour 6 (les arêtes de facettes se lisent comme des fentes radiales, profondeur 63 pour 30) ; fire 15 pour 7 ; ice 2 pour 4 (4 fentes ajoutées sur fond sombre n'étaient pas détectées, retirées) ; courbure : seule prism l'utilise (09 dérive à 36 °/ρ, non reprise).
+- **Étoiles** : premier éclat d'ice 0,79 pour 0,81 et de fire 0,90 pour 0,80 (réglés à la main, instables : le seuil de l'ouverture morphologique fait sauter la mesure) ; petites étoiles `star` à 5 pointes sans lobes asymétriques fidèles à 10b (5 à 6 lobes irréguliers, bleu glacé) ; teinte seulement dans le dégradé du corps (pas de couleur propre par aiguille).
+- **Tonalité** : part sombre emerald 0,166 pour 0,101 et fire 0,316 pour 0,373 ; `lift` et `vibrance` à recalibrer ensemble à chaque changement de famille (`calibrate-lift.ts`, `calibrate-vibrance.ts`).
+- **Filtres SVG** : avertissement `filter-budget` (non bloquant, limite 14) : ice 18 (15 avant la passe), emerald 15 ; `softness` ajoute un filtre par éclat ; les étoiles d'anneau d'ice ont déjà `intensity` 0. Piste : un seul filtre de flou partagé par les éclats d'une famille.
+- **Tests** : `eye-gallery-ext3` « identité 300 » échoue depuis avant la passe (empreintes figées à régénérer) ; non relancés après la dernière série : rotation 3D de la tête et pipeline visage complet hors galeries.
+- **Non fait** : galerie 4 « nouvelles enveloppes réfs 13/17 », facettes taillées de 07, braises de 10a, anneau 10a fidèle (listés en passe 11–12, inchangés).

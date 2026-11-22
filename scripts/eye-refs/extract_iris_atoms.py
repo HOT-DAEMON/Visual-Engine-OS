@@ -79,10 +79,16 @@ def slits(bgr, cx, cy, rx, ry, rho_lo=0.30, rho_hi=0.90):
         bands = {found[m]['band'] for m in grp}
         if len(bands) >= 3:
             used.update(grp)
-            persistent.append({'angDeg': round(float(np.mean([found[m]['angDeg'] for m in grp])), 1), 'bands': len(bands), 'widthDeg': round(float(np.mean([found[m]['widthDeg'] for m in grp])), 2), 'depth': round(float(np.mean([found[m]['depth'] for m in grp])), 1), 'rhoMin': min(found[m]['rho'] for m in grp), 'rhoMax': max(found[m]['rho'] for m in grp)})
+            # DÉRIVE (passe 13) : angle de la fente à la bande la plus interne et à la plus externe du groupe -> une fente droite dérive de ~0°, une fente courbe (réf. 04) de plusieurs degrés
+            bi = min(bands); bo = max(bands)
+            ai = np.mean([found[m]['angDeg'] for m in grp if found[m]['band'] == bi]); ao = np.mean([found[m]['angDeg'] for m in grp if found[m]['band'] == bo])
+            drift = ((ao - ai) + 180) % 360 - 180
+            persistent.append({'angDeg': round(float(np.mean([found[m]['angDeg'] for m in grp])), 1), 'bands': len(bands), 'widthDeg': round(float(np.mean([found[m]['widthDeg'] for m in grp])), 2), 'depth': round(float(np.mean([found[m]['depth'] for m in grp])), 1), 'rhoMin': min(found[m]['rho'] for m in grp), 'rhoMax': max(found[m]['rho'] for m in grp), 'driftDeg': round(float(drift), 2), 'spanRho': round(float(max(found[m]['rho'] for m in grp) - min(found[m]['rho'] for m in grp)), 3)})
     return {'raw': len(found), 'persistent': persistent, 'persistentCount': len(persistent),
             'meanWidthDeg': round(float(np.mean([p['widthDeg'] for p in persistent])), 2) if persistent else None,
-            'meanDepth': round(float(np.mean([p['depth'] for p in persistent])), 1) if persistent else None}
+            'meanDepth': round(float(np.mean([p['depth'] for p in persistent])), 1) if persistent else None,
+            'meanAbsDriftDeg': round(float(np.mean([abs(p['driftDeg']) for p in persistent])), 2) if persistent else None,
+            'meanDriftPerRho': round(float(np.mean([abs(p['driftDeg']) / max(0.05, p['spanRho']) for p in persistent])), 2) if persistent else None}
 
 
 def cells(bgr, cx, cy, rx, ry):
@@ -123,6 +129,24 @@ def stars(bgr, cx, cy, rx, ry):
     kk = max(3, int(round(0.05 * R))) | 1
     mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (kk, kk)))
     n, lab, st, cen = cv2.connectedComponentsWithStats(mask, connectivity=8)
+    # SÉPARATION (passe 13) : des corps qui se touchent (arc blanc + flare central, étoiles de l'anneau reliées par leurs pointes) formaient une seule composante (Feret 1,0 R sur ice).
+    # Bassins versants sur la transformée de distance, marqueurs = h-maxima (h = 30 % du maximum de la composante) : on ne coupe qu'aux VRAIS étranglements ; un flare à plusieurs bras reste entier.
+    from skimage.morphology import h_maxima
+    dist = cv2.distanceTransform(mask, cv2.DIST_L2, 5)
+    mk = np.zeros(mask.shape, np.int32); nm = 0
+    for i in range(1, n):
+        sel = lab == i; mx = float(dist[sel].max()) if sel.any() else 0.0
+        if mx < 0.02 * R: continue
+        hm = h_maxima(np.where(sel, dist, 0).astype(np.float32), 0.30 * mx) & sel
+        c, l2 = cv2.connectedComponents(hm.astype(np.uint8))
+        for j in range(1, c): nm += 1; mk[l2 == j] = nm
+    if nm > n - 1:                                   # au moins une composante a plusieurs marqueurs : on sépare
+        from skimage.segmentation import watershed
+        lab = watershed(-dist, mk, mask=mask > 0).astype(np.int32); n = nm + 1
+        st = np.zeros((n, 5), np.int32); cen = np.zeros((n, 2))
+        for i in range(1, n):
+            ys, xs = np.where(lab == i)
+            if len(xs): st[i, cv2.CC_STAT_AREA] = len(xs); cen[i] = (xs.mean(), ys.mean())
     items = []
     for i in range(1, n):
         a = int(st[i, cv2.CC_STAT_AREA])
@@ -186,7 +210,7 @@ def main():
         bgr = cache[f]
         cx, cy, rx, ry = ellipse(e)
         r = {'file': f, 'ellipse': {'cx': cx, 'cy': cy, 'rx': rx, 'ry': ry}, 'darkByBand': dark_by_band(bgr, cx, cy, rx, ry)}
-        if e['id'] in ('04', '03', '05', '06', '09'): r['slits'] = slits(bgr, cx, cy, rx, ry)
+        r['slits'] = slits(bgr, cx, cy, rx, ry)                       # passe 13 : toutes les références (04, 03, 05, 06, 07, 08a, 08b, 09, 10a, 10b), pas seulement 04
         if e['id'] in ('07', '04', '08a', '10a', '10b'): r['cells'] = cells(bgr, cx, cy, rx, ry)
         if e['id'] in ('10a', '10b', '07', '04'): r['stars'] = stars(bgr, cx, cy, rx, ry)
         if e['id'] in ('10a', '10b'): r['ring'] = ring_embers(bgr, cx, cy, rx, ry)

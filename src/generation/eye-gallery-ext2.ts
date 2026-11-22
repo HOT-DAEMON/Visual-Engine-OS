@@ -76,7 +76,7 @@ export function applyIrisPreset(e: EyeInput, p: PhotoIris, style: string, simple
   const keepAspect = ROUNDISH.includes(style) || p.irisAspect === null;
   return {
     ...e, archetype: null, finish: 'shaded',   // dégradés, fibres et lueur : un fini `flat` (encre) les retirerait
-    iris: { ...e.iris, ...(p.base ? { material: { ...(e.iris as { material?: object } | undefined)?.material, base: { type: 'radial', stops: p.base } } } : {}), layers: p.layers, detail: p.detail, limbalRing: p.limbalRing, fibers: p.fibers, glow: p.glow, ...(p.vibrance === undefined ? {} : { vibrance: p.vibrance }), ...(keepAspect ? {} : { aspect: p.irisAspect }) },
+    iris: { ...e.iris, ...(p.base ? { material: { ...(e.iris as { material?: object } | undefined)?.material, base: { type: 'radial', stops: p.base } } } : {}), layers: p.layers, detail: p.detail, limbalRing: p.limbalRing, fibers: p.fibers, glow: p.glow, ...(p.vibrance === undefined ? {} : { vibrance: p.vibrance }), ...(p.lift === undefined ? {} : { lift: p.lift }), ...(keepAspect ? {} : { aspect: p.irisAspect }) },
     pupil: { ...e.pupil, shape: p.pupil.shape, size: p.pupil.size, deform: { ...(e.pupil?.deform ?? {}), squash: p.pupil.squash } },
     highlights: { list: simple ? p.highlights.slice(0, 2) : p.highlights },
   } as EyeInput;

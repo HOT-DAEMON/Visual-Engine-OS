@@ -102,11 +102,13 @@ describe('couche de vérification du rendu (géométrie · anatomie · style)', 
     for (const f of PHOTO2_IRIS_FAMILIES) { const r = verifyEyeRender(eyeOf(f)); expect(r.filter((c) => !c.ok).map((c) => c.id), f).toEqual([]); if (f !== 'lime-cyan') expect(r.filter((c) => ids.includes(c.id)).map((c) => c.id), f).toEqual(expect.arrayContaining(['iris-dark-share-plausible', 'atomic-edge-density'])); }
     expect(verifyEyeRender(eyeOf('prism-star')).some((c) => c.id === 'slits-radial')).toBe(true); expect(verifyEyeRender(eyeOf('ice-star')).some((c) => c.id === 'arcs-concentric')).toBe(true);
   }, 120000);
-  it('lime-cyan (aucun détail atomique) : AUCUNE règle atomique n’est évaluée (les yeux historiques gardent leurs contrôles)', () => {
-    expect(verifyEyeRender(eyeOf('lime-cyan')).filter((c) => ids.includes(c.id))).toEqual([]);
-  });
+  it('lime-cyan (détail atomique, passe 13 : anneau vert foncé continu à r = 0,62 + points cyan) : les règles atomiques sont évaluées ET passées ; sans arcs ni braises, aucune règle atomique (yeux historiques)', () => {
+    const r = verifyEyeRender(eyeOf('lime-cyan')).filter((c) => ids.includes(c.id)); expect(r.length).toBeGreaterThan(0); expect(r.filter((c) => !c.ok).map((c) => c.id)).toEqual([]);
+    const bare = eyeOf('lime-cyan', (e) => { delete e.iris.detail.arcs; delete e.iris.detail.embers; }); expect(verifyEyeRender(bare).filter((c) => ids.includes(c.id))).toEqual([]);
+  }, 60000);
+  // passe 13 : on ne garde que les 2 reflets principaux, car les étoiles d'anneau claires couvrent assez d'iris pour garder la part sombre à 0,4
   it('contre-exemple anatomie : des vides qui noircissent presque tout l’iris échouent `iris-dark-share-plausible`', () => {
-    const r = verifyEyeRender(eyeOf('ice-star', (e) => { e.iris.detail.voids = [{ inner: 0.1, outer: 1, strength: 1 }, { inner: 0.1, outer: 1, strength: 1 }, { inner: 0.1, outer: 1, strength: 1 }]; })).find((c) => c.id === 'iris-dark-share-plausible')!;
+    const r = verifyEyeRender(eyeOf('ice-star', (e) => { e.iris.detail.voids = [{ inner: 0.1, outer: 1, strength: 1 }, { inner: 0.1, outer: 1, strength: 1 }, { inner: 0.1, outer: 1, strength: 1 }]; e.highlights.list = e.highlights.list.slice(0, 2); })).find((c) => c.id === 'iris-dark-share-plausible')!;
     expect(r.ok).toBe(false); expect(r.value).toBeGreaterThan(ATOM_DARK_MAX);
   }, 60000);
   it('contre-exemple style : un détail atomique demandé mais invisible (profondeur 0, sans facettes ni reflets : gradient ≈ 6,6) échoue `atomic-edge-density`', () => {

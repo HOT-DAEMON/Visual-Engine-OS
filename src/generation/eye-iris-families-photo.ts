@@ -55,6 +55,8 @@ export interface PhotoIris {
   readonly base?: readonly { readonly offset: number; readonly color: string }[];
   /** Saturation du disque d'iris (`iris.vibrance`, passe 11) ; absent : 0 (aucun filtre). */
   readonly vibrance?: number;
+  /** Luminosité des demi-teintes du disque d'iris (`iris.lift`, passe 13) ; absent : 0 (aucun filtre). */
+  readonly lift?: number;
 }
 
 export function photoIrisFamily(f: PhotoIrisFamily, rnd: () => number): PhotoIris {

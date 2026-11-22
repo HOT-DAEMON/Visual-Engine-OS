@@ -1,0 +1,398 @@
+{
+ "familles": {
+  "prism-star": {
+   "ref": "04",
+   "lumMean": {
+    "moteur": 125.7,
+    "reference": 126.1
+   },
+   "darkShare": {
+    "moteur": 0.178,
+    "reference": 0.154
+   },
+   "satPeaks": {
+    "moteur": 0.781,
+    "reference": 0.783
+   },
+   "etoiles": {
+    "moteurTop6Moy": 0.346,
+    "referenceTop6Moy": 0.362,
+    "moteurTop6": [
+     0.557,
+     0.397,
+     0.366,
+     0.267,
+     0.259,
+     0.23
+    ],
+    "referenceTop6": [
+     0.57,
+     0.402,
+     0.331,
+     0.322,
+     0.282,
+     0.264
+    ]
+   },
+   "cellules": {
+    "moteur": 200,
+    "reference": 167
+   },
+   "fentes": {
+    "moteur": 43,
+    "reference": 33,
+    "derive": {
+     "moteur": 6.22,
+     "reference": 5.78
+    }
+   },
+   "regles": {
+    "iris-texture": {
+     "ok": true,
+     "valeur": 55.86,
+     "limite": 8
+    },
+    "slits-radial": {
+     "ok": true,
+     "valeur": 0.878,
+     "limite": 0.5
+    },
+    "iris-luminance-plausible": {
+     "ok": true,
+     "valeur": 134.921,
+     "limite": 60
+    },
+    "iris-white-share-plausible": {
+     "ok": true,
+     "valeur": 0.057,
+     "limite": 0.2
+    },
+    "iris-dark-share-plausible": {
+     "ok": true,
+     "valeur": 0.144,
+     "limite": 0.6
+    },
+    "atomic-edge-density": {
+     "ok": true,
+     "valeur": 32.929,
+     "limite": 12
+    }
+   },
+   "echecs": []
+  },
+  "emerald-facets": {
+   "ref": "07",
+   "lumMean": {
+    "moteur": 124.5,
+    "reference": 128.8
+   },
+   "darkShare": {
+    "moteur": 0.166,
+    "reference": 0.101
+   },
+   "satPeaks": {
+    "moteur": 0.741,
+    "reference": 0.738
+   },
+   "etoiles": {
+    "moteurTop6Moy": 0.325,
+    "referenceTop6Moy": 0.312,
+    "moteurTop6": [
+     0.621,
+     0.513,
+     0.29,
+     0.183,
+     0.18,
+     0.165
+    ],
+    "referenceTop6": [
+     0.583,
+     0.524,
+     0.239,
+     0.228,
+     0.151,
+     0.148
+    ]
+   },
+   "cellules": {
+    "moteur": 54,
+    "reference": 105
+   },
+   "fentes": {
+    "moteur": 19,
+    "reference": 6,
+    "derive": {
+     "moteur": 8.38,
+     "reference": 3.57
+    }
+   },
+   "regles": {
+    "pupil-darker-than-iris-pixels": {
+     "ok": true,
+     "valeur": -200.263,
+     "limite": 2
+    },
+    "iris-texture": {
+     "ok": true,
+     "valeur": 28.567,
+     "limite": 8
+    },
+    "iris-luminance-plausible": {
+     "ok": true,
+     "valeur": 118.311,
+     "limite": 60
+    },
+    "iris-white-share-plausible": {
+     "ok": true,
+     "valeur": 0.101,
+     "limite": 0.2
+    },
+    "iris-dark-share-plausible": {
+     "ok": true,
+     "valeur": 0.189,
+     "limite": 0.6
+    },
+    "atomic-edge-density": {
+     "ok": true,
+     "valeur": 24.921,
+     "limite": 12
+    }
+   },
+   "echecs": []
+  },
+  "lime-cyan": {
+   "ref": "08a",
+   "lumMean": {
+    "moteur": 169.5,
+    "reference": 169.4
+   },
+   "darkShare": {
+    "moteur": 0.02,
+    "reference": 0.003
+   },
+   "satPeaks": {
+    "moteur": 0.786,
+    "reference": 0.786
+   },
+   "etoiles": {
+    "moteurTop6Moy": 0.34,
+    "referenceTop6Moy": null,
+    "moteurTop6": [
+     0.847,
+     0.383,
+     0.338,
+     0.26,
+     0.129,
+     0.084
+    ],
+    "referenceTop6": []
+   },
+   "cellules": {
+    "moteur": 52,
+    "reference": 5
+   },
+   "fentes": {
+    "moteur": 1,
+    "reference": 0,
+    "derive": {
+     "moteur": 1.2,
+     "reference": null
+    }
+   },
+   "regles": {
+    "pupil-darker-than-iris-pixels": {
+     "ok": true,
+     "valeur": -160.134,
+     "limite": 2
+    },
+    "iris-texture": {
+     "ok": true,
+     "valeur": 12.244,
+     "limite": 8
+    },
+    "arcs-concentric": {
+     "ok": true,
+     "valeur": 0.03,
+     "limite": 0.06
+    },
+    "iris-luminance-plausible": {
+     "ok": true,
+     "valeur": 170.893,
+     "limite": 60
+    },
+    "iris-white-share-plausible": {
+     "ok": true,
+     "valeur": 0.007,
+     "limite": 0.2
+    },
+    "iris-dark-share-plausible": {
+     "ok": true,
+     "valeur": 0.016,
+     "limite": 0.6
+    },
+    "atomic-edge-density": {
+     "ok": true,
+     "valeur": 12.314,
+     "limite": 9
+    }
+   },
+   "echecs": []
+  },
+  "fire-halo": {
+   "ref": "10a",
+   "lumMean": {
+    "moteur": 92.7,
+    "reference": 89.1
+   },
+   "darkShare": {
+    "moteur": 0.316,
+    "reference": 0.373
+   },
+   "satPeaks": {
+    "moteur": 0.72,
+    "reference": 0.72
+   },
+   "etoiles": {
+    "moteurTop6Moy": 0.353,
+    "referenceTop6Moy": 0.348,
+    "moteurTop6": [
+     0.901,
+     0.342,
+     0.255,
+     0.247,
+     0.216,
+     0.16
+    ],
+    "referenceTop6": [
+     0.8,
+     0.304,
+     0.264,
+     0.243,
+     0.237,
+     0.237
+    ]
+   },
+   "cellules": {
+    "moteur": 60,
+    "reference": 44
+   },
+   "fentes": {
+    "moteur": 15,
+    "reference": 7,
+    "derive": {
+     "moteur": 3.33,
+     "reference": 3.74
+    }
+   },
+   "regles": {
+    "iris-texture": {
+     "ok": true,
+     "valeur": 33.795,
+     "limite": 8
+    },
+    "iris-luminance-plausible": {
+     "ok": true,
+     "valeur": 112.877,
+     "limite": 60
+    },
+    "iris-white-share-plausible": {
+     "ok": true,
+     "valeur": 0.103,
+     "limite": 0.2
+    },
+    "iris-dark-share-plausible": {
+     "ok": true,
+     "valeur": 0.215,
+     "limite": 0.6
+    },
+    "atomic-edge-density": {
+     "ok": true,
+     "valeur": 19.436,
+     "limite": 12
+    }
+   },
+   "echecs": []
+  },
+  "ice-star": {
+   "ref": "10b",
+   "lumMean": {
+    "moteur": 104.7,
+    "reference": 103.3
+   },
+   "darkShare": {
+    "moteur": 0.252,
+    "reference": 0.297
+   },
+   "satPeaks": {
+    "moteur": 0.73,
+    "reference": 0.729
+   },
+   "etoiles": {
+    "moteurTop6Moy": 0.507,
+    "referenceTop6Moy": 0.473,
+    "moteurTop6": [
+     0.785,
+     0.507,
+     0.463,
+     0.457,
+     0.445,
+     0.388
+    ],
+    "referenceTop6": [
+     0.808,
+     0.516,
+     0.393,
+     0.392,
+     0.369,
+     0.358
+    ]
+   },
+   "cellules": {
+    "moteur": 41,
+    "reference": 31
+   },
+   "fentes": {
+    "moteur": 2,
+    "reference": 4,
+    "derive": {
+     "moteur": 4.71,
+     "reference": 5.29
+    }
+   },
+   "regles": {
+    "iris-texture": {
+     "ok": true,
+     "valeur": 36.35,
+     "limite": 8
+    },
+    "arcs-concentric": {
+     "ok": true,
+     "valeur": 0,
+     "limite": 0.06
+    },
+    "iris-luminance-plausible": {
+     "ok": true,
+     "valeur": 112.774,
+     "limite": 60
+    },
+    "iris-white-share-plausible": {
+     "ok": true,
+     "valeur": 0.188,
+     "limite": 0.2
+    },
+    "iris-dark-share-plausible": {
+     "ok": true,
+     "valeur": 0.18,
+     "limite": 0.6
+    },
+    "atomic-edge-density": {
+     "ok": true,
+     "valeur": 30.097,
+     "limite": 12
+    }
+   },
+   "echecs": []
+  }
+ },
+ "echecsPixelsGalerie4": {}
+}

@@ -26,7 +26,7 @@ const ATTRIBUTES: ReadonlySet<string> = new Set([
   'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'stroke-opacity', 'stroke-dasharray',
   'opacity', 'transform', 'clip-path', 'clip-rule', 'filter',
   'gradientUnits', 'offset', 'stop-color', 'stop-opacity', 'stdDeviation',
-  'in', 'in2', 'result', 'operator', 'values', 'tableValues', 'type', 'slope', 'intercept', 'dx', 'dy', 'flood-color', 'flood-opacity',
+  'in', 'in2', 'result', 'operator', 'values', 'tableValues', 'type', 'slope', 'intercept', 'amplitude', 'exponent', 'offset', 'dx', 'dy', 'flood-color', 'flood-opacity',
   'k1', 'k2', 'k3', 'k4', 'baseFrequency', 'numOctaves', 'seed', 'scale', 'xChannelSelector', 'yChannelSelector',
   'filterUnits', 'color-interpolation-filters', 'href', 'preserveAspectRatio',
   'surfaceScale', 'diffuseConstant', 'specularConstant', 'specularExponent', 'azimuth', 'elevation', 'lighting-color',

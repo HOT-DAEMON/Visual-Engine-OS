@@ -158,6 +158,8 @@ export const IrisDetail = z
         outer: z.number().min(0.3).max(0.99).default(0.92),
         /** Effilement : 0 = largeur constante, 1 = pointe au bout externe. */
         taper: Unit.default(0.6),
+        /** Courbure (passe 13) : dérive angulaire de la fente vers l'extérieur, en degrés par unité de rayon d'iris (réf. 04 : 5,8 ° / ρ mesurés, signe constant = tourbillon). 0 : fentes droites. */
+        curve: z.number().min(-40).max(40).default(0),
       })
       .strict()
       .optional(),
@@ -225,6 +227,11 @@ export const Iris = z
      * superposées (fibres claires, voile de limbe) qui lavent les teintes.
      */
     vibrance: Unit.default(0),
+    /**
+     * LUMINOSITÉ DES DEMI-TEINTES (passe 13, opt-in, 0 = aucun filtre : rendu historique) : courbe à genou appliquée au disque de l'iris (pas la pupille ni les reflets) : identité sous 0,35 et en 1,
+     * bosse sinusoïdale de hauteur 0,4 × valeur au milieu. Les noirs (part sombre, L < 50) et les blancs restent en place ; seules les teintes moyennes montent. Réfs 04 / 07 / 10 : luminance moyenne de 126 / 129 / 89 / 103, le moteur sous elles de 14 à 22 (couleurs plates dans les zones claires).
+     */
+    lift: Unit.default(0),
   })
   .strict();
 
