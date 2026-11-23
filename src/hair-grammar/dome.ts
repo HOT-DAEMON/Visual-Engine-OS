@@ -5,17 +5,16 @@ import { v3 } from './vec';
 /**
  * CALOTTE — la région de l'image que le contrôle anatomique `anat.dome` exige couverte : l'intérieur de l'ellipse du crâne (0,8 du rayon, au carré) qui reste
  * au-dessus de la ligne des yeux moins 0,12 H. Extraite de `compose-verify.ts` pour être PARTAGÉE avec le remplissage de calotte (`repair-dome.ts`) : la
- * vérification et la réparation jugent exactement les mêmes cellules.
+ * vérification et la réparation jugent exactement les mêmes cellules. `domePredicate` donne la même région en coordonnées image continues (lecture de la raie, `part-line.ts`).
  */
-export function domeMask(h: HeadSpec, view: View, g: Grid): Uint8Array {
+export function domePredicate(h: HeadSpec, view: View): (px: number, py: number) => boolean {
   const c0 = project(view, v3(0, 0, h.cz)); const rx = h.rx * view.s; const ry = h.ry * view.s; const eyeY = project(view, landmarks(h).eyeR).y;
-  const m = new Uint8Array(g.nx * g.ny);
-  for (let y = 0; y < g.ny; y++) for (let x = 0; x < g.nx; x++) {
-    const px = (x + 0.5) * g.cell; const py = (y + 0.5) * g.cell;
-    if (py > eyeY - 0.12 * view.s) continue;
-    if (((px - c0.x) / rx) ** 2 + ((py - c0.y) / ry) ** 2 > 0.8) continue;
-    m[y * g.nx + x] = 1;
-  }
+  return (px, py) => py <= eyeY - 0.12 * view.s && ((px - c0.x) / rx) ** 2 + ((py - c0.y) / ry) ** 2 <= 0.8;
+}
+
+export function domeMask(h: HeadSpec, view: View, g: Grid): Uint8Array {
+  const inside = domePredicate(h, view); const m = new Uint8Array(g.nx * g.ny);
+  for (let y = 0; y < g.ny; y++) for (let x = 0; x < g.nx; x++) if (inside((x + 0.5) * g.cell, (y + 0.5) * g.cell)) m[y * g.nx + x] = 1;
   return m;
 }
 

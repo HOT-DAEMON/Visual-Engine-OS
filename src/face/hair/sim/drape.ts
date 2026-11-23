@@ -54,11 +54,14 @@ export function makeDrape(lm: FaceLandmarks, sim: HairSim, hw: (y: number) => nu
   return { yF, limit, onSkin };
 }
 
-/** Ombre portée sur la peau : le ruban de la mèche décalé vers le bas / la droite (lumière en haut à gauche), tronqué à la zone de peau. */
+/** Décalage CUIT de l'ombre sur la peau (fractions de W et de H) : celui d'une lumière de référence en haut à gauche, à 45° d'élévation. Le rendu le corrige selon la lumière réelle (`render/face/hair-skin-shadow.ts`). */
+export const SKIN_SHADOW_DX = 0.006;
+export const SKIN_SHADOW_DY = 0.011;
+/** Ombre portée sur la peau : le ruban de la mèche décalé vers le bas / la droite (lumière de référence en haut à gauche), tronqué à la zone de peau. */
 export function skinShadow(spine: Vec[], w0: number, sharp: number, lm: FaceLandmarks, onSkin: (v: Vec) => boolean): Poly | null {
   const pts = spine.filter(onSkin);
   if (pts.length < 2) return null;
-  const dx = 0.006 * lm.W;
-  const dy = 0.011 * lm.H;
+  const dx = SKIN_SHADOW_DX * lm.W;
+  const dy = SKIN_SHADOW_DY * lm.H;
   return ribbon(pts.map((p) => ({ x: p.x + dx, y: p.y + dy })), w0 * 1.15, sharp);
 }

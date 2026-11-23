@@ -1,3 +1,5 @@
+import { awayEdits, sideOf } from './part-edits';
+import { PART_SEVERITY, crossesPart } from './part-line';
 import { joinLocks } from './branch';
 import { emergeFrom } from './emerge';
 import { sampleLock, type HairProfile } from './grammar';
@@ -50,23 +52,27 @@ export function candidateEdits(P: HairProfile, L: LockSpec, view: View, codes: R
 }
 
 /** Coût de défauts LOCAL d'une mèche (avec dégagement) : somme des gravités. */
-export function localCost(P: HairProfile, S: LockSpec, view: View, marks: Marks, parent?: LockSpec): number {
-  return defectCost(lockDefects(P.head, view, paintLock(P.head, S, view), marks, parent, CLEARANCE * view.s));
+export function localCost(P: HairProfile, S: LockSpec, view: View, marks: Marks, parent?: LockSpec, part?: number): number {
+  const p = paintLock(P.head, S, view);
+  // Raie demandée : recouvrir son couloir est un défaut LOCAL (il ne dépend que de la mèche) ; sans lui, une correction d'œil pouvait pousser une mèche sur la raie (mesuré : graine 5, passe 4).
+  return defectCost(lockDefects(P.head, view, p, marks, parent, CLEARANCE * view.s)) + (part !== undefined && p.layer !== 'back' && crossesPart(P.head, view, p, part) > 0 ? PART_SEVERITY : 0);
 }
 
 /**
  * Résout une mèche : première édition, par coût croissant, qui annule le coût local ; à défaut la meilleure amélioration stricte ; `null` si aucune.
  * Le coût d'édition autorisé croît avec la gravité du défaut (0,6 + coût de défaut) : un auto-croisement de mèche arrière (0,25) ne justifie pas de raccourcir la mèche de moitié.
  */
-export function solveLock(P: HairProfile, specs: readonly LockSpec[], idx: number, view: View, marks: Marks, seed: number): Solved | null {
+export function solveLock(P: HairProfile, specs: readonly LockSpec[], idx: number, view: View, marks: Marks, seed: number, part?: number): Solved | null {
   const L = specs[idx] as LockSpec; const parent = L.parent ? specs.find((s) => s.id === L.parent?.id) : undefined;
-  const before = localCost(P, L, view, marks, parent); if (before <= 0) return null;
+  const before = localCost(P, L, view, marks, parent, part); if (before <= 0) return null;
   const codes = new Set(lockDefects(P.head, view, paintLock(P.head, L, view), marks, parent, CLEARANCE * view.s).map((d) => d.code));
+  const crosses = part !== undefined && crossesPart(P.head, view, paintLock(P.head, L, view), part) > 0;
   const budget = 0.6 + before; let best: Solved | null = null; let tried = 0;
-  for (const e of candidateEdits(P, L, view, codes, seed)) {
+  const edits = [...candidateEdits(P, L, view, codes, seed), ...(crosses ? awayEdits(sideOf(P.head, L, part as number)) : [])].sort((a, b) => a.cost - b.cost);
+  for (const e of edits) {
     if (e.cost > budget) break;
     const S = e.apply(L); if (S === L) continue;
-    const after = localCost(P, S, view, marks, parent); tried++;
+    const after = localCost(P, S, view, marks, parent, part); tried++;
     if (after < (best?.after ?? before) - 1e-9) best = { spec: S, fix: e.name, editCost: e.cost, before, after, tried };
     if (after <= 1e-9) break;
   }

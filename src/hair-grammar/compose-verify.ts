@@ -1,3 +1,4 @@
+import { PART_FLOOR, PART_SEVERITY, partOpenness } from './part-line';
 import { joinGap } from './branch';
 import { domeMask, domeRatio } from './dome';
 import { emergenceContinuity } from './emerge';
@@ -30,7 +31,10 @@ export interface VerifyOpts {
   readonly wind?: number;
   /** Mesure aussi la part visible de chaque lame (trame d'ordre de peinture, ≈ 15 ms) et la rapporte dans `Verdict.visibility`. */
   readonly visibility?: boolean;
-  /** Raie demandée (position latérale, unités H, repère de tête). Aucun seuil n'en dépend : seul le remplissage de calotte (`repair-dome.ts`) garde son couloir libre. */
+  /**
+   * Raie demandée (position latérale, unités H, repère de tête). Elle est VÉRIFIÉE (`part-line.ts`) : couloir libre de toute lame (`style.part`, localisé sur la mèche fautive) et ouverture qui reste un sillon
+   * (`style.partgap`, global). Le solveur local, le remplissage de calotte et la génération (`part-shape.ts`) partagent la même lecture.
+   */
   readonly part?: number;
 }
 export const balanceLimit = (wind = 0): number => 0.4 + 0.35 * Math.min(1, Math.max(0, wind));
@@ -87,6 +91,13 @@ export function verifyComposed(h: HeadSpec, specs: readonly LockSpec[], view: Vi
   if (Math.abs(comp.balance.moment) > bLim) D.push({ code: 'anat.balance', layer: 'anatomy', severity: 1, detail: `moment G/D ${comp.balance.moment.toFixed(2)}` });
   A.push(chk('équilibre G/D (moment)', comp.balance.moment, -bLim, bLim));
   // ── Style : lisibilité de la direction, hiérarchie, espaces négatifs intentionnels, variété, croisements.
+  // ── Raie demandée : couloir libre et sillon étroit, lus le long de la ligne projetée (valable à tous les lacets).
+  if (opts.part !== undefined) {
+    const pl = partOpenness(h, view, painted, opts.part);
+    S.push(chk('raie : couloir libre (part des échantillons)', pl.bare, 0.99, 1), chk('raie : sillon étroit (netteté)', pl.clarity, PART_FLOOR, 1));
+    for (const c of pl.covering) D.push({ code: 'style.part', layer: 'style', lock: c.id, ...(byId.get(c.id) ? { family: (byId.get(c.id) as LockSpec).family } : {}), severity: PART_SEVERITY, detail: `recouvre la raie sur ${c.n} point(s) de la ligne` });
+    if (!pl.covering.length && pl.clarity < PART_FLOOR) D.push({ code: 'style.partgap', layer: 'style', severity: PART_SEVERITY, detail: `raie trop ouverte (ouverture médiane ${pl.width.toFixed(2)} H, netteté ${pl.clarity.toFixed(2)})` });
+  }
   S.push(chk('cohérence de lecture', comp.reading.coherence, 0.3, 1), chk('part de la masse dominante', comp.hierarchy.dominantShare, 0.25, 0.8), chk('rapport dominante / seconde', comp.hierarchy.ratio, 1.15, 50));
   if (comp.reading.coherence < 0.3) D.push({ code: 'style.coherence', layer: 'style', severity: 1, detail: 'direction de lecture illisible' });
   if (comp.hierarchy.dominantShare < 0.25) D.push({ code: 'style.hierarchy', layer: 'style', severity: 1, detail: 'aucune masse ne domine' });

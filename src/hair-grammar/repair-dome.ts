@@ -2,11 +2,14 @@ import { bladeOutline } from './blade';
 import { fillPoly, makeGrid, type Grid } from './compose-grid';
 import { domeMask } from './dome';
 import { sampleLock, type HairProfile } from './grammar';
-import { aimOnShell, project, type View } from './head';
+import { aimOnShell, type View } from './head';
 import { defectCost, lockDefects, visibleMarks } from './lock-check';
 import type { LockSpec } from './lock';
 import { paintLock } from './paint';
-import { clamp, norm, prng, rad, v3, type V2 } from './vec';
+import { PART_HALF, crossesPart, partLinePoints } from './part-line';
+import { norm, prng, v3, type V2 } from './vec';
+
+export { PART_HALF };
 
 /**
  * REMPLISSAGE DE CALOTTE — `anat.dome` est un défaut GLOBAL : aucune mèche n'est fautive, il en MANQUE une. Le cycle de réparation ne traitait que les défauts
@@ -20,16 +23,9 @@ import { clamp, norm, prng, rad, v3, type V2 } from './vec';
  */
 export interface DomeFill { readonly spec: LockSpec; readonly gain: number; readonly corridor: number; readonly tried: number; readonly root: { readonly el: number; readonly az: number }; readonly lat: number }
 
-/** Demi-largeur du couloir protégé de la raie (unités H) : une ligne de crâne à découvert, pas une fenêtre. */
-export const PART_HALF = 0.035;
-
-/** Couloir de la raie en repère image : la ligne `x = xp` sur la calotte (élévation 30°–89°) épaissie de ±`half` H, rasterisée sur la trame de la vue. */
+/** Couloir de la raie en repère image : la ligne `x = xp` sur la calotte (élévation 30°–89°, `partLinePoints`) épaissie de ±`half` H, rasterisée sur la trame de la vue. */
 export function partCorridor(P: HairProfile, view: View, xp: number, g: Grid, half = PART_HALF): Uint8Array {
-  const h = P.head; const T = makeGrid(g.nx * g.cell, g.ny * g.cell, g.cell); const pts: V2[] = [];
-  for (let el = 30; el <= 89; el += 3) {
-    const c = Math.cos(rad(el)); const az = Math.asin(clamp(xp / (h.rx * c), -1, 1));
-    pts.push(project(view, v3(h.rx * c * Math.sin(az), -h.ry * Math.sin(rad(el)), h.cz + h.rz * c * Math.cos(az))));
-  }
+  const T = makeGrid(g.nx * g.cell, g.ny * g.cell, g.cell); const pts: V2[] = partLinePoints(P.head, view, xp);
   const w = half * view.s; fillPoly(T, [...pts.map((p) => ({ x: p.x - w, y: p.y })), ...[...pts].reverse().map((p) => ({ x: p.x + w, y: p.y }))], 1);
   return T.data;
 }
@@ -62,7 +58,7 @@ export function proposeDomeFill(P: HairProfile, specs: readonly LockSpec[], view
   const h = P.head; const F = P.families.find((f) => f.id === family); if (!F) return null;
   const mask = domeMask(h, view, g); const bare = (i: number): boolean => mask[i] === 1 && !g.data[i];
   const zone = largestBare(g, bare); if (!zone || zone.cells < 4) return null;
-  const corridor = partX === undefined ? null : partCorridor(P, view, partX, g);
+  const corridor = partX === undefined ? null : partCorridor(P, view, partX, g); const dome = domeMask(h, view, g);
   const marks = visibleMarks(h, view); const base = sampleLock(P, F, 300 + k, prng(seed * 131 + k * 17 + 5));
   const used = new Set(specs.map((s) => s.id)); let id = `${F.id}-dome${k}`; for (let n = 0; used.has(id); n++) id = `${F.id}-dome${k}x${n}`;
   const cx = (i: number): number => (i + 0.5) * g.cell;
@@ -74,10 +70,12 @@ export function proposeDomeFill(P: HairProfile, specs: readonly LockSpec[], view
     for (const lat of LATERAL) for (const len of LENGTHS) {
       const cand: LockSpec = { ...base, id, root: { el: at.el, az: at.az }, aim: norm(v3(base.aim.x + lat, base.aim.y, base.aim.z)), length: len || base.length };
       const p = paintLock(h, cand, view); tried++;
+      // Test EXACT du couloir (la trame à 3 px ne voit pas une lame qui mord le bord de la ligne : mesuré, des mèches de remplissage la recouvraient).
+      if (partX !== undefined && crossesPart(h, view, p, partX) > 0) continue;
       if (defectCost(lockDefects(h, view, p, marks, undefined, 0.03 * view.s)) > 0) continue; // ni œil, ni nez, ni bouche, ni axe qui se coupe
       const T = makeGrid(g.nx * g.cell, g.ny * g.cell, g.cell); fillPoly(T, bladeOutline(p.blade), 1);
       let gain = 0; let over = 0;
-      for (let i = 0; i < T.data.length; i++) { if (!T.data[i]) continue; if (bare(i)) gain++; if (corridor && corridor[i] && mask[i]) over++; }
+      for (let i = 0; i < T.data.length; i++) { if (!T.data[i]) continue; if (bare(i)) gain++; if (corridor && corridor[i] && dome[i]) over++; }
       // Chaque cellule du couloir recouverte coûte 4 cellules de gain : la raie prime sur la couverture d'une cellule isolée.
       // Le couloir de la raie est une contrainte DURE : une mèche qui le traverse est refusée (la raie reste une ligne de crâne à découvert entre deux rideaux).
       if (over > 0 || gain < 4 || gain <= (best?.gain ?? 0)) continue;

@@ -24,8 +24,12 @@ import type { LockSpec } from './lock';
 export interface FitStep { readonly iter: number; readonly intent: Intent; readonly obs: ArtObservations; readonly err: { readonly width: number; readonly negative: number; readonly moment: number; readonly axis: number } }
 export interface ReferenceFit { readonly intent: Intent; readonly specs: LockSpec[]; readonly target: ArtObservations; readonly structure: ArtStructure; readonly steps: FitStep[]; readonly repair: RepairResult; readonly final: ArtObservations }
 
-/** Rastérise des mèches peintes en `Reference` : masque = union des lames ; gris = ton de la mèche (ordre de peinture), contour d'encre d'un pixel. */
-export function referenceFromPainted(painted: readonly PaintedLock[], w: number, h: number): Reference {
+/**
+ * Rastérise des mèches peintes en `Reference` : masque = union des lames ; gris = ton de la mèche (ordre de peinture), contour d'encre d'un pixel.
+ * `skull` (optionnel) : ellipse du crâne ; les mèches `back` y sont CACHÉES (le crâne est devant elles), comme dans le rendu réel. Sans lui (comportement historique, calibrage de `observationsToSpec`),
+ * une mèche arrière peinte sous le crâne comble le sillon d'une raie et la mesure de netteté ne la voit plus : `measureArt` le fournit.
+ */
+export function referenceFromPainted(painted: readonly PaintedLock[], w: number, h: number, skull?: HeadEllipse): Reference {
   const mask = new Uint8Array(w * h); const gray = new Float32Array(w * h).fill(1); const g = makeGrid(w, h, 1);
   const tone = (p: PaintedLock): number => { const c = fillOf(p.spec.tone, INK); return c === INK.dark ? 38 / 255 : c === INK.mid ? 207 / 255 : 243 / 255; };
   const order = (['back', 'front', 'over'] as const).flatMap((l) => painted.filter((p) => p.layer === l));
@@ -33,6 +37,7 @@ export function referenceFromPainted(painted: readonly PaintedLock[], w: number,
     g.data.fill(0); fillPoly(g, bladeOutline(p.blade), 1); const t = tone(p);
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
       const i = y * w + x; if (!g.data[i]) continue;
+      if (skull && p.layer === 'back' && ((x + 0.5 - skull.cx) / skull.rx) ** 2 + ((y + 0.5 - skull.cy) / skull.ry) ** 2 < 1) continue;
       const edge = x === 0 || y === 0 || x === w - 1 || y === h - 1 || !g.data[i - 1] || !g.data[i + 1] || !g.data[i - w] || !g.data[i + w];
       mask[i] = 1; gray[i] = edge ? 0.08 : t;
     }

@@ -1,5 +1,7 @@
 # Moteur capillaire — reste à faire après la passe 4, par composant
 
+> Mis à jour par la passe 5 : raie, ombre de peau et segmentation sont traitées dans `HAIR-PASS5.md` / `HAIR-PASS5-REMAINING.md` (les lignes correspondantes ci-dessous sont dépassées).
+
 Bilan et mesures : `HAIR-PASS4.md`. Ce fichier remplace, pour les points qu'il traite, `HAIR-PASS3-REMAINING.md` (dont les lignes soldées sont marquées).
 Rien de ce qui suit n'est présenté comme fait.
 

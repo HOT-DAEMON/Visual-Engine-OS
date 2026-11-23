@@ -30,7 +30,7 @@ export interface ArtMeasure { readonly fringe: number; readonly part: { readonly
 
 /** Mesures des axes d'art direction sur une coiffure rendue (lecture de la même observation structurée que pour une référence). */
 export function measureArt(P: HairProfile, specs: readonly LockSpec[], view: View, size = { w: 156, h: 150 }): ArtMeasure {
-  const R = referenceFromPainted(specs.map((L) => paintLock(P.head, L, view)), size.w, size.h); const S = observeStructure(R, headEllipse(P, view));
+  const E = headEllipse(P, view); const R = referenceFromPainted(specs.map((L) => paintLock(P.head, L, view)), size.w, size.h, E); const S = observeStructure(R, E); // le crâne cache les mèches arrière : sans cela elles comblent le sillon
   const roots = specs.filter((s) => !s.parent).length; const kids = specs.filter((s) => s.parent && s.width < 0.5 * (specs.find((m) => m.id === s.parent?.id)?.width ?? 1) && s.strands === 0).length;
   return { fringe: S.fringe, part: S.part, tips: roots ? kids / roots : 0, gloss: S.gloss.share };
 }
