@@ -47,8 +47,8 @@ describe('OPT-01/04 — système de reflets', () => {
     expect(custom.ok).toBe(true);
     if (custom.ok && legacy.ok) {
       expect(custom.svg).not.toBe(legacy.svg);
-      expect(custom.svg).toContain('hl0-glow');
-      expect(custom.svg).toContain('hl0-soft');
+      expect(custom.svg).toContain('-hl-glow');
+      expect(custom.svg).toContain('-hl-soft');
     }
   });
 

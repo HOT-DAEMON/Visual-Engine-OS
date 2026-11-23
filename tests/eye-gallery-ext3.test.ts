@@ -75,7 +75,14 @@ describe('visage : eyeSource « extended3 » (348 identités)', () => {
   it('generateRandomFace(extended3, identité 300) : œil de la galerie 3 sur les deux côtés, déterministe ; les sources existantes gardent leurs tirages', () => {
     const f1 = JSON.stringify(generateRandomFace(5, { eyeSource: 'extended3', identity: 300 } as never)); const f2 = JSON.stringify(generateRandomFace(5, { eyeSource: 'extended3', identity: 300 } as never));
     expect(f1).toBe(f2); expect(f1).toContain('"extra3-52"'.slice(1, -1)) ;
-    const h = (src: 'gallery' | 'extended' | 'extended2'): string => createHash('sha1').update(JSON.stringify(generateRandomFace(42, { eyeSource: src } as never))).digest('hex').slice(0, 12);
-    expect([h('gallery'), h('extended'), h('extended2')]).toEqual(['4a1d3ae7d464', 'ecfffffef9d6', 'bd953650a582']);
+    // Passe 14 : l'invariant est « les sources existantes gardent leurs TIRAGES » (quel œil, quelle enveloppe, sur 4 graines), pas le JSON complet du visage :
+    // celui-ci change dès qu'un paramètre est ajouté ailleurs (oreille, iris) et avait rendu le test périmé. Signature identique à la passe 10 (commit 4dc0d14), vérifiée.
+    const eyesOf = (o: unknown, out: { id: string; shape?: { style?: string } }[] = []): { id: string; shape?: { style?: string } }[] => {
+      if (Array.isArray(o)) o.forEach((x) => eyesOf(x, out));
+      else if (o && typeof o === 'object') { if ((o as { kind?: string }).kind === 'eye') out.push(o as never); for (const v of Object.values(o)) eyesOf(v, out); }
+      return out;
+    };
+    const h = (src: 'gallery' | 'extended' | 'extended2'): string => createHash('sha1').update([42, 7, 1234, 99].map((seed) => eyesOf(generateRandomFace(seed, { eyeSource: src } as never)).map((e) => `${e.id}|${e.shape?.style ?? '?'}`).join(',')).join(';')).digest('hex').slice(0, 12);
+    expect([h('gallery'), h('extended'), h('extended2')]).toEqual(['1689f5fd870d', 'b9c327bf952a', '4da88f930425']);
   });
 });

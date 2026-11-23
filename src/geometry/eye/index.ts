@@ -12,7 +12,7 @@ export { browGeometry, browHairs } from './eyebrow';
 export type { Caruncle, FoldGeometry } from './canthi-fold';
 export { caruncleOf, foldGeometry } from './canthi-fold';
 export { linerGeometry, linerTopOffset, type LinerGeometry, type LinerSpec } from './liner';
-export { placeHighlights, hasDetailedHighlights, type PlacedHighlight, type PlaceCtx } from './highlights';
+export { placeHighlights, hasDetailedHighlights, pupilOccludedByStar, type PlacedHighlight, type PlaceCtx } from './highlights';
 export { polar, wobble, angularRange, radialRange, zoneOutline, angularCells, blendColor, type AngularCell } from './iris-layers';
 export { microLod, scleraVessels, scleraMarks, type Lod, type Vessel } from './micro-detail';
 export { turnOpening, turnPoint, jacobianAtCenter, facingOf, type TurnParams, type TurnedOpening, type Jacobian } from './turn3d';

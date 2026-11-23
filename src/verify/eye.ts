@@ -1,4 +1,4 @@
-import { IRIS_FIT, openingPolygon, openingGeometry, eyeLashSet, upperFrame, lowerFrame, placeHighlights, pupilContours, scleraVessels, microLod, turnOpening, type Vec } from '../geometry/eye';
+import { IRIS_FIT, openingPolygon, openingGeometry, eyeLashSet, upperFrame, lowerFrame, placeHighlights, pupilOccludedByStar, pupilContours, scleraVessels, microLod, turnOpening, type Vec } from '../geometry/eye';
 import { halfVectorXY, lightVector, toLocal, type LightVector } from '../lighting/light';
 import { rotateLightForHeadTurn } from '../lighting/head-turn';
 import { compileEye, resolveEye } from '../render/eye/eye';
@@ -124,7 +124,7 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
   const scl = dominantColor(eye.sclera.base);
   out.push(check('style', 'iris-sclera-contrast', '>=', Math.abs(lum(scl) - lum(irisBase)), 0.1, 'iris et sclère trop proches en luminance', 'warn'));
   const pupilFill = eye.pupil.fill.type === 'solid' ? eye.pupil.fill.color : dominantColor(eye.pupil.fill);
-  out.push(check('style', 'pupil-darker-than-iris', '>=', lum(irisBase) - lum(pupilFill), 0.02, 'pupille plus claire que l’iris', 'warn'));
+  if (!pupilOccludedByStar(eye)) out.push(check('style', 'pupil-darker-than-iris', '>=', lum(irisBase) - lum(pupilFill), 0.02, 'pupille plus claire que l’iris (non évaluée si une étoile centrée la noie : réfs 04 / 10a / 10b)', 'warn'));
 
   const r = report(out);
   return { ...r, metrics: { openingArea, irisToOpeningWidth: irisToOpening, pupilToIris, irisVisible, filters, svgBytes, lashes: lashCheck.metrics } };

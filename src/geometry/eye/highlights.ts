@@ -95,3 +95,11 @@ export function placeHighlights(items: readonly HighlightItem[], ctx: PlaceCtx):
 
 /** Reflets effectifs d'un œil : la liste détaillée, ou l'équivalent EXACT des deux reflets historiques (non utilisé pour le rendu historique). */
 export const hasDetailedHighlights = (h: EyeSpec['highlights']): boolean => h.list.length > 0;
+
+/**
+ * Pupille OCCULTÉE par un éclat en étoile (passe 10, partagée en passe 14) : dans les réfs 04, 10a et 10b la pupille est noyée dans une étoile centrée, aucun disque sombre
+ * n'est visible. Un éclat n'occulte que s'il est ancré à l'iris, centré dans la pupille et au moins aussi grand qu'elle. Une seule définition pour la règle de géométrie
+ * (`pupil-darker-than-iris`, verify/eye.ts) et la règle de pixels (`pupil-darker-than-iris-pixels`) : avant, seule la seconde l'exemptait (30 faux avertissements sur la galerie 4).
+ */
+export const pupilOccludedByStar = (eye: { readonly pupil: { readonly size: number }; readonly highlights?: { readonly list: readonly { shape?: string; anchor?: string; x: number; y: number; size: number }[] } }): boolean =>
+  (eye.highlights?.list ?? []).some((h) => h.shape === 'sparkle' && h.anchor === 'iris' && Math.hypot(h.x, h.y) <= eye.pupil.size && h.size >= eye.pupil.size);

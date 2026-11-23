@@ -1,0 +1,62 @@
+{
+ "filtresSvg": {
+  "avant": {
+   "prism-star": 11,
+   "emerald-facets": 15,
+   "lime-cyan": 5,
+   "fire-halo": 12,
+   "ice-star": 18
+  },
+  "apres": {
+   "prism-star": 11,
+   "emerald-facets": 13,
+   "lime-cyan": 5,
+   "fire-halo": 10,
+   "ice-star": 12
+  },
+  "limite": 14,
+  "note": "décompte des définitions ; le temps de rastérisation resvg ne change pas (≈ 408 ms pour ice-star avant comme après : coût par application, pas par définition)"
+ },
+ "emerald": {
+  "reference": {
+   "darkShare": 0.101,
+   "lumMean": 128.8,
+   "satPeaks": 0.738,
+   "cellules": 105,
+   "fentes": 6,
+   "etoilesTop6": 0.312
+  },
+  "passe13": {
+   "darkShare": 0.167,
+   "lumMean": 124.5,
+   "satPeaks": 0.741,
+   "cellules": 50,
+   "celluleMediane": 0.00143,
+   "fentes": 19,
+   "fenteDerive": 8.38,
+   "etoilesTop6": 0.326,
+   "etoilePremiere": 0.625
+  },
+  "passe14": {
+   "darkShare": 0.104,
+   "lumMean": 136.2,
+   "satPeaks": 0.729,
+   "cellules": 97,
+   "celluleMediane": 0.00089,
+   "fentes": 16,
+   "fenteDerive": 6.86,
+   "etoilesTop6": 0.339,
+   "etoilePremiere": 0.841
+  }
+ },
+ "galerie4": {
+  "avertissementsApres": {
+   "svg-weight": 44
+  },
+  "avertissementsAvant": {
+   "pupil-darker-than-iris": 30,
+   "svg-weight": 44
+  },
+  "echecsPixels": 0
+ }
+}

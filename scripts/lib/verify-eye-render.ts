@@ -1,7 +1,7 @@
 import { Resvg } from '@resvg/resvg-js';
 import { compileScene } from '../../src';
 import { lashHalfWidth, signedDepth } from '../../src/geometry/eye/lash-clearance';
-import { cubicAt, eyeLashSet, openingGeometry, openingPolygon, type Lash, type Vec } from '../../src/geometry/eye';
+import { cubicAt, eyeLashSet, openingGeometry, openingPolygon, pupilOccludedByStar, type Lash, type Vec } from '../../src/geometry/eye';
 import { irisCenter, irisRadii } from '../../src/render/eye/helpers';
 import { resolveEye } from '../../src/render/eye/eye';
 import { EyeSpec } from '../../src/schema';
@@ -93,7 +93,7 @@ export function verifyEyeRender(input: Record<string, unknown>): EyeImageCheck[]
   const pupilL = Math.min(...[[0, 0], [pr, 0], [-pr, 0], [0, pr], [0, -pr], [d, d], [-d, d], [d, -d], [-d, -d]].map(([a, b]) => lum(px, c.x + ox + (a as number), c.y + oy + (b as number))));
   // passe 10 : pupille OCCULTÉE par un éclat en étoile centré (réfs 04, 10a, 10b : la pupille est noyée dans l'étoile, aucun disque sombre n'est visible) -> la règle ne s'applique pas ;
   // un éclat n'occulte que s'il est ancré à l'iris, centré dans la pupille et au moins aussi grand qu'elle. Une pupille claire SANS éclat échoue toujours (tests/eye-iris-photo2.test.ts).
-  const occluded = (eye.highlights?.list ?? []).some((h: { shape?: string; anchor?: string; x: number; y: number; size: number }) => h.shape === 'sparkle' && h.anchor === 'iris' && Math.hypot(h.x, h.y) <= eye.pupil.size && h.size >= eye.pupil.size);
+  const occluded = pupilOccludedByStar(eye);
   if (eye.pupil.visible && eye.pupil.shape === 'round' && Number.isFinite(irisL) && !occluded) add('anatomy', 'pupil-darker-than-iris-pixels', pupilL <= irisL + 2, pupilL - irisL, 2, 'la pupille rendue est plus claire que l’iris');
   // sclère : point entre le limbe et le canthus interne (s'il est dans l'ouverture) ; références : luminance moyenne 150–180, 5ᵉ centile 60–73 (ombre de paupière)
   const s = g.s;
