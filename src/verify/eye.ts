@@ -1,3 +1,4 @@
+import { svgCostMs, svgFeatures, SVG_COST_MAX_MS } from './eye-cost';
 import { IRIS_FIT, openingPolygon, openingGeometry, eyeLashSet, upperFrame, lowerFrame, placeHighlights, pupilOccludedByStar, pupilContours, scleraVessels, microLod, turnOpening, type Vec } from '../geometry/eye';
 import { halfVectorXY, lightVector, toLocal, type LightVector } from '../lighting/light';
 import { rotateLightForHeadTurn } from '../lighting/head-turn';
@@ -117,9 +118,10 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
 
   // ---- style -------------------------------------------------------------------------------------------------
   const filters = (svg.match(/<filter /g) ?? []).length;
+  const svgCost = svgCostMs(svgFeatures(svg));
   const svgBytes = svg.length;
   out.push(check('style', 'filter-budget', '<=', filters, 14, 'trop de filtres SVG (coût de rastérisation)', 'warn'));
-  out.push(check('style', 'svg-weight', '<=', svgBytes, 140_000, 'SVG de l’œil trop lourd', 'warn'));
+  out.push(check('style', 'svg-cost', '<=', svgCost, SVG_COST_MAX_MS, 'coût de rastérisation prédit trop élevé (applications de filtre surtout ; modèle mesuré, voir eye-cost.ts)', 'warn'));
   const irisBase = dominantColor(eye.iris.material.base);
   const scl = dominantColor(eye.sclera.base);
   out.push(check('style', 'iris-sclera-contrast', '>=', Math.abs(lum(scl) - lum(irisBase)), 0.1, 'iris et sclère trop proches en luminance', 'warn'));

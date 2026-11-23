@@ -204,11 +204,13 @@ export function renderGlobeInner(
   if (eye.highlights.list.length > 0) {
     const hr = renderHighlights(eye, g, c, L, irisRx, irisRy, hlColor, id);
     defs.push(...hr.defs);
-    inner.push(...hr.markup);
+    // Modèle sphère : les reflets sont posés dans le repère de l'iris puis suivent la même matrice locale que lui (positions ET formes comprimées).
+    inner.push(...(turnT ? [el('g', { transform: turnT }, hr.markup)] : hr.markup));
   } else {
     const off = highlightOffsets(eye, worldLight);
     const hl = eye.highlights;
-    inner.push(
+    const hlNodes: string[] = [];
+    hlNodes.push(
       el('circle', {
         cx: c.x + off.primary.x,
         cy: c.y + off.primary.y,
@@ -218,7 +220,7 @@ export function renderGlobeInner(
       }),
     );
     if (hl.secondary) {
-      inner.push(
+      hlNodes.push(
         el('circle', {
           cx: c.x + off.secondary.x,
           cy: c.y + off.secondary.y,
@@ -228,6 +230,7 @@ export function renderGlobeInner(
         }),
       );
     }
+    inner.push(...(turnT ? [el('g', { transform: turnT }, hlNodes)] : hlNodes));
   }
 
   // Pli épicanthique : la peau recouvre une partie de la fente (recouvrement limité à l'ouverture)

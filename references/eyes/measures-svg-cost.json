@@ -1,0 +1,19 @@
+{
+  "yeux": 100,
+  "ms": {
+    "median": 49,
+    "p90": 90.3,
+    "max": 127.2
+  },
+  "correlations": {
+    "filterApps": 0.662,
+    "nodes": 0.379,
+    "kb": 0.451
+  },
+  "modele": {
+    "intercept": 14.884,
+    "filterApps": 3.003,
+    "kb": 0.045
+  },
+  "r2": 0.445
+}

@@ -6,9 +6,8 @@ Légende : ✅ fait et testé · 🟡 partiel (précisé) · ⬜ non fait · ❔
 - ❔ EYE-01A→01K, EYE-02A→02G : géométrie existante (12 styles, pli, caroncule, plica…) non retravaillée ; un audit ligne à ligne contre le TODO reste à faire.
 - ✅ Rotation 3D de chaque enveloppe (modèle `sphere`). 🟡 Les cils, le liner et le sourcil dérivent de l'ouverture tournée mais leur épaisseur n'est pas
   recalculée anisotropiquement ; le sourcil n'est pas reprojeté sur la sphère du front.
-- ⬜ Intégration au visage : `FaceParams` ne passe pas `headTurn.model = 'sphere'` ni l'azimut (± 22°) à chaque œil ; à brancher dans `render/face` (la pose du visage
-  garde le modèle `flat` + sa propre parallaxe). `headTurn.parallax` est prévu pour cet hôte.
-- ⬜ Reflets (disques) et pupille ne sont pas déformés par la projection sphérique (seul l'iris suit la jacobienne centrale).
+- ✅ (passe 15 : correction d'un constat périmé) Intégration au visage : `face/pose/eye-pose.ts` passe déjà `headTurn.model = 'sphere'`, l'azimut et `parallax: false` aux yeux des visages en rotation.
+- ✅ (passe 15) Reflets : suivent la matrice locale de la projection sphérique comme l'iris (`EYES-PASS-15.md`). La pupille la suivait déjà (constat antérieur faux). 🟡 Matrice locale au centre seulement, pas de reprojection point par point.
 
 ## 03 Globe / sclère
 - ✅ Humidité naturelle (film lacrymal + ménisque), vaisseaux, chroma, occlusion locale, marques.
@@ -168,3 +167,10 @@ Fait : liner épais effilé par famille de cils (`lids.liner`), dégagement de l
 - **⬜ LOD automatique** (07) : `lod.eyePixels` n'est calculé nulle part. Il faudrait ajouter l'échelle en pixels de la scène à `CompileCtx` (aujourd'hui : lumière, hôtes, orbites, yeux, sexe du corps) et la composer avec `transform.scale` de l'œil posé ; `null` valant pleine précision, tout œil petit changerait de rendu : les empreintes de non-régression des visages seraient à régénérer. Non touché.
 - **⬜ Non retouchés** (inchangés depuis les passes 11–13) : intégration `headTurn.model = 'sphere'` dans `FaceParams`, reflets et pupille non déformés par la projection sphérique, cornée / réfraction réelle, microrelief cutané, bords palpébraux irréguliers, fire (part sombre 0,316 pour 0,373) et ice (fentes 2 pour 4), facettes taillées de 07 fidèles, braises et anneau de 10a, galerie 4 « nouvelles enveloppes » (`circle` / `diamond`, plafond d'aspect 0,8), `svg-weight`.
 - **Vérifié** : suite complète sur l'état fusionné avec la branche (221 fichiers) : 4 004 tests verts, 1 échec : `tests/nose-visibility.test.ts` « garde-fou du pivot » (hash d'une tête complète `1401677…` pour `995eb7f…`), **préexistant** : identique sur la branche distante seule (`662e1e7`, passe 5 des oreilles) et avec l'ancien rendu des reflets ; hash non recalé ici, à recaler par la session des oreilles.
+
+## Passe 15 (détail : `EYES-PASS-15.md`)
+- ✅ Reflets sous rotation sphérique (preuve en pixels, 3 cas échouaient avant) ; ✅ `svg-weight` remplacé par `svg-cost` (coût mesuré : filtres, ko) ; galerie 4 : 0 avertissement.
+- 🟡 `svg-cost` : R² 0,45, ms propres à la machine de calibration, plafond 120 ms non rattaché à un budget de frame ; `filter-budget` (14) inchangé.
+- ⬜ Pas de règle `verifyEye` sur les reflets sous rotation (tautologique en géométrie) ; contrôle en pixels seulement, hors `verifyFace`.
+- ⬜ **Non touchés** (inchangés depuis la passe 14) : LOD automatique `lod.eyePixels` ; emerald (bulles, facettes triangulaires, fentes 16 pour 6, première étoile 0,84 R pour 0,58) ; fire (part sombre 0,316 pour 0,373), ice (fentes 2 pour 4) ; facettes taillées de 07, braises et anneau de 10a ; galerie 4 (`circle` / `diamond`, plafond d'aspect 0,8) ; cornée et réfraction réelle, microrelief cutané, bords palpébraux irréguliers (03, 07) ; teinte de style cel de la paire d'yeux.
+- ⬜ `scripts/artefacts-eyes-pass14.ts` compte encore l'identifiant `svg-weight` (supprimé) : ses compteurs de cette règle restent à 0.
