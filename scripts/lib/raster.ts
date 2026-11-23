@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { clock } from '../../src/perf';
+import { cullOffCanvas } from '../../src/core/offcanvas';
 
 /**
  * Rastérisation avec cache DISQUE adressé par le contenu.
@@ -22,7 +23,8 @@ const keyOf = (svg: string, o: RasterOpts): string => createHash('sha1').update(
 function engine(svg: string, o: RasterOpts): Resvg {
   // `loadSystemFonts` vaut `true` PAR DÉFAUT dans resvg-js : sans ce réglage explicite, chaque instance rescanne les polices du système (≈ 65 ms
   // mesurés, même pour un SVG minimal ; docs/PERF-2.md). Le moteur n'émet aucun <text> : les polices ne servent qu'aux planches étiquetées (`fonts: true`).
-  return new Resvg(svg, { font: { loadSystemFonts: o.fonts === true }, ...(o.fitWidth ? { fitTo: { mode: 'width' as const, value: o.fitWidth } } : {}) });
+  // Garde : un calque entièrement hors cadre avorte le processus (panic natif de resvg, docs/PERF-4.md) ; l'enlever ne change aucun pixel.
+  return new Resvg(cullOffCanvas(svg).svg, { font: { loadSystemFonts: o.fonts === true }, ...(o.fitWidth ? { fitTo: { mode: 'width' as const, value: o.fitWidth } } : {}) });
 }
 
 /** PNG du SVG, depuis le cache (mémoire puis disque) ou rastérisé (durée comptée dans l'étape `raster`). */

@@ -11,6 +11,7 @@ import { BodyParams, expressedSex } from './body';
 import { lightVector } from './lighting/light';
 import { SceneSpec, type HostSpec } from './schema';
 import { el } from './core/svg';
+import { dedupeDefs } from './core/defs';
 
 /** Compile une scène DÉJÀ validée en SVG. Pure et déterministe : même scène => même chaîne. */
 export function renderScene(scene: SceneSpec, opts: { readonly bodySex?: ReadonlyMap<string, number>; readonly pixelRatio?: number } = {}): string {
@@ -63,7 +64,8 @@ function renderSceneUntimed(scene: SceneSpec, sexOverride: ReadonlyMap<string, n
       role: 'img',
       'aria-label': scene.label,
     },
-    [el('defs', {}, defs), ...background, ...body],
+    // Une seule définition par identifiant : les émetteurs qui repoussent le `clipPath` déjà émis par `compileSurface` ne dupliquent plus rien (core/defs.ts).
+    [el('defs', {}, dedupeDefs(defs).defs), ...background, ...body],
   );
 }
 
