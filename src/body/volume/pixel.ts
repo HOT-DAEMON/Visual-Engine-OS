@@ -1,20 +1,19 @@
-import { encodePngRgba } from '../../core/png';
-import { toView, dirToView, FRONT } from './camera';
-import { ringPoint } from './loft';
-import { selectVolumes, type VMarkup, type VRenderOpts } from './render';
-import { DEFAULT_LIGHT, tone, paletteOf } from './shade';
-import { p3, type P3 } from './vec3';
-import { castShadowScaled } from '../../relief/cast';
-import { lightModelOf, shadeAt, tonesOf, type LightModel } from '../../relief/model';
-import { hexOf } from '../../relief/oklab';
-import { parseHex } from '../../core/color';
-import type { Volume, VolumeSet } from './types';
+import { lightModelOf, type LightModel } from '../../relief/model';
+import { LayerCache, idOf, timedLayer } from '../../perf/layers';
+import { buildGBuffer, gbufferKeyOf, type GBuffer } from './gbuffer';
+import { occlusionOf, type Occlusion } from './occlusion';
+import type { VMarkup, VRenderOpts } from './render';
+import { bodyCast, encodeFinal, shadePixels } from './shade-pixels';
+import type { VolumeSet } from './types';
 
 /**
- * RENDU PAR PIXEL des volumes : même géométrie, même sélection et même ordre de peinture que le rendu vectoriel, mais l'ombrage est calculé À
- * CHAQUE PIXEL depuis la normale interpolée (au lieu d'un dégradé par volume). Pipeline : G-buffer (normale, profondeur, identifiant, θ de
- * section) → éclairage global `tone` → occlusion ambiante par horizon sur la profondeur → rainures de séparation entre volumes → stries de
- * fibres → sur-échantillonnage (`ss`) → PNG incrusté dans le SVG (le moteur reste un moteur SVG affichable dans le navigateur).
+ * RENDU PAR PIXEL des volumes : même géométrie, même sélection et même ordre de peinture que le rendu vectoriel, mais l'ombrage est calculé À CHAQUE PIXEL depuis
+ * la normale interpolée (au lieu d'un dégradé par volume). Découpé en COUCHES à clés de dépendance (docs/PERF-4.md) :
+ *   G-buffer ← (volumes, caméra, cadrage, sélection)            · indépendant de la lumière, de la peau et de l'ombrage
+ *   occlusion + rainures ← G-buffer                              · idem
+ *   ombre portée ← G-buffer + modèle de lumière + occulteur      · mise en cache si l'occulteur est nommé (`proxyKey`)
+ *   ombrage par pixel + sur-échantillonnage + PNG ← tout         · jamais mis en cache (dépend de tout)
+ * Changer la lumière ne refait donc que l'ombre portée et l'ombrage. Résultat IDENTIQUE octet pour octet à l'ancien rendu monolithique (tests/figure-layers.test.ts).
  */
 export interface PixelOpts extends VRenderOpts {
   readonly heightPx?: number; readonly ss?: number; readonly ao?: number; readonly groove?: number;
@@ -22,165 +21,29 @@ export interface PixelOpts extends VRenderOpts {
   readonly lightModel?: LightModel | null;
   /** Occulteur sans surface visible (la tête, dessinée par le moteur de visage) : profondeur en un point du repère du corps, `-Infinity` = rien. Il PROJETTE son ombre (menton → cou, poitrine). */
   readonly proxy?: (x: number, y: number) => number;
+  /** Identifiant DE CONTENU de l'occulteur (ex. clé du champ de relief de la tête) : s'il est donné, l'ombre portée est mise en cache ; sinon elle est recalculée à chaque rendu (une fonction ne se compare pas). */
+  readonly proxyKey?: string;
   /** Portée de l'ombre portée, en unités du monde (défaut : 1,2 hauteur de tête). */
   readonly shadowReach?: number;
-  /** Fondu des normales aux intersections peau/peau (itération 07, défaut : actif). `false` = ancien rendu (comparaisons avant/après). */
-  readonly seamBlend?: boolean;
 }
-/** Mesure sur le G-buffer : pixels de peau fondus, plus grand saut de normale (degrés) entre deux pixels voisins de peaux différentes, avant et après le fondu. */
-export interface SeamStats { readonly blended: number; readonly jumpBefore: number; readonly jumpAfter: number }
-interface Tri { readonly x: number[]; readonly y: number[]; readonly z: number[]; readonly n: number[][]; readonly th: number[] }
-const hex = (c: string): [number, number, number] => { const m = /^#?([0-9a-f]{6})$/i.exec(c); const v = m ? parseInt(m[1] as string, 16) : 0xc99a76; return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; };
-const mixc = (a: number[], b: number[], t: number): number[] => [a[0]! + (b[0]! - a[0]!) * t, a[1]! + (b[1]! - a[1]!) * t, a[2]! + (b[2]! - a[2]!) * t];
+export interface VPixelMarkup extends VMarkup { readonly pixels: { readonly w: number; readonly h: number; readonly rgba: Uint8ClampedArray } }
 
-/** Maillage d'un volume en vue : (stations − 1) × K quadrilatères, deux triangles chacun, normales de section interpolées. */
-function mesh(v: Volume, cam: NonNullable<VRenderOpts['camera']>, K: number): Tri[] {
-  // Couvercles : sauf peau (enveloppes continues entre elles) et brins, chaque bout est refermé par une calotte (4 anneaux, profil circulaire).
-  let st = v.stations;
-  if (v.kind !== 'skin' && !v.strand && st.length > 1) {
-    const cap = (s: Volume['stations'][number], sg: 1 | -1): Volume['stations'][number][] => [0.55, 0.83, 0.97].map((u) => { const r = Math.sqrt(Math.max(0, 1 - u * u)), d = Math.max(s.a, s.b) * 0.6 * u * sg; return { ...s, c: { x: s.c.x + s.t.x * d, y: s.c.y + s.t.y * d, z: s.c.z + s.t.z * d }, a: Math.max(1e-3, s.a * r), b: Math.max(1e-3, s.b * r) }; });
-    st = [...cap(st[0]!, -1).reverse(), ...st, ...cap(st[st.length - 1]!, 1)];
-  }
-  const rings = st.map((s) => Array.from({ length: K + 1 }, (_, k) => { const th = (k / K) * 2 * Math.PI, q = ringPoint(s, th), pv = toView(q.p, cam), nv = dirToView(q.n, cam); return { x: pv.x, y: pv.y, z: pv.z, n: [nv.x, nv.y, nv.z], th }; }));
-  const out: Tri[] = [];
-  for (let i = 0; i < rings.length - 1; i++) for (let k = 0; k < K; k++) {
-    const a = rings[i]![k]!, b = rings[i]![k + 1]!, c = rings[i + 1]![k]!, d = rings[i + 1]![k + 1]!;
-    for (const t of [[a, b, c], [b, d, c]] as const) out.push({ x: t.map((q) => q.x), y: t.map((q) => q.y), z: t.map((q) => q.z), n: t.map((q) => q.n), th: t.map((q) => q.th) });
-  }
-  return out;
-}
+const GBUF = new LayerCache<GBuffer>('body.gbuffer', 2), OCCL = new LayerCache<Occlusion>('body.occlusion', 2), CAST = new LayerCache<Float32Array>('body.cast', 4);
+const DEFAULT_MODEL = lightModelOf({}, { style: 'soft' });
+
+/** G-buffer d'un jeu de volumes (mis en cache : le jeu est IMMUABLE, désigné par son identité). */
+export const gbufferOf = (set: VolumeSet, o: PixelOpts): GBuffer => GBUF.get(`${idOf(set)}|${gbufferKeyOf(o)}`, () => buildGBuffer(set, o));
 
 /** Rendu pixel d'un VolumeSet → SVG (image PNG incrustée). Pur et déterministe. */
-export interface VPixelMarkup extends VMarkup { readonly pixels: { readonly w: number; readonly h: number; readonly rgba: Uint8ClampedArray }; readonly seam: SeamStats }
 export function renderVolumesPixel(set: VolumeSet, o: PixelOpts): VPixelMarkup {
-  const cam = o.camera ?? FRONT, L = o.light ?? DEFAULT_LIGHT, pal = paletteOf(o.skin), H = set.measures.h as number, vis = set.measures.vis as number;
-  const { list, rel } = selectVolumes(set, o), ss = o.ss ?? 2, K = o.quality === 'fast' ? 14 : 22, bias = 0.004 * H;
-  const keyed = list.map((v) => { const m = mesh(v, cam, K); let zs = 0, n = 0; for (const t of m) for (const z of t.z) { zs += z; n++; } return { v, m, k: zs / Math.max(1, n) + v.layer * bias }; }).sort((a, b) => a.k - b.k);
-  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-  for (const { m } of keyed) for (const t of m) for (let i = 0; i < 3; i++) { x0 = Math.min(x0, t.x[i]!); x1 = Math.max(x1, t.x[i]!); y0 = Math.min(y0, t.y[i]!); y1 = Math.max(y1, t.y[i]!); }
-  const mg = 0.04 * H; x0 -= mg; y0 -= mg; x1 += mg; y1 += mg;
-  const ppu = ((o.heightPx ?? 900) * ss) / (y1 - y0);
-  const W = Math.max(8, Math.ceil((x1 - x0) * ppu)), Hh = Math.max(8, Math.ceil((y1 - y0) * ppu)), N = W * Hh;
-  // G-buffer
-  const depth = new Float32Array(N).fill(-Infinity), id = new Int16Array(N).fill(-1), nx = new Float32Array(N), ny = new Float32Array(N), nz = new Float32Array(N), th = new Float32Array(N), tn = new Float32Array(N), ly = new Uint8Array(N), op = new Float32Array(N);
-  const sd = new Float32Array(N).fill(-Infinity), sn = new Float32Array(N * 3), st = new Float32Array(N);
-  const skn = new Float32Array(N * 3), skinCover = new Uint8Array(N), isSkin = keyed.map(({ v }) => v.kind === 'skin'), isStrand = keyed.map(({ v }) => !!v.strand);
-  const meta = keyed.map(({ v }) => ({ layer: v.layer, tone: v.tone, fib: v.kind === 'muscle' && v.fibres.length > 0, kind: v.kind, rel: rel(v), mass: v.mass }));
-  // Rasterisation d'un volume dans le tampon de travail (test de profondeur) ; renvoie les pixels touchés.
-  const so = new Int16Array(N), raster = (vi: number, touched: number[]): void => {
-    for (const t of keyed[vi]!.m) {
-      const ax = (t.x[0]! - x0) * ppu, ay = (t.y[0]! - y0) * ppu, bx = (t.x[1]! - x0) * ppu, by = (t.y[1]! - y0) * ppu, cx = (t.x[2]! - x0) * ppu, cy = (t.y[2]! - y0) * ppu;
-      const den = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy); if (Math.abs(den) < 1e-9) continue;
-      const mnx = Math.max(0, Math.floor(Math.min(ax, bx, cx))), mxx = Math.min(W - 1, Math.ceil(Math.max(ax, bx, cx))), mny = Math.max(0, Math.floor(Math.min(ay, by, cy))), mxy = Math.min(Hh - 1, Math.ceil(Math.max(ay, by, cy)));
-      for (let py = mny; py <= mxy; py++) for (let px = mnx; px <= mxx; px++) {
-        const qx = px + 0.5, qy = py + 0.5, l0 = ((by - cy) * (qx - cx) + (cx - bx) * (qy - cy)) / den, l1 = ((cy - ay) * (qx - cx) + (ax - cx) * (qy - cy)) / den, l2 = 1 - l0 - l1;
-        if (l0 < -1e-6 || l1 < -1e-6 || l2 < -1e-6) continue;
-        const z = l0 * t.z[0]! + l1 * t.z[1]! + l2 * t.z[2]!, key = py * W + px;
-        if (sd[key]! >= z) continue;
-        if (sd[key] === -Infinity) touched.push(key);
-        sd[key] = z; so[key] = vi; st[key] = l0 * t.th[0]! + l1 * t.th[1]! + l2 * t.th[2]!;
-        for (let j = 0; j < 3; j++) sn[key * 3 + j] = l0 * t.n[0]![j]! + l1 * t.n[1]![j]! + l2 * t.n[2]![j]!;
-      }
-    }
-  };
-  // Recopie dans le G-buffer (le volume propriétaire de chaque pixel fournit ton, couche et opacité) et remise à zéro du tampon de travail.
-  const commit = (touched: number[]): void => {
-    for (const key of touched) {
-      const vi = so[key]!, md = meta[vi]!;
-      if ((isStrand[vi] && !skinCover[key]) || (!isSkin[vi] && skinZ[key]! > -Infinity && sd[key]! < skinZ[key]! - hideMargin)) { sd[key] = -Infinity; continue; }
-      const a = sn[key * 3]!, b = sn[key * 3 + 1]!, c = sn[key * 3 + 2]!, len = Math.hypot(a, b, c) || 1;
-      depth[key] = sd[key]!; id[key] = vi; nx[key] = a / len; ny[key] = b / len; nz[key] = c / len; th[key] = st[key]!; tn[key] = md.tone; ly[key] = md.layer; op[key] = md.rel;
-      sd[key] = -Infinity;
-    }
-  };
-  // Passe PEAU : toutes les enveloppes partagent un tampon de profondeur (épaule, coude, cou se raccordent sans couture) ; puis les autres volumes en ordre du peintre.
-  const skinKeys: number[] = [];
-  keyed.forEach((_, vi) => { if (isSkin[vi]) raster(vi, skinKeys); });
-  // FONDU DES NORMALES AUX INTERSECTIONS PEAU/PEAU (itération 07). Les enveloppes de peau partagent un tampon de profondeur : à l'intersection de deux surfaces (aine : bassin/cuisse ; épaule : tronc/bras) le pixel garde la normale de la surface la plus proche, d'où un liseré net (saut de normale de plusieurs dizaines de degrés). Les pixels situés à moins de `rb` d'un pixel de peau d'un AUTRE volume et de profondeur voisine (|Δz| < 1,5 % h : on ne floute jamais une silhouette) reçoivent la moyenne gaussienne des normales de la fenêtre : un congé, pas une arête.
-  const seamStats = (keys: number[], blend: boolean): SeamStats => {
-    const rb = Math.max(2, Math.round(0.024 * H * ppu)), dz = 0.015 * H, offs: [number, number][] = [];
-    for (let j = -rb; j <= rb; j += Math.max(1, rb >> 2)) for (let i = -rb; i <= rb; i += Math.max(1, rb >> 2)) if (i * i + j * j <= rb * rb) offs.push([i, j]);
-    const n0 = [Float32Array.from(nx), Float32Array.from(ny), Float32Array.from(nz)], marked: number[] = [];
-    // Un RACCORD relie deux surfaces d'orientation voisine (≤ 75°, aine, épaule) ; au-delà (> 75°) c'est un CONTACT (aisselle, bras contre le flanc) : un pli réel, qu'on ne gomme pas.
-    const same = (k: number, k2: number): boolean => id[k2]! >= 0 && isSkin[id[k2]!] === true && Math.abs(depth[k2]! - depth[k]!) < dz && n0[0]![k]! * n0[0]![k2]! + n0[1]![k]! * n0[1]![k2]! + n0[2]![k]! * n0[2]![k2]! > 0.26;
-    const jump = (k: number, k2: number, n0: Float32Array[]): number => Math.acos(Math.max(-1, Math.min(1, n0[0]![k]! * n0[0]![k2]! + n0[1]![k]! * n0[1]![k2]! + n0[2]![k]! * n0[2]![k2]!))) * (180 / Math.PI);
-    const pairs: number[] = [];
-    for (const k of keys) {
-      const px = k % W, py = (k / W) | 0; let seam = false;
-      for (const [i, j] of [[rb, 0], [-rb, 0], [0, rb], [0, -rb], [rb * 0.7, rb * 0.7], [-rb * 0.7, rb * 0.7], [rb * 0.7, -rb * 0.7], [-rb * 0.7, -rb * 0.7]] as const) {
-        const qx = Math.round(px + i), qy = Math.round(py + j); if (qx < 0 || qy < 0 || qx >= W || qy >= Hh) continue;
-        const k2 = qy * W + qx; if (same(k, k2) && id[k2] !== id[k]) { seam = true; pairs.push(k, k2); }
-      }
-      if (seam) marked.push(k);
-    }
-    // Saut moyen (degrés) de la normale entre les paires de pixels voisins de deux peaux différentes : mesure du liseré, avant puis après le fondu.
-    const meanJump = (nn: Float32Array[]): number => { let t = 0; for (let q = 0; q < pairs.length; q += 2) t += jump(pairs[q]!, pairs[q + 1]!, nn); return pairs.length ? t / (pairs.length / 2) : 0; };
-    const jb = meanJump(n0);
-    if (!blend) return { blended: 0, jumpBefore: jb, jumpAfter: jb };
-    for (const k of marked) {
-      const px = k % W, py = (k / W) | 0; let ax = 0, ay = 0, az = 0, wt = 0;
-      for (const [i, j] of offs) {
-        const qx = px + i, qy = py + j; if (qx < 0 || qy < 0 || qx >= W || qy >= Hh) continue;
-        const k2 = qy * W + qx; if (!same(k, k2)) continue;
-        const w = Math.exp(-(i * i + j * j) / (0.5 * rb * rb)); ax += n0[0]![k2]! * w; ay += n0[1]![k2]! * w; az += n0[2]![k2]! * w; wt += w;
-      }
-      const l = Math.hypot(ax, ay, az); if (wt > 0 && l > 1e-6) { nx[k] = ax / l; ny[k] = ay / l; nz[k] = az / l; }
-    }
-    return { blended: marked.length, jumpBefore: jb, jumpAfter: meanJump([nx, ny, nz]) };
-  };
-  commit(skinKeys); const seam = seamStats(skinKeys, o.seamBlend !== false); for (const key of skinKeys) { skinCover[key] = 1; skn[key * 3] = nx[key]!; skn[key * 3 + 1] = ny[key]!; skn[key * 3 + 2] = nz[key]!; }
-  // Les volumes profonds situés DERRIÈRE la surface de la peau (dos vu de face…) sont masqués ; les muscles sous la peau, à moins d'une demi-épaisseur, restent visibles.
-  const skinZ = Float32Array.from(depth), hideMargin = 0.05 * H;
-  keyed.forEach((_, vi) => { if (isSkin[vi]) return; const t: number[] = []; raster(vi, t); commit(t); });
-  // Éclairage par pixel, occlusion ambiante (horizon sur la profondeur) et rainures de séparation.
-  const out = new Uint8ClampedArray(N * 4), aoK = o.ao ?? 0.55, grK = o.groove ?? 0.5, R = Math.max(2, Math.round(0.018 * H * ppu)), DIR = [[1, 0], [-1, 0], [0, 1], [0, -1], [0.7, 0.7], [-0.7, 0.7], [0.7, -0.7], [-0.7, -0.7]] as const;
-  const sh = hex(pal.shadow), sk = hex(pal.skin), li = hex(pal.light), rg = new Float32Array(N);
-  // Modèle de lumière unique : ombres portées (marche de rayon sur la profondeur, tête comprise), terminateur, tons d'ombre en OKLab (relief/model.ts).
-  const M = o.lightModel === null ? null : (o.lightModel ?? lightModelOf({}, { style: 'soft' }));
+  const g = gbufferOf(set, o), gid = idOf(g), oc = OCCL.get(String(gid), () => occlusionOf(g));
+  const M = o.lightModel === null ? null : (o.lightModel ?? DEFAULT_MODEL);
   let castArr: Float32Array | null = null;
   if (M) {
-    const comb = new Float32Array(N); for (let k = 0; k < N; k++) comb[k] = id[k]! >= 0 ? depth[k]! : -Infinity;
-    if (o.proxy) for (let py = 0; py < Hh; py++) for (let px = 0; px < W; px++) { const z = o.proxy(x0 + (px + 0.5) / ppu, y0 + (py + 0.5) / ppu); if (z > comb[py * W + px]!) comb[py * W + px] = z; }
-    castArr = castShadowScaled({ x0, y0, ppu, w: W, h: Hh }, comb, M.dir, { reach: o.shadowReach ?? 1.2 * H, penumbra: 0.06 + 0.4 * M.soft, growth: 0.05, blur: 1 }, 2);
+    const make = (): Float32Array => bodyCast(g, M, o);
+    castArr = o.proxy && o.proxyKey === undefined ? timedLayer('body.cast', make) : CAST.get(`${gid}|${o.proxyKey ?? ''}|${JSON.stringify([M.dir, M.soft, o.shadowReach ?? null])}`, make);
   }
-  const alb = M ? mixc(sk, li, 0.38) : sk, T = M ? tonesOf(hexOf(alb), M) : null, rc = M ? parseHex(M.rimColor) : [0, 0, 0], lc = M ? parseHex(M.color) : [0, 0, 0];
-  const paint = (n: P3, cs: number, occ1: number, add: number, gk: number): number[] => {
-    const d = shadeAt(M!, n, cs, aoK * Math.min(1, occ1 / 10)), lit = Math.min(1, Math.max(0, d.lit + add)) * gk, ra = Math.min(1, d.rim * 0.9), sa = Math.min(1, d.spec * 0.5);
-    return [0, 1, 2].map((ch) => { let m = T!.shadowMul[ch]! + (T!.lightMul[ch]! - T!.shadowMul[ch]!) * lit; m += (T!.coreMul[ch]! - m) * d.core; const v = alb[ch]! * m; return v + (255 - v) * (ra * (rc[ch]! / 255) + sa * (lc[ch]! / 255)); });
-  };
-  for (let key = 0; key < N; key++) {
-    const vi = id[key]!; if (vi < 0) continue;
-    const px = key % W, py = (key / W) | 0, z = depth[key]!, md = meta[vi]!;
-    // AO : voisins plus proches du spectateur que ce pixel (relief qui l'abrite) ; rainure : voisin d'un autre volume situé AU-DESSUS (couche supérieure).
-    let occ = 0, gro = 0;
-    for (const [dx, dy] of DIR) for (const r of [R * 0.5, R]) {
-      const qx = Math.round(px + dx * r), qy = Math.round(py + dy * r); if (qx < 0 || qy < 0 || qx >= W || qy >= Hh) continue;
-      const k2 = qy * W + qx, v2 = id[k2]!; if (v2 < 0) continue;
-      occ += Math.min(1, Math.max(0, (depth[k2]! - z - 0.002 * H) / (0.05 * H)));
-      if (v2 !== vi && meta[v2]!.layer > md.layer && r === R * 0.5 && !(md.mass !== undefined && meta[v2]!.mass === md.mass) && !(md.kind === 'skin' && meta[v2]!.kind === 'skin')) gro += 1; // peau/peau : une seule surface (épaule, hanche), pas de rainure (itération 05)
-    }
-    const nv = p3(nx[key]!, ny[key]!, nz[key]!), fib = md.fib ? 0.045 * Math.min(1, vis * 2) * Math.sin(th[key]! * 22) : 0, gk = 1 - grK * 0.45 * Math.min(1, gro / 4);
-    let t = tone(nv, L) + 0.14 * tn[key]! + fib;
-    t *= 1 - aoK * Math.min(1, occ / 10) - grK * 0.45 * Math.min(1, gro / 4);
-    const c = M ? paint(nv, castArr![key]!, occ, 0.1 * tn[key]! + 2 * fib, gk) : t < 0.55 ? mixc(sh, sk, Math.max(0, t) / 0.55) : mixc(sk, li, Math.min(1, (t - 0.55) / 0.6) * 0.62);
-    rg[key] = t;
-    // Opacité de palier : un muscle PEU VISIBLE se fond sur la PEAU située dessous (couleur mêlée, alpha 1), il ne perce jamais le corps. Avant la correction de l'itération 05, l'opacité partait dans le canal alpha : le fond apparaissait à travers le ventre, les côtes et les bras (« creux » bleu-gris).
-    const o1 = md.kind === 'skin' ? 1 : Math.min(1, op[key]! * 1.2);
-    if (o1 < 0.5 && !skinCover[key]) continue; // frange FAIBLE (< 50 %) d'un muscle dont le palier n'est pas atteint : fantôme hors de la peau, supprimé ; au-delà, le muscle reste visible (profil du pectoral)
-    if (o1 < 1 && skinCover[key]) {
-      const sn3 = p3(skn[key * 3]!, skn[key * 3 + 1]!, skn[key * 3 + 2]!), ts = tone(sn3, L) * (1 - aoK * Math.min(1, occ / 10)), cs = M ? paint(sn3, castArr![key]!, occ, 0, 1) : ts < 0.55 ? mixc(sh, sk, Math.max(0, ts) / 0.55) : mixc(sk, li, Math.min(1, (ts - 0.55) / 0.6) * 0.62), m2 = mixc(cs, c, o1);
-      out.set([m2[0]!, m2[1]!, m2[2]!, 255], key * 4);
-    } else out.set([c[0]!, c[1]!, c[2]!, 255 * o1], key * 4);
-  }
-  // Sur-échantillonnage → résolution finale (moyenne pondérée par la couverture).
-  const w2 = Math.max(1, Math.floor(W / ss)), h2 = Math.max(1, Math.floor(Hh / ss)), fin = new Uint8ClampedArray(w2 * h2 * 4);
-  for (let y = 0; y < h2; y++) for (let x = 0; x < w2; x++) {
-    let r = 0, g = 0, b = 0, a = 0;
-    for (let j = 0; j < ss; j++) for (let i = 0; i < ss; i++) { const k = ((y * ss + j) * W + x * ss + i) * 4, al = out[k + 3]! / 255; r += out[k]! * al; g += out[k + 1]! * al; b += out[k + 2]! * al; a += al; }
-    const n2 = ss * ss, o4 = (y * w2 + x) * 4; if (a > 0) { fin[o4] = r / a; fin[o4 + 1] = g / a; fin[o4 + 2] = b / a; fin[o4 + 3] = (a / n2) * 255; }
-  }
-  const png = encodePngRgba(w2, h2, fin), bw = x1 - x0, bh = y1 - y0;
-  const svg = `<g><image x="${x0.toFixed(2)}" y="${y0.toFixed(2)}" width="${bw.toFixed(2)}" height="${bh.toFixed(2)}" preserveAspectRatio="none" href="data:image/png;base64,${png.toString('base64')}"/></g>`;
-  void rg;
-  return { svg, bounds: { x0, y0, x1, y1 }, drawn: keyed.length, ids: keyed.map((k) => k.v.id), pixels: { w: w2, h: h2, rgba: fin }, seam };
+  const out = timedLayer('body.shade', () => shadePixels(g, oc, castArr, M, o));
+  const fin = timedLayer('body.encode', () => encodeFinal(g, out));
+  return { svg: fin.svg, bounds: { x0: g.x0, y0: g.y0, x1: g.x1, y1: g.y1 }, drawn: g.ids.length, ids: g.ids, pixels: { w: fin.w, h: fin.h, rgba: fin.rgba } };
 }
