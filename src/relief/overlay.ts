@@ -5,7 +5,7 @@ import { LayerCache } from '../perf/layers';
 import { parseHex } from '../core/color';
 import type { FaceLandmarks, NoseGeometry } from '../face';
 import type { FaceParams } from '../schema';
-import { ambientOcclusion, castShadow } from './cast';
+import { ambientOcclusion, castShadow, castShadowScaled } from './cast';
 import { REGION, type Grid, type ReliefField } from './field';
 import { headGrid, headRelief } from './head';
 import { shaderOf, tonesOf, type LightModel, type ShadeOut, type Tones } from './model';
@@ -25,7 +25,9 @@ export interface HeadLit {
   /** Part éclairée par pixel (0 = ombre, 1 = lumière) et part d'ombre portée, même grille que `field`. */
   readonly lit: Float32Array; readonly cast: Float32Array;
 }
-export interface HeadLitOpts { readonly ppu?: number; readonly reach?: number; readonly zc?: number; readonly neckAxisZ?: number; readonly fadeNeck?: boolean; readonly ao?: number }
+export interface HeadLitOpts { readonly ppu?: number; readonly reach?: number; readonly zc?: number; readonly neckAxisZ?: number; readonly fadeNeck?: boolean; readonly ao?: number;
+  /** Facteur de grille de l'ombre portée : 1 (défaut) = pleine résolution, résultat EXACT ; 2 ou 4 = grille plus grossière (profondeur = max du bloc, puis bilinéaire) : ≈ 4× / 16× moins de calcul, écart borné et vérifié (docs/PERF-4.md, tests/figure-approx-verified.test.ts). */
+  readonly castScale?: number }
 /**
  * COUCHES de la tête, à clés de dépendance (docs/PERF-4.md) : le champ de relief et l'occlusion ambiante ne dépendent PAS de la lumière ; l'ombre portée ne dépend que
  * de la direction, de la portée et de la pénombre. Changer la lumière, la peau ou le style ne refait donc que ce qui en dépend. Les valeurs sont des tampons IMMUABLES.
@@ -35,7 +37,7 @@ export function headLit(p: FaceParams, lm: FaceLandmarks, nose: NoseGeometry, sk
   const g: Grid = headGrid(lm, o.ppu ?? 2.4), fkey = createHash('sha1').update(canonical([p, lm, nose, g, o.zc ?? 0, o.neckAxisZ ?? null])).digest('hex');
   const field = FIELD.get(fkey, () => headRelief(p, lm, nose, { grid: g, zc: o.zc ?? 0, ...(o.neckAxisZ === undefined ? {} : { neckAxisZ: o.neckAxisZ }) }));
   const reach = o.reach ?? 0.42 * lm.W, pen = 0.08 + 0.5 * model.soft, aoR = 0.035 * lm.W, aoG = 0.05 * lm.W;
-  const cast = CASTL.get(`${fkey}|${JSON.stringify([model.dir, reach, pen])}`, () => castShadow(g, field.depth, model.dir, { reach, penumbra: pen }));
+  const cs = o.castScale ?? 1, cast = CASTL.get(`${fkey}|${JSON.stringify([model.dir, reach, pen, cs])}`, () => (cs > 1 ? castShadowScaled(g, field.depth, model.dir, { reach, penumbra: pen }, cs) : castShadow(g, field.depth, model.dir, { reach, penumbra: pen })));
   const ao = AOL.get(`${fkey}|${aoR}|${aoG}`, () => ambientOcclusion(g, field.depth, aoR, aoG)), tones = tonesOf(skin, model, { shadow: p.skin.light.shadow });
   const N = g.w * g.h, mul = new Uint8ClampedArray(N * 4), scr = new Uint8ClampedArray(N * 4), lit = new Float32Array(N), aoK = o.ao ?? 0.5;
   const shader = shaderOf(model), s: ShadeOut = { lit: 0, core: 0, rim: 0, spec: 0 }, rc = parseHex(model.rimColor), lc = parseHex(model.color), fade0 = lm.neck.bottomY - 0.12 * lm.H;

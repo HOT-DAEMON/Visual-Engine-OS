@@ -31,9 +31,9 @@ export interface LitFigure { readonly svg: string; readonly head: HeadLit; reado
  * FIGURE ÉCLAIRÉE : le corps (rendu par pixel) reçoit l'ombre de la tête (le menton sur le cou et la poitrine) ; la tête reçoit sa couche d'éclairage ; les deux
  * lisent le MÊME `LightModel`. Le corps est dessiné derrière le visage, la couche de tête par-dessus (via `composeFigure`).
  */
-export function litFigure(sceneSvg: string, host: { readonly face?: unknown; readonly width: number; readonly height: number }, skin: string, set: VolumeSet, model: LightModel, o: Omit<PixelOpts, 'skin' | 'lightModel' | 'proxy'> & { readonly headPpu?: number } = {}): LitFigure {
+export function litFigure(sceneSvg: string, host: { readonly face?: unknown; readonly width: number; readonly height: number }, skin: string, set: VolumeSet, model: LightModel, o: Omit<PixelOpts, 'skin' | 'lightModel' | 'proxy'> & { readonly headPpu?: number; readonly headCastScale?: number } = {}): LitFigure {
   const face = hostFace(host), za = neckAxisZ(set, face.lm.chinY), W = face.lm.W;
-  const head = headLit(face.p, face.lm, face.nose, skin, model, { zc: za + 0.05 * W, neckAxisZ: za, ppu: o.headPpu ?? 2.4 });
+  const head = headLit(face.p, face.lm, face.nose, skin, model, { zc: za + 0.05 * W, neckAxisZ: za, ppu: o.headPpu ?? 2.4, ...(o.headCastScale ? { castScale: o.headCastScale } : {}) });
   const f = head.field, front = (o.camera?.yaw ?? 0) === 0;
   const proxy = front ? (x: number, y: number): number => { const i = Math.floor((x - f.x0) * f.ppu), j = Math.floor((y - f.y0) * f.ppu); return i < 0 || j < 0 || i >= f.w || j >= f.h ? -Infinity : f.depth[j * f.w + i]!; } : undefined;
   const body = renderVolumesPixel(set, { ...o, skin, lightModel: model, ...(proxy ? { proxy, proxyKey: head.key } : {}) }); // `head.key` nomme l'occulteur : l'ombre du corps est mise en cache par contenu
