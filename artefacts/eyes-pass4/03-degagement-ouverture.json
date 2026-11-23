@@ -1,7 +1,0 @@
-{
- "yeux": 1100,
- "cils": 19021,
- "intrusionsAvantDegagement": 848,
- "intrusionsApres": 24,
- "definition": "corps du cil (ligne médiane + demi-largeur) dans l’ouverture de plus de la demi-épaisseur du trait de paupière, après 50 % de la longueur"
-}
