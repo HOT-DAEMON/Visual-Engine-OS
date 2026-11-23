@@ -53,6 +53,26 @@ export function shadeAt(m: LightModel, n: P3, cast: number, ao: number, gobo = 1
   const h = norm3(p3(m.dir.x, m.dir.y, m.dir.z + 1)), spec = Math.max(0, dot3(n, h)) ** (6 + 40 * (1 - m.soft)) * lit * 0.5 * m.intensity;
   return { lit: clamp01(lit), core: clamp01(core), rim: clamp01(rim), spec: clamp01(spec) };
 }
+/** Résultat d'un éclairage de pixel, écrit dans une structure RÉUTILISÉE (aucune allocation par pixel). */
+export interface ShadeOut { lit: number; core: number; rim: number; spec: number }
+/**
+ * `shadeAt` sans allocation par pixel (docs/PERF-4.md) : les grandeurs qui ne dépendent que du modèle (largeur du terminateur, vecteur demi-angle normalisé,
+ * exposant spéculaire) sont calculées UNE fois ; les normales arrivent en trois scalaires. Mêmes expressions, même ordre d'opérations que `shadeAt` : même résultat
+ * au bit près (tests/shader-exact.test.ts). `shadeAt` reste la définition de référence.
+ */
+export function shaderOf(m: LightModel): (nx: number, ny: number, nz: number, cast: number, ao: number, gobo: number, o: ShadeOut) => void {
+  const soft = m.style === 'soft', cel = !soft, cel3 = m.style === 'cel3', w = soft ? 0.05 + 0.5 * m.soft : 0.012, hv = norm3(p3(m.dir.x, m.dir.y, m.dir.z + 1)), pw = 6 + 40 * (1 - m.soft);
+  const dx = m.dir.x, dy = m.dir.y, dz = m.dir.z, rx = m.rimDir.x, ry = m.rimDir.y, rz = m.rimDir.z, hx = hv.x, hy = hv.y, hz = hv.z;
+  return (nx, ny, nz, cast, ao, gobo, o) => {
+    const ndl = (nx * dx + ny * dy + nz * dz) - m.bias, d = soft ? sstep(-w, w + 0.28, ndl) : sstep(-w, w, ndl);
+    let lit = d * (1 - cast) * gobo;
+    if (cel) lit = sstep(0.4, 0.6, lit) * (1 - 0.85 * sstep(0.5, 0.62, ao)); else lit *= 1 - 0.5 * ao;
+    const core = cel3 ? (1 - sstep(-0.6, -0.32, ndl + m.bias)) * (1 - lit) : soft ? (1 - sstep(-0.9, -0.1, ndl + m.bias)) * (1 - lit) * 0.35 : 0;
+    const fr = (1 - Math.max(0, nz)) ** 2.6, rim = fr * sstep(0.0, 0.55, nx * rx + ny * ry + nz * rz) * m.rim * (1 - 0.7 * lit);
+    const spec = Math.max(0, nx * hx + ny * hy + nz * hz) ** pw * lit * 0.5 * m.intensity;
+    o.lit = clamp01(lit); o.core = clamp01(core); o.rim = clamp01(rim); o.spec = clamp01(spec);
+  };
+}
 /**
  * LUMIÈRE DE REBOND (seconde lumière, `m.bounce`) : le sol / l'environnement renvoie une lumière faible PAR EN DESSOUS et du côté opposé à la clé (planches 02, 03, 10 : bas du menton, dessous du nez, creux du cou éclaircis dans l'ombre).
  * Renvoie la part (0 … `m.bounce`) dont une surface de normale `n` (espace vue) est ramenée vers sa couleur éclairée ; 0 sur une surface occultée (`ao` élevé : le rebond n'y entre pas). En cel, la part est un palier franc (pas de dégradé dans un aplat).

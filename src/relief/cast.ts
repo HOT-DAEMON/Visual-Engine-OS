@@ -10,18 +10,27 @@ import type { Grid } from './field';
 export interface CastOpts { readonly reach: number; readonly steps?: number; readonly penumbra?: number; readonly bias?: number; readonly blur?: number; readonly growth?: number }
 export function castShadow(g: Grid, depth: Float32Array, dir: P3, o: CastOpts): Float32Array {
   const out = new Float32Array(g.w * g.h), hl = Math.hypot(dir.x, dir.y); if (dir.z <= 0.02 || hl < 1e-4) return out;
-  const dx = dir.x / hl, dy = dir.y / hl, slope = dir.z / hl, steps = o.steps ?? 28, pen = o.penumbra ?? 0.25, bias = o.bias ?? 0.004 * o.reach, eps = 1 / g.ppu;
+  const dx = dir.x / hl, dy = dir.y / hl, slope = dir.z / hl, pen = o.penumbra ?? 0.25, bias = o.bias ?? 0.004 * o.reach, eps = 1 / g.ppu;
   // Pas : 1 px près du pixel, puis 3 % de la distance déjà parcourue (la pénombre croît plus vite que le pas : pas d'escalier).
-  const ts: number[] = []; for (let t = 1 / g.ppu; t < o.reach; t += Math.max(1, (o.growth ?? 0.03) * t * g.ppu) / g.ppu) ts.push(t); void steps;
-  for (let y = 0; y < g.h; y++) for (let x = 0; x < g.w; x++) {
-    const k = y * g.w + x, z = depth[k]!; if (z === -Infinity) continue;
+  const ts: number[] = []; for (let t = 1 / g.ppu; t < o.reach; t += Math.max(1, (o.growth ?? 0.03) * t * g.ppu) / g.ppu) ts.push(t);
+  // Tables par pas, calculées UNE fois (l'ancienne boucle refaisait ces produits pour chaque pixel). Mêmes expressions, même ordre : mêmes bits (tests/cast-exact.test.ts).
+  const n = ts.length, ox = new Float64Array(n), oy = new Float64Array(n), st = new Float64Array(n), pt = new Float64Array(n);
+  for (let i = 0; i < n; i++) { const t = ts[i]!; ox[i] = dx * t * g.ppu; oy[i] = dy * t * g.ppu; st[i] = slope * t; pt[i] = pen * t + eps; }
+  let dmax = -Infinity; for (let k = 0; k < depth.length; k++) if (depth[k]! > dmax) dmax = depth[k]!;
+  const w = g.w, h = g.h;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const k = y * w + x, z = depth[k]!; if (z === -Infinity) continue;
     let s = 0;
-    for (const t of ts) {
-      const qx = Math.round(x + dx * t * g.ppu), qy = Math.round(y + dy * t * g.ppu);
-      if (qx < 0 || qy < 0 || qx >= g.w || qy >= g.h) break;
-      const d = depth[qy * g.w + qx]!; if (d === -Infinity) continue;
-      const ex = d - (z + slope * t) - bias; if (ex <= 0) continue;
-      const o1 = Math.min(1, ex / (pen * t + eps)); if (o1 > s) { s = o1; if (s >= 1) break; }
+    for (let i = 0; i < n; i++) {
+      const base = z + st[i]!;
+      // Borne EXACTE : aucun pixel n'est plus profond que `dmax`, et `base` ne fait que croître avec le pas ; dès que `dmax − base − bias ≤ 0`, tous les pas suivants
+      // donnent `ex ≤ 0` (l'arrondi flottant est monotone) : ils n'auraient rien changé, on s'arrête.
+      if (dmax - base - bias <= 0) break;
+      const qx = Math.round(x + ox[i]!), qy = Math.round(y + oy[i]!);
+      if (qx < 0 || qy < 0 || qx >= w || qy >= h) break;
+      const d = depth[qy * w + qx]!; if (d === -Infinity) continue;
+      const ex = d - base - bias; if (ex <= 0) continue;
+      const o1 = Math.min(1, ex / pt[i]!); if (o1 > s) { s = o1; if (s >= 1) break; }
     }
     out[k] = s;
   }
@@ -50,12 +59,16 @@ function blur(g: Grid, a: Float32Array, r: number, depth: Float32Array): Float32
 /** Occlusion ambiante par horizon : part des voisins (8 directions, 2 rayons) plus proches de l'observateur que le pixel ; ∈ [0,1]. */
 export function ambientOcclusion(g: Grid, depth: Float32Array, radius: number, range: number): Float32Array {
   const out = new Float32Array(g.w * g.h), R = Math.max(2, Math.round(radius * g.ppu)), D = [[1, 0], [-1, 0], [0, 1], [0, -1], [0.7, 0.7], [-0.7, 0.7], [0.7, -0.7], [-0.7, -0.7]] as const;
-  for (let y = 0; y < g.h; y++) for (let x = 0; x < g.w; x++) {
-    const k = y * g.w + x, z = depth[k]!; if (z === -Infinity) continue;
+  // 16 prises (8 directions × 2 rayons) : décalages calculés une fois, avec les mêmes produits que l'ancienne boucle (aucun tableau créé par pixel).
+  const ox = new Float64Array(16), oy = new Float64Array(16), c0 = 0.1 * range; let m = 0;
+  for (const [dx, dy] of D) for (const r of [R * 0.5, R]) { ox[m] = dx * r; oy[m] = dy * r; m++; }
+  const w = g.w, h = g.h;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const k = y * w + x, z = depth[k]!; if (z === -Infinity) continue;
     let occ = 0, n = 0;
-    for (const [dx, dy] of D) for (const r of [R * 0.5, R]) {
-      const qx = Math.round(x + dx * r), qy = Math.round(y + dy * r); if (qx < 0 || qy < 0 || qx >= g.w || qy >= g.h) continue;
-      const d = depth[qy * g.w + qx]!; n++; if (d !== -Infinity) occ += Math.min(1, Math.max(0, (d - z - 0.1 * range) / range));
+    for (let j = 0; j < 16; j++) {
+      const qx = Math.round(x + ox[j]!), qy = Math.round(y + oy[j]!); if (qx < 0 || qy < 0 || qx >= w || qy >= h) continue;
+      const d = depth[qy * w + qx]!; n++; if (d !== -Infinity) occ += Math.min(1, Math.max(0, (d - z - c0) / range));
     }
     out[k] = n ? Math.min(1, (occ / n) * 2.2) : 0;
   }

@@ -1,12 +1,12 @@
 import { encodePngRgba } from '../../core/png';
 import { parseHex } from '../../core/color';
 import { castShadowScaled } from '../../relief/cast';
-import { shadeAt, tonesOf, type LightModel } from '../../relief/model';
+import { shaderOf, tonesOf, type LightModel, type ShadeOut } from '../../relief/model';
 import { hexOf } from '../../relief/oklab';
 import type { GBuffer } from './gbuffer';
 import type { Occlusion } from './occlusion';
 import { DEFAULT_LIGHT, paletteOf, tone, type LightRig } from './shade';
-import { p3, type P3 } from './vec3';
+import { p3 } from './vec3';
 
 /**
  * ÉTAGE D'OMBRAGE du rendu par pixel (tout ce qui dépend de la lumière, de la peau et des réglages) : ombre portée du corps (+ occulteur « tête »), éclairage par
@@ -34,24 +34,33 @@ export function shadePixels(g: GBuffer, oc: Occlusion, castArr: Float32Array | n
   const out = new Uint8ClampedArray(N * 4), aoK = o.ao ?? 0.55, grK = o.groove ?? 0.5;
   const sh = hex(pal.shadow), sk = hex(pal.skin), li = hex(pal.light);
   const alb = M ? mixc(sk, li, 0.38) : sk, T = M ? tonesOf(hexOf(alb), M) : null, rc = M ? parseHex(M.rimColor) : [0, 0, 0], lc = M ? parseHex(M.color) : [0, 0, 0];
-  const paint = (n: P3, cs: number, occ1: number, add: number, gk: number): number[] => {
-    const d = shadeAt(M!, n, cs, aoK * Math.min(1, occ1 / 10)), lit = Math.min(1, Math.max(0, d.lit + add)) * gk, ra = Math.min(1, d.rim * 0.9), sa = Math.min(1, d.spec * 0.5);
-    return [0, 1, 2].map((ch) => { let m = T!.shadowMul[ch]! + (T!.lightMul[ch]! - T!.shadowMul[ch]!) * lit; m += (T!.coreMul[ch]! - m) * d.core; const v = alb[ch]! * m; return v + (255 - v) * (ra * (rc[ch]! / 255) + sa * (lc[ch]! / 255)); });
+  // Éclairage sans allocation par pixel : `shader` (invariants du modèle hoistés) écrit dans `so` ; `paintInto` écrit les trois canaux dans `rgb` (double précision, comme l'ancien tableau).
+  const shader = M ? shaderOf(M) : null, so: ShadeOut = { lit: 0, core: 0, rim: 0, spec: 0 }, rgb = new Float64Array(3), rcN = [rc[0]! / 255, rc[1]! / 255, rc[2]! / 255], lcN = [lc[0]! / 255, lc[1]! / 255, lc[2]! / 255];
+  const paintInto = (nxx: number, nyy: number, nzz: number, cs: number, occ1: number, add: number, gk: number): void => {
+    shader!(nxx, nyy, nzz, cs, aoK * Math.min(1, occ1 / 10), 1, so);
+    const lit = Math.min(1, Math.max(0, so.lit + add)) * gk, ra = Math.min(1, so.rim * 0.9), sa = Math.min(1, so.spec * 0.5);
+    for (let ch = 0; ch < 3; ch++) { let m = T!.shadowMul[ch]! + (T!.lightMul[ch]! - T!.shadowMul[ch]!) * lit; m += (T!.coreMul[ch]! - m) * so.core; const v = alb[ch]! * m; rgb[ch] = v + (255 - v) * (ra * rcN[ch]! + sa * lcN[ch]!); }
   };
   for (let key = 0; key < N; key++) {
     const vi = id[key]!; if (vi < 0) continue;
     const md = meta[vi]!, occ = oc.occ[key]!, gro = oc.gro[key]!;
-    const nv = p3(nx[key]!, ny[key]!, nz[key]!), fib = md.fib ? 0.045 * Math.min(1, vis * 2) * Math.sin(th[key]! * 22) : 0, gk = 1 - grK * 0.45 * Math.min(1, gro / 4);
-    let t = tone(nv, L) + 0.14 * tn[key]! + fib;
-    t *= 1 - aoK * Math.min(1, occ / 10) - grK * 0.45 * Math.min(1, gro / 4);
-    const c = M ? paint(nv, castArr![key]!, occ, 0.1 * tn[key]! + 2 * fib, gk) : t < 0.55 ? mixc(sh, sk, Math.max(0, t) / 0.55) : mixc(sk, li, Math.min(1, (t - 0.55) / 0.6) * 0.62);
+    const fib = md.fib ? 0.045 * Math.min(1, vis * 2) * Math.sin(th[key]! * 22) : 0, gk = 1 - grK * 0.45 * Math.min(1, gro / 4);
+    let c0: number, c1: number, c2: number;
+    if (M) { paintInto(nx[key]!, ny[key]!, nz[key]!, castArr![key]!, occ, 0.1 * tn[key]! + 2 * fib, gk); c0 = rgb[0]!; c1 = rgb[1]!; c2 = rgb[2]!; }
+    else { // ancien éclairage (comparaisons avant/après) : seul cas où `tone` est utile
+      let t = tone(p3(nx[key]!, ny[key]!, nz[key]!), L) + 0.14 * tn[key]! + fib;
+      t *= 1 - aoK * Math.min(1, occ / 10) - grK * 0.45 * Math.min(1, gro / 4);
+      const c = t < 0.55 ? mixc(sh, sk, Math.max(0, t) / 0.55) : mixc(sk, li, Math.min(1, (t - 0.55) / 0.6) * 0.62); c0 = c[0]!; c1 = c[1]!; c2 = c[2]!;
+    }
     // Opacité de palier : un muscle PEU VISIBLE se fond sur la PEAU située dessous (couleur mêlée, alpha 1), il ne perce jamais le corps. Avant la correction de l'itération 05, l'opacité partait dans le canal alpha : le fond apparaissait à travers le ventre, les côtes et les bras (« creux » bleu-gris).
-    const o1 = md.kind === 'skin' ? 1 : Math.min(1, op[key]! * 1.2);
+    const o1 = md.kind === 'skin' ? 1 : Math.min(1, op[key]! * 1.2), k4 = key * 4;
     if (o1 < 0.5 && !skinCover[key]) continue; // frange FAIBLE (< 50 %) d'un muscle dont le palier n'est pas atteint : fantôme hors de la peau, supprimé ; au-delà, le muscle reste visible (profil du pectoral)
     if (o1 < 1 && skinCover[key]) {
-      const sn3 = p3(skn[key * 3]!, skn[key * 3 + 1]!, skn[key * 3 + 2]!), ts = tone(sn3, L) * (1 - aoK * Math.min(1, occ / 10)), cs = M ? paint(sn3, castArr![key]!, occ, 0, 1) : ts < 0.55 ? mixc(sh, sk, Math.max(0, ts) / 0.55) : mixc(sk, li, Math.min(1, (ts - 0.55) / 0.6) * 0.62), m2 = mixc(cs, c, o1);
-      out.set([m2[0]!, m2[1]!, m2[2]!, 255], key * 4);
-    } else out.set([c[0]!, c[1]!, c[2]!, 255 * o1], key * 4);
+      const sx = skn[key * 3]!, sy = skn[key * 3 + 1]!, sz = skn[key * 3 + 2]!; let s0: number, s1: number, s2: number;
+      if (M) { paintInto(sx, sy, sz, castArr![key]!, occ, 0, 1); s0 = rgb[0]!; s1 = rgb[1]!; s2 = rgb[2]!; }
+      else { const ts = tone(p3(sx, sy, sz), L) * (1 - aoK * Math.min(1, occ / 10)), cs = ts < 0.55 ? mixc(sh, sk, Math.max(0, ts) / 0.55) : mixc(sk, li, Math.min(1, (ts - 0.55) / 0.6) * 0.62); s0 = cs[0]!; s1 = cs[1]!; s2 = cs[2]!; }
+      out[k4] = s0 + (c0 - s0) * o1; out[k4 + 1] = s1 + (c1 - s1) * o1; out[k4 + 2] = s2 + (c2 - s2) * o1; out[k4 + 3] = 255;
+    } else { out[k4] = c0; out[k4 + 1] = c1; out[k4 + 2] = c2; out[k4 + 3] = 255 * o1; }
   }
   return out;
 }
