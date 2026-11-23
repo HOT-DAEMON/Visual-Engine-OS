@@ -60,14 +60,15 @@ export function buildGBuffer(set: VolumeSet, o: GBufferOpts): GBuffer {
       const ax = (t.x[0]! - x0) * ppu, ay = (t.y[0]! - y0) * ppu, bx = (t.x[1]! - x0) * ppu, by = (t.y[1]! - y0) * ppu, cx = (t.x[2]! - x0) * ppu, cy = (t.y[2]! - y0) * ppu;
       const den = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy); if (Math.abs(den) < 1e-9) continue;
       const mnx = Math.max(0, Math.floor(Math.min(ax, bx, cx))), mxx = Math.min(W - 1, Math.ceil(Math.max(ax, bx, cx))), mny = Math.max(0, Math.floor(Math.min(ay, by, cy))), mxy = Math.min(Hh - 1, Math.ceil(Math.max(ay, by, cy)));
+      const z0 = t.z[0]!, z1 = t.z[1]!, z2 = t.z[2]!, th0 = t.th[0]!, th1 = t.th[1]!, th2 = t.th[2]!, na = t.n[0]!, nb = t.n[1]!, nc = t.n[2]!;
       for (let py = mny; py <= mxy; py++) for (let px = mnx; px <= mxx; px++) {
         const qx = px + 0.5, qy = py + 0.5, l0 = ((by - cy) * (qx - cx) + (cx - bx) * (qy - cy)) / den, l1 = ((cy - ay) * (qx - cx) + (ax - cx) * (qy - cy)) / den, l2 = 1 - l0 - l1;
         if (l0 < -1e-6 || l1 < -1e-6 || l2 < -1e-6) continue;
-        const z = l0 * t.z[0]! + l1 * t.z[1]! + l2 * t.z[2]!, key = py * W + px;
+        const z = l0 * z0 + l1 * z1 + l2 * z2, key = py * W + px;
         if (sd[key]! >= z) continue;
         if (sd[key] === -Infinity) touched.push(key);
-        sd[key] = z; so[key] = vi; st[key] = l0 * t.th[0]! + l1 * t.th[1]! + l2 * t.th[2]!;
-        for (let j = 0; j < 3; j++) sn[key * 3 + j] = l0 * t.n[0]![j]! + l1 * t.n[1]![j]! + l2 * t.n[2]![j]!;
+        sd[key] = z; so[key] = vi; st[key] = l0 * th0 + l1 * th1 + l2 * th2;
+        sn[key * 3] = l0 * na[0]! + l1 * nb[0]! + l2 * nc[0]!; sn[key * 3 + 1] = l0 * na[1]! + l1 * nb[1]! + l2 * nc[1]!; sn[key * 3 + 2] = l0 * na[2]! + l1 * nb[2]! + l2 * nc[2]!;
       }
     }
   };
