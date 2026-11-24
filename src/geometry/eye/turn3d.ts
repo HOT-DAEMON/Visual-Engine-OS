@@ -1,6 +1,7 @@
 import { rad } from '../../core/math';
 import { cubicAt, type Vec } from './primitives';
-import type { OpeningGeometry } from './opening';
+import type { EyeSpec } from '../../schema';
+import { openingGeometry, type OpeningGeometry } from './opening';
 
 /**
  * Rotation 3D RÉELLE de l'enveloppe palpébrale (modèle `sphere`) : chaque point de l'ouverture est repris sur la sphère de la tête,
@@ -91,4 +92,14 @@ export function turnOpening(g: OpeningGeometry, t: TurnParams, recenter = true):
   const sx = Math.hypot(jac.a, jac.c);
   const out: OpeningGeometry = { ...g, pi, po, u1, u2, l1, l2, w: g.w * sx, h: g.h * sy, hEff: g.hEff * sy, bbox: { x: minX, y: minY, w: maxX - minX, h: maxY - minY } };
   return { g: out, jac, shift: sh, facing: facingOf(t) };
+}
+
+/**
+ * Géométrie de l'œil telle que le rendu la dessine : enveloppe de face `g0`, ouverture tournée `turned` (modèle `sphere`, sinon `null`) et enveloppe effective `g`.
+ * Source unique du rendu (`render/eye/eye.ts`) et de la vérification (`verify/eye.ts`) — qui recopiaient chacun ces lignes.
+ */
+export function eyeTurn(eye: EyeSpec): { readonly g0: OpeningGeometry; readonly turned: TurnedOpening | null; readonly g: OpeningGeometry } {
+  const g0 = openingGeometry(eye.shape, eye.canthi); const ht = eye.headTurn;
+  const turned = ht.model === 'sphere' ? turnOpening(g0, { yawDeg: ht.yawDeg, pitchDeg: ht.pitchDeg, azimuthDeg: ht.azimuthDeg, radius: eye.shape.width * ht.radiusFactor }, !ht.parallax) : null;
+  return { g0, turned, g: turned ? turned.g : g0 };
 }

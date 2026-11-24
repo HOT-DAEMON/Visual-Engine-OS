@@ -1,4 +1,4 @@
-import { EDGE_MAX_DEV, cubicAt, irregularEdges, microLod, type OpeningGeometry, type Vec } from '../geometry/eye';
+import { EDGE_MAX_DEV, cubicAt, eyeEdges, type OpeningGeometry, type Vec } from '../geometry/eye';
 import { warpOf } from '../render/eye/cornea';
 import { resolveEye, withAutoLod } from '../render/eye/eye';
 import type { EyeSpec } from '../schema';
@@ -34,7 +34,7 @@ export function checkEyeCornea(raw: EyeSpec, eye: EyeSpec, g: OpeningGeometry): 
   }
   const md = eye.microdetail;
   if (md?.edge) {
-    const e = irregularEdges(g, md.edge, eye.seed, microLod(withAutoLod(eye).eye.microdetail?.lod.eyePixels ?? null).fine);
+    const e = eyeEdges(withAutoLod(eye).eye, g)!; // même source que le rendu (LOD résolu)
     const dense = (c: readonly [Vec, Vec, Vec, Vec]): Vec[] => Array.from({ length: 401 }, (_, i) => cubicAt(c[0], c[1], c[2], c[3], i / 400));
     const up = dense([g.pi, g.u1, g.u2, g.po]); const lo = dense([g.po, g.l1, g.l2, g.pi]);
     const dev = Math.max(...e.upper.map((p) => Math.min(...up.map((q) => Math.hypot(p.x - q.x, p.y - q.y)))), ...e.lower.map((p) => Math.min(...lo.map((q) => Math.hypot(p.x - q.x, p.y - q.y))))) / (g.hEff || 1);

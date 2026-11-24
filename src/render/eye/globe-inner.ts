@@ -1,5 +1,5 @@
 import { darken, lighten } from '../../core/color';
-import { caruncleOf, foldGeometry, type OpeningGeometry, type FoldGeometry, type TurnedOpening, type Vec } from '../../geometry/eye';
+import { caruncleOf, edgeFrames, edgePolygon, foldGeometry, type EdgeIrregularity, type OpeningGeometry, type FoldGeometry, type TurnedOpening, type Vec } from '../../geometry/eye';
 import { direction2D, type LightVector } from '../../lighting/light';
 import { foreshortenTransform, gazeOf } from '../../lighting/gaze3d';
 import { compileSurface, gradientStop as stop, type Surface } from '../../materials';
@@ -16,7 +16,7 @@ import type { EyeLook } from './look';
 import { compileEffects } from '../../appearance';
 import type { EyeSpec } from '../../schema';
 import { el, num, urlRef } from '../../core/svg';
-import { P, highlightOffsets, irisFibers, limbalRing, openingPath, polygonPath, pupilRadii } from './helpers';
+import { P, highlightOffsets, irisFibers, limbalRing, openingPath, polygonPath, pupilRadii, smoothThrough } from './helpers';
 
 export interface GlobeInner {
   readonly defs: string[];
@@ -54,6 +54,8 @@ export function renderGlobeInner(
   look: EyeLook | null = null,
   /** Pixels finaux par unité locale de l'œil (LOD automatique, `geometry/eye/lod.ts`) ; `null` = pleine précision. */
   pxPerUnit: number | null = null,
+  /** EYE-07E : bords irréguliers (même tracé que le clip) ; la caroncule, la ligne humide, le liseré et l'ombre des paupières les suivent. `null` = enveloppe. */
+  edges: EdgeIrregularity | null = null,
 ): GlobeInner {
   const defs: string[] = [];
   const inner: string[] = [];
@@ -134,7 +136,7 @@ export function renderGlobeInner(
   inner.push(...micro.over);
 
   // Caroncule lacrymale (canthus interne)
-  const car = caruncleOf(g, eye.canthi.inner.caruncle);
+  const car = caruncleOf(g, eye.canthi.inner.caruncle, edges ? edgeFrames(g, edges) : undefined);
   if (car) {
     const col = eye.canthi.inner.color;
     defs.push(
@@ -147,11 +149,14 @@ export function renderGlobeInner(
     inner.push(el('ellipse', { cx: car.cx, cy: car.cy, rx: car.rx, ry: car.ry, fill: urlRef(`${id}-caruncle`) }));
   }
 
-  // Ligne humide du bord inférieur
+  // Ligne humide du bord inférieur (remontée de 1,2 % de h, comme sur l'enveloppe ; sur le tracé perturbé si le bord est irrégulier)
+  const up = (p: Vec): Vec => ({ x: p.x, y: p.y - g.h * 0.012 });
   if (eye.lids.waterline > 0.01) {
     inner.push(
       el('path', {
-        d: `M${P({ x: g.po.x, y: g.po.y - g.h * 0.012 })}C${P({ x: g.l1.x, y: g.l1.y - g.h * 0.012 })} ${P({ x: g.l2.x, y: g.l2.y - g.h * 0.012 })} ${P({ x: g.pi.x, y: g.pi.y - g.h * 0.012 })}`,
+        d: edges
+          ? `M${P(up(edges.lower[0]!))}${smoothThrough(edges.lower.map(up))}`
+          : `M${P({ x: g.po.x, y: g.po.y - g.h * 0.012 })}C${P({ x: g.l1.x, y: g.l1.y - g.h * 0.012 })} ${P({ x: g.l2.x, y: g.l2.y - g.h * 0.012 })} ${P({ x: g.pi.x, y: g.pi.y - g.h * 0.012 })}`,
         fill: 'none',
         stroke: lighten(eye.canthi.inner.color, 0.3),
         'stroke-opacity': 0.55 * eye.lids.waterline,
@@ -163,7 +168,7 @@ export function renderGlobeInner(
 
   // Lumière de contour (appearance.light.rim) : liseré fin le long du bord inférieur, du côté opposé à l'ombre des paupières.
   if (look && look.spec.light.rimStrength > 0) {
-    inner.push(el('path', { d: `M${P(g.po)}C${P(g.l1)} ${P(g.l2)} ${P(g.pi)}`, fill: 'none', stroke: look.skin.rim, 'stroke-opacity': look.spec.light.rimStrength * 0.55, 'stroke-width': g.h * 0.01, 'stroke-linecap': 'round' }));
+    inner.push(el('path', { d: edges ? `M${P(edges.lower[0]!)}${smoothThrough(edges.lower)}` : `M${P(g.po)}C${P(g.l1)} ${P(g.l2)} ${P(g.pi)}`, fill: 'none', stroke: look.skin.rim, 'stroke-opacity': look.spec.light.rimStrength * 0.55, 'stroke-width': g.h * 0.01, 'stroke-linecap': 'round' }));
   }
 
   // Ombre portée des paupières : le contour de l'ouverture décalé À L'OPPOSÉ de la lumière ;
@@ -175,12 +180,14 @@ export function renderGlobeInner(
   // Fini « flat » : ni ombre portée des paupières ni vignettage d'orbite (aplats francs, voir flat-finish.ts).
   if (!flat) {
     const shadowColor = look ? darken(look.skin.shadow, 0.55) : '#000000';
-    const shiftedOpening = openingPath(g, -L.x * dist, -L.y * dist);
+    // ombre des paupières : le contour RÉEL de l'ouverture (tracé perturbé si le bord est irrégulier), décalé à l'opposé de la lumière
+    const sdx = -L.x * dist; const sdy = -L.y * dist; const away = (p: Vec): Vec => ({ x: p.x + sdx, y: p.y + sdy });
+    const shiftedOpening = edges ? `M${P(away(edges.upper[0]!))}${smoothThrough(edges.upper.map(away))}${smoothThrough(edges.lower.map(away))}Z` : openingPath(g, sdx, sdy);
     if (eye.renderQuality === 'reference') {
       defs.push(el('filter', { id: `${id}-lidblur`, x: '-20%', y: '-20%', width: '140%', height: '140%' }, [el('feGaussianBlur', { stdDeviation: g.hEff * 0.035 })]));
       inner.push(el('path', { d: outer + shiftedOpening, 'fill-rule': 'evenodd', fill: shadowColor, 'fill-opacity': 0.38, filter: urlRef(`${id}-lidblur`) }));
     } else {
-      const sh = softShadow(id, openingPolygon(g, 48, -L.x * dist, -L.y * dist), { x: b.x - margin, y: b.y - margin, w: b.w + 2 * margin, h: b.h + 2 * margin }, g.hEff * 0.035, shadowColor, 0.38);
+      const sh = softShadow(id, edges ? edgePolygon(edges).map(away) : openingPolygon(g, 48, sdx, sdy), { x: b.x - margin, y: b.y - margin, w: b.w + 2 * margin, h: b.h + 2 * margin }, g.hEff * 0.035, shadowColor, 0.38);
       defs.push(...sh.defs);
       inner.push(...sh.markup);
     }

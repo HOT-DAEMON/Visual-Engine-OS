@@ -1,5 +1,5 @@
 import { darken } from '../../core/color';
-import { creaseCurve, cubicTopY, eyeLashSet, type EdgeIrregularity, type FoldGeometry, type OpeningGeometry, type Vec } from '../../geometry/eye';
+import { creaseCurve, cubicTopY, eyeLashSet, upperEdgeShift, type EdgeIrregularity, type FoldGeometry, type OpeningGeometry, type Vec } from '../../geometry/eye';
 import { direction2D, type LightVector } from '../../lighting/light';
 import { dominantColor, gradientStop as stop } from '../../materials';
 import { clamp01 } from '../../core/math';
@@ -39,7 +39,7 @@ export function renderLidsAndFold(
   const flat = isFlat(eye);   // fini flat : traits pleins, aucune ombre de pli ni trait translucide
 
   // Pli palpébral : ombre sous le pli (selon la lumière) + trait du pli
-  const crease = creaseCurve(g, eye.lids.crease.height);
+  const crease = creaseCurve(g, eye.lids.crease.height, edges ? (t) => upperEdgeShift(g, edges, t) : undefined);
   if (crease) {
     const depth = eye.lids.crease.depth;
     const topY = cubicTopY(crease);
@@ -50,7 +50,7 @@ export function renderLidsAndFold(
         stop(1, look ? look.skin.shadow : '#000000', 0),
       ]),
     );
-    const region = `M${P(g.pi)}C${P(g.u1)} ${P(g.u2)} ${P(g.po)}L${P(crease.p3)}C${P(crease.p2)} ${P(crease.p1)} ${P(crease.p0)}Z`;
+    const region = `${edges ? `M${P(edges.upper[0]!)}${smoothThrough(edges.upper)}` : `M${P(g.pi)}C${P(g.u1)} ${P(g.u2)} ${P(g.po)}`}L${P(crease.p3)}C${P(crease.p2)} ${P(crease.p1)} ${P(crease.p0)}Z`;
     outside.push(
       ...(flat ? [] : [el('path', { id: `${id}-crease-fill`, d: region, fill: urlRef(`${id}-crease-shadow`) })]),
       el('path', {
@@ -130,7 +130,7 @@ export function renderLidsAndFold(
   // voir eye-lashes.ts (`material: null` = hérite de `lidColor`, comportement historique).
   const lightDir = direction2D(L);
   // Les cils (graines, racines sur le liner) viennent du point d'entrée commun avec la vérification : geometry/eye/lashes.ts `eyeLashSet`.
-  const { upper: upLashes, lower: loLashes } = eyeLashSet(eye, g, th);
+  const { upper: upLashes, lower: loLashes } = eyeLashSet(eye, g, th, edges);
   if (upLashes.length > 0) {
     const upColor = eye.lashes.upper.material ? dominantColor(eye.lashes.upper.material.base) : lidColor;
     lids.push(

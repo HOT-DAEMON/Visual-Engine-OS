@@ -44,6 +44,8 @@ export function checkEyeLashes(
   lashes: { upper: readonly Lash[]; lower: readonly Lash[] },
   upperEdge: (t: number) => { pos: Vec; N: Vec },
   lowerEdge: (t: number) => { pos: Vec; N: Vec },
+  /** Contour réel de l'ouverture (tracé perturbé si le bord est irrégulier) ; défaut : enveloppe. */
+  contour?: readonly Vec[],
 ): { checks: Check[]; metrics: LashMetrics } {
   const B = LASH_VERIFY_BOUNDS;
   const out: Check[] = [];
@@ -60,7 +62,7 @@ export function checkEyeLashes(
   out.push(check('geometry', 'lash-roots-on-lid', '<=', worstRoot, B.rootDistThickness, 'un cil est planté loin du bord palpébral (racine flottante)'));
   const worstZone = lashZoneExcess(g, all) * Math.max(g.w, g.h);
   out.push(check('geometry', 'lashes-in-zone', '<=', worstZone / Math.max(g.w, g.h), B.zoneFraction, 'un cil dépasse de l’ouverture de plus de la fraction autorisée de la plus grande dimension de l’œil'));
-  const poly = openingPolygon(g);
+  const poly = contour ?? openingPolygon(g);
   // même définition que le dégagement (geometry/eye/lash-clearance.ts) : la pointe doit être plus profonde que la demi-épaisseur du trait de paupière pour compter comme « dans l'ouverture »
   const tipsInOpening = lashes.upper.filter((l) => depthInOpening(l.tip, poly) > th * 0.5).length;
   out.push(check('geometry', 'upper-lash-tips-outside-opening', '==', tipsInOpening, 0, 'la pointe d’un cil du haut retombe dans l’ouverture (sur l’iris ou la sclère)', 'warn'));

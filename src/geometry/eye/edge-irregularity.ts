@@ -1,5 +1,7 @@
 import { mulberry32 } from '../../core/prng';
-import type { OpeningGeometry } from './opening';
+import type { EyeSpec } from '../../schema';
+import type { Frame, OpeningGeometry } from './opening';
+import { microLod } from './micro-detail';
 import { cubicAt, cubicDeriv, norm, type Vec } from './primitives';
 
 /**
@@ -44,4 +46,43 @@ export function irregularEdges(g: OpeningGeometry, o: { readonly irregularity: n
   const up = edge([g.pi, g.u1, g.u2, g.po], amp * EDGE_UPPER_WEIGHT, o.grain, fine, rnd);
   const lo = edge([g.po, g.l1, g.l2, g.pi], amp, o.grain, fine, rnd);
   return { upper: up.pts, lower: lo.pts, maxDev: Math.max(up.dev, lo.dev) };
+}
+
+/**
+ * Bords de l'œil EFFECTIF (LOD déjà résolu dans `microdetail.lod`) : source unique du rendu (`render/eye/eye.ts`), des cils (`eyeLashSet`) et de la vérification (`verify/eye.ts`).
+ * `null` = bord parfait (courbes de l'enveloppe), comportement historique.
+ */
+export function eyeEdges(eye: EyeSpec, g: OpeningGeometry): EdgeIrregularity | null {
+  const md = eye.microdetail;
+  return md?.edge ? irregularEdges(g, md.edge, eye.seed, microLod(md.lod.eyePixels).fine) : null;
+}
+
+/** Point de la polyligne au paramètre t (0..1, échantillonnage uniforme = même paramètre que la cubique de l'enveloppe), tangente par différence centrée sur ±1 échantillon. */
+function polyFrameAt(pts: readonly Vec[], t: number): { pos: Vec; T: Vec } {
+  const n = pts.length - 1; const f = Math.min(Math.max(t, 0), 1) * n; const i = Math.min(Math.floor(f), n - 1); const u = f - i;
+  const a = pts[i] as Vec; const b = pts[i + 1] as Vec;
+  const pos = { x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u };
+  const p0 = pts[Math.max(i - 1, 0)] as Vec; const p1 = pts[Math.min(i + 2, n)] as Vec;
+  const T = norm({ x: p1.x - p0.x, y: p1.y - p0.y });
+  return { pos, T };
+}
+
+/**
+ * Repères (position, tangente, normale sortante) des bords PERTURBÉS : mêmes conventions que `upperFrame` / `lowerFrame` (t = 0 canthus interne → 1 externe), mais sur le tracé irrégulier.
+ * La normale garde le côté de la normale de l'enveloppe (jamais retournée par une ondulation). Les cils, la caroncule et le pli y accrochent leurs racines : ils suivent le bord réellement dessiné.
+ */
+export function edgeFrames(g: OpeningGeometry, e: EdgeIrregularity): { readonly upper: (t: number) => Frame; readonly lower: (t: number) => Frame } {
+  const upper = (t: number): Frame => { const { pos, T } = polyFrameAt(e.upper, t); return { pos, T, N: { x: g.s * T.y, y: -g.s * T.x } }; };
+  // le bord inférieur est stocké de l'externe vers l'interne : t (interne → externe) = 1 − paramètre de stockage
+  const lower = (t: number): Frame => { const { pos, T: d } = polyFrameAt(e.lower, 1 - t); const T = { x: -d.x, y: -d.y }; return { pos, T, N: { x: -g.s * T.y, y: g.s * T.x } }; };
+  return { upper, lower };
+}
+
+/** Contour échantillonné du tracé perturbé (haut interne → externe, puis bas externe → interne) : même sens que `openingPolygon`, utilisé par le dégagement des cils. */
+export function edgePolygon(e: EdgeIrregularity): Vec[] { return [...e.upper.slice(0, -1), ...e.lower.slice(0, -1)]; }
+
+/** Déplacement du bord supérieur (perturbé − enveloppe) au paramètre t : ce que le pli palpébral et la caroncule héritent du tarse. */
+export function upperEdgeShift(g: OpeningGeometry, e: EdgeIrregularity, t: number): Vec {
+  const a = polyFrameAt(e.upper, t).pos; const b = cubicAt(g.pi, g.u1, g.u2, g.po, Math.min(Math.max(t, 0), 1));
+  return { x: a.x - b.x, y: a.y - b.y };
 }

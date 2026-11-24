@@ -8,6 +8,8 @@ import type { Vec } from './primitives';
 import { linerTopOffset } from './liner';
 import { clearLashesFromOpening } from './lash-clearance';
 import { openingPolygon } from './opening-polygon';
+import { thinLashes } from './lod';
+import { edgeFrames, edgePolygon, type EdgeIrregularity } from './edge-irregularity';
 
 // ------------------------------------------------------------------ Cils
 
@@ -142,14 +144,16 @@ export function upperLashes(
   lidPx: number,
   seed: number,
   rootShift?: (t: number) => number,
+  /** Repères du bord supérieur ; défaut = enveloppe (bord parfait). Avec `microdetail.edge`, `edgeFrames(g, e).upper` : les racines suivent le tracé irrégulier. */
+  frameAt: (t: number) => Frame = (t) => upperFrame(g, t),
 ): Lash[] {
-  const base = buildLashes((t) => upperFrame(g, t), { ...lashes, length: lashes.length * g.h }, lidPx, lidPx * 0.3, seed, rootShift);
+  const base = buildLashes(frameAt, { ...lashes, length: lashes.length * g.h }, lidPx, lidPx * 0.3, seed, rootShift);
   const clumped = clumpLashes(base, lashes.clump, lashes.clumpSize, seed);
-  return [...clumped, ...flickLashes(g, lashes.flick, lidPx, rootShift ?? (() => lidPx * 0.3), seed)];
+  return [...clumped, ...flickLashes(g, lashes.flick, lidPx, rootShift ?? (() => lidPx * 0.3), seed, frameAt)];
 }
 
-export function lowerLashes(g: OpeningGeometry, lashes: EyeSpec['lashes']['lower'], lidPx: number, seed: number): Lash[] {
-  const base = buildLashes((t) => lowerFrame(g, t), { ...lashes, length: lashes.length * g.h }, lidPx, lidPx * 0.1, seed);
+export function lowerLashes(g: OpeningGeometry, lashes: EyeSpec['lashes']['lower'], lidPx: number, seed: number, frameAt: (t: number) => Frame = (t) => lowerFrame(g, t)): Lash[] {
+  const base = buildLashes(frameAt, { ...lashes, length: lashes.length * g.h }, lidPx, lidPx * 0.1, seed);
   return clumpLashes(base, lashes.clump, lashes.clumpSize, seed);
 }
 
@@ -157,14 +161,19 @@ export function lowerLashes(g: OpeningGeometry, lashes: EyeSpec['lashes']['lower
  * Point d'entrée UNIQUE des cils d'un œil : le rendu (render/eye/lids-fold.ts) et la vérification (verify/eye-lashes.ts) appellent la même fonction, avec les mêmes graines et le même
  * décalage de racine (le liner, s'il existe, porte les racines sur son bord haut), pour que la vérification porte sur les cils réellement dessinés.
  */
-export function eyeLashSet(eye: EyeSpec, g: OpeningGeometry, th: number): { upper: Lash[]; lower: Lash[]; rootShift: ((t: number) => number) | undefined } {
+export function eyeLashSet(eye: EyeSpec, g: OpeningGeometry, th: number, edges: EdgeIrregularity | null = null): { upper: Lash[]; lower: Lash[]; rootShift: ((t: number) => number) | undefined } {
   const liner = eye.lids.liner;
   const rootShift = liner ? (t: number) => linerTopOffset(liner, th, t) * 0.88 : undefined;
-  const poly = openingPolygon(g);
+  // EYE-07E : avec un bord irrégulier, les racines s'accrochent au tracé PERTURBÉ (même polyligne que le clip de l'ouverture et les traits de paupière) et le dégagement
+  // se fait contre le contour réellement dessiné. `edges = null` : enveloppe, résultat identique à l'ancien (testé).
+  const fr = edges ? edgeFrames(g, edges) : null;
+  const poly = edges ? edgePolygon(edges) : openingPolygon(g);
   const center: Vec = { x: g.bbox.x + g.bbox.w / 2, y: g.bbox.y + g.bbox.h / 2 };
+  // LOD des cils (EYE-07) : lu sur l'œil EFFECTIF (`microdetail.lod.eyePixels` résolu par `withAutoLod`) ; sans microdétails ou LOD non résolu : pleine précision, comme avant.
+  const px = eye.microdetail?.lod.eyePixels ?? null; const ppu = px === null ? null : px / eye.shape.width;
   return {
-    upper: clearLashesFromOpening(upperLashes(g, eye.lashes.upper, th, (eye.seed ^ 0xa5a5a5a5) >>> 0, rootShift), poly, center, th),
-    lower: clearLashesFromOpening(lowerLashes(g, eye.lashes.lower, th, (eye.seed ^ 0x5a5a5a5a) >>> 0), poly, center, th),
+    upper: thinLashes(clearLashesFromOpening(upperLashes(g, eye.lashes.upper, th, (eye.seed ^ 0xa5a5a5a5) >>> 0, rootShift, fr?.upper), poly, center, th), ppu),
+    lower: thinLashes(clearLashesFromOpening(lowerLashes(g, eye.lashes.lower, th, (eye.seed ^ 0x5a5a5a5a) >>> 0, fr?.lower), poly, center, th), ppu),
     rootShift,
   };
 }

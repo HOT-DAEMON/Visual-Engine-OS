@@ -1,5 +1,5 @@
 import type { EyeSpec } from '../../schema';
-import type { OpeningGeometry } from './opening';
+import type { Frame, OpeningGeometry } from './opening';
 import { lowerFrame, upperFrame } from './opening';
 import { cubicAt, type Cubic } from './primitives';
 import type { Vec } from './primitives';
@@ -13,10 +13,11 @@ export interface Caruncle {
   readonly ry: number;
 }
 
-export function caruncleOf(g: OpeningGeometry, size: number): Caruncle | null {
+/** `frames` (EYE-07E) : repères des bords perturbés ; la caroncule se loge entre les bords RÉELLEMENT dessinés (défaut : enveloppe). */
+export function caruncleOf(g: OpeningGeometry, size: number, frames?: { readonly upper: (t: number) => Frame; readonly lower: (t: number) => Frame }): Caruncle | null {
   if (size <= 0.005) return null;
-  const a = upperFrame(g, 0.07).pos;
-  const b = lowerFrame(g, 0.07).pos;
+  const a = (frames ? frames.upper(0.07) : upperFrame(g, 0.07)).pos;
+  const b = (frames ? frames.lower(0.07) : lowerFrame(g, 0.07)).pos;
   const rx = g.w * 0.04 * (0.35 + 0.65 * size);
   return { cx: (a.x + b.x) / 2, cy: (a.y + b.y) / 2, rx, ry: rx * 1.2 };
 }

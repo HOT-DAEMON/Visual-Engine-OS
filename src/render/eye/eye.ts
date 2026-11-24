@@ -1,6 +1,6 @@
 import { applyArchetype } from '../../archetypes';
 import { applyExpression } from '../../expressions';
-import { effectivePupilSize, irregularEdges, microLod, openingGeometry, resolveEyePixels, turnOpening, type TurnedOpening } from '../../geometry/eye';
+import { apparentWidthRatio, effectivePupilSize, eyeEdges, eyeTurn, resolveEyePixels } from '../../geometry/eye';
 import { toLocal, type LightVector } from '../../lighting/light';
 import { headTurnOf, rotateLightForHeadTurn } from '../../lighting/head-turn';
 import { foreshortenTransform } from '../../lighting/gaze3d';
@@ -35,13 +35,17 @@ export function resolveEye(rawEye: EyeSpec): EyeSpec {
  * LOD AUTOMATIQUE (EYE-07) : l'œil effectif dont `microdetail.lod.eyePixels` est résolu (explicite > dérivé de `shape.width` × échelle monde × `pixelRatio`),
  * et la largeur en pixels utilisée par le détail atomique de l'iris. Réutilisé par `verify/eye.ts` : le contrôle lit exactement ce que le rendu dessine.
  */
-export function withAutoLod(eye: EyeSpec, pixelRatio = 1): { readonly eye: EyeSpec; readonly eyePx: number } {
-  const eyePx = resolveEyePixels(eye.microdetail?.lod.eyePixels ?? null, eye.shape.width, eye.transform.scale, pixelRatio);
+export function withAutoLod(eye: EyeSpec, pixelRatio = 1, widthRatio = 1): { readonly eye: EyeSpec; readonly eyePx: number } {
+  const eyePx = resolveEyePixels(eye.microdetail?.lod.eyePixels ?? null, eye.shape.width, eye.transform.scale, pixelRatio, widthRatio);
   return { eye: eye.microdetail ? { ...eye, microdetail: { ...eye.microdetail, lod: { eyePixels: eyePx } } } : eye, eyePx };
 }
 
 export function compileEye(rawEye: EyeSpec, worldLight: LightVector, opts: { readonly pixelRatio?: number } = {}): CompiledObject {
-  const { eye, eyePx } = withAutoLod(resolveEye(rawEye), opts.pixelRatio ?? 1);
+  const resolved = resolveEye(rawEye);
+  // Rotation 3D : modèle `sphere` = enveloppe reprojetée point par point sur la sphère de la tête (turn3d.ts) ; `flat` = écrasement uniforme historique (headWrap).
+  // Le LOD lit la largeur APPARENTE de l'œil (raccourcie par la rotation) : un œil vu à 70° n'a pas besoin du détail d'un œil de face.
+  const { g0, turned, g } = eyeTurn(resolved);
+  const { eye, eyePx } = withAutoLod(resolved, opts.pixelRatio ?? 1, apparentWidthRatio(g0, turned));
   const id = eye.id;
   const rot = eye.transform.rotationDeg;
   // Rotation 3D de la tête (voir lighting/head-turn.ts) : s'applique AVANT la rotation 2D dans le
@@ -49,12 +53,6 @@ export function compileEye(rawEye: EyeSpec, worldLight: LightVector, opts: { rea
   // recevoir une « lumière du monde » — simplement déjà corrigée pour l'orientation de la tête.
   const headLight = rotateLightForHeadTurn(worldLight, eye.headTurn.yawDeg, eye.headTurn.pitchDeg);
   const L = toLocal(headLight, rot);
-  const g0 = openingGeometry(eye.shape, eye.canthi);
-  // Rotation 3D : modèle `sphere` = enveloppe reprojetée point par point sur la sphère de la tête (turn3d.ts) ; `flat` = écrasement uniforme historique (headWrap).
-  const ht = eye.headTurn;
-  const turned: TurnedOpening | null =
-    ht.model === 'sphere' ? turnOpening(g0, { yawDeg: ht.yawDeg, pitchDeg: ht.pitchDeg, azimuthDeg: ht.azimuthDeg, radius: eye.shape.width * ht.radiusFactor }, !ht.parallax) : null;
-  const g = turned ? turned.g : g0;
   const { rx: irisRx, ry: irisRy } = irisRadii(eye);
   const c = irisCenter(eye, g);
   const skin = dominantColor((eye.skin ?? DEFAULT_SKIN).base);
@@ -63,8 +61,7 @@ export function compileEye(rawEye: EyeSpec, worldLight: LightVector, opts: { rea
   const th = eye.lids.thickness * eye.shape.height;
   const defs: string[] = [];
   // EYE-07E : bords palpébraux irréguliers (opt-in) — LE MÊME tracé découpe l'ouverture (clip) et guide les bords libres des paupières (lids-fold) : aucun interstice.
-  const md = eye.microdetail;
-  const edges = md?.edge ? irregularEdges(g, md.edge, eye.seed, microLod(md.lod.eyePixels).fine) : null;
+  const edges = eyeEdges(eye, g);
   const openD = edges ? `M${P(edges.upper[0]!)}${smoothThrough(edges.upper)}${smoothThrough(edges.lower)}Z` : openingPath(g);
 
   defs.push(el('clipPath', { id: `${id}-opening` }, [el('path', { d: openD })]));
@@ -78,7 +75,7 @@ export function compileEye(rawEye: EyeSpec, worldLight: LightVector, opts: { rea
   const sclera = isFlat(eye) ? flatSurface(`${id}-sclera`, scleraSurface, eye.sclera.base) : compileSurface(`${id}-sclera`, scleraSurface, eye.sclera, L, rot);
   defs.push(...sclera.defs);
 
-  const globe = renderGlobeInner(eye, g, c, L, rot, headLight, skin, id, irisRx, irisRy, turned, look, eyePx / eye.shape.width);
+  const globe = renderGlobeInner(eye, g, c, L, rot, headLight, skin, id, irisRx, irisRy, turned, look, eyePx / eye.shape.width, edges);
   defs.push(...globe.defs);
 
   const lids = renderLidsAndFold(eye, g, L, skin, lidColor, th, globe.fold, id, look, edges);

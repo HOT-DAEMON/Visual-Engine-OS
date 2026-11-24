@@ -3,7 +3,7 @@ import { mulberry32 } from '../../core/prng';
 import type { EyeSpec } from '../../schema';
 import type { Lash } from './lashes';
 import type { OpeningGeometry } from './opening';
-import { upperFrame } from './opening';
+import { upperFrame, type Frame } from './opening';
 import type { Vec } from './primitives';
 
 const lerp = (a: Vec, b: Vec, f: number): Vec => ({ x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f });
@@ -55,6 +55,8 @@ export function flickLashes(
   lidPx: number,
   rootShift: (t: number) => number,
   seed: number,
+  /** Repères du bord supérieur (défaut : enveloppe ; `edgeFrames` quand le bord est irrégulier, EYE-07E). */
+  frameAt: (t: number) => Frame = (t) => upperFrame(g, t),
 ): Lash[] {
   if (flick.count <= 0) return [];
   const rnd = mulberry32((seed ^ 0x51ed270b) >>> 0);
@@ -65,7 +67,7 @@ export function flickLashes(
     const jLen = rnd();
     const jAng = rnd();
     const t = clamp(1 - flick.reach * (1 - u) - 0.004, 0.5, 0.995);
-    const f = upperFrame(g, t);
+    const f = frameAt(t);
     const base: Vec = { x: f.pos.x + f.N.x * rootShift(t), y: f.pos.y + f.N.y * rootShift(t) };
     const a = rad(flick.liftDeg + (1 - u) * 34 + (jAng - 0.5) * 8);
     const d: Vec = { x: g.s * Math.cos(a) + up.x * Math.sin(a), y: up.y * Math.sin(a) };

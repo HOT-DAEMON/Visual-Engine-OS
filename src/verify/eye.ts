@@ -1,5 +1,5 @@
 import { svgCostMs, svgFeatures, SVG_COST_MAX_MS } from './eye-cost';
-import { IRIS_FIT, openingPolygon, openingGeometry, eyeLashSet, upperFrame, lowerFrame, placeHighlights, pupilOccludedByStar, pupilContours, scleraVessels, microLod, turnOpening, type Vec } from '../geometry/eye';
+import { IRIS_FIT, apparentWidthRatio, edgeFrames, edgePolygon, eyeEdges, eyeTurn, openingPolygon, eyeLashSet, upperFrame, lowerFrame, placeHighlights, pupilOccludedByStar, pupilContours, scleraVessels, microLod, type Vec } from '../geometry/eye';
 import { halfVectorXY, lightVector, toLocal, type LightVector } from '../lighting/light';
 import { rotateLightForHeadTurn } from '../lighting/head-turn';
 import { compileEye, resolveEye, withAutoLod } from '../render/eye/eye';
@@ -53,13 +53,12 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
   const raw = EyeSpec.parse(input);
   const eye = resolveEye(raw);
   const out: Check[] = [];
-  const g0 = openingGeometry(eye.shape, eye.canthi);
-  const ht = eye.headTurn;
-  const turned = ht.model === 'sphere' ? turnOpening(g0, { yawDeg: ht.yawDeg, pitchDeg: ht.pitchDeg, azimuthDeg: ht.azimuthDeg, radius: eye.shape.width * ht.radiusFactor }, !ht.parallax) : null;
-  const g = turned ? turned.g : g0;
+  const { g0, turned, g } = eyeTurn(eye); const ht = eye.headTurn;
+  const lodEye = withAutoLod(eye, 1, apparentWidthRatio(g0, turned)).eye; // exactement l'œil que le rendu dessine (LOD, raccourcissement de rotation compris)
+  const edges = eyeEdges(lodEye, g); const fr = edges ? edgeFrames(g, edges) : null; // bords irréguliers : cils et contour lus sur le tracé réellement dessiné
   const { rx: irisRx, ry: irisRy } = irisRadii(eye);
   const c = irisCenter(eye, g);
-  const poly = openingPolygon(g);
+  const poly = edges ? edgePolygon(edges) : openingPolygon(g);
   const compiled = compileEye(raw, light);
   const svg = compiled.defs.join('') + compiled.markup;
 
@@ -88,7 +87,7 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
     out.push(check('geometry', 'highlights-confined', '==', bad, 0, 'un reflet sort de la boîte de l’ouverture'));
   }
   if (eye.microdetail?.vessels) {
-    const vs = scleraVessels(g, c, irisRx, irisRy, eye.microdetail.vessels, eye.seed, microLod(withAutoLod(eye).eye.microdetail?.lod.eyePixels ?? null));
+    const vs = scleraVessels(g, c, irisRx, irisRy, eye.microdetail.vessels, eye.seed, microLod(lodEye.microdetail?.lod.eyePixels ?? null));
     const inIris = vs.flatMap((v) => v.pts).filter((p) => Math.hypot((p.x - c.x) / irisRx, (p.y - c.y) / irisRy) < 1).length;
     out.push(check('geometry', 'vessels-outside-iris', '==', inIris, 0, 'des vaisseaux traversent l’iris'));
   }
@@ -97,7 +96,7 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
   out.push(...checkEyeCornea(raw, eye, g0)); // cornée (réfraction) et bords palpébraux irréguliers : geometry / anatomy / style (eye-cornea.ts)
   out.push(...checkEyeEnvelope(g0, eye.shape.style, irisRy)); // enveloppe vs références mesurées (geometry / anatomy / style)
   const lashTh = eye.lids.thickness * eye.shape.height;
-  const lashCheck = checkEyeLashes(eye, g, lashTh, eyeLashSet(eye, g, lashTh), (t) => upperFrame(g, t), (t) => lowerFrame(g, t)); // cils : géométrie / anatomie / style (eye-lashes.ts)
+  const lashCheck = checkEyeLashes(eye, g, lashTh, eyeLashSet(lodEye, g, lashTh, edges), fr?.upper ?? ((t) => upperFrame(g, t)), fr?.lower ?? ((t) => lowerFrame(g, t)), poly); // cils : géométrie / anatomie / style (eye-lashes.ts)
   out.push(...lashCheck.checks);
 
   // ---- anatomy -----------------------------------------------------------------------------------------------
