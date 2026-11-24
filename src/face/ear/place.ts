@@ -29,6 +29,8 @@ export interface EarAlignment {
  */
 /** Part de la pente du contour de la tête suivie par la surface d'accrochage (1 = tout le contour, 0 = verticale). */
 export const EAR_LEAN = 0.5;
+/** Pente maximale suivie par la surface d'accrochage (mâchoire très fuyante). */
+export const EAR_LEAN_MAX = 0.7;
 /** Largeur frontale minimale lisible (en hauteurs d'oreille) et angle d'écartement minimal du canon (°). */
 export const FRONT_MIN = 0.34;
 export const CANON_MIN_DEG = 27;
@@ -54,7 +56,8 @@ export function earPlacement(p: FaceParams, lm: FaceLandmarks, m: EarModel): { p
   const hwA = halfWidthAt(lm.outline, clamp(yA, -lm.H / 2 + 0.02 * lm.H, yMax)), hwB = halfWidthAt(lm.outline, clamp(yB, -lm.H / 2 + 0.02 * lm.H, yMax));
   // Pente suivie : au moins `EAR_LEAN`, davantage si la mâchoire fuit fort (l'écart du lobule à la joue reste ≤ 15 % de la hauteur d'oreille).
   const drop = hwA - hwB;
-  const lean = drop > 0 ? clamp(1 - (0.15 * hPx) / drop, EAR_LEAN, 1) : EAR_LEAN;
+  // Passe 6 : au plus 0,7 de la pente (avant : 1) — une mâchoire très fuyante n'incline plus l'oreille en diagonale ; l'écart restant est résorbé par le cisaillement d'attache (portée élargie, `attachShear`).
+  const lean = drop > 0 ? clamp(1 - (0.2 * hPx) / drop, EAR_LEAN, EAR_LEAN_MAX) : EAR_LEAN;
   const skullX = (y: number): number => {
     const yy = clamp(y, -lm.H / 2 + 0.02 * lm.H, yMax);
     const t = clamp((yy - yA) / (yB - yA || 1), 0, 1);

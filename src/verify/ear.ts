@@ -8,6 +8,7 @@ import { polyArea, inPoly, type Poly } from '../face/poly';
 import { renderEars } from '../render/face/ears';
 import type { FaceParams } from '../schema';
 import { check, type Check } from './types';
+import { earPass6Checks } from './ear-pass6';
 
 const finite = (p: readonly { x: number; y: number }[]): boolean => p.every((q) => Number.isFinite(q.x) && Number.isFinite(q.y));
 const lum = (hex: string): number => { const [r, g, b] = parseHex(hex); return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255; };
@@ -35,7 +36,7 @@ export function checkEars(p: FaceParams, lm: FaceLandmarks, skin: string): Check
   if (!p.ears.visible || earEngine(p) !== 'morphology') return [];
   const ears = earGeometry(p, lm);
   const o: Check[] = [];
-  for (const e of ears) o.push(...earGeometryChecks(e), ...earAnatomyChecks(p, lm, e));
+  for (const e of ears) o.push(...earGeometryChecks(e), ...earAnatomyChecks(p, lm, e), ...earPass6Checks(e));
   if (ears.length === 2) {
     const [a, b] = ears as [EarGeo, EarGeo];
     const h = Math.max(a.placement!.hPx, b.placement!.hPx);

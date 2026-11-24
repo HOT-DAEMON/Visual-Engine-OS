@@ -57,7 +57,7 @@ export function renderEarProjected(id: string, pe: ProjectedEar, model: EarModel
     if (s.strength !== undefined) {
       // Surimpression (dégradé de scapha, pont de conque) : voile sombre doux posé sur la structure déjà dessinée ; la bordure se fond (flou) au lieu d'un palier net.
       defs.push(el('filter', { id: `${id}-ov${k}`, x: '-10%', y: '-10%', width: '120%', height: '120%' }, [el('feGaussianBlur', { stdDeviation: num(hPx * (s.id === 'concha:bridge' ? 0.011 : 0.0045)) })]));
-      body.push(el('path', { d: polyPath(poly), fill: mix(P.base, mix(P.shade, '#1a0d0d', 0.5), s.id === 'concha:bridge' ? 0.55 : 0.8), opacity: num(s.id === 'concha:bridge' ? 0.15 + 0.4 * s.strength : Math.min(0.85, 0.2 + 0.6 * s.strength)), ...(anime ? {} : { filter: urlRef(`${id}-ov${k++}`) }) }));
+      body.push(el('path', { d: polyPath(poly), fill: mix(P.base, mix(P.shade, '#1a0d0d', 0.5), s.id === 'concha:bridge' ? 0.55 : String(s.id).startsWith('scapha:') ? 0.92 : 0.8), opacity: num(s.id === 'concha:bridge' ? 0.15 + 0.4 * s.strength : String(s.id).startsWith('scapha:') ? Math.min(0.94, 0.3 + 0.7 * s.strength) : Math.min(0.85, 0.2 + 0.6 * s.strength)), ...(anime ? {} : { filter: urlRef(`${id}-ov${k++}`) }) }));
       continue;
     }
     if (s.relief < 0) {

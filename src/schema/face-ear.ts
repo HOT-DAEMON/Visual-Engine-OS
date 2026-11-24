@@ -35,12 +35,13 @@ export const EarMorph = z
     tragus: z.object({ size: Sg, projection: Sg, tip: Sg, thickness: Sg }).strict().default({}),
     antitragus: z.object({ size: Sg, orientation: Sg }).strict().default({}),
     notch: z.object({ depth: Sg }).strict().default({}),
+    /** Passe 6 — `helix.darwinSite` : position du tubercule de Darwin le long du bord (−1 vers le sommet, +1 vers le milieu du bord postérieur) ; `antihelix.upperBend`/`lowerBend` (02B/02C) : courbure libre de chaque branche ; `concha.floor` (05E) : fond du cavum (> 0 cuvette plus profonde, < 0 plateau surélevé). */
     /** EAR-01 hélix : épaisseur du rebord et enroulement (relief) ; `darwin` = tubercule de Darwin (bosse du bord postérieur-supérieur, 0 = absent) ; `fold` = hélix replié (« cup ear », 0 = aucun). */
-    helix: z.object({ thickness: Sg, roll: Sg, darwin: Sg, fold: Sg, torsion: Sg, continuity: Sg }).strict().default({}),
+    helix: z.object({ thickness: Sg, roll: Sg, darwin: Sg, fold: Sg, torsion: Sg, continuity: Sg, darwinSite: Sg }).strict().default({}),
     /** EAR-02 anthélix : relief, écart des branches, longueur des branches supérieure et inférieure. */
-    antihelix: z.object({ relief: Sg, branchAngle: Sg, upperLength: Sg, lowerLength: Sg, curvature: Sg }).strict().default({}),
+    antihelix: z.object({ relief: Sg, branchAngle: Sg, upperLength: Sg, lowerLength: Sg, curvature: Sg, upperBend: Sg, lowerBend: Sg }).strict().default({}),
     /** EAR-05 conque : profondeur, part de la cymba, `wall` = rebord et paroi de conque distincts (05C–E ; 0 = aucun). EAR-03 scapha : largeur, profondeur. EAR-02 crus de l'hélix : épaisseur. */
-    concha: z.object({ depth: Sg, cymba: Sg, wall: Sg, volume: Sg, tilt: Sg, transition: Sg }).strict().default({}),
+    concha: z.object({ depth: Sg, cymba: Sg, wall: Sg, volume: Sg, tilt: Sg, transition: Sg, floor: Sg }).strict().default({}),
     scapha: z.object({ width: Sg, depth: Sg, curvature: Sg, gradient: Sg }).strict().default({}),
     crus: z.object({ thickness: Sg, angle: Sg, length: Sg }).strict().default({}),
     /** EAR-04 fosse triangulaire : profondeur et largeur. */

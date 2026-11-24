@@ -13,7 +13,7 @@ export function earColor(f: EarField, u: number, v: number, front: boolean, kw: 
   if (!front) return inkAt(f, u, v) < (0.4 * lineU * kw) / hU ? { c: pal.ink, region: REGION.ear, ink: true } : { c: mix(pal.skin, pal.shade, 0.2), region: REGION.ear, ink: false };
   const t = texelAt(f, u, v);
   if (t.lab === 255) return { c: pal.skin, region: REGION.ear, ink: false };
-  if (inkAt(f, u, v) < (0.45 * lineU * kw) / hU) return { c: pal.ink, region: REGION.ear, ink: true };
+  if (inkAt(f, u, v) < (0.41 * lineU * kw) / hU) return { c: pal.ink, region: REGION.ear, ink: true };
   const name = t.lab > 0 ? f.names[t.lab - 1]! : '';
   const depth = DEEP.has(name) ? smooth(-t.rel / 0.6) : 0;
   return { c: mix(pal.skin, pal.shade, Math.min(0.85, 0.25 + 0.6 * depth)), region: REGION.ear, ink: false };

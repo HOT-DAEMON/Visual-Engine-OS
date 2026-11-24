@@ -63,12 +63,16 @@ export function composeEar(seed: number, o: ComposeOptions = {}): z.output<typeo
   const g4 = G('pass4', 0.8), r4 = stream(seed, 'rare4');
   const nick = (p: number): number => (r4() < Math.min(0.9, p * rare) ? -round(between(r4, 0.4, 0.9)) : 0);
   const v4 = { tors: g4(), cont: round(g4() * 0.5), scc: g4(), scg: g4(), ft: g4(), fc: g4(), cv: g4(), ct: round(g4() * 0.8), ctr: g4(), th: g4(), lv: g4() };
+  // ── Passe 6 (02B/02C branches libres, 05E fond du cavum, site de Darwin) : flux PROPRE `pass6` → aucun tirage antérieur ne bouge.
+  const g6 = G('pass6', 0.8);
+  const v6 = { ub: g6(), lb: g6(), fl: round(g6() * 0.8), ds: g6() };
   const morph = {
     ...morph0,
-    helix: { ...morph0.helix, torsion: v4.tors, continuity: nick(0.04) || v4.cont },
+    helix: { ...morph0.helix, torsion: v4.tors, continuity: nick(0.04) || v4.cont, darwinSite: morph0.helix.darwin > 0 ? v6.ds : 0 },
     scapha: { ...morph0.scapha, curvature: v4.scc, gradient: v4.scg },
     fossa: { ...morph0.fossa, tilt: v4.ft, curvature: v4.fc },
-    concha: { ...morph0.concha, volume: v4.cv, tilt: v4.ct, transition: v4.ctr },
+    antihelix: { ...morph0.antihelix, upperBend: v6.ub, lowerBend: v6.lb },
+    concha: { ...morph0.concha, volume: v4.cv, tilt: v4.ct, transition: v4.ctr, floor: v6.fl },
     tragus: { ...morph0.tragus, thickness: v4.th },
     lobule: { ...morph0.lobule, volume: round(clampS(0.4 * morph0.lobule.length + v4.lv * 0.8)) },
   };

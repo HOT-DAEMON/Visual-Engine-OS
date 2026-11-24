@@ -13,6 +13,10 @@ import type { EarModel, PlacedStructure } from './types';
  * Invariant testé : la hauteur de chaque repère est IDENTIQUE dans toutes les vues ; seule l'abscisse change selon φ et le relief. C'est ce qui
  * interdit « quatre illustrations convaincantes mais quatre géométries incompatibles ».
  */
+/** Fermeture progressive de l'angle d'écartement vers le lobule (0 = aucune, 1 = lobule collé). */
+export const LOBE_FLAT = 0.55;
+/** `v` rapporté à la course racine de l'hélix → pied du pavillon (0 à la racine, 1 au pied) : la fermeture ne touche jamais la racine, quelle que soit la hauteur du pôle. */
+const lobeT = (v: number, pivotV: number): number => { const t = Math.min(1, Math.max(0, ((v - pivotV) / Math.max(0.2, 1 - pivotV) - 0.6) / 0.4)); return t * t * (3 - 2 * t); };
 export type ViewName = 'face' | 'three-quarter' | 'profile' | 'close-up';
 export const VIEW_YAW: Readonly<Record<ViewName, number>> = { face: 0, 'three-quarter': 45, profile: 90, 'close-up': 75 };
 
@@ -39,12 +43,13 @@ export interface EarPlacement {
  */
 export function placeEarPoint(pl: EarPlacement, q: Vec, h: number, pivot: Vec): { X: number; y: number; Z: number } {
   const s = pl.side;
-  const a = (pl.openingDeg * Math.PI) / 180;
   // Rotation locale dans le plan, autour de la racine de l'hélix (sens miroir pour l'oreille gauche).
   const r = rotate({ x: q.x - pivot.x, y: q.y - pivot.y }, s * pl.rotationDeg);
   const u = r.x + pivot.x;
   const v = r.y + pivot.y;
   const y = pl.topY + v * pl.hPx;
+  // Passe 6 : le lobule n'a pas de cartilage et repose sur la joue : l'angle d'écartement se referme vers le bas (de `LOBE_FLAT` au pied du pavillon) — le bas du lobule ne pend plus à 0,2–0,4 H de la tête.
+  const a = (pl.openingDeg * Math.PI) / 180 * (1 - LOBE_FLAT * lobeT(v, pl.pivotV));
   const sk = pl.skullX(y);
   const pitch = ((v - pl.pivotV) * pl.hPx * Math.sin((pl.pitchDeg * Math.PI) / 180));
   return { X: s * (sk + Math.sin(a) * u * pl.hPx + Math.cos(a) * h), y, Z: -Math.cos(a) * u * pl.hPx + Math.sin(a) * h + pitch };
@@ -89,7 +94,7 @@ export interface ProjectedEar {
  * reste identique dans toutes les vues ; de profil, le cisaillement est invisible par construction).
  */
 export const ATTACH_OVERLAP = 0.012;
-export const ATTACH_REACH = 0.3;
+export const ATTACH_REACH = 0.36;
 /** Abscisse canonique du bord antérieur à la hauteur v (chaîne C06 → C05 → C04 du contour) : le cisaillement se mesure à partir de CE bord, pas de u = 0 (la jonction lobule-joue est en retrait du crus). */
 const edgeCache = new WeakMap<EarModel, (v: number) => number>();
 export function anteriorEdge(m: EarModel): (v: number) => number {
@@ -107,7 +112,7 @@ export function attachShear(pl: EarPlacement, y: number, u: number, uEdge = 0): 
   const gap = pl.skullX(y) + Math.sin((pl.openingDeg * Math.PI) / 180) * uEdge * pl.hPx - (hx(y) - ATTACH_OVERLAP * pl.hPx);
   const s = Math.max(0, u - uEdge) / ATTACH_REACH;
   const k = Math.max(0, 1 - s);
-  return -Math.min(0.3 * pl.hPx, Math.max(0, gap)) * k * k;
+  return -Math.min(0.4 * pl.hPx, Math.max(0, gap)) * k * k;
 }
 
 /** Point (u, v, h) du plan → hôte (px) avec l'attache cisaillée. */

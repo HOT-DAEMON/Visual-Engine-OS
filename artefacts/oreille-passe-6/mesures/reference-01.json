@@ -1,0 +1,46 @@
+{
+ "source": "references/orreil/01.jpg (oreille humaine colorée, rangée du bas à gauche)",
+ "boite_px": [
+  4,
+  231,
+  95,
+  153
+ ],
+ "ratio_largeur_hauteur": 0.6209150326797386,
+ "part_aire_pavillon": {
+  "helix_rose": 0.44418410041841005,
+  "antihelix_bleu": 0.2659414225941423,
+  "tragus_vert": 0.06493723849372385,
+  "creux_gris": 0.22493723849372385
+ },
+ "ordonnee_relative_haut_bas": {
+  "antihelix": [
+   0.13071895424836602,
+   0.7843137254901961
+  ],
+  "tragus": [
+   0.46405228758169936,
+   0.6601307189542484
+  ],
+  "creux": [
+   0.1503267973856209,
+   0.7320261437908496
+  ]
+ },
+ "bas_antihelix_relatif": 0.7843137254901961,
+ "lobule_hauteur_relative": 0.21568627450980393,
+ "centroides_xy_relatifs": {
+  "antihelix": [
+   0.5221291113245669,
+   0.4621478547366083
+  ],
+  "creux": [
+   0.4824718045112782,
+   0.4669409430438843
+  ],
+  "tragus": [
+   0.0865979381443299,
+   0.5655447746108753
+  ]
+ }
+}
