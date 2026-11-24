@@ -175,6 +175,10 @@ Moteur de structure du visage (`anatomyEngine: 'structured'` : régions du nez, 
 `generateRandomProfile(seed)` et `verifyProfile(...)` (29 contrôles, géométrie / anatomie / style). Documentation : `docs/SKULL-PROFILE.md` (+ `-ANATOMY`, `-VERIFY`,
 `-REMAINING`), vitesse : `docs/PERF-3.md`, preuves : `artefacts/skull-profile/`.
 
+## Vitesse de la figure complète (feat/hair-grammar)
+
+`litFigure` (tête + cou + corps éclairés) est découpée en couches à clés de dépendance, identiques octet pour octet à l'ancien rendu ; garde contre le plantage natif de `resvg` (calque hors cadre), identifiants `defs` uniques, budgets par composant, option `headCastScale` vérifiée. Documentation : `docs/PERF-4.md` (+ `-GUARD`, `-LAYERS`, `-VERIFY`, `-REMAINING`), preuves : `artefacts/figure-perf/`.
+
 ## Tête en rotation sur 360° (feat/hair-grammar)
 
 `renderHead(refView(yaw))` rend la TÊTE COMPLÈTE (crâne, mâchoire, cou, oreilles, nez, bouche, yeux, sourcils, cheveux) sous n'importe quel lacet, calée sur les
