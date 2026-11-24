@@ -7,7 +7,7 @@ import { hairGeometry, type HairLock } from '../../face/hair';
 import { poseHair, posedOutline, type PosedFace } from '../../face/pose';
 import { polyBox, type Poly } from '../../face/poly';
 import { direction2D, type LightVector } from '../../lighting/light';
-import { skinShadowShift } from './hair-skin-shadow';
+import { skinShadowOpacity, skinShadowShift } from './hair-skin-shadow';
 import { compileSurface, resolvePreset, spotGradient, type Surface } from '../../materials';
 import type { FaceParams } from '../../schema';
 import { hairGloss, hairlineTransition, smoothPath } from './hair-detail';
@@ -155,7 +155,7 @@ export function renderHair(id: string, p: FaceParams, lm: FaceLandmarks, L: Ligh
     const fid = `${id}-hair-skin-blur`;
     defs.push(el('clipPath', { id: cid }, [el('path', { d: outlinePath(outline) })]), el('filter', { id: fid, x: '-10%', y: '-10%', width: '120%', height: '120%' }, [el('feGaussianBlur', { stdDeviation: lm.W * 0.006 })]));
     const sh = skinShadowShift(L, lm.W, lm.H); // l'ombre cuite vaut pour la lumière de référence : on la déplace selon la lumière réelle
-    shadows.push(el('g', { 'clip-path': urlRef(cid) }, [el('g', { filter: urlRef(fid), opacity: h.sim.skinShadow, ...(Math.abs(sh.x) + Math.abs(sh.y) > 0.05 ? { transform: `translate(${sh.x.toFixed(2)} ${sh.y.toFixed(2)})` } : {}) }, geo.skinShadows.map((q) => el('path', { d: polyPath(q), fill: mix(skin, '#1a0f0a', 0.55) })))]));
+    shadows.push(el('g', { 'clip-path': urlRef(cid) }, [el('g', { filter: urlRef(fid), opacity: skinShadowOpacity(L, h.sim.skinShadow), ...(Math.abs(sh.x) + Math.abs(sh.y) > 0.05 ? { transform: `translate(${sh.x.toFixed(2)} ${sh.y.toFixed(2)})` } : {}) }, geo.skinShadows.map((q) => el('path', { d: polyPath(q), fill: mix(skin, '#1a0f0a', 0.55) })))]));
   }
   const front: string[] = [...hairlineTransition(geo, p, lm, skinShadow, skin), ...shadows, fx.filter ? el('g', { filter: fx.filter }, body) : body.join('')];
   const over = geo.locks.filter((q) => q.layer === 'over').flatMap((l) => draw(l, 0, false));

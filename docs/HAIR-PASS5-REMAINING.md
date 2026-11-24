@@ -2,6 +2,7 @@
 
 Bilan et mesures : `HAIR-PASS5.md` (raie, ombre de peau) · `HAIR-PASS5-SEGMENT.md` (segmentation). Remplace `HAIR-PASS4-REMAINING.md` pour les points traités ; ce qui n'y est pas repris reste valable tel quel.
 Rien de ce qui suit n'est présenté comme fait.
+**Mise à jour passe 6** (`HAIR-PASS6.md`, `HAIR-PASS6-REMAINING.md`) : la raie lue sur référence est câblée (`fitFromReferencePart`) ; l'opacité de `skinShadow` et la brillance principale suivent l'intensité de la lumière. Le reste de ce fichier est repris, avec son état, dans `HAIR-PASS6-REMAINING.md`.
 
 ## Raie
 - `GROOVE_MAX_H` = 0,14 H est un PLAFOND DU MOTEUR (les rideaux générés laissent 0,07–0,15 H), pas une cible d'illustration : une raie réelle est plus fine (quelques % de H). La génération vise 0,85 × le plafond (≈ 0,12 H). Affiner exige des mèches-rideaux plus étroites et plus proches, donc une grammaire de bords de raie (mèches « en lame » qui se séparent), pas un réglage de seuil.

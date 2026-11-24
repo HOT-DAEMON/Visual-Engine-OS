@@ -50,13 +50,23 @@ export const headEllipse = (P: HairProfile, view: View): HeadEllipse => { const 
 
 const W_PER_VOLUME = 0.34; const NEG_PER_WEIGHT = 0.04;
 
-export function fitFromReference(P: HairProfile, R: Reference, view: View, o: { readonly seed?: number; readonly iters?: number; readonly towards?: number } = {}): ReferenceFit {
+/**
+ * Options de l'ajustement. `shape` et `part` sont les crochets de la RAIE (`reference-fit-part.ts`, `docs/HAIR-PASS6.md`) : `shape` retouche les mèches générées à CHAQUE tour (la raie change l'espace négatif mesuré, donc le poids estimé), `part`
+ * (position absolue, repère de tête, unités H) est transmise à la vérification et à la réparation pour que le couloir reste libre. Absents : comportement historique, au bit près. Ils sont des crochets et non un import de `part.ts` : `part.ts` importe déjà ce fichier.
+ */
+export interface FitOptions {
+  readonly seed?: number; readonly iters?: number; readonly towards?: number;
+  readonly shape?: (specs: LockSpec[], profile: HairProfile) => LockSpec[];
+  readonly part?: number;
+}
+
+export function fitFromReference(P: HairProfile, R: Reference, view: View, o: FitOptions = {}): ReferenceFit {
   const seed = o.seed ?? 1; const iters = o.iters ?? 4; const H = headEllipse(P, view);
   const target = observe(R, H); const structure = observeStructure(R, H);
   const start = observationsToSpec(target, o.towards); let intent: Intent = { ...start.intent };
   const steps: FitStep[] = []; let specs: LockSpec[] = [];
   for (let it = 0; it <= iters; it++) {
-    const { profile } = applyIntent(P, intent); specs = composeHair(profile, start.composition, seed, view, 3).specs;
+    const { profile } = applyIntent(P, intent); specs = composeHair(profile, start.composition, seed, view, 3).specs; if (o.shape) specs = o.shape(specs, profile);
     const cur = observe(referenceFromPainted(specs.map((L) => paintLock(P.head, L, view)), R.w, R.h), H);
     const err = { width: target.widthRatio - cur.widthRatio, negative: target.negative - cur.negative, moment: target.moment - cur.moment, axis: Math.atan2(Math.sin(target.axis - cur.axis), Math.cos(target.axis - cur.axis)) };
     steps.push({ iter: it, intent, obs: cur, err });
@@ -64,7 +74,7 @@ export function fitFromReference(P: HairProfile, R: Reference, view: View, o: { 
     // Moins d'espaces négatifs (negative ↓) = plus lourd : weight = (1 − negative − 0,856)/0,04, donc l'erreur de poids est −(err.negative).
     intent = { ...intent, volume: clamp((intent.volume ?? 0) + (0.8 * err.width) / W_PER_VOLUME, -1, 1), weight: clamp((intent.weight ?? 0) - (0.8 * err.negative) / NEG_PER_WEIGHT, -1, 1) };
   }
-  const { profile } = applyIntent(P, intent); const repair = repairCycle(profile, specs, view, seed, 12, { wind: intent.wind ?? 0 });
+  const { profile } = applyIntent(P, intent); const repair = repairCycle(profile, specs, view, seed, 12, { wind: intent.wind ?? 0, ...(o.part !== undefined ? { part: o.part } : {}) });
   const final = observe(referenceFromPainted(repair.specs.map((L) => paintLock(P.head, L, view)), R.w, R.h), H);
   return { intent, specs: repair.specs, target, structure, steps, repair, final };
 }

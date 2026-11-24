@@ -4,6 +4,7 @@ import { localGeometry, lightScreen, LIGHT, occlusionProfile, type Light, type L
 import { walk, type LockSpec } from './lock';
 import { relationsOf } from './occlusion';
 import { renderResolved, type ResolvedPainting } from './occlusion-paint';
+import { RING, ringBands } from './spec-ring';
 import { INK, fillOf, layerOfLock, strandLines, type PaintStyle, type PaintedLock } from './paint';
 import type { V2 } from './vec';
 
@@ -15,7 +16,10 @@ import type { V2 } from './vec';
  *  - OMBRE PROPRE : bande côté opposé à la lumière, plus large quand l'exposition baisse et près des recouvrements ;
  *  - ENCRE : contour plein ; brins fins comme avant. Une mèche torsadée reçoit donc un reflet cassé, une mèche plate un reflet continu.
  */
-export interface ProStyle extends PaintStyle { readonly shadow: string; readonly highlight: string }
+/**
+ * `ring` : reflet TRANSVERSAL de `spec-ring.ts` (référence 60). Absent ou `'off'` : rendu historique, au bit près. `'replace'` : l'anneau remplace le reflet longitudinal ; `'add'` : les deux (le longitudinal joue alors le liseré de bord).
+ */
+export interface ProStyle extends PaintStyle { readonly shadow: string; readonly highlight: string; readonly ring?: 'off' | 'replace' | 'add' }
 export const INK_PRO: ProStyle = { ...INK, shadow: '#35353b', highlight: '#ffffff' };
 export interface ProLock extends PaintedLock { readonly geom: LockGeom }
 
@@ -42,7 +46,15 @@ export function paintLockPro(h: HeadSpec, L: LockSpec, view: View, st: ProStyle 
   if (sh) parts.push(`<path d="${smoothPath(sh, true)}" fill="${st.shadow}" opacity="0.3"/>`);
   // Reflet : collé au bord éclairé, largeur ∝ exposition × |cos φ|, éteint sur le dessous du ruban.
   const hi = band(blade, geom, (i) => side(i) * 0.5, (i) => env(i) * (0.07 + 0.2 * (geom.exposure[i] as number) ** 2) * face(i) * (L.tone < -0.6 ? 0.6 : 1));
-  if (hi) { const e = geom.exposure.reduce((a, b) => a + b, 0) / n; const back = geom.backface.filter(Boolean).length / n; parts.push(`<path d="${smoothPath(hi, true)}" fill="${st.highlight}" opacity="${Math.max(0.15, (0.35 + 0.6 * e) * (1 - 0.7 * back)).toFixed(2)}"/>`); }
+  if (hi && st.ring !== 'replace') { const e = geom.exposure.reduce((a, b) => a + b, 0) / n; const back = geom.backface.filter(Boolean).length / n; parts.push(`<path d="${smoothPath(hi, true)}" fill="${st.highlight}" opacity="${Math.max(0.15, (0.35 + 0.6 * e) * (1 - 0.7 * back)).toFixed(2)}"/>`); }
+  if (st.ring === 'replace' || st.ring === 'add') {
+    const r = ringBands(blade, geom, L, view, light);
+    if (r) {
+      // Zone sombre aval d'abord (trois paliers cumulés), puis la bande par-dessus.
+      for (const q of r.shoulder) parts.push(`<path d="${smoothPath(q, true)}" fill="${st.shadow}" opacity="${RING.shoulderOpacity}"/>`);
+      parts.push(`<path d="${r.highlight.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join('')}Z" fill="${st.highlight}" opacity="${(0.55 + 0.4 * r.strength).toFixed(2)}"/>`);
+    }
+  }
   for (const line of strandLines(blade, L.strands)) parts.push(`<path d="${smoothPath(line)}" fill="none" stroke="#111" stroke-width="0.4" opacity="0.5"/>`);
   return { spec: L, blade, layer, svg: parts.join(''), geom };
 }

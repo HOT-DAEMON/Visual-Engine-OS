@@ -1,5 +1,6 @@
 import type { LightVector } from '../../lighting/light';
 import { SKIN_SHADOW_DX, SKIN_SHADOW_DY } from '../../face/hair/sim/drape';
+import { intensityFor, softness } from '../../lighting/rig';
 import { shadowReach } from './hair-light';
 
 /**
@@ -20,4 +21,20 @@ export function skinShadowShift(L: Pick<LightVector, 'x' | 'y' | 'z'>, W: number
   const turn = Math.hypot(L.x, L.y) < 1e-6 ? 0 : Math.atan2(L.y, L.x) - REF_ANGLE; const c = Math.cos(turn); const s = Math.sin(turn);
   const off = { x: reach * (baked.x * c - baked.y * s), y: reach * (baked.x * s + baked.y * c) };
   return { x: off.x - baked.x, y: off.y - baked.y };
+}
+
+/** Douceur de la lumière de référence (taille 0,5, dureté 0,5, source à l'infini : `softness` = 0,5). Elle y garde l'opacité cuite. */
+const REF_SOFTNESS = 0.5;
+
+/**
+ * OPACITÉ de l'ombre des mèches sur la peau suivant la lumière (docs/HAIR-PASS6.md). La position et la portée de l'ombre suivaient déjà la lumière (`skinShadowShift`), pas son INTENSITÉ : une scène presque éteinte gardait une ombre pleine.
+ * Deux facteurs, tous deux lus sur le moteur d'éclairage (aucune constante nouvelle côté lumière) :
+ *  - intensité effective pour la peau (`intensityFor(L, 'skin')`, 0–1) : le contraste d'une ombre est proportionnel à la lumière directrice qui la crée ; 0 = pas d'ombre ;
+ *  - douceur (`softness(L)`, 0–1) : une source large ou proche remplit l'ombre. Facteur 1 − 0,5·(douceur − 0,5), borné à [0,75 ; 1,25].
+ * Lumière de référence (intensité 1, douceur 0,5) : facteur 1, valeur rendue inchangée, au bit près. Le résultat reste dans [0, 1].
+ */
+export function skinShadowOpacity(L: LightVector, base: number): number {
+  const soft = Math.min(1.25, Math.max(0.75, 1 - 0.5 * (softness(L) - REF_SOFTNESS)));
+  const k = intensityFor(L, 'skin') * (Math.abs(soft - 1) < 1e-9 ? 1 : soft);
+  return Math.abs(k - 1) < 1e-9 ? base : Math.min(1, Math.max(0, base * k));
 }
