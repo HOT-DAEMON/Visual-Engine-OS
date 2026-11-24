@@ -17,6 +17,8 @@ ce qui n'est PAS fait → `PERF-4-REMAINING.md`. Preuves visuelles : `artefacts/
 
 ## Résultat (même machine, médiane de 3, `scripts/bench-render.ts`, section `figure`)
 
+Les chronos varient d'une exécution à l'autre (1 cœur, bruit machine) : une autre exécution a donné 4 436 / 2 822 / 1 118 ms ; les rapports (−36 %, ÷ 4) sont stables.
+
 | Cas | Avant | Après |
 |---|---|---|
 | premier rendu d'un personnage (à froid) | 3 848 ms | **2 441 ms** (−37 %) |

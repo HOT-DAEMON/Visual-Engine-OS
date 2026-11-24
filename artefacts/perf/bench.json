@@ -1,22 +1,22 @@
 {
   "summary": {
-    "faces": 6,
+    "faces": 3,
     "size": "340x420",
     "avg": {
-      "geometryMs": 3.1,
-      "svgMs": 50.4,
-      "rasterShapesMs": 84.2,
-      "filtersMs": 68,
-      "fullRasterMs": 152.2,
-      "filters": 31.3
+      "geometryMs": 3.4,
+      "svgMs": 88.2,
+      "rasterShapesMs": 31,
+      "filtersMs": 47,
+      "fullRasterMs": 78,
+      "filters": 66.7
     },
-    "warmCompileMsPerFace": 5.16,
+    "warmCompileMsPerFace": 3.58,
     "caches": [
       {
         "name": "faceLandmarks",
-        "hits": 24,
-        "misses": 6,
-        "size": 6
+        "hits": 15,
+        "misses": 3,
+        "size": 3
       },
       {
         "name": "earModel",
@@ -26,9 +26,15 @@
       },
       {
         "name": "noseGeometry",
-        "hits": 12,
-        "misses": 6,
-        "size": 6
+        "hits": 6,
+        "misses": 3,
+        "size": 3
+      },
+      {
+        "name": "neck-model",
+        "hits": 6,
+        "misses": 3,
+        "size": 3
       },
       {
         "name": "structureGeometry",
@@ -37,79 +43,186 @@
         "size": 0
       },
       {
+        "name": "body-geometry",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "body-svg",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "leg-geometry",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "figure-svg",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "skullGeometry",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "head-profile-svg",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "headTurnEngine",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "head-3d-subject",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "head-3d-svg",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "head-lit-svg",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "body-volumes",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
+        "name": "body-volume-svg",
+        "hits": 0,
+        "misses": 0,
+        "size": 0
+      },
+      {
         "name": "compileScene",
-        "hits": 6,
-        "misses": 6,
-        "size": 6
+        "hits": 3,
+        "misses": 3,
+        "size": 3
       }
     ]
   },
   "rows": [
     {
       "seed": 1000,
-      "geometryMs": 10.9,
-      "svgMs": 92.3,
-      "otherMs": 27.5,
-      "rasterShapesMs": 89,
-      "filtersMs": 65,
-      "fullRasterMs": 154,
-      "svgKB": 139,
-      "filters": 30
+      "geometryMs": 6.6,
+      "svgMs": 133,
+      "otherMs": 34.3,
+      "rasterShapesMs": 32,
+      "filtersMs": 58,
+      "fullRasterMs": 90,
+      "svgKB": 332,
+      "filters": 66
     },
     {
       "seed": 1037,
-      "geometryMs": 1.4,
-      "svgMs": 49.6,
-      "otherMs": 24.2,
-      "rasterShapesMs": 84,
-      "filtersMs": 58,
-      "fullRasterMs": 142,
-      "svgKB": 139,
-      "filters": 33
+      "geometryMs": 1.9,
+      "svgMs": 76.6,
+      "otherMs": 11.4,
+      "rasterShapesMs": 35,
+      "filtersMs": 40,
+      "fullRasterMs": 74,
+      "svgKB": 295,
+      "filters": 69
     },
     {
       "seed": 1074,
-      "geometryMs": 1.8,
-      "svgMs": 60.5,
-      "otherMs": 11.7,
-      "rasterShapesMs": 84,
-      "filtersMs": 62,
-      "fullRasterMs": 146,
-      "svgKB": 142,
-      "filters": 30
-    },
-    {
-      "seed": 1111,
-      "geometryMs": 0.9,
-      "svgMs": 26.4,
-      "otherMs": 5.3,
-      "rasterShapesMs": 80,
-      "filtersMs": 66,
-      "fullRasterMs": 146,
-      "svgKB": 133,
-      "filters": 29
-    },
-    {
-      "seed": 1148,
-      "geometryMs": 2.5,
-      "svgMs": 25.8,
-      "otherMs": 6.3,
-      "rasterShapesMs": 83,
-      "filtersMs": 55,
-      "fullRasterMs": 138,
-      "svgKB": 140,
-      "filters": 30
-    },
-    {
-      "seed": 1185,
-      "geometryMs": 0.8,
-      "svgMs": 47.5,
-      "otherMs": 7,
-      "rasterShapesMs": 85,
-      "filtersMs": 102,
-      "fullRasterMs": 187,
-      "svgKB": 147,
-      "filters": 36
+      "geometryMs": 1.7,
+      "svgMs": 54.9,
+      "otherMs": 4.8,
+      "rasterShapesMs": 26,
+      "filtersMs": 43,
+      "fullRasterMs": 70,
+      "svgKB": 335,
+      "filters": 65
     }
-  ]
+  ],
+  "figure": {
+    "heightPx": 1100,
+    "calibrationMs": 25.7,
+    "budgets": [
+      {
+        "layer": "head.field",
+        "msPerCall": 339.7,
+        "units": 13.2,
+        "budget": 35,
+        "ok": true
+      },
+      {
+        "layer": "head.cast",
+        "msPerCall": 420.9,
+        "units": 16.35,
+        "budget": 42,
+        "ok": true
+      },
+      {
+        "layer": "head.ao",
+        "msPerCall": 87.7,
+        "units": 3.41,
+        "budget": 9,
+        "ok": true
+      },
+      {
+        "layer": "body.gbuffer",
+        "msPerCall": 469,
+        "units": 18.22,
+        "budget": 48,
+        "ok": true
+      },
+      {
+        "layer": "body.occlusion",
+        "msPerCall": 52.3,
+        "units": 2.03,
+        "budget": 5,
+        "ok": true
+      },
+      {
+        "layer": "body.cast",
+        "msPerCall": 60.4,
+        "units": 2.35,
+        "budget": 6,
+        "ok": true
+      },
+      {
+        "layer": "body.shade",
+        "msPerCall": 65.8,
+        "units": 2.56,
+        "budget": 6,
+        "ok": true
+      },
+      {
+        "layer": "body.encode",
+        "msPerCall": 21.8,
+        "units": 0.85,
+        "budget": 2.5,
+        "ok": true
+      }
+    ],
+    "wallMs": {
+      "cold": 2541,
+      "lightChangeOnly": 1032,
+      "coldHeadCastScale2": 2073,
+      "lightChangeHeadCastScale2": 676
+    }
+  }
 }

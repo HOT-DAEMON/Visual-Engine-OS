@@ -13,5 +13,5 @@
 | Immuabilité du jeu de volumes | prouvée côté moteur, non imposée aux appelants | `tests/figure-immutable.test.ts` : le moteur ne modifie ni le jeu (gelé en profondeur) ni les tampons de la tête. Un appelant qui mute un jeu après un rendu servirait un G-buffer périmé (le cache le désigne par identité) |
 | `HeadLitOpts.ao / reach / fadeNeck` | non exposés par `litFigure` | inatteignables depuis ce pipeline ; à exposer ou à retirer |
 | Paramètres de forme du crâne et voisins | non re-balayés | couverts par les contrats existants, pas par ces preuves |
-| Suite complète du dépôt | voir `CHANGELOG-26.md` | relancée après les changements (elle dure > 25 min sur 1 cœur) |
+| Suite complète du dépôt | faite : 4 009 passés, 3 échoués (226 fichiers) | les 3 échecs sont ANTÉRIEURS à ce travail (identiques sur l'état d'origine `ddbbad4`) : `eye-gallery-ext3` (tirages), `highlights-system` (schéma des reflets), `nose-visibility` (référence figée périmée, même hash de SVG avant et après mon travail). Non corrigés ici |
 | Mémoire des caches | non plafonnée en octets | 2 G-buffers ≈ 200 Mo à 1 100 px ; borne en entrées, pas en octets |
