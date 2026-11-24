@@ -1,6 +1,6 @@
 import { applyArchetype } from '../../archetypes';
 import { applyExpression } from '../../expressions';
-import { effectivePupilSize, openingGeometry, turnOpening, type TurnedOpening } from '../../geometry/eye';
+import { effectivePupilSize, irregularEdges, microLod, openingGeometry, resolveEyePixels, turnOpening, type TurnedOpening } from '../../geometry/eye';
 import { toLocal, type LightVector } from '../../lighting/light';
 import { headTurnOf, rotateLightForHeadTurn } from '../../lighting/head-turn';
 import { foreshortenTransform } from '../../lighting/gaze3d';
@@ -8,13 +8,14 @@ import { compileSurface, dominantColor, type Surface } from '../../materials';
 import type { EyeSpec } from '../../schema';
 import { el, num, urlRef } from '../../core/svg';
 import { objectTransform, type CompiledObject } from '../object';
-import { irisCenter, irisRadii, openingPath } from './helpers';
+import { irisCenter, irisRadii, openingPath, P, smoothThrough } from './helpers';
 import { renderGlobeInner } from './globe-inner';
 import { renderLidsAndFold } from './lids-fold';
 import { renderEyebrow } from './eyebrow-render';
 import { DEFAULT_SKIN } from './default-skin';
 import { gradeEye, resolveEyeLook } from './look';
 import { flatSurface, flattenEye, isFlat } from './flat-finish';
+import { applyCornea } from './cornea';
 
 /**
  * Compile un œil complet : sclère, iris/pupille/regard 3D (globe-inner.ts), paupières/cils/pli
@@ -27,11 +28,20 @@ export function resolveEye(rawEye: EyeSpec): EyeSpec {
   const posed = applyExpression(applyArchetype(rawEye));
   // EYE-05G : la réponse lumineuse change la taille AVANT tout le reste (iris détaillé, fibres, pupille lisent la même taille).
   const sized = posed.pupil.response.model === 'fixed' ? posed : { ...posed, pupil: { ...posed.pupil, size: effectivePupilSize(posed.pupil) } };
-  return flattenEye(gradeEye(sized));
+  return flattenEye(gradeEye(applyCornea(sized)));
 }
 
-export function compileEye(rawEye: EyeSpec, worldLight: LightVector): CompiledObject {
-  const eye = resolveEye(rawEye);
+/**
+ * LOD AUTOMATIQUE (EYE-07) : l'œil effectif dont `microdetail.lod.eyePixels` est résolu (explicite > dérivé de `shape.width` × échelle monde × `pixelRatio`),
+ * et la largeur en pixels utilisée par le détail atomique de l'iris. Réutilisé par `verify/eye.ts` : le contrôle lit exactement ce que le rendu dessine.
+ */
+export function withAutoLod(eye: EyeSpec, pixelRatio = 1): { readonly eye: EyeSpec; readonly eyePx: number } {
+  const eyePx = resolveEyePixels(eye.microdetail?.lod.eyePixels ?? null, eye.shape.width, eye.transform.scale, pixelRatio);
+  return { eye: eye.microdetail ? { ...eye, microdetail: { ...eye.microdetail, lod: { eyePixels: eyePx } } } : eye, eyePx };
+}
+
+export function compileEye(rawEye: EyeSpec, worldLight: LightVector, opts: { readonly pixelRatio?: number } = {}): CompiledObject {
+  const { eye, eyePx } = withAutoLod(resolveEye(rawEye), opts.pixelRatio ?? 1);
   const id = eye.id;
   const rot = eye.transform.rotationDeg;
   // Rotation 3D de la tête (voir lighting/head-turn.ts) : s'applique AVANT la rotation 2D dans le
@@ -52,7 +62,10 @@ export function compileEye(rawEye: EyeSpec, worldLight: LightVector): CompiledOb
   const look = resolveEyeLook(eye, skin);
   const th = eye.lids.thickness * eye.shape.height;
   const defs: string[] = [];
-  const openD = openingPath(g);
+  // EYE-07E : bords palpébraux irréguliers (opt-in) — LE MÊME tracé découpe l'ouverture (clip) et guide les bords libres des paupières (lids-fold) : aucun interstice.
+  const md = eye.microdetail;
+  const edges = md?.edge ? irregularEdges(g, md.edge, eye.seed, microLod(md.lod.eyePixels).fine) : null;
+  const openD = edges ? `M${P(edges.upper[0]!)}${smoothThrough(edges.upper)}${smoothThrough(edges.lower)}Z` : openingPath(g);
 
   defs.push(el('clipPath', { id: `${id}-opening` }, [el('path', { d: openD })]));
 
@@ -65,10 +78,10 @@ export function compileEye(rawEye: EyeSpec, worldLight: LightVector): CompiledOb
   const sclera = isFlat(eye) ? flatSurface(`${id}-sclera`, scleraSurface, eye.sclera.base) : compileSurface(`${id}-sclera`, scleraSurface, eye.sclera, L, rot);
   defs.push(...sclera.defs);
 
-  const globe = renderGlobeInner(eye, g, c, L, rot, headLight, skin, id, irisRx, irisRy, turned, look);
+  const globe = renderGlobeInner(eye, g, c, L, rot, headLight, skin, id, irisRx, irisRy, turned, look, eyePx / eye.shape.width);
   defs.push(...globe.defs);
 
-  const lids = renderLidsAndFold(eye, g, L, skin, lidColor, th, globe.fold, id, look);
+  const lids = renderLidsAndFold(eye, g, L, skin, lidColor, th, globe.fold, id, look, edges);
   defs.push(...lids.defs);
 
   const brow = renderEyebrow(eye, g, L, rot, id);

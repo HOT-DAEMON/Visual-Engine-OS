@@ -9,6 +9,7 @@ import { renderHighlights } from './highlights-render';
 import { renderIrisLayers } from './iris-layers-render';
 import { renderMicrodetail } from './micro-render';
 import { flatSurface, isFlat } from './flat-finish';
+import { limbalHaze } from './cornea';
 import { softShadow } from './soft-shadow';
 import { openingPolygon } from '../../geometry/eye';
 import type { EyeLook } from './look';
@@ -51,6 +52,8 @@ export function renderGlobeInner(
   irisRy: number,
   turn: TurnedOpening | null = null,
   look: EyeLook | null = null,
+  /** Pixels finaux par unité locale de l'œil (LOD automatique, `geometry/eye/lod.ts`) ; `null` = pleine précision. */
+  pxPerUnit: number | null = null,
 ): GlobeInner {
   const defs: string[] = [];
   const inner: string[] = [];
@@ -74,7 +77,7 @@ export function renderGlobeInner(
   if (ring) irisGroup.push(ring);
 
   // Iris détaillé (opt-in : vide si `iris.detail` est null) — couches sous la pupille, voir iris-detail.ts.
-  const detail = renderIrisDetail(eye, c, irisRx, irisRy, id);
+  const detail = renderIrisDetail(eye, c, irisRx, irisRy, id, pxPerUnit);
   defs.push(...detail.defs);
   irisGroup.push(...detail.markup);
 
@@ -122,6 +125,10 @@ export function renderGlobeInner(
     defs.push(el('filter', { id: vid, filterUnits: 'userSpaceOnUse', x: c.x - irisRx - pad, y: c.y - irisRy - pad, width: 2 * (irisRx + pad), height: 2 * (irisRy + pad), 'color-interpolation-filters': 'sRGB' }, prims));
     irisGroup.splice(0, irisGroup.length - pupil.markup.length, el('g', { filter: urlRef(vid) }, irisGroup.slice(0, irisGroup.length - pupil.markup.length)));
   }
+  // EYE-03F : halo cornéoscléral (opt-in) — suit le regard et la rotation de tête comme l'iris, passe DERRIÈRE lui.
+  const haze = limbalHaze(eye, c, irisRx, irisRy, id, defs);
+  const withGaze = (n: string): string => (gazeT ? el('g', { transform: gazeT }, [n]) : n);
+  if (haze) inner.push(turnT ? el('g', { transform: turnT }, [withGaze(haze)]) : withGaze(haze));
   const irisNode = gazeT ? el('g', { transform: gazeT, ...irisAttrs }, irisGroup) : el('g', irisAttrs, irisGroup);
   inner.push(turnT ? el('g', { transform: turnT }, [irisNode]) : irisNode);
   inner.push(...micro.over);

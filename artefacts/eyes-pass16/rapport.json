@@ -1,0 +1,104 @@
+{
+  "refraction": {
+    "rows": [
+      {
+        "refraction": 0,
+        "pupilRadiusMeasuredPx": 35.5,
+        "pupilRadiusPredictedPx": 36.29,
+        "trueRadiusPx": 36.29
+      },
+      {
+        "refraction": 1,
+        "pupilRadiusMeasuredPx": 39.5,
+        "pupilRadiusPredictedPx": 39.81,
+        "trueRadiusPx": 36.29
+      },
+      {
+        "refraction": 3,
+        "pupilRadiusMeasuredPx": 46.5,
+        "pupilRadiusPredictedPx": 46.87,
+        "trueRadiusPx": 36.29
+      }
+    ],
+    "warpHumain": [
+      [
+        0.1,
+        0.1107
+      ],
+      [
+        0.25,
+        0.2758
+      ],
+      [
+        0.5,
+        0.5431
+      ],
+      [
+        0.75,
+        0.7904
+      ],
+      [
+        1,
+        1
+      ]
+    ]
+  },
+  "bords": [
+    {
+      "irregularity": 0.4,
+      "verify": 0
+    },
+    {
+      "irregularity": 0.9,
+      "verify": 0
+    }
+  ],
+  "lod": [
+    {
+      "eyePixels": 300,
+      "svgNodes": 470,
+      "bytes": 106300
+    },
+    {
+      "eyePixels": 150,
+      "svgNodes": 432,
+      "bytes": 101687
+    },
+    {
+      "eyePixels": 70,
+      "svgNodes": 296,
+      "bytes": 84352
+    },
+    {
+      "eyePixels": 34,
+      "svgNodes": 258,
+      "bytes": 79682
+    }
+  ],
+  "atomes": {
+    "emerald-facets:avant": {
+      "darkShare": 0.104,
+      "lumMean": 136.2,
+      "satPeaks": 0.729,
+      "feretTop6Mean": 0.339
+    },
+    "emerald-facets:après": {
+      "darkShare": 0.08,
+      "lumMean": 136.2,
+      "satPeaks": 0.74,
+      "feretTop6Mean": 0.343
+    },
+    "fire-halo:avant": {
+      "darkShare": 0.316,
+      "lumMean": 92.7,
+      "satPeaks": 0.72,
+      "feretTop6Mean": 0.353
+    },
+    "fire-halo:après": {
+      "darkShare": 0.36,
+      "lumMean": 92.6,
+      "satPeaks": 0.719,
+      "feretTop6Mean": 0.347
+    }
+  }
+}

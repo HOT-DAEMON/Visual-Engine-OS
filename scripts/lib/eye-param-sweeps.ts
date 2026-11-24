@@ -54,6 +54,15 @@ export const SWEEPS: readonly Sweep[] = [
   { path: 'pupil.shape', lo: 'round', hi: 'slit_vertical', region: 'pupille' },
   { path: 'highlights.primary.size', lo: 0.1, hi: 0.3, region: 'reflet principal' },
   { path: 'highlights.secondary.size', lo: 0.05, hi: 0.18, region: 'reflet secondaire', minPixels: 30 },
+  // Cornée (EYE-03C→H, OPT-02) : `cornea` absent de BASE, créé par le chemin (les autres champs gardent leur défaut) ; la réfraction se lit sur la pupille et le halo sur la sclère voisine du limbe.
+  { path: 'cornea.curvature', lo: 0.35, hi: 1.05, region: 'pupille (taille apparente)', minPixels: 60 },
+  { path: 'cornea.depth', lo: 0.25, hi: 1.1, region: 'pupille (taille apparente)', minPixels: 60 },
+  { path: 'cornea.index', lo: 1.1, hi: 1.9, region: 'pupille (taille apparente)', minPixels: 60 },
+  { path: 'cornea.refraction', lo: 0, hi: 3, region: 'pupille (taille apparente)', minPixels: 150 },
+  { path: 'cornea.haze', lo: 0, hi: 1, region: 'sclère au limbe (transition cornéosclérale)', minPixels: 100 },
+  // Bords palpébraux irréguliers (EYE-07E) : `microdetail.edge` ; le LOD explicite à 8 px retire le festonnage fin (EYE-07).
+  { path: 'microdetail.edge.irregularity', lo: 0, hi: 1, region: 'bords libres des paupières', minPixels: 100 },
+  { path: 'microdetail.edge.grain', lo: 0, hi: 1, region: 'bords libres des paupières (festonnage)', minPixels: 40 },
   { path: 'lashes.upper.count', lo: 8, hi: 30, region: 'cils hauts' },
   { path: 'lashes.upper.length', lo: 0.12, hi: 0.34, region: 'cils hauts' },
   { path: 'lashes.upper.curl', lo: 0.1, hi: 0.95, region: 'cils hauts' },

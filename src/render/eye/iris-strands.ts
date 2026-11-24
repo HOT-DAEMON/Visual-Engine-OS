@@ -11,11 +11,16 @@ export interface IrisFrame {
   readonly rx: number;
   readonly ry: number;
   readonly at: (rho: number, a: number) => Vec;
+  /** Pixels finaux par unité locale (LOD automatique) ; `null` = pleine précision (aucun atome retiré). */
+  readonly pxPerUnit: number | null;
 }
 
-export function irisFrame(c: Vec, rx: number, ry: number): IrisFrame {
-  return { c, rx, ry, at: (rho, a) => ({ x: c.x + Math.cos(a) * rx * rho, y: c.y + Math.sin(a) * ry * rho }) };
+export function irisFrame(c: Vec, rx: number, ry: number, pxPerUnit: number | null = null): IrisFrame {
+  return { c, rx, ry, pxPerUnit, at: (rho, a) => ({ x: c.x + Math.cos(a) * rx * rho, y: c.y + Math.sin(a) * ry * rho }) };
 }
+
+/** Vrai si un trait / un disque de `units` unités locales fait moins de `minPx` pixels finaux : il ne ferait qu'un bruit sub-pixel (LOD, `irisLod().minAtomPx`). */
+export const subPixel = (f: IrisFrame, units: number, minPx: number): boolean => f.pxPerUnit !== null && units * f.pxPerUnit < minPx;
 
 export interface IrisPalette {
   readonly center: string;
@@ -61,6 +66,8 @@ export function stromaFibers(
   width: [number, number],
   opacity: [number, number],
   contrast: number,
+  /** Part (0–1) des fibres tracées (LOD) : tous les tirages sont faits, le tracé est réparti uniformément sur les angles. */
+  keep = 1,
 ): string {
   const out: string[] = [];
   for (let i = 0; i < n; i++) {
@@ -75,6 +82,7 @@ export function stromaFibers(
     const ra = range.from[0] + (range.from[1] - range.from[0]) * r0;
     const rb = range.to[0] + (range.to[1] - range.to[0]) * r1;
     if (rb <= ra + 0.06) continue;
+    if (Math.floor((i + 1) * keep) === Math.floor(i * keep)) continue;
     const color = pick < 0.08 ? lighten(pal.mid, 0.75) : pick < 0.55 ? pal.light : pal.dark;
     out.push(
       el('path', {

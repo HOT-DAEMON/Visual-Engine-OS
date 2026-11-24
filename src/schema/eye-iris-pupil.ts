@@ -91,6 +91,10 @@ export const IrisDetail = z
         rays: z.number().int().min(0).max(12).default(0),
         /** Taille de gemme (passe 12, opt-in, 0 = couronnes régulières historiques) : facettes TAILLÉES = diagramme de puissance (Laguerre-Voronoï) de `count × rings` graines dont les rayons suivent une loi log-normale d'écart `0,5 + 0,6 × valeur` ; arêtes franches, table lumineuse sur une facette sur trois, biseau côté lumière. Réf. 07 : cellules très inégales (CV des aires 1,77). */
         cut: Unit.default(0),
+        /** Éclats (passe 16, opt-in, 0 = aucun ; réf. 07) : part des facettes taillées FENDUE par une corde passant par leur centroïde en deux éclats triangulaires de tons distincts (facettes étroites et aiguës de la gemme). Sans effet si `cut` = 0. */
+        shard: Unit.default(0),
+        /** Poussière de gemme (passe 16, opt-in, 0 = aucune ; réf. 07) : jusqu'à 60 grains en losange, turquoise clair, concentrés côté lumière (haut-gauche) de la couronne de facettes. Sans effet si `cut` = 0. */
+        dust: Unit.default(0),
       })
       .strict()
       .optional(),
@@ -107,6 +111,10 @@ export const IrisDetail = z
         zone: z.enum(['lower', 'all']).default('lower'),
         /** Netteté (passe 11, opt-in, 0 = rendu historique) : bulle à CONTOUR SOMBRE net + liseré interne clair + croissant caustique (lumière focalisée du côté opposé au reflet) + reflet spéculaire ponctuel. Réf. 07. */
         crisp: Unit.default(0),
+        /** Dispersion des tailles (passe 16, opt-in, 0 = tailles historiques 0,55–1,25 × `size`) : loi en puissance, beaucoup de petites bulles et quelques grosses (grappes de la réf. 07). */
+        sizeSpread: Unit.default(0),
+        /** Force du contour sombre d'une bulle `crisp` (1 = historique ; 0,3 = parois discrètes de la réf. 07). */
+        rim: Unit.default(1),
       })
       .strict()
       .optional(),
@@ -192,6 +200,10 @@ export const IrisDetail = z
         streak: Unit.default(0.5),
         opacity: Unit.default(0.85),
         color: Hex.nullable().default(null),
+        /** Forme (passe 16) : `capsule` historique, ou `lance` = losange pointu à coeur blanc (étincelles de la réf. 10a). */
+        shape: z.enum(['capsule', 'lance']).default('capsule'),
+        /** Part (0–1, opt-in) des braises éparpillées sur tout l'iris au lieu d'être groupées autour de `ringRho` (étincelles dans la zone sombre, réf. 10a). */
+        scatter: Unit.default(0),
       })
       .strict()
       .optional(),

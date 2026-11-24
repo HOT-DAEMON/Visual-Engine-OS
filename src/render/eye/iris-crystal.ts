@@ -62,11 +62,11 @@ export function bubbles(f: IrisFrame, pal: IrisPalette, rnd: Rnd, o: Bubbles, rh
   for (let n = 0; n < o.count * 12 && placed.length < o.count; n++) {
     const a = o.zone === 'lower' ? Math.PI * (0.1 + 0.8 * rnd()) : TAU * rnd();
     const rho = Math.max(rhoPupil + 0.14, 0.3) + (0.8 - Math.max(rhoPupil + 0.14, 0.3)) * rnd();
-    const r = f.rx * o.size * (0.55 + 0.7 * rnd()); const c = f.at(rho, a);
+    const u = rnd(); const r = f.rx * o.size * (o.sizeSpread > 0 ? 0.25 + 1.45 * u ** (1 + 2 * o.sizeSpread) : 0.55 + 0.7 * u); const c = f.at(rho, a);
     if (placed.some((p) => Math.hypot(p.x - c.x, p.y - c.y) < (p.r + r) * 1.05)) continue;
     placed.push({ x: c.x, y: c.y, r });
     const g = o.opacity;
-    if (o.crisp > 0) { out.push(crispBubble(c, r, pal, g, o.crisp)); continue; }
+    if (o.crisp > 0) { out.push(crispBubble(c, r, pal, g, o.crisp, o.rim)); continue; }
     out.push(el('circle', { cx: c.x, cy: c.y, r, fill: lighten(pal.light, 0.5), 'fill-opacity': 0.14 * g, stroke: '#ffffff', 'stroke-width': r * 0.16, 'stroke-opacity': 0.5 * g }));
     out.push(el('path', { d: `M${P({ x: c.x + r * 0.62, y: c.y - r * 0.5 })}A${r * 0.8} ${r * 0.8} 0 0 1 ${P({ x: c.x - r * 0.4, y: c.y + r * 0.7 })}`, fill: 'none', stroke: darken(pal.edge, 0.4), 'stroke-width': r * 0.2, 'stroke-opacity': 0.35 * g }));
     out.push(el('circle', { cx: c.x - r * 0.36, cy: c.y - r * 0.4, r: r * 0.2, fill: '#ffffff', 'fill-opacity': 0.9 * g }));
@@ -96,12 +96,12 @@ export function lightRays(f: IrisFrame, pal: IrisPalette, rnd: Rnd, count: numbe
  * paroi), remplissage très léger plus clair vers le bas, CROISSANT CAUSTIQUE lumineux du côté opposé à la lumière (la sphère focalise la lumière : bas-droite), reflet
  * spéculaire ponctuel et reflet secondaire minuscule. `k` (0–1) pilote la franchise du contour et l'intensité de la caustique.
  */
-function crispBubble(c: { x: number; y: number }, r: number, pal: IrisPalette, g: number, k: number): string {
+function crispBubble(c: { x: number; y: number }, r: number, pal: IrisPalette, g: number, k: number, rim = 1): string {
   const at = (a: number, rr: number): string => P({ x: c.x + Math.cos(a) * rr, y: c.y + Math.sin(a) * rr });
   const a0 = Math.PI * 0.12, a1 = Math.PI * 0.62; const rc = r * 0.74;
   return el('g', {}, [
     el('circle', { cx: c.x, cy: c.y, r, fill: lighten(pal.light, 0.55), 'fill-opacity': 0.12 * g * (0.5 + k) }),
-    el('circle', { cx: c.x, cy: c.y, r, fill: 'none', stroke: darken(pal.edge, 0.9), 'stroke-width': r * (0.16 + 0.16 * k), 'stroke-opacity': Math.min(1, 0.7 + 0.3 * k) * g }),
+    el('circle', { cx: c.x, cy: c.y, r, fill: 'none', stroke: darken(pal.edge, 0.9), 'stroke-width': r * (0.16 + 0.16 * k) * rim, 'stroke-opacity': Math.min(1, 0.7 + 0.3 * k) * g * (1 - 0.7 * (1 - rim)) }),
     el('circle', { cx: c.x, cy: c.y, r: r * 0.86, fill: 'none', stroke: lighten(pal.light, 0.7), 'stroke-width': r * 0.08, 'stroke-opacity': 0.75 * g }),
     el('path', { d: `M${at(a0, rc)}A${rc} ${rc} 0 0 1 ${at(a1, rc)}`, fill: 'none', stroke: '#ffffff', 'stroke-width': r * (0.16 + 0.14 * k), 'stroke-linecap': 'round', 'stroke-opacity': (0.35 + 0.5 * k) * g }),
     el('circle', { cx: c.x - r * 0.36, cy: c.y - r * 0.38, r: r * 0.17, fill: '#ffffff', 'fill-opacity': 0.95 * g }),

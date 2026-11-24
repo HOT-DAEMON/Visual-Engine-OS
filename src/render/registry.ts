@@ -17,6 +17,8 @@ export interface CompileCtx {
   readonly eyes: ReadonlyMap<string, readonly PlacedEye[]>;
   /** Sexe exprimé (−1 féminin … +1 masculin, 0 = indéterminé) du corps accroché à chaque hôte : seul le cou le lit (larynx). Absent = pas de corps = 0. */
   readonly bodySex: ReadonlyMap<string, number>;
+  /** Pixels du rendu final par unité de scène (1 = la scène est rastérisée à sa taille ; 2 = rétine). Lu par le LOD automatique des yeux (`geometry/eye/lod.ts`). */
+  readonly pixelRatio: number;
 }
 
 export type ObjectKind = SceneObject['kind'];
@@ -28,7 +30,7 @@ export type ObjectCompiler<K extends ObjectKind> = (o: Extract<SceneObject, { ki
  * Ajouter un objet = 1 schéma + 1 entrée ici (+ 1 ligne dans l'union de `schema/scene.ts`).
  */
 export const COMPILERS: { readonly [K in ObjectKind]: ObjectCompiler<K> } = {
-  eye: (o, c) => compileEye(o, c.light),
+  eye: (o, c) => compileEye(o, c.light, { pixelRatio: c.pixelRatio }),
   robot_eye: (o, c) => compileRobotEye(o, c.light),
   panel: (o, c) => compilePanel(o, c.light),
   host: (o, c) => compileHost(o, c.light, c.orbits.get(o.id), c.bodySex.get(o.id) ?? 0),

@@ -13,12 +13,12 @@ import { SceneSpec, type HostSpec } from './schema';
 import { el } from './core/svg';
 
 /** Compile une scène DÉJÀ validée en SVG. Pure et déterministe : même scène => même chaîne. */
-export function renderScene(scene: SceneSpec, opts: { readonly bodySex?: ReadonlyMap<string, number> } = {}): string {
+export function renderScene(scene: SceneSpec, opts: { readonly bodySex?: ReadonlyMap<string, number>; readonly pixelRatio?: number } = {}): string {
   // Étape `svg` (durée EXCLUSIVE : le calcul géométrique imbriqué est compté dans `geometry`).
-  return clock.time('svg', () => renderSceneUntimed(scene, opts.bodySex));
+  return clock.time('svg', () => renderSceneUntimed(scene, opts.bodySex, opts.pixelRatio ?? 1));
 }
 
-function renderSceneUntimed(scene: SceneSpec, sexOverride?: ReadonlyMap<string, number>): string {
+function renderSceneUntimed(scene: SceneSpec, sexOverride: ReadonlyMap<string, number> | undefined, pixelRatio: number): string {
   const light = lightVector(scene.light);
   const hosts = new Map<string, HostSpec>();
   for (const o of scene.objects) if (o.kind === 'host') hosts.set(o.id, o);
@@ -30,7 +30,7 @@ function renderSceneUntimed(scene: SceneSpec, sexOverride?: ReadonlyMap<string, 
   // Sexe EXPRIMÉ du corps accroché à chaque hôte (axe `body.sex` × puberté) : lu par le cou pour le dimorphisme du larynx ; le cou n'a pas de paramètre de sexe propre.
   const bodySex = new Map<string, number>();
   for (const o of scene.objects) if (o.kind === 'body') { const bp = BodyParams.parse(o.body); bodySex.set(o.host, expressedSex(bp)); }
-  const ctx = { light, lightSpec: scene.light, hosts, orbits, eyes: placed, bodySex: sexOverride ?? bodySex };
+  const ctx = { light, lightSpec: scene.light, hosts, orbits, eyes: placed, bodySex: sexOverride ?? bodySex, pixelRatio };
   const defs: string[] = [];
   const underlays: string[] = [];
   const body: string[] = [];

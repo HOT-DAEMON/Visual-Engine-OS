@@ -13,6 +13,7 @@ import { EyeGaze, Expression } from './eye-gaze-expression';
 import { HeadTurn } from './eye-head-turn';
 import { EyeArchetype } from './eye-archetype';
 import { Microdetail } from './eye-microdetail';
+import { Cornea } from './eye-cornea';
 import { Appearance } from './appearance';
 
 export const EyeSpec = z
@@ -56,6 +57,8 @@ export const EyeSpec = z
     appearance: Appearance.nullable().default(null),
     /** Microdétails de la sclère et des tissus (EYE-07) — voir `eye-microdetail.ts`. null : aucun (comportement historique). */
     microdetail: Microdetail.nullable().default(null),
+    /** Cornée (EYE-03C→H, OPT-02) : réfraction réelle de l'iris et transition cornéosclérale — voir `eye-cornea.ts`. null : iris « à nu » (comportement historique). */
+    cornea: Cornea.nullable().default(null),
     /** Préréglage de regard (voir eye-archetype.ts) : résolu AVANT l'expression, au rendu. */
     archetype: EyeArchetype.default(null),
     place: Place.optional(),

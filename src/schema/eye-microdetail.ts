@@ -37,6 +37,8 @@ export const Microdetail = z
     occlusion: Unit.default(0.4),
     /** EYE-07F : petites marques facultatives (nombre). */
     imperfections: z.number().int().min(0).max(8).default(0),
+    /** EYE-07E : irrégularité des bords palpébraux (ondulation du tarse + festonnage des glandes) ; `null` = bord parfait. Voir geometry/eye/edge-irregularity.ts. */
+    edge: z.object({ irregularity: Unit.default(0.5), grain: Unit.default(0.5) }).strict().nullable().default(null),
     /** EYE-07 LOD : largeur approximative de l'œil en pixels dans l'image finale ; null = détail complet. */
     lod: z.object({ eyePixels: z.number().min(8).max(8000).nullable().default(null) }).strict().default({}),
   })

@@ -11,8 +11,8 @@ Légende : ✅ fait et testé · 🟡 partiel (précisé) · ⬜ non fait · ❔
 
 ## 03 Globe / sclère
 - ✅ Humidité naturelle (film lacrymal + ménisque), vaisseaux, chroma, occlusion locale, marques.
-- ⬜ EYE-03C→03H (limbe/cornée/réfraction cornéosclérale) : non touchés. ⬜ OPT-02 réfraction réelle (déformation de l'iris derrière la cornée) ; `appearance.refraction` ne
-  fait qu'appliquer l'effet du moteur partagé. ⬜ OPT-03 diffusion sous-surface.
+- 🟡 (passe 16, `EYES-PASS-16.md` § 2) Cornée opt-in : réfraction réelle par lancer de rayon (03D, OPT-02) et transition cornéosclérale (03F). ⬜ 03C / 03E / 03H non audités, 03G non fait ;
+  `appearance.refraction` reste l'effet du moteur partagé. ⬜ OPT-03 diffusion sous-surface.
 
 ## 04 Iris
 - ✅ Couches de couleur (masques, gradients radial/angulaire, spots, fusion émulée, halo, irrégularité à graine).
@@ -30,8 +30,8 @@ Légende : ✅ fait et testé · 🟡 partiel (précisé) · ⬜ non fait · ❔
 ## 06 Cils — ✅ (2026-11-15) 10 familles tirées des réfs 12–16, 3 paramètres ajoutés (`bendDeg`, `rootFuse`, `span`), vérification dédiée : voir `EYES-LASHES.md` et `EYES-LASHES-VERIFY.md`. Reste à faire : fin de `EYES-LASHES.md` (écart visuel aplats/dégradés, mèches sur l'iris, cils non adaptés aux yeux très inclinés).
 
 ## 07 Microanatomie
-- ✅ A, B, C, F, H + LOD. ⬜ D microrelief cutané (pores, normales), E irrégularité des bords palpébraux, G petits plis des canthi.
-- 🟡 LOD : paramètre explicite `lod.eyePixels` ; le visage/la scène ne le renseigne pas encore automatiquement à partir de la taille finale en pixels.
+- ✅ A, B, C, F, H + LOD + (passe 16) E irrégularité des bords palpébraux. ⬜ D microrelief cutané (pores, normales), G petits plis des canthi.
+- ✅ (passe 16) LOD automatique : `lod.eyePixels: null` est dérivé de la largeur × échelle monde × `pixelRatio`. 🟡 Ni les cils ni le raccourcissement par `headTurn` n'y participent.
 
 ## 08 Expression / 09 Extensions non humaines
 - ❔ Expression (`expressions/`) non retouchée ; ⬜ le système de matériaux unifié de la §4 (contrat commun sclère/iris/pupille/cornée/paupières/bord lacrymal/cils/
@@ -164,7 +164,7 @@ Fait : liner épais effilé par famille de cils (`lids.liner`), dégagement de l
 - **emerald (07) — non fait** : bulles trop grandes et uniformes, cerclées de sombre (la réf. a des grappes de tailles variées, sans cercle) ; facettes triangulaires étroites et grain turquoise du haut de l'iris ; fentes 16 pour 6 ; luminance 136 pour 129 (en hausse) ; première étoile 0,84 R pour 0,58 ; dérive des fentes 6,9 pour 3,6 °/ρ.
 - **`svg-weight`** : 44 yeux sur 100 de la galerie 4 dépassent 140 ko (max 233 ko), de 850 à 1 050 tracés d'iris (facettes, cellules). Mesuré : le temps de rastérisation corrèle à 0,69 avec le nombre de filtres et à 0,39 avec les ko ; médiane 237 ms (lourds) contre 185 ms (légers). Le seuil de 140 ko est un mauvais proxy du coût : à remplacer par une règle composite (filtres, tracés, ko), non fait.
 - **Partage de filtres sans gain de temps** : resvg applique le filtre à chaque élément ; pour gagner du temps il faut moins d'éclats flous (`softness`) ou un flou appliqué à un groupe d'éclats, non fait.
-- **⬜ LOD automatique** (07) : `lod.eyePixels` n'est calculé nulle part. Il faudrait ajouter l'échelle en pixels de la scène à `CompileCtx` (aujourd'hui : lumière, hôtes, orbites, yeux, sexe du corps) et la composer avec `transform.scale` de l'œil posé ; `null` valant pleine précision, tout œil petit changerait de rendu : les empreintes de non-régression des visages seraient à régénérer. Non touché.
+- **✅ LOD automatique (résolu en passe 16)** (07) : `lod.eyePixels` n'est calculé nulle part. Il faudrait ajouter l'échelle en pixels de la scène à `CompileCtx` (aujourd'hui : lumière, hôtes, orbites, yeux, sexe du corps) et la composer avec `transform.scale` de l'œil posé ; `null` valant pleine précision, tout œil petit changerait de rendu : les empreintes de non-régression des visages seraient à régénérer. Non touché.
 - **⬜ Non retouchés** (inchangés depuis les passes 11–13) : intégration `headTurn.model = 'sphere'` dans `FaceParams`, reflets et pupille non déformés par la projection sphérique, cornée / réfraction réelle, microrelief cutané, bords palpébraux irréguliers, fire (part sombre 0,316 pour 0,373) et ice (fentes 2 pour 4), facettes taillées de 07 fidèles, braises et anneau de 10a, galerie 4 « nouvelles enveloppes » (`circle` / `diamond`, plafond d'aspect 0,8), `svg-weight`.
 - **Vérifié** : suite complète sur l'état fusionné avec la branche (221 fichiers) : 4 004 tests verts, 1 échec : `tests/nose-visibility.test.ts` « garde-fou du pivot » (hash d'une tête complète `1401677…` pour `995eb7f…`), **préexistant** : identique sur la branche distante seule (`662e1e7`, passe 5 des oreilles) et avec l'ancien rendu des reflets ; hash non recalé ici, à recaler par la session des oreilles.
 
@@ -172,5 +172,13 @@ Fait : liner épais effilé par famille de cils (`lids.liner`), dégagement de l
 - ✅ Reflets sous rotation sphérique (preuve en pixels, 3 cas échouaient avant) ; ✅ `svg-weight` remplacé par `svg-cost` (coût mesuré : filtres, ko) ; galerie 4 : 0 avertissement.
 - 🟡 `svg-cost` : R² 0,45, ms propres à la machine de calibration, plafond 120 ms non rattaché à un budget de frame ; `filter-budget` (14) inchangé.
 - ⬜ Pas de règle `verifyEye` sur les reflets sous rotation (tautologique en géométrie) ; contrôle en pixels seulement, hors `verifyFace`.
-- ⬜ **Non touchés** (inchangés depuis la passe 14) : LOD automatique `lod.eyePixels` ; emerald (bulles, facettes triangulaires, fentes 16 pour 6, première étoile 0,84 R pour 0,58) ; fire (part sombre 0,316 pour 0,373), ice (fentes 2 pour 4) ; facettes taillées de 07, braises et anneau de 10a ; galerie 4 (`circle` / `diamond`, plafond d'aspect 0,8) ; cornée et réfraction réelle, microrelief cutané, bords palpébraux irréguliers (03, 07) ; teinte de style cel de la paire d'yeux.
+- ⬜ **Non touchés** (inchangés depuis la passe 14 ; LOD automatique et braises de 10a traités en passe 16) : emerald (bulles, facettes triangulaires, fentes 16 pour 6, première étoile 0,84 R pour 0,58) ; fire (part sombre 0,316 pour 0,373), ice (fentes 2 pour 4) ; anneau de 10a (facettes et braises : passe 16) ; galerie 4 (`circle` / `diamond`, plafond d'aspect 0,8) ; microrelief cutané (07) ; teinte de style cel de la paire d'yeux.
 - ⬜ `scripts/artefacts-eyes-pass14.ts` compte encore l'identifiant `svg-weight` (supprimé) : ses compteurs de cette règle restent à 0.
+
+## Passe 16 (détail : `EYES-PASS-16.md`)
+- ✅ LOD automatique (iris, microdétails, `verifyEye`) · ✅ bords palpébraux irréguliers (`microdetail.edge`) · 🟡 cornée (`cornea` : réfraction, halo) · ✅ atomes `shard`, `dust`, `sizeSpread`, `rim`, braises `lance` / `scatter` (tous opt-in).
+- ✅ fire : part sombre 0,316 → 0,360 (réf. 0,373). 🟡 emerald : bulles variées et éclats, **métriques maintenues, non améliorées** (part sombre 0,104 → 0,080 pour 0,101 ; étoiles 0,343 pour 0,312 ; luminance 136 pour 129). `rim` 0,65 imposé par le détecteur d'étoiles.
+- ⬜ ice (fentes 2 pour 4) · ⬜ emerald : fentes 16 pour 6, première étoile 0,84 R pour 0,58, 54 cellules pour 105, poussière peu visible · ⬜ fire : anneau 10a en halo large avec rayons.
+- ⬜ Cornée : fibres historiques et cellules non réfractées ; mesure de pupille en pixels inutilisable sur pupille claire (feu : 0 px) ; haze discret à l'écran ; `cornea` sans effet sur les reflets (voulu).
+- ⬜ Bords : cils, pli et caroncule ne suivent pas le tracé perturbé. ⬜ Poids SVG non remesuré après les nouveaux atomes.
+- Vérifié : tous les tests `*eye*` + 30 autres fichiers ; 1 échec préexistant (`nose-visibility`) ; suite complète de 233 fichiers **non exécutée**.

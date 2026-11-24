@@ -2,12 +2,13 @@ import { svgCostMs, svgFeatures, SVG_COST_MAX_MS } from './eye-cost';
 import { IRIS_FIT, openingPolygon, openingGeometry, eyeLashSet, upperFrame, lowerFrame, placeHighlights, pupilOccludedByStar, pupilContours, scleraVessels, microLod, turnOpening, type Vec } from '../geometry/eye';
 import { halfVectorXY, lightVector, toLocal, type LightVector } from '../lighting/light';
 import { rotateLightForHeadTurn } from '../lighting/head-turn';
-import { compileEye, resolveEye } from '../render/eye/eye';
+import { compileEye, resolveEye, withAutoLod } from '../render/eye/eye';
 import { irisCenter, irisRadii } from '../render/eye/helpers';
 import { dominantColor } from '../materials';
 import { EyeSpec } from '../schema';
 import { REFERENCE_LIGHT } from './face-engine';
 import { checkEyeEnvelope } from './eye-envelope';
+import { checkEyeCornea } from './eye-cornea';
 import { checkEyeLashes, type LashMetrics } from './eye-lashes';
 import { check, report, type Check, type Report } from './types';
 
@@ -87,12 +88,13 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
     out.push(check('geometry', 'highlights-confined', '==', bad, 0, 'un reflet sort de la boîte de l’ouverture'));
   }
   if (eye.microdetail?.vessels) {
-    const vs = scleraVessels(g, c, irisRx, irisRy, eye.microdetail.vessels, eye.seed, microLod(eye.microdetail.lod.eyePixels));
+    const vs = scleraVessels(g, c, irisRx, irisRy, eye.microdetail.vessels, eye.seed, microLod(withAutoLod(eye).eye.microdetail?.lod.eyePixels ?? null));
     const inIris = vs.flatMap((v) => v.pts).filter((p) => Math.hypot((p.x - c.x) / irisRx, (p.y - c.y) / irisRy) < 1).length;
     out.push(check('geometry', 'vessels-outside-iris', '==', inIris, 0, 'des vaisseaux traversent l’iris'));
   }
   if (turned) out.push(check('geometry', 'eye-facing-camera', '>=', turned.facing, 0.05, 'l’œil est passé derrière le crâne (rotation trop forte pour sa position)'));
 
+  out.push(...checkEyeCornea(raw, eye, g0)); // cornée (réfraction) et bords palpébraux irréguliers : geometry / anatomy / style (eye-cornea.ts)
   out.push(...checkEyeEnvelope(g0, eye.shape.style, irisRy)); // enveloppe vs références mesurées (geometry / anatomy / style)
   const lashTh = eye.lids.thickness * eye.shape.height;
   const lashCheck = checkEyeLashes(eye, g, lashTh, eyeLashSet(eye, g, lashTh), (t) => upperFrame(g, t), (t) => lowerFrame(g, t)); // cils : géométrie / anatomie / style (eye-lashes.ts)

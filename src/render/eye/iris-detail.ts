@@ -4,6 +4,7 @@ import { el, urlRef } from '../../core/svg';
 import type { Vec } from '../../geometry/eye';
 import { gradientStop as stop } from '../../materials';
 import type { EyeSpec } from '../../schema';
+import { irisLod } from '../../geometry/eye';
 import { arcs, embers, slits } from './iris-atoms';
 import { bubbles, facets, lightRays, rainbow } from './iris-crystal';
 import { collarette, crypts, flames, irisFrame, irisPalette, sparkles, stromaFibers } from './iris-strands';
@@ -20,12 +21,13 @@ const radial = (id: string, stops: string[]): string => el('radialGradient', { i
  * découpées dans l'ellipse de l'iris et dessinées SOUS la pupille. Les dégradés radiaux sont
  * exprimés en fraction du rayon de l'iris (le bbox de l'ellipse = l'iris), donc suivent son aspect.
  */
-export function renderIrisDetail(eye: EyeSpec, c: Vec, rx: number, ry: number, id: string): IrisDetailRender {
+export function renderIrisDetail(eye: EyeSpec, c: Vec, rx: number, ry: number, id: string, pxPerUnit: number | null = null): IrisDetailRender {
   const d = eye.iris.detail;
   if (!d) return { defs: [], markup: [] };
   const defs: string[] = [];
   const layers: string[] = [];
-  const f = irisFrame(c, rx, ry);
+  const f = irisFrame(c, rx, ry, pxPerUnit);
+  const lod = irisLod(pxPerUnit === null ? null : 2 * rx * pxPerUnit);
   const pal = irisPalette(eye.iris.material.base);
   const rnd = mulberry32((eye.seed ^ 0x1f3d5b79) >>> 0);
   const rhoP = eye.pupil.shape === 'round' ? eye.pupil.size : Math.min(0.2, eye.pupil.size);
@@ -53,7 +55,7 @@ export function renderIrisDetail(eye: EyeSpec, c: Vec, rx: number, ry: number, i
   const k = d.density;
   layers.push(
     stromaFibers(f, pal, rnd, Math.round(50 + 90 * k), { from: [rhoP * 1.04, rhoP * 1.04 + 0.06], to: [0.78, 0.97] }, [0.009, 0.022], [0.1, 0.4], d.contrast),
-    stromaFibers(f, pal, rnd, Math.round(80 + 170 * k), { from: [0.5, 0.74], to: [0.84, 0.99] }, [0.003, 0.007], [0.12, 0.34], d.contrast),
+    stromaFibers(f, pal, rnd, Math.round(80 + 170 * k), { from: [0.5, 0.74], to: [0.84, 0.99] }, [0.003, 0.007], [0.12, 0.34], d.contrast, lod.fibers),
   );
   // 5. Cryptes.
   if (d.crypts > 0) layers.push(crypts(f, pal, rnd, d.crypts, rhoC));

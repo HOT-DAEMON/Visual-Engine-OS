@@ -1,11 +1,11 @@
 import { darken } from '../../core/color';
-import { creaseCurve, cubicTopY, eyeLashSet, type FoldGeometry, type OpeningGeometry, type Vec } from '../../geometry/eye';
+import { creaseCurve, cubicTopY, eyeLashSet, type EdgeIrregularity, type FoldGeometry, type OpeningGeometry, type Vec } from '../../geometry/eye';
 import { direction2D, type LightVector } from '../../lighting/light';
 import { dominantColor, gradientStop as stop } from '../../materials';
 import { clamp01 } from '../../core/math';
 import type { EyeSpec } from '../../schema';
 import { el, num, urlRef } from '../../core/svg';
-import { P, polygonPath } from './helpers';
+import { P, polygonPath, smoothThrough } from './helpers';
 import { renderLashGroup } from './lashes-render';
 import { renderLiner } from './liner';
 import type { EyeLook } from './look';
@@ -31,6 +31,8 @@ export function renderLidsAndFold(
   fold: FoldGeometry | null,
   id: string,
   look: EyeLook | null = null,
+  /** EYE-07E : bords irréguliers de l'ouverture (même tracé que le clip) ; `null` = courbes de Bézier de l'enveloppe. */
+  edges: EdgeIrregularity | null = null,
 ): LidsAndFold {
   const defs: string[] = [];
   const outside: string[] = [];
@@ -66,7 +68,7 @@ export function renderLidsAndFold(
   // Bords libres, pointe externe et cils
   const lids: string[] = [
     el('path', {
-      d: `M${P(g.po)}C${P(g.l1)} ${P(g.l2)} ${P(g.pi)}`,
+      d: edges ? `M${P(edges.lower[0]!)}${smoothThrough(edges.lower)}` : `M${P(g.po)}C${P(g.l1)} ${P(g.l2)} ${P(g.pi)}`,
       fill: 'none',
       stroke: lidColor,
       'stroke-width': th * 0.35,
@@ -74,7 +76,7 @@ export function renderLidsAndFold(
       'stroke-linecap': 'round',
     }),
     el('path', {
-      d: `M${P(g.pi)}C${P(g.u1)} ${P(g.u2)} ${P(g.po)}`,
+      d: edges ? `M${P(edges.upper[0]!)}${smoothThrough(edges.upper)}` : `M${P(g.pi)}C${P(g.u1)} ${P(g.u2)} ${P(g.po)}`,
       fill: 'none',
       stroke: lidColor,
       'stroke-width': th,
