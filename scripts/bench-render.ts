@@ -5,11 +5,13 @@
  *   raster (formes) : rastérisation du SVG SANS attribut `filter` ;
  *   filters         : rastérisation complète − rastérisation sans filtres ;
  * puis un second passage (caches chauds) montre ce que les caches économisent réellement.
- * Usage : npx tsx scripts/bench-render.ts [nbVisages=6] ; écrit artefacts/perf/bench.json
+ * Section `figure` : figure complète (tête + cou + corps) — coût par couche vs budgets (src/perf/budget.ts) et temps réels ; `--no-figure` pour l'omettre.
+ * Usage : npx tsx scripts/bench-render.ts [nbVisages=6] [--no-figure] ; écrit artefacts/perf/bench.json
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { clearCaches, cacheStats, clock, sceneCacheStats } from '../src';
 import { cellSvg } from './lib/board';
+import { figureBench } from './lib/figure-bench';
 import { rasterPixels, stripFilters } from './lib/raster';
 
 const N = Number(process.argv[2] ?? 6);
@@ -37,5 +39,7 @@ const t3 = now(); for (const seed of SEEDS) cellSvg({ seed, opts }, W, H); const
 const avg = (k: string): number => +(rows.reduce((a, r) => a + Number(r[k]), 0) / rows.length).toFixed(1);
 const summary = { faces: N, size: `${W}x${H}`, avg: { geometryMs: avg('geometryMs'), svgMs: avg('svgMs'), rasterShapesMs: avg('rasterShapesMs'), filtersMs: avg('filtersMs'), fullRasterMs: avg('fullRasterMs'), filters: avg('filters') }, warmCompileMsPerFace: +warm.toFixed(2), caches: [...cacheStats(), sceneCacheStats()] };
 mkdirSync('artefacts/perf', { recursive: true });
-writeFileSync('artefacts/perf/bench.json', JSON.stringify({ summary, rows }, null, 2));
+const figure = process.argv.includes('--no-figure') ? undefined : figureBench(); // figure complète : coût par couche vs budget + temps réels (docs/PERF-4.md)
+writeFileSync('artefacts/perf/bench.json', JSON.stringify({ summary, rows, figure }, null, 2));
 console.log(JSON.stringify(summary, null, 2));
+if (figure) console.log(JSON.stringify(figure, null, 2));
