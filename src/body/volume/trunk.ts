@@ -38,10 +38,12 @@ export function makeTrunk(f: BodyFrame, _bp: BodyParams, vp: VolumeParams, lf: L
   // `yr` = bas de la cage thoracique (entre mamelon et taille) : point-clé ajouté à l'itération 04 (profil ref-04 : le thorax inférieur manquait de 0,14–0,19 h de profondeur).
   // BASSIN (itération 05) : le tronc ne s'arrêtait plus à la crête par une coupe plate ; il se prolonge jusqu'à la fourche (mêmes cotes que `lower/frame.ts`) en passant par le grand trochanter (`yh`, plus large que la crête), ce qui donne au haut et au bas du corps UNE seule enveloppe de peau.
   const crotch = lf.y.crotch, yh = y.crop + 0.4 * (crotch - y.crop);
-  const yt = y.base - 0.06 * h, yk = y.base + 0.45 * (y.acr - y.base), yr = (y.nipple + y.waist) / 2, ky = [yt, y.base, yk, y.acr, y.axilla, y.nipple, yr, y.waist, y.navel, y.crop, yh, crotch];
+  const yt = y.base - 0.06 * h, yk = y.base + 0.45 * (y.acr - y.base), yr = (y.nipple + y.waist) / 2, ya2 = y.acr + 0.3 * (y.axilla - y.acr), ky = [yt, y.base, yk, y.acr, ya2, y.axilla, y.nipple, yr, y.waist, y.navel, y.crop, yh, crotch];
+  // ARRONDI DE L'ÉPAULE (itération 07) : la paroi la plus large de la peau tombait EXACTEMENT sur y.acr (X = 0,94 x.acr puis chute lissée) : un coin vif entre la pente du trapèze et la paroi verticale, qui dépassait du dôme du deltoïde (gros plan : « pointe d'acromion »). Le maximum est descendu à `ya2` (30 % de la chute acromion → aisselle), là où le bras et le deltoïde recouvrent la peau ; la pente se courbe au lieu de casser.
+  const SH = { acr: 0.9, ya2: 0.965 };
   // PENTE DU TRAPÈZE (itération 05) : coefficients balayés (voir docs/BODY-UPPER-LIMB-05.md) sur la SILHOUETTE complète alignée sur l'axe du corps (ref-02 : écart moyen 0,031 tête ; ref-04 : 0,032–0,053) ET sur le dépassement muscles/os − peau (≤ 0,03 h sur la pente, des deux côtés). Plus étroit (0,36 / 0,62 / 0,90, ancien) : les muscles débordent de 0,05 h ; plus large (0,40 / 0,73 / 1,00) : la silhouette dépasse ref-02 de 0,05 h.
   const SL = { base: 0.38, yk: 0.66, acr: 0.94 };
-  const X = (yy: number): number => prof(ky, [f.a.baseHalf * 1.15, x.acr * SL.base, x.acr * SL.yk, x.acr * SL.acr, x.chest, x.chest * 1.02, (x.chest * 1.02 + x.waist) / 2 + 0.02 * x.chest, x.waist, x.waist * 1.03, x.hip, x.hip * 1.05, x.hip * 1.0], yy);
+  const X = (yy: number): number => prof(ky, [f.a.baseHalf * 1.15, x.acr * SL.base, x.acr * SL.yk, x.acr * SH.acr, x.acr * SH.ya2, x.chest, x.chest * 1.02, (x.chest * 1.02 + x.waist) / 2 + 0.02 * x.chest, x.waist, x.waist * 1.03, x.hip, x.hip * 1.05, x.hip * 1.0], yy);
   const td = 1 + 0.15 * vp.torso.thoraxDepth;
   // Profondeur de l'ABDOMEN (taille → crête iliaque) : mesurée sur le profil de ref-04 (largeur par ligne, indépendante de l'alignement) — le canon était ≈ 20 % trop plat ; +15 % à musculature visible maximale. Le thorax (aisselle, mamelon) n'est PAS touché : il collait déjà (1,29 h contre 1,35 h) et sa bande D/L reste 0,60–0,85.
   const DM = 1 + 0.15 * f.vis;
@@ -50,7 +52,7 @@ export function makeTrunk(f: BodyFrame, _bp: BodyParams, vp: VolumeParams, lf: L
   // la taille et le haut de l'abdomen (+12 %) ; les clés des hanches ne bougent pas (le fessier dépasse déjà de ≈ 0,1 h vers l'arrière, tâche restante). Balayage : docs/BODY-LEGS-3D-06.md.
   const RAMP = 1.12, YR = 0.95;
   // Rapport profondeur/largeur : divisé par le même facteur que la largeur a augmenté (0,40/0,36, 0,73/0,62, 1,0/0,9) → la PROFONDEUR du haut du tronc reste celle mesurée sur le profil de ref-04.
-  const k = (yy: number): number => prof(ky, [0.65, 0.58 * (0.36 / SL.base), 0.5 * (0.62 / SL.yk), 0.46 * td * (0.9 / SL.acr), 0.7 * td, 0.74 * td, (0.9 + 0.1 * vp.torso.ribDepth) * DM * YR, 0.74 * DM * RAMP, 0.76 * DM * RAMP, 0.64 * DM, 0.7 * DM, 0.62 * DM], yy);
+  const k = (yy: number): number => prof(ky, [0.65, 0.58 * (0.36 / SL.base), 0.5 * (0.62 / SL.yk), 0.46 * td * (0.9 / SL.acr), 0.54 * td, 0.7 * td, 0.74 * td, (0.9 + 0.1 * vp.torso.ribDepth) * DM * YR, 0.74 * DM * RAMP, 0.76 * DM * RAMP, 0.64 * DM, 0.7 * DM, 0.62 * DM], yy);
   const bellyAmt = Math.min(1.2, 0.55 * f.fat + 0.6 * vp.torso.belly), yb = (y.waist + y.navel) / 2 + 0.05 * tl;
   const belly = (yy: number): number => bellyAmt * x.waist * 0.42 * Math.exp(-(((yy - yb) / (0.2 * tl)) ** 2));
   // Fessier : sommet SOUS la crête iliaque (≈ niveau du grand trochanter) — avant l'itération 04 il culminait à la crête et poussait le dos 0,29 h trop en arrière dans la bande navel→crête de ref-04.

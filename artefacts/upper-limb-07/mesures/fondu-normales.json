@@ -1,0 +1,152 @@
+[
+ {
+  "archetype": "adultMale",
+  "yaw": 0,
+  "blendedPixels": 1985,
+  "meanJumpBeforeDeg": 21.6,
+  "meanJumpAfterDeg": 12,
+  "ratio": 0.56,
+  "bodyPixelsChangedPct": 0.48,
+  "meanLumaChange255": 2.1
+ },
+ {
+  "archetype": "adultMale",
+  "yaw": 40,
+  "blendedPixels": 1782,
+  "meanJumpBeforeDeg": 20.4,
+  "meanJumpAfterDeg": 11.8,
+  "ratio": 0.58,
+  "bodyPixelsChangedPct": 0.42,
+  "meanLumaChange255": 2.4
+ },
+ {
+  "archetype": "adultMale",
+  "yaw": 180,
+  "blendedPixels": 1606,
+  "meanJumpBeforeDeg": 18.2,
+  "meanJumpAfterDeg": 10.3,
+  "ratio": 0.57,
+  "bodyPixelsChangedPct": 0.33,
+  "meanLumaChange255": 1.4
+ },
+ {
+  "archetype": "veryMuscular",
+  "yaw": 0,
+  "blendedPixels": 1817,
+  "meanJumpBeforeDeg": 21.5,
+  "meanJumpAfterDeg": 12.1,
+  "ratio": 0.56,
+  "bodyPixelsChangedPct": 0.41,
+  "meanLumaChange255": 1.8
+ },
+ {
+  "archetype": "veryMuscular",
+  "yaw": 40,
+  "blendedPixels": 1651,
+  "meanJumpBeforeDeg": 20,
+  "meanJumpAfterDeg": 11.8,
+  "ratio": 0.59,
+  "bodyPixelsChangedPct": 0.34,
+  "meanLumaChange255": 1.9
+ },
+ {
+  "archetype": "veryMuscular",
+  "yaw": 180,
+  "blendedPixels": 1529,
+  "meanJumpBeforeDeg": 18.3,
+  "meanJumpAfterDeg": 10,
+  "ratio": 0.54,
+  "bodyPixelsChangedPct": 0.34,
+  "meanLumaChange255": 1.7
+ },
+ {
+  "archetype": "adultFemale",
+  "yaw": 0,
+  "blendedPixels": 1904,
+  "meanJumpBeforeDeg": 21.6,
+  "meanJumpAfterDeg": 12.7,
+  "ratio": 0.59,
+  "bodyPixelsChangedPct": 0.51,
+  "meanLumaChange255": 2.2
+ },
+ {
+  "archetype": "adultFemale",
+  "yaw": 40,
+  "blendedPixels": 1571,
+  "meanJumpBeforeDeg": 22.1,
+  "meanJumpAfterDeg": 13.1,
+  "ratio": 0.59,
+  "bodyPixelsChangedPct": 0.46,
+  "meanLumaChange255": 2.2
+ },
+ {
+  "archetype": "adultFemale",
+  "yaw": 180,
+  "blendedPixels": 1720,
+  "meanJumpBeforeDeg": 19,
+  "meanJumpAfterDeg": 10.5,
+  "ratio": 0.55,
+  "bodyPixelsChangedPct": 0.35,
+  "meanLumaChange255": 1.5
+ },
+ {
+  "archetype": "child",
+  "yaw": 0,
+  "blendedPixels": 3135,
+  "meanJumpBeforeDeg": 24,
+  "meanJumpAfterDeg": 15,
+  "ratio": 0.62,
+  "bodyPixelsChangedPct": 0.93,
+  "meanLumaChange255": 2.4
+ },
+ {
+  "archetype": "child",
+  "yaw": 40,
+  "blendedPixels": 2493,
+  "meanJumpBeforeDeg": 24.5,
+  "meanJumpAfterDeg": 15,
+  "ratio": 0.61,
+  "bodyPixelsChangedPct": 0.82,
+  "meanLumaChange255": 2.9
+ },
+ {
+  "archetype": "child",
+  "yaw": 180,
+  "blendedPixels": 2312,
+  "meanJumpBeforeDeg": 19.3,
+  "meanJumpAfterDeg": 11.8,
+  "ratio": 0.61,
+  "bodyPixelsChangedPct": 0.58,
+  "meanLumaChange255": 2
+ },
+ {
+  "archetype": "obese",
+  "yaw": 0,
+  "blendedPixels": 2356,
+  "meanJumpBeforeDeg": 23.9,
+  "meanJumpAfterDeg": 12.9,
+  "ratio": 0.54,
+  "bodyPixelsChangedPct": 0.62,
+  "meanLumaChange255": 2.5
+ },
+ {
+  "archetype": "obese",
+  "yaw": 40,
+  "blendedPixels": 2021,
+  "meanJumpBeforeDeg": 27.8,
+  "meanJumpAfterDeg": 16.1,
+  "ratio": 0.58,
+  "bodyPixelsChangedPct": 0.71,
+  "meanLumaChange255": 2.6
+ },
+ {
+  "archetype": "obese",
+  "yaw": 180,
+  "blendedPixels": 2194,
+  "meanJumpBeforeDeg": 24.7,
+  "meanJumpAfterDeg": 14.2,
+  "ratio": 0.58,
+  "bodyPixelsChangedPct": 0.54,
+  "meanLumaChange255": 2.9
+ }
+]

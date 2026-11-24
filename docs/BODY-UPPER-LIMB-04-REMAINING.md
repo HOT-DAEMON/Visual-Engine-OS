@@ -2,6 +2,8 @@
 
 > **Mise à jour itération 05** : « le tronc s'arrête à la crête, sans jambes » est levé, l'épaule est raccordée à la pente du trapèze et le rendu ne laisse plus transparaître le fond : voir `BODY-JUNCTIONS-05.md` et `BODY-JUNCTIONS-05-REMAINING.md`.
 
+> **Mise à jour itération 07** : le haut du dos et l'omoplate n'ont PAS été repris (champ de relief non essayé) ; la piste est précisée dans `BODY-JUNCTIONS-07-REMAINING.md` (perturbation de normale dans le rendu par pixel, point monde reconstruit depuis la profondeur). Les mains (ref-05) n'ont pas été touchées.
+
 **Bilan honnête** : le résultat n'est pas « parfait sur tous les axes ». Chiffres = écarts mesurés ; ce qui n'a pas été mesuré est dit tel quel. Les points des itérations précédentes non repris ici restent ouverts (`BODY-UPPER-LIMB-03-REMAINING.md`, `-02-REMAINING.md`).
 
 > **Mise à jour itération 06 (éclairage)** : « aucune mesure de couleur ou d'ombrage par pixel » est partiellement levé : le rendu par pixel utilise désormais un modèle de lumière unique avec ombres portées entre volumes ; voir `LIGHT-VISIBLE-06.md`. Le haut du dos reste à reprendre.

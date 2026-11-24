@@ -1,5 +1,7 @@
 # Raccords du corps — ce qui reste après l'itération 05 (par composant)
 
+> **Mise à jour itération 07** : la « pointe d'acromion » était en fait un coin de la peau du tronc (plaque à angle vif à `y.acr`) : atténué (paroi la plus large descendue sous l'acromion), pas supprimé ; le liseré d'aine est adouci par un fondu de normales (effet faible). Le deltoïde enveloppant et le pectoral recouvrant ne sont toujours pas faits : voir `BODY-JUNCTIONS-07.md` et `BODY-JUNCTIONS-07-REMAINING.md`. `baby` échoue toujours `shoulder-symmetry` (diagnostic partiel dans le 07-REMAINING).
+
 **Bilan honnête** : l'épaule et la hanche sont raccordées en continuité, mais le résultat n'est pas « parfait sur tous les axes ». Ce qui suit est ce qui n'a pas été fait ou pas été mesuré. Les restes des itérations précédentes qui ne sont pas repris ici (mains, coude, clavicule, dos) restent valables : voir `BODY-UPPER-LIMB-04-REMAINING.md`. L'élément « le tronc s'arrête toujours à la crête, sans jambes » de ce fichier est **levé**.
 
 ## 1. Épaule ↔ bras (raccord traité, pas fini)

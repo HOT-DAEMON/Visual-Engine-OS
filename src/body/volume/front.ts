@@ -58,10 +58,10 @@ export function frontVolumes(tr: Trunk, nk: Neck, f: BodyFrame, bp: BodyParams, 
     [A(yA + 0.012 * H, 0.98, 0.004 * H, 0.003 * H, 0), A(y.navel + 0.19 * tl, 0.6, 0.004 * H, 0.003 * H, 0), A(y.crop + 0.015 * H, 0.17, 0.004 * H, 0.003 * H, 0)]));
   // Clavicules (os saillants, en S) et cou : sterno-cléido-mastoïdiens + pomme d'Adam.
   for (const s of [1, -1] as const) {
-    const sh = tr.shoulder(s), acr: P3 = add3(sh, p3(s * (f.x.acr - f.joint.x) * 0.55, y.acr - f.joint.y, 0.02 * H));
+    const sh = tr.shoulder(s), acr: P3 = add3(sh, p3(s * (f.x.acr - f.joint.x) * 0.38, y.acr - f.joint.y + 0.01 * H, 0.012 * H));
     const n0 = tr.point(y.base + 0.035 * H, s * 0.08, 0.016 * H), m0 = tr.point(y.base + 0.05 * H, s * 0.6, 0.026 * H);
     out.push(vol({ id: `clavicle.${s > 0 ? 'L' : 'R'}`, name: 'clavicule', group: 'shoulder', kind: 'bone', side: s > 0 ? 'L' : 'R', layer: 5, level: 2, tier: 1, tone: 0.28, origin: 'sternum', insertion: 'acromion' },
-      [{ c: n0.p, a: 0.016 * H, b: 0.015 * H, hint: n0.n }, { c: m0.p, a: 0.0125 * H, b: 0.0135 * H, hint: m0.n }, { c: acr, a: 0.016 * H, b: 0.014 * H, hint: p3(0, -0.4, 1) }]));
+      [{ c: n0.p, a: 0.016 * H, b: 0.015 * H, hint: n0.n }, { c: m0.p, a: 0.0125 * H, b: 0.0135 * H, hint: m0.n }, { c: acr, a: 0.012 * H, b: 0.011 * H, hint: p3(0, -0.4, 1) }]));
   }
   out.push(...[1, -1].map((s) => {
     const t = nk.top, a0 = nk.point(t + 0.05 * H, s * 2.15, 0.014 * H), a1 = nk.point(mid(t, f.a.baseY), s * 1.15, 0.016 * H), a2 = tr.point(y.base + 0.03 * H, s * 0.32, 0.012 * H);

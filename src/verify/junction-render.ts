@@ -12,11 +12,12 @@ const chk = (id: string, layer: VCheck['layer'], ok: boolean, detail: string): V
  * CONTRÔLES DE RENDU des raccords, mesurés sur l'IMAGE (rendu par pixel, face, 460 px de haut) et non sur la géométrie :
  *  · aucun pixel translucide à l'intérieur du corps (le fond ne doit jamais apparaître à travers la peau : bogue d'opacité de palier corrigé à l'itération 05) ;
  *  · contour supérieur de l'épaule sans cran : en allant du cou vers l'extérieur, le contour ne remonte jamais de plus de 0,02 h ;
- *  · hanche sans marche : la paroi externe du bassin et de la cuisse ne saute jamais de plus de 0,05 h entre deux rangées voisines.
+ *  · hanche sans marche : la paroi externe du bassin et de la cuisse ne saute jamais de plus de 0,05 h entre deux rangées voisines ;
+ *  · raccords peau/peau sans liseré (itération 07) : saut moyen de normale entre pixels voisins de deux peaux (aine, épaule) ≤ 0,65 × le saut sans fondu ET ≤ 16° (mesuré de face : avant fondu 21,5–24,0°, après 12,0–15,0° sur 5 archétypes ; 18,2–27,8° → 10,0–16,1° sur les 3 lacets).
  */
-export function junctionRenderChecks(set: VolumeSet, raw: BodyInput, a: NeckAnchor): VCheck[] {
+export function junctionRenderChecks(set: VolumeSet, raw: BodyInput, a: NeckAnchor, opts: { readonly seamBlend?: boolean } = {}): VCheck[] {
   const H = set.measures.h as number, f = bodyFrame(BodyParams.parse(raw), a);
-  const m = renderVolumesPixel(set, { skin: '#c99a76', heightPx: 460, camera: { yaw: 0, pitch: 0, pivot: { x: 0, y: 0, z: 0 } }, uid: 'jr' }), { w, h, rgba } = m.pixels, b = m.bounds;
+  const m = renderVolumesPixel(set, { skin: '#c99a76', heightPx: 460, camera: { yaw: 0, pitch: 0, pivot: { x: 0, y: 0, z: 0 } }, uid: 'jr', seamBlend: opts.seamBlend }), { w, h, rgba } = m.pixels, b = m.bounds;
   const ppx = w / (b.x1 - b.x0), ppy = h / (b.y1 - b.y0), al = (x: number, y: number): number => (x < 0 || y < 0 || x >= w || y >= h ? 0 : rgba[(y * w + x) * 4 + 3]! / 255);
   const col = (x: number): number => Math.round((x - b.x0) * ppx);
   // 1. Pixels translucides entourés de corps (ne touchant aucun pixel vide) : le fond verrait à travers.
@@ -40,5 +41,8 @@ export function junctionRenderChecks(set: VolumeSet, raw: BodyInput, a: NeckAnch
   const wall: number[] = []; for (let y = r2(yTop); y <= r2(yBot); y += Math.max(1, Math.round(0.02 * H * py2))) { let x = c2(0.3 * H); if (a2(x, y) < 0.5) continue; while (a2(x + 1, y) > 0.5) x++; wall.push(x); }
   let step = 0; for (let i = 1; i < wall.length; i++) step = Math.max(step, Math.abs(wall[i]! - wall[i - 1]!));
   out.push(chk('junction.geo.hip-wall-step', 'geometry', wall.length > 5 && step <= 0.05 * H * px2, `paroi bassin/cuisse (sans les bras) : saut maximal ${(step / px2 / H).toFixed(3)} h entre rangées voisines sur ${wall.length} rangées (≤ 0,05 h)`));
+  // 4. Liseré aux intersections peau/peau, mesuré sur le G-buffer du même rendu (voir `SeamStats`).
+  const sm = m.seam, ratio = sm.jumpBefore > 0 ? sm.jumpAfter / sm.jumpBefore : 1;
+  out.push(chk('junction.sty.seam-normal-jump', 'style', sm.blended > 0 && ratio <= 0.65 && sm.jumpAfter <= 16, `saut moyen de normale aux raccords peau/peau : ${sm.jumpBefore.toFixed(1)}° sans fondu → ${sm.jumpAfter.toFixed(1)}° (rapport ${ratio.toFixed(2)} ≤ 0,65 et ≤ 16°) sur ${sm.blended} pixels fondus ; mesure au rayon de fondu, pas un angle de pli réel`));
   return out;
 }
