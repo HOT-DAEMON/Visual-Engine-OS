@@ -92,3 +92,22 @@ Temporalité physique : ce qui doit évoluer naturellement avec le mouvement.
 Temporalité artistique : ce que la direction artistique souhaite accentuer, retarder ou exagérer.
 
 Une animation japonaise peut volontairement conserver un éclairage graphique pendant plusieurs images pour renforcer sa lisibilité. Ce n'est pas un défaut de simulation si cette décision est intentionnelle.
+
+# Le système doit gérer les événements lumineux
+Je veux que le puisses définir des relations de ce genre :(
+EVENT: SWORD_IMPACT
+TRIGGER:
+  weapon.contact(target)
+ACTIONS:
+  - emit_flash()
+  - illuminate(target)
+  - cast_shadow(environment)
+  - spawn_sparks()
+  - activate_smoke()
+  - animate_exposure()
+  - trigger_camera_flash()
+TEMPORAL:
+  anticipation: 2 frames
+  flash: 1 frame
+  expansion: 4 frames
+  decay: 12 frames)
