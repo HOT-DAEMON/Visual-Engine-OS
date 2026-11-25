@@ -15,16 +15,17 @@ import { dot, norm, add, type V2, type V3 } from './vec';
  *   étendue           0,047 / 0,071 L    → `extent` 0,06 (noyau ≥ 40 % : 0,035 L, soit 0,6 de l'étendue) ;
  *   couverture largeur 0,67 / 0,91       → `coverage` 0,8 ;
  *   dentelure σ        0,010–0,020 L     → `jag` 0,015 (écart-type de la position du bord, rangée par rangée) ;
- *   ombre aval         0,21 / 0,20 L, creux de 13 niveaux sur 36 (≈ −36 %) → `shoulderLen` 0,2 ; trois paliers de 0,12 d'opacité cumulent 1 − 0,88³ = 0,32.
+ *   ombre aval         creux −34 / −36 % (A, B) et −33 % (éventail C), mi-retour à +0,28 / +0,27 L (C : +0,30 R), retour complet à +0,42 R (C) → `shoulderLen` 0,42 (passe 7 ; la passe 6 avait 0,2 : elle mesurait la seule poche sombre).
+ *                      Les paliers [1 ; 0,65 ; 0,33] × 0,42 L font tomber le mi-niveau à 0,65 × 0,42 = 0,27 L du bord du reflet. Opacité : `ring-tone.ts` (creux relatif −33 % pour tout ton) ; `shoulderOpacity` n'est plus que la valeur historique (`SHOULDER_BASE`).
  * `minNH` / `fullNH` / `bodyWidth` ne sont PAS mesurés : seuils d'ingénierie (cos 38,7°, cos 14°, 40 % de la largeur maximale), à rejuger sur les artefacts. `bodyWidth` : le centre est cherché sur le CORPS de la mèche (largeur ≥ 40 % du
  * maximum) ; sur la sonde, 5 reflets sur 19 tombaient pile sur la pointe, où la bande était coupée en deux puis écrasée.
  * Un reflet spéculaire exige une surface ÉCLAIRÉE : N·H est donc multiplié par une porte sur N·L (`lit`, 0 sous 0,02, 1 au-delà de 0,3). Sans elle, une lumière derrière la tête donnait PLUS de reflets (normales vers le haut proches du médian
  * mais non éclairées) : défaut relevé par le test « lumière derrière la tête ».
  * `minCoverage` 0,3 (ingénierie, non mesuré) : seuil sous lequel la courbure interdit la bande.
- * Limites assumées : deux rubans mesurés (l'éventail du panneau C n'est pas mesuré) ; leur rapport longueur/largeur est ~4,5 contre ~9 pour une mèche, et l'on ne sait pas si l'étendue du reflet se règle sur la longueur (choix retenu : elle
+ * Constantes chiffrées : `ring-measures.ts`. Limites assumées : trois panneaux mesurés (A, B, éventail C) ; leur rapport longueur/largeur est ~4,5 contre ~9 pour une mèche, et l'on ne sait pas si l'étendue du reflet se règle sur la longueur (choix retenu : elle
  * vient de la courbure le long de la mèche) ou sur la largeur. Les valeurs sont un ordre de grandeur de l'illustrateur, pas une loi.
  */
-export const RING = { extent: 0.06, coverage: 0.8, jag: 0.015, minCoverage: 0.3, teeth: 9, shoulderLen: 0.2, shoulderSteps: [1, 0.65, 0.33], shoulderOpacity: 0.12, minNH: 0.78, fullNH: 0.97, bodyWidth: 0.4 } as const;
+export const RING = { extent: 0.06, coverage: 0.8, jag: 0.015, minCoverage: 0.3, teeth: 9, shoulderLen: 0.42, shoulderSteps: [1, 0.65, 0.33], shoulderOpacity: 0.12, minNH: 0.78, fullNH: 0.97, bodyWidth: 0.4 } as const;
 
 export interface RingBands {
   /** Position du centre le long de la mèche, 0 = racine, 1 = pointe. */
@@ -59,7 +60,7 @@ function pointAt(b: Blade, g: LockGeom, cum: readonly number[], s: number, u: nu
  * Bande transversale d'une mèche, ou `null` quand elle ne regarde pas le vecteur médian (N·H < `minNH` partout), quand elle est vue par le dessous, ou quand elle est trop courte pour porter un reflet.
  * Déterministe : le bruit des bords dépend de la seule position de la racine.
  */
-export function ringBands(b: Blade, g: LockGeom, _L: LockSpec, view: View, light: Light): RingBands | null {
+export function ringBands(b: Blade, g: LockGeom, _L: LockSpec, view: View, light: Light, shoulderLen: number = RING.shoulderLen): RingBands | null {
   const n = Math.min(g.n, b.spine.length); if (n < 6) return null;
   const spine = b.spine.slice(0, n); const cum = arcs(spine); const total = cum[n - 1] as number; if (total < 6) return null;
   const hs = add(light.dir, viewRayInHead(view)); if (!(Math.hypot(hs.x, hs.y, hs.z) > 1e-6)) return null; // lumière exactement en face de la caméra : vecteur médian nul, pas de reflet
@@ -98,7 +99,7 @@ export function ringBands(b: Blade, g: LockGeom, _L: LockSpec, view: View, light
   const highlight = [...top, ...bot.reverse()];
   // Côté de l'ombre : celui où l'exposition à la lumière baisse le plus vite (l'ombre est du côté opposé à la source).
   const exAt = (s: number): number => lerpAt(g.exposure, s);
-  const dl = RING.shoulderLen * total; const side: 1 | -1 = exAt(s0 + dl) <= exAt(s0 - dl) ? 1 : -1;
+  const dl = shoulderLen * total; const side: 1 | -1 = exAt(s0 + dl) <= exAt(s0 - dl) ? 1 : -1;
   const shoulder = RING.shoulderSteps.map((f) => {
     const a = s0 + side * half; const e = s0 + side * (half + dl * f); const lo: V2[] = []; const hi: V2[] = [];
     for (let j = 0; j <= m; j++) { const u = -0.96 + (2 * 0.96 * j) / m; lo.push(pointAt(b, g, cum, a, u)); hi.push(pointAt(b, g, cum, e, u)); }

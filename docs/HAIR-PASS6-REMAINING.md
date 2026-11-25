@@ -41,3 +41,6 @@ Rien de ce qui suit n'est présenté comme fait.
 
 ## Discipline
 Chaque fichier de `docs/` ≤ 200 lignes. Jetons et identifiants ne sont jamais écrits dans le dépôt.
+
+## Mise à jour
+État à jour après la passe 7 : `HAIR-PASS7-REMAINING.md` (ombre aval mesurée, raie cachée rejetée, garde de rendu ; chaque point ci-dessus y est repris avec son statut).

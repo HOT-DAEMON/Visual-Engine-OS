@@ -21,21 +21,30 @@ export const PART_READ_MIN = 0.5;
 /** Élévation de crâne (°) où la raie est lue. À 47° la ligne x = xp existe jusqu'à ±0,68 rx (rx·cos 47°), presque toute la plage permise ±0,7 rx ; à 60° elle saturait à ±0,5 rx. */
 const READ_EL = 47;
 
-/** Raie lue (unités rx, repère image) → position de crâne (unités H, repère de tête) : `undefined` si le sillon n'est pas net. */
+/**
+ * Tolérance de l'inversion, en demi-largeurs de tête (rx). Mesurée (passe 7, `tests/hair-engine-part-hidden.test.ts`) : l'erreur de re-projection de `imageUToSkull` vaut 0,000–0,006 rx quand le point visé est atteignable,
+ * 0,027 rx à la limite de la plage, et 0,15–0,76 rx quand il est caché (lacet 30–75°, côté détourné) ou hors de la plage permise (|xp| ≤ 0,7 rx) : la valeur retournée est alors le point visible LE PLUS PROCHE, pas le point lu.
+ * 0,03 rx sépare ces deux régimes ; c'est un seuil d'ingénierie (l'erreur croît continûment près du bord), pas une loi.
+ */
+export const PART_INVERT_TOL = 0.03;
+
+/** Raie lue (unités rx, repère image) → position de crâne (unités H, repère de tête) : `undefined` si le sillon n'est pas net, OU si son point image n'est pas retrouvable sur le crâne (côté détourné, hors plage). */
 export function partFromObservation(o: PartObservation, P: HairProfile, view: View): number | undefined {
   if (!o.groove || o.clarity < PART_READ_MIN) return undefined;
-  return imageUToSkull(P, view, o.u);
+  const r = skullFromImageU(P, view, o.u);
+  return r && r.err <= PART_INVERT_TOL ? r.xp : undefined;
 }
 
 /**
  * Inversion de la projection : x image = cx + u·rx  →  xp tel que la ligne de crâne x = xp passe par ce point à l'élévation `READ_EL`.
  * Balayage fin (pas de 2·10⁻⁴ H) restreint aux points TOURNÉS VERS LA CAMÉRA (normale de l'ellipsoïde · rayon de vue > 0) : à fort lacet la projection de la
- * ligne n'est plus monotone (la calotte s'enroule) et une bissection se tromperait de branche. Sans point visible : repli sur l'identité u·rx.
+ * ligne n'est plus monotone (la calotte s'enroule) et une bissection se tromperait de branche. Rend aussi l'ERREUR de re-projection (en rx) : un point caché n'a pas d'antécédent visible,
+ * le balayage retombe alors sur le plus proche et l'appelant doit pouvoir le savoir. `undefined` : aucun point visible à cette élévation.
  */
-export function imageUToSkull(P: HairProfile, view: View, u: number): number {
+export function skullFromImageU(P: HairProfile, view: View, u: number): { xp: number; err: number } | undefined {
   const h = P.head; const c = Math.cos(rad(READ_EL)); const s = Math.sin(rad(READ_EL)); const ray = viewRayInHead(view);
   const cx = project(view, { x: 0, y: 0, z: h.cz }).x; const target = cx + u * h.rx * view.s;
-  const lim = Math.min(0.7 * h.rx, 0.999 * h.rx * c); const N = 1400; let best = Infinity; let bx = clamp(u, -0.7, 0.7) * h.rx;
+  const lim = Math.min(0.7 * h.rx, 0.999 * h.rx * c); const N = 1400; let best = Infinity; let bx = 0;
   for (let i = 0; i <= N; i++) {
     const xp = -lim + (2 * lim * i) / N; const az = Math.asin(clamp(xp / (h.rx * c), -1, 1));
     const p = { x: h.rx * c * Math.sin(az), y: -h.ry * s, z: h.cz + h.rz * c * Math.cos(az) };
@@ -43,7 +52,12 @@ export function imageUToSkull(P: HairProfile, view: View, u: number): number {
     if ((nx * ray.x + ny * ray.y + nz * ray.z) / m <= 0) continue;
     const d = Math.abs(project(view, p).x - target); if (d < best) { best = d; bx = xp; }
   }
-  return bx;
+  return best === Infinity ? undefined : { xp: bx, err: best / (h.rx * view.s) };
+}
+
+/** Comportement historique, conservé pour les appelants existants : le point visible le plus proche, sans signal d'erreur (identité u·rx, bornée, quand aucun point n'est visible). Pour lire une raie, préférer `skullFromImageU`. */
+export function imageUToSkull(P: HairProfile, view: View, u: number): number {
+  return skullFromImageU(P, view, u)?.xp ?? clamp(u, -0.7, 0.7) * P.head.rx;
 }
 
 export interface PartFit extends ReferenceFit {
