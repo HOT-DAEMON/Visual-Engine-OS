@@ -1,5 +1,4 @@
 il y a une limite importante : le glow est construit à partir de l'alpha de l'objet, pas de sa géométrie lumineuse réelle.
-
 Conséquences :
 - une chevelure entière peut recevoir un halo uniforme ;
 - une petite pierre lumineuse et une grande surface émissive peuvent recevoir le même type de traitement ;
@@ -9,12 +8,10 @@ Conséquences :
 Il s'agit donc d'un effet graphique de contour, pas encore d'une propagation lumineuse.
 # Bloom :
 ## Premier problème : le bloom dépend du contenu RGB de l'objet, mais le projet ne possède pas encore un vrai buffer HDR de luminance.
-
 Dans un moteur de rendu avancé, le bloom est généralement extrait d'une image contenant une plage dynamique étendue. Les valeurs lumineuses peuvent dépasser le blanc conventionnel avant le tone mapping.Ici, le calcul travaille sur les valeurs de couleur SVG et leur luminance. Il ne dispose donc pas d'une véritable plage HDR permettant de différencier proprement une surface simplement blanche d'une source extrêmement intense.
 
 ## Deuxième problème : l'intensité n'agit pas comme un simple multiplicateur direct.
 L'intensité intervient dans le gain de la matrice. Cela signifie que le bloom commence déjà avec un gain de 3 dès qu'il dépasse le seuil d'activation.
-
 Ce comportement mérite un réglage et une validation visuelle. Il n'est pas évident qu'il fournisse une progression intuitive entre 0,05, 0,3 et 1.
 
 # . Le véritable problème : où ces effets sont-ils branchés ?
@@ -74,3 +71,32 @@ Mais il manque encore :
 - les interactions entre plusieurs sources émissives ;
 - la variation de l'effet selon la distance.
 Le halo radial actuel est une approximation graphique, pas un véritable champ lumineux.
+# Ce que le moteur doit réellement posséder
+Je ne recommande pas de simplement augmenter les intensités. Ce serait une correction superficielle.Il faut construire un véritable Light Effects Engine, complémentaire du Lighting Core.
+Voici les capacités que je considère nécessaires.
+## 6.1 Une grammaire des halos
+### Famille	Silhouette glow	
+Description :Aura diffuse autour de la forme
+### Famille	Inner glow	
+Description Lumière diffuse à l'intérieur de la forme
+### Famille	Outer glow	
+Description Diffusion extérieure
+### Famille	Rim glow	
+Description Liseré lumineux diffus
+### Famille	Core glow	
+Description Cœur lumineux intense
+### Famille	Radial halo	
+Description Halo concentrique
+### Famille	Directional halo	
+Description Halo étiré dans une direction
+### Famille	Volumetric glow	
+Description Lumière diffusée dans l'atmosphère
+### Famille	Energy aura
+Description Aura animée et irrégulière
+### Famille	Pulsating glow	
+Description Halo qui respire ou pulse
+# TRES IMPORTANT 
+Il faut aussi permettre de combiner ces familles.
+Par exemple Un cristal pourrait avoir un cœur lumineux intense, un halo radial bleu, un contour cyan et des particules lumineuses.
+Ou par exemple Un personnage pourrait avoir une aura rouge très douce autour de son corps, avec un rim light plus intense sur les cheveux.
+Ce ne sont pas les mêmes traitements.
