@@ -21,3 +21,13 @@ Une précision importante : tous les matériaux ne doivent pas être simulés ph
 # Un moteur atmosphérique
 C'est une dimension que je ne voudrais surtout pas que le moteur l'oubliée.
 La lumière ne rencontre pas uniquement des surfaces. Elle traverse aussi des milieux.
+Il faut prévoir :
+## A. La fumée
+- Densité variable;- Opacité;- Diffusion lumineuse;- Absorption;- Éclairage interne;- Contours rétroéclairés;- Évolution dans le temps.
+## B. La brume
+- Profondeur atmosphérique;- Perte de contraste;- Désaturation progressive;- Décalage chromatique;- Persistance de la lumière dans les zones éloignées.
+## C. Les rayons lumineux
+- Faisceaux directionnels;- Faisceaux volumétriques;- Rayons traversant des ouvertures;- Rayons découpés par des obstacles;- Intensité variable dans l'espace;- Particules révélant les faisceaux.
+## D. Les particules
+- Poussière;- Cendres;- Étincelles;- Pluie;- Neige;- Débris;- Particules énergétiques.
+Chaque particule devrait pouvoir recevoir une lumière, en émettre une ou simplement interagir avec le volume atmosphérique.
