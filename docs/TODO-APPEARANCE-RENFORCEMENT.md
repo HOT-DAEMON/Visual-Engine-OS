@@ -210,7 +210,6 @@ Il faut surtout que les normales soient disponibles à plusieurs niveaux :
 - Normale de la surface après animation.
 Cela permettrait d'éclairer une épaule, une oreille, un nez, une paupière, une mèche ou un muscle avec le même système fondamental.
 ## Un système de matériaux optiques spécialisé
-Ton moteur possède déjà MaterialDescriptor, roughness, metallic, clearcoat, opacity et plusieurs effets.
-
+Le moteur possède déjà MaterialDescriptor, roughness, metallic, clearcoat, opacity et plusieurs effets.
 Mais il faut enrichir considérablement la réponse optique des matériaux.
 
