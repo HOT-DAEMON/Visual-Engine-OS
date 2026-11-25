@@ -28,3 +28,13 @@ Composant	: Couches internes de l'iris Glow / Bloom:	Oui	Intégration observée 
 Composant	: Pilosité faciale Glow / Bloom:	Pas de filtre général identifié - Intégration observée:	Apparence résolue, mais pas de compileEffects() dans le fichier examiné
 Composant	: Corps Glow / Bloom:	Pas de branchement général identifié-Intégration observée:	Reçoit essentiellement base et ombre
 Composant	: Matériaux génériques Glow / Bloom:	Émission uniquement	- Intégration observée : Pas de glow/bloom général dans MaterialDescriptor
+
+# Les cheveux : un branchement incomplet
+Dans src/render/face/hair.ts, le moteur appelle : const fx = compileEffects(...);
+Puis applique le filtre au groupe body de la chevelure.Mais ce groupe ne représente pas tous les calques de cheveux.
+Le rendu distingue :
+- back : masses et mèches arrière ;- front : coque, racines et mèches frontales ;- over : mèches passant devant les yeux.
+Le filtre est appliqué au groupe body contenu dans front.
+Les calques back et over ne reçoivent donc pas ce filtre.
+Cela peut produire une incohérence : une chevelure peut avoir une aura sur sa masse frontale, mais pas sur les mèches qui passent devant les yeux ou sur certaines parties arrière.
+C'est une vraie limite d'intégration, pas une simple question de réglage.
