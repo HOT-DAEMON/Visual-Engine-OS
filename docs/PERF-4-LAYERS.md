@@ -49,6 +49,8 @@ modifie pas (jeu gelé en profondeur rendu sans erreur, tampons de la tête inch
 | Avant/après réel, ancien code en worktree `ddbbad4` | `artefacts/figure-perf/01-…png`, `mesures.json` | 0 pixel différent sur 754 560 |
 | Réutilisation des couches | `tests/figure-budget.test.ts` | changer seulement la lumière : relief, AO, G-buffer, occlusion réutilisés (0 calcul) ; ombres et ombrage refaits |
 
+**Intégration de l'amont (fondu des jonctions peau/peau, itération 07).** Pendant ce travail, la branche a reçu un fondu des normales aux intersections peau/peau (`seamBlend`, `SeamStats`). Il vit dans le G-buffer (indépendant de la lumière) : `seamBlend` fait partie de la clé de cache et `seam` est renvoyé par `renderVolumesPixel`. Ce fondu a changé les pixels du corps (les 7 empreintes de corps diffèrent de l'ancienne référence ; les champs de lumière de la tête sont inchangés) : la référence figée a donc été REGÉNÉRÉE avec le pipeline amont non optimisé (+ la seule correction d'identifiants), et le pipeline en couches lui est identique 7/7. Test : `seamBlend` est consommé et distingué par le cache.
+
 La référence figée contient le SVG de scène APRÈS la correction des identifiants (`PERF-4-GUARD.md`), validée séparément par la régression visuelle du dépôt.
 
 ## Coût par couche (1 100 px, à froid)
