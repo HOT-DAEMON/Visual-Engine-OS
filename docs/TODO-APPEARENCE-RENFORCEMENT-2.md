@@ -35,15 +35,7 @@ C'est particulièrement intéressant pour ton ambition de mise en scène.Une lum
 Tu possèdes déjà un début de cette fonctionnalité dans src/relief/patterns.ts, avec les gobos de type blinds et dapple.
 Mais il faut généraliser cette idée.
 Le moteur devrait pouvoir projeter :
-- Des rayures.
-- Des grilles.
-- Des motifs géométriques.
-- Des motifs de feuillage.
-- Des formes abstraites.
-- Des symboles magiques.
-- Des textures animées.
-- Des images lumineuses.
-- Des motifs générés procéduralement.
+- Des rayures;- Des grilles;- Des motifs géométriques;- Des motifs de feuillage;- Des formes abstraites;- Des symboles magiques;- Des textures animées;- Des images lumineuses;- Des motifs générés procéduralement.
 Et surtout, ces projections doivent pouvoir suivre les surfaces, les personnages et les déplacements de caméra.
 # 4.7. Un moteur de lumière indirecte
 IMPORTANT: Le mur rouge est un exemple parmi tant d'autres 
