@@ -1,5 +1,4 @@
 # Je recommande de prévoir ces familles :
-Matériau	Propriétés particulières
 Matériau Peau: Propriétés particulières(Diffusion sous-cutanée, pores, huile, variations régionales)
 Matériau Cheveux: Propriétés particulières(	Anisotropie, fibres, brillance longitudinale)
 Matériau Yeux: Propriétés particulières(	Cornée, iris, sclère, humidité, réfraction)
