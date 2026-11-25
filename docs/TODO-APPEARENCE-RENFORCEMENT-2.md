@@ -69,3 +69,11 @@ Il faut garantir qu'elle reste cohérente à l'image numéro 2, 3, 4, 5 et jusqu
 ## Chaque lumière doit posséder une grammaire temporelle
 Une source lumineuse devrait pouvoir recevoir :
 - Une position initiale;- Une position finale;- Une trajectoire;- Une intensité initiale;- Une intensité finale;- Une variation de température;- Une variation de couleur;- Une courbe d'évolution;- Une durée;- Un déclencheur;- Une relation avec un événement.
+Par exemple une explosion (ceci est un exemple parmis tant d'autres que le moteur doit être capable de composer correctement sans halluciner)
+Phase	Comportement lumineux
+Phase Préparation	: Comportement lumineux (Augmentation de l'émission)
+Phase Flash	: Comportement lumineux (Éclair intense et très bref)
+Phase Expansion	: Comportement lumineux (Lumière orange qui s'étend)
+Phase Propagation: Comportement lumineux (	Éclairage des personnages et de l'environnement)
+Phase Décroissance: Comportement lumineux (	Diminution de l'intensité)
+Phase Résidus: Comportement lumineux (	Étincelles et petites sources mobiles)
