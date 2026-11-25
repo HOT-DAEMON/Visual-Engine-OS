@@ -111,25 +111,14 @@ TEMPORAL:
   flash: 1 frame
   expansion: 4 frames
   decay: 12 frames)
-
 C'est un exemple de langage de commande proposé.
-
 Le moteur doit pouvoir interpréter de telles instructions comme des événements orchestrés, et non comme une suite de paramètres indépendants..
 La direction artistique doit être un véritable système de contrôle
 Voici une autre distinction essentielle.
-
 Tu ne veux pas uniquement que le moteur calcule correctement la lumière.
-
 Tu veux pouvoir lui demander de produire une image avec une intention artistique précise.
-
 Par exemple :
-- Une scène mystérieuse.
-- Une scène romantique.
-- Une scène de terreur.
-- Une scène épique.
-- Une scène mélancolique.
-- Une scène de combat.
-- Une scène contemplative.
+- Une scène mystérieuse;- Une scène romantique;- Une scène de terreur;- Une scène épique;- Une scène mélancolique;- Une scène de combat;- Une scène contemplative.
 - Une scène surnaturelle.
 Et chaque intention doit pouvoir modifier plusieurs dimensions simultanément.
 Mystère : Contraste élevé, éclairage latéral, zones occultées, lumière froide.
@@ -151,7 +140,50 @@ Chaque grammaire serait un assemblage cohérent de :
 10. Règles de composition.
 11. Animation temporelle.
 Et il faut que ces grammaires soient combinables.
+Une scène peut être simultanément mystérieuse, épique et mélancolique.Il ne faut donc pas enfermer le système dans des presets rigides.
+CHARACTER
+ ├── HEAD
+ │    ├── SKULL
+ │    ├── FOREHEAD
+ │    ├── EYES
+ │    ├── NOSE
+ │    ├── CHEEKS
+ │    ├── MOUTH
+ │    ├── CHIN
+ │    └── HAIR
+ │
+ ├── NECK
+ ├── SHOULDERS
+ ├── TORSO
+ ├── ARMS
+ └── LEGS
+Chaque composant doit pouvoir définir :
+- Sa réponse lumineuse;- Sa sensibilité aux différentes sources;- Ses ombres propres;- Ses ombres projetées;- Ses reflets;- Ses effets de contour;- Ses propriétés optiques;- Ses relations avec les composants voisins.
+Mais attention : cela ne signifie pas que chaque composant doit posséder son propre moteur de lumière.
+Il faut un moteur commun, avec des adaptateurs et des profils spécialisés.
+Sinon tu vas multiplier les implémentations, créer des incohérences et rendre la maintenance extrêmement difficile.
+# Une couche de composition qui ne détruit pas les interactions
+Je voudrais insister sur ce point : ton système actuel repose fortement sur les couches SVG et les images raster superposées.
+Cette approche reste parfaitement valable pour certaines productions 2D et 2.5D.
+Mais elle ne doit pas être la seule représentation possible.
+Il te faut un système de composition capable de gérer :
+- L'ordre de profondeur;- Les masques de visibilité;- Les masques d'objets;- Les masques anatomiques;- Les modes de fusion;- Les groupes de rendu;- Les effets locaux;- Les effets globaux;- Les objets traversant plusieurs plans;- Les interactions entre objets qui se chevauchent.
+Je conserverais donc ton compilateur SVG comme backend, mais je développerais progressivement une représentation intermédiaire indépendante du backend.
+Ainsi, tu pourrais avoir un même modèle de scène envoyé vers :
+- Un backend SVG pour les rendus graphiques.
+- Un backend raster pour les effets par pixel.
+- Un backend GPU pour les scènes complexes.
+- Un backend hors ligne pour les rendus de haute qualité.
+Tu éviterais de reconstruire toute ton architecture si tu décides ultérieurement de passer à WebGL ou WebGPU.
 
-Une scène peut être simultanément mystérieuse, épique et mélancolique.
+# Premier changement : passer d'un moteur de lumière par spécialité à un Lighting Core universel.
 
-Il ne faut donc pas enfermer le système dans des presets rigides.
+Le visage, les cheveux, les yeux et le corps doivent pouvoir exploiter les mêmes sources et les mêmes règles fondamentales.
+
+# Deuxième changement : passer d'un système de calques lumineux à un véritable système de relations spatiales.
+
+Les composants doivent savoir ce qu'ils éclairent, ce qu'ils occultent, ce qu'ils reçoivent et ce qu'ils transmettent.
+
+# Troisième changement : passer du rendu d'images indépendantes à un système temporel.
+
+La lumière doit devenir un élément de chorégraphie, au même titre que le corps, la caméra, les cheveux et les effets.
