@@ -14,8 +14,7 @@ Matériau Sang: Propriétés particulières(	Brillance, viscosité visuelle, tra
 Matériau Cristal: Propriétés particulières(Réfraction, dispersion chromatique, réflexion interne)
 
 Il faut également introduire les propriétés suivantes :
-- IOR (indice de réfraction).- Transmission.- Absorption.- Anisotropie.- Subsurface scattering.- Clearcoat.- Microfacet distribution.- Épaisseur.- Rugosité spatiale.
-- Variation régionale.- Réponse à la lumière indirecte.
+- IOR (indice de réfraction).- Transmission.- Absorption.- Anisotropie.- Subsurface scattering.- Clearcoat.- Microfacet distribution.- Épaisseur.- Rugosité spatiale;- Variation régionale.- Réponse à la lumière indirecte.
 Une précision importante : tous les matériaux ne doivent pas être simulés physiquement avec la même fidélité. Ton moteur doit pouvoir utiliser une approximation artistique très contrôlée pour les cheveux, les yeux et la peau, sans imposer un rendu PBR uniforme à toute l'image.
 
 # Un moteur atmosphérique
