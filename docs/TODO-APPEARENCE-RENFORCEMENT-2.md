@@ -77,3 +77,18 @@ Phase Expansion	: Comportement lumineux (Lumière orange qui s'étend)
 Phase Propagation: Comportement lumineux (	Éclairage des personnages et de l'environnement)
 Phase Décroissance: Comportement lumineux (	Diminution de l'intensité)
 Phase Résidus: Comportement lumineux (	Étincelles et petites sources mobiles)
+
+La lumière doit pouvoir être pilotée par la chorégraphie elle-même.Un coup de poing peut provoquer un flash d'impact.Une collision peut déclencher une poussière rétroéclairée.Une épée énergétique peut illuminer le visage du personnage qui la tient.Une attaque peut laisser une traînée lumineuse qui évolue après le mouvement.
+
+# Il faut un système de continuité temporelle
+Je recommande de prévoir un registre temporel pour :
+- Les lumières;- Les ombres;- Les reflets;- Les matériaux;- Les effets;- Les volumes atmosphériques;- Les ombres projetées;- Les variations d'exposition.
+Et surtout, il faut éviter les changements arbitraires entre deux images.
+Quelques exemples de défauts à détecter :
+- Une ombre qui change brutalement de forme;- Un reflet qui saute d'une position à une autre;- Une lumière qui disparaît pendant une rotation;- Une frange dont l'ombre change sans mouvement correspondant;- Une lumière de contour qui change de côté sans raison;- Une explosion qui éclaire un personnage sur une image mais pas sur la suivante.
+
+Il faudra également prévoir une distinction entre :
+Temporalité physique : ce qui doit évoluer naturellement avec le mouvement.
+Temporalité artistique : ce que la direction artistique souhaite accentuer, retarder ou exagérer.
+
+Une animation japonaise peut volontairement conserver un éclairage graphique pendant plusieurs images pour renforcer sa lisibilité. Ce n'est pas un défaut de simulation si cette décision est intentionnelle.
