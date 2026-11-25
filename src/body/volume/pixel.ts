@@ -1,6 +1,6 @@
 import { lightModelOf, type LightModel } from '../../relief/model';
 import { LayerCache, idOf, timedLayer } from '../../perf/layers';
-import { buildGBuffer, gbufferKeyOf, type GBuffer } from './gbuffer';
+import { buildGBuffer, gbufferKeyOf, type GBuffer, type SeamStats } from './gbuffer';
 import { occlusionOf, type Occlusion } from './occlusion';
 import type { VMarkup, VRenderOpts } from './render';
 import { bodyCast, encodeFinal, shadePixels } from './shade-pixels';
@@ -25,8 +25,11 @@ export interface PixelOpts extends VRenderOpts {
   readonly proxyKey?: string;
   /** Portée de l'ombre portée, en unités du monde (défaut : 1,2 hauteur de tête). */
   readonly shadowReach?: number;
+  /** Fondu des normales aux intersections peau/peau (itération 07, défaut : actif). `false` = ancien rendu (comparaisons avant/après). */
+  readonly seamBlend?: boolean;
 }
-export interface VPixelMarkup extends VMarkup { readonly pixels: { readonly w: number; readonly h: number; readonly rgba: Uint8ClampedArray } }
+export type { SeamStats };
+export interface VPixelMarkup extends VMarkup { readonly pixels: { readonly w: number; readonly h: number; readonly rgba: Uint8ClampedArray }; readonly seam: SeamStats }
 
 const GBUF = new LayerCache<GBuffer>('body.gbuffer', 2), OCCL = new LayerCache<Occlusion>('body.occlusion', 2), CAST = new LayerCache<Float32Array>('body.cast', 4);
 const DEFAULT_MODEL = lightModelOf({}, { style: 'soft' });
@@ -45,5 +48,5 @@ export function renderVolumesPixel(set: VolumeSet, o: PixelOpts): VPixelMarkup {
   }
   const out = timedLayer('body.shade', () => shadePixels(g, oc, castArr, M, o));
   const fin = timedLayer('body.encode', () => encodeFinal(g, out));
-  return { svg: fin.svg, bounds: { x0: g.x0, y0: g.y0, x1: g.x1, y1: g.y1 }, drawn: g.ids.length, ids: g.ids, pixels: { w: fin.w, h: fin.h, rgba: fin.rgba } };
+  return { svg: fin.svg, bounds: { x0: g.x0, y0: g.y0, x1: g.x1, y1: g.y1 }, drawn: g.ids.length, ids: g.ids, pixels: { w: fin.w, h: fin.h, rgba: fin.rgba }, seam: g.seam };
 }

@@ -1,6 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { clearLayerCaches, layerStats, resetLayerStats } from '../src/perf';
+import { ARCHETYPES, type BodyInput } from '../src/body';
+import { bodyVolumes } from '../src/body/volume';
+import { renderVolumesPixel } from '../src/body/volume/pixel';
+import { bodyHost } from '../scripts/lib/body-host';
 import { FIGURE_CASES, digestOf } from './helpers/figure-cases';
 
 /**
@@ -19,5 +23,12 @@ describe('figure en couches ≡ rendu monolithique', () => {
   it('les couches chaudes sont réellement réutilisées', () => {
     const s = layerStats();
     expect(s['body.gbuffer']!.hits).toBeGreaterThan(0); expect(s['body.occlusion']!.hits).toBeGreaterThan(0);
+  });
+  it('seamBlend (fondu des jonctions peau/peau) est consommé et distingué par le cache du G-buffer', () => {
+    const BH = bodyHost(), set = bodyVolumes(ARCHETYPES.veryMuscular as BodyInput, BH.a, {}); clearLayerCaches();
+    const on = renderVolumesPixel(set, { skin: BH.skin, heightPx: 360 }), off = renderVolumesPixel(set, { skin: BH.skin, heightPx: 360, seamBlend: false }), on2 = renderVolumesPixel(set, { skin: BH.skin, heightPx: 360 });
+    expect(on.seam.blended).toBeGreaterThan(0); expect(off.seam.blended).toBe(0);
+    expect(Buffer.from(on.pixels.rgba).equals(Buffer.from(off.pixels.rgba))).toBe(false); // le paramètre agit
+    expect(Buffer.from(on.pixels.rgba).equals(Buffer.from(on2.pixels.rgba))).toBe(true); // et le cache ne mélange pas les deux
   });
 });

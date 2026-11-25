@@ -8,14 +8,16 @@ import type { Volume, VolumeSet } from './types';
  * opacité de palier, normale de la peau dessous. NE DÉPEND NI DE LA LUMIÈRE NI DE LA PEAU NI DES RÉGLAGES D'OMBRAGE : changer la lumière ne le refait donc pas
  * (couche mise en cache par `pixel.ts`, docs/PERF-4.md). Extrait tel quel de l'ancien `renderVolumesPixel` : mêmes calculs, même ordre, mêmes résultats.
  */
-export interface GBufferOpts extends Omit<VRenderOpts, 'skin' | 'light' | 'uid' | 'contact' | 'mode'> { readonly heightPx?: number; readonly ss?: number }
+export interface GBufferOpts extends Omit<VRenderOpts, 'skin' | 'light' | 'uid' | 'contact' | 'mode'> { readonly heightPx?: number; readonly ss?: number; /** Fondu des normales aux intersections peau/peau (itération 07, défaut : actif) ; `false` = ancien rendu. */ readonly seamBlend?: boolean }
+/** Mesure sur le G-buffer : pixels de peau fondus, plus grand saut de normale (degrés) entre deux pixels voisins de peaux différentes, avant et après le fondu. */
+export interface SeamStats { readonly blended: number; readonly jumpBefore: number; readonly jumpAfter: number }
 export interface VMeta { readonly layer: number; readonly tone: number; readonly fib: boolean; readonly kind: string; readonly rel: number; readonly mass: unknown }
 export interface GBuffer {
   readonly W: number; readonly Hh: number; readonly ppu: number; readonly H: number; readonly vis: number; readonly ss: number;
   readonly x0: number; readonly y0: number; readonly x1: number; readonly y1: number;
   readonly depth: Float32Array; readonly id: Int16Array; readonly nx: Float32Array; readonly ny: Float32Array; readonly nz: Float32Array;
   readonly th: Float32Array; readonly tn: Float32Array; readonly op: Float32Array; readonly skn: Float32Array; readonly skinCover: Uint8Array;
-  readonly meta: readonly VMeta[]; readonly ids: readonly string[];
+  readonly meta: readonly VMeta[]; readonly ids: readonly string[]; readonly seam: SeamStats;
 }
 interface Tri { readonly x: number[]; readonly y: number[]; readonly z: number[]; readonly n: number[][]; readonly th: number[] }
 
@@ -38,7 +40,7 @@ function mesh(v: Volume, cam: NonNullable<VRenderOpts['camera']>, K: number): Tr
 
 
 /** Les options qui déterminent le G-buffer (clé de cache) : exactement celles que `selectVolumes`, le maillage et le cadrage lisent. */
-export const gbufferKeyOf = (o: GBufferOpts): string => JSON.stringify([o.showHidden ?? null, o.camera ?? null, o.level ?? null, o.hideFromLayer ?? null, o.joints ?? null, o.trunkOnly ?? null, o.forceTier ?? null, o.quality ?? null, o.ss ?? null, o.heightPx ?? null]);
+export const gbufferKeyOf = (o: GBufferOpts): string => JSON.stringify([o.showHidden ?? null, o.camera ?? null, o.level ?? null, o.hideFromLayer ?? null, o.joints ?? null, o.trunkOnly ?? null, o.forceTier ?? null, o.quality ?? null, o.ss ?? null, o.heightPx ?? null, o.seamBlend !== false]);
 
 export function buildGBuffer(set: VolumeSet, o: GBufferOpts): GBuffer {
   const cam = o.camera ?? FRONT, H = set.measures.h as number, vis = set.measures.vis as number;
@@ -85,9 +87,41 @@ export function buildGBuffer(set: VolumeSet, o: GBufferOpts): GBuffer {
   // Passe PEAU : toutes les enveloppes partagent un tampon de profondeur (épaule, coude, cou se raccordent sans couture) ; puis les autres volumes en ordre du peintre.
   const skinKeys: number[] = [];
   keyed.forEach((_, vi) => { if (isSkin[vi]) raster(vi, skinKeys); });
-  commit(skinKeys); for (const key of skinKeys) { skinCover[key] = 1; skn[key * 3] = nx[key]!; skn[key * 3 + 1] = ny[key]!; skn[key * 3 + 2] = nz[key]!; }
+  // FONDU DES NORMALES AUX INTERSECTIONS PEAU/PEAU (itération 07). Les enveloppes de peau partagent un tampon de profondeur : à l'intersection de deux surfaces (aine : bassin/cuisse ; épaule : tronc/bras) le pixel garde la normale de la surface la plus proche, d'où un liseré net (saut de normale de plusieurs dizaines de degrés). Les pixels situés à moins de `rb` d'un pixel de peau d'un AUTRE volume et de profondeur voisine (|Δz| < 1,5 % h : on ne floute jamais une silhouette) reçoivent la moyenne gaussienne des normales de la fenêtre : un congé, pas une arête.
+  const seamStats = (keys: number[], blend: boolean): SeamStats => {
+    const rb = Math.max(2, Math.round(0.024 * H * ppu)), dz = 0.015 * H, offs: [number, number][] = [];
+    for (let j = -rb; j <= rb; j += Math.max(1, rb >> 2)) for (let i = -rb; i <= rb; i += Math.max(1, rb >> 2)) if (i * i + j * j <= rb * rb) offs.push([i, j]);
+    const n0 = [Float32Array.from(nx), Float32Array.from(ny), Float32Array.from(nz)], marked: number[] = [];
+    // Un RACCORD relie deux surfaces d'orientation voisine (≤ 75°, aine, épaule) ; au-delà (> 75°) c'est un CONTACT (aisselle, bras contre le flanc) : un pli réel, qu'on ne gomme pas.
+    const same = (k: number, k2: number): boolean => id[k2]! >= 0 && isSkin[id[k2]!] === true && Math.abs(depth[k2]! - depth[k]!) < dz && n0[0]![k]! * n0[0]![k2]! + n0[1]![k]! * n0[1]![k2]! + n0[2]![k]! * n0[2]![k2]! > 0.26;
+    const jump = (k: number, k2: number, n0: Float32Array[]): number => Math.acos(Math.max(-1, Math.min(1, n0[0]![k]! * n0[0]![k2]! + n0[1]![k]! * n0[1]![k2]! + n0[2]![k]! * n0[2]![k2]!))) * (180 / Math.PI);
+    const pairs: number[] = [];
+    for (const k of keys) {
+      const px = k % W, py = (k / W) | 0; let seam = false;
+      for (const [i, j] of [[rb, 0], [-rb, 0], [0, rb], [0, -rb], [rb * 0.7, rb * 0.7], [-rb * 0.7, rb * 0.7], [rb * 0.7, -rb * 0.7], [-rb * 0.7, -rb * 0.7]] as const) {
+        const qx = Math.round(px + i), qy = Math.round(py + j); if (qx < 0 || qy < 0 || qx >= W || qy >= Hh) continue;
+        const k2 = qy * W + qx; if (same(k, k2) && id[k2] !== id[k]) { seam = true; pairs.push(k, k2); }
+      }
+      if (seam) marked.push(k);
+    }
+    // Saut moyen (degrés) de la normale entre les paires de pixels voisins de deux peaux différentes : mesure du liseré, avant puis après le fondu.
+    const meanJump = (nn: Float32Array[]): number => { let t = 0; for (let q = 0; q < pairs.length; q += 2) t += jump(pairs[q]!, pairs[q + 1]!, nn); return pairs.length ? t / (pairs.length / 2) : 0; };
+    const jb = meanJump(n0);
+    if (!blend) return { blended: 0, jumpBefore: jb, jumpAfter: jb };
+    for (const k of marked) {
+      const px = k % W, py = (k / W) | 0; let ax = 0, ay = 0, az = 0, wt = 0;
+      for (const [i, j] of offs) {
+        const qx = px + i, qy = py + j; if (qx < 0 || qy < 0 || qx >= W || qy >= Hh) continue;
+        const k2 = qy * W + qx; if (!same(k, k2)) continue;
+        const w = Math.exp(-(i * i + j * j) / (0.5 * rb * rb)); ax += n0[0]![k2]! * w; ay += n0[1]![k2]! * w; az += n0[2]![k2]! * w; wt += w;
+      }
+      const l = Math.hypot(ax, ay, az); if (wt > 0 && l > 1e-6) { nx[k] = ax / l; ny[k] = ay / l; nz[k] = az / l; }
+    }
+    return { blended: marked.length, jumpBefore: jb, jumpAfter: meanJump([nx, ny, nz]) };
+  };
+  commit(skinKeys); const seam = seamStats(skinKeys, o.seamBlend !== false); for (const key of skinKeys) { skinCover[key] = 1; skn[key * 3] = nx[key]!; skn[key * 3 + 1] = ny[key]!; skn[key * 3 + 2] = nz[key]!; }
   // Les volumes profonds situés DERRIÈRE la surface de la peau (dos vu de face…) sont masqués ; les muscles sous la peau, à moins d'une demi-épaisseur, restent visibles.
   const skinZ = Float32Array.from(depth), hideMargin = 0.05 * H;
   keyed.forEach((_, vi) => { if (isSkin[vi]) return; const t: number[] = []; raster(vi, t); commit(t); });
-  return { W, Hh, ppu, H, vis, ss, x0, y0, x1, y1, depth, id, nx, ny, nz, th, tn, op, skn, skinCover, meta, ids: keyed.map((k) => k.v.id) };
+  return { W, Hh, ppu, H, vis, ss, x0, y0, x1, y1, depth, id, nx, ny, nz, th, tn, op, skn, skinCover, meta, ids: keyed.map((k) => k.v.id), seam };
 }
