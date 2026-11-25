@@ -138,3 +138,9 @@ Il faudra prévoir :
 - traînées lumineuses ;
 - lumière qui se disperse dans les explosions.
 Cette couche ne doit pas être confondue avec un simple flou appliqué à une silhouette.
+# TRES IMPORTANT
+Le point essentiel : tous ces modules doivent utiliser des contrats communs.
+Un effet devrait connaître au minimum :
+- son objet source ;- son type ;- son espace de coordonnées ;- son volume ou sa silhouette ;- sa couleur ;- son intensité ;- son rayon ;- son seuil ;- sa durée ;
+- ses receveurs ;- ses éventuels obstacles ;- sa transformation ;- sa priorité de composition.
+Et surtout, il doit pouvoir fonctionner sans connaître l'anatomie particulière d'un visage.
