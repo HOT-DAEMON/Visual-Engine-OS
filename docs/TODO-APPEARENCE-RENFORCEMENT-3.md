@@ -100,3 +100,41 @@ Il faut aussi permettre de combiner ces familles.
 Par exemple Un cristal pourrait avoir un cœur lumineux intense, un halo radial bleu, un contour cyan et des particules lumineuses.
 Ou par exemple Un personnage pourrait avoir une aura rouge très douce autour de son corps, avec un rim light plus intense sur les cheveux.
 Ce ne sont pas les mêmes traitements.
+## 6.2 Bloom à plusieurs échelles
+Un seul flou gaussien ne suffit pas.
+Je recommande plusieurs couches :
+1. Bloom fin : diffusion autour des petites zones brillantes.
+2. Bloom moyen : diffusion des grandes zones lumineuses.
+3. Bloom large : halo atmosphérique autour des sources puissantes.
+4. Halation : diffusion colorée proche des zones très lumineuses.
+5. Streaks : rayures lumineuses horizontales ou directionnelles, contrôlées artistiquement.
+Le moteur doit pouvoir régler indépendamment les rayons, les intensités, les couleurs, les seuils et les formes de diffusion.
+## Le rayonnement doit interagir avec les matériaux
+C'est probablement la capacité la plus importante qui manque.
+Aujourd'hui, un objet peut avoir un halo sans que les objets autour de lui reçoivent réellement sa lumière.
+Le moteur doit pouvoir calculer :
+- la lumière colorée projetée sur la peau ;
+- les reflets lumineux sur les cheveux ;
+- les surfaces éclairées par une épée énergétique ;
+- la lumière d'un cristal sur les doigts qui le tiennent ;
+- le rayonnement d'une explosion sur les murs ;
+- les reflets sur les yeux ;
+- les ombres produites par les objets qui bloquent cette lumière.
+Il faut donc distinguer trois résultats :
+- Rayonnement visible : ce que la caméra voit comme halo.
+- Contribution lumineuse : ce que la source ajoute aux autres surfaces.
+- Effet atmosphérique : ce que le rayonnement produit dans l'air, la fumée ou les particules.
+Un objet peut avoir un glow très visible sans éclairer son environnement. Inversement, une source peut éclairer un environnement sans présenter un énorme halo.
+Ces trois phénomènes doivent être indépendants.
+## Un moteur de diffusion atmosphérique
+Il faudra prévoir :
+- rayons lumineux volumétriques ;
+- diffusion dans le brouillard ;
+- absorption de la lumière ;
+- poussière et particules éclairées ;
+- fumée traversée par un faisceau ;
+- halos dans les nuages ;
+- faisceaux découpés par les obstacles ;
+- traînées lumineuses ;
+- lumière qui se disperse dans les explosions.
+Cette couche ne doit pas être confondue avec un simple flou appliqué à une silhouette.
