@@ -111,3 +111,47 @@ TEMPORAL:
   flash: 1 frame
   expansion: 4 frames
   decay: 12 frames)
+
+C'est un exemple de langage de commande proposé.
+
+Le moteur doit pouvoir interpréter de telles instructions comme des événements orchestrés, et non comme une suite de paramètres indépendants..
+La direction artistique doit être un véritable système de contrôle
+Voici une autre distinction essentielle.
+
+Tu ne veux pas uniquement que le moteur calcule correctement la lumière.
+
+Tu veux pouvoir lui demander de produire une image avec une intention artistique précise.
+
+Par exemple :
+- Une scène mystérieuse.
+- Une scène romantique.
+- Une scène de terreur.
+- Une scène épique.
+- Une scène mélancolique.
+- Une scène de combat.
+- Une scène contemplative.
+- Une scène surnaturelle.
+Et chaque intention doit pouvoir modifier plusieurs dimensions simultanément.
+Mystère : Contraste élevé, éclairage latéral, zones occultées, lumière froide.
+Romantisme : Lumière chaude, transitions douces, reflets subtils.
+Terreur : Sous-éclairage, ombres dures, couleurs inquiétantes.
+Épique : Contre-jour, lumière volumétrique, contraste monumental.
+Je recommande donc de construire une bibliothèque de Lighting Grammars.
+
+Chaque grammaire serait un assemblage cohérent de :
+1. Configuration des sources.
+2. Direction lumineuse.
+3. Contraste.
+4. Température.
+5. Couleur des ombres.
+6. Douceur.
+7. Réflexions.
+8. Atmosphère.
+9. Traitement des matériaux.
+10. Règles de composition.
+11. Animation temporelle.
+Et il faut que ces grammaires soient combinables.
+
+Une scène peut être simultanément mystérieuse, épique et mélancolique.
+
+Il ne faut donc pas enfermer le système dans des presets rigides.
