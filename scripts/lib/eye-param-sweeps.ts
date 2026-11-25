@@ -63,6 +63,12 @@ export const SWEEPS: readonly Sweep[] = [
   // Bords palpébraux irréguliers (EYE-07E) : `microdetail.edge` ; le LOD explicite à 8 px retire le festonnage fin (EYE-07).
   { path: 'microdetail.edge.irregularity', lo: 0, hi: 1, region: 'bords libres des paupières', minPixels: 100 },
   { path: 'microdetail.edge.grain', lo: 0, hi: 1, region: 'bords libres des paupières (festonnage)', minPixels: 40 },
+  // Petits plis des canthi (EYE-07G) : `microdetail.canthusLines` ; la preuve se lit hors de l'ouverture (coin externe en éventail, sous le canthus interne).
+  { path: 'microdetail.canthusLines', lo: undefined, hi: { outer: 0.6, count: 4, spread: 0.6, inner: 0.5 }, region: 'plis des canthi (présence)', minPixels: 60 },
+  { path: 'microdetail.canthusLines.outer', lo: 0.05, hi: 1, region: 'ridules du coin externe (longueur, opacité)', minPixels: 40 },
+  { path: 'microdetail.canthusLines.count', lo: 1, hi: 6, region: 'ridules du coin externe (nombre)', minPixels: 30 },
+  { path: 'microdetail.canthusLines.spread', lo: 0, hi: 1, region: 'ridules du coin externe (éventail)', minPixels: 20 },
+  { path: 'microdetail.canthusLines.inner', lo: 0, hi: 1, region: 'pli sous le canthus interne', minPixels: 20 },
   { path: 'lashes.upper.count', lo: 8, hi: 30, region: 'cils hauts' },
   { path: 'lashes.upper.length', lo: 0.12, hi: 0.34, region: 'cils hauts' },
   { path: 'lashes.upper.curl', lo: 0.1, hi: 0.95, region: 'cils hauts' },

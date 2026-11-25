@@ -9,6 +9,7 @@ import { P, polygonPath, smoothThrough } from './helpers';
 import { renderLashGroup } from './lashes-render';
 import { renderLiner } from './liner';
 import type { EyeLook } from './look';
+import { renderCanthusLines } from './canthus-lines';
 import { isFlat } from './flat-finish';
 
 export interface LidsAndFold {
@@ -159,6 +160,9 @@ export function renderLidsAndFold(
   } else {
     outside.push(...lids);
   }
+
+  // EYE-07G : petits plis cutanés des canthi (peau hors ouverture) — sous les cils, après les traits de paupière
+  outside.push(...renderCanthusLines(eye, g, th, flat ? lidColor : look ? look.skin.shadow : darken(skin, 0.5), flat));
 
   // Pli épicanthique : l'extrémité arrondie de la fente prolonge le bord libre ; l'arête côté nez
   // est rendue par une ligne + une ombre douce (deux traits plus larges et transparents).

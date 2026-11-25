@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { EyeSpec, compileScene } from '../src';
-import { CREASE_FOLLOW, apparentWidthRatio, caruncleOf, creaseCurve, edgeFrames, edgePolygon, eyeEdges, eyeLashSet, eyeTurn, lowerFrame, openingGeometry, thinLashes, upperEdgeShift, upperFrame, LASH_MIN_PX, type Lash } from '../src/geometry/eye';
+import { CANTHUS_FAN_MAX_DEG, CANTHUS_MAX_LENGTH, CREASE_FOLLOW, apparentWidthRatio, canthusLines, canthusOutline, caruncleOf, creaseCurve, edgeFrames, edgePolygon, eyeEdges, eyeLashSet, eyeTurn, lowerFrame, openingGeometry, thinLashes, upperEdgeShift, upperFrame, LASH_MIN_PX, type Lash } from '../src/geometry/eye';
 import { resolveEye, withAutoLod } from '../src/render/eye/eye';
 import { verifyEye } from '../src/verify/eye';
 
@@ -92,5 +92,52 @@ describe('EYE-07 (passe 17) — LOD des cils et raccourcissement de rotation', (
     const a = withAutoLod(turned, 1, apparentWidthRatio(g0, t)).eyePx; const b = withAutoLod(turned, 1).eyePx;
     expect(a).toBeLessThan(b);
     expect(withAutoLod(resolveEye(spec({ microdetail: { lod: { eyePixels: 77 } } })), 1, 0.3).eyePx).toBe(77);   // un nombre explicite reste prioritaire
+  });
+});
+
+describe('EYE-07G (passe 17) — petits plis des canthi', () => {
+  const CL = { outer: 0.7, count: 4, spread: 0.6, inner: 0.6 };
+  const e = withAutoLod(resolveEye(spec({ microdetail: { canthusLines: CL, lod: { eyePixels: 8000 } } }))).eye;
+  const g = openingGeometry(e.shape, e.canthi); const th = e.lids.thickness * e.shape.height;
+  it('déterministe, nombre = count (+ 1 ou 2 arcs internes), coordonnées finies', () => {
+    const a = canthusLines(g, CL, e.seed, th); const b = canthusLines(g, CL, e.seed, th);
+    expect(a).toEqual(b); expect(a.filter((s) => s.side === 'outer')).toHaveLength(4); expect(a.filter((s) => s.side === 'inner')).toHaveLength(2);
+    expect(canthusLines(g, { ...CL, inner: 0.4 }, e.seed, th).filter((s) => s.side === 'inner')).toHaveLength(1);
+    for (const s of a) for (const p of [s.root, s.ctrl, s.tip]) { expect(Number.isFinite(p.x)).toBe(true); expect(Number.isFinite(p.y)).toBe(true); }
+  });
+  it('anatomie : externes du côté externe, internes du côté du nez, éventail ≤ 70°, longueur ≤ 22 % de la largeur', () => {
+    const a = canthusLines(g, { ...CL, outer: 1, spread: 1, count: 6 }, e.seed, th);
+    for (const s of a) { const dx = (s.tip.x - s.root.x) * g.s; expect(s.side === 'outer' ? dx > 0 : dx < 0).toBe(true); expect(Math.hypot(s.tip.x - s.root.x, s.tip.y - s.root.y)).toBeLessThan(g.w * CANTHUS_MAX_LENGTH); }
+    expect(Math.max(...a.filter((s) => s.side === 'outer').map((s) => Math.abs(s.angleDeg)))).toBeLessThanOrEqual(CANTHUS_FAN_MAX_DEG);
+  });
+  it('les rides conservées ne bougent pas : count ↑ ajoute, ne déplace pas ; le LOD retire par la fin', () => {
+    const few = canthusLines(g, { ...CL, count: 2 }, e.seed, th).filter((s) => s.side === 'outer'); const many = canthusLines(g, { ...CL, count: 2 }, e.seed, th, 1);
+    expect(many.filter((s) => s.side === 'outer')).toEqual(few);
+    expect(canthusLines(g, CL, e.seed, th, 0)).toHaveLength(0);
+    expect(canthusLines(g, CL, e.seed, th, 0.3).length).toBeLessThan(canthusLines(g, CL, e.seed, th, 1).length);
+    expect(canthusLines(g, CL, e.seed, th, 0.3).length).toBeGreaterThan(0);
+  });
+  it('contour effilé : racine large, pointe nulle', () => {
+    const s = canthusLines(g, CL, e.seed, th)[0]!; const o = canthusOutline(s, 6);
+    expect(o).toHaveLength(14); expect(Math.hypot(o[0]!.x - o[13]!.x, o[0]!.y - o[13]!.y)).toBeCloseTo(s.width, 5); expect(Math.hypot(o[6]!.x - o[7]!.x, o[6]!.y - o[7]!.y)).toBeLessThan(1e-9);
+  });
+  const svgOf = (eyeO: object) => { const r = compileScene({ width: 700, height: 460, background: '#3b4157', objects: [{ ...spec(eyeO), transform: { x: 350, y: 230, scale: 1 }, eyebrow: null }] } as never); if (!r.ok) throw new Error(r.issues.join('\n')); return r.svg; };
+  it('rendu : null = historique octet pour octet ; actif = rides dessinées ; fini flat = encre pleine', () => {
+    expect(svgOf({ microdetail: { canthusLines: null } })).toBe(svgOf({ microdetail: {} }));
+    const on = svgOf({ microdetail: { canthusLines: CL } }); const off = svgOf({ microdetail: {} });
+    expect(on).not.toBe(off); expect(on.length - off.length).toBeGreaterThan(300);
+    const flat = svgOf({ microdetail: { canthusLines: CL }, finish: 'flat' });
+    expect(flat).toMatch(/fill-opacity="1"/);
+  });
+  it('verifyEye : 0 échec ; contrôles geometry / anatomy / style présents ; flat + forte force → avertissement de style', () => {
+    const r = verifyEye({ ...spec({ microdetail: { canthusLines: CL, lod: { eyePixels: 8000 } } }) });
+    expect(r.failures).toEqual([]);
+    for (const id of ['canthus-lines-finite', 'canthus-lines-outside-opening', 'canthus-line-length', 'canthus-fan-angle', 'canthus-side', 'canthus-lines-visible']) expect(r.checks.some((c) => c.id === id && c.ok)).toBe(true);
+    const f = verifyEye({ ...spec({ microdetail: { canthusLines: { ...CL, outer: 0.95 }, lod: { eyePixels: 8000 } }, finish: 'flat' }) });
+    expect(f.warnings.some((c) => c.id === 'canthus-flat-subtle')).toBe(true); expect(f.failures).toEqual([]);
+    expect(verifyEye({ ...spec({ microdetail: {} }) }).checks.some((c) => c.id.startsWith('canthus-line'))).toBe(false);
+  });
+  it('LOD : à 20 px d’œil, plus aucune ride (fine = 0) ; la vérification ne signale rien', () => {
+    expect(svgOf({ microdetail: { canthusLines: CL, lod: { eyePixels: 20 } } })).toBe(svgOf({ microdetail: { lod: { eyePixels: 20 } } }));
   });
 });

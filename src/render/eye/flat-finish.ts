@@ -23,7 +23,9 @@ export function flattenEye(eye: EyeSpec): EyeSpec {
   return {
     ...eye,
     appearance: null,
-    microdetail: null,
+    // Aplats francs : aucun microdétail de matière (vaisseaux, teintes, film lacrymal, occlusion, bord irrégulier) ; SEULS les petits plis des canthi (EYE-07G) survivent,
+    // car ils se dessinent au trait en encre pleine — comme les ridules des références au trait.
+    microdetail: eye.microdetail?.canthusLines ? { ...eye.microdetail, vessels: null, chroma: null, tearFilm: null, occlusion: 0, imperfections: 0, edge: null } : null,
     iris: {
       ...eye.iris,
       fibers: 0,

@@ -180,5 +180,13 @@ Fait : liner épais effilé par famille de cils (`lids.liner`), dégagement de l
 - ✅ fire : part sombre 0,316 → 0,360 (réf. 0,373). 🟡 emerald : bulles variées et éclats, **métriques maintenues, non améliorées** (part sombre 0,104 → 0,080 pour 0,101 ; étoiles 0,343 pour 0,312 ; luminance 136 pour 129). `rim` 0,65 imposé par le détecteur d'étoiles.
 - ⬜ ice (fentes 2 pour 4) · ⬜ emerald : fentes 16 pour 6, première étoile 0,84 R pour 0,58, 54 cellules pour 105, poussière peu visible · ⬜ fire : anneau 10a en halo large avec rayons.
 - ⬜ Cornée : fibres historiques et cellules non réfractées ; mesure de pupille en pixels inutilisable sur pupille claire (feu : 0 px) ; haze discret à l'écran ; `cornea` sans effet sur les reflets (voulu).
-- ⬜ Bords : cils, pli et caroncule ne suivent pas le tracé perturbé. ⬜ Poids SVG non remesuré après les nouveaux atomes.
+- ✅ (passe 17) Bords : cils, pli et caroncule suivent le tracé perturbé. ✅ (passe 17) Poids SVG remesuré : voir `EYES-PASS-17.md` §5.
 - Vérifié : tous les tests `*eye*` + 30 autres fichiers ; 1 échec préexistant (`nose-visibility`) ; suite complète de 233 fichiers **non exécutée**.
+
+## Passe 17 (détail : `EYES-PASS-17.md`)
+- ✅ Bord irrégulier suivi par cils, pli (×0,6), caroncule, ligne humide, liseré et ombre des paupières (`eyeEdges` source unique) · ✅ LOD des cils (couverture d'encre conservée) · ✅ LOD sensible à la rotation de tête (`apparentWidthRatio`, modèle `sphere`).
+- ✅ EYE-07G `microdetail.canthusLines` (4 paramètres, preuve en pixels, fini flat conservé) · ✅ paire d'yeux : fini, présence et force des microdétails (6 → 9 contrôles) · ✅ outils d'artefacts mutualisés.
+- ⬜ Rotation : `iris-meets-opening` et `highlights-confined` échouent à lacet 60° + azimut 22° (préexistant, vérifié sur la passe 16) ; LOD du modèle `flat` de rotation non traité.
+- ⬜ Plis des canthi : pas de pli de la paupière inférieure ni de lien avec l'âge ou l'expression ; teinte propre à la peau seulement (pas de cohérence mesurée avec le style cel de la tête).
+- ⬜ Reste de la passe 16 inchangé : emerald (fentes, première étoile, cellules), ice (fentes 2 pour 4), fire (anneau 10a), cornée (fibres non réfractées, pupille claire non mesurable), microrelief cutané ; tête de graine 23 à 25° : 16 Mo de SVG, à expliquer.
+- Vérifié : suite complète exécutée fichier par fichier (46 fichiers yeux / cils / liner + 190 autres) ; 1 échec préexistant (`nose-visibility`, hash `e27bacc…` identique sur le code de la passe 16). Plis de canthus : invisibles sur une tête entière (œil < 70 px → LOD), lisibles en gros plan.

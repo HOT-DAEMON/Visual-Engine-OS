@@ -5,9 +5,11 @@ import { check, type Check } from './types';
  * COUCHE « PAIRE D'YEUX » du visage (rattachée à `checkFaceEngine`) : les trois familles de contrôles sur les deux yeux posés par `generateRandomFace`.
  *   géométrie : transformations finies ; coins externes de côtés opposés (un œil gauche et un droit, jamais deux fois le même sens) ; même roulis (rotation commune de la tête) ;
  *   anatomie  : asymétrie d'échelle gauche / droite bornée (mesurée sur 600 visages : 0,878–1,162 -> bornes 0,85–1,18) ; décalage vertical des deux yeux ≤ 0,08 largeur d'œil (mesuré ≤ 0,062) ;
- *   style     : les deux yeux sont de la MÊME identité (même enveloppe, même aspect d'iris, même sclère, même palette d'iris) — jamais deux yeux d'identités différentes sur un visage.
+ *   style     : les deux yeux sont de la MÊME identité (même enveloppe, même aspect d'iris, même sclère, même palette d'iris) — jamais deux yeux d'identités différentes sur un visage ;
+ *               même FINI (peint ou flat : un œil en aplats et l'autre peint casse le style de la tête) ;
+ *   (passe 17) anatomie : les microdétails de paupière (bord irrégulier, plis des canthi) sont présents sur les DEUX yeux ou sur aucun, et leur force diffère de ≤ 0,35.
  */
-type EyeObj = { id: string; transform: { x: number; y: number; rotationDeg: number; scale: number }; shape: { width: number; outerSide: string; style: string }; iris: unknown; sclera: unknown };
+type EyeObj = { id: string; transform: { x: number; y: number; rotationDeg: number; scale: number }; shape: { width: number; outerSide: string; style: string }; iris: unknown; sclera: unknown; finish?: string; microdetail?: { edge?: { irregularity: number } | null; canthusLines?: { outer: number; inner: number } | null } | null };
 export function checkEyePair(face: RandomFace): Check[] {
   const L = face.objects.find((o) => o.id.endsWith('eye-left')) as unknown as EyeObj | undefined;
   const R = face.objects.find((o) => o.id.endsWith('eye-right')) as unknown as EyeObj | undefined;
@@ -23,5 +25,10 @@ export function checkEyePair(face: RandomFace): Check[] {
   o.push(check('anatomy', 'eyes-same-height', '<=', Math.abs(L.transform.y - R.transform.y) / wMean, 0.08, 'les deux yeux ne sont pas à la même hauteur (> 0,08 largeur d’œil)'));
   const same = L.shape.style === R.shape.style && JSON.stringify(L.iris) === JSON.stringify(R.iris) && JSON.stringify(L.sclera) === JSON.stringify(R.sclera);
   o.push(check('style', 'eyes-same-identity', '==', same ? 1 : 0, 1, 'les deux yeux ne sont pas de la même identité (enveloppe, iris ou sclère différents)'));
+  o.push(check('style', 'eyes-same-finish', '==', (L.finish ?? 'painted') === (R.finish ?? 'painted') ? 1 : 0, 1, 'un œil est en aplats (flat) et l’autre peint : le style de la tête n’est pas homogène'));
+  const both = (f: (e: EyeObj) => unknown): boolean => Boolean(f(L)) === Boolean(f(R));
+  o.push(check('anatomy', 'eyes-micro-presence', '==', both((e) => e.microdetail?.edge) && both((e) => e.microdetail?.canthusLines) ? 1 : 0, 1, 'bord irrégulier ou plis des canthi présents sur un seul œil', 'warn'));
+  const dOuter = Math.abs((L.microdetail?.canthusLines?.outer ?? 0) - (R.microdetail?.canthusLines?.outer ?? 0)); const dIrr = Math.abs((L.microdetail?.edge?.irregularity ?? 0) - (R.microdetail?.edge?.irregularity ?? 0));
+  o.push(check('anatomy', 'eyes-micro-strength-match', '<=', Math.max(dOuter, dIrr), 0.35, 'force des plis des canthi ou du bord irrégulier trop différente entre les deux yeux', 'warn'));
   return o;
 }

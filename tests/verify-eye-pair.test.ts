@@ -9,12 +9,12 @@ const mutate = (f: RandomFace, side: 'eye-left' | 'eye-right', fn: (o: any) => v
 const failing = (f: RandomFace): string[] => checkEyePair(f).filter((c) => !c.ok).map((c) => c.id);
 
 describe('vérification de la paire d’yeux (géométrie, anatomie, style)', () => {
-  it('les visages générés (galerie, étendue, œil tiré) passent les 6 contrôles', () => {
+  it('les visages générés (galerie, étendue, œil tiré) passent les 9 contrôles', () => {
     for (const src of ['gallery', 'extended', 'random'] as const) for (let s = 1; s <= 60; s++) expect(failing(generateRandomFace(s, { eyeSource: src })), `${src} ${s}`).toEqual([]);
   });
-  it('couche rattachée à checkFaceEngine : 6 contrôles, trois couches représentées', () => {
+  it('couche rattachée à checkFaceEngine : 9 contrôles (6 + fini, présence et force des microdétails), trois couches représentées', () => {
     const f = generateRandomFace(3, { eyeSource: 'extended' }); const ids = checkFaceEngine(f).filter((c) => c.id.startsWith('eyes-'));
-    expect(ids).toHaveLength(6); expect(new Set(ids.map((c) => c.layer))).toEqual(new Set(['geometry', 'anatomy', 'style']));
+    expect(ids).toHaveLength(9); expect(new Set(ids.map((c) => c.layer))).toEqual(new Set(['geometry', 'anatomy', 'style']));
   });
   it('détecte : deux coins externes du même côté, taille asymétrique, hauteurs différentes, identités différentes, roulis différent', () => {
     const f = generateRandomFace(9, { eyeSource: 'extended' });
@@ -33,5 +33,16 @@ describe('PASSE 8 — appariement d’échelle des yeux bridés par le sourcil',
     const r = Math.max(sc('eye-left') / sc('eye-right'), sc('eye-right') / sc('eye-left'));
     expect(r).toBeLessThanOrEqual(PAIR_SCALE_MAX + 1e-9); expect(r).toBeLessThan(1 / 0.85);
     const raw = Math.max(f.fits.left.scale / f.fits.right.scale, f.fits.right.scale / f.fits.left.scale); expect(raw).toBeLessThanOrEqual(PAIR_SCALE_MAX + 1e-9);
+  });
+  it('passe 17 — détecte : fini différent (error), microdétails sur un seul œil ou de force trop différente (warn)', () => {
+    const f = generateRandomFace(9, { eyeSource: 'extended' });
+    expect(failing(mutate(f, 'eye-right', (o) => { (o as { finish?: string }).finish = 'flat'; }))).toContain('eyes-same-finish');
+    const md = (outer: number) => ({ canthusLines: { outer, inner: 0.4 }, edge: { irregularity: 0.5 } });
+    const one = mutate(f, 'eye-right', (o) => { (o as { microdetail?: unknown }).microdetail = md(0.5); });
+    expect(failing(one)).toContain('eyes-micro-presence');
+    const both = mutate(mutate(f, 'eye-right', (o) => { (o as { microdetail?: unknown }).microdetail = md(0.9); }), 'eye-left', (o) => { (o as { microdetail?: unknown }).microdetail = md(0.2); });
+    expect(failing(both)).toContain('eyes-micro-strength-match'); expect(failing(both)).not.toContain('eyes-micro-presence');
+    const ok = mutate(mutate(f, 'eye-right', (o) => { (o as { microdetail?: unknown }).microdetail = md(0.5); }), 'eye-left', (o) => { (o as { microdetail?: unknown }).microdetail = md(0.5); });
+    expect(failing(ok)).toEqual([]);
   });
 });

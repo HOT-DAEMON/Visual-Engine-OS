@@ -1,0 +1,191 @@
+{
+  "heads": {
+    "01-tete-emeraude-yaw0": {
+      "svgBytes": 1246676,
+      "eyeFailures": [
+        [],
+        []
+      ]
+    },
+    "01-tete-emeraude-yaw25": {
+      "svgBytes": 2857082,
+      "eyeFailures": [
+        [],
+        []
+      ]
+    },
+    "02-tete-feu-yaw0": {
+      "svgBytes": 1123359,
+      "eyeFailures": [
+        [],
+        []
+      ]
+    },
+    "02-tete-feu-yaw25": {
+      "svgBytes": 2740908,
+      "eyeFailures": [
+        [],
+        []
+      ]
+    },
+    "03-tete-graine-23-yaw0": {
+      "svgBytes": 3388969,
+      "eyeFailures": [
+        [],
+        []
+      ]
+    },
+    "03-tete-graine-23-yaw25": {
+      "svgBytes": 16102790,
+      "eyeFailures": [
+        [],
+        []
+      ]
+    }
+  },
+  "lashLod": [
+    {
+      "eyePixels": 300,
+      "upper": 40,
+      "upperFull": 40,
+      "keepShare": 1,
+      "coverageRatio": 1,
+      "svgNodes": 1411
+    },
+    {
+      "eyePixels": 120,
+      "upper": 40,
+      "upperFull": 40,
+      "keepShare": 1,
+      "coverageRatio": 1,
+      "svgNodes": 682
+    },
+    {
+      "eyePixels": 60,
+      "upper": 27,
+      "upperFull": 40,
+      "keepShare": 0.675,
+      "coverageRatio": 1.012,
+      "svgNodes": 532
+    },
+    {
+      "eyePixels": 30,
+      "upper": 16,
+      "upperFull": 40,
+      "keepShare": 0.4,
+      "coverageRatio": 1.033,
+      "svgNodes": 440
+    }
+  ],
+  "rotationLod": [
+    {
+      "yawDeg": 0,
+      "apparentWidthRatio": 1,
+      "eyePxFrontal": 300,
+      "eyePxApparent": 300
+    },
+    {
+      "yawDeg": 35,
+      "apparentWidthRatio": 0.583,
+      "eyePxFrontal": 300,
+      "eyePxApparent": 174.9
+    },
+    {
+      "yawDeg": 60,
+      "apparentWidthRatio": 0.15,
+      "eyePxFrontal": 300,
+      "eyePxApparent": 45
+    },
+    {
+      "yawDeg": 75,
+      "apparentWidthRatio": 0.15,
+      "eyePxFrontal": 300,
+      "eyePxApparent": 45
+    }
+  ],
+  "verify": [
+    {
+      "name": "bords 0,9 + plis",
+      "geometry": "21/21",
+      "anatomy": "22/22",
+      "style": "9/9",
+      "warnings": [],
+      "failures": []
+    },
+    {
+      "name": "plis forts flat",
+      "geometry": "18/18",
+      "anatomy": "22/22",
+      "style": "9/10",
+      "warnings": [
+        "canthus-flat-subtle"
+      ],
+      "failures": []
+    },
+    {
+      "name": "rotation 60°",
+      "geometry": "20/22",
+      "anatomy": "19/22",
+      "style": "9/9",
+      "warnings": [
+        "lash-max-length",
+        "iris-to-opening-width-max",
+        "iris-visible-fraction"
+      ],
+      "failures": [
+        "iris-meets-opening",
+        "highlights-confined"
+      ]
+    },
+    {
+      "name": "petit œil 40 px",
+      "geometry": "21/21",
+      "anatomy": "22/22",
+      "style": "9/9",
+      "warnings": [],
+      "failures": []
+    },
+    {
+      "name": "émeraude",
+      "geometry": "18/18",
+      "anatomy": "19/19",
+      "style": "8/8",
+      "warnings": [],
+      "failures": []
+    },
+    {
+      "name": "feu",
+      "geometry": "19/19",
+      "anatomy": "22/22",
+      "style": "8/8",
+      "warnings": [],
+      "failures": []
+    }
+  ],
+  "svgCost": [
+    {
+      "n": "bords 0,9 + plis",
+      "bytes": 291142,
+      "nodes": 1577,
+      "filterApps": 15,
+      "costMs": 73.03
+    },
+    {
+      "n": "émeraude",
+      "bytes": 270740,
+      "nodes": 1442,
+      "filterApps": 15,
+      "costMs": 72.11
+    },
+    {
+      "n": "feu",
+      "bytes": 102471,
+      "nodes": 453,
+      "filterApps": 12,
+      "costMs": 55.53
+    }
+  ],
+  "edge": {
+    "maxDevAt1": 4.183750268912263
+  }
+}

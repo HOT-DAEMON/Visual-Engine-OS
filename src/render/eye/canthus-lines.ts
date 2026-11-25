@@ -14,6 +14,6 @@ export function renderCanthusLines(eye: EyeSpec, g: OpeningGeometry, th: number,
   const fine = microLod(eye.microdetail?.lod.eyePixels ?? null).fine;
   return canthusLines(g, o, eye.seed, th, fine).map((s) => {
     const pts = canthusOutline(s);
-    return el('path', { d: `M${P(pts[0]!)}${pts.slice(1).map((p) => `L${P(p)}`).join('')}Z`, fill: color, 'fill-opacity': flat ? 1 : s.alpha, stroke: 'none', 'data-canthus': s.side });
+    return el('path', { d: `M${P(pts[0]!)}${pts.slice(1).map((p) => `L${P(p)}`).join('')}Z`, fill: color, 'fill-opacity': flat ? 1 : s.alpha, stroke: 'none' });
   });
 }

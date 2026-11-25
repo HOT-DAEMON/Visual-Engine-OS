@@ -10,6 +10,8 @@ import { REFERENCE_LIGHT } from './face-engine';
 import { checkEyeEnvelope } from './eye-envelope';
 import { checkEyeCornea } from './eye-cornea';
 import { checkEyeLashes, type LashMetrics } from './eye-lashes';
+import { checkCanthusLines } from './eye-canthus-lines';
+import { isFlat } from '../render/eye/flat-finish';
 import { check, report, type Check, type Report } from './types';
 
 /**
@@ -98,6 +100,7 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
   const lashTh = eye.lids.thickness * eye.shape.height;
   const lashCheck = checkEyeLashes(eye, g, lashTh, eyeLashSet(lodEye, g, lashTh, edges), fr?.upper ?? ((t) => upperFrame(g, t)), fr?.lower ?? ((t) => lowerFrame(g, t)), poly); // cils : géométrie / anatomie / style (eye-lashes.ts)
   out.push(...lashCheck.checks);
+  out.push(...checkCanthusLines(lodEye, g, lashTh, poly, isFlat(lodEye))); // plis des canthi (07G) : géométrie, anatomie, style
 
   // ---- anatomy -----------------------------------------------------------------------------------------------
   const irisToOpening = (2 * irisRx) / (g.bbox.w || 1);

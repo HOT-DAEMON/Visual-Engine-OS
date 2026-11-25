@@ -39,6 +39,21 @@ export const Microdetail = z
     imperfections: z.number().int().min(0).max(8).default(0),
     /** EYE-07E : irrégularité des bords palpébraux (ondulation du tarse + festonnage des glandes) ; `null` = bord parfait. Voir geometry/eye/edge-irregularity.ts. */
     edge: z.object({ irregularity: Unit.default(0.5), grain: Unit.default(0.5) }).strict().nullable().default(null),
+    /** EYE-07G : petits plis cutanés des canthi (ridules du coin externe en éventail + naissance du pli naso-jugal) ; `null` = aucun. Voir geometry/eye/canthus-lines.ts. */
+    canthusLines: z
+      .object({
+        /** Force des ridules externes (longueur et opacité). */
+        outer: Unit.default(0.5),
+        /** Nombre de ridules externes. */
+        count: z.number().int().min(1).max(6).default(3),
+        /** Ouverture de l'éventail externe (0 = parallèles, 1 = ± 40°). */
+        spread: Unit.default(0.5),
+        /** Force du pli interne (arcs sous le canthus interne, vers le nez). */
+        inner: Unit.default(0.4),
+      })
+      .strict()
+      .nullable()
+      .default(null),
     /** EYE-07 LOD : largeur approximative de l'œil en pixels dans l'image finale ; null = détail complet. */
     lod: z.object({ eyePixels: z.number().min(8).max(8000).nullable().default(null) }).strict().default({}),
   })
