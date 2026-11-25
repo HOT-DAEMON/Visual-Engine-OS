@@ -57,3 +57,20 @@ Le projet possède par ailleurs deux autres phénomènes :
 - eye.iris.glow : transillumination de l'iris selon la direction de la lumière ;
 - IrisLayer.glow : flou lumineux propre à une couche de couleur de l'iris.
 Ces effets sont utiles, mais leurs comportements ne sont pas encore pilotés par une grammaire lumineuse commune.
+## Émission : une distinction importante
+J'ai examiné deux implémentations différentes.
+### A. Émission de l'apparence
+Dans src/appearance/effects.ts, l'émission est construite comme un voile coloré limité à l'alpha de l'objet.Elle colore donc la surface, mais ne produit pas nécessairement un halo extérieur.
+### B. Émission du matériau
+Dans src/materials/compile-surface.ts, l'émission possède deux couches :
+1. une ellipse avec un dégradé radial derrière la surface ;
+2. une teinte émissive appliquée sur la surface.
+Le préréglage emissive dans src/materials/presets.ts active cette fonctionnalité avec une intensité de 0,8.
+C'est une meilleure base pour produire un objet qui semble rayonner.
+Mais il manque encore :
+- la propagation de cette lumière sur les objets proches ;
+- l'occlusion du rayonnement par les objets intermédiaires ;
+- les rebonds colorés ;
+- les interactions entre plusieurs sources émissives ;
+- la variation de l'effet selon la distance.
+Le halo radial actuel est une approximation graphique, pas un véritable champ lumineux.
