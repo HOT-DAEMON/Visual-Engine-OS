@@ -11,7 +11,7 @@ import { renderMicrodetail } from './micro-render';
 import { flatSurface, isFlat } from './flat-finish';
 import { limbalHaze } from './cornea';
 import { softShadow } from './soft-shadow';
-import { openingPolygon } from '../../geometry/eye';
+import { openingPolygon, isIdentityJac } from '../../geometry/eye';
 import type { EyeLook } from './look';
 import { compileEffects } from '../../appearance';
 import type { EyeSpec } from '../../schema';
@@ -112,7 +112,7 @@ export function renderGlobeInner(
   defs.push(...micro.defs);
   inner.push(...micro.under);
   // Rotation 3D de la tête (modèle sphère) : l'iris suit la matrice locale de la projection au centre de l'œil (compression propre à sa position).
-  const isId = !turn || (Math.abs(turn.jac.a - 1) < 1e-9 && Math.abs(turn.jac.d - 1) < 1e-9 && Math.abs(turn.jac.b) < 1e-9 && Math.abs(turn.jac.c) < 1e-9);
+  const isId = !turn || isIdentityJac(turn.jac);
   const turnT = turn && !isId ? `translate(${num(c.x)} ${num(c.y)}) matrix(${num(turn.jac.a)} ${num(turn.jac.c)} ${num(turn.jac.b)} ${num(turn.jac.d)} 0 0) translate(${num(-c.x)} ${num(-c.y)})` : '';
   // Effets du moteur d'apparence (réfraction, grain, glow, bloom, émission) sur le seul disque de l'iris.
   const fx = look ? compileEffects(`${id}-iris`, look.spec, look.iris, { x: c.x - irisRx - look.reach, y: c.y - irisRy - look.reach, w: 2 * (irisRx + look.reach), h: 2 * (irisRy + look.reach) }) : null;

@@ -1,0 +1,118 @@
+{
+  "rotation": [
+    {
+      "yaw": 0,
+      "yeux": 20,
+      "iris-meets-opening < 0,2 : avant": 0,
+      "après": 0,
+      "min fraction avant": 0.48,
+      "min après": 0.48,
+      "centre hors ouverture : avant": 0,
+      "après ": 0
+    },
+    {
+      "yaw": 30,
+      "yeux": 20,
+      "iris-meets-opening < 0,2 : avant": 0,
+      "après": 0,
+      "min fraction avant": 0.2,
+      "min après": 0.48,
+      "centre hors ouverture : avant": 0,
+      "après ": 0
+    },
+    {
+      "yaw": 45,
+      "yeux": 20,
+      "iris-meets-opening < 0,2 : avant": 1,
+      "après": 0,
+      "min fraction avant": 0.04,
+      "min après": 0.44,
+      "centre hors ouverture : avant": 1,
+      "après ": 0
+    },
+    {
+      "yaw": 60,
+      "yeux": 20,
+      "iris-meets-opening < 0,2 : avant": 9,
+      "après": 0,
+      "min fraction avant": 0.04,
+      "min après": 0.36,
+      "centre hors ouverture : avant": 2,
+      "après ": 1
+    }
+  ],
+  "bald": {
+    "Mo SVG (chauve, pixelRatio 1)": 0.75,
+    "Mo SVG (chauve, pixelRatio 6)": 0.9
+  },
+  "head": {
+    "graine 23 lacet 25° — Mo SVG": 16.08,
+    "pixelRatio 6 — Mo SVG": 16.23,
+    "tracés": 2069,
+    "segments par tracé (médiane approx.)": "voir docs/EYES-PASS-18.md § 3"
+  },
+  "weight": {
+    "graine 23, lacet 0°": {
+      "Mo SVG": 3.11,
+      "clip du reflet des cheveux (Mo)": 0.44,
+      "segments du clip": 27332,
+      "tracés les plus lourds": [
+        {
+          "peinture": "url/-",
+          "tracés": 243,
+          "Mo": 0.7,
+          "segments par tracé": 92
+        },
+        {
+          "peinture": "-/-",
+          "tracés": 35,
+          "Mo": 0.49,
+          "segments par tracé": 852
+        },
+        {
+          "peinture": "url/#7b2ab3",
+          "tracés": 125,
+          "Mo": 0.23,
+          "segments par tracé": 57
+        },
+        {
+          "peinture": "#5606ac/-",
+          "tracés": 135,
+          "Mo": 0.22,
+          "segments par tracé": 52
+        }
+      ]
+    },
+    "graine 23, lacet 25°": {
+      "Mo SVG": 15.81,
+      "clip du reflet des cheveux (Mo)": 2.67,
+      "segments du clip": 166528,
+      "tracés les plus lourds": [
+        {
+          "peinture": "url/-",
+          "tracés": 243,
+          "Mo": 3.71,
+          "segments par tracé": 480
+        },
+        {
+          "peinture": "-/-",
+          "tracés": 34,
+          "Mo": 2.76,
+          "segments par tracé": 5040
+        },
+        {
+          "peinture": "url/#7b2ab3",
+          "tracés": 125,
+          "Mo": 2.31,
+          "segments par tracé": 586
+        },
+        {
+          "peinture": "#5606ac/-",
+          "tracés": 135,
+          "Mo": 1.68,
+          "segments par tracé": 391
+        }
+      ]
+    }
+  }
+}

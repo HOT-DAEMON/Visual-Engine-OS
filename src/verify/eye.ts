@@ -1,5 +1,5 @@
 import { svgCostMs, svgFeatures, SVG_COST_MAX_MS } from './eye-cost';
-import { IRIS_FIT, apparentWidthRatio, edgeFrames, edgePolygon, eyeEdges, eyeTurn, openingPolygon, eyeLashSet, upperFrame, lowerFrame, placeHighlights, pupilOccludedByStar, pupilContours, scleraVessels, microLod, type Vec } from '../geometry/eye';
+import { IRIS_FIT, applyTurnAbout, turnedHalfExtents, apparentWidthRatio, edgeFrames, edgePolygon, eyeEdges, eyeTurn, openingPolygon, eyeLashSet, upperFrame, lowerFrame, placeHighlights, pupilOccludedByStar, pupilContours, scleraVessels, microLod, type Vec } from '../geometry/eye';
 import { halfVectorXY, lightVector, toLocal, type LightVector } from '../lighting/light';
 import { rotateLightForHeadTurn } from '../lighting/head-turn';
 import { compileEye, resolveEye, withAutoLod } from '../render/eye/eye';
@@ -59,7 +59,7 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
   const lodEye = withAutoLod(eye, 1, apparentWidthRatio(g0, turned)).eye; // exactement l'œil que le rendu dessine (LOD, raccourcissement de rotation compris)
   const edges = eyeEdges(lodEye, g); const fr = edges ? edgeFrames(g, edges) : null; // bords irréguliers : cils et contour lus sur le tracé réellement dessiné
   const { rx: irisRx, ry: irisRy } = irisRadii(eye);
-  const c = irisCenter(eye, g);
+  const c = irisCenter(eye, g, turned?.jac ?? null);
   const poly = edges ? edgePolygon(edges) : openingPolygon(g);
   const compiled = compileEye(raw, light);
   const svg = compiled.defs.join('') + compiled.markup;
@@ -76,7 +76,10 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
   out.push(check('geometry', 'opening-simple', '==', selfX, 0, 'l’ouverture palpébrale se recoupe elle-même'));
   const openingArea = area(poly);
   out.push(check('geometry', 'opening-area', '>=', openingArea / (g.w * g.h || 1), 0.15, 'ouverture quasi dégénérée (aire trop petite devant w × h)'));
-  const ring = Array.from({ length: 24 }, (_, i) => ({ x: c.x + Math.cos((i / 24) * Math.PI * 2) * irisRx, y: c.y + Math.sin((i / 24) * Math.PI * 2) * irisRy }));
+  // Rotation de tête (modèle `sphere`) : le rendu dessine l'iris dans son repère puis lui applique la matrice locale de la projection (`turnT`, globe-inner.ts) — on mesure l'iris TEL QUE DESSINÉ.
+  const turnJac = turned?.jac ?? null;
+  const toDrawn = (p: Vec): Vec => (turnJac ? applyTurnAbout(p, c, turnJac) : p);
+  const ring = Array.from({ length: 24 }, (_, i) => toDrawn({ x: c.x + Math.cos((i / 24) * Math.PI * 2) * irisRx, y: c.y + Math.sin((i / 24) * Math.PI * 2) * irisRy }));
   const irisVisible = [c, ...ring].filter((p) => inside(p, poly)).length / (ring.length + 1);
   out.push(check('geometry', 'iris-meets-opening', '>=', irisVisible, 0.2, 'l’iris est presque entièrement hors de l’ouverture'));
   const pc = pupilContours(eye.pupil, eye.pupil.size, irisRx, irisRy, eye.seed);
@@ -85,7 +88,10 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
   if (eye.highlights.list.length) {
     const L = toLocal(rotateLightForHeadTurn(light, ht.yawDeg, ht.pitchDeg), eye.transform.rotationDeg);
     const placed = placeHighlights(eye.highlights.list, { c, irisRx, irisRy, half: halfVectorXY(L), bbox: g.bbox });
-    const bad = placed.filter((p) => p.cx - p.rx < g.bbox.x - 1e-6 || p.cx + p.rx > g.bbox.x + g.bbox.w + 1e-6 || p.cy - p.ry < g.bbox.y - 1e-6 || p.cy + p.ry > g.bbox.y + g.bbox.h + 1e-6).length;
+    const bad = placed.filter((p) => {
+      const m = toDrawn({ x: p.cx, y: p.cy }); const h = turnJac ? turnedHalfExtents(p.rx, p.ry, turnJac) : { rx: p.rx, ry: p.ry }; // centre et demi-axes de l'ellipse comprimée, comme dessinée
+      return m.x - h.rx < g.bbox.x - 1e-6 || m.x + h.rx > g.bbox.x + g.bbox.w + 1e-6 || m.y - h.ry < g.bbox.y - 1e-6 || m.y + h.ry > g.bbox.y + g.bbox.h + 1e-6;
+    }).length;
     out.push(check('geometry', 'highlights-confined', '==', bad, 0, 'un reflet sort de la boîte de l’ouverture'));
   }
   if (eye.microdetail?.vessels) {

@@ -4,7 +4,7 @@ import { gazeOf } from '../../lighting/gaze3d';
 import { halfVectorXY, toLocal, type LightVector } from '../../lighting/light';
 import { mulberry32 } from '../../core/prng';
 import { el, num } from '../../core/svg';
-import type { OpeningGeometry, Vec } from '../../geometry/eye';
+import { isIdentityJac, type Jacobian, type OpeningGeometry, type Vec } from '../../geometry/eye';
 import type { EyeSpec } from '../../schema';
 
 /** Point SVG formaté (voir core/svg.ts pour les garanties de `num`). */
@@ -81,12 +81,18 @@ export function irisRadii(eye: EyeSpec): { rx: number; ry: number } {
   return { rx, ry: rx * eye.iris.aspect };
 }
 
-/** Centre de l'iris : centre de l'ouverture, décalé par la projection 3D du regard (voir gaze3d.ts). */
-export function irisCenter(eye: EyeSpec, g: OpeningGeometry): Vec {
+/**
+ * Centre de l'iris : centre de l'ouverture, décalé par la projection 3D du regard (voir gaze3d.ts).
+ * `jac` (rotation de tête, modèle `sphere`) : le décalage du regard est un vecteur de l'espace écran de FACE, comme l'ouverture et l'iris — il subit la même matrice locale
+ * (turn3d.ts). Sans elle (passe 17), l'ouverture se comprimait (× 0,15 à lacet 60°) mais pas le décalage : le centre de l'iris sortait de l'ouverture (3 yeux sur 100 à 45–60°).
+ * `null` / identité : résultat inchangé à l'octet près.
+ */
+export function irisCenter(eye: EyeSpec, g: OpeningGeometry, jac: Jacobian | null = null): Vec {
   const gaze = gazeOf(eye);
+  const d = jac && !isIdentityJac(jac) ? { x: jac.a * gaze.dx + jac.b * gaze.dy, y: jac.c * gaze.dx + jac.d * gaze.dy } : { x: gaze.dx, y: gaze.dy };
   return {
-    x: g.bbox.x + g.bbox.w / 2 + gaze.dx,
-    y: g.bbox.y + g.bbox.h / 2 + gaze.dy,
+    x: g.bbox.x + g.bbox.w / 2 + d.x,
+    y: g.bbox.y + g.bbox.h / 2 + d.y,
   };
 }
 

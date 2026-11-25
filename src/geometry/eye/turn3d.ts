@@ -94,6 +94,23 @@ export function turnOpening(g: OpeningGeometry, t: TurnParams, recenter = true):
   return { g: out, jac, shift: sh, facing: facingOf(t) };
 }
 
+/** Vrai si la matrice locale est l'identité (œil de face) : le rendu n'ajoute alors aucune transformation. */
+export const isIdentityJac = (j: Jacobian): boolean => Math.abs(j.a - 1) < 1e-9 && Math.abs(j.d - 1) < 1e-9 && Math.abs(j.b) < 1e-9 && Math.abs(j.c) < 1e-9;
+
+/**
+ * Image d'un point du REPÈRE DE L'IRIS par la matrice locale de la rotation, autour du centre `c` : exactement la transformation `turnT` que `globe-inner.ts`
+ * applique à l'iris, à ses reflets, à leur halo (x' = a x + b y, y' = c x + d y, relatifs à `c`). Source unique du rendu et de `verifyEye` : avant la passe 18, la
+ * vérification comparait l'iris NON comprimé à une ouverture comprimée (faux échecs de `iris-meets-opening` et `highlights-confined` à lacet 60° / azimut 22°).
+ */
+export function applyTurnAbout(p: Vec, c: Vec, j: Jacobian): Vec {
+  const x = p.x - c.x; const y = p.y - c.y;
+  return { x: c.x + j.a * x + j.b * y, y: c.y + j.c * x + j.d * y };
+}
+
+/** Demi-axes de la boîte (alignée aux axes) de l'image d'une ellipse (rx, ry) par la matrice locale : √((a rx)² + (b ry)²) et √((c rx)² + (d ry)²) — égaux à (rx, ry) à l'identité. */
+export const turnedHalfExtents = (rx: number, ry: number, j: Jacobian): { readonly rx: number; readonly ry: number } =>
+  ({ rx: Math.hypot(j.a * rx, j.b * ry), ry: Math.hypot(j.c * rx, j.d * ry) });
+
 /**
  * Géométrie de l'œil telle que le rendu la dessine : enveloppe de face `g0`, ouverture tournée `turned` (modèle `sphere`, sinon `null`) et enveloppe effective `g`.
  * Source unique du rendu (`render/eye/eye.ts`) et de la vérification (`verify/eye.ts`) — qui recopiaient chacun ces lignes.

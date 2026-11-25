@@ -19,7 +19,7 @@ export { irregularEdges, eyeEdges, edgeFrames, edgePolygon, upperEdgeShift, EDGE
 export { corneaWarp, trueRadiusAtHeight, IDENTITY_WARP, type CorneaParams, type Warp } from './cornea';
 export { eyePixelWidth, resolveEyePixels, apparentWidthRatio, thinLashes, lashKeepShare, LASH_MIN_PX, LASH_KEEP_MIN, irisLod, eyeLod, LOD_PIXELS_MIN, LOD_PIXELS_MAX, type IrisLod } from './lod';
 export { microLod, scleraVessels, scleraMarks, type Lod, type Vessel } from './micro-detail';
-export { turnOpening, eyeTurn, turnPoint, jacobianAtCenter, facingOf, type TurnParams, type TurnedOpening, type Jacobian } from './turn3d';
+export { turnOpening, eyeTurn, turnPoint, jacobianAtCenter, facingOf, isIdentityJac, applyTurnAbout, turnedHalfExtents, type TurnParams, type TurnedOpening, type Jacobian } from './turn3d';
 export { openingPolygon } from './opening-polygon';
 export { openingProfile, canthusChordAngles, PROFILE_SAMPLES, type OpeningProfile } from './profile';
 export { ALMOND_REF, ALMOND_REF_SOURCES, NEUTRAL_REF, REF_PROFILE, REF_RANGES, type EnvelopeRefFactors } from './opening-ref';

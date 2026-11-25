@@ -54,7 +54,7 @@ export function compileEye(rawEye: EyeSpec, worldLight: LightVector, opts: { rea
   const headLight = rotateLightForHeadTurn(worldLight, eye.headTurn.yawDeg, eye.headTurn.pitchDeg);
   const L = toLocal(headLight, rot);
   const { rx: irisRx, ry: irisRy } = irisRadii(eye);
-  const c = irisCenter(eye, g);
+  const c = irisCenter(eye, g, turned?.jac ?? null);
   const skin = dominantColor((eye.skin ?? DEFAULT_SKIN).base);
   const lidColor = dominantColor(eye.lids.material.base);
   const look = resolveEyeLook(eye, skin);
