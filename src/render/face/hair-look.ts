@@ -10,12 +10,14 @@ import type { Appearance, FaceParams } from '../../schema';
  */
 export function hairAppearance(h: FaceParams['hair']): ResolvedAppearance {
   const spec: Appearance = h.appearance;
-  if (spec.gradient.length > 0 || !h.look.tipColor) return resolveAppearance(h.color, spec);
+  // Modèle « cheveux » : lumière continue, sans reflet bleuté sur un brun foncé (`appearance/hair-light.ts`).
+  const HAIR = { model: 'hair' } as const;
+  if (spec.gradient.length > 0 || !h.look.tipColor) return resolveAppearance(h.color, spec, HAIR);
   const a = (1 - h.look.tipReach) * 0.6;
   const stops = h.look.midColor
     ? [{ offset: 0, color: h.color, opacity: 1 }, { offset: a, color: h.color, opacity: 1 }, { offset: a + (1 - a) * 0.5, color: h.look.midColor, opacity: 1 }, { offset: 1, color: h.look.tipColor, opacity: 1 }]
     : [{ offset: 0, color: h.color, opacity: 1 }, { offset: 1 - h.look.tipReach, color: h.color, opacity: 1 }, { offset: 1, color: h.look.tipColor, opacity: 1 }];
-  return resolveAppearance(h.color, { ...spec, gradient: stops });
+  return resolveAppearance(h.color, { ...spec, gradient: stops }, HAIR);
 }
 
 /** Ton relatif de la masse arrière : celui des mèches arrière qu'elle double (`tone` −0,25 … −0,45 dans `generate` des mèches pendantes). */

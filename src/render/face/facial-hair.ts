@@ -70,7 +70,7 @@ export function renderFacialHair(id: string, p: FaceParams, lm: FaceLandmarks, L
   if (fh.mustache === 'none' && fh.beard === 'none' && fh.sideburns === 'none') return none;
   const geo = facialHairGeometry(p, lm);
   const color = fh.color ?? p.hair.color;
-  const ra = resolveAppearance(color, fh.appearance);
+  const ra = resolveAppearance(color, fh.appearance, { model: 'hair' });
   const defs: string[] = [];
   const mustache: string[] = [];
   const beard: string[] = [];

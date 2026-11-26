@@ -65,7 +65,7 @@ function pointAt(b: Blade, g: LockGeom, cum: readonly number[], s: number, u: nu
  * Bande transversale d'une mèche, ou `null` quand elle ne regarde pas le vecteur médian (N·H < `minNH` partout), quand elle est vue par le dessous, ou quand elle est trop courte pour porter un reflet.
  * Déterministe : le bruit des bords dépend de la seule position de la racine.
  */
-export function ringBands(b: Blade, g: LockGeom, _L: LockSpec, view: View, light: Light, shoulderLen: number = RING.shoulderLen): RingBands | null {
+export function ringBands(b: Blade, g: LockGeom, _L: LockSpec, view: View, light: Light, shoulderLen: number = RING.shoulderLen, jagScale: number = 1, lens: number = 0): RingBands | null {
   const n = Math.min(g.n, b.spine.length); if (n < 6) return null;
   const spine = b.spine.slice(0, n); const cum = arcs(spine); const total = cum[n - 1] as number; if (total < 6) return null;
   const hs = add(light.dir, viewRayInHead(view)); if (!(Math.hypot(hs.x, hs.y, hs.z) > 1e-6)) return null; // lumière exactement en face de la caméra : vecteur médian nul, pas de reflet
@@ -95,11 +95,13 @@ export function ringBands(b: Blade, g: LockGeom, _L: LockSpec, view: View, light
   let kw = 0; for (let i = 0; i < n; i++) if ((cum[i] as number) >= s0 - half - RING.jag * 1.7 * total && (cum[i] as number) <= s0 + half + RING.jag * 1.7 * total) kw = Math.max(kw, Math.abs(g.curvature[i] as number) * (b.half[i] as number));
   const cov = Math.min(RING.coverage, kw > 0 ? 0.9 / kw : RING.coverage); if (cov < RING.minCoverage) return null;
   const rnd = rng(hash2((spine[0] as V2).x, (spine[0] as V2).y)); const m = RING.teeth;
-  const halfW = (b.half.slice(0, n).reduce((a, c) => a + c, 0) / n); const jag = Math.min(RING.jag * total, 0.3 * halfW); // le bruit des bords ne doit pas pencher la bande plus que la largeur de la mèche ne le permet
+  const halfW = (b.half.slice(0, n).reduce((a, c) => a + c, 0) / n); const jag = Math.min(RING.jag * total, 0.3 * halfW) * Math.max(0, jagScale); // `jagScale` 1 : dents mesurées sur l'encre de la référence 60 ; 0 : bord lisse (rendu principal, passe 9). Le bruit des bords ne doit pas pencher la bande plus que la largeur de la mèche ne le permet
   const top: V2[] = []; const bot: V2[] = [];
   for (let j = 0; j <= m; j++) {
     const u = -cov + (2 * cov * j) / m; const edge = (j === 0 || j === m) ? 0.5 : 1; // dents plus courtes aux deux bouts : la bande s'éteint avant le bord de la mèche
-    top.push(pointAt(b, g, cum, s0 - half + (rnd() * 2 - 1) * jag * 1.7 * edge, u)); bot.push(pointAt(b, g, cum, s0 + half + (rnd() * 2 - 1) * jag * 1.7 * edge, u));
+    // Lentille (passe 9) : la demi-hauteur décroît en parabole du centre aux deux bouts (`lens` 0 = bande rectangulaire, historique au bit près ; 1 = bouts pointus). Le tirage `rnd()` est conservé : la graine ne change pas.
+    const t = cov > 0 ? u / cov : 0; const hh = half * (1 - Math.max(0, Math.min(1, lens)) * t * t);
+    top.push(pointAt(b, g, cum, s0 - hh + (rnd() * 2 - 1) * jag * 1.7 * edge, u)); bot.push(pointAt(b, g, cum, s0 + hh + (rnd() * 2 - 1) * jag * 1.7 * edge, u));
   }
   const highlight = [...top, ...bot.reverse()];
   // Côté de l'ombre : celui où l'exposition à la lumière baisse le plus vite (l'ombre est du côté opposé à la source).

@@ -2,6 +2,7 @@ import { mix } from '../core/color';
 import { clamp01 } from '../core/math';
 import type { Appearance } from '../schema/appearance';
 import { fromHsl, grade, pullHue, toHsl, type Grade } from './hsl';
+import { deriveHairLight } from './hair-light';
 
 /** Teinte visée par les ombres (bleu-violet) et par les lumières chaudes / froides. */
 const SHADOW_HUE = 250;
@@ -77,14 +78,20 @@ function makeRamp(base: string, stops: Appearance['gradient'], g: Grade): { colo
   };
 }
 
+/**
+ * Options de résolution. `model: 'hair'` : lumière propre aux cheveux et poils (`hair-light.ts`, continue, sans reflet bleuté sur un brun foncé). Absent ou `'default'` : rendu historique au bit près
+ * (peau, yeux, matières).
+ */
+export interface ResolveOpts { readonly model?: 'default' | 'hair' }
+
 /** Résout une apparence pour une couleur de base : SOURCE UNIQUE de toutes les teintes d'un composant. */
-export function resolveAppearance(baseHex: string, spec: Appearance): ResolvedAppearance {
+export function resolveAppearance(baseHex: string, spec: Appearance, opts: ResolveOpts = {}): ResolvedAppearance {
   const g: Grade = { contrast: spec.contrast, saturation: spec.saturation, brightness: spec.brightness };
   const base = grade(baseHex, g);
   // Teintes IMPOSÉES : étalonnées comme la base. Teintes DÉRIVÉES : calculées depuis la base DÉJÀ étalonnée (un contraste fort
   // ne doit pas écraser ombre et lumière l'une sur l'autre).
   const shadow = spec.light.shadow ? grade(spec.light.shadow, g) : deriveShadow(base, spec.light.shadowShift);
-  const light = spec.light.light ? grade(spec.light.light, g) : deriveLight(base);
+  const light = spec.light.light ? grade(spec.light.light, g) : opts.model === 'hair' ? deriveHairLight(base) : deriveLight(base);
   const rim = spec.light.rim ? grade(spec.light.rim, g) : mix(light, '#ffffff', 0.35);
   const highlight = spec.reflection.tint ?? mix(light, '#ffffff', 0.78);
   const ramp = makeRamp(base, spec.gradient, g);

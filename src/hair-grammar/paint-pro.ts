@@ -31,8 +31,17 @@ export interface ProStyle extends PaintStyle {
    * `len` : longueur de l'ombre (fraction de la mèche), défaut `RING.shoulderLen`.
    */
   readonly shoulder?: { readonly len?: number; readonly opacity?: number; readonly profile?: 'smooth' | 'steps' };
+  /**
+   * Amplitude de la dentelure des bords du reflet transversal (passe 9). Absent ou 1 : les dents mesurées sur l'ENCRE de la référence 60 (rendu historique, au bit près). 0 : bords lisses.
+   * Le rendu principal est lisse, pas à l'encre : une bande de 6 px à 1,5 px de dentelure s'y dessinait en « W » blanc (mesuré : 7 à 15 inversions de convexité sur 20 points ; une bande saine en a 0 à 2).
+   */
+  readonly ringJag?: number;
+  /** Forme du reflet transversal (passe 9) : 0 ou absent = rectangle (historique) ; 1 = lentille aux bouts pointus (les références 06, 19, 21 : un reflet est une lentille qui s'effile, pas un rectangle). */
+  readonly ringLens?: number;
 }
 export const INK_PRO: ProStyle = { ...INK, shadow: '#35353b', highlight: '#ffffff' };
+/** Style de PASSAGE vers le rendu principal (`interop.ts`) : reflet transversal par mèche (`replace`), bords lisses. Les couleurs viennent du moteur d'apparence, pas de ce style. */
+export const MAIN_PRO: ProStyle = { ...INK_PRO, ring: 'replace', ringJag: 0, ringLens: 0.85 };
 /** `ring` : reflet transversal retenu par la garde de rendu (`ringIsSane`) ; absent si `st.ring` est `'off'`/absent ou si la garde l'a refusé — le rendu principal le dessine alors à son tour (`interop.ts` → `HairLockGeom.ring`). */
 export interface ProLock extends PaintedLock { readonly geom: LockGeom; readonly ring?: RingBands }
 
@@ -62,7 +71,7 @@ export function paintLockPro(h: HeadSpec, L: LockSpec, view: View, st: ProStyle 
   if (hi && st.ring !== 'replace') { const e = geom.exposure.reduce((a, b) => a + b, 0) / n; const back = geom.backface.filter(Boolean).length / n; parts.push(`<path d="${smoothPath(hi, true)}" fill="${st.highlight}" opacity="${Math.max(0.15, (0.35 + 0.6 * e) * (1 - 0.7 * back)).toFixed(2)}"/>`); }
   let kept: RingBands | undefined;
   if (st.ring === 'replace' || st.ring === 'add') {
-    const r = ringBands(blade, geom, L, view, light, st.shoulder?.len);
+    const r = ringBands(blade, geom, L, view, light, st.shoulder?.len, st.ringJag, st.ringLens);
     // Garde de rendu : un reflet qui sort de la lame, n'est pas transverse, est sur le dessous, trop peu exposé ou trop large (`ring-check.ts`) n'est pas dessiné ; la mèche n'a alors pas de reflet.
     if (r && ringIsSane({ spec: L, blade, geom }, r)) {
       kept = r;

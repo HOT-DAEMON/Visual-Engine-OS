@@ -1,0 +1,107 @@
+{
+ "ringEdges": {
+  "before": {
+   "bands": 5,
+   "zigzagPerBand": [
+    7,
+    11,
+    9,
+    10,
+    8
+   ]
+  },
+  "after": {
+   "bands": 5,
+   "zigzagPerBand": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "contractAfter": 0
+ },
+ "verifyAfter": {
+  "smooth": [],
+  "cel": []
+ },
+ "verifyBefore": [
+  "ring.band-smooth",
+  "ring.band-smooth",
+  "ring.band-smooth",
+  "ring.band-smooth",
+  "ring.band-smooth",
+  "style.lit-hue"
+ ],
+ "hueTable": [
+  {
+   "couleur": "noir",
+   "base": "#1a1a1f",
+   "lumiereAvant": "#6c88b7",
+   "lumiereApres": "#6c88b7",
+   "deriveAvant": 22,
+   "deriveApres": 22,
+   "deriveTonsEclairesApres": 0
+  },
+  {
+   "couleur": "brun foncé",
+   "base": "#4a3326",
+   "lumiereAvant": "#7d95bf",
+   "lumiereApres": "#af998c",
+   "deriveAvant": 163,
+   "deriveApres": 1,
+   "deriveTonsEclairesApres": 2
+  },
+  {
+   "couleur": "brun très foncé",
+   "base": "#2a1a10",
+   "lumiereAvant": "#6e89b8",
+   "lumiereApres": "#b68c66",
+   "deriveAvant": 165,
+   "deriveApres": 5,
+   "deriveTonsEclairesApres": 6
+  },
+  {
+   "couleur": "auburn",
+   "base": "#6b3a22",
+   "lumiereAvant": "#c89e7d",
+   "lumiereApres": "#c89e7d",
+   "deriveAvant": 7,
+   "deriveApres": 7,
+   "deriveTonsEclairesApres": 5
+  },
+  {
+   "couleur": "blond",
+   "base": "#d8b868",
+   "lumiereAvant": "#e5daba",
+   "lumiereApres": "#e5daba",
+   "deriveAvant": 2,
+   "deriveApres": 2,
+   "deriveTonsEclairesApres": 1
+  },
+  {
+   "couleur": "roux",
+   "base": "#a03020",
+   "lumiereAvant": "#d99d86",
+   "lumiereApres": "#d99d86",
+   "deriveAvant": 9,
+   "deriveApres": 9,
+   "deriveTonsEclairesApres": 7
+  }
+ ],
+ "yaw": [
+  {
+   "yaw": -30,
+   "issues": []
+  },
+  {
+   "yaw": 0,
+   "issues": []
+  },
+  {
+   "yaw": 30,
+   "issues": []
+  }
+ ]
+}

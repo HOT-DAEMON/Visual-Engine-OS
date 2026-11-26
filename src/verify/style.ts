@@ -46,8 +46,9 @@ export function checkStyle(params: FaceParams, geo: HairGeometry | null, svg: st
   const b = toHsl(ra.base);
   if (b.s > 0.25 && b.l > 0.25) {
     out.push(check('style', 'shadow-near-main', '<=', Math.abs(hueDelta(b.h, toHsl(ra.shadow).h)), 75, 'ombre trop éloignée de la couleur principale', 'warn'));
-    out.push(check('style', 'highlight-keeps-hue', '<=', Math.abs(hueDelta(b.h, toHsl(ra.light).h)), 70, 'lumière / reflet de teinte incohérente avec les cheveux', 'warn'));
   }
+  // Garde `l > 0,08` et non `l > 0,25` (passe 9) : avec l'ancienne garde, un brun foncé (#4a3326, l = 0,219) échappait au contrôle alors que sa lumière était bleu ardoise (163° d'écart).
+  if (b.s > 0.25 && b.l > 0.08) out.push(check('style', 'highlight-keeps-hue', '<=', Math.abs(hueDelta(b.h, toHsl(ra.light).h)), 70, 'lumière / reflet de teinte incohérente avec les cheveux', 'warn'));
   if (h.look.tipColor) out.push(check('style', 'gradient-differs', '>=', Math.abs(luminance(ra.ramp(0)) - luminance(ra.ramp(1))) + (ra.ramp(0) === ra.ramp(1) ? 0 : 0.001), 0.001, 'dégradé racine → pointe sans effet'));
   out.push(check('style', 'hair-skin-contrast', '>=', Math.abs(luminance(ra.base) - luminance(skin)), 0.02, 'cheveux et peau de luminance trop proche', 'warn'));
   if (h.silhouette.asymmetry >= 0.5) {
