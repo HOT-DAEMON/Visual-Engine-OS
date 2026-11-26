@@ -75,9 +75,9 @@ describe('opacité de l\'ombre aval selon le ton', () => {
     expect(shoulderOpacityFor(dark, INK_PRO.shadow)).toBe(0);
   });
   it('couleur non #rrggbb : retombe sur l\'opacité historique, sans lever d\'exception', () => { expect(shoulderOpacityFor('#fff', '#333')).toBe(SHOULDER_BASE); });
-  it('SVG : la même mèche repeinte en trois tons — paliers à l\'opacité calculée en clair et en moyen, aucun en sombre', () => {
+  it('SVG (profil « steps », passes 6–7) : la même mèche repeinte en trois tons — paliers à l\'opacité calculée en clair et en moyen, aucun en sombre', () => {
     const base = scene().find((x) => ringBands(x.blade, x.geom, x.spec, V, L))!; const r = ringBands(base.blade, base.geom, base.spec, V, L)!;
-    const count = (tone: number): number => { const l = paintLockPro(H, { ...base.spec, tone }, V, { ...INK_PRO, ring: 'add' }, L); return (l.svg.match(new RegExp(`fill="${INK_PRO.shadow}" opacity="0\\.(1[7-9]|20)\\d"`, 'g')) ?? []).length; };
+    const count = (tone: number): number => { const l = paintLockPro(H, { ...base.spec, tone }, V, { ...INK_PRO, ring: 'add', shoulder: { profile: 'steps' } }, L); return (l.svg.match(new RegExp(`fill="${INK_PRO.shadow}" opacity="0\\.(1[7-9]|20)\\d"`, 'g')) ?? []).length; };
     expect(r.shoulder.length).toBe(3);
     expect(count(0.6)).toBe(3); expect(count(-0.3)).toBe(3); expect(count(-0.9)).toBe(0);
   });
@@ -86,7 +86,7 @@ describe('opacité de l\'ombre aval selon le ton', () => {
 describe('retour arrière vers l\'ombre de la passe 6 (ProStyle.shoulder)', () => {
   it('{ len: 0.2, opacity: 0.12 } : ombre plus courte et opacité fixe ; le reflet lui-même est inchangé', () => {
     const base = scene().find((x) => ringBands(x.blade, x.geom, x.spec, V, L))!;
-    const p7 = paintLockPro(H, { ...base.spec, tone: 0.6 }, V, { ...INK_PRO, ring: 'add' }, L); const p6 = paintLockPro(H, { ...base.spec, tone: 0.6 }, V, { ...INK_PRO, ring: 'add', shoulder: { len: 0.2, opacity: 0.12 } }, L);
+    const p7 = paintLockPro(H, { ...base.spec, tone: 0.6 }, V, { ...INK_PRO, ring: 'add', shoulder: { profile: 'steps' } }, L); const p6 = paintLockPro(H, { ...base.spec, tone: 0.6 }, V, { ...INK_PRO, ring: 'add', shoulder: { profile: 'steps', len: 0.2, opacity: 0.12 } }, L);
     expect(p6.svg).toContain(`fill="${INK_PRO.shadow}" opacity="0.120"`); expect(p6.svg).not.toContain(`opacity="0.171"`); expect(p7.svg).toContain(`opacity="0.171"`);
     const r6 = ringBands(base.blade, base.geom, base.spec, V, L, 0.2)!; const r7 = ringBands(base.blade, base.geom, base.spec, V, L)!;
     expect(r6.highlight).toEqual(r7.highlight); expect(r6.side).toBe(r7.side);

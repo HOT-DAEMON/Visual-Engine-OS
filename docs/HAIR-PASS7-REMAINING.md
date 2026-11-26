@@ -1,6 +1,7 @@
 # Moteur capillaire — reste à faire après la passe 7, par composant
 
 Bilan : `HAIR-PASS7.md` · mesures : `HAIR-PASS7-MEASURES.md`. Remplace `HAIR-PASS6-REMAINING.md` : chaque point y est repris ci-dessous.
+État à jour après la passe 8 : `HAIR-PASS8-REMAINING.md` (ombre lisse FAITE, reflet branché sur le rendu principal, `replace` par mèche).
 Statuts : FAIT · PARTIEL · NON FAIT (avec la raison) · DÉCIDÉ DE NE PAS FAIRE (avec la raison). Rien n'est présenté comme fait sans preuve (tests, planches, `metrics.json`).
 
 ## Raie

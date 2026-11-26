@@ -37,7 +37,7 @@ import { applyWind } from './wind';
 
 export { buildBoundary, rootFrames, windDir, projectBoundary } from './boundary';
 export type { HairBoundary, BoundaryPoint, EdgeKind, HairMarks, RootFrame } from './boundary';
-export type { HairGeometry, HairLock, LockRank, LockKind, BareScalp, TierMass, OcclusionInfo, SideInfo } from './types';
+export type { HairGeometry, HairLock, HairLockRing, HairLockShade, LockRank, LockKind, BareScalp, TierMass, OcclusionInfo, SideInfo } from './types';
 
 /**
  * Chevelure complète d'un visage — GÉOMÉTRIE PURE (sans SVG) lue par le rendu ET par la couche de vérification.

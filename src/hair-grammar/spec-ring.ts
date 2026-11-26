@@ -2,6 +2,7 @@ import type { Blade } from './blade';
 import { viewRayInHead, type View } from './head';
 import type { Light, LockGeom } from './local-geometry';
 import type { LockSpec } from './lock';
+import { shadeSegments, type ShadeSegment } from './ring-shade';
 import { dot, norm, add, type V2, type V3 } from './vec';
 
 /**
@@ -38,7 +39,11 @@ export interface RingBands {
   readonly side: 1 | -1;
   /** Vrai si le vrai maximum de N·H tombe hors du corps (racine ou pointe amincie) : le reflet est alors posé au meilleur point du corps, plus bas que le maximum. */
   readonly peakClamped: boolean;
-  readonly highlight: V2[]; readonly shoulder: V2[][];
+  readonly highlight: V2[];
+  /** Ombre aval en TROIS PALIERS à bords durs (passes 6–7), conservée pour le retour arrière (`ProStyle.shoulder.profile: 'steps'`) et les planches comparatives. */
+  readonly shoulder: V2[][];
+  /** Ombre aval LISSE (passe 8) : segments à dégradé suivant l'axe de la mèche, profil mesuré sur la référence 60 (`ring-shade.ts`). Même longueur et même côté que `shoulder`. */
+  readonly shade: ShadeSegment[];
 }
 
 const hash2 = (a: number, b: number): number => { let h = (Math.imul(Math.round(a * 97) | 0, 374761393) ^ Math.imul(Math.round(b * 97) | 0, 668265263)) >>> 0; h = Math.imul(h ^ (h >>> 13), 1274126177) >>> 0; return (h ^ (h >>> 16)) >>> 0; };
@@ -105,5 +110,6 @@ export function ringBands(b: Blade, g: LockGeom, _L: LockSpec, view: View, light
     for (let j = 0; j <= m; j++) { const u = -0.96 + (2 * 0.96 * j) / m; lo.push(pointAt(b, g, cum, a, u)); hi.push(pointAt(b, g, cum, e, u)); }
     return [...lo, ...hi.reverse()];
   });
-  return { at: s0 / total, strength, extent: ext, coverage: cov, side, peakClamped, highlight, shoulder };
+  const shade = shadeSegments((s, u) => pointAt(b, g, cum, s, u), s0 + side * half, side, dl, total);
+  return { at: s0 / total, strength, extent: ext, coverage: cov, side, peakClamped, highlight, shoulder, shade };
 }

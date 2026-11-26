@@ -9,6 +9,7 @@ import { celBands } from './hair-cel';
 import { shadowReach, type Light3 } from './hair-light';
 import { smoothPath } from './hair-detail';
 import { polyPath } from './path';
+import { ringMarkup } from './hair-ring';
 
 /** Contexte de rendu d'une chevelure : apparence résolue, lumière locale 2D (vers la source) et échelle. */
 export interface LockStyle {
@@ -20,6 +21,11 @@ export interface LockStyle {
   readonly W: number;
   /** Rendu « encre » : noir franc, bande blanche continue, contour noir épais. */
   readonly ink?: string;
+  /**
+   * Reflet transversal de grammaire (`HairLock.geom.ring`, passe 8). Absent ou `'off'` : rendu historique, au bit près. `'replace'` : sur une mèche qui porte un reflet transversal, il remplace la bande axiale ; une mèche sans anneau (refusé par la garde de rendu, ou hors lumière) garde sa bande axiale, jamais mate ; `'add'` : les deux (la bande axiale joue alors le liseré de bord).
+   * Sans effet sur une mèche sans `geom` et en rendu encre.
+   */
+  readonly ring?: 'off' | 'replace' | 'add';
 }
 
 /**
@@ -94,6 +100,9 @@ export function lockMarkup(l: HairLock, k: number, st: LockStyle, depth: number,
   const outline = l.edge ? mix(ra.base, '#000000', 0.5) : undefined;
   out.push(el('path', { d, fill, opacity, stroke: outline, 'stroke-width': l.edge ? W * (cel ? 0.0018 : 0.0014) : undefined, 'stroke-opacity': l.edge ? (cel ? 0.55 : 0.35) : undefined }));
 
+  // Reflet transversal de grammaire : `replace` éteint la bande axiale des seules mèches qui portent un reflet transversal (les autres gardent leur bande : sur la coiffure finale 2–10 % des mèches ont un anneau, un `replace` global matifierait le reste) ; `add` garde les deux.
+  const ringOn = (st.ring === 'replace' || st.ring === 'add') && !!l.geom;
+  const axial = !(st.ring === 'replace' && l.geom?.ring);
   if (cel && rankBig && sp && l.layer !== 'back') {
     const tones = ra.cel(dark(ra.tone(l.tone, ra.ramp(0.4))));
     const bands = celBands(l, ld, spec.shading.highlightBand, spec.shading.bands === 3, undefined, st.light);
@@ -102,18 +111,24 @@ export function lockMarkup(l: HairLock, k: number, st: LockStyle, depth: number,
     const g: string[] = [];
     if (bands.shade) g.push(el('path', { d: polyPath(bands.shade), fill: tones.shade }));
     if (bands.core) g.push(el('path', { d: polyPath(bands.core), fill: tones.core, opacity: 0.9 }));
-    if (bands.highlight) g.push(el('path', { d: polyPath(bands.highlight), fill: ra.highlight, stroke: mix(ra.light, '#ffffff', 0.4), 'stroke-width': W * 0.0011, 'stroke-linejoin': 'miter', opacity: 0.95 }));
+    if (bands.highlight && axial) g.push(el('path', { d: polyPath(bands.highlight), fill: ra.highlight, stroke: mix(ra.light, '#ffffff', 0.4), 'stroke-width': W * 0.0011, 'stroke-linejoin': 'miter', opacity: 0.95 }));
     out.push(el('g', { 'clip-path': urlRef(cid) }, g));
   }
   // Hors cel, une mèche qui PORTE sa géométrie locale (moteur de grammaire) reçoit SON reflet : une bande qui suit son axe, étranglée par la
   // torsion et atténuée sous un recouvrement — à la place de la tache globale de `hairGloss` (qui s'efface d'autant : `localGlossShare`).
-  if (!cel && rankBig && sp && l.layer !== 'back' && l.geom) {
+  if (!cel && rankBig && sp && l.layer !== 'back' && l.geom && axial) {
     const band = celBands(l, ld, 0.35 + 0.6 * spec.reflection.size, false, undefined, st.light).highlight;
     if (band) {
       const cid = `${id}-c${k}`;
       defs.push(el('clipPath', { id: cid }, [el('path', { d })]));
       out.push(el('g', { 'clip-path': urlRef(cid) }, [el('path', { d: polyPath(band), fill: ra.highlight, opacity: clamp(0.2 + 0.5 * spec.reflection.intensity, 0, 0.7) })]));
     }
+  }
+  // Reflet transversal (passe 8) : ombre aval lisse puis bande, au-dessus de tout le reste, rognés par le contour de la mèche.
+  if (ringOn && rankBig && l.layer !== 'back' && l.geom?.ring) {
+    const rc = `${id}-rc${k}`; const m = ringMarkup(l.geom.ring, { shadow: ra.shadow, highlight: ra.highlight, fill: colorAt(0.5), intensity: spec.reflection.intensity, id: `${id}-rs${k}`, cel });
+    defs.push(el('clipPath', { id: rc }, [el('path', { d })]), ...m.defs);
+    out.push(el('g', { 'clip-path': urlRef(rc) }, m.markup));
   }
   return { defs, markup: out };
 }

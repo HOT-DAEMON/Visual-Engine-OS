@@ -1,4 +1,4 @@
-import { parseHex } from '../core/color';
+import { lumaOf } from '../core/shade';
 import { MEASURED } from './ring-measures';
 
 /**
@@ -9,7 +9,8 @@ import { MEASURED } from './ring-measures';
  * Luma sRGB 0,299 R + 0,587 G + 0,114 B, dans l'espace où la référence a été mesurée et où SVG compose l'opacité (pas de conversion en lumière linéaire).
  * Bornes : au-dessus de 0,2 l'ombre masquerait le liseré du bord ; sous 0,12 (opacité historique) elle ne se lirait plus. Remplissage PLUS SOMBRE que l'ombre (ton « sombre » de l'encre : #26262a sous #35353b) : l'ombre l'ÉCLAIRCISSAIT de 12,6 % — une ombre ne doit jamais éclaircir ; l'opacité est alors 0 et le palier n'est pas dessiné.
  */
-const luma = (hex: string): number => { const c = parseHex(hex); return 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]; };
+/** Ombre en TROIS PALIERS (passes 6–7, retour arrière `profile: 'steps'`). L'ombre lisse de la passe 8 utilise `core/shade.ts` (`peakShadeOpacity`). */
+const luma = lumaOf;
 
 export const SHOULDER_BASE = 0.12;
 export const SHOULDER_MAX = 0.2;

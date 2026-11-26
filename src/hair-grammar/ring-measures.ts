@@ -17,6 +17,12 @@ export const MEASURED = {
   /** Part de l'aire des cheveux occupée par le reflet (seuil strict R>190 & G>55) : tête illustrée, et panneaux A–D. */
   headHighlightShare: 0.0139,
   panelHighlightShare: { min: 0.009, max: 0.027 },
+  /**
+   * Profil LISSE de l'ombre aval (passe 8), nœuds [x, w] : x = distance au bord aval du reflet / 0,418 (retour complet), w = creux relatif au creux maximal (1 = −33,5 %).
+   * Dérivé de `fan.profile` par `deriveShadeProfile` (`ring-profile.ts`, régression isotone) ; `tests/hair-engine-ring-shade.test.ts` rejoue la dérivation contre le JSON (écart < 0,01).
+   * Remplace les trois paliers de la passe 7 (1 / 0,73 / 0,40 par tiers) : plateau jusqu'à x ≈ 0,4 puis chute franche, ce que les paliers sous-estimaient au milieu et surestimaient en fin de course.
+   */
+  shadeProfile: [[0, 1], [0.1, 0.99], [0.2, 0.93], [0.3, 0.87], [0.4, 0.83], [0.5, 0.72], [0.6, 0.55], [0.7, 0.36], [0.8, 0.24], [0.9, 0.1], [1, 0]],
 } as const;
 
 const span = (o: Record<string, number>): { min: number; max: number } => { const v = Object.values(o); return { min: Math.min(...v), max: Math.max(...v) }; };

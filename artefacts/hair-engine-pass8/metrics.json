@@ -1,0 +1,419 @@
+{
+  "fullHead": [
+    {
+      "light": "haut-gauche (réf.)",
+      "variant": "sans",
+      "rings": null,
+      "verified": null,
+      "failing": [],
+      "defects": null
+    },
+    {
+      "light": "haut-gauche (réf.)",
+      "variant": "paliers (passe 7)",
+      "rings": 5,
+      "verified": true,
+      "failing": [],
+      "defects": 0
+    },
+    {
+      "light": "haut-gauche (réf.)",
+      "variant": "lisse (passe 8)",
+      "rings": 5,
+      "verified": true,
+      "failing": [],
+      "defects": 0
+    },
+    {
+      "light": "haut-droite",
+      "variant": "sans",
+      "rings": null,
+      "verified": null,
+      "failing": [],
+      "defects": null
+    },
+    {
+      "light": "haut-droite",
+      "variant": "paliers (passe 7)",
+      "rings": 3,
+      "verified": true,
+      "failing": [],
+      "defects": 0
+    },
+    {
+      "light": "haut-droite",
+      "variant": "lisse (passe 8)",
+      "rings": 3,
+      "verified": true,
+      "failing": [],
+      "defects": 0
+    },
+    {
+      "light": "zénith",
+      "variant": "sans",
+      "rings": null,
+      "verified": null,
+      "failing": [],
+      "defects": null
+    },
+    {
+      "light": "zénith",
+      "variant": "paliers (passe 7)",
+      "rings": 5,
+      "verified": true,
+      "failing": [],
+      "defects": 0
+    },
+    {
+      "light": "zénith",
+      "variant": "lisse (passe 8)",
+      "rings": 5,
+      "verified": true,
+      "failing": [],
+      "defects": 0
+    }
+  ],
+  "shadowProfile": {
+    "rmsVsReference": {
+      "steps": 0.0508,
+      "smooth": 0.0059
+    },
+    "peakOpacity": 0.431,
+    "peakRelativeDip": -0.335,
+    "nodes": [
+      [
+        0,
+        1
+      ],
+      [
+        0.1,
+        0.99
+      ],
+      [
+        0.2,
+        0.93
+      ],
+      [
+        0.3,
+        0.87
+      ],
+      [
+        0.4,
+        0.83
+      ],
+      [
+        0.5,
+        0.72
+      ],
+      [
+        0.6,
+        0.55
+      ],
+      [
+        0.7,
+        0.36
+      ],
+      [
+        0.8,
+        0.24
+      ],
+      [
+        0.9,
+        0.1
+      ],
+      [
+        1,
+        0
+      ]
+    ]
+  },
+  "mainRender": {
+    "contractOk": true,
+    "locksWithRing": 5,
+    "locks": 50,
+    "target": {
+      "head": 0.0139,
+      "panels": {
+        "min": 0.009,
+        "max": 0.027
+      }
+    },
+    "rows": [
+      {
+        "shading": "smooth",
+        "ring": "off",
+        "lightPixelShare": 0.0695,
+        "hairPixels": 340480
+      },
+      {
+        "shading": "smooth",
+        "ring": "replace",
+        "lightPixelShare": 0.0693,
+        "hairPixels": 340480
+      },
+      {
+        "shading": "smooth",
+        "ring": "add",
+        "lightPixelShare": 0.0735,
+        "hairPixels": 340480
+      },
+      {
+        "shading": "cel",
+        "ring": "off",
+        "lightPixelShare": 0.0853,
+        "hairPixels": 341401
+      },
+      {
+        "shading": "cel",
+        "ring": "replace",
+        "lightPixelShare": 0.0826,
+        "hairPixels": 341401
+      },
+      {
+        "shading": "cel",
+        "ring": "add",
+        "lightPixelShare": 0.0891,
+        "hairPixels": 341401
+      }
+    ]
+  },
+  "mainRenderYaw": [
+    {
+      "yaw": -30,
+      "contractOk": true,
+      "mode": "replace",
+      "lightPixelShare": 0.0504,
+      "locksWithRing": 2
+    },
+    {
+      "yaw": 0,
+      "contractOk": true,
+      "mode": "replace",
+      "lightPixelShare": 0.0693,
+      "locksWithRing": 5
+    },
+    {
+      "yaw": 30,
+      "contractOk": true,
+      "mode": "replace",
+      "lightPixelShare": 0.0695,
+      "locksWithRing": 5
+    }
+  ],
+  "tones": {
+    "lock": "mass-5",
+    "rows": [
+      {
+        "tone": 0.6,
+        "variant": "paliers",
+        "peakOpacity": 0.431,
+        "peakRelativeDip": -0.335,
+        "gradients": 0
+      },
+      {
+        "tone": 0.6,
+        "variant": "lisse",
+        "peakOpacity": 0.431,
+        "peakRelativeDip": -0.335,
+        "gradients": 10
+      },
+      {
+        "tone": -0.3,
+        "variant": "paliers",
+        "peakOpacity": 0.44,
+        "peakRelativeDip": -0.335,
+        "gradients": 0
+      },
+      {
+        "tone": -0.3,
+        "variant": "lisse",
+        "peakOpacity": 0.44,
+        "peakRelativeDip": -0.335,
+        "gradients": 10
+      },
+      {
+        "tone": -0.9,
+        "variant": "paliers",
+        "peakOpacity": 0,
+        "peakRelativeDip": 0,
+        "gradients": 0
+      },
+      {
+        "tone": -0.9,
+        "variant": "lisse",
+        "peakOpacity": 0,
+        "peakRelativeDip": 0,
+        "gradients": 0
+      }
+    ]
+  },
+  "ringVerification": {
+    "cases": 18,
+    "passing": 18,
+    "defects": 0,
+    "rows": [
+      {
+        "light": "haut-gauche (réf.)",
+        "seed": 1,
+        "yaw": 0,
+        "ok": true,
+        "defects": 0,
+        "rings": 2,
+        "failing": []
+      },
+      {
+        "light": "haut-gauche (réf.)",
+        "seed": 1,
+        "yaw": 30,
+        "ok": true,
+        "defects": 0,
+        "rings": 2,
+        "failing": []
+      },
+      {
+        "light": "haut-gauche (réf.)",
+        "seed": 2,
+        "yaw": 0,
+        "ok": true,
+        "defects": 0,
+        "rings": 5,
+        "failing": []
+      },
+      {
+        "light": "haut-gauche (réf.)",
+        "seed": 2,
+        "yaw": 30,
+        "ok": true,
+        "defects": 0,
+        "rings": 5,
+        "failing": []
+      },
+      {
+        "light": "haut-gauche (réf.)",
+        "seed": 3,
+        "yaw": 0,
+        "ok": true,
+        "defects": 0,
+        "rings": 1,
+        "failing": []
+      },
+      {
+        "light": "haut-gauche (réf.)",
+        "seed": 3,
+        "yaw": 30,
+        "ok": true,
+        "defects": 0,
+        "rings": 4,
+        "failing": []
+      },
+      {
+        "light": "haut-droite",
+        "seed": 1,
+        "yaw": 0,
+        "ok": true,
+        "defects": 0,
+        "rings": 3,
+        "failing": []
+      },
+      {
+        "light": "haut-droite",
+        "seed": 1,
+        "yaw": 30,
+        "ok": true,
+        "defects": 0,
+        "rings": 1,
+        "failing": []
+      },
+      {
+        "light": "haut-droite",
+        "seed": 2,
+        "yaw": 0,
+        "ok": true,
+        "defects": 0,
+        "rings": 3,
+        "failing": []
+      },
+      {
+        "light": "haut-droite",
+        "seed": 2,
+        "yaw": 30,
+        "ok": true,
+        "defects": 0,
+        "rings": 2,
+        "failing": []
+      },
+      {
+        "light": "haut-droite",
+        "seed": 3,
+        "yaw": 0,
+        "ok": true,
+        "defects": 0,
+        "rings": 2,
+        "failing": []
+      },
+      {
+        "light": "haut-droite",
+        "seed": 3,
+        "yaw": 30,
+        "ok": true,
+        "defects": 0,
+        "rings": 4,
+        "failing": []
+      },
+      {
+        "light": "zénith",
+        "seed": 1,
+        "yaw": 0,
+        "ok": true,
+        "defects": 0,
+        "rings": 2,
+        "failing": []
+      },
+      {
+        "light": "zénith",
+        "seed": 1,
+        "yaw": 30,
+        "ok": true,
+        "defects": 0,
+        "rings": 2,
+        "failing": []
+      },
+      {
+        "light": "zénith",
+        "seed": 2,
+        "yaw": 0,
+        "ok": true,
+        "defects": 0,
+        "rings": 5,
+        "failing": []
+      },
+      {
+        "light": "zénith",
+        "seed": 2,
+        "yaw": 30,
+        "ok": true,
+        "defects": 0,
+        "rings": 3,
+        "failing": []
+      },
+      {
+        "light": "zénith",
+        "seed": 3,
+        "yaw": 0,
+        "ok": true,
+        "defects": 0,
+        "rings": 2,
+        "failing": []
+      },
+      {
+        "light": "zénith",
+        "seed": 3,
+        "yaw": 30,
+        "ok": true,
+        "defects": 0,
+        "rings": 3,
+        "failing": []
+      }
+    ]
+  }
+}

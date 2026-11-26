@@ -1,8 +1,9 @@
-import type { HairLock, HairLockGeom, LockKind, LockRank } from '../face/hair/types';
+import type { HairLock, HairLockGeom, HairLockRing, LockKind, LockRank } from '../face/hair/types';
 import { bladeOutline, type Blade } from './blade';
 import type { HeadSpec } from './head';
 import type { LockGeom } from './local-geometry';
 import type { PaintedLock } from './paint';
+import type { RingBands } from './spec-ring';
 import type { V2 } from './vec';
 
 /**
@@ -35,11 +36,20 @@ export function rankOf(b: Blade, headW: number): LockRank { const w = 2 * Math.m
 
 export interface InteropOpts { readonly frame: Frame; readonly head: HeadSpec; readonly headW: number }
 /** Mèche peinte, éventuellement accompagnée de sa géométrie locale (`paintLockPro` → `ProLock`) : si elle y est, elle passe dans la `HairLock`. */
-export type PaintedWithGeom = PaintedLock & { readonly geom?: LockGeom };
+export type PaintedWithGeom = PaintedLock & { readonly geom?: LockGeom; readonly ring?: RingBands };
 
-/** Géométrie locale du moteur de grammaire → `HairLockGeom` du moteur principal, dans son repère (largeur × échelle k de la similitude ; le reste est sans unité). */
-export function toHairLockGeom(g: LockGeom, k: number): HairLockGeom {
-  return { width: g.width.map((w) => w * k), twist: [...g.twist], backface: [...g.backface], occlusion: [...g.occlusion], exposure: [...g.exposure] };
+/** Reflet transversal → `HairLockRing` dans le repère du moteur principal : points par la similitude, poids et force inchangés (sans unité). */
+export function toHairLockRing(r: RingBands, f: Frame): HairLockRing {
+  const p = (q: V2): V2 => applyFrame(f, q);
+  return { highlight: r.highlight.map(p), strength: r.strength, shade: r.shade.map((s) => ({ poly: s.poly.map(p), from: p(s.from), to: p(s.to), w0: s.w0, w1: s.w1 })) };
+}
+
+/**
+ * Géométrie locale du moteur de grammaire → `HairLockGeom` du moteur principal, dans son repère (largeur × échelle k de la similitude ; le reste est sans unité).
+ * `ring` (+ la similitude complète, car les points tournent et se translatent) : le reflet transversal retenu par la garde de rendu, s'il y en a un.
+ */
+export function toHairLockGeom(g: LockGeom, k: number, ring?: { readonly bands: RingBands; readonly frame: Frame }): HairLockGeom {
+  return { width: g.width.map((w) => w * k), twist: [...g.twist], backface: [...g.backface], occlusion: [...g.occlusion], exposure: [...g.exposure], ...(ring ? { ring: toHairLockRing(ring.bands, ring.frame) } : {}) };
 }
 
 export function grammarToHairLocks(painted: readonly PaintedWithGeom[], o: InteropOpts): HairLock[] {
@@ -51,7 +61,7 @@ export function grammarToHairLocks(painted: readonly PaintedWithGeom[], o: Inter
     return {
       poly, rank, tone: Math.max(-1, Math.min(1, p.spec.tone)), layer: p.layer, edge: rank === 'mass' || rank === 'main', kind: KIND[p.spec.family] ?? 'lock',
       spine, w0: 2 * (p.blade.half[Math.round(p.blade.half.length * 0.4)] as number) * o.frame.k, profile: 'ribbon', tier,
-      ...(p.geom ? { geom: toHairLockGeom(p.geom, o.frame.k) } : {}),
+      ...(p.geom ? { geom: toHairLockGeom(p.geom, o.frame.k, p.ring ? { bands: p.ring, frame: o.frame } : undefined) } : {}),
       ...(p.spec.root.el > 60 ? { zone: 'top' as const } : {}),
     };
   });
@@ -75,6 +85,11 @@ export function checkHairLockContract(locks: readonly HairLock[], headW: number)
       if (g.width.length !== n || g.twist.length !== n || g.backface.length !== n || g.occlusion.length !== n) bad('geom : tableaux alignés sur la spine');
       // Une pointe se termine à largeur NULLE (profil effilé) : on exige des largeurs finies ≥ 0 dont une au moins > 0, pas partout > 0.
       else if (g.width.some((w) => !(w >= 0) || !Number.isFinite(w)) || !g.width.some((w) => w > 0) || g.twist.some((t) => !Number.isFinite(t)) || g.occlusion.some((o) => !(o >= 0 && o <= 1))) bad('geom : largeurs finies ≥ 0 (une > 0), torsion finie, occlusion ∈ [0, 1]');
+      if (g.ring) {
+        const r = g.ring; const pts = [...r.highlight, ...r.shade.flatMap((s) => [...s.poly, s.from, s.to])];
+        if (r.highlight.length < 4 || pts.some((p) => !Number.isFinite(p.x) || !Number.isFinite(p.y)) || !(r.strength >= 0 && r.strength <= 1)) bad('ring : bande ≥ 4 points finis, force ∈ [0, 1]');
+        else if (r.shade.some((s) => !(s.w0 >= 0 && s.w0 <= 1 && s.w1 >= 0 && s.w1 <= 1) || s.w1 > s.w0 + 1e-9) || r.shade.some((s, j) => j > 0 && (Math.hypot((r.shade[j - 1] as { to: V2 }).to.x - s.from.x, (r.shade[j - 1] as { to: V2 }).to.y - s.from.y) > 1e-6 || Math.abs((r.shade[j - 1] as { w1: number }).w1 - s.w0) > 1e-9))) bad('ring : ombre aux poids ∈ [0, 1], non croissants, segments raccordés');
+      }
     }
   });
   return out;

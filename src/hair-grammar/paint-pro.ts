@@ -4,8 +4,10 @@ import { localGeometry, lightScreen, LIGHT, occlusionProfile, type Light, type L
 import { walk, type LockSpec } from './lock';
 import { relationsOf } from './occlusion';
 import { renderResolved, type ResolvedPainting } from './occlusion-paint';
-import { ringBands } from './spec-ring';
+import { peakShadeOpacity } from '../core/shade';
+import { ringBands, type RingBands } from './spec-ring';
 import { shoulderOpacityFor } from './ring-tone';
+import { shadeMarkup } from './ring-shade';
 import { ringIsSane } from './ring-check';
 import { INK, fillOf, layerOfLock, strandLines, type PaintStyle, type PaintedLock } from './paint';
 import type { V2 } from './vec';
@@ -23,11 +25,16 @@ import type { V2 } from './vec';
  */
 export interface ProStyle extends PaintStyle {
   readonly shadow: string; readonly highlight: string; readonly ring?: 'off' | 'replace' | 'add';
-  /** Ombre aval du reflet transversal : par défaut (absent) longueur `RING.shoulderLen` et opacité selon le ton (`ring-tone.ts`, passe 7). `{ len: 0.2, opacity: 0.12 }` rend l'ombre de la passe 6 (retour arrière, planches comparatives). */
-  readonly shoulder?: { readonly len?: number; readonly opacity?: number };
+  /**
+   * Ombre aval du reflet transversal. `profile` : `'smooth'` (défaut, passe 8) = dégradé au profil mesuré (`ring-shade.ts`), opacité de CRÊTE selon le ton (`core/shade.ts`) ou `opacity` s'il est donné ;
+   * `'steps'` = trois paliers à bords durs des passes 6–7, `opacity` = opacité PAR palier (défaut : selon le ton, `ring-tone.ts`). `{ profile: 'steps', len: 0.2, opacity: 0.12 }` rend l'ombre de la passe 6.
+   * `len` : longueur de l'ombre (fraction de la mèche), défaut `RING.shoulderLen`.
+   */
+  readonly shoulder?: { readonly len?: number; readonly opacity?: number; readonly profile?: 'smooth' | 'steps' };
 }
 export const INK_PRO: ProStyle = { ...INK, shadow: '#35353b', highlight: '#ffffff' };
-export interface ProLock extends PaintedLock { readonly geom: LockGeom }
+/** `ring` : reflet transversal retenu par la garde de rendu (`ringIsSane`) ; absent si `st.ring` est `'off'`/absent ou si la garde l'a refusé — le rendu principal le dessine alors à son tour (`interop.ts` → `HairLockGeom.ring`). */
+export interface ProLock extends PaintedLock { readonly geom: LockGeom; readonly ring?: RingBands }
 
 /** Point de la lame à l'échantillon i, position latérale u ∈ [−1, 1] (+1 = bord gauche dans le sens racine → pointe). */
 const at = (b: Blade, g: LockGeom, i: number, u: number): V2 => { const p = b.spine[i] as V2; const nrm = g.normal[i] as V2; const w = b.half[i] as number; return { x: p.x + nrm.x * u * w, y: p.y + nrm.y * u * w }; };
@@ -53,19 +60,20 @@ export function paintLockPro(h: HeadSpec, L: LockSpec, view: View, st: ProStyle 
   // Reflet : collé au bord éclairé, largeur ∝ exposition × |cos φ|, éteint sur le dessous du ruban.
   const hi = band(blade, geom, (i) => side(i) * 0.5, (i) => env(i) * (0.07 + 0.2 * (geom.exposure[i] as number) ** 2) * face(i) * (L.tone < -0.6 ? 0.6 : 1));
   if (hi && st.ring !== 'replace') { const e = geom.exposure.reduce((a, b) => a + b, 0) / n; const back = geom.backface.filter(Boolean).length / n; parts.push(`<path d="${smoothPath(hi, true)}" fill="${st.highlight}" opacity="${Math.max(0.15, (0.35 + 0.6 * e) * (1 - 0.7 * back)).toFixed(2)}"/>`); }
+  let kept: RingBands | undefined;
   if (st.ring === 'replace' || st.ring === 'add') {
     const r = ringBands(blade, geom, L, view, light, st.shoulder?.len);
     // Garde de rendu : un reflet qui sort de la lame, n'est pas transverse, est sur le dessous, trop peu exposé ou trop large (`ring-check.ts`) n'est pas dessiné ; la mèche n'a alors pas de reflet.
     if (r && ringIsSane({ spec: L, blade, geom }, r)) {
-      // Zone sombre aval d'abord (trois paliers cumulés), puis la bande par-dessus.
-      // Opacité selon le ton (`ring-tone.ts`) : le creux relatif mesuré (−33 %) vaut pour toutes les teintes ; 0 sous un remplissage plus sombre que l'ombre (elle l'éclaircirait).
-      const so = st.shoulder?.opacity ?? shoulderOpacityFor(fillOf(L.tone, st), st.shadow);
-      if (so > 0) for (const q of r.shoulder) parts.push(`<path d="${smoothPath(q, true)}" fill="${st.shadow}" opacity="${so.toFixed(3)}"/>`);
+      kept = r;
+      // Zone sombre aval d'abord, puis la bande par-dessus. Le creux relatif mesuré (−33 %) vaut pour toutes les teintes : l'opacité dépend du ton ; 0 sous un remplissage plus sombre que l'ombre (elle l'éclaircirait).
+      if ((st.shoulder?.profile ?? 'smooth') === 'smooth') parts.push(shadeMarkup(r.shade, st.shoulder?.opacity ?? peakShadeOpacity(fillOf(L.tone, st), st.shadow), st.shadow)); // dégradé lisse (passe 8)
+      else { const so = st.shoulder?.opacity ?? shoulderOpacityFor(fillOf(L.tone, st), st.shadow); if (so > 0) for (const q of r.shoulder) parts.push(`<path d="${smoothPath(q, true)}" fill="${st.shadow}" opacity="${so.toFixed(3)}"/>`); } // trois paliers (passes 6–7)
       parts.push(`<path d="${r.highlight.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join('')}Z" fill="${st.highlight}" opacity="${(0.55 + 0.4 * r.strength).toFixed(2)}"/>`);
     }
   }
   for (const line of strandLines(blade, L.strands)) parts.push(`<path d="${smoothPath(line)}" fill="none" stroke="#111" stroke-width="0.4" opacity="0.5"/>`);
-  return { spec: L, blade, layer, svg: parts.join(''), geom };
+  return { spec: L, blade, layer, svg: parts.join(''), geom, ...(kept ? { ring: kept } : {}) };
 }
 
 /** Coiffure complète en finition pilotée par la géométrie locale, occlusion locale incluse (mèches émergentes et groupes de tressage). */

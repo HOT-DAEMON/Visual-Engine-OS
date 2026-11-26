@@ -77,7 +77,18 @@ export interface HairLockGeom {
    * Seule grandeur de cette interface qui dépend de la lumière — et de la MÊME que `LockStyle.ld`, jamais d'une seconde lumière. Absente : gain de reflet neutre.
    */
   readonly exposure?: readonly number[];
+  /** Reflet TRANSVERSAL du moteur de grammaire (référence 60), déjà dans le repère de cette mèche. Absent (mode « off », défaut) : le rendu est inchangé. */
+  readonly ring?: HairLockRing;
 }
+
+/** Segment d'ombre aval : quadrilatère `poly`, axe de dégradé `from` → `to`, poids du profil (0–1) à chaque bout (`hair-grammar/ring-shade.ts`). */
+export interface HairLockShade { readonly poly: readonly Vec[]; readonly from: Vec; readonly to: Vec; readonly w0: number; readonly w1: number }
+
+/**
+ * REFLET TRANSVERSAL d'une mèche (passe 8) : bande blanche `highlight` (polygone fermé), ombre aval lisse `shade` (segments raccordés, poids non croissant),
+ * `strength` ∈ [0, 1] (opacité de la bande). Calculé et validé par le moteur de grammaire (`ringIsSane`) ; le rendu principal ne fait que le dessiner (`render/face/hair-ring.ts`).
+ */
+export interface HairLockRing { readonly highlight: readonly Vec[]; readonly shade: readonly HairLockShade[]; readonly strength: number }
 
 /** Masse de sous-couche visible d'un étage : silhouette, ton relatif et décalage de teinte (degrés). */
 export interface TierMass {
