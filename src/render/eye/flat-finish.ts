@@ -12,7 +12,9 @@ import type { EyeSpec } from '../../schema';
  * Fonction pure : `resolveEye` l'applique AVANT tout (le rendu et `verifyEye` lisent donc le même œil), et le rendu lit `eye.finish` pour les
  * ombrages qui ne passent pas par un paramètre (voir `isFlat`).
  */
-export const isFlat = (eye: Pick<EyeSpec, 'finish'>): boolean => eye.finish === 'flat';
+export const isFlat = (eye: Pick<EyeSpec, 'finish'>): boolean => eye.finish === 'flat' || eye.finish === 'cel';
+/** Fini `cel` (passe 19) : tout ce que retire `flat`, SAUF l'ombre portée des paupières, redessinée en aplat à bord dur (`globe-inner.ts`). */
+export const hasCastShadow = (eye: Pick<EyeSpec, 'finish'>): boolean => eye.finish === 'cel';
 
 const solid = (color: string): { type: 'solid'; color: string } => ({ type: 'solid', color });
 

@@ -1,6 +1,7 @@
 import { EDGE_MAX_DEV, cubicAt, eyeEdges, type OpeningGeometry, type Vec } from '../geometry/eye';
 import { warpOf } from '../render/eye/cornea';
 import { resolveEye, withAutoLod } from '../render/eye/eye';
+import { isFlat } from '../render/eye/flat-finish';
 import type { EyeSpec } from '../schema';
 import { check, type Check } from './types';
 
@@ -42,7 +43,7 @@ export function checkEyeCornea(raw: EyeSpec, eye: EyeSpec, g: OpeningGeometry): 
     const poly = [...e.upper, ...e.lower.slice(1, -1)]; let selfX = 0;
     for (let i = 0; i < poly.length; i++) for (let j = i + 2; j < poly.length; j++) { if (i === 0 && j === poly.length - 1) continue; if (crosses(poly[i] as Vec, poly[(i + 1) % poly.length] as Vec, poly[j] as Vec, poly[(j + 1) % poly.length] as Vec)) selfX++; }
     out.push(check('geometry', 'edge-opening-simple', '==', selfX, 0, 'le contour irrégulier de l’ouverture se recoupe lui-même'));
-    if (eye.finish === 'flat') out.push(check('style', 'edge-flat-clean', '<=', md.edge.irregularity, FLAT_EDGE_IRREGULARITY_MAX, 'un œil au trait net (finish flat) porte un bord très irrégulier : style incohérent', 'warn'));
+    if (isFlat(eye)) out.push(check('style', 'edge-flat-clean', '<=', md.edge.irregularity, FLAT_EDGE_IRREGULARITY_MAX, 'un œil au trait net (finish flat) porte un bord très irrégulier : style incohérent', 'warn'));
   }
   return out;
 }

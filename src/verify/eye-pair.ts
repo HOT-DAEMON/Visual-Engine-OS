@@ -28,7 +28,8 @@ export function checkEyePair(face: RandomFace): Check[] {
   o.push(check('style', 'eyes-same-identity', '==', same ? 1 : 0, 1, 'les deux yeux ne sont pas de la même identité (enveloppe, iris ou sclère différents)'));
   o.push(check('style', 'eyes-same-finish', '==', (L.finish ?? 'shaded') === (R.finish ?? 'shaded') ? 1 : 0, 1, 'un œil est en aplats (flat) et l’autre peint : le style de la tête n’est pas homogène'));
   // (passe 19) Style : une tête cel (aplats à bords nets) avec des yeux ombrés (dégradés, vernis, ombre de paupière), ou l'inverse, n'est pas une seule main. Avertissement, jamais erreur : un œil peint sur une tête cel peut être un choix.
-  const eyesFlat = (L.finish ?? 'shaded') === 'flat' && (R.finish ?? 'shaded') === 'flat';
+  const flatish = (e: EyeObj): boolean => e.finish === 'flat' || e.finish === 'cel';
+  const eyesFlat = flatish(L) && flatish(R);
   o.push(check('style', 'eyes-finish-matches-head', '==', faceIsCel(face.params) === eyesFlat ? 1 : 0, 1, 'le fini des yeux (aplats / ombré) ne suit pas le style de la tête (cel / lisse)', 'warn'));
   const both = (f: (e: EyeObj) => unknown): boolean => Boolean(f(L)) === Boolean(f(R));
   o.push(check('anatomy', 'eyes-micro-presence', '==', both((e) => e.microdetail?.edge) && both((e) => e.microdetail?.canthusLines) ? 1 : 0, 1, 'bord irrégulier ou plis des canthi présents sur un seul œil', 'warn'));

@@ -47,10 +47,11 @@ export const EyeSpec = z
      */
     skin: MaterialRef.nullable().default(null),
     /**
-     * Fini du dessin : `shaded` (défaut, comportement historique : ombrage de sphère, ombre des paupières, vignettage, dégradés) ou `flat` (APLATS FRANCS des références
-     * au trait : aucune ombre ni dégradé ajoutés par le moteur ; seules les couleurs choisies restent) — voir `render/eye/flat-finish.ts`.
+     * Fini du dessin : `shaded` (défaut, comportement historique : ombrage de sphère, ombre des paupières, vignettage, dégradés) `flat` (APLATS FRANCS des références
+     * au trait : aucune ombre ni dégradé ajoutés par le moteur ; seules les couleurs choisies restent) ou `cel` (passe 19 : `flat` + ombre portée des paupières en APLAT à bord dur,
+     * comme la réf. 01 — iris et sclère à deux tons) — voir `render/eye/flat-finish.ts`.
      */
-    finish: z.enum(['shaded', 'flat']).default('shaded'),
+    finish: z.enum(['shaded', 'flat', 'cel']).default('shaded'),
     /** `fast` (défaut) : ombres douces SANS filtre (≈ 4× plus rapide à rastériser, voir `render/eye/soft-shadow.ts`) ; `reference` : flou gaussien SVG historique. */
     renderQuality: z.enum(['fast', 'reference']).default('fast'),
     /** Moteur d'apparence partagé (ombre/lumière/contour dérivés, effets sur l'iris, étalonnage) — voir `render/eye/look.ts`. null : aucun. */

@@ -3,6 +3,7 @@ import { darken } from '../../core/color';
 import { el, urlRef } from '../../core/svg';
 import { edgeColor, gradientStop as stop } from '../../materials';
 import type { EyeSpec } from '../../schema';
+import { isFlat } from './flat-finish';
 import type { Vec } from '../../geometry/eye';
 
 /** Loi radiale de la cornée de cet œil (identité si `cornea` est null). */
@@ -37,7 +38,7 @@ export function applyCornea(eye: EyeSpec): EyeSpec {
 
 /** EYE-03F — transition cornéosclérale : halo de la teinte du limbe, DEHORS de l'iris (nul au-dedans). Largeur ∝ courbure (la bosse cornéenne est plus marquée). `null` si `haze` = 0. */
 export function limbalHaze(eye: EyeSpec, c: Vec, rx: number, ry: number, id: string, defs: string[]): string | null {
-  const co = eye.cornea; if (!co || co.haze <= 0 || eye.finish === 'flat') return null;   // fini flat : aucun dégradé ajouté par le moteur
+  const co = eye.cornea; if (!co || co.haze <= 0 || isFlat(eye)) return null;   // fini flat : aucun dégradé ajouté par le moteur
   const k = 0.1 + 0.14 * co.curvature; const col = darken(edgeColor(eye.iris.material.base), 0.25); const inner = 1 / (1 + k);
   defs.push(el('radialGradient', { id: `${id}-haze`, cx: 0.5, cy: 0.5, r: 0.5 }, [stop(0, col, 0), stop(inner * 0.97, col, 0), stop(inner, col, 0.5 * co.haze), stop(1, col, 0)]));
   return el('ellipse', { cx: c.x, cy: c.y, rx: rx * (1 + k), ry: ry * (1 + k), fill: urlRef(`${id}-haze`) });

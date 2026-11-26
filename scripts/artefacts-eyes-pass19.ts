@@ -26,7 +26,7 @@ const caption = (f: ReturnType<typeof face>, tag: string): string => `${tag} · 
 const cells: { img: Buffer; label: string }[] = []; const crops: { img: Buffer; label: string }[] = [];
 const grad: Record<string, unknown>[] = [];
 for (const seed of [23, 5, 11]) {
-  for (const [tag, o] of [['avant', { anatomy: { style: 'cel' } }], ['après auto', { anatomy: { style: 'cel' }, eyeFinish: 'auto' }]] as [string, Opts][]) {
+  for (const [tag, o] of [['shaded', { anatomy: { style: 'cel' } }], ['flat', { anatomy: { style: 'cel' }, eyeFinish: 'flat' }], ['cel (auto)', { anatomy: { style: 'cel' }, eyeFinish: 'auto' }]] as [string, Opts][]) {
     const f = face(seed, o); const svg = svgOf(f);
     cells.push({ img: png(svg, 330), label: caption(f, `g${seed} ${tag}`) });
     const ic = faceLandmarks(f.params, f.width, f.height).innerCanthus.left; const cx = W / 2 + ic.x + f.fits.left.transform.x, cy = H / 2 + ic.y + f.fits.left.transform.y;
@@ -34,8 +34,8 @@ for (const seed of [23, 5, 11]) {
     grad.push({ seed, tag, eleme_degrade_filtre_oeil: eyeEls(svg), regle: verdict(f) });
   }
 }
-sheet('01-tete-cel-yeux-ombres-vs-accordes.png', cells, 330, 406, 2);
-sheet('01b-gros-plans-oeil-gauche.png', crops, 600, 360, 2);
+sheet('01-tete-cel-yeux-ombres-vs-accordes.png', cells, 330, 406, 3);
+sheet('01b-gros-plans-oeil-gauche.png', crops, 600, 360, 3);
 report.celGradientsFilters = grad;
 
 // 02 — yeux d'encre sur tête lisse → tête cel

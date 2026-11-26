@@ -29,9 +29,9 @@ describe('eyeFinish — le fini des yeux suit le style de la tête', () => {
   it('absent : visages inchangés ; auto sur tête lisse : identique à absent (octet pour octet)', () => {
     for (const s of SEEDS) expect(JSON.stringify(generateRandomFace(s, { eyeFinish: 'auto' }).objects)).toBe(JSON.stringify(generateRandomFace(s).objects));
   });
-  it('auto sur tête cel : les DEUX yeux en aplats ; shaded impose l’ombré ; flat impose les aplats sur tête lisse', () => {
+  it('auto sur tête cel : les DEUX yeux en fini cel ; shaded impose l’ombré ; flat impose les aplats sur tête lisse', () => {
     for (const s of SEEDS) {
-      expect(finishes(generateRandomFace(s, { anatomy: { style: 'cel' }, eyeFinish: 'auto' }))).toEqual(['flat', 'flat']);
+      expect(finishes(generateRandomFace(s, { anatomy: { style: 'cel' }, eyeFinish: 'auto' }))).toEqual(['cel', 'cel']);   // identités de galerie non encre : aplats + ombre portée dure
       expect(finishes(generateRandomFace(s, { anatomy: { style: 'cel' }, eyeFinish: 'shaded' }))).toEqual(['shaded', 'shaded']);
       expect(finishes(generateRandomFace(s, { eyeFinish: 'flat' }))).toEqual(['flat', 'flat']);
     }

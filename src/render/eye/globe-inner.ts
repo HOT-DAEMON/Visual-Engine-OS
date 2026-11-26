@@ -8,7 +8,7 @@ import { renderIrisDetail } from './iris-detail';
 import { renderHighlights } from './highlights-render';
 import { renderIrisLayers } from './iris-layers-render';
 import { renderMicrodetail } from './micro-render';
-import { flatSurface, isFlat } from './flat-finish';
+import { flatSurface, hasCastShadow, isFlat } from './flat-finish';
 import { limbalHaze } from './cornea';
 import { softShadow } from './soft-shadow';
 import { openingPolygon, isIdentityJac } from '../../geometry/eye';
@@ -38,6 +38,9 @@ export function saturationMatrix(k: number): string {
 
 /** Courbe de la luminosité des demi-teintes (`iris.lift`) : identité sous 0,35 (les noirs de l'iris ne bougent pas : la part sombre est mesurée à L < 50 / 255) et en 1 (les blancs), bosse sinusoïdale entre les deux, 9 points. */
 export const liftTable = (lift: number): string => Array.from({ length: 9 }, (_, i) => { const x = i / 8; const t = Math.min(1, Math.max(0, (x - 0.35) / 0.65)); return Math.min(1, x + 0.4 * lift * Math.sin(Math.PI * t)).toFixed(4); }).join(' ');
+
+/** Profondeur de l'ombre portée du fini `cel`, en fraction de la hauteur effective de l'ouverture (l'ombre douce du fini `shaded` : 0,2). Choisie pour que le croissant atteigne l'iris (réf. 01 : l'ombre couvre ≈ la moitié de l'iris au centre) ; ESTIMÉE, non ajustée à une mesure de l'ouverture de la réf. */
+export const CEL_SHADOW_DEPTH = 0.45;
 
 export function renderGlobeInner(
   eye: EyeSpec,
@@ -177,6 +180,15 @@ export function renderGlobeInner(
   const margin = Math.max(g.bbox.w, g.bbox.h) * 0.25;
   const b = g.bbox;
   const outer = `M${num(b.x - margin)} ${num(b.y - margin)}H${num(b.x + b.w + margin)}V${num(b.y + b.h + margin)}H${num(b.x - margin)}Z`;
+  // Fini « cel » (passe 19) : l'ombre portée est un APLAT à bord dur — le même croissant que l'ombre douce (contour de l'ouverture décalé à l'opposé de la lumière, donc incliné comme
+  // la lumière), sans flou ni dégradé : sur un iris et une sclère unis elle fait exactement deux tons, comme la réf. 01 (iris jaune éclairé / orange d'ombre, frontière inclinée).
+  // Teinte : celle de l'ombre douce du fini `shaded` (une ombre ASSOMBRIT toujours : peinte de la couleur de la peau, elle éclaircissait les surfaces sombres) ; opacité 0,4 : estimation, non mesurée.
+  // Non reproduit de la réf. 01 : le virage chaud de l'ombre (jaune → orange) et la frontière dentelée.
+  if (flat && hasCastShadow(eye)) {
+    const celDist = g.hEff * CEL_SHADOW_DEPTH; const sdx = -L.x * celDist; const sdy = -L.y * celDist; const away = (p: Vec): Vec => ({ x: p.x + sdx, y: p.y + sdy });
+    const shifted = edges ? `M${P(away(edges.upper[0]!))}${smoothThrough(edges.upper.map(away))}${smoothThrough(edges.lower.map(away))}Z` : openingPath(g, sdx, sdy);
+    inner.push(el('path', { d: outer + shifted, 'fill-rule': 'evenodd', fill: look ? darken(look.skin.shadow, 0.55) : '#000000', 'fill-opacity': 0.4 }));
+  }
   // Fini « flat » : ni ombre portée des paupières ni vignettage d'orbite (aplats francs, voir flat-finish.ts).
   if (!flat) {
     const shadowColor = look ? darken(look.skin.shadow, 0.55) : '#000000';

@@ -44,10 +44,10 @@ export interface RandomFaceOptions extends ExtrasOverride {
   /** Famille de cils (réfs 12–16, voir eye-lash-families.ts) : un identifiant l'impose aux deux yeux ; 'auto' en tire une d'un flux dérivé dédié (les autres tirages ne bougent pas) ; absent ou null = cils de l'identité d'origine (visages d'avant inchangés). */
   readonly lashFamily?: LashFamilyId | 'auto' | null;
   /**
-   * Fini des DEUX yeux (`EyeSpec.finish`). `'flat'` / `'shaded'` l'imposent. `'auto'` accorde tête et yeux dans les DEUX sens : tête cel (`faceIsCel`) → yeux en aplats ; identité à yeux
+   * Fini des DEUX yeux (`EyeSpec.finish`). `'flat'` / `'cel'` / `'shaded'` l'imposent. `'auto'` accorde tête et yeux dans les DEUX sens : tête cel (`faceIsCel`) → yeux `cel` (aplats + ombre portée dure) ; identité à yeux
    * d'encre (aplats) sur une tête dont `anatomy.style` n'est pas imposé → tête cel ; sinon rien ne change. Absent : visages d'avant identiques. Ce que `checkEyePair` signale (`eyes-finish-matches-head`).
    */
-  readonly eyeFinish?: 'auto' | 'shaded' | 'flat';
+  readonly eyeFinish?: 'auto' | 'shaded' | 'flat' | 'cel';
   /** Identité de galerie imposée (0–47, 0–147 si eyeSource = 'extended', 0–247 si 'extended2', 0–347 si 'extended3', 0–447 si 'extended4') ; sinon tirée. Ignoré si eyeSource = 'random'. */
   readonly identity?: number;
   /** Expression imposée (yeux ET bouche) ; sinon tirée. */
@@ -123,7 +123,9 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
   // Creux de la paupière basse (passe 11) : même valeur pour les deux yeux (une paire a le même profil, miroir près).
   const lp = options.eyeLowerPeak === undefined ? undefined : options.eyeLowerPeak === 'auto' ? LOWER_PEAK_RANGE[0] + mulberry32((seed ^ 0x10ae9ea4) >>> 0)() * (LOWER_PEAK_RANGE[1] - LOWER_PEAK_RANGE[0]) : options.eyeLowerPeak;
   const withPeak = (e: EyeInput): EyeInput => (lp !== undefined && e.kind === 'eye' ? ({ ...e, shape: { ...e.shape, lowerPeak: lp } } as EyeInput) : e);
-  const finish = options.eyeFinish === 'auto' ? (faceIsCel(params) ? 'flat' : undefined) : options.eyeFinish;
+  // `auto` : tête cel + identité non encre → fini `cel` (aplats + ombre portée dure, comme la peau cel) ; identité encre (déjà `flat`, sans ombre : réfs 13/17) inchangée ; tête lisse : rien.
+  const inkPair = pair0.left.kind === 'eye' && (pair0.left as { finish?: string }).finish === 'flat';
+  const finish = options.eyeFinish === 'auto' ? (faceIsCel(params) && !inkPair ? 'cel' : undefined) : options.eyeFinish;
   const withFinish = (e: EyeInput): EyeInput => (finish && e.kind === 'eye' ? ({ ...e, finish } as EyeInput) : e);
   const pair: Record<EyeSide, EyeInput> = { left: withFinish(withPeak(withLashes(pair0.left))), right: withFinish(withPeak(withLashes(pair0.right))) };
 

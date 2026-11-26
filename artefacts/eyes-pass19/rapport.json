@@ -2,37 +2,55 @@
  "celGradientsFilters": [
   {
    "seed": 23,
-   "tag": "avant",
+   "tag": "shaded",
    "eleme_degrade_filtre_oeil": 26,
    "regle": "AVERTIT"
   },
   {
    "seed": 23,
-   "tag": "après auto",
+   "tag": "flat",
+   "eleme_degrade_filtre_oeil": 2,
+   "regle": "passe"
+  },
+  {
+   "seed": 23,
+   "tag": "cel (auto)",
    "eleme_degrade_filtre_oeil": 2,
    "regle": "passe"
   },
   {
    "seed": 5,
-   "tag": "avant",
+   "tag": "shaded",
    "eleme_degrade_filtre_oeil": 22,
    "regle": "AVERTIT"
   },
   {
    "seed": 5,
-   "tag": "après auto",
+   "tag": "flat",
+   "eleme_degrade_filtre_oeil": 2,
+   "regle": "passe"
+  },
+  {
+   "seed": 5,
+   "tag": "cel (auto)",
    "eleme_degrade_filtre_oeil": 2,
    "regle": "passe"
   },
   {
    "seed": 11,
-   "tag": "avant",
+   "tag": "shaded",
    "eleme_degrade_filtre_oeil": 24,
    "regle": "AVERTIT"
   },
   {
    "seed": 11,
-   "tag": "après auto",
+   "tag": "flat",
+   "eleme_degrade_filtre_oeil": 4,
+   "regle": "passe"
+  },
+  {
+   "seed": 11,
+   "tag": "cel (auto)",
    "eleme_degrade_filtre_oeil": 4,
    "regle": "passe"
   }
