@@ -1,42 +1,42 @@
 {
   "c1-tres-muscle-soft": {
-    "svg": "57914edcdf7b50a3f00f938b482409a542183dd8",
-    "body": "c57c60a6894f12de685844a1f49454e2eb48ce83",
+    "svg": "8ee54a7ba42fee8a2cbd545f2478e877bc8879b9",
+    "body": "6657bf9fb9659642cac25bea3cc845869e8d4895",
     "lit": "8327766339ebcedf9c523c1a4cee06182ffc09d3",
     "cast": "49bd9fcb9495fc9d3b7e9162e7d090fc26134fe6"
   },
   "c2-femme-cel2-haute": {
-    "svg": "3cda0551cbd7ce9cd6c411509b1f6c0dbec6290d",
-    "body": "9435ddb96ba077ab093bb0deaddbfef3f2a5b5c0",
+    "svg": "0d07f0ede077c47b412c3ea338362dfc6cd4a5fd",
+    "body": "c49f52e86adeeb36711caeb7354bbf8d0f643cc0",
     "lit": "bb2683f226c1af8d35032e84bde20ad380223f86",
     "cast": "e1d9eea76ebad5f434d62f60b92ad1fe95fb21fc"
   },
   "c3-corpulent-dure-rasante": {
-    "svg": "e072a86cd54096aeb038eab1f1ef900508baf928",
-    "body": "a372c14c862d739ac3d4fb95aaf1d14d337cbccc",
+    "svg": "67ba6186d82ac2aaa70820723bbecc189f1174f5",
+    "body": "3df2c45cb01d9c90143ea2bdf50753379e1930c4",
     "lit": "dd50c273577dc410c5b560eb75fa6802f33c4ce5",
     "cast": "7b35236e2bce4b1f541ace76bb2b4be28f26647d"
   },
   "c4-enfant-cel3-ss1": {
-    "svg": "cd8dc1b9cc40f0b1dc26ebbc2fcaa63475985b54",
-    "body": "4e909081397697eb6167575e49cfb731cd78406d",
+    "svg": "2bfd6f55dfbc007a5eadcc16580dd85c437091a8",
+    "body": "e2483243fff05f22a790e7a41837d85a7f5651d9",
     "lit": "4996aa273ce77e805fcbda01a79fe08e136733df",
     "cast": "11706a4d17872dd2e0b9126155b5f2892d806b18"
   },
   "c5-mince-camera-35deg": {
-    "svg": "df7efd0e0262a669e25edc5e2c2df2c15a3648f6",
-    "body": "14a77f5d2bc5274d6cfa35a9dea040bf11e9b9ef",
+    "svg": "d102f44af0045be70b0e95816543856f9a8c3df8",
+    "body": "5ceef4b78b16a8a9770056ffb06ff56b13ac6094",
     "lit": "2e6d08488fc1fb5942fd026e235ef1f343c80727",
     "cast": "8a97a45507dbd1709ac99af2a1640a2b03145dcc"
   },
   "c6-muscle-rapide-ppu16": {
-    "svg": "f64a5906425dbdadb2d63b1143ce6874327e9999",
-    "body": "ebcffcb18e75326ad43d6a242418b1e3e33f7763",
+    "svg": "154225cc076bb17da938ecd29a366843ff085039",
+    "body": "7e4045b9fcc38c286322981307d64e29ea5f8d8a",
     "lit": "8a832fc8b7c1625aaccff1aa13a50ef546a4c531",
     "cast": "b36d7b524848eb1dddf47c03b3dddef04b05e410"
   },
   "c7-corps-seul-ancien-eclairage": {
-    "svg": "0d770ce5293cbc880c473b42189025629bba7197",
-    "body": "f45de552ee3f898ab2b16c342ec5dc21af0c764a"
+    "svg": "b9b9134c1e88cc52febe07f4a8bd70e975a248e0",
+    "body": "bfc35141b17d4c95775f63ed3b5c582ad9add7d3"
   }
 }

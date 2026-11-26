@@ -1,6 +1,7 @@
 import type { BodyInput, NeckAnchor } from '../body';
 import { reveal, tierOf } from '../body/muscle-tiers';
 import { renderVolumes, type VolumeSet } from '../body/volume';
+import { backReliefChecks } from './back-relief';
 import type { VCheck, VReport } from './volume';
 
 const chk = (id: string, layer: VCheck['layer'], ok: boolean, detail: string): VCheck => ({ id, layer, ok, detail });
@@ -13,7 +14,6 @@ const ext = (v: { stations: readonly { c: { x: number; y: number } }[] }, k: 'x'
  *  STYLE     : la lame (os) reste cachée par défaut sous les muscles ; le relief de surface (épine, infra-épineux, grand rond) est dessiné ; `showHidden` la révèle.
  */
 export function verifyBack(set: VolumeSet, _raw: BodyInput, _a: NeckAnchor): VReport {
-  void _raw; void _a;
   const C: VCheck[] = [], m = set.measures, H = m.h as number, acrX = Math.abs(set.landmarks.get('acromion.L')!.x), c7Y = m.c7Y as number, t12Y = m.t12Y as number;  // niveaux OSSEUX (axe vertébral) : les sphères d'articulation, décalées le long de la normale, ne sont pas des repères de niveau
   const sL = set.byId.get('scapula.L'), sR = set.byId.get('scapula.R'), spL = set.byId.get('scapular-spine.L');
   // ── Géométrie ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -41,6 +41,7 @@ export function verifyBack(set: VolumeSet, _raw: BodyInput, _a: NeckAnchor): VRe
   const tr = tierOf(m.vis as number), want = (id: string): boolean => { const v = set.byId.get(id); return !!v && (v.kind !== 'muscle' || v.tier === undefined || reveal(tr, v.tier) >= 0.04); };
   const rel = ['scapular-spine.L', 'infraspinatus.L', 'teres-major.L'], bad = rel.filter((id) => ids.has(id) !== want(id));
   C.push(chk('back.sty.relief-drawn', 'style', bad.length === 0 && ids.has('scapular-spine.L'), bad.length ? `incohérent avec le palier : ${bad.join(',')}` : `relief dessiné selon le palier ${tr.toFixed(1)} : ${rel.filter((i) => ids.has(i)).length}/3 volumes (épine toujours)`));
+  C.push(...backReliefChecks(set, _raw, _a)); // itération 08 : relief du haut du dos, 3 couches
   const failures = C.filter((c) => !c.ok);
   return { ok: failures.length === 0, checks: C, failures };
 }

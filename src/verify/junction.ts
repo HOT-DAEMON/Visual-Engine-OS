@@ -6,6 +6,7 @@ import { ringPoint } from '../body/volume/loft';
 import type { Volume, VolumeSet } from '../body/volume';
 import { BodyParams } from '../body/types';
 import { junctionRenderChecks } from './junction-render';
+import { pecInsertionChecks } from './junction-pec';
 import type { VCheck, VReport } from './volume';
 
 const chk = (id: string, layer: VCheck['layer'], ok: boolean, detail: string): VCheck => ({ id, layer, ok, detail });
@@ -22,6 +23,27 @@ export function rowExtent(vs: readonly Volume[], y: number, tol: number, side: 1
   }
   return best;
 }
+/**
+ * Asymétrie gauche/droite du dépassement (muscle − peau) INVARIANTE À LA POSE. À hauteur absolue, le contrapposto (épaules basculées en sens opposés) déplace la peau de ±Δy ;
+ * quand la pente d'épaule est raide (baby : ≈ 3,6 en x par unité de y), cela fait ±0,035 h d'écart sans que la forme soit asymétrique (contrapposto = 0 : écart exactement nul, mesuré).
+ * La bascule est lue sur la peau elle-même : l'axe latéral `u` de la section du tronc la plus proche donne la pente r = u.y / u.x, et un point à l'abscisse x est déplacé de x·r en y
+ * (au premier ordre ; la torsion ne change que x). Chaque côté est donc mesuré à la hauteur de rangée `y + sg·x·r`, c'est-à-dire à la même rangée du corps vu dans son propre repère.
+ * (Essai écarté : chercher la hauteur où la peau atteint le même x des deux côtés — mal conditionné sur le plateau de la paroi, `muscular` passait de 0,033 à 0,063 h.)
+ */
+export function poseFreeAsymmetry(relief: (side: 'L' | 'R') => Volume[], trunk: Volume, rows: readonly number[], H: number): number {
+  const sides = [['L', 1], ['R', -1]] as const;
+  let worst = 0;
+  for (const y of rows) {
+    const st = trunk.stations.reduce((p, q) => (Math.abs(q.c.y - y) < Math.abs(p.c.y - y) ? q : p)), r = Math.abs(st.u.x) > 1e-6 ? st.u.y / st.u.x : 0;
+    const t = (rowExtent([trunk], y, 0.003 * H, 1) + rowExtent([trunk], y, 0.003 * H, -1)) / 2;
+    const over = sides.map(([n, sg]) => {
+      const ys = y + sg * t * r, q = rowExtent(relief(n), ys, 0.003 * H, sg) - rowExtent([trunk], ys, 0.003 * H, sg);
+      return Number.isFinite(q) ? q : 0;
+    });
+    worst = Math.max(worst, Math.abs(over[0]! - over[1]!));
+  }
+  return worst;
+}
 const topOf = (v: Volume): number => { let y = Infinity; for (const s of v.stations) for (let q = 0; q < 24; q++) y = Math.min(y, ringPoint(s, (q / 24) * 2 * Math.PI).p.y); return y; };
 
 /**
@@ -37,10 +59,11 @@ export function verifyJunctions(set: VolumeSet, raw: BodyInput, a: NeckAnchor): 
   // ── Géométrie ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
   const drop = f.y.acr - f.y.base, rows = [0.3, 0.6, 0.9].map((k) => f.y.base + k * drop), sd = [['L', 1], ['R', -1]] as const;
   const over = sd.map(([n, s]) => rows.map((y) => { const q = rowExtent(relief(n), y, 0.006 * H, s) - rowExtent([trunk], y, 0.006 * H, s); return Number.isFinite(q) ? q : 0; })), worst = Math.max(...over.flat());
-  const asym = Math.max(...rows.map((_, i) => Math.abs(over[0]![i]! - over[1]![i]!)));
+  const asymRaw = Math.max(...rows.map((_, i) => Math.abs(over[0]![i]! - over[1]![i]!)));
+  const asym = poseFreeAsymmetry(relief, trunk, rows, H);
   const fmt = (v: number[]): string => v.map((q) => (q / H).toFixed(3)).join(' / ');
   C.push(chk('junction.geo.no-floating-muscle', 'geometry', worst <= 0.08 * H, `muscles et os − peau sur la pente d'épaule à 0,3 / 0,6 / 0,9 de la chute : gauche ${fmt(over[0]!)} · droite ${fmt(over[1]!)} h (borne de cohérence ≤ 0,08 h ; avant l'itération 05 : jusqu'à 0,082 h à droite — c'est la symétrie qui discrimine)`));
-  C.push(chk('junction.geo.shoulder-symmetry', 'geometry', asym <= 0.05 * H, `écart gauche/droite du dépassement : ${(asym / H).toFixed(3)} h (≤ 0,05 h ; avant l'itération 05 : 0,05–0,07 h, la pose ne s'appliquait qu'au centre des sections de peau)`));
+  C.push(chk('junction.geo.shoulder-symmetry', 'geometry', asym <= 0.05 * H, `écart gauche/droite du dépassement muscle − peau, comparé au MÊME x de peau (invariant à la bascule des épaules) : ${(asym / H).toFixed(3)} h (≤ 0,05 h) ; mesure brute à hauteur absolue : ${(asymRaw / H).toFixed(3)} h, qui mélange forme et pose (voir docs/BODY-JUNCTIONS-08.md)`));
   const legL = by.get('leg.env.L'), legR = by.get('leg.env.R');
   const cx = (v: Volume | undefined): number => (v ? v.stations[2]!.c.x : NaN);
   C.push(chk('junction.geo.legs-symmetric', 'geometry', !!legL && !!legR && Math.abs(cx(legL) + cx(legR)) <= 0.08 * H, `axes des cuisses : G ${(cx(legL) / H).toFixed(3)} h · D ${(cx(legR) / H).toFixed(3)} h (somme ≤ 0,08 h : le contrapposto décale le bassin)`));
@@ -59,7 +82,7 @@ export function verifyJunctions(set: VolumeSet, raw: BodyInput, a: NeckAnchor): 
   // ── Style ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
   const env = [trunk, neck, by.get('arm.env.L'), by.get('arm.env.R'), by.get('forearm.env.L'), legL, legR], bad = env.filter((v) => !v || v.kind !== 'skin' || v.level !== 0).map((v) => v?.id ?? 'manquant');
   C.push(chk('junction.sty.skin-merge', 'style', bad.length === 0, bad.length ? `enveloppes non fusionnées : ${bad.join(',')}` : 'tronc, cou, bras, avant-bras et jambes sont de la peau de niveau 0 : un seul tampon de profondeur, aucune rainure entre elles'));
-  C.push(...junctionRenderChecks(set, raw, a));
+  C.push(...junctionRenderChecks(set, raw, a), ...pecInsertionChecks(set, raw, a));
   const failures = C.filter((c) => !c.ok);
   return { ok: failures.length === 0, checks: C, failures };
 }

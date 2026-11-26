@@ -1,4 +1,5 @@
 import type { Level } from '../types';
+import type { BackRelief } from './back-relief';
 import type { P3 } from './vec3';
 
 /** Section elliptique d'un volume : centre `c`, demi-axes `a` (le long de `u`) et `b` (le long de `w`), tangente `t` de l'axe. Repère (t,u,w) orthonormé. */
@@ -33,4 +34,6 @@ export interface VolumeSet {
   readonly volumes: readonly Volume[]; readonly byId: ReadonlyMap<string, Volume>;
   readonly measures: Readonly<Record<string, number>>;
   readonly landmarks: ReadonlyMap<string, P3>;
+  /** Champ de relief du haut du dos (itération 08) : lu par le rendu par pixel, jamais par la géométrie. */
+  readonly relief?: BackRelief;
 }

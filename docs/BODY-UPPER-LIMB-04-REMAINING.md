@@ -1,5 +1,7 @@
 # Membre supérieur — ce qui reste après l'itération 04 (par composant)
 
+> **Mise à jour itération 08** : le haut du dos et l'omoplate ONT été repris par un champ de relief (shading par normale) ; voir `BODY-JUNCTIONS-08.md`. Les restes de cette section sont maintenant : volumes remplacés non dessinés (trapèze moyen/inférieur, rhomboïde…), grand dorsal toujours en sabres, angle inférieur à ≈ T9 : `BODY-JUNCTIONS-08-REMAINING.md`. Le point « n'est pas convaincant » est partiellement levé : mieux de dos (continu, paramétré), mais moins détaillé chez les sujets musclés.
+
 > **Mise à jour itération 05** : « le tronc s'arrête à la crête, sans jambes » est levé, l'épaule est raccordée à la pente du trapèze et le rendu ne laisse plus transparaître le fond : voir `BODY-JUNCTIONS-05.md` et `BODY-JUNCTIONS-05-REMAINING.md`.
 
 > **Mise à jour itération 07** : le haut du dos et l'omoplate n'ont PAS été repris (champ de relief non essayé) ; la piste est précisée dans `BODY-JUNCTIONS-07-REMAINING.md` (perturbation de normale dans le rendu par pixel, point monde reconstruit depuis la profondeur). Les mains (ref-05) n'ont pas été touchées.

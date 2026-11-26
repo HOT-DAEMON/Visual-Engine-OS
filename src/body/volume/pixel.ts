@@ -1,6 +1,7 @@
 import { lightModelOf, type LightModel } from '../../relief/model';
 import { LayerCache, idOf, timedLayer } from '../../perf/layers';
 import { buildGBuffer, gbufferKeyOf, type GBuffer, type SeamStats } from './gbuffer';
+export { RELIEF_REPLACES, RELIEF_SLOPE_MAX } from './gbuffer';
 import { occlusionOf, type Occlusion } from './occlusion';
 import type { VMarkup, VRenderOpts } from './render';
 import { bodyCast, encodeFinal, shadePixels } from './shade-pixels';
@@ -27,6 +28,10 @@ export interface PixelOpts extends VRenderOpts {
   readonly shadowReach?: number;
   /** Fondu des normales aux intersections peau/peau (itération 07, défaut : actif). `false` = ancien rendu (comparaisons avant/après). */
   readonly seamBlend?: boolean;
+  /** Relief du haut du dos (itération 08, défaut : actif) ; `false` = ancien rendu. Voir `gbuffer.ts`. */
+  readonly backRelief?: boolean;
+  /** Gain de la pente du champ (défaut 1 = pente physique) ; sert aux diagnostics. */
+  readonly reliefGain?: number;
 }
 export type { SeamStats };
 export interface VPixelMarkup extends VMarkup { readonly pixels: { readonly w: number; readonly h: number; readonly rgba: Uint8ClampedArray }; readonly seam: SeamStats }

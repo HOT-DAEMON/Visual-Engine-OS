@@ -1,14 +1,20 @@
-import { toView, dirToView, FRONT } from './camera';
+import { toView, dirToView, fromView, dirFromView, FRONT } from './camera';
+import { reliefAt } from './back-relief';
 import { ringPoint } from './loft';
 import { selectVolumes, type VRenderOpts } from './render';
 import type { Volume, VolumeSet } from './types';
+import { p3 } from './vec3';
 
 /**
  * G-BUFFER du rendu par pixel : maillage des volumes → rasterisation (test de profondeur) → par pixel : profondeur, volume propriétaire, normale, θ de section, ton,
  * opacité de palier, normale de la peau dessous. NE DÉPEND NI DE LA LUMIÈRE NI DE LA PEAU NI DES RÉGLAGES D'OMBRAGE : changer la lumière ne le refait donc pas
  * (couche mise en cache par `pixel.ts`, docs/PERF-4.md). Extrait tel quel de l'ancien `renderVolumesPixel` : mêmes calculs, même ordre, mêmes résultats.
  */
-export interface GBufferOpts extends Omit<VRenderOpts, 'skin' | 'light' | 'uid' | 'contact' | 'mode'> { readonly heightPx?: number; readonly ss?: number; /** Fondu des normales aux intersections peau/peau (itération 07, défaut : actif) ; `false` = ancien rendu. */ readonly seamBlend?: boolean }
+export interface GBufferOpts extends Omit<VRenderOpts, 'skin' | 'light' | 'uid' | 'contact' | 'mode'> { readonly heightPx?: number; readonly ss?: number; /** Fondu des normales aux intersections peau/peau (itération 07, défaut : actif) ; `false` = ancien rendu. */ readonly seamBlend?: boolean; /** Relief du haut du dos (itération 08, défaut : actif) : normale de peau perturbée par le champ de `back-relief.ts` ; les volumes qu'il remplace (`RELIEF_REPLACES`) ne sont plus dessinés. `false` = ancien rendu. */ readonly backRelief?: boolean; /** Gain de la pente du champ (défaut 1 = pente physique) ; sert aux diagnostics. */ readonly reliefGain?: number }
+/** Pente maximale (tangente) de la perturbation de normale : 0,6 ≈ 31°. */
+export const RELIEF_SLOPE_MAX = 0.6;
+/** Volumes du dos que le champ de relief remplace dans l'IMAGE (ils restent dans les données : repères, contrats, vérification). */
+export const RELIEF_REPLACES = /^(trapezius\.(middle|lower)|rhomboid|infraspinatus|teres-major|scapular-spine|erector\.(medial|lateral))\.[LR]$/;
 /** Mesure sur le G-buffer : pixels de peau fondus, plus grand saut de normale (degrés) entre deux pixels voisins de peaux différentes, avant et après le fondu. */
 export interface SeamStats { readonly blended: number; readonly jumpBefore: number; readonly jumpAfter: number }
 export interface VMeta { readonly layer: number; readonly tone: number; readonly fib: boolean; readonly kind: string; readonly rel: number; readonly mass: unknown }
@@ -40,11 +46,11 @@ function mesh(v: Volume, cam: NonNullable<VRenderOpts['camera']>, K: number): Tr
 
 
 /** Les options qui déterminent le G-buffer (clé de cache) : exactement celles que `selectVolumes`, le maillage et le cadrage lisent. */
-export const gbufferKeyOf = (o: GBufferOpts): string => JSON.stringify([o.showHidden ?? null, o.camera ?? null, o.level ?? null, o.hideFromLayer ?? null, o.joints ?? null, o.trunkOnly ?? null, o.forceTier ?? null, o.quality ?? null, o.ss ?? null, o.heightPx ?? null, o.seamBlend !== false]);
+export const gbufferKeyOf = (o: GBufferOpts): string => JSON.stringify([o.showHidden ?? null, o.camera ?? null, o.level ?? null, o.hideFromLayer ?? null, o.joints ?? null, o.trunkOnly ?? null, o.forceTier ?? null, o.quality ?? null, o.ss ?? null, o.heightPx ?? null, o.seamBlend !== false, o.backRelief ?? null, o.reliefGain ?? null]);
 
 export function buildGBuffer(set: VolumeSet, o: GBufferOpts): GBuffer {
   const cam = o.camera ?? FRONT, H = set.measures.h as number, vis = set.measures.vis as number;
-  const { list, rel } = selectVolumes(set, { ...o, skin: '' }), ss = o.ss ?? 2, K = o.quality === 'fast' ? 14 : 22, bias = 0.004 * H;
+  const sel = selectVolumes(set, { ...o, skin: '' }), rel = sel.rel, useRelief = o.backRelief !== false && !!set.relief, list = useRelief ? sel.list.filter((v) => !RELIEF_REPLACES.test(v.id)) : sel.list, ss = o.ss ?? 2, K = o.quality === 'fast' ? 14 : 22, bias = 0.004 * H;
   const keyed = list.map((v) => { const m = mesh(v, cam, K); let zs = 0, n = 0; for (const t of m) for (const z of t.z) { zs += z; n++; } return { v, m, k: zs / Math.max(1, n) + v.layer * bias }; }).sort((a, b) => a.k - b.k);
   let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
   for (const { m } of keyed) for (const t of m) for (let i = 0; i < 3; i++) { x0 = Math.min(x0, t.x[i]!); x1 = Math.max(x1, t.x[i]!); y0 = Math.min(y0, t.y[i]!); y1 = Math.max(y1, t.y[i]!); }
@@ -119,7 +125,25 @@ export function buildGBuffer(set: VolumeSet, o: GBufferOpts): GBuffer {
     }
     return { blended: marked.length, jumpBefore: jb, jumpAfter: meanJump([nx, ny, nz]) };
   };
-  commit(skinKeys); const seam = seamStats(skinKeys, o.seamBlend !== false); for (const key of skinKeys) { skinCover[key] = 1; skn[key * 3] = nx[key]!; skn[key * 3 + 1] = ny[key]!; skn[key * 3 + 2] = nz[key]!; }
+  commit(skinKeys); const seam = seamStats(skinKeys, o.seamBlend !== false);
+  // RELIEF DU DOS (itération 08) : pour chaque pixel de la peau du tronc tourné vers l'arrière, on reconstruit le point monde depuis la profondeur, on lit la pente du champ de hauteur en (x, y)
+  // et on incline la normale (silhouette et profondeur intactes). Poids : 0 de face/de profil, 1 quand la peau regarde franchement vers l'arrière. Fait ici (G-buffer) : indépendant de la lumière.
+  if (useRelief) {
+    const ti = keyed.findIndex(({ v }) => v.id === 'trunk'), G = o.reliefGain ?? 1, rf = set.relief!;
+    if (ti >= 0) for (const key of skinKeys) {
+      if (id[key] !== ti) continue;
+      const nw = dirFromView(p3(nx[key]!, ny[key]!, nz[key]!), cam), wB = Math.min(1, Math.max(0, (-nw.z - 0.3) / 0.45)); if (wB <= 0) continue;
+      const px = key % W, py = (key / W) | 0, w = fromView(p3(x0 + (px + 0.5) / ppu, y0 + (py + 0.5) / ppu, depth[key]!), cam), r = reliefAt(rf, w.x, w.y);
+      const g0 = Math.hypot(r.hx, r.hy); if (g0 < 1e-6) continue;
+      // Limiteur de pente (asymptote RELIEF_SLOPE_MAX ≈ 31°) : les crêtes étroites des sujets très musclés dépassaient 50° et dessinaient un liseré dur (saut de luminance max 83–89/255 contre 63–65 avant le relief) ; la direction du gradient est conservée.
+      const lim = 1 / Math.sqrt(1 + (g0 / RELIEF_SLOPE_MAX) ** 2); r.hx *= lim; r.hy *= lim;
+      const t = dirToView(p3(nw.x - wB * r.hx * G, nw.y - wB * r.hy * G, nw.z), cam), l = Math.hypot(t.x, t.y, t.z) || 1;
+      nx[key] = t.x / l; ny[key] = t.y / l; nz[key] = t.z / l;
+      // Modelé de ton : le relief éclaircit ce qui avance et assombrit les gouttières (lisible quelle que soit la direction de la lumière) ; borné à ±0,7 et pondéré comme la normale.
+      tn[key] = tn[key]! + wB * Math.max(-0.7, Math.min(0.7, (r.h / (0.05 * H)) * 0.9));
+    }
+  }
+  for (const key of skinKeys) { skinCover[key] = 1; skn[key * 3] = nx[key]!; skn[key * 3 + 1] = ny[key]!; skn[key * 3 + 2] = nz[key]!; }
   // Les volumes profonds situés DERRIÈRE la surface de la peau (dos vu de face…) sont masqués ; les muscles sous la peau, à moins d'une demi-épaisseur, restent visibles.
   const skinZ = Float32Array.from(depth), hideMargin = 0.05 * H;
   keyed.forEach((_, vi) => { if (isSkin[vi]) return; const t: number[] = []; raster(vi, t); commit(t); });

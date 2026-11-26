@@ -3,12 +3,14 @@ import { legGeometry } from '../lower/geometry';
 import { bodyFrame } from '../frame';
 import { BodyParams, type BodyInput, type NeckAnchor } from '../types';
 import { backVolumes } from './back';
+import { makeBackRelief } from './back-relief';
 import { frontVolumes } from './front';
 import { handVolumes } from './hand3d';
 import { legVolumes } from './legs';
 import { armChain, armVolumes, jointBalls } from './limb';
 import { ball } from './loft';
 import { makeNeck } from './neck';
+import { pectoralInsertion } from './pec-insertion';
 import { VolumeParams, type VolumeInput } from './params';
 import { spineAngles } from './spine';
 import { makeTrunk } from './trunk';
@@ -21,7 +23,7 @@ const build = (bp: BodyParams, a: NeckAnchor, vp: VolumeParams): VolumeSet => {
   const chains = ([1, -1] as const).map((s) => armChain(tr, f, s > 0 ? bp.pose.left : bp.pose.right, s > 0 ? vp.swing.left : vp.swing.right, s));
   for (const ch of chains) {
     const pose = ch.side > 0 ? bp.pose.left : bp.pose.right;
-    vols.push(...armVolumes(ch, f, vis), ...handVolumes(ch, f, pose, bp.fingers, vp.fingerRelax, vp.seed));
+    vols.push(pectoralInsertion(tr, ch, f, vis), ...armVolumes(ch, f, vis), ...handVolumes(ch, f, pose, bp.fingers, vp.fingerRelax, vp.seed));
     for (const j of jointBalls(ch, f)) vols.push({ id: j.id, name: `sphère d’articulation ${j.id.split('.')[1]}`, group: 'joint', kind: 'joint', side: ch.side > 0 ? 'L' : 'R', parent: null, level: 3, layer: 8, stations: ball(j.c, j.r), fibres: [], tone: 0, sphere: true });
   }
   // Articulations axiales : C7, charnière thoraco-lombaire, hanches (le bassin est la racine des membres inférieurs).
@@ -34,7 +36,7 @@ const build = (bp: BodyParams, a: NeckAnchor, vp: VolumeParams): VolumeSet => {
   const zfr = (yy: number): number => tr.point(yy, 0, 0).p.z, deg = (dz: number, dy: number): number => (Math.atan2(dz, dy) * 180) / Math.PI;
   const trunkLeanDeg = deg(tr.spine.z(y.crop) - tr.spine.z(tr.spine.lv.c7), y.crop - tr.spine.lv.c7), frontLineDeg = deg(zfr(y.crop) - zfr(y.nipple), y.crop - y.nipple);
   const measures = { h: H, vis, trunkLeanDeg, frontLineDeg, c7Y: tr.spine.lv.c7, t12Y: tr.spine.lv.t12, cobbCervical: ang.cervical, cobbThoracic: ang.thoracic, cobbLumbar: ang.lumbar, thoraxDepthOverWidth: ch.D / ch.X, bellyProjection: (nv.zf - ch.zf) / H, gluteProjection: (tr.at(y.navel + 0.2 * (y.navel - y.base)).zb - tr.at(y.waist).zb) / H, volumes: vols.length, shoulderTiltDeg: Math.atan2(tr.shoulder(1).y - tr.shoulder(-1).y, tr.shoulder(1).x - tr.shoulder(-1).x) * 180 / Math.PI };
-  return { volumes: vols, byId: new Map(vols.map((v) => [v.id, v])), measures, landmarks };
+  return { volumes: vols, byId: new Map(vols.map((v) => [v.id, v])), measures, landmarks, relief: makeBackRelief(tr, f) };
 };
 const memo = memoPure('body-volumes', 'geometry', build, 64);
 /** Volumes 3D du corps : pur et mémoïsé par le contenu (le point de vue n'y entre JAMAIS : tourner la caméra ne recalcule rien). Valeurs IMMUABLES. */

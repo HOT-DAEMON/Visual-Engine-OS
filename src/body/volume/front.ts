@@ -19,7 +19,7 @@ export function frontVolumes(tr: Trunk, nk: Neck, f: BodyFrame, bp: BodyParams, 
   // Pectoraux : chef claviculaire (haut) + chef sterno-costal ; 7 faisceaux de fibres (striations) qui convergent vers le tendon huméral.
   out.push(...both(tr, { id: 'pectoralis.clav', name: 'grand pectoral — chef claviculaire', group: 'chest', layer: 4, tier: 2, fibres: fan(5, 0.8), origin: 'clavicle', insertion: 'humerus' },
     [A(y.base + 0.07 * H, 0.14, 0.04 * H, 0.02 * H), A(mid(y.base, y.acr) + 0.07 * H, 0.55, 0.05 * H, 0.03 * H), A(y.axilla - 0.1 * H, 1.1, 0.035 * H, 0.03 * H)]));
-  out.push(...both(tr, { id: 'pectoralis.sternal', name: 'grand pectoral — chef sterno-costal', group: 'chest', layer: 4, tier: 1, fibres: fan(7, 0.95), origin: 'sternum', insertion: 'humerus' },
+  out.push(...both(tr, { id: 'pectoralis.sternal', name: 'grand pectoral — chef sterno-costal', group: 'chest', layer: 4, tier: 1, fibres: fan(7, 0.95), origin: 'sternum', insertion: 'humerus', mass: 'pectoralis' },
     [A(mid(y.axilla, y.nipple) + 0.05 * H, 0.1, 0.13 * H, 0.04 * H * PEC), A(mid(y.axilla, y.nipple) + 0.01 * H, 0.55, 0.12 * H, 0.052 * H * PEC), A(y.axilla - 0.01 * H, 1.12, 0.05 * H, 0.04 * H)]));
   // Seins (adulte seulement : garde-fou hérité du moteur 2D) : volume 3D posé sur le pectoral, projection indépendante.
   const bAmt = f.age >= 18 ? Math.max(0, Math.min(1, 0.5 - 0.55 * f.dim)) : 0;

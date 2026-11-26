@@ -1,5 +1,7 @@
 # Ce qui reste après l'itération 07 (par composant)
 
+> **Mise à jour itération 08** : levés ou modifiés — insertion du pectoral par-dessus le deltoïde (sillon delto-pectoral), champ de relief du dos, `baby` / `shoulder-symmetry` (cause établie, métrique rendue invariante à la pose). Voir `BODY-JUNCTIONS-08.md` ; restes dans `BODY-JUNCTIONS-08-REMAINING.md`. Les sections « Mains », « Aine, hanche, fessier » et « Vérification » ci-dessous restent ouvertes.
+
 Bilan honnête : deux changements gardés, tous deux modestes (`BODY-JUNCTIONS-07.md`). La tâche demandée (membre supérieur + raccords, « chef-d'œuvre ») n'est pas terminée. Les restes de `BODY-UPPER-LIMB-04-REMAINING.md` et `BODY-JUNCTIONS-05-REMAINING.md` non repris ici restent ouverts.
 
 ## Épaule ↔ bras

@@ -19,3 +19,12 @@ export function toView(p: P3, c: Camera): P3 {
 /** Direction (normale) vers l'espace vue : rotation seule, sans pivot. */
 export const dirToView = (n: P3, c: Camera): P3 => { const o = toView(p3(n.x + c.pivot.x, n.y + c.pivot.y, n.z + c.pivot.z), c), q = toView(p3(c.pivot.x, c.pivot.y, c.pivot.z), c); return p3(o.x - q.x, o.y - q.y, o.z - q.z); };
 export const facing = (nView: P3): number => dot3(nView, p3(0, 0, 1));
+
+/** Inverse de `toView` : point de l'espace vue (x image, y image, z profondeur) → repère du corps. */
+export function fromView(v: P3, c: Camera): P3 {
+  const cy = Math.cos(c.yaw * R), sy = Math.sin(c.yaw * R), cp = Math.cos(c.pitch * R), sp = Math.sin(c.pitch * R), xv = v.x - c.pivot.x, yv = v.y - c.pivot.y, zv = v.z;
+  const y0 = yv * cp + zv * sp, z1 = -yv * sp + zv * cp, x0 = xv * cy - z1 * sy, z0 = xv * sy + z1 * cy;
+  return p3(x0 + c.pivot.x, y0 + c.pivot.y, z0 + c.pivot.z);
+}
+/** Inverse de `dirToView` (rotation seule). */
+export const dirFromView = (n: P3, c: Camera): P3 => { const o = fromView(p3(n.x + c.pivot.x, n.y + c.pivot.y, n.z), c), q = fromView(p3(c.pivot.x, c.pivot.y, 0), c); return p3(o.x - q.x, o.y - q.y, o.z - q.z); };
