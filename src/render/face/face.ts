@@ -21,6 +21,7 @@ import { renderNose } from './nose';
 import { softKit } from './soft';
 import { renderStructure, type StructureLayers } from './structure';
 import { inkFilter, inkThreshold } from './structure/ink-filter';
+import { faceIsCel } from '../../face/head-style';
 
 /** Surface « crâne + mâchoire » d'un hôte `shape: 'face'`, habillable par le système de matériaux. */
 export function faceSurface(h: HostSpec, lm: FaceLandmarks, outline: Outline = lm.outline): Surface {
@@ -69,7 +70,7 @@ export function hostFace(h: HostSpec): { readonly params: FaceParams; readonly l
 
 /** Apparence RÉSOLUE de la peau d'un hôte : source unique lue par la tête, le cou, le corps et les jambes (mode `anime` : aplats à bords nets). */
 export function skinAppearance(skin: string, params: FaceParams): ResolvedAppearance {
-  return resolveAppearance(skin, params.renderMode === 'anime' ? { ...params.skin, shading: { ...params.skin.shading, mode: 'cel' } } : params.skin);
+  return resolveAppearance(skin, faceIsCel(params) ? { ...params.skin, shading: { ...params.skin.shading, mode: 'cel' } } : params.skin);
 }
 
 export function faceParts(h: HostSpec, L: LightVector, rot: number, orbits?: PublishedOrbits, sex = 0): FaceParts {

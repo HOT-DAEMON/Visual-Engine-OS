@@ -13,6 +13,7 @@ import { randomNeck } from './random-face-neck';
 import { drawStructure, type StructureOverride } from './random-face-structure';
 import { noseArchetype, NOSE_ARCHETYPE_NAMES, type NoseArchetypeName } from '../face/nose/archetypes';
 import { applyStylization } from '../face/stylize';
+import { faceIsCel } from '../face/head-style';
 import { pick, range, type EyeInput } from './random-eye-helpers';
 
 export interface RandomFaceOptions extends ExtrasOverride {
@@ -42,6 +43,11 @@ export interface RandomFaceOptions extends ExtrasOverride {
   readonly eyeLowerPeak?: number | 'auto';
   /** Famille de cils (réfs 12–16, voir eye-lash-families.ts) : un identifiant l'impose aux deux yeux ; 'auto' en tire une d'un flux dérivé dédié (les autres tirages ne bougent pas) ; absent ou null = cils de l'identité d'origine (visages d'avant inchangés). */
   readonly lashFamily?: LashFamilyId | 'auto' | null;
+  /**
+   * Fini des DEUX yeux (`EyeSpec.finish`). `'flat'` / `'shaded'` l'imposent. `'auto'` accorde tête et yeux dans les DEUX sens : tête cel (`faceIsCel`) → yeux en aplats ; identité à yeux
+   * d'encre (aplats) sur une tête dont `anatomy.style` n'est pas imposé → tête cel ; sinon rien ne change. Absent : visages d'avant identiques. Ce que `checkEyePair` signale (`eyes-finish-matches-head`).
+   */
+  readonly eyeFinish?: 'auto' | 'shaded' | 'flat';
   /** Identité de galerie imposée (0–47, 0–147 si eyeSource = 'extended', 0–247 si 'extended2', 0–347 si 'extended3', 0–447 si 'extended4') ; sinon tirée. Ignoré si eyeSource = 'random'. */
   readonly identity?: number;
   /** Expression imposée (yeux ET bouche) ; sinon tirée. */
@@ -82,19 +88,7 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
   const drawnIdentity = Math.floor(rnd() * GALLERY_IDENTITIES);
   const base = drawFaceParams(rnd, mouthFor(kind, intensity));
   const extras = drawFaceExtras(rnd, options, { hairEngine: options.hairEngine, occlusions: options.occlusions });
-  // Nouveaux axes (nez, menton, mâchoire, matériau, éclairage, apparence) : flux de tirage DÉRIVÉ, les tirages existants ne bougent pas.
-  const archetype = options.noseArchetype === 'random' ? NOSE_ARCHETYPE_NAMES[Math.floor(mulberry32((seed ^ 0x6e6f7365) >>> 0)() * NOSE_ARCHETYPE_NAMES.length)] : options.noseArchetype;
-  // L'archétype est une SURCHARGE du tirage : posée sous `anatomy.nose` explicite (l'utilisateur garde le dernier mot).
-  const anatomyOver = archetype ? { ...(options.anatomy ?? {}), nose: deepMerge((noseArchetype(archetype) as { nose: Record<string, unknown> }).nose, options.anatomy?.nose as Record<string, unknown> | undefined) } as AnatomyOverride : options.anatomy;
-  const anatomy = drawAnatomy(seed, skin, anatomyOver);
-  const merged = { ...base, ...anatomy, nose: { ...(base.nose ?? {}), ...(anatomy.nose ?? {}) }, neck: randomNeck(seed, extras.neck as Record<string, unknown>, options.neck as Record<string, unknown> | undefined, { variety: options.neckVariety ?? 0, preset: options.neckPreset }), hair: extras.hair, facialHair: extras.facialHair, asymmetry: extras.asymmetry };
-  // Structure (optionnelle) : axes tirés dans un flux dérivé, fusionnés en profondeur. Puis profil de stylisation appliqué UNE fois (idempotent) : les repères qui suivent
-  // (ajustement des yeux) lisent déjà la géométrie stylisée.
-  const withStructure = options.structure ? deepMerge(merged, drawStructure(seed, options.structure === true ? {} : options.structure)) : merged;
-  const params = applyStylization(FaceParams.parse(withStructure));
-  const lm = faceLandmarks(params, width, height);
-
-  const id = options.id ?? `face-${(seed >>> 0).toString(16)}`;
+  // Identité et paire d'yeux : calculées ICI (avant l'anatomie) car `eyeFinish: 'auto'` lit leur fini pour décider du style de la tête ; aucun tirage `rnd` entre les deux : flux inchangés.
   const expression = { kind, intensity };
   const source = options.eyeSource ?? 'gallery';
   const gallery = source === 'gallery' || source === 'extended' || source === 'extended2' || source === 'extended3' || source === 'extended4';
@@ -108,12 +102,30 @@ export function generateRandomFace(seed: number, options: RandomFaceOptions = {}
         return { left: { ...eye, shape: { ...eye.shape, outerSide: 'left' } }, right: { ...eye, shape: { ...eye.shape, outerSide: 'right' } } };
       })();
 
+  // Nouveaux axes (nez, menton, mâchoire, matériau, éclairage, apparence) : flux de tirage DÉRIVÉ, les tirages existants ne bougent pas.
+  const archetype = options.noseArchetype === 'random' ? NOSE_ARCHETYPE_NAMES[Math.floor(mulberry32((seed ^ 0x6e6f7365) >>> 0)() * NOSE_ARCHETYPE_NAMES.length)] : options.noseArchetype;
+  // L'archétype est une SURCHARGE du tirage : posée sous `anatomy.nose` explicite (l'utilisateur garde le dernier mot).
+  // `eyeFinish: 'auto'` (passe 19), sens « les yeux d'encre mènent » : une identité à yeux en aplats (réfs 13/17) sur une tête dont le style n'est pas imposé rend la TÊTE cel.
+  const inkEyes = options.eyeFinish === 'auto' && options.anatomy?.style === undefined && pair0.left.kind === 'eye' && (pair0.left as { finish?: string }).finish === 'flat';
+  const anatomyIn: AnatomyOverride | undefined = inkEyes ? { ...(options.anatomy ?? {}), style: 'cel' } : options.anatomy;
+  const anatomyOver = archetype ? { ...(anatomyIn ?? {}), nose: deepMerge((noseArchetype(archetype) as { nose: Record<string, unknown> }).nose, anatomyIn?.nose as Record<string, unknown> | undefined) } as AnatomyOverride : anatomyIn;
+  const anatomy = drawAnatomy(seed, skin, anatomyOver);
+  const merged = { ...base, ...anatomy, nose: { ...(base.nose ?? {}), ...(anatomy.nose ?? {}) }, neck: randomNeck(seed, extras.neck as Record<string, unknown>, options.neck as Record<string, unknown> | undefined, { variety: options.neckVariety ?? 0, preset: options.neckPreset }), hair: extras.hair, facialHair: extras.facialHair, asymmetry: extras.asymmetry };
+  // Structure (optionnelle) : axes tirés dans un flux dérivé, fusionnés en profondeur. Puis profil de stylisation appliqué UNE fois (idempotent) : les repères qui suivent
+  // (ajustement des yeux) lisent déjà la géométrie stylisée.
+  const withStructure = options.structure ? deepMerge(merged, drawStructure(seed, options.structure === true ? {} : options.structure)) : merged;
+  const params = applyStylization(FaceParams.parse(withStructure));
+  const lm = faceLandmarks(params, width, height);
+
+  const id = options.id ?? `face-${(seed >>> 0).toString(16)}`;
   const lashFam = options.lashFamily ? (options.lashFamily === 'auto' ? lashFamilyForSeed(seed) : options.lashFamily) : null;
   const withLashes = (e: EyeInput): EyeInput => (lashFam && e.kind === 'eye' ? (applyLashFamily(e as unknown as Record<string, unknown>, lashFam) as unknown as EyeInput) : e);
   // Creux de la paupière basse (passe 11) : même valeur pour les deux yeux (une paire a le même profil, miroir près).
   const lp = options.eyeLowerPeak === undefined ? undefined : options.eyeLowerPeak === 'auto' ? LOWER_PEAK_RANGE[0] + mulberry32((seed ^ 0x10ae9ea4) >>> 0)() * (LOWER_PEAK_RANGE[1] - LOWER_PEAK_RANGE[0]) : options.eyeLowerPeak;
   const withPeak = (e: EyeInput): EyeInput => (lp !== undefined && e.kind === 'eye' ? ({ ...e, shape: { ...e.shape, lowerPeak: lp } } as EyeInput) : e);
-  const pair: Record<EyeSide, EyeInput> = { left: withPeak(withLashes(pair0.left)), right: withPeak(withLashes(pair0.right)) };
+  const finish = options.eyeFinish === 'auto' ? (faceIsCel(params) ? 'flat' : undefined) : options.eyeFinish;
+  const withFinish = (e: EyeInput): EyeInput => (finish && e.kind === 'eye' ? ({ ...e, finish } as EyeInput) : e);
+  const pair: Record<EyeSide, EyeInput> = { left: withFinish(withPeak(withLashes(pair0.left))), right: withFinish(withPeak(withLashes(pair0.right))) };
 
   const sides: EyeSide[] = ['left', 'right'];
   const anchors = sides.map((side) => {

@@ -40,8 +40,8 @@ Légende : ✅ fait et testé · 🟡 partiel (précisé) · ⬜ non fait · ❔
 - ⬜ Cornée translucide, sclère sombre minérale, œil artificiel : réalisables avec `iris.layers` + `appearance.emission`, non présentés dans les artefacts.
 
 ## Vérification (`verifyEye`)
-- ✅ (2026-11-14) Paire d'yeux rattachée à `checkFaceEngine` : `src/verify/eye-pair.ts` (6 contrôles : coins externes opposés, roulis commun, asymétrie d'échelle, hauteur, identité commune). ⬜ Pas de cohérence de
-  teinte avec le style cel de la tête ; `style` mesure le poids/filtres/contraste, pas une adéquation à un style cible nommé.
+- ✅ (2026-11-14) Paire d'yeux rattachée à `checkFaceEngine` : `src/verify/eye-pair.ts` (6 contrôles : coins externes opposés, roulis commun, asymétrie d'échelle, hauteur, identité commune). 🟡 (passe 19) Le FINI des yeux est accordé au style de la tête (`eyeFinish`, règle `eyes-finish-matches-head`, 10 contrôles) ; ⬜ pas de cohérence de
+  TEINTE avec la palette cel de la tête ; `style` mesure le poids/filtres/contraste, pas une adéquation à un style cible nommé.
 - 🟡 Contrôles anatomiques paramétrés pour des yeux humains : les styles stylisés produisent des avertissements, jamais des erreurs (choix volontaire).
 
 ## Performance
@@ -90,3 +90,9 @@ Archive déplacée telle quelle ; ses points ouverts encore valables sont repris
 - ⬜ Rotation : 1 cas sur 20 à 60° (almond très haut + regard baissé, hypothèse de cisaillement non mesurée) ; `gazeT` absent de la mesure de l'iris ; cils et liner non recalculés anisotropiquement ; LOD du modèle `flat`.
 - ⬜ Inchangés depuis les passes 16–17 (non touchés ici) : emerald (fentes, première étoile, cellules), ice (fentes 2 pour 4), fire (anneau 10a), cornée (fibres non réfractées), microrelief cutané (07D), cohérence de teinte avec le style cel de la tête, ⬜ suite complète du dépôt et `npm run regress` non exécutés.
 
+## Passe 19 (détail : `EYES-PASS-19.md`)
+- ✅ `faceIsCel` (définition unique), `RandomFaceOptions.eyeFinish` (`auto` accorde tête et yeux dans les deux sens, opt-in, visages par défaut identiques à l'octet), règle `eyes-finish-matches-head` (avertissement) ; mesure : 14 têtes lisses à yeux d'encre sur 120 visages des galeries étendues sans `auto`, 0 avec ; correction de `eyes-same-finish` (valeur par défaut `'painted'` hors énumération).
+- ⬜ La tête cel n'est pas plate : grain de peau (`texture: grain`), blush et cheveux gardent leurs dégradés ; le terminateur d'ombre dur et les ovales de reflet plats de la peau cel rendent la tête « cel » obtenue par `auto` sur les yeux d'encre PAS meilleure à l'œil (planche 02). Chantier du moteur de peau, non touché.
+- ⬜ Iris `flat` sans détail : limbe, ombre de paupière sur l'iris et bord dentelé de la réf. 01 ne sont pas recomposés en aplats.
+- ⬜ Inchangés depuis la passe 18 (non touchés ici) : rotation (1 cas sur 20 à 60°, cils et liner non recalculés anisotropiquement, LOD du modèle `flat`), emerald / ice / fire, cornée (fibres non réfractées), microrelief cutané (07D : à reconsidérer, le style cel des références n'en a pas), enveloppes non auditées (01/02), 16 Mo de cheveux (hors yeux).
+- Vérifié : 13 fichiers de tests liés (133 tests) + 23 fichiers `eye-*` verts ; `npm run regress` EXIT 0 (4 cas « close » préexistants, identiques sur l'ancien code). ⬜ Suite complète (250 fichiers) **non exécutée** ; `eye-gallery-ext4` non rejoué.

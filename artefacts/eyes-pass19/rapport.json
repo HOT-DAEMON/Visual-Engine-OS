@@ -1,0 +1,78 @@
+{
+ "celGradientsFilters": [
+  {
+   "seed": 23,
+   "tag": "avant",
+   "eleme_degrade_filtre_oeil": 26,
+   "regle": "AVERTIT"
+  },
+  {
+   "seed": 23,
+   "tag": "après auto",
+   "eleme_degrade_filtre_oeil": 2,
+   "regle": "passe"
+  },
+  {
+   "seed": 5,
+   "tag": "avant",
+   "eleme_degrade_filtre_oeil": 22,
+   "regle": "AVERTIT"
+  },
+  {
+   "seed": 5,
+   "tag": "après auto",
+   "eleme_degrade_filtre_oeil": 2,
+   "regle": "passe"
+  },
+  {
+   "seed": 11,
+   "tag": "avant",
+   "eleme_degrade_filtre_oeil": 24,
+   "regle": "AVERTIT"
+  },
+  {
+   "seed": 11,
+   "tag": "après auto",
+   "eleme_degrade_filtre_oeil": 4,
+   "regle": "passe"
+  }
+ ],
+ "inkSeeds": [
+  2,
+  7,
+  13
+ ],
+ "ordinaryIdentical": true,
+ "rulePerSource": {
+  "gallery": {
+   "visages": 30,
+   "violations sans auto": 0,
+   "violations avec auto": 0
+  },
+  "extended": {
+   "visages": 30,
+   "violations sans auto": 6,
+   "violations avec auto": 0
+  },
+  "extended2": {
+   "visages": 30,
+   "violations sans auto": 2,
+   "violations avec auto": 0
+  },
+  "extended3": {
+   "visages": 30,
+   "violations sans auto": 3,
+   "violations avec auto": 0
+  },
+  "extended4": {
+   "visages": 30,
+   "violations sans auto": 3,
+   "violations avec auto": 0
+  },
+  "random": {
+   "visages": 30,
+   "violations sans auto": 0,
+   "violations avec auto": 0
+  }
+ }
+}

@@ -9,12 +9,12 @@ const mutate = (f: RandomFace, side: 'eye-left' | 'eye-right', fn: (o: any) => v
 const failing = (f: RandomFace): string[] => checkEyePair(f).filter((c) => !c.ok).map((c) => c.id);
 
 describe('vérification de la paire d’yeux (géométrie, anatomie, style)', () => {
-  it('les visages générés (galerie, étendue, œil tiré) passent les 9 contrôles', () => {
-    for (const src of ['gallery', 'extended', 'random'] as const) for (let s = 1; s <= 60; s++) expect(failing(generateRandomFace(s, { eyeSource: src })), `${src} ${s}`).toEqual([]);
+  it('les visages générés (galerie, étendue, œil tiré) passent les 10 contrôles (fini accordé au style de la tête : `eyeFinish: \'auto\'`, passe 19)', () => {
+    for (const src of ['gallery', 'extended', 'random'] as const) for (let s = 1; s <= 60; s++) expect(failing(generateRandomFace(s, { eyeSource: src, eyeFinish: 'auto' })), `${src} ${s}`).toEqual([]);
   });
-  it('couche rattachée à checkFaceEngine : 9 contrôles (6 + fini, présence et force des microdétails), trois couches représentées', () => {
+  it('couche rattachée à checkFaceEngine : 10 contrôles (6 + fini, présence et force des microdétails, fini accordé à la tête), trois couches représentées', () => {
     const f = generateRandomFace(3, { eyeSource: 'extended' }); const ids = checkFaceEngine(f).filter((c) => c.id.startsWith('eyes-'));
-    expect(ids).toHaveLength(9); expect(new Set(ids.map((c) => c.layer))).toEqual(new Set(['geometry', 'anatomy', 'style']));
+    expect(ids).toHaveLength(10); expect(new Set(ids.map((c) => c.layer))).toEqual(new Set(['geometry', 'anatomy', 'style']));
   });
   it('détecte : deux coins externes du même côté, taille asymétrique, hauteurs différentes, identités différentes, roulis différent', () => {
     const f = generateRandomFace(9, { eyeSource: 'extended' });
