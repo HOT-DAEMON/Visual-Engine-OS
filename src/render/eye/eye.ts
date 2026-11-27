@@ -16,6 +16,7 @@ import { DEFAULT_SKIN } from './default-skin';
 import { gradeEye, resolveEyeLook } from './look';
 import { flatSurface, flattenEye, isFlat } from './flat-finish';
 import { applyCornea } from './cornea';
+import { effectiveFinish, eyeLevers } from './appearance-levers';
 
 /**
  * Compile un œil complet : sclère, iris/pupille/regard 3D (globe-inner.ts), paupières/cils/pli
@@ -25,7 +26,9 @@ import { applyCornea } from './cornea';
  */
 /** Œil EFFECTIF : archétype, expression, réponse lumineuse de la pupille (EYE-05G), étalonnage — exactement ce que le rendu dessine (réutilisé par `verify/eye.ts`). */
 export function resolveEye(rawEye: EyeSpec): EyeSpec {
-  const posed = applyExpression(applyArchetype(rawEye));
+  const posed0 = applyExpression(applyArchetype(rawEye));
+  const finish = effectiveFinish(posed0);   // passe 20 : `appearance.shading.mode: 'cel'` sur un œil `shaded` = fini `cel`
+  const posed = finish === posed0.finish ? posed0 : { ...posed0, finish };
   // EYE-05G : la réponse lumineuse change la taille AVANT tout le reste (iris détaillé, fibres, pupille lisent la même taille).
   const sized = posed.pupil.response.model === 'fixed' ? posed : { ...posed, pupil: { ...posed.pupil, size: effectivePupilSize(posed.pupil) } };
   return flattenEye(gradeEye(applyCornea(sized)));
@@ -42,6 +45,7 @@ export function withAutoLod(eye: EyeSpec, pixelRatio = 1, widthRatio = 1): { rea
 
 export function compileEye(rawEye: EyeSpec, worldLight: LightVector, opts: { readonly pixelRatio?: number } = {}): CompiledObject {
   const resolved = resolveEye(rawEye);
+  const levers = eyeLevers(rawEye);   // lus sur l'œil brut : `flattenEye` met `appearance` à null (passe 20, appearance-levers.ts)
   // Rotation 3D : modèle `sphere` = enveloppe reprojetée point par point sur la sphère de la tête (turn3d.ts) ; `flat` = écrasement uniforme historique (headWrap).
   // Le LOD lit la largeur APPARENTE de l'œil (raccourcie par la rotation) : un œil vu à 70° n'a pas besoin du détail d'un œil de face.
   const { g0, turned, g } = eyeTurn(resolved);
@@ -75,7 +79,7 @@ export function compileEye(rawEye: EyeSpec, worldLight: LightVector, opts: { rea
   const sclera = isFlat(eye) ? flatSurface(`${id}-sclera`, scleraSurface, eye.sclera.base) : compileSurface(`${id}-sclera`, scleraSurface, eye.sclera, L, rot);
   defs.push(...sclera.defs);
 
-  const globe = renderGlobeInner(eye, g, c, L, rot, headLight, skin, id, irisRx, irisRy, turned, look, eyePx / eye.shape.width, edges);
+  const globe = renderGlobeInner(eye, g, c, L, rot, headLight, skin, id, irisRx, irisRy, turned, look, eyePx / eye.shape.width, edges, levers);
   defs.push(...globe.defs);
 
   const lids = renderLidsAndFold(eye, g, L, skin, lidColor, th, globe.fold, id, look, edges);
@@ -97,6 +101,6 @@ export function compileEye(rawEye: EyeSpec, worldLight: LightVector, opts: { rea
     ...brow.outside,
   ];
 
-  const markup = el('g', { transform: objectTransform(eye.transform) }, [el('g', headWrap ? { transform: headWrap } : {}, content)]);
+  const markup = el('g', { transform: objectTransform(eye.transform), ...(levers.opacity < 1 ? { opacity: levers.opacity } : {}) }, [el('g', headWrap ? { transform: headWrap } : {}, content)]);
   return { defs, markup };
 }

@@ -11,6 +11,7 @@ import { checkEyeEnvelope } from './eye-envelope';
 import { checkEyeCornea } from './eye-cornea';
 import { checkEyeLashes, type LashMetrics } from './eye-lashes';
 import { checkCanthusLines } from './eye-canthus-lines';
+import { checkEyeAppearance } from './eye-appearance';
 import { isFlat } from '../render/eye/flat-finish';
 import { check, report, type Check, type Report } from './types';
 
@@ -107,6 +108,7 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
   const lashCheck = checkEyeLashes(eye, g, lashTh, eyeLashSet(lodEye, g, lashTh, edges), fr?.upper ?? ((t) => upperFrame(g, t)), fr?.lower ?? ((t) => lowerFrame(g, t)), poly); // cils : géométrie / anatomie / style (eye-lashes.ts)
   out.push(...lashCheck.checks);
   out.push(...checkCanthusLines(lodEye, g, lashTh, poly, isFlat(lodEye))); // plis des canthi (07G) : géométrie, anatomie, style
+  out.push(...checkEyeAppearance(raw, irisRx, g.hEff, withAutoLod(eye, 1, apparentWidthRatio(g0, turned)).eyePx / eye.shape.width)); // leviers d'apparence (passe 20) : bande, ombre portée, reflets, opacité
 
   // ---- anatomy -----------------------------------------------------------------------------------------------
   const irisToOpening = (2 * irisRx) / (g.bbox.w || 1);

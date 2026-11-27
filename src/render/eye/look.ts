@@ -10,7 +10,7 @@ import type { EyeSpec } from '../../schema';
  *  - `skin` (base = peau périoculaire) : teinte des ombres des paupières et du pli, lumière de contour du bord inférieur, teinte du reflet ;
  *  - `iris` (base = couleur dominante de l'iris) : filtre d'effets (réfraction, grain, glow, bloom, émission) appliqué au disque de l'iris ;
  *  - contraste / saturation / luminosité : appliqués aux matériaux de l'iris et de la sclère (`gradeEye`), pas seulement aux teintes dérivées.
- * Limites assumées (docs/EYES-REMAINING.md) : `opacity`, `shading.cel`, `gradient` (racine → pointe) n'ont pas de sens pour un œil et sont ignorés.
+ * Limite assumée : `gradient` (racine → pointe) n'a pas de sens pour un œil. `opacity`, `reflection.*`, `shading.*` sont lus par `appearance-levers.ts` (passe 20, docs/EYES-PASS-20.md).
  */
 export interface EyeLook {
   readonly skin: ResolvedAppearance;

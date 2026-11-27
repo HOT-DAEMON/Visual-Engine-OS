@@ -16,6 +16,7 @@ import type { EyeLook } from './look';
 import { compileEffects } from '../../appearance';
 import type { EyeSpec } from '../../schema';
 import { el, num, urlRef } from '../../core/svg';
+import { NEUTRAL_LEVERS, type EyeLevers } from './appearance-levers';
 import { P, highlightOffsets, irisFibers, limbalRing, openingPath, polygonPath, pupilRadii, smoothThrough } from './helpers';
 
 export interface GlobeInner {
@@ -59,6 +60,8 @@ export function renderGlobeInner(
   pxPerUnit: number | null = null,
   /** EYE-07E : bords irréguliers (même tracé que le clip) ; la caroncule, la ligne humide, le liseré et l'ombre des paupières les suivent. `null` = enveloppe. */
   edges: EdgeIrregularity | null = null,
+  /** Passe 20 : leviers d'apparence lus sur l'œil BRUT (reflets, ombre portée, bande de lumière) — voir `appearance-levers.ts`. Neutres par défaut. */
+  levers: EyeLevers = NEUTRAL_LEVERS,
 ): GlobeInner {
   const defs: string[] = [];
   const inner: string[] = [];
@@ -98,6 +101,21 @@ export function renderGlobeInner(
       ),
     );
     irisGroup.push(el('ellipse', { cx: c.x, cy: c.y, rx: irisRx, ry: irisRy, fill: urlRef(`${id}-glow`) }));
+  }
+
+  // Bande de lumière (`appearance.shading.highlightBand`, passe 20) : croissant du côté de la lumière, aplat à bord dur, borné à l'iris (marge de 7 % du rayon) par clip ; la pupille se peint par-dessus.
+  // Même repère et même sens que la lueur (`direction2D(L)` pointe vers la lumière) ; largeur = 0,32 × valeur × rayon, jamais moins d'un demi-pixel de large (sinon : orphelin).
+  if (levers.highlightBand > 0) {
+    const d = direction2D(L); const w = 0.32 * levers.highlightBand; const bid = `${id}-band`;
+    defs.push(el('clipPath', { id: bid }, [el('ellipse', { cx: c.x, cy: c.y, rx: irisRx * 0.93, ry: irisRy * 0.93 })]));   // 7 % de marge : l'anneau limbique garde le contour de l'iris lisible contre la sclère
+    const bx = irisRx * 1.05, by = irisRy * 1.05;   // boîte de l'iris seulement : un rectangle plus grand agrandit la boîte englobante du filtre qui enveloppe l'iris (rendu corrompu sur l'œil de galerie 9)
+    // Trou = MÊME ellipse que le clip (93 % du rayon), décalée de w·R : l'épaisseur du croissant du côté de la lumière vaut alors exactement w·R (un trou à 100 % du rayon laissait
+    // un croissant VIDE pour toute valeur < 0,22 : zone morte, paramètre orphelin en bas de plage). Quatre quarts d'arc : drapeaux non ambigus (précaution, jamais cause du défaut).
+    const hx = c.x - d.x * w * irisRx, hy = c.y - d.y * w * irisRy; const hrx = irisRx * 0.93, hry = irisRy * 0.93; const A = `A${num(hrx)} ${num(hry)} 0 0 1`;
+    irisGroup.push(el('g', { 'clip-path': urlRef(bid) }, [el('path', {
+      d: `M${num(c.x - bx)} ${num(c.y - by)}H${num(c.x + bx)}V${num(c.y + by)}H${num(c.x - bx)}ZM${num(hx + hrx)} ${num(hy)}${A} ${num(hx)} ${num(hy + hry)}${A} ${num(hx - hrx)} ${num(hy)}${A} ${num(hx)} ${num(hy - hry)}${A} ${num(hx + hrx)} ${num(hy)}Z`,
+      'fill-rule': 'evenodd', fill: lighten(worldLight.color, 0.2), 'fill-opacity': flat ? 0.62 : 0.45,
+    })]));
   }
 
   // Pupille (voir pupil.ts : visible/invisible, remplissage ColorSource, contours concentriques).
@@ -176,7 +194,7 @@ export function renderGlobeInner(
 
   // Ombre portée des paupières : le contour de l'ouverture décalé À L'OPPOSÉ de la lumière ;
   // la partie de l'ouverture réelle non couverte par la copie décalée est le croissant d'ombre.
-  const dist = g.hEff * 0.2;
+  const dist = g.hEff * 0.2 * (1 + 0.5 * levers.castShadow);   // passe 20 : `appearance.shading.castShadow` : profondeur ×(1 + 0,5 × valeur), opacité ×(1 + 0,5 × valeur) (0 = inchangée)
   const margin = Math.max(g.bbox.w, g.bbox.h) * 0.25;
   const b = g.bbox;
   const outer = `M${num(b.x - margin)} ${num(b.y - margin)}H${num(b.x + b.w + margin)}V${num(b.y + b.h + margin)}H${num(b.x - margin)}Z`;
@@ -185,9 +203,9 @@ export function renderGlobeInner(
   // Teinte : celle de l'ombre douce du fini `shaded` (une ombre ASSOMBRIT toujours : peinte de la couleur de la peau, elle éclaircissait les surfaces sombres) ; opacité 0,4 : estimation, non mesurée.
   // Non reproduit de la réf. 01 : le virage chaud de l'ombre (jaune → orange) et la frontière dentelée.
   if (flat && hasCastShadow(eye)) {
-    const celDist = g.hEff * CEL_SHADOW_DEPTH; const sdx = -L.x * celDist; const sdy = -L.y * celDist; const away = (p: Vec): Vec => ({ x: p.x + sdx, y: p.y + sdy });
+    const celDist = g.hEff * CEL_SHADOW_DEPTH * (1 + 0.5 * levers.castShadow); const sdx = -L.x * celDist; const sdy = -L.y * celDist; const away = (p: Vec): Vec => ({ x: p.x + sdx, y: p.y + sdy });
     const shifted = edges ? `M${P(away(edges.upper[0]!))}${smoothThrough(edges.upper.map(away))}${smoothThrough(edges.lower.map(away))}Z` : openingPath(g, sdx, sdy);
-    inner.push(el('path', { d: outer + shifted, 'fill-rule': 'evenodd', fill: look ? darken(look.skin.shadow, 0.55) : '#000000', 'fill-opacity': 0.4 }));
+    inner.push(el('path', { d: outer + shifted, 'fill-rule': 'evenodd', fill: look ? darken(look.skin.shadow, 0.55) : '#000000', 'fill-opacity': Math.min(0.8, 0.4 * (1 + 0.5 * levers.castShadow)) }));
   }
   // Fini « flat » : ni ombre portée des paupières ni vignettage d'orbite (aplats francs, voir flat-finish.ts).
   if (!flat) {
@@ -197,9 +215,9 @@ export function renderGlobeInner(
     const shiftedOpening = edges ? `M${P(away(edges.upper[0]!))}${smoothThrough(edges.upper.map(away))}${smoothThrough(edges.lower.map(away))}Z` : openingPath(g, sdx, sdy);
     if (eye.renderQuality === 'reference') {
       defs.push(el('filter', { id: `${id}-lidblur`, x: '-20%', y: '-20%', width: '140%', height: '140%' }, [el('feGaussianBlur', { stdDeviation: g.hEff * 0.035 })]));
-      inner.push(el('path', { d: outer + shiftedOpening, 'fill-rule': 'evenodd', fill: shadowColor, 'fill-opacity': 0.38, filter: urlRef(`${id}-lidblur`) }));
+      inner.push(el('path', { d: outer + shiftedOpening, 'fill-rule': 'evenodd', fill: shadowColor, 'fill-opacity': Math.min(0.8, 0.38 * (1 + 0.5 * levers.castShadow)), filter: urlRef(`${id}-lidblur`) }));
     } else {
-      const sh = softShadow(id, edges ? edgePolygon(edges).map(away) : openingPolygon(g, 48, sdx, sdy), { x: b.x - margin, y: b.y - margin, w: b.w + 2 * margin, h: b.h + 2 * margin }, g.hEff * 0.035, shadowColor, 0.38);
+      const sh = softShadow(id, edges ? edgePolygon(edges).map(away) : openingPolygon(g, 48, sdx, sdy), { x: b.x - margin, y: b.y - margin, w: b.w + 2 * margin, h: b.h + 2 * margin }, g.hEff * 0.035, shadowColor, Math.min(0.8, 0.38 * (1 + 0.5 * levers.castShadow)));
       defs.push(...sh.defs);
       inner.push(...sh.markup);
     }
@@ -228,7 +246,7 @@ export function renderGlobeInner(
   const hlColor = look && look.spec.reflection.tint ? look.skin.highlight : worldLight.color;
   // Reflets : liste détaillée (highlights-render.ts) ou, par défaut, les deux reflets « anime » historiques.
   if (eye.highlights.list.length > 0) {
-    const hr = renderHighlights(eye, g, c, L, irisRx, irisRy, hlColor, id);
+    const hr = renderHighlights(eye, g, c, L, irisRx, irisRy, hlColor, id, levers);
     defs.push(...hr.defs);
     // Modèle sphère : les reflets sont posés dans le repère de l'iris puis suivent la même matrice locale que lui (positions ET formes comprimées).
     inner.push(...(turnT ? [el('g', { transform: turnT }, hr.markup)] : hr.markup));
@@ -240,9 +258,9 @@ export function renderGlobeInner(
       el('circle', {
         cx: c.x + off.primary.x,
         cy: c.y + off.primary.y,
-        r: hl.primary.size * irisRx,
+        r: hl.primary.size * irisRx * levers.reflectionScale,
         fill: hlColor,
-        'fill-opacity': hl.primary.opacity,
+        'fill-opacity': Math.min(1, hl.primary.opacity * levers.reflectionGain),
       }),
     );
     if (hl.secondary) {
@@ -250,9 +268,9 @@ export function renderGlobeInner(
         el('circle', {
           cx: c.x + off.secondary.x,
           cy: c.y + off.secondary.y,
-          r: hl.secondary.size * irisRx,
+          r: hl.secondary.size * irisRx * levers.reflectionScale,
           fill: hlColor,
-          'fill-opacity': hl.secondary.opacity,
+          'fill-opacity': Math.min(1, hl.secondary.opacity * levers.reflectionGain),
         }),
       );
     }

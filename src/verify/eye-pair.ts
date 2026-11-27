@@ -10,7 +10,7 @@ import { check, type Check } from './types';
  *               même FINI (peint ou flat : un œil en aplats et l'autre peint casse le style de la tête) ;
  *   (passe 17) anatomie : les microdétails de paupière (bord irrégulier, plis des canthi) sont présents sur les DEUX yeux ou sur aucun, et leur force diffère de ≤ 0,35.
  */
-type EyeObj = { id: string; transform: { x: number; y: number; rotationDeg: number; scale: number }; shape: { width: number; outerSide: string; style: string }; iris: unknown; sclera: unknown; finish?: string; microdetail?: { edge?: { irregularity: number } | null; canthusLines?: { outer: number; inner: number } | null } | null };
+type EyeObj = { id: string; transform: { x: number; y: number; rotationDeg: number; scale: number }; shape: { width: number; outerSide: string; style: string }; iris: unknown; sclera: unknown; finish?: string; appearance?: { shading?: { mode?: string } } | null; microdetail?: { edge?: { irregularity: number } | null; canthusLines?: { outer: number; inner: number } | null } | null };
 export function checkEyePair(face: RandomFace): Check[] {
   const L = face.objects.find((o) => o.id.endsWith('eye-left')) as unknown as EyeObj | undefined;
   const R = face.objects.find((o) => o.id.endsWith('eye-right')) as unknown as EyeObj | undefined;
@@ -26,9 +26,10 @@ export function checkEyePair(face: RandomFace): Check[] {
   o.push(check('anatomy', 'eyes-same-height', '<=', Math.abs(L.transform.y - R.transform.y) / wMean, 0.08, 'les deux yeux ne sont pas à la même hauteur (> 0,08 largeur d’œil)'));
   const same = L.shape.style === R.shape.style && JSON.stringify(L.iris) === JSON.stringify(R.iris) && JSON.stringify(L.sclera) === JSON.stringify(R.sclera);
   o.push(check('style', 'eyes-same-identity', '==', same ? 1 : 0, 1, 'les deux yeux ne sont pas de la même identité (enveloppe, iris ou sclère différents)'));
-  o.push(check('style', 'eyes-same-finish', '==', (L.finish ?? 'shaded') === (R.finish ?? 'shaded') ? 1 : 0, 1, 'un œil est en aplats (flat) et l’autre peint : le style de la tête n’est pas homogène'));
+  const fin0 = (e: EyeObj): string => (e.finish ?? 'shaded') === 'shaded' && e.appearance?.shading?.mode === 'cel' ? 'cel' : (e.finish ?? 'shaded');   // fini EFFECTIF (passe 20 : `shading.mode: 'cel'` sur un œil `shaded` = `cel`)
+  o.push(check('style', 'eyes-same-finish', '==', fin0(L) === fin0(R) ? 1 : 0, 1, 'un œil est en aplats (flat) et l’autre peint : le style de la tête n’est pas homogène'));
   // (passe 19) Style : une tête cel (aplats à bords nets) avec des yeux ombrés (dégradés, vernis, ombre de paupière), ou l'inverse, n'est pas une seule main. Avertissement, jamais erreur : un œil peint sur une tête cel peut être un choix.
-  const flatish = (e: EyeObj): boolean => e.finish === 'flat' || e.finish === 'cel';
+  const flatish = (e: EyeObj): boolean => fin0(e) === 'flat' || fin0(e) === 'cel';
   const eyesFlat = flatish(L) && flatish(R);
   o.push(check('style', 'eyes-finish-matches-head', '==', faceIsCel(face.params) === eyesFlat ? 1 : 0, 1, 'le fini des yeux (aplats / ombré) ne suit pas le style de la tête (cel / lisse)', 'warn'));
   const both = (f: (e: EyeObj) => unknown): boolean => Boolean(f(L)) === Boolean(f(R));

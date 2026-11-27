@@ -5,6 +5,7 @@ import { el, urlRef } from '../../core/svg';
 import { polygonPath, smoothClosed } from './helpers';
 import { isFlat } from './flat-finish';
 import { rayMarkup } from './highlight-rays';
+import { NEUTRAL_LEVERS, type EyeLevers } from './appearance-levers';
 
 /**
  * OPT-01/04 — Peinture des reflets détaillés (placement et règle d'occlusion : geometry/eye/highlights.ts).
@@ -33,11 +34,13 @@ function shapeMarkup(p: PlacedHighlight, attrs: Record<string, string | number>)
 const BLUR_STEP = Math.log(1.05);
 export const quantizeBlur = (std: number): number => (std <= 0 ? 0 : Math.exp(Math.round(Math.log(std) / BLUR_STEP) * BLUR_STEP));
 
-export function renderHighlights(eye: EyeSpec, g: OpeningGeometry, c: Vec, localLight: LightVector, irisRx: number, irisRy: number, lightColor: string, id: string): HighlightsRender {
+export function renderHighlights(eye: EyeSpec, g: OpeningGeometry, c: Vec, localLight: LightVector, irisRx: number, irisRy: number, lightColor: string, id: string, levers: EyeLevers = NEUTRAL_LEVERS): HighlightsRender {
   const defs: string[] = [];
   const markup: string[] = [];
   const flat = isFlat(eye);   // fini flat : reflets nets (ni halo d'intensité ni flou de douceur)
-  const placed = placeHighlights(eye.highlights.list, { c, irisRx, irisRy, half: halfVectorXY(localLight), bbox: g.bbox });
+  // Passe 20 : `appearance.reflection.{intensity,size}` (mêmes conventions que la peau, 0,5 = neutre) ; identité exacte aux valeurs neutres.
+  const list = levers.reflectionGain === 1 && levers.reflectionScale === 1 ? eye.highlights.list : eye.highlights.list.map((h) => ({ ...h, size: h.size * levers.reflectionScale, opacity: Math.min(1, h.opacity * levers.reflectionGain) }));
+  const placed = placeHighlights(list, { c, irisRx, irisRy, half: halfVectorXY(localLight), bbox: g.bbox });
   const blurIds = new Map<string, string>();   // clé « kind:écart » -> id du filtre déjà déclaré
   const blurFilter = (kind: 'glow' | 'soft', std: number): string => {
     const q = quantizeBlur(std); const key = `${kind}:${q.toFixed(3)}`; const known = blurIds.get(key);

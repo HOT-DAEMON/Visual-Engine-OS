@@ -63,7 +63,7 @@ L'iris suit la matrice jacobienne locale de la projection au centre de l'œil.
 Contrat de `APPEARANCE.md` respecté : base `skin` (peau périoculaire) et `iris` (couleur dominante). Branché sur : ombre du pli et des paupières (`light.shadow`
 dérivée), lumière de contour du bord inférieur (`rimStrength`), teinte des reflets (`reflection.tint`), effets sur le seul disque de l'iris (`glow`, `bloom`,
 `emission`, `refraction`, `grain` via `compileEffects`, UN filtre), étalonnage (contraste, saturation, luminosité) des matériaux d'iris et de sclère.
-Ignorés pour un œil (voir `EYES-REMAINING.md`) : `opacity`, `shading.cel`, `gradient` racine→pointe.
+Lus depuis la passe 20 (`render/eye/appearance-levers.ts`, `EYES-PASS-20.md`) : `opacity`, `reflection.intensity` / `size`, `shading.mode` (`cel` = fini `cel`), `shading.castShadow`, `shading.highlightBand`. Seul `gradient` racine→pointe reste sans objet pour un œil (propre aux mèches).
 
 ## 6. Vérification (`verifyEye`, `verify/eye.ts`) — même contrat `Check/Report` que `verifyFace`
 

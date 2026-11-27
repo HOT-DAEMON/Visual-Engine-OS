@@ -1,0 +1,128 @@
+{
+  "audit": {
+    "feuilles": 268,
+    "orphelins": [],
+    "exemptes": [
+      "id",
+      "place.host",
+      "place.variation"
+    ],
+    "conditionnees": {
+      "pupil.response.model": "pupil.response.light=0",
+      "appearance.texture.scale": "appearance.texture.kind=grain",
+      "appearance.texture.intensity": "appearance.texture.kind=grain",
+      "appearance.emission.color": "appearance.emission.intensity=1",
+      "appearance.refraction.scale": "appearance.refraction.strength=1",
+      "appearance.glow.color": "appearance.glow.intensity=1",
+      "appearance.glow.radius": "appearance.glow.intensity=1",
+      "appearance.bloom.radius": "appearance.bloom.intensity=1",
+      "appearance.bloom.threshold": "appearance.bloom.intensity=1",
+      "microdetail.imperfections": "graine 2"
+    },
+    "avantPasse20": [
+      "appearance.opacity",
+      "appearance.reflection.intensity",
+      "appearance.reflection.size",
+      "appearance.shading.mode",
+      "appearance.shading.castShadow",
+      "appearance.shading.highlightBand"
+    ]
+  },
+  "verification": [
+    {
+      "cas": "neutre",
+      "ok": true,
+      "niveaux": []
+    },
+    {
+      "cas": "bande 0,5",
+      "ok": true,
+      "niveaux": [
+        {
+          "id": "band-clear-of-pupil",
+          "couche": "geometry",
+          "ok": true,
+          "severite": "warn"
+        },
+        {
+          "id": "band-visible",
+          "couche": "style",
+          "ok": true,
+          "severite": "warn"
+        }
+      ]
+    },
+    {
+      "cas": "bande 1 + grande pupille",
+      "ok": true,
+      "niveaux": [
+        {
+          "id": "band-clear-of-pupil",
+          "couche": "geometry",
+          "ok": false,
+          "severite": "warn"
+        },
+        {
+          "id": "band-visible",
+          "couche": "style",
+          "ok": true,
+          "severite": "warn"
+        }
+      ]
+    },
+    {
+      "cas": "opacité 0,1",
+      "ok": true,
+      "niveaux": [
+        {
+          "id": "eye-opacity-readable",
+          "couche": "anatomy",
+          "ok": false,
+          "severite": "warn"
+        }
+      ]
+    },
+    {
+      "cas": "reflets size 1",
+      "ok": true,
+      "niveaux": [
+        {
+          "id": "reflection-scale-bounded",
+          "couche": "anatomy",
+          "ok": true,
+          "severite": "warn"
+        },
+        {
+          "id": "reflection-visible",
+          "couche": "style",
+          "ok": true,
+          "severite": "warn"
+        }
+      ]
+    },
+    {
+      "cas": "bande + ombre, œil 24 px",
+      "ok": true,
+      "niveaux": [
+        {
+          "id": "band-clear-of-pupil",
+          "couche": "geometry",
+          "ok": true,
+          "severite": "warn"
+        },
+        {
+          "id": "band-visible",
+          "couche": "style",
+          "ok": false,
+          "severite": "warn"
+        },
+        {
+          "id": "cast-shadow-visible",
+          "couche": "style",
+          "ok": false,
+          "severite": "warn"
+        }
+      ]
+    }
+  ]
+}
