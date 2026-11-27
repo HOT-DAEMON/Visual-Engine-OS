@@ -1,6 +1,7 @@
 import type { HeadSpec } from './head';
 import type { LockSpec } from './lock';
 import { add, mul, norm, prng, v3, type V3 } from './vec';
+import type { WidthOp } from './width-program';
 
 /**
  * GRAMMAIRE DE COIFFURE : une coiffure = un CHAMP D'ÉCOULEMENT + des FAMILLES de mèches. Aucune coiffure n'a sa fonction :
@@ -46,6 +47,8 @@ export interface FamilySpec {
   readonly layer: LockSpec['layer'];
   /** Signe de la torsion (±1) : côté vers lequel se courbent les mèches (alterne par défaut). */
   readonly bendSign?: 1 | -1 | 0;
+  /** Profil de largeur local (`width-program.ts`) recopié sur chaque mèche : ex. `flat` jusqu'au bout = bord franc (frange coupée droit), `bulge` = masse qui gonfle. */
+  readonly widthProg?: readonly WidthOp[];
 }
 
 export interface HairProfile { readonly name: string; readonly head: HeadSpec; readonly field: FlowField; readonly families: readonly FamilySpec[] }
@@ -77,6 +80,7 @@ export function sampleLock(P: HairProfile, F: FamilySpec, i: number, g: () => nu
     flick: { amt: pick(g, F.flickAmt) * (g() < 0.5 ? 1 : -1), len: pick(g, F.flickLen) },
     lift0: pick(g, F.lift0), lift1: pick(g, F.lift1), liftPow: pick(g, F.liftPow), gravity: pick(g, F.gravity),
     width: pick(g, F.width), peak: pick(g, F.peak), taper: pick(g, F.taper), tone: pick(g, F.tone), strands: Math.round(pick(g, F.strands)), layer: F.layer,
+    ...(F.widthProg ? { widthProg: F.widthProg } : {}),
   };
 }
 

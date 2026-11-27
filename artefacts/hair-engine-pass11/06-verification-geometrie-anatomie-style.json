@@ -1,0 +1,496 @@
+{
+ "n": 48,
+ "ok": 43,
+ "rows": [
+  {
+   "cut": "hime",
+   "yaw": 0,
+   "seed": 1,
+   "defectsBefore": 6,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": 0,
+   "seed": 2,
+   "defectsBefore": 4,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": 0,
+   "seed": 3,
+   "defectsBefore": 3,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": 0,
+   "seed": 4,
+   "defectsBefore": 9,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": 0,
+   "seed": 5,
+   "defectsBefore": 5,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": 0,
+   "seed": 6,
+   "defectsBefore": 5,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": 0,
+   "seed": 7,
+   "defectsBefore": 1,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": 0,
+   "seed": 8,
+   "defectsBefore": 3,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": 30,
+   "seed": 1,
+   "defectsBefore": 5,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": 30,
+   "seed": 2,
+   "defectsBefore": 4,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": 30,
+   "seed": 3,
+   "defectsBefore": 3,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": 30,
+   "seed": 4,
+   "defectsBefore": 4,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": 30,
+   "seed": 5,
+   "defectsBefore": 4,
+   "defectsAfter": 1,
+   "ok": false,
+   "score": 1,
+   "failing": [
+    "style:trous parasites (part des espaces négatifs)"
+   ]
+  },
+  {
+   "cut": "hime",
+   "yaw": 30,
+   "seed": 6,
+   "defectsBefore": 9,
+   "defectsAfter": 1,
+   "ok": false,
+   "score": 1,
+   "failing": [
+    "style:trous parasites (part des espaces négatifs)"
+   ]
+  },
+  {
+   "cut": "hime",
+   "yaw": 30,
+   "seed": 7,
+   "defectsBefore": 7,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": 30,
+   "seed": 8,
+   "defectsBefore": 5,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": -30,
+   "seed": 1,
+   "defectsBefore": 6,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": -30,
+   "seed": 2,
+   "defectsBefore": 7,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": -30,
+   "seed": 3,
+   "defectsBefore": 7,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": -30,
+   "seed": 4,
+   "defectsBefore": 7,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": -30,
+   "seed": 5,
+   "defectsBefore": 6,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": -30,
+   "seed": 6,
+   "defectsBefore": 2,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": -30,
+   "seed": 7,
+   "defectsBefore": 9,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "hime",
+   "yaw": -30,
+   "seed": 8,
+   "defectsBefore": 4,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": 0,
+   "seed": 1,
+   "defectsBefore": 4,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": 0,
+   "seed": 2,
+   "defectsBefore": 0,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": 0,
+   "seed": 3,
+   "defectsBefore": 5,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": 0,
+   "seed": 4,
+   "defectsBefore": 0,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": 0,
+   "seed": 5,
+   "defectsBefore": 2,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": 0,
+   "seed": 6,
+   "defectsBefore": 0,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": 0,
+   "seed": 7,
+   "defectsBefore": 2,
+   "defectsAfter": 1,
+   "ok": false,
+   "score": 1,
+   "failing": [
+    "style:trous parasites (part des espaces négatifs)"
+   ]
+  },
+  {
+   "cut": "pixie",
+   "yaw": 0,
+   "seed": 8,
+   "defectsBefore": 1,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": 30,
+   "seed": 1,
+   "defectsBefore": 5,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": 30,
+   "seed": 2,
+   "defectsBefore": 7,
+   "defectsAfter": 0,
+   "ok": false,
+   "score": 0,
+   "failing": [
+    "style:rapport dominante / seconde"
+   ]
+  },
+  {
+   "cut": "pixie",
+   "yaw": 30,
+   "seed": 3,
+   "defectsBefore": 11,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": 30,
+   "seed": 4,
+   "defectsBefore": 8,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": 30,
+   "seed": 5,
+   "defectsBefore": 12,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": 30,
+   "seed": 6,
+   "defectsBefore": 9,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": 30,
+   "seed": 7,
+   "defectsBefore": 14,
+   "defectsAfter": 1,
+   "ok": false,
+   "score": 0.25,
+   "failing": [
+    "geometry:axes qui se coupent (sans programme)"
+   ]
+  },
+  {
+   "cut": "pixie",
+   "yaw": 30,
+   "seed": 8,
+   "defectsBefore": 10,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": -30,
+   "seed": 1,
+   "defectsBefore": 1,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": -30,
+   "seed": 2,
+   "defectsBefore": 1,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": -30,
+   "seed": 3,
+   "defectsBefore": 3,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": -30,
+   "seed": 4,
+   "defectsBefore": 0,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": -30,
+   "seed": 5,
+   "defectsBefore": 1,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": -30,
+   "seed": 6,
+   "defectsBefore": 3,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": -30,
+   "seed": 7,
+   "defectsBefore": 1,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  },
+  {
+   "cut": "pixie",
+   "yaw": -30,
+   "seed": 8,
+   "defectsBefore": 0,
+   "defectsAfter": 0,
+   "ok": true,
+   "score": 0,
+   "failing": []
+  }
+ ]
+}

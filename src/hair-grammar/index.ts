@@ -13,6 +13,8 @@ export { TOUSLED } from './profiles/tousled';
 export { TOUSLED_FITTED } from './profiles/tousled.fitted';
 export { BOB } from './profiles/bob';
 export { SHAG } from './profiles/shag';
+export { HIME } from './profiles/hime';
+export { PIXIE } from './profiles/pixie';
 export * from './raster';
 export * from './autofit';
 export * from './ribbon';
