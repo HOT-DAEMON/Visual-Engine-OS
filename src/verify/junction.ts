@@ -6,6 +6,7 @@ import { ringPoint } from '../body/volume/loft';
 import type { Volume, VolumeSet } from '../body/volume';
 import { BodyParams } from '../body/types';
 import { junctionRenderChecks } from './junction-render';
+import { armBodyChecks } from './body-09';
 import { pecInsertionChecks } from './junction-pec';
 import type { VCheck, VReport } from './volume';
 
@@ -82,7 +83,7 @@ export function verifyJunctions(set: VolumeSet, raw: BodyInput, a: NeckAnchor): 
   // ── Style ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
   const env = [trunk, neck, by.get('arm.env.L'), by.get('arm.env.R'), by.get('forearm.env.L'), legL, legR], bad = env.filter((v) => !v || v.kind !== 'skin' || v.level !== 0).map((v) => v?.id ?? 'manquant');
   C.push(chk('junction.sty.skin-merge', 'style', bad.length === 0, bad.length ? `enveloppes non fusionnées : ${bad.join(',')}` : 'tronc, cou, bras, avant-bras et jambes sont de la peau de niveau 0 : un seul tampon de profondeur, aucune rainure entre elles'));
-  C.push(...junctionRenderChecks(set, raw, a), ...pecInsertionChecks(set, raw, a));
+  C.push(...junctionRenderChecks(set, raw, a), ...pecInsertionChecks(set, raw, a), ...armBodyChecks(set, raw, a));
   const failures = C.filter((c) => !c.ok);
   return { ok: failures.length === 0, checks: C, failures };
 }

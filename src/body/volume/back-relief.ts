@@ -1,4 +1,5 @@
 import type { BodyFrame } from '../frame';
+import { SCAP_LIFT } from './back';
 import type { Trunk } from './trunk';
 
 /**
@@ -71,29 +72,49 @@ export function finishRelief(shapes: readonly Shape[], H: number): BackRelief {
 export function makeBackRelief(tr: Trunk, f: BodyFrame): BackRelief {
   const fk = 1 - 0.65 * f.fat, H = f.h, y = f.y, lv = tr.spine.lv, u = (lv.t12 - lv.c7) / 12, ys = y.acr + 0.005 * H, XA = f.x.acr, vis = f.vis;
   const bx = (yy: number, x: number): number => PI - Math.asin(Math.min(0.97, x / tr.at(yy).X));
-  const yu = (k: number): number => ys + k * u;
+  const yu = (k: number): number => ys + k * u, yb = (k: number): number => ys + (k - SCAP_LIFT) * u;
   const shapes: Shape[] = [];
   // Amplitude en hauteurs de tête : terme de base (anatomie présente chez tout le monde) atténué par l'adiposité — l'omoplate d'un nourrisson ou d'un sujet obèse ne se devine pas —, plus un terme proportionnel à `vis`.
   const ab = (base: number, mus: number): number => H * (base * fk + mus * vis);
   for (const s of [1, -1] as const) {
     /** Point posé (x, y monde) à k vertèbres sous l'acromion et à la fraction `xf` de x.acr du plan médian, côté s. */
     const sd = s > 0 ? 'L' : 'R';
-    const P = (k: number, xf: number): Pt => { const q = tr.point(yu(k), s * bx(yu(k), xf * XA), 0).p; return [q.x, q.y]; };
+    /** Point de la LAME (niveau remonté de SCAP_LIFT) ; `Ps` = point de l'ÉPINE (ancrée sur l'acromion du cadre). */
+    const P = (k: number, xf: number): Pt => { const q = tr.point(yb(k), s * bx(yb(k), xf * XA), 0).p; return [q.x, q.y]; };
+    const Ps = (k: number, xf: number): Pt => { const q = tr.point(yu(k), s * bx(yu(k), xf * XA), 0).p; return [q.x, q.y]; };
         // 1. LAME : masse continue (même table que l'atome caché `scapula` de back.ts), bord adouci sur 0,018 h.
     // Contour réel de la lame, sens horaire depuis la racine de l'épine : bord médial (quasi vertical), angle inférieur, bord latéral (oblique vers l'aisselle), glène, angle acromial, bord supérieur
     // (oblique : il monte du bord médial vers l'acromion, ce que l'ancien contour à bord horizontal ne faisait pas). Couples [k vertèbres sous l'acromion, fraction de x.acr].
     const outline: readonly (readonly [number, number])[] = [[0.75, 0.28], [1.2, 0.27], [2.3, 0.28], [3.5, 0.29], [4.7, 0.3], [5.5, 0.32], [5.4, 0.39], [4.5, 0.5], [3.4, 0.65], [2.4, 0.75], [1.4, 0.8], [0.6, 0.79], [0.15, 0.74], [0.3, 0.55], [0.5, 0.38]];
     shapes.push({ id: `blade.${sd}`, kind: 'poly', pts: chaikin(outline.map(([k, xf]) => P(k, xf)), 2), amp: ab(0.018, 0.04), edge: 0.048 * H });
     // 2. ÉPINE : crête oblique de la racine (bord médial) à l'acromion ; s'estompe vers l'acromion où le deltoïde la recouvre.
-    shapes.push({ id: `spine.${sd}`, kind: 'line', pts: [P(1.05, 0.27), P(0.85, 0.42), P(0.6, 0.58), P(0.25, 0.74), P(0.0, 0.83)], amp: ab(0.022, 0.045), w: 0.016 * H, fade: 0.55 });
+    shapes.push({ id: `spine.${sd}`, kind: 'line', pts: [Ps(0.8, 0.27), Ps(0.6, 0.42), Ps(0.36, 0.58), Ps(0.16, 0.74), Ps(0.0, 0.83)], amp: ab(0.022, 0.045), w: 0.016 * H, fade: 0.55 });
     // 3. BORD MÉDIAL : gouttière entre la lame et les érecteurs (décalée vers la ligne médiane de 0,03 h).
     shapes.push({ id: `medial-border.${sd}`, kind: 'line', pts: [P(1.1, 0.205), P(2.2, 0.215), P(3.5, 0.225), P(4.8, 0.235), P(5.4, 0.24)], amp: -ab(0.015, 0.035), w: 0.018 * H, fade: 0 });
     // 4. ANGLE INFÉRIEUR : saillie de la pointe de la lame, allongée le long du bord.
     { const c = P(5.0, 0.31), d = P(5.8, 0.33); shapes.push({ id: `inferior-angle.${sd}`, kind: 'blob', c, ax: norm2(d[0] - c[0], d[1] - c[1]), rx: 0.036 * H, ry: 0.02 * H, amp: ab(0.02, 0.04) }); }
     // 5. INFRA-ÉPINEUX : masse convexe sous l'épine (centre ≈ celui du volume de back.ts), allongée le long de l'épine.
-    { const c = P(2.5, 0.54), sp0 = P(1.05, 0.27), sp1 = P(0.0, 0.83); shapes.push({ id: `infraspinatus.${sd}`, kind: 'blob', c, ax: norm2(sp1[0] - sp0[0], sp1[1] - sp0[1]), rx: 0.072 * H, ry: 0.05 * H, amp: ab(0.015, 0.035) }); }
+    { const c = P(2.5, 0.54), sp0 = Ps(0.8, 0.27), sp1 = Ps(0.0, 0.83); shapes.push({ id: `infraspinatus.${sd}`, kind: 'blob', c, ax: norm2(sp1[0] - sp0[0], sp1[1] - sp0[1]), rx: 0.072 * H, ry: 0.05 * H, amp: ab(0.015, 0.035) }); }
     // 6. GRAND ROND : renflement oblique vers l'aisselle, formant le pli postérieur.
     { const c = P(4.3, 0.62), d = P(3.5, 0.82); shapes.push({ id: `teres-major.${sd}`, kind: 'blob', c, ax: norm2(d[0] - c[0], d[1] - c[1]), rx: 0.052 * H, ry: 0.026 * H, amp: ab(0.018, 0.036) }); }
+  }
+  // 8. GRAND DORSAL (itération 09) : nappe plate qui remplace les « sabres » (volumes elliptiques). Bord médial (aponévrose T7→crête), bord supérieur ancré sur l'angle inférieur de l'omoplate (yb(4.6), donc pour tous les âges : il le recouvre), bord latéral (pli
+  // postérieur de l'aisselle → flanc → crête). La nappe est basse et molle ; seul le bord latéral porte une arête (là où le muscle se détache du flanc), qui rejoint le grand rond à l'aisselle.
+  const c7 = lv.c7, PQ = (s: number, yy: number, p: number): Pt => { const q = tr.point(yy, s * (PI - p), 0).p; return [q.x, q.y]; };
+  for (const s of [1, -1] as const) {
+    const sd = s > 0 ? 'L' : 'R';
+    const med: Pt[] = [PQ(s, y.crop - 0.01 * H, 0.1), PQ(s, y.waist, 0.24), PQ(s, c7 + 9.5 * u, 0.42), PQ(s, yb(4.6), 0.62)];
+    const lat: Pt[] = [PQ(s, y.axilla + 0.03 * H, 1.1), PQ(s, y.nipple + 0.4 * (y.waist - y.nipple), 1.3), PQ(s, y.waist, 1.38), PQ(s, y.crop - 0.02 * H, 1.2)];
+    shapes.push({ id: `latissimus.${sd}`, kind: 'poly', pts: chaikin([...med, ...lat], 2), amp: ab(0.014, 0.045), edge: 0.06 * H });
+    shapes.push({ id: `latissimus-border.${sd}`, kind: 'line', pts: [lat[3]!, lat[2]!, lat[1]!, lat[0]!], amp: ab(0.018, 0.05), w: 0.022 * H, fade: 0.2 });
+  }
+  // 9. LOSANGE DU TRAPÈZE (itération 09) : plateau tendineux entre les bords médiaux des omoplates (du cou à T12, pointe en bas) ; les arêtes obliques sont les bords inférieurs des fibres (racine de l'épine → T12).
+  // Les bords supérieurs du losange sont déjà portés par le trapèze supérieur (volume) : le polygone n'a donc pas d'arête oblique vers C7.
+  { const root = (s: number): Pt => { const q = tr.point(yu(0.8), s * bx(yu(0.8), 0.27 * XA), 0).p; return [q.x, q.y]; };
+    const bot = PQ(1, c7 + 12 * u, 0.0), yT = y.base + 0.1 * H, topL = PQ(1, yT, 0), topR = PQ(-1, yT, 0), xr = Math.abs(root(1)[0]);
+    const kite: Pt[] = [[topR[0] - xr, topR[1]], [topL[0] + xr, topL[1]], root(1), bot, root(-1)];
+    shapes.push({ id: 'trapezius-diamond', kind: 'poly', pts: kite, amp: ab(0.008, 0.04), edge: 0.045 * H });
+    for (const s of [1, -1] as const) shapes.push({ id: `trapezius-lower-border.${s > 0 ? 'L' : 'R'}`, kind: 'line', pts: [root(s), PQ(s, c7 + 8 * u, 0.2), bot], amp: ab(0.006, 0.032), w: 0.017 * H, fade: 0 });
   }
   // 7. ÉRECTEURS DU RACHIS : deux colonnes continues de chaque côté du sillon vertébral (mêmes ψ que `back.ts` : 0,16 et 0,42), de la crête à D3 ; elles s'effacent vers le haut où le trapèze les recouvre.
   for (const s of [1, -1] as const) for (const [psi, w, k] of [[0.16, 0.034, 1], [0.42, 0.036, 0.85]] as const) {

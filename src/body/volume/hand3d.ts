@@ -29,6 +29,7 @@ export function handVolumes(ch: ArmChain, f: BodyFrame, pose: ArmPose, fingers: 
   out.push(vol({ id: id('thenar'), name: 'éminence thénar', group: 'hand', side: sd, layer: 5, level: 2, tier: 1, tone: 0.1, origin: 'carpus', insertion: 'thumb-proximal-phalanx' }, [0.05, 0.3, 0.5].map((t, i) => ({ c: palmPt(t, 0.62 - i * 0.12, 0.7), a: pw * [0.3, 0.38, 0.22][i]!, b: th * [0.35, 0.5, 0.3][i]!, hint: palmN }))));
   out.push(vol({ id: id('hypothenar'), name: 'éminence hypothénar', group: 'hand', side: sd, layer: 5, level: 2, tier: 1, tone: 0.08, origin: 'carpus', insertion: 'little-finger-proximal-phalanx' }, [0.1, 0.4, 0.7].map((t, i) => ({ c: palmPt(t, -0.7, 0.6), a: pw * [0.26, 0.3, 0.2][i]!, b: th * [0.3, 0.4, 0.28][i]!, hint: palmN }))));
   for (let i = 0; i < 4; i++) out.push(vol({ id: id(`tendon.hand.${i + 1}`), name: `tendon extenseur du dos de la main ${i + 1}`, group: 'hand', kind: 'tendon', side: sd, layer: 6, level: 3, tier: 4, tone: 0.2, strand: true }, [0.05, 0.5, 1].map((t) => ({ c: palmPt(t, 0.76 - i * 0.5, -1.0), a: 0.005 * H, b: 0.005 * H, hint: mul3(palmN, -1) }))));
+  const prox: { p: P3; q: P3; rr: number }[] = [];
   for (let k = 0; k < 5; k++) {
     const [lat, tb] = BASE[k] as readonly [number, number], thumb = k === 0;
     const len = FINGER_LEN[k]! * L * (1 + 0.15 * (fingers[k] ?? 0)) * jit(0.07);
@@ -42,6 +43,7 @@ export function handVolumes(ch: ArmChain, f: BodyFrame, pose: ArmPose, fingers: 
       const lj = len * SPLIT[j]! * (thumb ? 1.12 : 1) * jit(0.05), q = add3(p, mul3(d, lj)), rr = rt * (1 - 0.12 * j), hint = mul3(palmN, -1);
       out.push(vol({ id: id(`finger.${k}.${j + 1}`), name: `${NAME[k]} — phalange ${['proximale', 'moyenne', 'distale'][j]}`, group: 'hand', kind: 'bone', side: sd, layer: 6, level: 2, tier: 0, parent: j ? id(`finger.${k}.${j}`) : id('palm'), n: 4 },
         [{ c: p, a: rr * 1.05, b: rr * 0.92, hint }, { c: add3(p, mul3(sub3(q, p), 0.5)), a: rr * 0.98, b: rr * 0.88 * (j === 2 ? 0.85 : 1), hint }, { c: q, a: rr * (j === 2 ? 0.8 : 0.92), b: rr * (j === 2 ? 0.7 : 0.84), hint }]));
+      if (j === 0) prox.push({ p, q, rr });
       if (j < 2) out.push({ id: id(`knuckle.${k}.${j + 1}`), name: `${NAME[k]} — articulation ${j ? 'interphalangienne proximale' : 'métacarpo-phalangienne'}`, group: 'joint', kind: 'joint', side: sd, parent: id(`finger.${k}.${j + 1}`), level: 3, layer: 7, stations: ball(q, rr * 1.0), fibres: [], tone: 0.05, sphere: true });
       if (j === 2) {
         out.push(vol({ id: id(`nail.${k}`), name: `${NAME[k]} — ongle`, group: 'hand', kind: 'landmark', side: sd, layer: 7, level: 3, tier: 0, tone: 0.4, n: 3 }, [0.25, 0.62, 0.96].map((t) => ({ c: add3(add3(p, mul3(sub3(q, p), t)), mul3(hint, rr * 0.8)), a: rr * 0.6, b: rr * 0.1, hint }))));
@@ -49,6 +51,16 @@ export function handVolumes(ch: ArmChain, f: BodyFrame, pose: ArmPose, fingers: 
       }
       p = q;
     }
+  }
+  // PALMURES (itération 09) : la peau entre les doigts. Sans elle, les doigts sont des cylindres détachés (effet mannequin). Une palmure = loft aplati entre deux phalanges proximales voisines, à 18–45 % de leur
+  // longueur (le pli interdigital est plus distal au dos qu'à la paume ; ici on garde le niveau moyen), épaisseur ≈ 0,42 du rayon du doigt ; celle du pouce est plus longue et plus épaisse (1re commissure).
+  for (let k = 0; k < 4; k++) {
+    const A0 = prox[k]!, B0 = prox[k + 1]!, thumb = k === 0, t0 = thumb ? 0.1 : 0.16, t1 = thumb ? 0.62 : 0.5, at = (v: typeof A0, t: number): P3 => add3(v.p, mul3(sub3(v.q, v.p), t));
+    const span = (Math.hypot(A0.q.x - A0.p.x, A0.q.y - A0.p.y, A0.q.z - A0.p.z) + Math.hypot(B0.q.x - B0.p.x, B0.q.y - B0.p.y, B0.q.z - B0.p.z)) / 2;
+    const tm = (t0 + t1) / 2, wl = span * (t1 - t0) * 0.5, rr = (A0.rr + B0.rr) / 2, thick = rr * (thumb ? 0.62 : 0.42);
+    const cA = at(A0, tm), cB = at(B0, tm), mid = mul3(add3(cA, cB), 0.5);
+    out.push(vol({ id: id(`web.${k}`), name: thumb ? 'palmure du pouce (1re commissure)' : `palmure interdigitale ${k}`, group: 'hand', kind: 'skin', side: sd, layer: 5, level: 1, tier: 0, mass: 'hand-web', n: 5 },
+      [cA, mid, cB].map((c, i) => ({ c, a: wl * (i === 1 ? 1 : 0.7), b: thick * (i === 1 ? 1 : 0.85), hint: palmN }))));
   }
   return out;
 }

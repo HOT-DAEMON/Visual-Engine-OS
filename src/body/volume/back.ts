@@ -6,6 +6,8 @@ import type { Volume } from './types';
 import { add3, p3, type P3 } from './vec3';
 
 const PI = Math.PI;
+/** Remontée de la lame de l'omoplate (en vertèbres u) par rapport à l'acromion du cadre, partagée avec `back-relief.ts` (itération 09) : l'acromion du cadre est bas (≈ T4), ce qui plaçait l'angle inférieur à ≈ T9 ; la lame est remontée, l'épine reste ancrée sur l'acromion (donc moins oblique). */
+export const SCAP_LIFT = 1.0;
 const A = (y: number, psi: number, a: number, b: number, lift?: number): Anchor => ({ y, psi, a, b, ...(lift !== undefined ? { lift } : {}) });
 const fan = (n: number, w: number): number[] => Array.from({ length: n }, (_, i) => PI / 2 + w * ((i / (n - 1)) * 2 - 1));
 
@@ -36,20 +38,22 @@ export function backVolumes(tr: Trunk, nk: Neck, f: BodyFrame): Volume[] {
   const lv = tr.spine.lv, u = (lv.t12 - lv.c7) / 12, ys = y.acr + 0.005 * H, XA = f.x.acr;
   const bx = (yy: number, x: number): number => PI - Math.asin(Math.min(0.97, x / tr.at(yy).X));
   const yu = (k: number): number => ys + k * u;
+  /** Niveau de la lame (remontée de `SCAP_LIFT` vertèbres) : lame, angle inférieur, muscles posés sur la lame. L'épine garde `yu` à son extrémité latérale. */
+  const yb = (k: number): number => ys + (k - SCAP_LIFT) * u;
   // lame : sections [k (en u sous l'acromion), bord médial, bord latéral] — large à l'épine, puis resserrée vers l'angle inférieur
   const blade: readonly (readonly [number, number, number])[] = [[0, 0.27, 0.42], [1, 0.27, 0.8], [2.2, 0.28, 0.8], [3.5, 0.29, 0.62], [4.8, 0.3, 0.42], [5.5, 0.3, 0.35]];
   L({ id: 'scapula', name: 'omoplate (lame)', group: 'shoulder', kind: 'bone', level: 3, layer: 2, tier: 4, tone: 0.1, n: 14, hidden: true },
-    blade.map(([k, m, l]) => A(yu(k), bx(yu(k), ((m + l) / 2) * XA), ((l - m) / 2) * XA, 0.013 * H, 0.004 * H)));  // atome CACHÉ (`hidden`) : géométrie exploitable (repères, collisions, vérification) mais non dessinée — la peau n'occulte pas les os, d'où le drapeau explicite
+    blade.map(([k, m, l]) => A(yb(k), bx(yb(k), ((m + l) / 2) * XA), ((l - m) / 2) * XA, 0.013 * H, 0.004 * H)));  // atome CACHÉ (`hidden`) : géométrie exploitable (repères, collisions, vérification) mais non dessinée — la peau n'occulte pas les os, d'où le drapeau explicite
   // épine de l'omoplate : de la racine (bord médial) à l'acromion, obliquement vers le haut et en dehors
   L({ id: 'scapular-spine', name: 'épine de l’omoplate', group: 'shoulder', kind: 'bone', level: 3, layer: 5, tier: 3, tone: 0.2, n: 11 },
-    ([[0.27, 1], [0.42, 0.85], [0.58, 0.6]] as const).map(([x, k]) => A(yu(k), bx(yu(k), x * XA), 0.018 * H, 0.012 * H, 0.0)));  // seul le tiers médial de l'épine se dessine en relief ; la partie latérale (jusqu'à l'acromion) est portée par le trapèze/deltoïde
+    ([[0.27, 0.8], [0.42, 0.62], [0.58, 0.34]] as const).map(([x, k]) => A(yu(k), bx(yu(k), x * XA), 0.018 * H, 0.012 * H, 0.0)));  // seul le tiers médial de l'épine se dessine en relief ; la partie latérale (jusqu'à l'acromion) est portée par le trapèze/deltoïde
   // angle inférieur : relief doux de surface (la lame reste sous les muscles, comme en anatomie : seule la pointe s'y devine). Le bord médial n'est PAS tracé : isolé, il se lisait comme une aiguille.
   L({ id: 'scapula.inferior-angle', name: 'angle inférieur de l’omoplate', group: 'shoulder', kind: 'landmark', level: 3, layer: 5, tier: 4, tone: 0.12, n: 5, hidden: true },
-    [A(yu(4.7), bx(yu(4.7), 0.31 * XA), 0.02 * H, 0.006 * H, 0.004 * H), A(yu(5.5), bx(yu(5.5), 0.31 * XA), 0.026 * H, 0.008 * H, 0.005 * H)]);
+    [A(yb(4.7), bx(yb(4.7), 0.31 * XA), 0.02 * H, 0.006 * H, 0.004 * H), A(yb(5.5), bx(yb(5.5), 0.31 * XA), 0.026 * H, 0.008 * H, 0.005 * H)]);
   // Muscles posés SUR la lame (mêmes cotes) : rhomboïde (de l'épineuse vers le bord médial, fibres obliques vers le bas et en dehors), infra-épineux (fosse sous l'épine), grand rond (angle inférieur → humérus).
-  L({ id: 'rhomboid', name: 'rhomboïde', group: 'back', layer: 4, tier: 3, fibres: fan(4, 0.5), origin: 'C7-T5', insertion: 'scapula-medial' }, [A(yu(0.2), bx(yu(0.2), 0.06 * XA), 0.02 * H, 0.016 * H), A(yu(1.6), bx(yu(1.6), 0.17 * XA), 0.036 * H, 0.018 * H), A(yu(3.2), bx(yu(3.2), 0.27 * XA), 0.022 * H, 0.015 * H)]);
-  L({ id: 'infraspinatus', name: 'infra-épineux', group: 'back', layer: 4, tier: 3, fibres: fan(4, 0.55), origin: 'scapula', insertion: 'humerus', n: 11 }, [A(yu(1.5), bx(yu(1.5), 0.36 * XA), 0.048 * H, 0.016 * H, 0.002 * H), A(yu(2.5), bx(yu(2.5), 0.52 * XA), 0.082 * H, 0.02 * H, 0.003 * H), A(yu(3.5), bx(yu(3.5), 0.64 * XA), 0.062 * H, 0.018 * H, 0.002 * H)]);
-  L({ id: 'teres-major', name: 'grand rond', group: 'back', layer: 4, tier: 3, origin: 'scapula-inferior', insertion: 'humerus', n: 9 }, [A(yu(4.6), bx(yu(4.6), 0.42 * XA), 0.034 * H, 0.02 * H, 0.002 * H), A(yu(4.0), bx(yu(4.0), 0.64 * XA), 0.04 * H, 0.024 * H, 0.003 * H), A(y.axilla + 0.015 * H, PI / 2 + 0.3, 0.024 * H, 0.018 * H)]);
+  L({ id: 'rhomboid', name: 'rhomboïde', group: 'back', layer: 4, tier: 3, fibres: fan(4, 0.5), origin: 'C7-T5', insertion: 'scapula-medial' }, [A(yb(0.2), bx(yb(0.2), 0.06 * XA), 0.02 * H, 0.016 * H), A(yb(1.6), bx(yb(1.6), 0.17 * XA), 0.036 * H, 0.018 * H), A(yb(3.2), bx(yb(3.2), 0.27 * XA), 0.022 * H, 0.015 * H)]);
+  L({ id: 'infraspinatus', name: 'infra-épineux', group: 'back', layer: 4, tier: 3, fibres: fan(4, 0.55), origin: 'scapula', insertion: 'humerus', n: 11 }, [A(yb(1.5), bx(yb(1.5), 0.36 * XA), 0.048 * H, 0.016 * H, 0.002 * H), A(yb(2.5), bx(yb(2.5), 0.52 * XA), 0.082 * H, 0.02 * H, 0.003 * H), A(yb(3.5), bx(yb(3.5), 0.64 * XA), 0.062 * H, 0.018 * H, 0.002 * H)]);
+  L({ id: 'teres-major', name: 'grand rond', group: 'back', layer: 4, tier: 3, origin: 'scapula-inferior', insertion: 'humerus', n: 9 }, [A(yb(4.6), bx(yb(4.6), 0.42 * XA), 0.034 * H, 0.02 * H, 0.002 * H), A(yb(4.0), bx(yb(4.0), 0.64 * XA), 0.04 * H, 0.024 * H, 0.003 * H), A(y.axilla + 0.015 * H, PI / 2 + 0.3, 0.024 * H, 0.018 * H)]);
   out.push(vol({ id: 'vertebral-groove', name: 'sillon vertébral', group: 'back', kind: 'landmark', level: 3, layer: 5, tier: 3, strand: true, tone: -0.5 }, [y.base + 0.03 * H, y.base + 0.3 * tl, y.base + 0.65 * tl, y.crop].map((yy) => { const q = tr.point(yy, PI, 0); return { c: q.p, a: 0.004 * H, b: 0.003 * H, hint: q.n }; })));
   return out;
 }

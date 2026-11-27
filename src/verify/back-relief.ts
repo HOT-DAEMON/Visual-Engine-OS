@@ -16,10 +16,10 @@ const find = (set: VolumeSet, id: string): Shape | undefined => set.relief?.shap
  *  GÉOMÉTRIE : (1) toutes les formes du champ sont dans le tronc : |x| ≤ demi-largeur max du tronc + 0,02 h, y entre la base du cou − 0,02 h et la crête iliaque + 0,03 h ;
  *              (2) symétrie du champ : énergie Σ|h| du côté gauche / droit entre 0,9 et 1,1 (observé 0,97–0,99).
  *  ANATOMIE  : (3) portée verticale de la lame entre 4,5 et 6,5 vertèbres (anatomie : 5–6 ; observé 5,1–5,4) ; (4) bord médial à 0,20–0,34 de x.acr de la ligne médiane (observé 0,270–0,275) ;
- *              (5) épine ascendante vers l'acromion de 0,5 à 1,6 vertèbre (observé 0,86–1,24) ; (6) angle inférieur entre 6,0 et 9,5 vertèbres sous C7, soit T6–T9 (littérature : T7, parfois T8 ;
- *              observé 7,2–9,3 : l'adulte est à ≈ T9, bas de la fourchette — écart hérité de l'itération 04, voir docs/BODY-JUNCTIONS-08-REMAINING.md).
+ *              (5) épine ascendante vers l'acromion de 0,5 à 1,6 vertèbre (observé 0,61–0,68 depuis l'itération 09 ; 0,86–1,24 avant : la lame est remontée, l'acromion du cadre ne l'est pas) ; (6) angle inférieur entre 6,0 et 8,6 vertèbres sous C7, soit T6–T8 (littérature : T7, parfois T8 ;
+ *              observé 6,3–8,3 du nourrisson au vieillard, adulte 7,8 contre 8,8 avant l'itération 09 ; le VOLUME de l'omoplate (back.ts) reste ≈ 0,5 vertèbre plus bas que le relief, voir docs/BODY-JUNCTIONS-09-REMAINING.md).
  *  STYLE     : image de dos à 460 px de haut avec / sans relief : (7) la silhouette ne change pas (≤ 20 pixels d'alpha ; observé 0) ; (8) le relief se voit : ≥ 3 % du corps modifié si vis ≥ 0,25
- *              (observé 5,5–8,3 %), sinon ≥ 0,3 % (observé 0,5–1,7 %) ; (9) il est doux : saut de luminance max entre voisins, dans la zone modifiée, ≤ 66/255 (observé 12,6–61,7 ; sans relief 55–65 —
+ *              (observé 6,9–9,4 %), sinon ≥ 0,3 % (observé 0,5–1,6 %) ; (9) il est doux : saut de luminance max entre voisins, dans la zone modifiée, ≤ 66/255 (observé 15,8–65,6 : marge de 0,4/255 sur teenFemale ; voisins opaques seulement depuis l'itération 09 ; sans relief 55–65 —
  *              un premier essai à pentes non limitées atteignait 83–89 et dessinait un liseré dur) ; (10) les volumes remplacés restent dans les données mais ne sont plus dessinés (rhomboïde, infra-épineux, grand rond…).
  */
 export function backReliefChecks(set: VolumeSet, raw: BodyInput, a: NeckAnchor): VCheck[] {
@@ -42,7 +42,7 @@ export function backReliefChecks(set: VolumeSet, raw: BodyInput, a: NeckAnchor):
   out.push(chk('back.ana.scapula-span', 'anatomy', span >= 4.5 && span <= 6.5, `la lame couvre ${span.toFixed(2)} vertèbres (4,5–6,5 ; anatomie 5–6)`));
   out.push(chk('back.ana.scapula-medial', 'anatomy', med >= 0.2 && med <= 0.34, `bord médial à ${med.toFixed(3)} × x.acr de la ligne médiane (0,20–0,34)`));
   out.push(chk('back.ana.spine-inclined', 'anatomy', rise >= 0.5 && rise <= 1.6, `l'épine monte de ${rise.toFixed(2)} vertèbre vers l'acromion (0,5–1,6)`));
-  out.push(chk('back.ana.inferior-angle-level', 'anatomy', lvl >= 6 && lvl <= 9.5, `angle inférieur à ${lvl.toFixed(2)} vertèbres sous C7 (6,0–9,5 = T6–T9 ; T7–T8 attendu : ${lvl > 8.5 ? 'bas de la fourchette' : 'dans la zone usuelle'})`));
+  out.push(chk('back.ana.inferior-angle-level', 'anatomy', lvl >= 6 && lvl <= 8.6, `angle inférieur à ${lvl.toFixed(2)} vertèbres sous C7 (6,0–8,6 = T6–T8 ; T7–T8 attendu : ${lvl > 8.2 ? 'bas de la fourchette' : 'dans la zone usuelle'} ; adulte avant l'itération 09 : 8,8)`));
   // (7)–(9) style : deux rendus de dos
   const R = (on: boolean) => renderVolumesPixel(set, { skin: '#c99a76', heightPx: 460, camera: CAM, uid: `br${on ? 1 : 0}`, backRelief: on }), on = R(true), off = R(false), A = on.pixels, B = off.pixels, w = A.w, h = A.h;
   const lum = (P: Uint8ClampedArray, i: number): number => 0.3 * P[i]! + 0.59 * P[i + 1]! + 0.11 * P[i + 2]!;
@@ -50,13 +50,14 @@ export function backReliefChecks(set: VolumeSet, raw: BodyInput, a: NeckAnchor):
   for (let i = 0; i < A.rgba.length; i += 4) { if (Math.abs(A.rgba[i + 3]! - B.rgba[i + 3]!) > 8) dAlpha++; if (A.rgba[i + 3]! > 200) body++; }
   for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
     const i = (y * w + x) * 4; if (Math.abs(A.rgba[i]! - B.rgba[i]!) <= 6) continue; ch++;
-    if (A.rgba[i + 3]! >= 250) mxJ = Math.max(mxJ, Math.abs(lum(A.rgba, i) - lum(A.rgba, i + 4)), Math.abs(lum(A.rgba, i) - lum(A.rgba, i + w * 4)));
+    // Voisins OPAQUES seulement : une pointe d'acromion à l'arête de la silhouette touche le fond transparent (saut de 168/255) sans que le relief y soit pour rien ; la silhouette a son propre contrôle (relief-silhouette, alpha).
+    if (A.rgba[i + 3]! >= 250) for (const j of [i + 4, i + w * 4]) if (A.rgba[j + 3]! >= 250) mxJ = Math.max(mxJ, Math.abs(lum(A.rgba, i) - lum(A.rgba, j)));
   }
   const share = (100 * ch) / Math.max(1, body), need = vis >= 0.25 ? 3 : 0.3;
   out.push(chk('back.sty.relief-silhouette', 'style', dAlpha <= 20, `le relief change ${dAlpha} pixels d'alpha (≤ 20) : la silhouette n'est pas touchée`));
   out.push(chk('back.sty.relief-visible', 'style', share >= need, `${ch} pixels modifiés = ${share.toFixed(1)} % du corps (≥ ${need} % pour vis = ${vis.toFixed(2)})`));
   out.push(chk('back.sty.relief-soft', 'style', mxJ <= 66, `saut de luminance max entre voisins dans la zone du relief : ${mxJ.toFixed(1)}/255 (≤ 66 ; ancien rendu à bâtonnets : 55–65)`));
   const drawn = new Set(on.ids), repl = set.volumes.filter((v) => RELIEF_REPLACES.test(v.id)), stillDrawn = repl.filter((v) => drawn.has(v.id));
-  out.push(chk('back.sty.relief-replaces-sticks', 'style', repl.length >= 10 && stillDrawn.length === 0, `${repl.length} volumes remplacés présents dans les données, ${stillDrawn.length} encore dessinés (0 attendu)`));
+  out.push(chk('back.sty.relief-replaces-sticks', 'style', repl.length >= 12 && stillDrawn.length === 0, `${repl.length} volumes remplacés présents dans les données, ${stillDrawn.length} encore dessinés (0 attendu)`));
   return out;
 }

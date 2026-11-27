@@ -14,7 +14,7 @@ export interface GBufferOpts extends Omit<VRenderOpts, 'skin' | 'light' | 'uid' 
 /** Pente maximale (tangente) de la perturbation de normale : 0,6 ≈ 31°. */
 export const RELIEF_SLOPE_MAX = 0.6;
 /** Volumes du dos que le champ de relief remplace dans l'IMAGE (ils restent dans les données : repères, contrats, vérification). */
-export const RELIEF_REPLACES = /^(trapezius\.(middle|lower)|rhomboid|infraspinatus|teres-major|scapular-spine|erector\.(medial|lateral))\.[LR]$/;
+export const RELIEF_REPLACES = /^(trapezius\.(middle|lower)|rhomboid|infraspinatus|teres-major|latissimus|scapular-spine|erector\.(medial|lateral))\.[LR]$/;
 /** Mesure sur le G-buffer : pixels de peau fondus, plus grand saut de normale (degrés) entre deux pixels voisins de peaux différentes, avant et après le fondu. */
 export interface SeamStats { readonly blended: number; readonly jumpBefore: number; readonly jumpAfter: number }
 export interface VMeta { readonly layer: number; readonly tone: number; readonly fib: boolean; readonly kind: string; readonly rel: number; readonly mass: unknown }

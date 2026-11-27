@@ -22,7 +22,7 @@ export function deltoidMass(ch: ArmChain, f: BodyFrame, m: number): Volume[] {
   const out = mul3(norm3(cross3(up, ant)), s) as P3;
   const k = 0.82 + 0.18 * m; // volume : de 0,82 (peu musclé) à 1 (musclé) du profil plein
   const ctl: Ctl[] = PROFILE.map((q) => ({ c: add3(add3(sh, mul3(up, q.s * L)), mul3(out, q.off * rU)), a: q.a * rU * k, b: q.b * rU * k, hint: out }));
-  const mass = vol({ id: `deltoid.${sd}`, name: 'deltoïde (masse continue : chefs antérieur, moyen, postérieur)', group: 'shoulder', side: sd as 'L' | 'R', layer: 4, level: 1, tier: 1, mass: 'deltoid',
+  const mass = vol({ id: `deltoid.${sd}`, name: 'deltoïde (masse continue : chefs antérieur, moyen, postérieur)', group: 'shoulder', side: sd as 'L' | 'R', layer: 4, level: 1, tier: 2, mass: 'deltoid',
     fibres: [1.15, 1.35, 1.57, 1.8, 2.0], origin: 'clavicle/acromion/scapular-spine', insertion: 'humerus', n: 12 }, ctl);
   // Sillons entre les chefs : deux brins sur la surface (x/a = ±0,62 de la section, y/b = +0,79), de 12 % à 85 % de la longueur.
   const grooves = ([['ant', 1], ['post', -1]] as const).map(([nm, sg]) => {
@@ -35,5 +35,25 @@ export function deltoidMass(ch: ArmChain, f: BodyFrame, m: number): Volume[] {
     });
     return vol({ id: `deltoid.groove.${nm}.${sd}`, name: `sillon deltoïdien ${nm === 'ant' ? 'antérieur' : 'postérieur'}`, group: 'shoulder', kind: 'landmark', side: sd as 'L' | 'R', level: 3, layer: 6, tier: 3, tone: -0.5, strand: true }, pts);
   });
-  return [mass, ...grooves];
+  return [mass, ...wrapHeads(ch, f, m), ...grooves];
+}
+
+/**
+ * ENVELOPPE DU DELTOÏDE (itération 09). Le deltoïde d'avant ne couvrait que le dessus de l'humérus : le chef antérieur (tiers latéral de la clavicule) et le chef postérieur (épine de l'omoplate)
+ * n'enveloppaient rien. Deux volumes plats de la MÊME masse (`mass: 'deltoid'` : les raccords se fondent comme dans la masse unique) partent, l'un de l'avant de l'épaule au-dessus de l'articulation,
+ * l'autre de l'arrière, et rejoignent la tubérosité deltoïdienne : de côté, le muscle prend une forme de calotte qui entoure la tête humérale au lieu d'un fuseau posé sur le bras.
+ * Identifiants `deltoid-wrap.*` (et non `deltoid.ant/post`, interdits par le contrat « masse unique » de verify/shoulder.ts : ce ne sont pas des chefs indépendants, mais des renforts de la même masse).
+ * Cotes en multiples de `rU` (rayon du bras) et de `L` (longueur d'humérus).
+ */
+const WRAP: readonly { readonly s: number; readonly fw: number; readonly off: number; readonly a: number; readonly b: number }[] = [
+  { s: 0.0, fw: 0.5, off: 0.16, a: 0.3, b: 0.26 }, { s: 0.04, fw: 0.64, off: 0.2, a: 0.42, b: 0.36 }, { s: 0.16, fw: 0.58, off: 0.3, a: 0.44, b: 0.4 }, { s: 0.3, fw: 0.36, off: 0.34, a: 0.28, b: 0.3 }, { s: 0.42, fw: 0.1, off: 0.38, a: 0.1, b: 0.16 },
+];
+function wrapHeads(ch: ArmChain, f: BodyFrame, m: number): Volume[] {
+  const { sh, up, ant } = ch, s = ch.side, sd = s > 0 ? 'L' : 'R', rU = f.arm.armHalf, L = f.arm.upper, out = mul3(norm3(cross3(up, ant)), s) as P3, k = 0.82 + 0.18 * m;
+  return ([['ant', 1, 1.0], ['post', -1, 0.78]] as const).map(([nm, sg, sz]) => {
+    const hint = norm3(add3(mul3(ant, 0.8 * sg), mul3(out, 0.45))) as P3;
+    const ctl: Ctl[] = WRAP.map((q) => ({ c: add3(add3(sh, mul3(up, q.s * L)), add3(mul3(ant, sg * q.fw * rU * (nm === 'post' ? 0.85 : 1)), mul3(out, q.off * rU))), a: q.a * rU * k * sz, b: q.b * rU * k * sz, hint }));
+    return vol({ id: `deltoid-wrap.${nm}.${sd}`, name: `deltoïde — enveloppe ${nm === 'ant' ? 'antérieure (clavicule)' : 'postérieure (épine de l’omoplate)'}`, group: 'shoulder', side: sd as 'L' | 'R', layer: 4, level: 1, tier: 2, mass: 'deltoid',
+      fibres: [1.2, 1.4, 1.57, 1.8, 2.0], origin: nm === 'ant' ? 'clavicle' : 'scapular-spine', insertion: 'humerus', n: 10 }, ctl);
+  });
 }

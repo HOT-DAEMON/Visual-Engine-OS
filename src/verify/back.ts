@@ -1,7 +1,9 @@
 import type { BodyInput, NeckAnchor } from '../body';
 import { reveal, tierOf } from '../body/muscle-tiers';
+import { BodyParams } from '../body/types';
 import { renderVolumes, type VolumeSet } from '../body/volume';
 import { backReliefChecks } from './back-relief';
+import { latTrapChecks } from './body-09';
 import type { VCheck, VReport } from './volume';
 
 const chk = (id: string, layer: VCheck['layer'], ok: boolean, detail: string): VCheck => ({ id, layer, ok, detail });
@@ -27,13 +29,15 @@ export function verifyBack(set: VolumeSet, _raw: BodyInput, _a: NeckAnchor): VRe
     // ── Anatomie ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     const u = (t12Y - c7Y) / 12, yb = ext(sL, 'y'), hv = (yb.hi - yb.lo) / u, inf = (yb.hi - c7Y) / u;
     C.push(chk('back.ana.scapula-height', 'anatomy', hv > 4.2 && hv < 6.8, `hauteur de la lame ${hv.toFixed(1)} vertèbres thoraciques (T2→T7/T8 ≈ 5,5 ; bande 4,2–6,8)`));
-    C.push(chk('back.ana.inferior-angle-level', 'anatomy', inf > 7 && inf < 10.5, `angle inférieur à ${inf.toFixed(1)} vertèbres sous C7 (T7–T9 ; bande 7–10,5)`));
+    C.push(chk('back.ana.inferior-angle-level', 'anatomy', inf > 6 && inf < 9.5, `angle inférieur à ${inf.toFixed(1)} vertèbres sous C7 (T6–T9 ; T7–T8 attendu ; bande 6–9,5, alignée sur le relief — itération 09 : la lame est remontée, l'adulte passe de ≈ T9 à ≈ T8)`));
     const a0 = spL.stations[0]!.c.y, a1 = spL.stations[spL.stations.length - 1]!.c.y;
     C.push(chk('back.ana.spine-oblique', 'anatomy', a0 > a1, `épine : racine y=${a0.toFixed(0)} plus basse que son extrémité latérale y=${a1.toFixed(0)} (oblique vers le haut et en dehors)`));
   }
   const lean = m.trunkLeanDeg as number, fl = m.frontLineDeg as number;
   C.push(chk('back.ana.trunk-axis-vertical', 'anatomy', Math.abs(lean) <= 4, `axe C7→crête incliné de ${lean.toFixed(1)}° (bande ±4°)`));
-  C.push(chk('back.ana.front-line-vertical', 'anatomy', Math.abs(fl) <= 8, `ligne avant poitrine→crête à ${fl.toFixed(1)}° (ref-04 : −1° ; bande ±8°, le buste féminin et le ventre l'écartent)`));
+  // Bande ±8° pour l'enfant plus âgé et l'adulte ; ±12° avant 4 ans : l'abdomen du nourrisson et du jeune enfant est PHYSIOLOGIQUEMENT proéminent (parois abdominales peu tendues, foie volumineux, lordose lombaire marquée), la ligne poitrine→crête s'incline donc vers l'avant (observé : baby 9,0°, toddler 5,2° ; adultes ≤ 5°).
+  const age = BodyParams.parse(_raw).age, band = age < 4 ? 12 : 8;
+  C.push(chk('back.ana.front-line-vertical', 'anatomy', Math.abs(fl) <= band, `ligne avant poitrine→crête à ${fl.toFixed(1)}° (ref-04 : −1° ; bande ±${band}° ${age < 4 ? `pour l'âge ${age} an(s) : abdomen physiologiquement proéminent` : ''}, le buste féminin et le ventre l'écartent)`));
   // ── Style ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
   const ids = new Set(renderVolumes(set, { skin: '#c99a76', uid: 'bk' }).ids), idsAll = new Set(renderVolumes(set, { skin: '#c99a76', uid: 'bk2', showHidden: true }).ids);
   C.push(chk('back.sty.blade-hidden', 'style', !ids.has('scapula.L') && !ids.has('scapula.R') && idsAll.has('scapula.L'), 'lame cachée par défaut, révélée par showHidden'));
@@ -42,6 +46,7 @@ export function verifyBack(set: VolumeSet, _raw: BodyInput, _a: NeckAnchor): VRe
   const rel = ['scapular-spine.L', 'infraspinatus.L', 'teres-major.L'], bad = rel.filter((id) => ids.has(id) !== want(id));
   C.push(chk('back.sty.relief-drawn', 'style', bad.length === 0 && ids.has('scapular-spine.L'), bad.length ? `incohérent avec le palier : ${bad.join(',')}` : `relief dessiné selon le palier ${tr.toFixed(1)} : ${rel.filter((i) => ids.has(i)).length}/3 volumes (épine toujours)`));
   C.push(...backReliefChecks(set, _raw, _a)); // itération 08 : relief du haut du dos, 3 couches
+  C.push(...latTrapChecks(set, _raw, _a)); // itération 09 : nappe du grand dorsal et losange du trapèze, 3 couches
   const failures = C.filter((c) => !c.ok);
   return { ok: failures.length === 0, checks: C, failures };
 }

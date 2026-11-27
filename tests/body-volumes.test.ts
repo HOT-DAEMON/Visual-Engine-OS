@@ -29,7 +29,7 @@ describe('volumes 3D du corps', () => {
     const s = bodyVolumes({ ...MUSC, pose: { left: {}, right: {} } } as BodyInput, A, { contrapposto: { amount: 0 }, swing: { left: 5, right: 5 } });
     for (const v of s.volumes.filter((q) => q.id.endsWith('.L'))) {
       const w = s.byId.get(v.id.replace(/\.L$/, '.R'));
-      if (!w || v.id.startsWith('rectus') || v.id.startsWith('finger') || v.id.startsWith('thenar') || v.id.startsWith('hypothenar') || v.id.startsWith('tendon.hand') || v.id.startsWith('nail') || v.id.startsWith('pad') || v.id.startsWith('knuckle')) continue; // irrégularités voulues (abdominaux, doigts)
+      if (!w || v.id.startsWith('rectus') || v.id.startsWith('finger') || v.id.startsWith('thenar') || v.id.startsWith('hypothenar') || v.id.startsWith('tendon.hand') || v.id.startsWith('nail') || v.id.startsWith('web.') || v.id.startsWith('pad') || v.id.startsWith('knuckle')) continue; // irrégularités voulues (abdominaux, doigts)
       v.stations.forEach((q, i) => { const o = w.stations[i]!; expect(Math.abs(q.c.x + o.c.x), `${v.id}[${i}].x`).toBeLessThan(1e-6 + 0.002 * Math.abs(q.c.x)); expect(Math.abs(q.c.y - o.c.y), `${v.id}[${i}].y`).toBeLessThan(1e-6); expect(Math.abs(q.c.z - o.c.z), `${v.id}[${i}].z`).toBeLessThan(1e-6); });
     }
   });
