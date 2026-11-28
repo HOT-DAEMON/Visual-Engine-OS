@@ -28,6 +28,13 @@ Principe appliqué : les références nourrissent les composants atomiques exist
 - **Preuve** : `03-pupille-lumiere-de-scene.png` (follow 0 / 1 × scène 0,15 / 0,55 / 1) : constante à 0 ; dilatée en scène sombre, contractée en scène vive à 1.
 - **Tests** : taille effective indépendante de la scène à `follow` 0, monotone décroissante à 1, mélange à 0,5, `fixed` inerte, SVG différent en pixels.
 
+## 4. Régression visuelle (`npm run regress`) — changement VOULU des références
+- **Constat** : avec la passe 21, 25 des 34 cas passaient en `changed` (0,11 % à 1,13 % de pixels > 8) ; sur le commit précédent `regress` sortait EXIT 0.
+- **Cause isolée** : en désactivant seulement `clearHighlightOfPupil`, les 34 cas redeviennent identiques à l'état d'avant (EXIT 0) ; ni le pli `cel`, ni `follow` (défaut 0), ni les règles de vérification n'y contribuent.
+- **Pourquoi** : les visages générés ont souvent une pupille en fente verticale que l'ancien reflet blanc recouvrait. `06-regress-avant-apres.png` (référence | actuel, zone des yeux ×4, std-03 / std-07 / std-15 / hard-09) : seul le reflet change.
+- **Action** : `scripts/regress.ts update-some` sur les 25 cas `changed` (`references/visual/*.png` + `manifest.json`) ; `regress` : EXIT 0. Les 9 cas `close` (RMS ≤ 1,20) ne sont pas touchés ; les cas à pupille ronde, `exact`.
+- **Retour en arrière** : retirer la lecture de `keepOut` dans `highlightOffsets` / `placeHighlights` redonne l'ancien rendu ; les références seraient alors à restaurer (`git revert` du commit).
+
 ## Limites connues (voir `EYES-REMAINING.md`)
 - Sur une tête entière l'iris est petit : le reflet dégagé peut rester au contact de la pupille (fente, œil droit de la graine 12) ; la règle ne pousse pas le reflet hors de l'iris.
 - Le reflet secondaire (petit disque opposé) n'est pas dégagé : il chevauche parfois la pupille, voulu (double reflet des références au trait).

@@ -106,5 +106,6 @@ Archive déplacée telle quelle ; ses points ouverts encore valables sont repris
 
 ## Passe 21 (détail : `EYES-PASS-21.md`)
 - ✅ Fini `cel` : l'arc de pli est rattaché à la paupière par un aplat dur (`celCreaseFill`) ; ✅ reflet primaire hors des pupilles non rondes ; ✅ `pupil.response.follow` (lumière de scène → pupille) ; règles `verifyEye` : `highlight-clear-of-pupil`, `highlight-keeps-light-side`, `cel-crease-readable`.
+- ✅ `regress` relancé : changement voulu du reflet des pupilles en fente, 25 références mises à jour (`EYES-PASS-21.md` § 4) ; tests `*eye*` (67 fichiers) et `hair-*` (60 fichiers) verts avant rebase. ⬜ Suite complète du dépôt non exécutée.
 - ⬜ Non touchés, inchangés depuis la passe 20 : bande de lumière discrète sur tête entière, cas à 60° de lacet (1 sur 20), audit des enveloppes 01 et 02, emerald / ice / fire, cornée, cils et liner non recalculés anisotropiquement.
 - ⬜ Hors yeux, signalé : `src/hair-grammar/profiles/bob.ts` (clé dupliquée dans un littéral, erreur `tsc` amont, non corrigée ici) ; `scripts/artefacts-figure-perf.ts` (chemin `/tmp/orig`, erreur `tsc` amont).
