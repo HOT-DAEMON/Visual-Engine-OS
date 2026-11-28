@@ -251,7 +251,7 @@ export function renderGlobeInner(
     // Modèle sphère : les reflets sont posés dans le repère de l'iris puis suivent la même matrice locale que lui (positions ET formes comprimées).
     inner.push(...(turnT ? [el('g', { transform: turnT }, hr.markup)] : hr.markup));
   } else {
-    const off = highlightOffsets(eye, worldLight);
+    const off = highlightOffsets(eye, worldLight, levers.reflectionScale);
     const hl = eye.highlights;
     const hlNodes: string[] = [];
     hlNodes.push(

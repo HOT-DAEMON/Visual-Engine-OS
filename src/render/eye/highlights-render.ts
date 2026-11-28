@@ -1,5 +1,5 @@
 import { halfVectorXY, type LightVector } from '../../lighting/light';
-import { placeHighlights, type OpeningGeometry, type PlacedHighlight, type Vec } from '../../geometry/eye';
+import { placeHighlights, pupilKeepOut, type OpeningGeometry, type PlacedHighlight, type Vec } from '../../geometry/eye';
 import type { EyeSpec } from '../../schema';
 import { el, urlRef } from '../../core/svg';
 import { polygonPath, smoothClosed } from './helpers';
@@ -40,7 +40,7 @@ export function renderHighlights(eye: EyeSpec, g: OpeningGeometry, c: Vec, local
   const flat = isFlat(eye);   // fini flat : reflets nets (ni halo d'intensité ni flou de douceur)
   // Passe 20 : `appearance.reflection.{intensity,size}` (mêmes conventions que la peau, 0,5 = neutre) ; identité exacte aux valeurs neutres.
   const list = levers.reflectionGain === 1 && levers.reflectionScale === 1 ? eye.highlights.list : eye.highlights.list.map((h) => ({ ...h, size: h.size * levers.reflectionScale, opacity: Math.min(1, h.opacity * levers.reflectionGain) }));
-  const placed = placeHighlights(list, { c, irisRx, irisRy, half: halfVectorXY(localLight), bbox: g.bbox });
+  const placed = placeHighlights(list, { c, irisRx, irisRy, half: halfVectorXY(localLight), bbox: g.bbox, keepOut: pupilKeepOut(eye, irisRx, irisRy) });
   const blurIds = new Map<string, string>();   // clé « kind:écart » -> id du filtre déjà déclaré
   const blurFilter = (kind: 'glow' | 'soft', std: number): string => {
     const q = quantizeBlur(std); const key = `${kind}:${q.toFixed(3)}`; const known = blurIds.get(key);

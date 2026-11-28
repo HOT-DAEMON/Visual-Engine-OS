@@ -4,7 +4,7 @@ import { gazeOf } from '../../lighting/gaze3d';
 import { halfVectorXY, toLocal, type LightVector } from '../../lighting/light';
 import { mulberry32 } from '../../core/prng';
 import { el, num } from '../../core/svg';
-import { isIdentityJac, type Jacobian, type OpeningGeometry, type Vec } from '../../geometry/eye';
+import { clearHighlightOfPupil, isIdentityJac, pupilKeepOut, type Jacobian, type OpeningGeometry, type Vec } from '../../geometry/eye';
 import type { EyeSpec } from '../../schema';
 
 /** Point SVG formaté (voir core/svg.ts pour les garanties de `num`). */
@@ -101,14 +101,17 @@ export function irisCenter(eye: EyeSpec, g: OpeningGeometry, jac: Jacobian | nul
  * la direction vient du vecteur médian de la lumière DU MONDE exprimée dans le repère local.
  * Ainsi, deux yeux tournés différemment ont leurs reflets du même côté dans le monde.
  */
-export function highlightOffsets(eye: EyeSpec, worldLight: LightVector): { primary: Vec; secondary: Vec } {
+export function highlightOffsets(eye: EyeSpec, worldLight: LightVector, reflectionScale = 1): { primary: Vec; secondary: Vec } {
   const L = toLocal(worldLight, eye.transform.rotationDeg);
   const H = halfVectorXY(L);
   const { rx, ry } = irisRadii(eye);
   // Reflet cornéen : essentiellement fixé par la lumière, pas par la rotation du globe (l'approximation
   // usuelle en dessin — la cornée est quasi sphérique quel que soit le regard). Documenté comme limite.
+  const primary = { x: H.x * rx * 0.85, y: H.y * ry * 0.85 };
+  // Passe 21 : une pupille non ronde (fente, croix, étoile, multiple) n'est plus recouverte par le disque primaire ; pupille ronde : position inchangée (octet pour octet).
+  const keepOut = pupilKeepOut(eye, rx, ry);
   return {
-    primary: { x: H.x * rx * 0.85, y: H.y * ry * 0.85 },
+    primary: keepOut ? clearHighlightOfPupil(primary, eye.highlights.primary.size * rx * reflectionScale, keepOut, rx, ry) : primary,
     secondary: { x: -H.x * rx * 0.6, y: -H.y * ry * 0.6 },
   };
 }

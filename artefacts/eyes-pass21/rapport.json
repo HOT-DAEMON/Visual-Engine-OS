@@ -1,0 +1,85 @@
+[
+  {
+    "cas": "ronde",
+    "ok": true,
+    "controles": []
+  },
+  {
+    "cas": "fente verticale",
+    "ok": true,
+    "controles": [
+      {
+        "id": "highlight-clear-of-pupil",
+        "couche": "geometry",
+        "ok": true,
+        "severite": "warn"
+      },
+      {
+        "id": "highlight-keeps-light-side",
+        "couche": "anatomy",
+        "ok": true,
+        "severite": "error"
+      }
+    ]
+  },
+  {
+    "cas": "croix",
+    "ok": true,
+    "controles": [
+      {
+        "id": "highlight-clear-of-pupil",
+        "couche": "geometry",
+        "ok": true,
+        "severite": "warn"
+      },
+      {
+        "id": "highlight-keeps-light-side",
+        "couche": "anatomy",
+        "ok": true,
+        "severite": "error"
+      }
+    ]
+  },
+  {
+    "cas": "étoile 0,7 (sans place)",
+    "ok": true,
+    "controles": [
+      {
+        "id": "highlight-clear-of-pupil",
+        "couche": "geometry",
+        "ok": false,
+        "severite": "warn"
+      },
+      {
+        "id": "highlight-keeps-light-side",
+        "couche": "anatomy",
+        "ok": true,
+        "severite": "error"
+      }
+    ]
+  },
+  {
+    "cas": "cel, pli lisible",
+    "ok": true,
+    "controles": [
+      {
+        "id": "cel-crease-readable",
+        "couche": "style",
+        "ok": true,
+        "severite": "warn"
+      }
+    ]
+  },
+  {
+    "cas": "cel, œil 20 px",
+    "ok": true,
+    "controles": [
+      {
+        "id": "cel-crease-readable",
+        "couche": "style",
+        "ok": false,
+        "severite": "warn"
+      }
+    ]
+  }
+]

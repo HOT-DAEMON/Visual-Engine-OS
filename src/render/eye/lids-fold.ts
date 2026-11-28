@@ -10,12 +10,21 @@ import { renderLashGroup } from './lashes-render';
 import { renderLiner } from './liner';
 import type { EyeLook } from './look';
 import { renderCanthusLines } from './canthus-lines';
-import { isFlat } from './flat-finish';
+import { hasCastShadow, isFlat } from './flat-finish';
 
 export interface LidsAndFold {
   readonly defs: string[];
   readonly outside: string[];
 }
+
+/**
+ * Fini `cel` (passe 21) : le trait du pli ne flotte plus au-dessus de l'ouverture. Le fini `flat` retire le dégradé d'ombre du pli (`-crease-shadow`) ; sans lui le trait
+ * fin, à `crease.height` de l'ouverture, paraissait détaché (planches de la passe 20, graines 7 et 12). En `cel`, la zone entre le bord libre et le pli reçoit l'ombre
+ * d'insertion du releveur en UN aplat à bord dur (ton d'ombre de la peau, opacité ∝ `crease.depth`) : c'est le procédé des références au trait (pli = aplat + trait).
+ */
+const CEL_CREASE_ALPHA = { base: 0.10, perDepth: 0.22 };
+const celCreaseFill = (id: string, region: string, depth: number, tone: string): string =>
+  el('path', { id: `${id}-crease-fill`, d: region, fill: tone, 'fill-opacity': +(CEL_CREASE_ALPHA.base + CEL_CREASE_ALPHA.perDepth * Math.min(1, Math.max(0, depth))).toFixed(3) });
 
 /**
  * Tout ce qui se dessine EN DEHORS du clip de l'ouverture : pli palpébral (ombre + trait), bords
@@ -53,7 +62,7 @@ export function renderLidsAndFold(
     );
     const region = `${edges ? `M${P(edges.upper[0]!)}${smoothThrough(edges.upper)}` : `M${P(g.pi)}C${P(g.u1)} ${P(g.u2)} ${P(g.po)}`}L${P(crease.p3)}C${P(crease.p2)} ${P(crease.p1)} ${P(crease.p0)}Z`;
     outside.push(
-      ...(flat ? [] : [el('path', { id: `${id}-crease-fill`, d: region, fill: urlRef(`${id}-crease-shadow`) })]),
+      ...(flat ? (hasCastShadow(eye) ? [celCreaseFill(id, region, depth, look ? look.skin.shadow : darken(skin, 0.5))] : []) : [el('path', { id: `${id}-crease-fill`, d: region, fill: urlRef(`${id}-crease-shadow`) })]),
       el('path', {
         id: `${id}-crease`,
         d: `M${P(crease.p0)}C${P(crease.p1)} ${P(crease.p2)} ${P(crease.p3)}`,

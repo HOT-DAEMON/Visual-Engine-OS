@@ -17,6 +17,8 @@ export const PupilResponse = z
     model: z.enum(PUPIL_RESPONSE_MODELS).default('fixed'),
     /** Niveau de lumière ambiante vu par l'œil : 0 = obscurité (dilatation), 0,5 = neutre (taille nominale), 1 = éblouissement. */
     light: Unit.default(0.5),
+    /** Passe 21 : part du niveau de lumière tirée de l'INTENSITÉ de la lumière de la scène (`LightVector.intensity`, 0-1). 0 = `light` seul (valeur historique) ; 1 = `light` est remplacé par l'intensité de la scène. */
+    follow: Unit.default(0),
   })
   .strict();
 

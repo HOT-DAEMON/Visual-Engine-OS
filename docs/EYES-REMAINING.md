@@ -22,10 +22,9 @@ Légende : ✅ fait et testé · 🟡 partiel (précisé) · ⬜ non fait · ❔
 - 🟡 Dégradé angulaire : secteurs de 7,5° ; des traînées radiales fines peuvent apparaître sur les grands iris (augmenter `stepsFor` si besoin).
 
 ## 05 Pupille
-- ✅ A, C, D, E, F, G (par `light` explicite), H, I, J. ⬜ G : `light` ne suit pas encore l'intensité de la lumière de la scène (à lier à `LightVector.intensity`).
+- ✅ A, C, D, E, F, G (par `light` explicite), H, I, J. ✅ (passe 21) G : `pupil.response.follow` lie `light` à `LightVector.intensity` (`EYES-PASS-21.md` § 3) ; 🟡 pas dans le rendu des têtes en rotation (`head-3d-eyes.ts`) ni `checkEyeAppearance`.
 - 🟡 Contours concentriques des profils : traits centrés recouverts par le remplissage — approximation correcte pour opacité 1, pas pour des contours translucides.
-- 🟡 Le reflet par défaut (grand disque en haut à gauche) **masque** souvent les pupilles non rondes ; les planches de preuve le réduisent explicitement.
-  Correction possible : décaler le reflet primaire hors de la pupille quand `pupil.shape` ≠ ronde.
+- ✅ (passe 21) Le reflet primaire glisse hors des pupilles non rondes (`highlight-clearance.ts`, `EYES-PASS-21.md` § 2) ; 🟡 à petite échelle (iris de tête entière) il peut rester au contact, reflet secondaire non dégagé.
 - ⬜ Mode `fast` du flou de bord (`edge.softness`) : reste un filtre.
 
 ## 06 Cils — ✅ (2026-11-15) 10 familles tirées des réfs 12–16, 3 paramètres ajoutés (`bendDeg`, `rootFuse`, `span`), vérification dédiée : voir `EYES-LASHES.md` et `EYES-LASHES-VERIFY.md`. Reste à faire : fin de `EYES-LASHES.md` (écart visuel aplats/dégradés, mèches sur l'iris, cils non adaptés aux yeux très inclinés).
@@ -104,3 +103,8 @@ Archive déplacée telle quelle ; ses points ouverts encore valables sont repris
 - 🟡 Bande de lumière : discrète à l'échelle d'une tête entière (œil ≈ 90 px) ; croissant sur l'iris seulement (pas de bande sur la sclère ni la cornée) ; le côté suit `direction2D(L)` de la lumière de la scène.
 - ⬜ **Fini `cel` sur une tête entière** (constaté sur les planches de la passe 20, identique à l'octet avec `finish: 'cel'`, donc hérité de la passe 19b) : un arc fin de pli de paupière paraît détaché au-dessus de l'ouverture ; les yeux de la graine 7 paraissent divergents. Non investigué.
 - ⬜ Non touchés, inchangés depuis la passe 19 : rotation (1 cas sur 20 à 60°, cils et liner non recalculés anisotropiquement, LOD du modèle `flat`), reflet primaire qui masque les pupilles non rondes, `light` de pupille non liée à `LightVector.intensity`, audit des enveloppes 01 / 02, emerald / ice / fire, cornée (fibres), microrelief 07D.
+
+## Passe 21 (détail : `EYES-PASS-21.md`)
+- ✅ Fini `cel` : l'arc de pli est rattaché à la paupière par un aplat dur (`celCreaseFill`) ; ✅ reflet primaire hors des pupilles non rondes ; ✅ `pupil.response.follow` (lumière de scène → pupille) ; règles `verifyEye` : `highlight-clear-of-pupil`, `highlight-keeps-light-side`, `cel-crease-readable`.
+- ⬜ Non touchés, inchangés depuis la passe 20 : bande de lumière discrète sur tête entière, cas à 60° de lacet (1 sur 20), audit des enveloppes 01 et 02, emerald / ice / fire, cornée, cils et liner non recalculés anisotropiquement.
+- ⬜ Hors yeux, signalé : `src/hair-grammar/profiles/bob.ts` (clé dupliquée dans un littéral, erreur `tsc` amont, non corrigée ici) ; `scripts/artefacts-figure-perf.ts` (chemin `/tmp/orig`, erreur `tsc` amont).

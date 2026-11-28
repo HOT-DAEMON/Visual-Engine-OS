@@ -25,12 +25,12 @@ import { effectiveFinish, eyeLevers } from './appearance-levers';
  * délègue chaque zone visuelle à sa fonction dédiée, et assemble le résultat final.
  */
 /** Œil EFFECTIF : archétype, expression, réponse lumineuse de la pupille (EYE-05G), étalonnage — exactement ce que le rendu dessine (réutilisé par `verify/eye.ts`). */
-export function resolveEye(rawEye: EyeSpec): EyeSpec {
+export function resolveEye(rawEye: EyeSpec, sceneIntensity?: number): EyeSpec {
   const posed0 = applyExpression(applyArchetype(rawEye));
   const finish = effectiveFinish(posed0);   // passe 20 : `appearance.shading.mode: 'cel'` sur un œil `shaded` = fini `cel`
   const posed = finish === posed0.finish ? posed0 : { ...posed0, finish };
   // EYE-05G : la réponse lumineuse change la taille AVANT tout le reste (iris détaillé, fibres, pupille lisent la même taille).
-  const sized = posed.pupil.response.model === 'fixed' ? posed : { ...posed, pupil: { ...posed.pupil, size: effectivePupilSize(posed.pupil) } };
+  const sized = posed.pupil.response.model === 'fixed' ? posed : { ...posed, pupil: { ...posed.pupil, size: effectivePupilSize(posed.pupil, sceneIntensity) } };
   return flattenEye(gradeEye(applyCornea(sized)));
 }
 
@@ -44,7 +44,7 @@ export function withAutoLod(eye: EyeSpec, pixelRatio = 1, widthRatio = 1): { rea
 }
 
 export function compileEye(rawEye: EyeSpec, worldLight: LightVector, opts: { readonly pixelRatio?: number } = {}): CompiledObject {
-  const resolved = resolveEye(rawEye);
+  const resolved = resolveEye(rawEye, worldLight.intensity);
   const levers = eyeLevers(rawEye);   // lus sur l'œil brut : `flattenEye` met `appearance` à null (passe 20, appearance-levers.ts)
   // Rotation 3D : modèle `sphere` = enveloppe reprojetée point par point sur la sphère de la tête (turn3d.ts) ; `flat` = écrasement uniforme historique (headWrap).
   // Le LOD lit la largeur APPARENTE de l'œil (raccourcie par la rotation) : un œil vu à 70° n'a pas besoin du détail d'un œil de face.

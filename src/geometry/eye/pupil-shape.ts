@@ -34,9 +34,15 @@ export function pupilResponseFactor(model: Pupil['response']['model'], light: nu
   return 6 ** (0.5 - l);
 }
 
-/** Taille nominale × réponse lumineuse, bornée. Identité si le modèle est `fixed` ou si `light` = 0,5. */
-export function effectivePupilSize(pupil: Pupil): number {
-  const f = pupilResponseFactor(pupil.response.model, pupil.response.light);
+/** Niveau de lumière effectif : `light` mélangé à l'intensité de la scène selon `follow` (passe 21). Sans intensité de scène, ou `follow` = 0 : `light` tel quel. */
+export const pupilLightLevel = (pupil: Pupil, sceneIntensity?: number): number => {
+  const f = pupil.response.follow;
+  return sceneIntensity === undefined || f <= 0 ? pupil.response.light : pupil.response.light + (Math.min(1, Math.max(0, sceneIntensity)) - pupil.response.light) * f;
+};
+
+/** Taille nominale × réponse lumineuse, bornée. Identité si le modèle est `fixed` ou si le niveau de lumière effectif = 0,5. */
+export function effectivePupilSize(pupil: Pupil, sceneIntensity?: number): number {
+  const f = pupilResponseFactor(pupil.response.model, pupilLightLevel(pupil, sceneIntensity));
   return Math.min(MAX_SIZE, Math.max(MIN_SIZE, pupil.size * f));
 }
 

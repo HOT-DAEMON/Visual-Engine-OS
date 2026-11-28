@@ -2,6 +2,8 @@ import type { EyeSpec } from '../../schema';
 import type { HighlightItem } from '../../schema/eye-highlights';
 import { chaikin, vertices } from './pupil-shape';
 import type { Vec } from './primitives';
+import type { Contour } from './pupil-shape';
+import { clearHighlightOfPupil } from './highlight-clearance';
 
 /**
  * OPT-01/04 — Placement des reflets (géométrie pure). Entrée : centre et rayons de l'iris, vecteur médian de la lumière
@@ -27,6 +29,8 @@ export interface PlaceCtx {
   readonly irisRy: number;
   readonly half: Vec;
   readonly bbox: { readonly x: number; readonly y: number; readonly w: number; readonly h: number };
+  /** Passe 21 : contours de la pupille NON ronde (repère local de l'iris, `pupilKeepOut`) ; le reflet primaire ancré à la lumière glisse hors d'elle. Absent = comportement historique. */
+  readonly keepOut?: readonly Contour[] | null;
 }
 
 /** Empreinte déterministe [0 ; 1[ d'un reflet (position, taille, nombre de pointes) et d'un indice : le `jitter` ne tire pas de hasard au rendu. */
@@ -59,6 +63,10 @@ export function placeHighlights(items: readonly HighlightItem[], ctx: PlaceCtx):
       const k = it.role === 'secondary' ? -it.along * 0.7 : it.along;
       cx = ctx.c.x + ctx.half.x * ctx.irisRx * k;
       cy = ctx.c.y + ctx.half.y * ctx.irisRy * k;
+      if (ctx.keepOut && it.role !== 'secondary') {
+        const q = clearHighlightOfPupil({ x: cx - ctx.c.x, y: cy - ctx.c.y }, Math.max(rx, ry), ctx.keepOut, ctx.irisRx, ctx.irisRy);
+        cx = ctx.c.x + q.x; cy = ctx.c.y + q.y;
+      }
     } else if (it.anchor === 'iris') {
       cx = ctx.c.x + it.x * ctx.irisRx;
       cy = ctx.c.y + it.y * ctx.irisRx;

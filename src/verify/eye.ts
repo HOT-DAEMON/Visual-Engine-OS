@@ -1,5 +1,5 @@
 import { svgCostMs, svgFeatures, SVG_COST_MAX_MS } from './eye-cost';
-import { IRIS_FIT, applyTurnAbout, turnedHalfExtents, apparentWidthRatio, edgeFrames, edgePolygon, eyeEdges, eyeTurn, openingPolygon, eyeLashSet, upperFrame, lowerFrame, placeHighlights, pupilOccludedByStar, pupilContours, scleraVessels, microLod, type Vec } from '../geometry/eye';
+import { IRIS_FIT, applyTurnAbout, turnedHalfExtents, apparentWidthRatio, edgeFrames, edgePolygon, eyeEdges, eyeTurn, openingPolygon, eyeLashSet, upperFrame, lowerFrame, placeHighlights, pupilKeepOut, pupilOccludedByStar, pupilContours, scleraVessels, microLod, type Vec } from '../geometry/eye';
 import { halfVectorXY, lightVector, toLocal, type LightVector } from '../lighting/light';
 import { rotateLightForHeadTurn } from '../lighting/head-turn';
 import { compileEye, resolveEye, withAutoLod } from '../render/eye/eye';
@@ -12,6 +12,7 @@ import { checkEyeCornea } from './eye-cornea';
 import { checkEyeLashes, type LashMetrics } from './eye-lashes';
 import { checkCanthusLines } from './eye-canthus-lines';
 import { checkEyeAppearance } from './eye-appearance';
+import { checkEyeClearance } from './eye-clearance';
 import { isFlat } from '../render/eye/flat-finish';
 import { check, report, type Check, type Report } from './types';
 
@@ -54,7 +55,7 @@ export interface EyeReport extends Report { readonly metrics: EyeMetrics; }
 
 export function verifyEye(input: unknown, light: LightVector = lightVector(REFERENCE_LIGHT)): EyeReport {
   const raw = EyeSpec.parse(input);
-  const eye = resolveEye(raw);
+  const eye = resolveEye(raw, light.intensity);
   const out: Check[] = [];
   const { g0, turned, g } = eyeTurn(eye); const ht = eye.headTurn;
   const lodEye = withAutoLod(eye, 1, apparentWidthRatio(g0, turned)).eye; // exactement l'œil que le rendu dessine (LOD, raccourcissement de rotation compris)
@@ -88,7 +89,7 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
   out.push(check('geometry', 'pupil-inside-iris', '<=', worst, IRIS_FIT, 'la pupille sort de l’iris'));
   if (eye.highlights.list.length) {
     const L = toLocal(rotateLightForHeadTurn(light, ht.yawDeg, ht.pitchDeg), eye.transform.rotationDeg);
-    const placed = placeHighlights(eye.highlights.list, { c, irisRx, irisRy, half: halfVectorXY(L), bbox: g.bbox });
+    const placed = placeHighlights(eye.highlights.list, { c, irisRx, irisRy, half: halfVectorXY(L), bbox: g.bbox, keepOut: pupilKeepOut(eye, irisRx, irisRy) });
     const bad = placed.filter((p) => {
       const m = toDrawn({ x: p.cx, y: p.cy }); const h = turnJac ? turnedHalfExtents(p.rx, p.ry, turnJac) : { rx: p.rx, ry: p.ry }; // centre et demi-axes de l'ellipse comprimée, comme dessinée
       return m.x - h.rx < g.bbox.x - 1e-6 || m.x + h.rx > g.bbox.x + g.bbox.w + 1e-6 || m.y - h.ry < g.bbox.y - 1e-6 || m.y + h.ry > g.bbox.y + g.bbox.h + 1e-6;
@@ -102,13 +103,14 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
   }
   if (turned) out.push(check('geometry', 'eye-facing-camera', '>=', turned.facing, 0.05, 'l’œil est passé derrière le crâne (rotation trop forte pour sa position)'));
 
-  out.push(...checkEyeCornea(raw, eye, g0)); // cornée (réfraction) et bords palpébraux irréguliers : geometry / anatomy / style (eye-cornea.ts)
+  out.push(...checkEyeCornea(raw, eye, g0, light.intensity)); // cornée (réfraction) et bords palpébraux irréguliers : geometry / anatomy / style (eye-cornea.ts)
   out.push(...checkEyeEnvelope(g0, eye.shape.style, irisRy)); // enveloppe vs références mesurées (geometry / anatomy / style)
   const lashTh = eye.lids.thickness * eye.shape.height;
   const lashCheck = checkEyeLashes(eye, g, lashTh, eyeLashSet(lodEye, g, lashTh, edges), fr?.upper ?? ((t) => upperFrame(g, t)), fr?.lower ?? ((t) => lowerFrame(g, t)), poly); // cils : géométrie / anatomie / style (eye-lashes.ts)
   out.push(...lashCheck.checks);
   out.push(...checkCanthusLines(lodEye, g, lashTh, poly, isFlat(lodEye))); // plis des canthi (07G) : géométrie, anatomie, style
   out.push(...checkEyeAppearance(raw, irisRx, g.hEff, withAutoLod(eye, 1, apparentWidthRatio(g0, turned)).eyePx / eye.shape.width)); // leviers d'apparence (passe 20) : bande, ombre portée, reflets, opacité
+  out.push(...checkEyeClearance(raw, eye, rotateLightForHeadTurn(light, ht.yawDeg, ht.pitchDeg), g.hEff, withAutoLod(eye, 1, apparentWidthRatio(g0, turned)).eyePx / eye.shape.width)); // passe 21 : reflet hors de la pupille non ronde, pli cel lisible
 
   // ---- anatomy -----------------------------------------------------------------------------------------------
   const irisToOpening = (2 * irisRx) / (g.bbox.w || 1);
@@ -123,7 +125,7 @@ export function verifyEye(input: unknown, light: LightVector = lightVector(REFER
   if (refl.length) {
     const L = toLocal(rotateLightForHeadTurn(light, ht.yawDeg, ht.pitchDeg), eye.transform.rotationDeg);
     const half = halfVectorXY(L);
-    const [p] = placeHighlights(refl, { c, irisRx, irisRy, half, bbox: g.bbox });
+    const [p] = placeHighlights(refl, { c, irisRx, irisRy, half, bbox: g.bbox, keepOut: pupilKeepOut(eye, irisRx, irisRy) });
     const dot = p ? (p.cx - c.x) * half.x + (p.cy - c.y) * half.y : 0;
     out.push(check('anatomy', 'reflection-faces-light', '>=', dot, 0, 'le reflet physique est du côté opposé à la lumière'));
   }

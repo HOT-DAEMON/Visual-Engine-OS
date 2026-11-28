@@ -20,7 +20,7 @@ export const FLAT_EDGE_IRREGULARITY_MAX = 0.35;
 const ccw = (a: Vec, b: Vec, c: Vec): number => (c.y - a.y) * (b.x - a.x) - (b.y - a.y) * (c.x - a.x);
 const crosses = (a: Vec, b: Vec, c: Vec, d: Vec): boolean => ccw(a, c, d) * ccw(b, c, d) < 0 && ccw(a, b, c) * ccw(a, b, d) < 0;
 
-export function checkEyeCornea(raw: EyeSpec, eye: EyeSpec, g: OpeningGeometry): Check[] {
+export function checkEyeCornea(raw: EyeSpec, eye: EyeSpec, g: OpeningGeometry, sceneIntensity?: number): Check[] {
   const out: Check[] = [];
   const co = eye.cornea;
   if (co) {
@@ -29,7 +29,7 @@ export function checkEyeCornea(raw: EyeSpec, eye: EyeSpec, g: OpeningGeometry): 
     for (let i = 1; i <= 64; i++) { const v = w(i / 64); if (v < prev - 1e-9) down++; gap = Math.max(gap, Math.abs(v - i / 64)); prev = v; }
     out.push(check('geometry', 'cornea-warp-monotone', '==', down, 0, 'la loi de réfraction de la cornée n’est pas monotone (l’iris se replierait sur lui-même)'));
     out.push(check('geometry', 'cornea-limbus-fixed', '==', w(1), 1, 'le limbe n’est plus le bord apparent de l’iris (taille de l’iris modifiée)'));
-    const un = resolveEye({ ...raw, cornea: null }).pupil.size; const mag = un > 0 ? eye.pupil.size / un : 1;
+    const un = resolveEye({ ...raw, cornea: null }, sceneIntensity).pupil.size; const mag = un > 0 ? eye.pupil.size / un : 1;
     out.push(check('anatomy', 'cornea-pupil-magnification', '<=', mag, CORNEA_PUPIL_MAGNIFICATION_MAX, 'la pupille paraît plus de 1,35 × plus grande que sa taille vraie (humain ≈ 1,13) : réfraction exagérée', 'warn'));
     if (co.refraction > 0) out.push(check('style', 'cornea-visible', '>=', gap, CORNEA_VISIBLE_MIN, 'la cornée est déclarée mais sa loi de réfraction est invisible (< 0,5 % du rayon) : paramètres orphelins', 'warn'));
   }
