@@ -1,5 +1,5 @@
 import { domePredicate } from './dome';
-import { sampleLock, type HairProfile } from './grammar';
+import { familyOf, sampleLock, type HairProfile } from './grammar';
 import { aimOnShell, type View } from './head';
 import { defectCost, lockDefects, visibleMarks, type Marks } from './lock-check';
 import type { LockSpec } from './lock';
@@ -75,7 +75,7 @@ export function closeFlanks(P: HairProfile, specs: readonly LockSpec[], view: Vi
   const top = partLinePoints(h, view, xp).filter((q) => domePredicate(h, view)(q.x, q.y)).sort((a, b) => a.y - b.y); if (!top.length) return { specs: cur, added };
   for (let k = 0; k < max; k++) {
     const S = partSamples(h, view, cur.map((L) => paintLock(h, L, view)), xp); const line = summarize(S); if (line.clarity >= target) break;
-    const fams = curtainFamilies(cur).slice(0, CURTAIN_FAMILIES).map((id) => P.families.find((f) => f.id === id)).filter((f): f is NonNullable<typeof f> => !!f); if (!fams.length) break;
+    const fams = curtainFamilies(cur).slice(0, CURTAIN_FAMILIES).map((id) => familyOf(P, id)).filter((f): f is NonNullable<typeof f> => !!f); if (!fams.length) break;
     const used = new Set(cur.map((s) => s.id)); let best: { spec: LockSpec; goal: number } | null = null;
     for (const F of fams) {
       const base = sampleLock(P, F, 400 + k, prng(seed * 131 + k * 17 + 9)); let id = `${F.id}-part${k}`; for (let n = 0; used.has(id); n++) id = `${F.id}-part${k}x${n}`;

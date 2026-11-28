@@ -49,11 +49,22 @@ export interface FamilySpec {
   readonly bendSign?: 1 | -1 | 0;
   /** Profil de largeur local (`width-program.ts`) recopié sur chaque mèche : ex. `flat` jusqu'au bout = bord franc (frange coupée droit), `bulge` = masse qui gonfle. */
   readonly widthProg?: readonly WidthOp[];
+  /** Champ d'écoulement PROPRE à la famille (fusionné sur celui du profil) : un tourbillon local, ex. le nœud d'un chignon. Absent = champ du profil. */
+  readonly field?: Partial<FlowField>;
+  /** Étiquette de MASSE (`LockSpec.family`) si elle diffère de `id` : plusieurs familles qui ne sont qu'UNE masse pour le dessin (ex. les trois étages d'une frange à bord franc, dont les longueurs diffèrent pour aligner les pointes) la partagent, et la vérification de hiérarchie (`compose.ts`) les compte ensemble. `id` reste unique (identifiant des mèches). */
+  readonly group?: string;
 }
 
-export interface HairProfile { readonly name: string; readonly head: HeadSpec; readonly field: FlowField; readonly families: readonly FamilySpec[] }
+export interface HairProfile {
+  readonly name: string; readonly head: HeadSpec; readonly field: FlowField; readonly families: readonly FamilySpec[];
+  /** Étape finale optionnelle du générateur (déterministe) : transforme la liste de mèches tirées, ex. remplacer une mèche marquée par un groupe de brins entrelacés (`weaveStrands`). */
+  readonly post?: (specs: LockSpec[], seed: number) => LockSpec[];
+}
 
 const pick = (g: () => number, a: Range): number => a.lo + (a.hi - a.lo) * g();
+
+/** Famille d'un profil par son identifiant OU par son groupe (`LockSpec.family` porte `group ?? id`) : la première qui correspond. */
+export const familyOf = (P: HairProfile, label: string): FamilySpec | undefined => P.families.find((f) => f.id === label) ?? P.families.find((f) => f.group === label);
 
 /** Direction du champ en un point de racine du repère de tête. */
 export function fieldDir(F: FlowField, p: V3): V3 {
@@ -68,14 +79,14 @@ export function sampleLock(P: HairProfile, F: FamilySpec, i: number, g: () => nu
   const H = P.head;
   const el = pick(g, F.el); const az = pick(g, F.az);
   const root = v3(H.rx * Math.cos((el * Math.PI) / 180) * Math.sin((az * Math.PI) / 180), -H.ry * Math.sin((el * Math.PI) / 180), H.cz + H.rz * Math.cos((el * Math.PI) / 180) * Math.cos((az * Math.PI) / 180));
-  const fd = fieldDir(P.field, root);
+  const fd = fieldDir(F.field ? { ...P.field, ...F.field } : P.field, root);
   const base = F.aim ? add(mul(fd, F.follow), mul(norm(F.aim), 1 - F.follow + 0.0001)) : fd;
   // Écart de cap : rotation du vecteur autour de la verticale de la racine (rapide, suffisant pour l'éventail).
   const e = (g() * 2 - 1) * F.fan;
   const dir = v3(base.x * Math.cos(e) + base.z * Math.sin(e), base.y, -base.x * Math.sin(e) + base.z * Math.cos(e));
   const sign = F.bendSign === 0 ? 0 : (F.bendSign ?? (i % 2 === 0 ? 1 : -1));
   return {
-    id: `${F.id}-${i}`, family: F.id, root: { el, az }, aim: norm(dir), length: pick(g, F.length),
+    id: `${F.id}-${i}`, family: F.group ?? F.id, root: { el, az }, aim: norm(dir), length: pick(g, F.length),
     bend: sign * pick(g, F.bend), wave: { amp: pick(g, F.waveAmp) * (g() < 0.5 ? 1 : -1), freq: pick(g, F.waveFreq), phase: g() },
     flick: { amt: pick(g, F.flickAmt) * (g() < 0.5 ? 1 : -1), len: pick(g, F.flickLen) },
     lift0: pick(g, F.lift0), lift1: pick(g, F.lift1), liftPow: pick(g, F.liftPow), gravity: pick(g, F.gravity),
@@ -88,5 +99,5 @@ export function generate(P: HairProfile, seed = 1): LockSpec[] {
   const g = prng(seed);
   const out: LockSpec[] = [];
   for (const F of P.families) for (let i = 0; i < F.count; i++) out.push(sampleLock(P, F, i, g));
-  return out;
+  return P.post ? P.post(out, seed) : out;
 }

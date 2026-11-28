@@ -1,7 +1,7 @@
 import { bladeOutline } from './blade';
 import { fillPoly, makeGrid, type Grid } from './compose-grid';
 import { domeMask } from './dome';
-import { sampleLock, type HairProfile } from './grammar';
+import { familyOf, sampleLock, type HairProfile } from './grammar';
 import { aimOnShell, type View } from './head';
 import { defectCost, lockDefects, visibleMarks } from './lock-check';
 import type { LockSpec } from './lock';
@@ -55,7 +55,7 @@ const LENGTHS = [0, 0.5, 0.65] as const;
  * `g` est la trame de la vue actuelle (`Composition.grid`) ; `family` la famille dominante (`Composition.masses[0]`) ; `k` l'indice de l'ajout (graine, identifiant).
  */
 export function proposeDomeFill(P: HairProfile, specs: readonly LockSpec[], view: View, g: Grid, family: string, seed: number, k: number, partX?: number): DomeFill | null {
-  const h = P.head; const F = P.families.find((f) => f.id === family); if (!F) return null;
+  const h = P.head; const F = familyOf(P, family); if (!F) return null;
   const mask = domeMask(h, view, g); const bare = (i: number): boolean => mask[i] === 1 && !g.data[i];
   const zone = largestBare(g, bare); if (!zone || zone.cells < 4) return null;
   const corridor = partX === undefined ? null : partCorridor(P, view, partX, g); const dome = domeMask(h, view, g);

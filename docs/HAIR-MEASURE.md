@@ -47,4 +47,4 @@ Les chiffres « Réf. » du pixie et de la hime (hors bas de frange) ne servent 
 ## Limites assumées
 - Boîtes d'amorce posées à la main ; accessoires clairs (bijoux, col) exclus par ROI ; proportions de visage de référence ≠ moteur.
 - Valeurs lues = `manual` dans le JSON, jamais présentées comme mesurées.
-- Références 04 (chignons), 28 et 50 : non mesurées (voir `HAIR-PASS11-REMAINING.md`).
+- Référence 04 (chignons) : mesurée en passe 12 (`HAIR-BUNS.md`). Références 28 et 50 : non mesurées (voir `HAIR-PASS12-REMAINING.md`).

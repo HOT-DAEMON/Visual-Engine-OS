@@ -1,6 +1,6 @@
 import { bladeOutline, makeBlade, type Blade } from './blade';
 import { viewRayInHead, type HeadSpec, type View } from './head';
-import { sampleLock, type HairProfile } from './grammar';
+import { familyOf, sampleLock, type HairProfile } from './grammar';
 import { walk, type LockSpec } from './lock';
 import { crescentPolygon, layerOfLock, strandLines } from './paint';
 import { boxBlur, clearBuf, distance, fillPoly, inkPath, makeBuf, type Buf } from './raster';
@@ -176,7 +176,7 @@ export function fitLocks(P: HairProfile, synth: Synth, start: readonly LockSpec[
       const l = synth.loss();
       if (l.total < cur.total) cur = l; else synth.restore(i, old);
     } else if (r < 0.9) { // re-tirage complet d'une mèche (saut structurel)
-      const i = Math.floor(g() * n); const F = P.families.find((f) => f.id === (synth.specs[i] as LockSpec).family) ?? (P.families[0] as typeof P.families[number]);
+      const i = Math.floor(g() * n); const F = familyOf(P, (synth.specs[i] as LockSpec).family) ?? (P.families[0] as typeof P.families[number]);
       const old = synth.replace(i, { ...sampleLock(P, F, i, g), id: `${F.id}-r${uid++}` });
       const l = synth.loss();
       if (l.total < cur.total) cur = l; else synth.restore(i, old);

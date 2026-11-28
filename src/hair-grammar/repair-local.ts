@@ -2,7 +2,7 @@ import { awayEdits, sideOf } from './part-edits';
 import { PART_SEVERITY, crossesPart } from './part-line';
 import { joinLocks } from './branch';
 import { emergeFrom } from './emerge';
-import { sampleLock, type HairProfile } from './grammar';
+import { familyOf, sampleLock, type HairProfile } from './grammar';
 import { viewRayInHead, type View } from './head';
 import { defectCost, lockDefects, type Marks } from './lock-check';
 import { rotAbout, type LockSpec } from './lock';
@@ -47,7 +47,7 @@ export function candidateEdits(P: HairProfile, L: LockSpec, view: View, codes: R
   for (const a of [...aims, ...roots, ...curv]) for (const b of [...lens, ...wids, ...lifts]) pairs.push(pair(a, b));
   for (const a of lens) for (const b of lifts) pairs.push(pair(a, b));
   for (const a of peels) for (const b of lens) pairs.push(pair(a, b));
-  const regen: Edit[] = codes.has('geom.self') ? [1, 2, 3].map((k) => ({ name: `régénérer (tirage ${k})`, cost: 3, apply: (S: LockSpec): LockSpec => { const F = P.families.find((f) => f.id === S.family); if (!F) return S; const i = Number(S.id.split('-').pop() ?? 0); return { ...sampleLock(P, F, i, prng(seed * 977 + k * 131 + i)), id: S.id, ...(S.weave ? { weave: S.weave } : {}) }; } })) : [];
+  const regen: Edit[] = codes.has('geom.self') ? [1, 2, 3].map((k) => ({ name: `régénérer (tirage ${k})`, cost: 3, apply: (S: LockSpec): LockSpec => { const F = familyOf(P, S.family); if (!F) return S; const i = Number(S.id.split('-').pop() ?? 0); return { ...sampleLock(P, F, i, prng(seed * 977 + k * 131 + i)), id: S.id, ...(S.weave ? { weave: S.weave } : {}) }; } })) : [];
   return [...singles, ...pairs, ...regen].sort((a, b) => a.cost - b.cost);
 }
 

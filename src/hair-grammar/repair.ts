@@ -4,7 +4,7 @@ import { joinLocks } from './branch';
 import { domeMask, domeRatio } from './dome';
 import { emergeFrom } from './emerge';
 import { proposeDomeFill } from './repair-dome';
-import { sampleLock, type HairProfile } from './grammar';
+import { familyOf, sampleLock, type HairProfile } from './grammar';
 import { viewRayInHead, type View } from './head';
 import { rotAbout, type LockSpec } from './lock';
 import { paintLock } from './paint';
@@ -34,7 +34,7 @@ const moveRoot = (d: number): Fix => ({ name: `déplacer la racine (${d > 0 ? '+
 type Fix = { readonly name: string; readonly apply: (L: LockSpec, ctx: Ctx) => LockSpec };
 interface Ctx { readonly P: HairProfile; readonly view: View; readonly specs: readonly LockSpec[]; readonly seed: number; readonly defect: Defect }
 
-const regenerate = (k: number): Fix => ({ name: `régénérer (tirage ${k})`, apply: (L, c) => { const F = c.P.families.find((f) => f.id === L.family); if (!F) return L; const i = Number(L.id.split('-').pop() ?? 0); const fresh = sampleLock(c.P, F, i, prng(c.seed * 977 + k * 131 + i)); return { ...fresh, id: L.id, ...(L.weave ? { weave: L.weave } : {}) }; } });
+const regenerate = (k: number): Fix => ({ name: `régénérer (tirage ${k})`, apply: (L, c) => { const F = familyOf(c.P, L.family); if (!F) return L; const i = Number(L.id.split('-').pop() ?? 0); const fresh = sampleLock(c.P, F, i, prng(c.seed * 977 + k * 131 + i)); return { ...fresh, id: L.id, ...(L.weave ? { weave: L.weave } : {}) }; } });
 const FIXES: Record<string, Fix[]> = {
   'geom.finite': [regenerate(1), regenerate(2), regenerate(3)],
   'geom.layer': [{ name: 'repasser la mèche en couche arrière', apply: (L) => ({ ...L, layer: 'back' }) }, { name: 'laisser la couche automatique', apply: (L) => ({ ...L, layer: 'auto' }) }],
@@ -44,7 +44,7 @@ const FIXES: Record<string, Fix[]> = {
   'geom.emerge': [{ name: 'détachement ÷2', apply: (L, c) => { const par = c.specs.find((s) => s.id === L.parent?.id); return par && L.parent ? emergeFrom(c.P.head, par, L, { t: L.parent.t, peel: 0.3 }) : L; } }, regenerate(1)],
   'anat.eye': [{ name: 'écarter le cap de l\'œil (+0,4 rad)', apply: (L) => ({ ...L, aim: norm(rotZ(L.aim, 0.4)) }) }, { name: 'écarter le cap de l\'œil (−0,4 rad)', apply: (L) => ({ ...L, aim: norm(rotZ(L.aim, -0.4)) }) }, aroundView(0.5), aroundView(-0.5), moveRoot(15), moveRoot(-15), { name: 'plaquer le décollement (÷2)', apply: (L) => ({ ...L, lift0: L.lift0 * 0.5, lift1: L.lift1 * 0.5 }) }, { name: 'raccourcir ×0,7', apply: (L) => ({ ...L, length: L.length * 0.7 }) }, { name: 'raccourcir ×0,4', apply: (L) => ({ ...L, length: L.length * 0.4 }) }],
   'anat.face': [{ name: 'écarter le cap du visage (+0,4 rad)', apply: (L) => ({ ...L, aim: norm(rotZ(L.aim, 0.4)) }) }, { name: 'écarter le cap du visage (−0,4 rad)', apply: (L) => ({ ...L, aim: norm(rotZ(L.aim, -0.4)) }) }, aroundView(0.5), aroundView(-0.5), moveRoot(15), moveRoot(-15), { name: 'raccourcir ×0,6', apply: (L) => ({ ...L, length: L.length * 0.6 }) }, { name: 'plaquer le décollement (÷2)', apply: (L) => ({ ...L, lift0: L.lift0 * 0.5, lift1: L.lift1 * 0.5 }) }],
-  'style.speckle': [{ name: 'élargir ×1,2', apply: (L) => ({ ...L, width: L.width * 1.2 }) }, { name: 'élargir ×1,4', apply: (L) => ({ ...L, width: L.width * 1.4 }) }],
+  'style.speckle': [{ name: 'élargir ×1,2', apply: (L) => ({ ...L, width: L.width * 1.2 }) }, { name: 'élargir ×1,4', apply: (L) => ({ ...L, width: L.width * 1.4 }) }, { name: 'allonger ×1,12 (une fente entre deux pointes se ferme par la longueur)', apply: (L) => ({ ...L, length: L.length * 1.12 }) }, { name: 'élargir ×1,8', apply: (L) => ({ ...L, width: L.width * 1.8 }) }],
   'style.coherence': [{ name: 'aligner le cap sur la lecture', apply: (L, c) => { const r = analyzeComposition(c.P.head, c.specs, c.view).reading.angle; return { ...L, aim: norm(rotZ(L.aim, clamp(r * 0.2, -0.5, 0.5))) }; } }],
 };
 
